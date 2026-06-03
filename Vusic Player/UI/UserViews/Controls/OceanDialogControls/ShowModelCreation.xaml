@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.UserViews.Controls.OceanDialogControls.ShowModelCreation"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.UserViews.Controls.OceanDialogControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <Grid RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Image Width="200" Name="imgShowPoster" Grid.Row="0" Source="/Assets/defaultalbum.png"></Image>
+            <Button Name="btnUploadShowPoster" Content="Upload Poster for Show" Click="btnUploadShowPoster_Click" Grid.Row="1" HorizontalAlignment="Center"></Button>
+            <StackPanel Orientation="Vertical" Grid.Row="2" Spacing="10">
+                <TextBlock  Text="Name of Show or Collection of Videos" ></TextBlock>
+                <TextBox Name="txtShowName"  FontSize="16" PlaceholderText="Enter name..." Grid.Row="2"></TextBox>
+
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="3" Spacing="10">
+                <TextBlock Text="Description of Show" ></TextBlock>
+                <TextBox Name="txtDescription"  FontSize="16" PlaceholderText="Description is optional..." Grid.Row="2"></TextBox>
+
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="4" Spacing="10">
+                <TextBlock Text="Release Date (optional)" ></TextBlock>
+                <DatePicker Name="dtRelease" FontSize="16" Grid.Row="2"></DatePicker>
+
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="5" Spacing="10">
+                <TextBlock Text="Creators (optional)" ></TextBlock>
+                <TextBox Name="txtCreators" FontSize="16" PlaceholderText="Enter names of creators..." Grid.Row="2"></TextBox>
+
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="6" Spacing="10">
+                <TextBlock Text="Cast and Crew (optional)" ></TextBlock>
+                <TextBox Name="txtCast"  FontSize="16" PlaceholderText="Enter names of cast or crew separated by commas..." Grid.Row="2"></TextBox>
+
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="7" Spacing="10">
+                <TextBlock Text="Add Folder" ></TextBlock>
+                <TextBlock Text="Seasons and Episodes might be automatically detected" ></TextBlock>
+                <TextBlock Text="if in the correct format" ></TextBlock>
+                <StackPanel Spacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Folder Location" 
+Style="{StaticResource CaptionTextBlockStyle}" 
+Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <Grid Width="280" HorizontalAlignment="Left">
+                            <TextBox Name="txtFolderPath" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Browse..."/>
+                            <Button ToolTipService.ToolTip="Browse" Style="{StaticResource AccentButtonStyle}" BorderBrush="Transparent" 
+ VerticalAlignment="Stretch" HorizontalAlignment="Right" Name="btnBrowseDirectory" 
+ Content="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" 
+ Click="btnBrowseDirectory_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="8" Spacing="10">
+                <TextBlock Text="Tags (optional)" ></TextBlock>
+                <TextBox Name="txtTags" FontSize="16" PlaceholderText="Search tags..." Grid.Row="2"></TextBox>
+
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="9" Spacing="10">
+                <TextBlock Text="Genre (optional)" ></TextBlock>
+                <TextBox Name="txtGenre"  FontSize="16" PlaceholderText="Drama, comedy, horror..." Grid.Row="2"></TextBox>
+
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+
+</UserControl>

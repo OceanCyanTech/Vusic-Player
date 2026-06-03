@@ -5,10 +5,114 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:grids="using:Vusic_Player.UI.UserViews.Grids" xmlns:videolibcontrols="using:Vusic_Player.UI.UserViews.Controls.VideoLibraryControls" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
 
-    <Grid>
+    <ScrollViewer>
+        <Grid Margin="40, 30" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition  Height="Auto"></RowDefinition>
+                <RowDefinition   Height="Auto"></RowDefinition>
+                <RowDefinition  Height="Auto"></RowDefinition>
+                <RowDefinition  Height="Auto"></RowDefinition>
+                <RowDefinition  Height="Auto"></RowDefinition>
+                <RowDefinition  Height="Auto"></RowDefinition>
 
-    </Grid>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                <Button CornerRadius="12"   Grid.Column="0" Name="btnNewPlaylist" Click="btnNewPlaylist_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button   BorderThickness="1" BorderBrush="Transparent" HorizontalAlignment="Left" CornerRadius="12"   Margin="0, 0" Name="btnOpenVideo" Click="btnOpenVideo_Click">
+                    <Button.Background>
+                        <AcrylicBrush TintColor="Transparent" 
+TintOpacity="00" 
+                   Opacity="0.3"
+FallbackColor="Black" 
+AlwaysUseFallback="False"/>
+                    </Button.Background>
+                    <StackPanel Orientation="Horizontal">
+
+                        <Image Width="20" Source="/Assets/importicon.png"></Image>
+                        <TextBlock Margin="5,0" Text="Open Video" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                    </StackPanel>
+
+                </Button>
+
+
+                <HyperlinkButton Content="View Entire Library" Click="hypViewEntireLib_Click" FontSize="16"  Grid.Row="0"></HyperlinkButton>
+            </StackPanel>
+            <Expander Grid.Row="1" 
+          Header="Recently Played"
+          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+          IsExpanded="True"  Expanding="Expander_Expanding" Name="expRecents">
+                <Expander.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="View Full Video History">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Disable Recent Videos">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Expander.ContextFlyout>
+                <grids:ContinuePlayingRecentsVideo/>
+            </Expander>
+            <TextBlock Text="Recommended" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
+            <Expander Grid.Row="3"  Expanding="Expander_Expanding" Name="expRecommended"
+          Header="Recommended from your libraries"
+          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+          IsExpanded="False">
+                <Expander.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Disable Recommended Videos">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Expander.ContextFlyout>
+                <videolibcontrols:RecommendedVideos/>
+            </Expander>
+            <TextBlock Text="My Playlists" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
+            <Expander Grid.Row="5"  Expanding="Expander_Expanding" Name="expVideoPlaylists"
+          Header="My Playlists"
+          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+          IsExpanded="False">
+                <Expander.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Delete all Video Playlists">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Expander.ContextFlyout>
+                <controls:UserPlaylists HorizontalAlignment="Left"/>
+            </Expander>
+            <TextBlock Text="Shows" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
+            <Expander Grid.Row="7" Expanding="Expander_Expanding" Name="expShows"  Header="My Shows"
+ HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+ IsExpanded="False">
+                <Grid RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Content="Create New Show Model" Click="Button_Click"></Button>
+                    <videolibcontrols:UserShows HorizontalAlignment="Left" Grid.Row="1"></videolibcontrols:UserShows>
+                </Grid>
+            </Expander>
+        </Grid>
+    </ScrollViewer>
+
 </Page>

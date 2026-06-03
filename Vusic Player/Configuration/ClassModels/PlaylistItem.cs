@@ -11,6 +11,7 @@ namespace Vusic_Player.Configuration.ClassModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         public string? PlaylistId { get; set; }
+        public int SeasonNumber { get; set; } = 1;
         public string? PlaylistName { get; set; } = "";
         public string? PlaylistCount { get; set; } = "";
         public string? PlaylistNowPlaying { get; set; } = "";

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.UserViews.Controls.VideoLibraryControls.UserShows"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.UserViews.Controls.VideoLibraryControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ani="using:CommunityToolkit.WinUI.Animations"
+    mc:Ignorable="d">
+
+    <Grid ColumnSpacing="30" Margin="0, 30" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1" Visibility="Collapsed" Name="grdRecents" HorizontalAlignment="Left">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Spacing="20">
+                <TextBlock Text="Shows" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+                <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
+                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAll" Visibility="Visible" Checked="chckSelectAll_Checked" Unchecked="chckSelectAll_Checked"></CheckBox>
+                    <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveShows_Click"  Name="btnRemoveShows" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"
+ x:Name="grdViewShows" SelectionMode="Single" IsItemClickEnabled="True" CanDragItems="True" AllowDrop="True" CanReorderItems="True"
+ItemClick="grdViewShows_ItemClick"  Margin="0, 20" SelectionChanged="grdViewShows_SelectionChanged">
+                <GridView.ItemTemplate>
+                    <DataTemplate >
+                        <StackPanel ToolTipService.ToolTip="{Binding Name}" Orientation="Vertical" 
+                        
+      >
+                            <ani:Implicit.Animations>
+                                <ani:ImplicitAnimationSet>
+                                    <ani:ScaleAnimation Duration="0:0:0.2" />
+                                </ani:ImplicitAnimationSet>
+                            </ani:Implicit.Animations>
+                            <StackPanel  VerticalAlignment="Stretch">
+                                <StackPanel.ContextFlyout>
+                                    <MenuFlyout Opened="MenuFlyout_Opened">
+                                        <MenuFlyoutItem Name="mnftOpenShow" Click="mnftOpenShow_Click" Text="Open Playlist">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Name="mnftPlayShow" Click="mnftPlayShow_Click" Text="Play all">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem Name="mnftEditShow" Click="mnftEditShow_Click" Text="Edit Playlist">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Name="mnftDeleteShow" Click="mnftDeleteShow_Click" Text="Delete Playlist">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </StackPanel.ContextFlyout>
+
+                                <Image Source="{Binding Poster}" Width="180" Stretch="UniformToFill"/>
+
+                                <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Visibility="Visible" TextWrapping="Wrap" />
+                                <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding SeasonCount}" Visibility="Visible" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+
+        </Grid>
+        <Grid HorizontalAlignment="Center" Name="grdEmptySuggestions" Visibility="Visible" Grid.Column="1">
+            <StackPanel Orientation="Vertical" Spacing="15">
+                <StackPanel Orientation="Vertical" Spacing="20">
+                    <Image Width="90" Source="/Assets/appicon.png"></Image>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="You have no playlists created!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                </StackPanel>
+                <Button Style="{StaticResource AccentButtonStyle}" Margin="0, 20" Name="btnNewShow" HorizontalAlignment="Center" Click="btnNewShow_Click" >
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon FontFamily="Segoe Fluent Icons" 
+Glyph="&#xE710;" 
+FontSize="16"
+VerticalAlignment="Center"/>
+
+                        <TextBlock Text="New Playlist" 
+ Margin="8,0,0,0" 
+ VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+</UserControl>

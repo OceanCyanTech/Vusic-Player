@@ -79,7 +79,7 @@
             </Button>
             <Button Name="btnSettings" Content="Settings" Click="btnSettings_Click" Grid.Row="2" HorizontalAlignment="Center"></Button>
         </Grid>
-        <Grid Name="MainGrid" Visibility="Visible" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PointerMoved="MainGrid_PointerMoved" PointerEntered="MainGrid_PointerEntered">
+        <Grid Name="MainGrid" PreviewKeyDown="MainGrid_PreviewKeyDown" Visibility="Visible" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PointerMoved="MainGrid_PointerMoved" PointerEntered="MainGrid_PointerEntered">
             <Grid.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem x:Name="mnftOpenVideo" Text="Open Video" Click="mnftOpenVideo_Click">

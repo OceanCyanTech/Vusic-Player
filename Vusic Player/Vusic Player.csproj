@@ -23,13 +23,27 @@
     <None Remove="Pages\Views\QueuePage.xaml" />
     <None Remove="Pages\Views\SearchResults.xaml" />
     <None Remove="Pages\Views\SettingsPage.xaml" />
+    <None Remove="Pages\Views\ShowModel.xaml" />
     <None Remove="Pages\Views\VideoLibrary.xaml" />
+    <None Remove="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml" />
+    <None Remove="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml" />
     <None Remove="UI\Dialogs\VideoOptionsWindow.xaml" />
+    <None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
+    <None Remove="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml" />
+    <None Remove="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml" />
+    <None Remove="UI\UserViews\Controls\OceanDialogControls\MassEditor.xaml" />
+    <None Remove="UI\UserViews\Controls\OceanDialogControls\MessagePanel.xaml" />
+    <None Remove="UI\UserViews\Controls\OceanDialogControls\NewPlaylistCreation.xaml" />
+    <None Remove="UI\UserViews\Controls\OceanDialogControls\OnlineArtistPicture.xaml" />
+    <None Remove="UI\UserViews\Controls\OceanDialogControls\ShowModelCreation.xaml" />
     <None Remove="UI\UserViews\Controls\OceanSlider.xaml" />
     <None Remove="UI\UserViews\Controls\PanelControlsAudioPlayer.xaml" />
     <None Remove="UI\UserViews\Controls\PlaybackMainControls.xaml" />
     <None Remove="UI\UserViews\Controls\PlayPauseControls.xaml" />
+    <None Remove="UI\UserViews\Controls\UserPlaylists.xaml" />
     <None Remove="UI\UserViews\Controls\VideoControls.xaml" />
+    <None Remove="UI\UserViews\Controls\VideoLibraryControls\RecommendedVideos.xaml" />
+    <None Remove="UI\UserViews\Controls\VideoLibraryControls\UserShows.xaml" />
     <None Remove="UI\UserViews\Controls\VolumeSlider.xaml" />
     <None Remove="UI\UserViews\Grids\ContinuePlayingRecentsVideo.xaml" />
     <None Remove="UI\UserViews\Grids\Favourites.xaml" />
@@ -81,6 +95,76 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Views\ShowModel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\ListViewMedia.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\OceanDialogControls\ShowModelCreation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\OceanDialogControls\MassEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\OceanDialogControls\MessagePanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\OceanDialogControls\OnlineArtistPicture.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\OceanDialogControls\NewPlaylistCreation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\VideoLibraryControls\RecommendedVideos.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\UserPlaylists.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\VideoLibraryControls\UserShows.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\UserViews\Grids\Favourites.xaml">

@@ -1,12 +1,14 @@
 
 using FlyleafLib;
 using FlyleafLib.MediaPlayer;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Playback;
@@ -69,6 +71,27 @@ namespace Vusic_Player.Pages
             }
 
         }
+        public void HidePointer()
+        {
+            int safetyThrottle = 0;
+            while (ShowCursor(false) >= 0 && safetyThrottle < 10)
+            {
+                safetyThrottle++;
+            }
+        }
+        public void ShowPointer()
+        {
+            int safetyThrottle = 0;
+
+            // Keep incrementing until the counter reaches 0 or above, 
+            // with a protection cutoff at 10 iterations.
+            while (ShowCursor(true) < 0 && safetyThrottle < 10)
+            {
+                safetyThrottle++;
+            }
+        }
+        [DllImport("user32.dll", EntryPoint = "ShowCursor", CharSet = CharSet.Auto)]
+        private static extern int ShowCursor(bool bShow);
         private void ShowInformation(string information)
         {
             txtInformation.VerticalAlignment = VerticalAlignment.Top;
@@ -76,12 +99,17 @@ namespace Vusic_Player.Pages
             txtInformation.Margin = new Thickness(20, 30, 0, 0);
             txtInformation.Text = information;
             FadeInOutStoryboard.Begin();
+            
         }
         private void Masterplayer_OpenCompleted(object? sender, OpenCompletedArgs e)
         {
             if (PlayerService.Masterplayer == null) return;
             FadeInOutStoryboardPanel.Begin();
             ShowInformation($"'{PlayerService.CurrentPlayingPath}' opened");
+
+            // Assign it to the UI grid
+       
+         
             //if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
             //{
             //    PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
@@ -130,7 +158,8 @@ namespace Vusic_Player.Pages
         {
             if (isPinned == false)
             {
-                 FadeInOutStoryboardPanel.Begin();
+                //ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+                FadeInOutStoryboardPanel.Begin();
             }
         }
         #region Context Menu Events
@@ -258,6 +287,18 @@ namespace Vusic_Player.Pages
         private void videoControls_ViewEpisodeClick()
         {
 
+        }
+
+        private void MainGrid_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Space)
+            {
+                // 1. Perform your custom logic here
+                System.Diagnostics.Debug.WriteLine("Spacebar intercepted!");
+                PlayerService.PlayPause();
+                // 2. Mark the event as handled to stop it from bubbling up to other controls
+                e.Handled = true;
+            }
         }
     }
 }

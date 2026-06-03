@@ -1,5 +1,6 @@
 using FlyleafLib;
 using FlyleafLib.MediaPlayer;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -28,6 +29,8 @@ namespace Vusic_Player
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        private InputPreTranslateKeyboardSource? _keyboardSource;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -40,7 +43,21 @@ namespace Vusic_Player
             //pl.Open(@"C:\Users\bnara\Downloads\Heartstopper Season 4\E08 Apart.mp4");
             //mainengine.Player = pl;
             this.ExtendsContentIntoTitleBar = true;
+            rootGrid.Loaded += RootGrid_Loaded;
+           
         }
+
+        private void RootGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            //var island = rootGrid.XamlRoot?.ContentIsland;
+
+            //if (island != null)
+            //{
+            //    _keyboardSource = InputPreTranslateKeyboardSource.GetForIsland(island);
+            //    _keyboardSource.PreTranslateMessage += OnKeyboardPreTranslateMessage;
+            //}
+        }
+
         public async void LoadVersion()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();

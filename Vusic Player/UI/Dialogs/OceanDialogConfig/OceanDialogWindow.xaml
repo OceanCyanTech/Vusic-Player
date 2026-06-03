@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Vusic_Player.UI.Dialogs.OceanDialogConfig.OceanDialogWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.OceanDialogConfig"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local1="using:Vusic_Player.UI.UserViews.Controls" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls.OceanDialogControls"
+    mc:Ignorable="d"
+    Title="OceanDialogWindow">
+
+    <Grid>
+
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  BorderThickness="2"
+    CornerRadius="8" Margin="25, 25"
+    BorderBrush="Transparent"
+    Background="Transparent"
+  >
+            <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+                <Grid Name="rootgrr">
+                    <Grid.Resources>
+
+                        <Style x:Key="OceanShimmer" TargetType="Button">
+                            <Setter Property="Padding" Value="16,8"/>
+                            <Setter Property="Background" Value="Transparent"/>
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+
+                                        <Grid x:Name="RootGrid"
+                      Background="Transparent">
+
+                                            <Border x:Name="BackgroundElement"
+                            CornerRadius="8"
+                            Background="Cyan"
+                            Opacity="0.6"
+                            RenderTransformOrigin="0.5,0.5">
+
+                                                <Border.RenderTransform>
+                                                    <ScaleTransform x:Name="MainScale"
+                                            ScaleX="1"
+                                            ScaleY="1"/>
+                                                </Border.RenderTransform>
+                                            </Border>
+
+                                            <ContentPresenter
+                        Content="{TemplateBinding Content}"
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup x:Name="CommonStates">
+
+                                                    <VisualState x:Name="Normal"/>
+
+                                                    <VisualState x:Name="PointerOver">
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                        Storyboard.TargetName="BackgroundElement"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="0.9"
+                                        Duration="0:0:0.15"/>
+                                                        </Storyboard>
+                                                    </VisualState>
+
+                                                    <VisualState x:Name="Pressed">
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                        Storyboard.TargetName="BackgroundElement"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="1"
+                                        Duration="0:0:0.1"/>
+
+                                                            <DoubleAnimation
+                                        Storyboard.TargetName="MainScale"
+                                        Storyboard.TargetProperty="ScaleX"
+                                        To="0.95"
+                                        Duration="0:0:0.1"/>
+
+                                                            <DoubleAnimation
+                                        Storyboard.TargetName="MainScale"
+                                        Storyboard.TargetProperty="ScaleY"
+                                        To="0.95"
+                                        Duration="0:0:0.1"/>
+                                                        </Storyboard>
+                                                    </VisualState>
+
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+
+                                        </Grid>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" Name="txtTitle" Text="Title" HorizontalAlignment="Left" Grid.Row="0"></TextBlock>
+
+                    <Grid Margin="0, 10" Name="Contents" Grid.Row="1">
+
+                        <controls:NewPlaylistCreation Visibility="Collapsed" x:Name="PlaylistCreation"/>
+                        <controls:InfoBox Visibility="Collapsed" x:Name="InfoBoxControl"></controls:InfoBox>
+                        <controls:OnlineArtistPicture x:Name="OnlineArtistPic" Visibility="Collapsed"></controls:OnlineArtistPicture>
+                        <controls:MessagePanel x:Name="MessageBox" Visibility="Collapsed"></controls:MessagePanel>
+                        <controls:AlbumEditor x:Name="AlbumEditorBox" Visibility="Collapsed"></controls:AlbumEditor>
+                        <controls:MassEditor x:Name="MassEdit" Visibility="Collapsed"/>
+                        <controls:ShowModelCreation x:Name="ShowMod" Visibility="Collapsed"/>
+                    </Grid>
+
+                    <Grid Grid.Row="2" Name="smokegrid" Background="Black" Opacity="0">
+
+
+                    </Grid>
+                    <StackPanel  Spacing="10" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0, 0">
+                        <local1:OceanButton  Style="{StaticResource OceanShimmer}" x:Name="btnPrimary" Click="btnPrimary_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="20" Name="imgPrimary"></Image>
+                                <TextBlock FontSize="16" Name="txtPrimary" Margin="5, 0" Text="Primary"></TextBlock>
+                            </StackPanel>
+                        </local1:OceanButton>
+                        <local1:OceanButton  x:Name="btnSecondary" CornerRadius="8" Visibility="Collapsed" Click="btnSecondary_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="20" Name="imgSecondary" Visibility="Collapsed"></Image>
+                                <TextBlock Name="txtSecondary" Text="Secondary" Margin="5, 0"></TextBlock>
+                            </StackPanel>
+                        </local1:OceanButton>
+                        <local1:OceanButton  CornerRadius="8"  x:Name="btnClose" Click="btnClose_Click">
+                            <local1:OceanButton.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="Escape"></KeyboardAccelerator>
+                            </local1:OceanButton.KeyboardAccelerators>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="20" Name="imgClose" Visibility="Collapsed"></Image>
+                                <TextBlock FontSize="16" Name="txtClose" Text="Cancel" Margin="5, 0"></TextBlock>
+                            </StackPanel>
+                        </local1:OceanButton>
+                    </StackPanel>
+                </Grid>
+                <Button Name="ChangeDialogSize" Content="Changee" Visibility="Collapsed" Click="ChangeDialogSize_Click"></Button>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</Window>
