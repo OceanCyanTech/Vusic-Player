@@ -7,17 +7,24 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.FilePickers;
 using Vusic_Player.MediaProperties.VideoProperties;
 using Vusic_Player.UI;
+using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
+using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 using Orientation = Vusic_Player.MediaProperties.VideoProperties.Orientation;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -30,6 +37,7 @@ namespace Vusic_Player.Pages
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
         bool isPinned = false;
+
         DateTime recordStartTime;
         DispatcherTimer? SubtitleTimer;
         DispatcherTimer? RecordTimer;
@@ -99,26 +107,87 @@ namespace Vusic_Player.Pages
             txtInformation.Margin = new Thickness(20, 30, 0, 0);
             txtInformation.Text = information;
             FadeInOutStoryboard.Begin();
-            
+
         }
-        private void Masterplayer_OpenCompleted(object? sender, OpenCompletedArgs e)
+        bool isEpisodeVideo = false;
+        private async void Masterplayer_OpenCompleted(object? sender, OpenCompletedArgs e)
         {
             if (PlayerService.Masterplayer == null) return;
             FadeInOutStoryboardPanel.Begin();
             ShowInformation($"'{PlayerService.CurrentPlayingPath}' opened");
 
             // Assign it to the UI grid
-       
-         
-            //if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
-            //{
-            //    PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
 
-            //    var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
-            //    mediacontroller.CurrentPosition = curTime.TotalSeconds;
-            //    ShowInformation($"Opened playback of '{PlayerService.CurrentPlayingPath}' at {mediacontroller.RunningDurationString}");
 
-            //}
+            if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
+            {
+                PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
+
+                var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
+                mediacontroller.CurrentPosition = curTime.TotalSeconds;
+                ShowInformation($"Opened playback of '{PlayerService.CurrentPlayingPath}' at {mediacontroller.RunningDurationString}");
+                if (vdprg.IsEpisode == true)
+                {
+                    if (vdprg.FilePath == null) return;
+                    Debug.WriteLine("Yes Episode");
+                    isEpisodeVideo = true;
+                    btnNextEpisode.Visibility = Visibility.Visible;
+                    videoControls.ViewEpisodeVisibility = Visibility.Visible;
+                    var listofotherepisodes = EpisodeDirectory.GetEpisodeShowInfo(vdprg.FilePath);
+                    var sorted = listofotherepisodes
+     .OrderBy(p => int.Parse(p.EpisodeName?.Replace("Episode ", "") ?? "0"));
+                    var filePathsToRemove = sorted.Select(item => item.FilePath).ToHashSet();
+                 
+                    // Optimize VusicQueue removal
+                    for (int i = QueueService.VusicQueue.Count - 1; i >= 0; i--)
+                    {
+                        if (filePathsToRemove.Contains(QueueService.VusicQueue[i].FilePath))
+                        {
+                            QueueService.VusicQueue.RemoveAt(i);
+                        }
+                    }
+
+                    // Optimize VusicQueueNext removal
+                    for (int i = QueueService.VusicQueueNext.Count - 1; i >= 0; i--)
+                    {
+                        if (filePathsToRemove.Contains(QueueService.VusicQueueNext[i].FilePath))
+                        {
+                            QueueService.VusicQueueNext.RemoveAt(i);
+                        }
+                    }
+                    QueueService.VusicQueue.Clear();
+                    QueueService.VusicQueueNext.Clear();
+                    foreach(var item in sorted)
+                    {
+                        var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
+                        var vidprops = await file.Properties.GetVideoPropertiesAsync();
+                        var title = vidprops.Title;
+                        if(title == "")
+                        {
+                            title = Path.GetFileName(item.FilePath);
+                        }
+                        QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
+                    }
+                    foreach(var item in QueueService.VusicQueue)
+                    {
+                        QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath});
+                    }
+                    QueueService.VusicQueueNext.RemoveAt(0);
+                    foreach(var item in QueueService.VusicQueueNext)
+                    {
+                        Debug.WriteLine(item.FilePath + " Next");
+
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Not Episode");
+
+                    btnNextEpisode.Visibility = Visibility.Collapsed;
+                    videoControls.ViewEpisodeVisibility = Visibility.Collapsed;
+                }
+
+            }
 
             SubtitleTimer?.Start();
             SaveTimer = new DispatcherTimer();
@@ -133,6 +202,7 @@ namespace Vusic_Player.Pages
                 {
                     item.CurrentDuration = PlayerService.Masterplayer.CurTime;
                     item.TotalDuration = PlayerService.Masterplayer.Duration;
+                    item.IsEpisode = isEpisodeVideo;
                 }
                 else
                 {
@@ -142,6 +212,7 @@ namespace Vusic_Player.Pages
                     {
 
                         FilePath = path,
+                        IsEpisode = isEpisodeVideo,
                         CurrentDuration = PlayerService.Masterplayer.CurTime,
                         TotalDuration = PlayerService.Masterplayer.Duration
                     });
@@ -162,6 +233,7 @@ namespace Vusic_Player.Pages
                 FadeInOutStoryboardPanel.Begin();
             }
         }
+        string CurrentShowDir = "";
         #region Context Menu Events
 
         private void mnftOpenVideo_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -201,6 +273,7 @@ namespace Vusic_Player.Pages
             btnNextEpisode.Visibility = Visibility.Collapsed;
 
             string VideoPath = "";
+            isEpisodeVideo = false;
             if (e.Parameter is VideoProgress vditem && vditem.FilePath is string path)
             {
                 VideoPath = path;
@@ -212,11 +285,14 @@ namespace Vusic_Player.Pages
                 LoadingProgress = false;
 
             }
-           // else if (e.Parameter is EpisodeModel episode)
-           // {
-           //     btnNextEpisode.Visibility = Visibility.Visible;
-           ////     videoControls.ViewEpisodeVisibility = Visibility.Visible;
-           // }
+            else if (e.Parameter is EpisodeModel episode)
+            {
+                btnNextEpisode.Visibility = Visibility.Visible;
+                videoControls.ViewEpisodeVisibility = Visibility.Visible;
+                if (episode.FilePath == null) return;
+                VideoPath = episode.FilePath;
+                isEpisodeVideo = true;
+            }
             PlayerService.OpenPath(VideoPath);
 
             if (PlayerService.Masterplayer != null)
@@ -231,7 +307,7 @@ namespace Vusic_Player.Pages
             else
             {
                 txtSplash.Text = "An unexpected error occured! Check log page under App Settings for more details";
-         //       Logger.Log("[ERR-PLY-001] Media player instance is null. Unable to initialize playback.", "VideoPlayerPage.OpenVideo", Logger.LogLevelType.Error);
+                Logger.Log("[ERR-PLY-001] Media player instance is null. Unable to initialize playback.", "VideoPlayerPage.OpenVideo", Logger.LogLevelType.Error);
             }
             base.OnNavigatedTo(e);
         }
@@ -298,6 +374,14 @@ namespace Vusic_Player.Pages
                 PlayerService.PlayPause();
                 // 2. Mark the event as handled to stop it from bubbling up to other controls
                 e.Handled = true;
+            }
+            else if (e.Key == Windows.System.VirtualKey.Left)
+            {
+                PlayerService.SeekBefore();
+            }
+            else if (e.Key == Windows.System.VirtualKey.Right)
+            {
+                PlayerService.SeekAhead();
             }
         }
     }

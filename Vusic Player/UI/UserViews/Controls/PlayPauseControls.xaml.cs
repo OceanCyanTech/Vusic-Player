@@ -31,7 +31,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         #region Media Transport Controls
         private void btnPrevious_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-           // QueueService.PlayPrevious();
+            QueueService.PlayPrevious();
         }
 
         private void btnPlayPause_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -42,7 +42,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void btnNext_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-       //     QueueService.PlayNext();
+           QueueService.PlayNext();
         }
 
         #endregion

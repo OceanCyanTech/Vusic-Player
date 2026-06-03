@@ -174,7 +174,6 @@ namespace Vusic_Player.Configuration.Playback
 
 
         }
-
         private static async void PlayMediaAtIndex()
         {
             var queue = VusicQueueNext;
@@ -199,7 +198,9 @@ namespace Vusic_Player.Configuration.Playback
                 Debug.WriteLine("True");
                 if(App.NavigationFrame != null)
                 {
-                    App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
+                    
+                        App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
+                    
                 }
                 //if (App.VideoPlayerFrame != null && App.RootFrameAudio != null)
                 //{

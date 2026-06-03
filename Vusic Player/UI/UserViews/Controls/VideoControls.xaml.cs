@@ -30,17 +30,17 @@ namespace Vusic_Player.UI.UserViews.Controls
     {
         public event Action? ViewEpisodeClick;
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
-        //public Visibility ViewEpisodeVisibility
-        //{
-        //    get => (Visibility)GetValue(viewepisodevis);
-        //    set => SetValue(viewepisodevis, value);
-        //}
-    //    public static readonly DependencyProperty viewepisodevis =
-    //DependencyProperty.Register(
-    //    nameof(ViewEpisodeVisibility),
-    //    typeof(Visibility),
-    //    typeof(ListViewMedia),
-    //    new PropertyMetadata(Visibility.Collapsed));
+        public Visibility ViewEpisodeVisibility
+        {
+            get => (Visibility)GetValue(viewepisodevis);
+            set => SetValue(viewepisodevis, value);
+        }
+        public static readonly DependencyProperty viewepisodevis =
+    DependencyProperty.Register(
+        nameof(ViewEpisodeVisibility),
+        typeof(Visibility),
+        typeof(VideoControls),
+        new PropertyMetadata(Visibility.Collapsed));
         public VideoControls()
         {
             InitializeComponent();

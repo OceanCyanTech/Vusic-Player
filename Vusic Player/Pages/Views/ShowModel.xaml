@@ -238,7 +238,7 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" SelectionChanged="grdViewSe
                 <StackPanel Orientation="Vertical" Grid.Row="0" Spacing="20">
                     <TextBlock Name="txtSeasonHeader" Text="Season 1" Style="{StaticResource TitleLargeTextBlockStyle}" Grid.Row="0"></TextBlock>
 
-                    <TextBlock Name="txtEpisodeCount" Text="0 Episodes" Style="{StaticResource BodyLargeTextBlockStyle}" ></TextBlock>
+                    <TextBlock Name="txtEpisodeCount" Text="Loading episodes..." Style="{StaticResource BodyLargeTextBlockStyle}" ></TextBlock>
                 </StackPanel>
                 <Button CornerRadius="12" Style="{StaticResource AccentButtonStyle}" Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click">
                     <StackPanel Orientation="Horizontal" Spacing="10">

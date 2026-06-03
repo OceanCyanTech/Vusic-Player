@@ -21,6 +21,7 @@ using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
+using Windows.Storage;
 
 namespace Vusic_Player.UI.UserViews.Grids
 {
@@ -85,8 +86,15 @@ namespace Vusic_Player.UI.UserViews.Grids
                 if (vd.FilePath is string path)
                 {
                     HighlightVideoPath = path;
-                    txtFileName.Text = Path.GetFileNameWithoutExtension(path);
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path);
+                    var videoprops = await storagefile.Properties.GetVideoPropertiesAsync();
 
+                    txtFileName.Text = videoprops.Title;
+                    if (txtFileName.Text == "")
+                    {
+                        txtFileName.Text = Path.GetFileNameWithoutExtension(path);
+                    }
+                    ToolTipService.SetToolTip(grdHighlightVideo, Path.GetFileNameWithoutExtension(path));
                     CoverBackground.ImageSource = await FileThumbnailObtain.GetVideoFrameAsync(path, 0.25);
                 }
                 prgHighlight.Maximum = vd.TotalDuration;
@@ -98,14 +106,13 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private async void btnResume_Click(object sender, RoutedEventArgs e)
         {
-
-            if (ContinuePlaying.videoProgressMain != null)
+            if(App.NavigationFrame != null)
             {
                 prgAwaitResume.Visibility = Visibility.Visible;
                 prgAwaitResume.IsActive = true;
-                await Task.Delay(200);
-          //      PlayerService.VideoInvoke();
+                App.NavigationFrame.Navigate(typeof(VideoPlayer), ContinuePlaying.videoProgressMain);
             }
+         
 
         }
         private void AnimateScale(double Scale)

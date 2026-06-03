@@ -7,13 +7,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vusic_player="using:Vusic_Player.UI.UserViews.Controls" xmlns:ani="using:CommunityToolkit.WinUI.Animations" xmlns:media="using:CommunityToolkit.WinUI.Media"
     mc:Ignorable="d">
-
     <Grid ColumnSpacing="30">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" PointerEntered="grdHighlightVideo_PointerEntered" PointerExited="grdHighlightVideo_PointerExited" RenderTransformOrigin="0.5,0.5" Name="grdHighlightVideo">
+    
+        <Grid MaxWidth="440" MaxHeight="400" Grid.Column="0" PointerEntered="grdHighlightVideo_PointerEntered" PointerExited="grdHighlightVideo_PointerExited" RenderTransformOrigin="0.5,0.5" Name="grdHighlightVideo">
             <Grid.RenderTransform>
                 <ScaleTransform x:Name="GridScale" ScaleX="1" ScaleY="1" />
             </Grid.RenderTransform>
@@ -44,11 +44,13 @@
             </VisualStateManager.VisualStateGroups>
             <Border CornerRadius="12">
                 <Grid>
+
                     <Border CornerRadius="12">
                         <Border.Background>
                             <ImageBrush x:Name="CoverBackground" ImageSource="/Assets/sampleimage.jpg" Stretch="UniformToFill"/>
                         </Border.Background>
                     </Border>
+
                     <ProgressRing Visibility="Collapsed" Name="prgAwaitResume" VerticalAlignment="Center" IsIndeterminate="True"></ProgressRing>
 
                     <Border Margin="10, 10" VerticalAlignment="Top" HorizontalAlignment="Left" CornerRadius="12,12,12,12">
@@ -69,7 +71,9 @@
             </Border>
 
             <StackPanel VerticalAlignment="Bottom" Padding="20" Spacing="16">
-                <TextBlock Name="txtFileName" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
+                <Viewbox Stretch="UniformToFill">
+                        <TextBlock TextTrimming="CharacterEllipsis" MaxWidth="450" MaxLines="2" TextWrapping="Wrap"  Name="txtFileName" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
+                </Viewbox>
                 <vusic_player:OceanSlider IsThumbVisible="Collapsed" Value="0" x:Name="prgHighlight"></vusic_player:OceanSlider>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -155,6 +159,7 @@
                 </Grid>
             </StackPanel>
         </Grid>
+
         <Grid Grid.Column="1" Name="grdRecents">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
@@ -254,5 +259,4 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 20" SelectionChanged="Grid
             </StackPanel>
         </Grid>
     </Grid>
-
 </UserControl>

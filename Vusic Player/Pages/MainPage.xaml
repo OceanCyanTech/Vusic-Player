@@ -70,7 +70,7 @@ Stretch="UniformToFill"/>
                         </Grid.RowDefinitions>
                         <Image Name="imgThumbnailCover" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}" Width="150" Grid.Row="0"></Image>
 
-                        <TextBlock Margin="0, 20" HorizontalAlignment="Center" Name="txtSongName" Width="300" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" >
+                        <TextBlock Margin="0, 20" HorizontalAlignment="Center" Name="txtSongName" TextTrimming="CharacterEllipsis" Width="300" MaxLines="1" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" >
 
                         </TextBlock>
                         <playback_views:PlayPauseControls SpaceWidth="10" Margin="0, 5" Grid.Row="4" HorizontalAlignment="Center"></playback_views:PlayPauseControls>

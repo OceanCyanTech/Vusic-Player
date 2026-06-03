@@ -13,6 +13,7 @@
             <Image Name="imgSeekbefore" 
                Width="{x:Bind ImageWidth, Mode=OneWay}" 
                Source="/Assets/skip10secondsbackwardlighticon.png"/>
+            
         </Button>
 
         <Button Name="btnPrevious" Click="btnPrevious_Click" ToolTipService.ToolTip="Previous" Padding="2" Background="Transparent" BorderBrush="Transparent">

@@ -80,23 +80,25 @@ namespace Vusic_Player.Pages.Views
            .ToHashSet();
                             var episodePatterns = new List<string>
 {
-    // 1. Standard E/EP format: E02, ep02, EP2, e2
-    @"\b(ep?|episode\s*|ep\.\s*)(\d+)\b",
+    // 1. Standard SxxExx or just Exx (Looks for 'E' or 'EP' optionally preceded by 'Sxx')
+    @"(?i)(?:s\d+)?e(\d+)\b",
 
     // 2. Multi-episode format: E02-E03, E02E03, e02_03
-    @"\be(\d+)(?:[-_]?e?(\d+))?\b",
+    @"(?i)e(\d+)(?:[-_]?e?(\d+))?\b",
 
-    // 3. X / Cross format: S01x02, 1x02, 1x2
-    @"\b\d+x(\d+)\b",
+    // 3. Standard text 'episode' or 'ep' followed by numbers (e.g., Ep.01, Episode 1)
+    @"(?i)\b(?:ep|episode)(?:\s*|\s*\.\s*)(\d+)\b",
 
-    // 4. Bracketed numbers (Anime style): [02], (02)
+    // 4. X / Cross format: S01x02, 1x02, 1x2
+    @"(?i)\b\d+x(\d+)\b",
+
+    // 5. Bracketed numbers (Anime style): [02], (02)
     @"\[(\d+)\]",
     @"\((\d+)\)",
 
-    // 5. Absolute / Standalone numbers: "Show - 02.mp4" 
+    // 6. Absolute / Standalone numbers: "Show - 02.mp4" 
     @"(?<=\s+|-|_|#)(\d+)(?=\.\w+$|\s+|-|_)"
-};
-                            //                            // 2. Get only the files that match your video extensions
+};                            //                            // 2. Get only the files that match your video extensions
                             //                            // 1. Grab files and immediately turn it into a list to prevent multiple enumerations
 
                             //                            var videoFiles = Directory.EnumerateFiles(folderpath)
@@ -316,29 +318,28 @@ namespace Vusic_Player.Pages.Views
                                     Match match = Regex.Match(fileName, pattern, RegexOptions.IgnoreCase);
                                     if (match.Success)
                                     {
-                                        // Filter out Group 0 (the full text match) and any empty optional groups
                                         var validGroups = match.Groups.Cast<Group>()
                                                                       .Skip(1)
                                                                       .Where(g => g.Success && !string.IsNullOrEmpty(g.Value))
                                                                       .ToList();
 
+                                        Debug.WriteLine($"  [Check] Pattern '{pattern}' matched! Found {validGroups.Count} valid capture groups.");
+
                                         if (validGroups.Any())
                                         {
-                                            // Pull the first successfully captured numerical value
                                             episodeNumber = validGroups.First().Value;
                                             Debug.WriteLine($"  -> Match Found! Episode: {episodeNumber}");
-
-                                            break; // Stop checking lower-priority patterns for this file
+                                            break;
                                         }
                                     }
                                 }
-
                                 var newEpisode = new EpisodeModel
                                 {
                                     EpisodeName = $"Episode {episodeNumber}",
                                     Description = "Loading...",
                                     Duration = "--:--:--",
-                                    FilePath = filePath
+                                    FilePath = filePath,
+                                    CurrentShowDirectory = Path.GetDirectoryName(filePath)
                                 };
 
                                 EpisodesList.Add(newEpisode);
@@ -496,53 +497,80 @@ namespace Vusic_Player.Pages.Views
 
                 if (Directory.Exists(rootPath))
                 {
-                    var directoriestoScan = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories).ToList();
-                    directoriestoScan.Insert(0, rootPath);
+                    // 1. Only get the top-level folders (e.g., "Season 1", "Season 2", "Season 3")
+                    var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
+                    primaryFolders.Insert(0, rootPath);
+
                     string pattern = @"\b(season\s*|s)(\d+)\b";
-                    foreach(string path in directoriestoScan)
+
+                    foreach (string path in primaryFolders)
                     {
-                        Match match = Regex.Match(path, pattern, RegexOptions.IgnoreCase);
+                        string folderName = Path.GetFileName(path);
+                        Match match = Regex.Match(folderName, pattern, RegexOptions.IgnoreCase);
+
+                        if (path == rootPath) match = Regex.Match(new DirectoryInfo(rootPath).Name, pattern, RegexOptions.IgnoreCase);
+
                         if (match.Success)
                         {
-                          
+                            int seasonNum = Convert.ToInt32(match.Groups[2].Value);
+                            string seasonName = $"Season {seasonNum}";
 
-                            // 2. Count videos inside this specific folder
                             int episodeCount = 0;
+
+                            // This variable will track the actual deep folder where files are found!
+                            string actualContentPath = path;
+
                             foreach (var ext in Extensions.VideoExtensions.List)
                             {
                                 string searchPattern = $"*{ext.ToLower()}";
-                                // TopDirectoryOnly ensures we only count episodes directly in this season folder
-                                episodeCount += Directory.EnumerateFiles(path, searchPattern, SearchOption.TopDirectoryOnly).Count();
+
+                                // Get the full path details of any matching video files inside
+                                var foundFiles = Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
+
+                                if (foundFiles.Any())
+                                {
+                                    episodeCount += foundFiles.Count;
+
+                                    // Grab the directory name of the first video file found. 
+                                    // This is guaranteed to be the real folder containing the episodes!
+                                    actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
+                                }
                             }
 
                             string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
-                            Debug.WriteLine("Season found: Season " + match.Groups[2].Value + " and episodes are :" + episodeCountString);
-                            string seasonName = $"Season {match.Groups[2].Value}";
-                            // 3. Update or Add to the collection
+
                             var existingSeason = seasons.FirstOrDefault(p => p.PlaylistName == seasonName);
                             if (existingSeason == null)
                             {
-                                Debug.WriteLine("Adding new season: " + seasonName);
-                                seasons.Add(new PlaylistItem { PlaylistName = seasonName, PlaylistCount = episodeCountString, PlaylistId = path, SeasonNumber = Convert.ToInt32(match.Groups[2].Value) });
+                                seasons.Add(new PlaylistItem
+                                {
+                                    PlaylistName = seasonName,
+                                    PlaylistCount = episodeCountString,
+
+                                    // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
+                                    PlaylistId = actualContentPath,
+
+                                    SeasonNumber = seasonNum
+                                });
                             }
                             else
                             {
-                                // Optional: Update the episode count if the season was already added
                                 existingSeason.PlaylistCount = episodeCountString;
+                                existingSeason.PlaylistId = actualContentPath; // Update path if found
                             }
                         }
                     }
+
+                    // Update WinUI 3 UI Elements
                     txtSeasonCount.Text = $"• {seasons.Count} {(seasons.Count == 1 ? "season" : "seasons")}";
                     if (seasons.Count != 0)
                     {
-                        Debug.WriteLine("Hawayein 2");
-                        var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber);
+                        var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
+                        grdViewSeasons.ItemsSource = null;
                         grdViewSeasons.ItemsSource = seasonsRearranged;
                         grdViewSeasons.Visibility = Visibility.Visible;
                     }
-
                 }
-
             }
             base.OnNavigatedTo(e);
         }
@@ -635,7 +663,16 @@ namespace Vusic_Player.Pages.Views
             {
                 observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
             }
-            QueueService.PlayMedia(observablesongcollection, false, false);
+            foreach (var item in observablesongcollection)
+            {
+
+                QueueService.VusicQueue.Add(item);
+            }
+            if (App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(VideoPlayer), EpisodesList[0]);
+            }
+
         }
     }
 
