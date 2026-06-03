@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.UserViews.Grids.ContinuePlayingRecentsVideo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.UserViews.Grids"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vusic_player="using:Vusic_Player.UI.UserViews.Controls" xmlns:ani="using:CommunityToolkit.WinUI.Animations" xmlns:media="using:CommunityToolkit.WinUI.Media"
+    mc:Ignorable="d">
+
+    <Grid ColumnSpacing="30">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" PointerEntered="grdHighlightVideo_PointerEntered" PointerExited="grdHighlightVideo_PointerExited" RenderTransformOrigin="0.5,0.5" Name="grdHighlightVideo">
+            <Grid.RenderTransform>
+                <ScaleTransform x:Name="GridScale" ScaleX="1" ScaleY="1" />
+            </Grid.RenderTransform>
+
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="HoverStates">
+                    <VisualState x:Name="Normal">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="GridScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.2" />
+                            <DoubleAnimation Storyboard.TargetName="GridScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.2" />
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="GridScale" Storyboard.TargetProperty="ScaleX" To="1.05" Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation Storyboard.TargetName="GridScale" Storyboard.TargetProperty="ScaleY" To="1.05" Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Border CornerRadius="12">
+                <Grid>
+                    <Border CornerRadius="12">
+                        <Border.Background>
+                            <ImageBrush x:Name="CoverBackground" ImageSource="/Assets/sampleimage.jpg" Stretch="UniformToFill"/>
+                        </Border.Background>
+                    </Border>
+                    <ProgressRing Visibility="Collapsed" Name="prgAwaitResume" VerticalAlignment="Center" IsIndeterminate="True"></ProgressRing>
+
+                    <Border Margin="10, 10" VerticalAlignment="Top" HorizontalAlignment="Left" CornerRadius="12,12,12,12">
+
+                        <Border.Background>
+                            <media:BackdropBlurBrush Opacity="1" Amount="10.0" x:Name="BackdropBlur"/>
+                        </Border.Background>
+
+                        <TextBlock Text="Continue Playing" Margin="20, 10" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    </Border>
+
+                    <Border VerticalAlignment="Bottom" Height="90" CornerRadius="12">
+                        <Border.Background>
+                            <media:BackdropBlurBrush Opacity="1" Amount="3.0" x:Name="BackdropBlur2"/>
+                        </Border.Background>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <StackPanel VerticalAlignment="Bottom" Padding="20" Spacing="16">
+                <TextBlock Name="txtFileName" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
+                <vusic_player:OceanSlider IsThumbVisible="Collapsed" Value="0" x:Name="prgHighlight"></vusic_player:OceanSlider>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button  Click="btnResume_Click" Grid.Column="0" Background="#00B2B2" Foreground="White" CornerRadius="8" Height="44">
+                        <Button.Resources>
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Cyan" />
+                            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
+                            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#008080" />
+                        </Button.Resources>
+                        <StackPanel Orientation="Horizontal" Spacing="8" Padding="12,0">
+                            <FontIcon Foreground="Black" Glyph="&#xE768;" />
+                            <TextBlock Foreground="Black" Text="Resume" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <StackPanel Margin="20, 0" HorizontalAlignment="Right" Grid.Column="1" Orientation="Horizontal" Spacing="12">
+                        <Button ToolTipService.ToolTip="Add to Queue" Background="#44FFFFFF" Foreground="White" CornerRadius="8" Height="44">
+                            <StackPanel Orientation="Horizontal" Spacing="8" Padding="12,0">
+                                <FontIcon Glyph="&#xE710;" />
+                                <TextBlock Text="Add to Queue"/>
+                            </StackPanel>
+                        </Button>
+                        <TeachingTip Target="{x:Bind btnOptions}" IsOpen="False" Name="ttCopiedToClipboard">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Image Source="/Assets/tickicon.png" Width="25"></Image>
+                                <TextBlock Text="Copied File Path to Clipboard"></TextBlock>
+                            </StackPanel>
+                        </TeachingTip>
+                        <Button ToolTipService.ToolTip="Options" Name="btnOptions" Background="#44FFFFFF" Foreground="White" CornerRadius="8" Width="44" Height="44">
+                            <FontIcon Glyph="&#xE712;" />
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Name="mnftStartPreviousCW" Click="btnResume_Click" Text="Resume from Previous Playback">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE823;"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Name="mnftStartFirstCW" Click="mnftStartFirstCW_Click" Text="Play from Start">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem Name="mnftRemoveCW" Click="mnftRemoveCW_Click" Text="Remove from Continue Playing">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem Name="mnftAddToQueueCW" Click="mnftAddToQueueCW_Click" Text="Add to Queue">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Name="mnftAddToFavCW" Click="mnftAddToFavCW_Click" Text="Add to Favourites">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Name="mnftFileInfoCW" Click="mnftFileInfoCW_Click" Text= "File Info">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Name="mnftOpenFileLocCW" Click="mnftOpenFileLocCW_Click" Text= "Open file location">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE838;"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Name="mnftCopyFilePathCW" Click="mnftCopyFilePathCW_Click" Text="Copy File Path">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8C8;"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1" Name="grdRecents">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Spacing="20">
+                <TextBlock Text="Recents" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Unchecked"></CheckBox>
+                <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
+                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Unchecked"></CheckBox>
+                    <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromContinueWatchingSelected_Click"  Name="btnRemoveFromContinueWatchingSelected" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"
+ x:Name="grdvRecents" SelectionMode="Single" IsItemClickEnabled="True" 
+ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 20" SelectionChanged="GridContinuePlaying_SelectionChanged" ScrollViewer.HorizontalScrollMode="Enabled"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate >
+                        <StackPanel ToolTipService.ToolTip="{Binding FileName}" Orientation="Vertical" VerticalAlignment="Stretch"
+                          PointerEntered="StackPanel_PointerEntered" PointerExited="StackPanel_PointerExited"
+      >
+                            <ani:Implicit.Animations>
+                                <ani:ImplicitAnimationSet>
+                                    <ani:ScaleAnimation Duration="0:0:0.2" />
+                                </ani:ImplicitAnimationSet>
+                            </ani:Implicit.Animations>
+                            <Grid Width="200" Height="100" VerticalAlignment="Stretch">
+                                <Grid.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Resume from previous playback">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftStartFirstRec" Text="Play from start">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftRemoveRec" Text="Remove from Continue Playing">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftAddToFavRec" Text="Add to Favourites">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftFileInfoRec" Text= "File Info">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftOpenFileLocRec" Text= "Open file location">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE838;"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftCopyFilePathRec" Text="Copy File Path">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </Grid.ContextFlyout>
+
+                                <Image Source="{Binding Thumbnail}" Width="200" Height="100" Stretch="UniformToFill"/>
+
+                                <vusic_player:OceanSlider VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="-5, 0" x:Name="prgContinuePlaying" Maximum="{Binding TotalDuration}" Value="{Binding CurrentDuration}" Width="200" IsEnabled="False" IsThumbVisible="Collapsed"></vusic_player:OceanSlider>
+
+                            </Grid>
+                            <TextBlock Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" Width="200" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+
+        </Grid>
+        <Grid Name="grdEmptyRecents" Visibility="Collapsed" Grid.Column="1">
+            <StackPanel Orientation="Vertical" Spacing="15">
+                <StackPanel Orientation="Vertical" Spacing="20">
+                    <Image Width="90" Source="/Assets/default.png"></Image>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Start watching videos to see them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                </StackPanel>
+                <Button HorizontalAlignment="Center"  Content="Disable Recents"></Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+</UserControl>

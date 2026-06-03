@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.UserViews.Controls.PlayPauseControls"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.UserViews.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Margin="0, 0" Spacing="{x:Bind SpaceWidth, Mode=OneWay}" Orientation="Horizontal">
+        <Button Name="btnSeekBefore" Click="btnSeekBefore_Click" ToolTipService.ToolTip="Skip 10 seconds before" Padding="2" Background="Transparent" BorderBrush="Transparent">
+            <Image Name="imgSeekbefore" 
+               Width="{x:Bind ImageWidth, Mode=OneWay}" 
+               Source="/Assets/skip10secondsbackwardlighticon.png"/>
+        </Button>
+
+        <Button Name="btnPrevious" Click="btnPrevious_Click" ToolTipService.ToolTip="Previous" Padding="2" Background="Transparent" BorderBrush="Transparent">
+            <Image Name="imgPrevious" 
+               Width="{x:Bind ImageWidth, Mode=OneWay}" 
+               Source="/Assets/previous.png"/>
+        </Button>
+
+        <Button Name="btnPlayPause" ToolTipService.ToolTip="{x:Bind mediacontroller.PlayPauseToolTip, Mode=OneWay}" Click="btnPlayPause_Click" Padding="2" Background="Transparent" BorderBrush="Transparent">
+            <Image Name="imgPlayPause" 
+               Width="{x:Bind ImageWidth, Mode=OneWay}" 
+               Source="{x:Bind mediacontroller.Thumbnail, Mode=OneWay}" />
+        </Button>
+
+        <Button Name="btnNext" Click="btnNext_Click" Padding="2" Background="Transparent" BorderBrush="Transparent">
+            <Image Name="imgNext" 
+               Width="{x:Bind ImageWidth, Mode=OneWay}" 
+               Source="/Assets/next.png"/>
+        </Button>
+
+        <Button Name="btnSeekAfter" Click="btnSeekAfter_Click" Padding="2" Background="Transparent" BorderBrush="Transparent">
+            <Image Name="imgSeekAfter" 
+               Width="{x:Bind ImageWidth, Mode=OneWay}" 
+               Source="/Assets/skip10secondsforwardiconlight.png"/>
+        </Button>
+    </StackPanel>
+
+</UserControl>

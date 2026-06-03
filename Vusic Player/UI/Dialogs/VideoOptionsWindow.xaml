@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptionsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:Vusic_Player.UI.UserViews.Controls"
+    mc:Ignorable="d"
+    Title="VideoOptionsWindow">
+
+    <Grid VerticalAlignment="Stretch">
+        <Grid Name="DragRegion" IsHitTestVisible="True" Background="Transparent" Height="34" VerticalAlignment="Top">
+            <Button BorderBrush="Transparent" HorizontalAlignment="Right" ToolTipService.ToolTip="Maximize" x:Name="MaximizeButton" 
+            Grid.Column="1"
+            Width="46" Height="32"
+            Style="{StaticResource DefaultButtonStyle}"
+            Background="Transparent"
+            Click="MaximizeButton_Click">
+                <FontIcon x:Name="MaximizeIcon" Glyph="&#xE922;" FontSize="10" />
+            </Button>
+        </Grid>
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  BorderThickness="2"
+    CornerRadius="8" Margin="25, 25"
+    BorderBrush="Transparent"
+          Background="Transparent"
+  >
+
+            <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent">
+                <Grid Name="rootgrr" Background="Transparent">
+                    <Grid.Resources>
+
+                        <Style x:Key="OceanShim" TargetType="Button">
+                            <Setter Property="Padding" Value="16,8"/>
+                            <Setter Property="Background" Value="Transparent"/>
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+
+                                        <Grid x:Name="RootGrid"
+                      Background="Transparent">
+
+                                            <Border x:Name="BackgroundElement"
+                            CornerRadius="8"
+                            Background="Cyan"
+                            Opacity="0.6"
+                            RenderTransformOrigin="0.5,0.5">
+
+                                                <Border.RenderTransform>
+                                                    <ScaleTransform x:Name="MainScale"
+                                            ScaleX="1"
+                                            ScaleY="1"/>
+                                                </Border.RenderTransform>
+                                                <Border CornerRadius="8">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                            <LinearGradientBrush.Transform>
+                                                                <TranslateTransform x:Name="GradientTransform" X="-1" />
+                                                            </LinearGradientBrush.Transform>
+                                                            <GradientStop Color="#00FFFFFF" Offset="0" />
+                                                            <GradientStop Color="#40FFFFFF" Offset="0.5" />
+                                                            <GradientStop Color="#00FFFFFF" Offset="1" />
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                            </Border>
+
+                                            <ContentPresenter
+                        Content="{TemplateBinding Content}"
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup x:Name="CommonStates">
+
+                                                    <VisualState x:Name="Normal">
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                Storyboard.TargetName="BackgroundElement"
+                Storyboard.TargetProperty="Opacity"
+                To="0.6" 
+                Duration="0:0:0.2"/>
+                                                            <DoubleAnimation
+                Storyboard.TargetName="MainScale"
+                Storyboard.TargetProperty="ScaleX"
+                To="1"
+                Duration="0:0:0.2"/>
+                                                            <DoubleAnimation
+                Storyboard.TargetName="MainScale"
+                Storyboard.TargetProperty="ScaleY"
+                To="1"
+                Duration="0:0:0.2"/>
+                                                        </Storyboard>
+                                                    </VisualState>
+
+                                                    <VisualState x:Name="PointerOver">
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                        Storyboard.TargetName="BackgroundElement"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="0.9"
+                                        Duration="0:0:0.15"/>
+                                                        </Storyboard>
+                                                    </VisualState>
+
+                                                    <VisualState x:Name="Pressed">
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                        Storyboard.TargetName="BackgroundElement"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="1"
+                                        Duration="0:0:0.1"/>
+
+                                                            <DoubleAnimation
+                                        Storyboard.TargetName="MainScale"
+                                        Storyboard.TargetProperty="ScaleX"
+                                        To="0.95"
+                                        Duration="0:0:0.1"/>
+
+                                                            <DoubleAnimation
+                                        Storyboard.TargetName="MainScale"
+                                        Storyboard.TargetProperty="ScaleY"
+                                        To="0.95"
+                                        Duration="0:0:0.1"/>
+                                                        </Storyboard>
+                                                    </VisualState>
+
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+
+                                        </Grid>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Grid.Resources>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" Name="txtTitle" Text="Options" HorizontalAlignment="Left" Grid.Row="0"></TextBlock>
+                    <Grid Margin="0, 10" Name="Contents" Grid.Row="1">
+                        <!--<videoplayersettings:PlayerSettingsHost x:Name="playersettings"/>-->
+                    </Grid>
+
+
+
+                    <StackPanel Name="stkActionButtons" Spacing="10" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0, 0">
+                        <control:OceanButton  Style="{StaticResource OceanShim   }" x:Name="btnPrimary" Click="btnPrimary_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="20" Name="imgPrimary" Source="/Assets/saveicon.png"></Image>
+                                <TextBlock FontSize="16" Name="txtPrimary" Margin="5, 0" Text="Save"></TextBlock>
+                            </StackPanel>
+                        </control:OceanButton>
+
+                        <control:OceanButton  CornerRadius="8"  x:Name="btnClose" Click="btnClose_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="20" Name="imgClose" Visibility="Collapsed"></Image>
+                                <TextBlock FontSize="16" Name="txtClose" Text="Cancel" Margin="5, 0"></TextBlock>
+                            </StackPanel>
+                        </control:OceanButton>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Button Name="ChangeDialogSize" Content="Changee" Visibility="Collapsed" Click="ChangeDialogSize_Click"></Button>
+        </Grid>
+    </Grid>
+
+</Window>

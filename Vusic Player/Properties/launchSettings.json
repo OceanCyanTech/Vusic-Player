@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Vusic Player (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Vusic Player (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
