@@ -11,10 +11,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Vortice.XAudio2;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Helper.SubtitlesProperties;
+using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -110,6 +113,8 @@ namespace Vusic_Player.Pages
 
         }
         bool isEpisodeVideo = false;
+        public Configuration.Helper.SubtitlesProperties.Stream ViewModelSubtitles { get; } = new();
+
         private async void Masterplayer_OpenCompleted(object? sender, OpenCompletedArgs e)
         {
             if (PlayerService.Masterplayer == null) return;
@@ -122,7 +127,20 @@ namespace Vusic_Player.Pages
             if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
             {
                 PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
-
+                if (vdprg.IsSubtitlesDisabled == true)
+                {
+                    PlayerService.Masterplayer.Config.Subtitles.Enabled = false;
+                }
+                else
+                {
+                    PlayerService.Masterplayer.Config.Subtitles.Enabled = true;
+                }
+                Debug.WriteLine(vdprg.SubtitleIndex + " is the subtitle index");
+                if (vdprg.SubtitleIndex >= 0)
+                {
+                    var streamindex = PlayerService.Masterplayer.Subtitles.Streams[vdprg.SubtitleIndex ?? 0];
+                    Configuration.Helper.SubtitlesProperties.Stream.Set(streamindex);
+                }
                 var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
                 mediacontroller.CurrentPosition = curTime.TotalSeconds;
                 ShowInformation($"Opened playback of '{PlayerService.CurrentPlayingPath}' at {mediacontroller.RunningDurationString}");
@@ -133,6 +151,7 @@ namespace Vusic_Player.Pages
                     isEpisodeVideo = true;
                     btnNextEpisode.Visibility = Visibility.Visible;
                     videoControls.ViewEpisodeVisibility = Visibility.Visible;
+                    ShowManager.UpdateCurrentSeason(vdprg.FilePath);
                     var listofotherepisodes = EpisodeDirectory.GetEpisodeShowInfo(vdprg.FilePath);
                     var sorted = listofotherepisodes
      .OrderBy(p => int.Parse(p.EpisodeName?.Replace("Episode ", "") ?? "0"));
@@ -178,6 +197,7 @@ namespace Vusic_Player.Pages
                         Debug.WriteLine(item.FilePath + " Next");
 
                     }
+                    
                 }
                 else
                 {
@@ -188,7 +208,7 @@ namespace Vusic_Player.Pages
                 }
 
             }
-
+            PlayerService.Masterplayer.Config.Video.SDRDisplayNits = 55;
             SubtitleTimer?.Start();
             SaveTimer = new DispatcherTimer();
             SaveTimer.Interval = TimeSpan.FromSeconds(4);
@@ -200,19 +220,38 @@ namespace Vusic_Player.Pages
                 var item = settings.SavedVideoProgress.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
                 if (item != null)
                 {
+                    int originalindex = settings.SavedVideoProgress.IndexOf(item);
+                    if (originalindex != -1)
+                    {
+                        int lastIndex = settings.SavedVideoProgress.Count - 1;
+                        settings.SavedVideoProgress.Move(originalindex, lastIndex);
+                    }
+                    var currentStream = ViewModelSubtitles.CurrentStream;
+                    var index = PlayerService.Masterplayer.Subtitles.Streams.IndexOf(currentStream);
+                    int indexofSubtitle = index;
+                    bool isSubtitlesEnabled = PlayerService.Masterplayer.Config.Subtitles.Enabled;
+                    item.IsSubtitlesDisabled = !isSubtitlesEnabled;
                     item.CurrentDuration = PlayerService.Masterplayer.CurTime;
                     item.TotalDuration = PlayerService.Masterplayer.Duration;
                     item.IsEpisode = isEpisodeVideo;
+                    item.SubtitleIndex = indexofSubtitle;
                 }
                 else
                 {
                     string path = PlayerService.CurrentPlayingPath;
+                    bool isSubtitlesEnabled = PlayerService.Masterplayer.Config.Subtitles.Enabled;
+                    var currentStream = ViewModelSubtitles.CurrentStream;
+                    var index = PlayerService.Masterplayer.Subtitles.Streams.IndexOf(currentStream);
+                    int indexofSubtitle = index;
 
                     settings.SavedVideoProgress.Add(new VideoProgress
                     {
 
                         FilePath = path,
+                        IsSubtitlesDisabled = !isSubtitlesEnabled,
                         IsEpisode = isEpisodeVideo,
+                        SubtitleIndex = indexofSubtitle,
+
                         CurrentDuration = PlayerService.Masterplayer.CurTime,
                         TotalDuration = PlayerService.Masterplayer.Duration
                     });
@@ -346,10 +385,17 @@ namespace Vusic_Player.Pages
         {
             //  this.Frame.Navigate(typeof(Pages.SettingsPage));
         }
-        private void btnNextEpisode_Click(object sender, RoutedEventArgs e)
+        private async void btnNextEpisode_Click(object sender, RoutedEventArgs e)
         {
-            //   QueueService.PlayNext();
+            if (PlayerService.Masterplayer == null) return;
+            PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
+            var nextindex = QueueService.VusicQueueNext[0];
+            if (nextindex == null) return;
+            PlayerService.LookForProgressForNextVideo(nextindex.FilePath ?? "");
+               QueueService.PlayNext();
         }
+
+       
         private void MainGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             ShowPanel();

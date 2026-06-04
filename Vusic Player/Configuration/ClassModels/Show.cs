@@ -7,6 +7,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public string? Name { get; set; }
         public string? Poster { get; set; }
         public string? Description { get; set; }
+        public string? ShowID { get; set; }
         public string? Genre { get; set; }
         public DateTimeOffset ReleaseDate { get; set; }
         public string? Creators { get; set; }

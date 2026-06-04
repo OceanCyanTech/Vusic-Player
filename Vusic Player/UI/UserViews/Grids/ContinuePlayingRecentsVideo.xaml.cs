@@ -142,7 +142,15 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private void GridContinuePlaying_ItemClick(object sender, ItemClickEventArgs e)
         {
+            if(e.ClickedItem is VideoProgress videoprogress)
+            {
+                ContinuePlaying.videoProgressMain = videoprogress;
+                if(App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(VideoPlayer), videoprogress);
+                }
 
+            }
         }
 
         private void GridContinuePlaying_SelectionChanged(object sender, SelectionChangedEventArgs e)

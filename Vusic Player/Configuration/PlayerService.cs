@@ -1,4 +1,5 @@
-﻿using FlyleafLib.MediaPlayer;
+﻿using FlyleafLib;
+using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
@@ -146,7 +147,10 @@ namespace Vusic_Player.Configuration
         {
             if (Masterplayer == null)
             {
+                //conf.Video.VideoProcessor = VideoProcessors.Flyleaf;
+                //conf.Video.SuperResolution = true;
                 Masterplayer = new Player();
+
             }
             CurrentPlayingPath = fiPath;
             PlayCalled?.Invoke();
@@ -352,6 +356,25 @@ namespace Vusic_Player.Configuration
 
             Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
 
+        }
+        public static async void LookForProgressForNextVideo(string Path)
+        {
+            if (Masterplayer == null) return;
+            Debug.WriteLine("Looking for video Progress");
+            Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var videoprogress = currentSettings.SavedVideoProgress;
+       
+            var FileToBePlayed =Path;
+            Debug.WriteLine("Looking for video Progress of " + FileToBePlayed);
+            var exist = videoprogress.FirstOrDefault(p => p.FilePath == FileToBePlayed);
+            if (exist != null)
+            {
+                curtimetemp = (long)exist.CurrentDuration;
+     //           PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
+
+                Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
+            }
         }
         private static async void Masterplayer_PlaybackStopped(object? sender, PlaybackStoppedArgs e)
         {

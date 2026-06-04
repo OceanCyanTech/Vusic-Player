@@ -33,7 +33,8 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
         private void PlaylistCreation_ShowCreationCall()
         {
             Debug.WriteLine("Add to settings");
-            var showitem = new Show { Name = txtShowName.Text, Description = txtDescription.Text, Creators = txtCreators.Text, Crew = txtCast.Text, Genre = txtGenre.Text, Tags = txtTags.Text, ReleaseDate = dtRelease.Date, Directory = txtFolderPath.Text, Poster = posterpath };
+            string showId = Guid.NewGuid().ToString("N");
+            var showitem = new Show { Name = txtShowName.Text, Description = txtDescription.Text, Creators = txtCreators.Text, Crew = txtCast.Text, Genre = txtGenre.Text, Tags = txtTags.Text, ReleaseDate = dtRelease.Date, Directory = txtFolderPath.Text, Poster = posterpath, ShowID =showId  };
             PlaylistCreation.showitem = showitem;
             PlaylistCreation.CallShowCreationAdd();
 

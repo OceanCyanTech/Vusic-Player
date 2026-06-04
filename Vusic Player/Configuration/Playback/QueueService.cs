@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Documents;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Pages;
@@ -163,118 +164,162 @@ namespace Vusic_Player.Configuration.Playback
             }
             //VusicQueueView.Filter = x => VusicQueue.IndexOf((SongModel)x) > videoindex;
         }
-        public static void MarkSongCompleted()
+        //public static void MarkSongCompleted()
+        //{
+        //    var song2 = VusicQueue.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
+
+        //    if (song2 != null)
+        //    {
+        //        song2.IsCompleted = true;
+        //        song2.VisibilityOfStrikeThrough = Microsoft.UI.Xaml.Visibility.Visible;
+        //        Debug.WriteLine(song2.FilePath + " is to be removed now");
+
+        //    }
+
+
+        //}
+        //private static async Task PlayMediaAtIndex()
+        //{
+        //    var queue = VusicQueueNext;
+        //    if (queue == null || queue.Count == 0) return;
+
+
+        //    var item = queue[0];
+        //    Debug.WriteLine(item.FilePath + " is to be played now");
+        //    if (string.IsNullOrEmpty(item.FilePath)) return;
+
+        //    // 3. Update state and play
+        //    //    videoindex = targetIndex;
+        //    var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
+
+        //    string fileExtension = file.FileType.ToLowerInvariant();
+        //    bool isVideo = false;
+        //    if (Extensions.VideoExtensions.List.Contains(fileExtension))
+        //    {
+        //        isVideo = true;
+        //    }
+        //    if (isVideo)
+        //    {
+        //        Debug.WriteLine("True");
+        //        if(App.NavigationFrame != null)
+        //        {
+        //            if (PlayerService.InVideoPage == false)
+        //            {
+        //                App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
+        //            }
+
+        //        }
+
+
+        //    }
+        //    PlayerService.OpenPath(item.FilePath);
+        //}
+        //private static async Task PlayandRemoveAsync()
+        //{
+        //    if (VusicQueueNext == null || VusicQueueNext.Count == 0) return;
+
+        //    // Capture the target item BEFORE we do anything asynchronous
+        //    var firstitem2 = VusicQueueNext[0];
+
+        //    // Await the media player initialization completely
+        //    await PlayMediaAtIndex();
+
+        //    Debug.WriteLine("Supposed to get removed is " + firstitem2.FilePath);
+        //    if (firstitem2 != null)
+        //    {
+        //        Debug.WriteLine("Supposed to get removed is2 " + firstitem2.FilePath);
+        //        VusicQueueNext.Remove(firstitem2);
+        //    }
+
+        //    foreach (var item in VusicQueueNext)
+        //    {
+        //        Debug.WriteLine(item.FilePath + " is new list");
+        //    }
+
+        //    if (IsShuffleTrue && firstitem2 != null)
+        //    {
+        //        var itemtoremove = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == firstitem2.FilePath);
+        //        if (itemtoremove != null)
+        //        {
+        //            OriginalVusicQueueNext.Remove(itemtoremove);
+        //        }
+        //    }
+        //}
+        //      REWRITE WHOLE CODE AGAIN FOR NEXT, MEDIA AT INDEX AND REMOVAL
+        public static async void PlayNext()
         {
-            var song2 = VusicQueue.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
-            if (song2 != null)
+            if (VusicQueueNext.Count != 0)
             {
-                song2.IsCompleted = true;
-                song2.VisibilityOfStrikeThrough = Microsoft.UI.Xaml.Visibility.Visible;
-            }
+                var firstitem = VusicQueueNext[0];
+                var FileToBePlayed = firstitem.FilePath;
+                if (FileToBePlayed == null) return;
+                VusicQueueNext.Remove(firstitem);
+                var file = await StorageFile.GetFileFromPathAsync(FileToBePlayed);
 
-
-        }
-        private static async void PlayMediaAtIndex()
-        {
-            var queue = VusicQueueNext;
-            if (queue == null || queue.Count == 0) return;
-
-
-            var item = queue[0];
-            if (string.IsNullOrEmpty(item.FilePath)) return;
-
-            // 3. Update state and play
-            //    videoindex = targetIndex;
-            var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-
-            string fileExtension = file.FileType.ToLowerInvariant();
-            bool isVideo = false;
-            if (Extensions.VideoExtensions.List.Contains(fileExtension))
-            {
-                isVideo = true;
-            }
-            if (isVideo)
-            {
-                Debug.WriteLine("True");
-                if(App.NavigationFrame != null)
+                string fileExtension = file.FileType.ToLowerInvariant();
+                bool isVideo = false;
+                if (Extensions.VideoExtensions.List.Contains(fileExtension))
                 {
-                    
-                        App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
-                    
+                    isVideo = true;
                 }
-                //if (App.VideoPlayerFrame != null && App.RootFrameAudio != null)
-                //{
-                //    App.UltimateFrame.Visibility = Visibility.Visible;
-                //    App.RootFrameAudio.Visibility = Visibility.Collapsed;
-                //    Debug.WriteLine("NOT NUll");
-                //    if (NavigationManager.AlreadyNavigated == false)
-                //    {
-                //        Debug.WriteLine("False");
-                //        App.UltimateFrame.Navigate(typeof(VideoPlay), item.FilePath);
-                //        NavigationManager.AlreadyNavigated = true;
-
-                //    }
-                //}
-
-            }
-            PlayerService.OpenPath(item.FilePath);
-        }
-        private static void PlayandRemove()
-        {
-            PlayMediaAtIndex();
-            if (VusicQueueNext == null || VusicQueueNext.Count == 0) return;
-            var firstitem2 = VusicQueueNext[0];
-
-            if (firstitem2 != null)
-            {
-                VusicQueueNext.Remove(firstitem2);
-            }
-            if (IsShuffleTrue)
-            {
-                if (firstitem2 != null)
+                if (isVideo)
                 {
-                    var itemtoremove = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == firstitem2.FilePath);
-                    if (itemtoremove != null)
+                    Debug.WriteLine("True");
+                    if (App.NavigationFrame != null)
                     {
-                        OriginalVusicQueueNext.Remove(itemtoremove);
+                        if (PlayerService.InVideoPage == false)
+                        {
+                            App.NavigationFrame.Navigate(typeof(VideoPlayer), FileToBePlayed);
+                        }
+
                     }
                 }
+
+                PlayerService.OpenPath(FileToBePlayed);
             }
         }
-        public static void PlayNext()
+        public static void PlayMediaAtIndex()
         {
-            if (VusicQueueNext.Count == 0)
-            {
-                if (IsLoopTrue)
-                {
-                    var refreshedobservablecoll = new ObservableCollection<SongModel>();
-                    foreach (var item in VusicQueue.ToList())
-                    {
-                        item.IsCompleted = false;
-                        item.VisibilityOfStrikeThrough = Visibility.Collapsed;
-                        refreshedobservablecoll.Add(item);
-                    }
-                    VusicQueue.Clear();
-                    foreach (var items in refreshedobservablecoll.ToList())
-                    {
-                        VusicQueue.Add(items);
-                    }
-                    foreach (var items in VusicQueue.ToList())
-                    {
-                        items.QueueControls = Visibility.Collapsed;
-                        VusicQueueNext.Add(items);
-                    }
-                    PlayandRemove();
-                    return;
-                }
-            }
-            MarkSongCompleted();
 
-
-
-
-            PlayandRemove();
         }
+        //public static async void PlayNext()
+        //{
+        //    if (VusicQueueNext == null) return;
+
+        //    if (VusicQueueNext.Count == 0)
+        //    {
+        //        if (IsLoopTrue)
+        //        {
+        //            var refreshedobservablecoll = new ObservableCollection<SongModel>();
+        //            foreach (var item in VusicQueue.ToList())
+        //            {
+        //                item.IsCompleted = false;
+        //                item.VisibilityOfStrikeThrough = Visibility.Collapsed;
+        //                refreshedobservablecoll.Add(item);
+        //            }
+
+        //            VusicQueue.Clear();
+        //            foreach (var items in refreshedobservablecoll)
+        //            {
+        //                VusicQueue.Add(items);
+        //            }
+        //            foreach (var items in VusicQueue)
+        //            {
+        //                items.QueueControls = Visibility.Collapsed;
+        //                VusicQueueNext.Add(items);
+        //            }
+
+        //            await PlayandRemoveAsync();
+        //            return;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Debug.WriteLine("Is true");
+        //    }
+        //    MarkSongCompleted();
+        //    await PlayandRemoveAsync();
+        //}
         public static void PlayPrevious()
         {
             var queue = VusicQueue;

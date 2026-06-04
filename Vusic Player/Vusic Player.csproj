@@ -28,6 +28,7 @@
     <None Remove="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml" />
     <None Remove="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml" />
     <None Remove="UI\Dialogs\VideoOptionsWindow.xaml" />
+    <None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
     <None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml" />
@@ -95,6 +96,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\GridViewRecentMusic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Views\ShowModel.xaml">

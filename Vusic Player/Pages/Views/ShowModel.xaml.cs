@@ -339,6 +339,7 @@ namespace Vusic_Player.Pages.Views
                                     Description = "Loading...",
                                     Duration = "--:--:--",
                                     FilePath = filePath,
+                                   
                                     CurrentShowDirectory = Path.GetDirectoryName(filePath)
                                 };
 

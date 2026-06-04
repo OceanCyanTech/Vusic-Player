@@ -13,9 +13,13 @@ namespace Vusic_Player.Configuration.ClassModels
         public string? FileName { get; set; }
         public string? FilePath { get; set; }
         public bool? IsNew { get; set; } = false;
+        public bool? IsSubtitlesDisabled { get; set; } = false;
+        public int? SubtitleIndex { get; set; } = 0;
         public bool? IsEpisode { get; set; } = false;
         public double CurrentDuration { get; set; }
         public double TotalDuration { get; set; }
+        public string ShowAssociatedID { get; set; } = "";
+        public int SeasonAssociated { get; set; } = 1;
         [JsonIgnore]
         public BitmapImage? Thumbnail { get; set; }
     }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.UserViews.Controls.GridViewRecentMusic"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.UserViews.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <GridView ItemClick="grdViewAllRecentMusic_ItemClick" SelectionMode="{x:Bind GridSelectionMode, Mode=OneWay}" Name="grdViewAllRecentMusic"  Visibility="Visible" ItemsSource="{Binding ItemsSource}" Grid.Row="2">
+            <GridView.ItemTemplate>
+                <DataTemplate >
+                    <StackPanel Width="150">
+                        <StackPanel.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Play" Click="mnftPlayRecents_Click" Name="mnftPlayRecents">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8DA;"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Remove from Recents" Click="mnftRemoveFromRecentMusic_Click"  Icon="Remove"></MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Go to File Location" Click="mnftGoToFileLocation_Click" >
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8DA;"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Add to Queue" Click="mnftAddtoQueueRecentMusic_Click" >
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8DA;"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="View File Info" Click="mnftViewFileInfo_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE946;"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </StackPanel.ContextFlyout>
+                        <Image Source="{Binding Thumbnail}" Width="70" Height="70" Stretch="UniformToFill"/>
+
+                        <TextBlock Text="{Binding SongName}" Visibility="Visible" TextWrapping="Wrap" />
+                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding FolderName}" Visibility="Visible" TextWrapping="Wrap" />
+                        <TextBlock FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding LastPlayed}" Visibility="Visible"  />
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+
+        </GridView>
+
+    </Grid>
+
+</UserControl>

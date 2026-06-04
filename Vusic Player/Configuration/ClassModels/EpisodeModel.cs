@@ -15,6 +15,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public string? EpisodeCount { get; set; }
         private string _description = "No description available!";
         private string _duration = "00:00:00";
+        private string _associatedshowID = "00:00:00";
         public string Description
         {
             get => _description;
