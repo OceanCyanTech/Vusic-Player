@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.UserSettings;
 
 namespace Vusic_Player.Configuration.Helper.UI
 {
     public class ShowManager
     {
-        public static int currentseason = 1;
+        public static int currentseason = 0;
         public static int currentepisode = 1;
         public static int totalepisodecount = 1;
         public static bool isNextSeasonAvailable = false;
         public static string ShowDirectory = "";
         public static string CurrentEpisodePath = "";
+        public static Show? CurrentShow;
         public static void GetNextSeasonEpisodes()
         {
 
@@ -38,9 +41,38 @@ namespace Vusic_Player.Configuration.Helper.UI
                 }
             }
         }
-        public static async void LoadAvailableShow()
+        public static ObservableCollection<EpisodeModel> EpisodeList = new();
+        public static async void LoadAvailableShow(string EpisodePath)
         {
+            EpisodeList.Clear();
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var shows = currentSettings.Shows;
+            foreach(var show in shows)
+            {
+                var directorypath = show.Directory;
+                if (directorypath != null)
+                {
+                    bool isInsideAndExists = IsFileInDirectory(directorypath, EpisodePath)
+                                && File.Exists(EpisodePath);
+                    if (isInsideAndExists)
+                    {
+                        CurrentShow = show;
+                        return;
+                    }
+                }
+            }
+        }
+        public static bool IsFileInDirectory(string directoryPath, string filePath)
+        {
+            string fullDirPath = Path.GetFullPath(directoryPath);
+            string fullFilePath = Path.GetFullPath(filePath);
 
+            if (!fullDirPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                fullDirPath += Path.DirectorySeparatorChar;
+            }
+
+            return fullFilePath.StartsWith(fullDirPath, StringComparison.OrdinalIgnoreCase);
         }
         public static async void PlayNextEpisode()
         {

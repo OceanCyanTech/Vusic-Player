@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -98,7 +99,8 @@ namespace Vusic_Player.Pages.Views
 
     // 6. Absolute / Standalone numbers: "Show - 02.mp4" 
     @"(?<=\s+|-|_|#)(\d+)(?=\.\w+$|\s+|-|_)"
-};                            //                            // 2. Get only the files that match your video extensions
+};                        
+                            //                            // 2. Get only the files that match your video extensions
                             //                            // 1. Grab files and immediately turn it into a list to prevent multiple enumerations
 
                             //                            var videoFiles = Directory.EnumerateFiles(folderpath)
@@ -564,6 +566,14 @@ namespace Vusic_Player.Pages.Views
 
                     // Update WinUI 3 UI Elements
                     txtSeasonCount.Text = $"• {seasons.Count} {(seasons.Count == 1 ? "season" : "seasons")}";
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    var shows = currentSettings.Shows;
+                    var exist = shows.FirstOrDefault(p => p.Name == show.Name);
+                    if(exist != null)
+                    {
+                        exist.SeasonCount = seasons.Count;
+                    }
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
                     if (seasons.Count != 0)
                     {
                         var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();

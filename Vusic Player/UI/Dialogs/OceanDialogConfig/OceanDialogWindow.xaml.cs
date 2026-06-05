@@ -481,59 +481,62 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
         bool _isClosing = false;
         private async void btnPrimary_Click(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("Yes");
             if (_isClosing) return;
             _isClosing = true;
-            //try
-            //{
-            //    if (cnt == ContentType.OnlineArtistPicture)
-            //    {
-            //        string image = OnlineArtistPic.GetSelectedImage();
-            //        await OnlineArtistPic.DownloadImageAsync(image);
-            //    }
-            //    else if (cnt == ContentType.PlaylistEdit)
-            //    {
-            //        Debug.WriteLine("tEST0");
+            try
+            {
+                Debug.WriteLine("Yes2");
 
-            //        var plitem = Vusic_Player.Helper.SettingsInvoke.PlaylistCreation.playlistItem;
-            //        if (plitem != null && plitem.PlaylistId != null)
-            //        {
-            //            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            //            var playlists = currentSettings.SavedPlaylists;
-            //            var exist = playlists.FirstOrDefault(p => p.PlaylistId == plitem.PlaylistId);
+                if (cnt == ContentType.OnlineArtistPicture)
+                {
+              //      string image = OnlineArtistPic.GetSelectedImage();
+                  //  await OnlineArtistPic.DownloadImageAsync(image);
+                }
+                else if (cnt == ContentType.PlaylistEdit)
+                {
+                    Debug.WriteLine("tEST0");
 
-            //            if (exist != null)
-            //            {
-            //                Debug.WriteLine("SHSHS");
-            //                var playlistItem = PlaylistCreation.GetEditedPlaylistItem();
-            //                string? baseName = playlistItem.PlaylistName;
+                    var plitem = Configuration.Helper.UI.PlaylistCreation.playlistItem;
+                    if (plitem != null && plitem.PlaylistId != null)
+                    {
+                        var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                        var playlists = currentSettings.SavedPlaylists;
+                        var exist = playlists.FirstOrDefault(p => p.PlaylistId == plitem.PlaylistId);
 
-            //                if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
-            //                string? finalName = baseName;
-            //                if (baseName != exist.PlaylistName)
-            //                {
+                        if (exist != null)
+                        {
+                            Debug.WriteLine("SHSHS");
+                            var playlistItem = PlaylistCreation.GetEditedPlaylistItem();
+                            string? baseName = playlistItem.PlaylistName;
 
-            //                    int counter = 1;
-            //                    while (currentSettings.SavedPlaylists.Any(p =>
-            //                        string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
-            //                    {
-            //                        finalName = $"{baseName} ({counter++})";
-            //                    }
-            //                }
-            //                exist.PlaylistName = finalName;
-            //                exist.PlaylistGenre = playlistItem.PlaylistGenre;
-            //                exist.SongsPaths = playlistItem.SongsPaths;
-            //                exist.Thumbnail = playlistItem.Thumbnail;
-            //                exist.PlaylistCount = $"{playlistItem.SongsPaths.Count} {(playlistItem.SongsPaths.Count == 1 ? "item" : "items")}";
-            //                await SettingsLoader.SaveSettingsAsync(currentSettings);
-            //            }
-            //        }
-            //    }
-            //    PrimaryRequested?.Invoke();
-            //}
-            //finally
-            //{
-            //    _isClosing = false;
-            //}
+                            if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+                            string? finalName = baseName;
+                            if (baseName != exist.PlaylistName)
+                            {
+
+                                int counter = 1;
+                                while (currentSettings.SavedPlaylists.Any(p =>
+                                    string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                                {
+                                    finalName = $"{baseName} ({counter++})";
+                                }
+                            }
+                            exist.PlaylistName = finalName;
+                            exist.PlaylistGenre = playlistItem.PlaylistGenre;
+                            exist.SongsPaths = playlistItem.SongsPaths;
+                            exist.Thumbnail = playlistItem.Thumbnail;
+                            exist.PlaylistCount = $"{playlistItem.SongsPaths.Count} {(playlistItem.SongsPaths.Count == 1 ? "item" : "items")}";
+                            await SettingsLoader.SaveSettingsAsync(currentSettings);
+                        }
+                    }
+                }
+                PrimaryRequested?.Invoke();
+            }
+            finally
+            {
+                _isClosing = false;
+            }
         }
 
         private void ChangeDialogSize_Click(object sender, RoutedEventArgs e)

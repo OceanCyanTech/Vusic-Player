@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -76,6 +77,7 @@ namespace Vusic_Player.Pages.Views
 
         private void OceanContentDialog_PrimaryRequested1()
         {
+            Debug.WriteLine("Yes create");
             PlaylistCreation.CallShowCreation();
             OceanContentDialog.HideDlg();
          //   MainWindow.ShowWindow();

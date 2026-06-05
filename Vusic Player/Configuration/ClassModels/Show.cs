@@ -11,7 +11,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public string? Genre { get; set; }
         public DateTimeOffset ReleaseDate { get; set; }
         public string? Creators { get; set; }
-        public string? SeasonCount { get; set; }
+        public int SeasonCount { get; set; } = 0;
         public string? Crew { get; set; }
         public PlaylistItem? Season { get; set; }
         public bool isSeasonPage { get; set; } = false;

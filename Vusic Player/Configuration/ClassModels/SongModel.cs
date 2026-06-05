@@ -14,6 +14,7 @@ namespace Vusic_Player.Configuration.ClassModels
     {
         private string? _title;
         public TimeSpan? SongDuration { get; set; }
+      
         private Brush _titleColor = new SolidColorBrush(Microsoft.UI.Colors.White); // Safe for any thread!
         private int _year;
         private Visibility visibilityofstrikethrough = Visibility.Collapsed;
@@ -21,6 +22,7 @@ namespace Vusic_Player.Configuration.ClassModels
         private Visibility visibilityofvidinfo = Visibility.Collapsed;
         private string? _artist;
         private string? _albumName;
+        private bool? _isEpisode;
         private Visibility _isQueueItem = Visibility.Visible;
         public int Year
         {
@@ -37,6 +39,11 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _artist;
             set { _artist = value; OnPropertyChanged(); }
         }
+        public bool? IsEpisode
+        {
+            get => _isEpisode;
+            set { _isEpisode = value; OnPropertyChanged(); }
+        } 
         public string? AlbumName
         {
             get => _albumName;

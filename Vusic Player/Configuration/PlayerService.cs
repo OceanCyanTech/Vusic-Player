@@ -375,6 +375,7 @@ namespace Vusic_Player.Configuration
 
                 Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
             }
+           
         }
         private static async void Masterplayer_PlaybackStopped(object? sender, PlaybackStoppedArgs e)
         {

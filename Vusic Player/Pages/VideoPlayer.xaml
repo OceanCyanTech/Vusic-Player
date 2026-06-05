@@ -20,6 +20,19 @@
                 <LinearDoubleKeyFrame KeyTime="0:0:4.0" Value="0.0" />
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
+        <Storyboard x:Name="FadeInStoryboardShowInfo">
+            <DoubleAnimation Storyboard.TargetName="grdShowInfo"
+                     Storyboard.TargetProperty="Opacity"
+                     To="1.0" 
+                     Duration="0:0:1.5" />
+        </Storyboard>
+
+        <Storyboard x:Name="FadeOutStoryboardShowInfo">
+            <DoubleAnimation Storyboard.TargetName="grdShowInfo"
+                     Storyboard.TargetProperty="Opacity"
+                     To="0.0" 
+                     Duration="0:0:0.5" />
+        </Storyboard>
         <Storyboard x:Name="FadeInOutSeek">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="txtSeek"
                             Storyboard.TargetProperty="Opacity">
@@ -185,7 +198,7 @@ IsHitTestVisible="False"
 HorizontalAlignment="Stretch" 
 VerticalAlignment="Stretch"
 Margin="2"/>
-            <Grid Name="grdInfo" Opacity="0" Margin="20, 50, 0, 0">
+            <Grid Name="grdInfo" Visibility="Visible" Opacity="0" Margin="20, 40, 0, 0">
 
                 <Border  Padding="5" VerticalAlignment="Top"     HorizontalAlignment="Left" Opacity="1"  Name="brdInformation"
 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
@@ -209,6 +222,119 @@ CornerRadius="16" >
                 </Border>
 
             </Grid>
+            <Grid MaxHeight="500" Visibility="Visible" Opacity="0" Margin="20, 10" Name="grdShowInfo" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Border CornerRadius="20">
+                    <Border.Background>
+                        <media:AcrylicBrush BlurAmount="15"
+                     TintColor="Black"
+                     TintOpacity=".6" />
+                    </Border.Background>
+                    <Grid RowSpacing="20" Margin="20, 10" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition MaxHeight="300" />
+
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Title" Name="txtShowTitle" Grid.Row="0" Style="{StaticResource TitleLargeTextBlockStyle}"></TextBlock>
+
+
+                        <Button Click="btnCloseShowInfo_Click" Name="btnCloseShowInfo" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
+                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                        </Button>
+                        <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="20">
+                            <TextBlock Text="• 0 Seasons" Name="txtShowSeasonCount" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                            <TextBlock Text="• Released on " Name="txtShowReleaseDate" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+
+                        </StackPanel>
+                        <MenuFlyoutSeparator Grid.Row="2"/>
+                        <TextBlock Text="Episodes" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                        <SelectorBar SelectionChanged="selbarSeasons_SelectionChanged" Name="selbarSeasons" Grid.Row="4">
+                            <SelectorBar.Items>
+                                <SelectorBarItem Text="Season 1"></SelectorBarItem>
+                                <SelectorBarItem Text="Season 2"></SelectorBarItem>
+                            </SelectorBar.Items>
+                        </SelectorBar>
+                        <TextBlock Name="txtSeasonEpisodeCount" Text="Loading episodes..." Grid.Row="5" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        <Grid Visibility="Collapsed" HorizontalAlignment="Center" Grid.Row="6" Name="grdNoEpisodes" RowSpacing="20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Image Source="/Assets/appicon.png" Width="30" Grid.Row="0"></Image>
+                            <TextBlock Text="No episodes in this season!" Name="txtNoEpisodes" Grid.Row="1"></TextBlock>
+                        </Grid>
+                        <ListView Name="lstViewEpisodes" Grid.Row="6">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0, 10" ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.Column="0" RowSpacing="10">
+                                            <Grid.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem Text="Play">
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="d"></FontIcon>
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem Text="File Info" >
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="d"></FontIcon>
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </Grid.ContextFlyout>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+
+                                            </Grid.RowDefinitions>
+                                            <Viewbox MaxWidth="150" HorizontalAlignment="Left">
+                                                <StackPanel Orientation="Horizontal" Grid.Row="0" Spacing="20">
+                                                    <Button ToolTipService.ToolTip="Play" CornerRadius="60" Width="40" Height="40" Style="{StaticResource AccentButtonStyle}">
+                                                        <FontIcon Glyph="d"></FontIcon>
+                                                    </Button>
+
+                                                    <TextBlock ToolTipService.ToolTip="{Binding EpisodeName}"  Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding EpisodeName}"></TextBlock>
+
+                                                </StackPanel>
+                                            </Viewbox>
+                                            <TextBlock MaxWidth="100"  TextWrapping="Wrap" Text="{Binding Description}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="1"></TextBlock>
+                                            <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="2">
+                                                <Button ToolTipService.ToolTip="File Info" Background="Transparent" Grid.Row="3" Padding="0" BorderBrush="Transparent" >
+                                                    <Image Source="/Assets/infoicon.png" Width="15" ></Image>
+                                                </Button>
+                                                <TextBlock Text="{Binding Duration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="2"></TextBlock>
+
+                                            </StackPanel>
+
+                                        </Grid>
+                                        <Viewbox Grid.Column="1" MaxWidth="180" MaxHeight="80">
+                                            <Border CornerRadius="300" BorderThickness="0" BorderBrush="White" Opacity="0.9 ">
+                                                <Border.Shadow>
+                                                    <ThemeShadow />
+                                                </Border.Shadow>
+                                                <Image Source="{Binding Thumbnail}" Stretch="Uniform"></Image>
+                                            </Border>
+                                        </Viewbox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                    </Grid>
+                </Border>
+            </Grid>
+
             <TextBlock Grid.Row="0" Margin="10, 0"  VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" Opacity="0" x:Name="txtSeek" Style="{StaticResource DisplayTextBlockStyle}" ></TextBlock>
 
             <Grid Grid.Row="0" Name="grdPlayback" Opacity="1">
@@ -279,6 +405,7 @@ Offset="0,0,0">
             </Grid>
 
         </Grid>
+ 
     </Grid>
 
 </Page>
