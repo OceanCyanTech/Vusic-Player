@@ -207,7 +207,11 @@ namespace Vusic_Player.Pages
                     {
                         QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
                     }
-                    QueueService.VusicQueueNext.RemoveAt(0);
+                    var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
+                    if (exist != null)
+                    {
+                        QueueService.VusicQueueNext.Remove(exist);
+                    }
                     foreach (var item in QueueService.VusicQueueNext)
                     {
                         Debug.WriteLine(item.FilePath + " Next");

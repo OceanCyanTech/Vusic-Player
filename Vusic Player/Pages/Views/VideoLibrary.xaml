@@ -97,7 +97,7 @@ AlwaysUseFallback="False"/>
                         </MenuFlyoutItem>
                     </MenuFlyout>
                 </Expander.ContextFlyout>
-                <controls:UserPlaylists HorizontalAlignment="Left"/>
+                <grids:UserPlaylists HorizontalAlignment="Left"/>
             </Expander>
             <TextBlock Text="Shows" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
             <Expander Grid.Row="7" Expanding="Expander_Expanding" Name="expShows"  Header="My Shows"

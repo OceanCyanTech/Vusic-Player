@@ -666,24 +666,25 @@ namespace Vusic_Player.Pages.Views
 
         }
 
+
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
-            var observablesongcollection = new ObservableCollection<SongModel>();
-
-            foreach (var item in EpisodesList)
-            {
-                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
-            }
-            foreach (var item in observablesongcollection)
-            {
-
-                QueueService.VusicQueue.Add(item);
-            }
             if (App.NavigationFrame != null)
             {
                 App.NavigationFrame.Navigate(typeof(VideoPlayer), EpisodesList[0]);
             }
 
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if(sender is Button btn && btn.DataContext is EpisodeModel episode)
+            {
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(VideoPlayer), episode);
+                }
+            }
         }
     }
 

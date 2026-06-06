@@ -278,7 +278,7 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" SelectionChanged="grdViewSe
                                     </Grid.RowDefinitions>
                                     <Viewbox MaxWidth="200" HorizontalAlignment="Left">
                                         <StackPanel Orientation="Horizontal" Grid.Row="0" Spacing="20">
-                                            <Button ToolTipService.ToolTip="Play" CornerRadius="60" Width="40" Height="40" Style="{StaticResource AccentButtonStyle}">
+                                            <Button Click="Button_Click_1" ToolTipService.ToolTip="Play" CornerRadius="60" Width="40" Height="40" Style="{StaticResource AccentButtonStyle}">
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </Button>
 

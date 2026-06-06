@@ -16,11 +16,14 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace Vusic_Player.UI.UserViews.Controls
+namespace Vusic_Player.Pages.Views
 {
-    public sealed partial class UserPlaylists : UserControl
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class PlaylistView : Page
     {
-        public UserPlaylists()
+        public PlaylistView()
         {
             InitializeComponent();
         }

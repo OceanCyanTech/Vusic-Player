@@ -5,10 +5,118 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:grids="using:Vusic_Player.UI.UserViews.Grids"
     mc:Ignorable="d">
 
-    <Grid>
+    <ScrollViewer>
+        <Grid Margin="40, 30" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition ></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition  ></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                <Button CornerRadius="12"   Grid.Column="0" Name="btnNewPlaylist" Click="btnNewPlaylist_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button   BorderThickness="1" BorderBrush="Transparent" HorizontalAlignment="Left" CornerRadius="12"   Margin="0, 0" Name="btnOpenMusic" Click="btnOpenMusic_Click">
+                    <Button.Background>
+                        <AcrylicBrush TintColor="Transparent" 
+TintOpacity="00" 
+                   Opacity="0.3"
+FallbackColor="Black" 
+AlwaysUseFallback="False"/>
+                    </Button.Background>
+                    <StackPanel Orientation="Horizontal">
 
-    </Grid>
+                        <Image Width="20" Source="/Assets/importicon.png"></Image>
+                        <TextBlock Margin="5,0" Text="Open Music" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                    </StackPanel>
+
+                </Button>
+
+
+                <HyperlinkButton Content="View Entire Library" Click="hypViewEntireLib_Click" FontSize="16"  Grid.Row="0"></HyperlinkButton>
+            </StackPanel>
+            <Expander Grid.Row="1" 
+          Header="Recently Played"
+          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+          IsExpanded="True" Name="expRecent" Expanding="expRecent_Expanding">
+                <Expander.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="View Full Music History">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Disable Recent Music">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Expander.ContextFlyout>
+                <grids:RecentMusicList />
+            </Expander>
+            <TextBlock Text="My Playlists" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
+
+            <Expander Grid.Row="3"  
+          Header="View My Playlists"
+          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Name="expPlaylists" Expanding="expRecent_Expanding">
+                <Expander.Resources>
+                    <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
+                    <SolidColorBrush x:Key="ExpanderHeaderHasItemsBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="ExpanderHeaderPointerOverBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="ExpanderHeaderPressedBackground" Color="Transparent" />
+                </Expander.Resources>
+                <grids:UserPlaylists x:Name="userplaylists" HorizontalAlignment="Left"/>
+            </Expander>
+            <TextBlock Text="Instant Playlists for you" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
+
+            <Expander Grid.Row="5" 
+          Header="Recommendations"
+          HorizontalAlignment="Stretch" Name="expRecommend" Expanding="expRecent_Expanding">
+                <Expander.Resources>
+                    <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
+                    <SolidColorBrush x:Key="ExpanderHeaderHasItemsBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="ExpanderHeaderPointerOverBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="ExpanderHeaderPressedBackground" Color="Transparent" />
+                </Expander.Resources>
+                <grids:InstantPlaylists />
+
+            </Expander>
+
+            <TextBlock Text="Dive into the mood" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
+
+            <Expander Grid.Row="7"  Background="Transparent"
+          Header="Explore Genres"
+          HorizontalAlignment="Stretch" Name="expGenres" Expanding="expRecent_Expanding">
+                <Expander.Resources>
+                    <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
+                    <SolidColorBrush x:Key="ExpanderHeaderHasItemsBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="ExpanderHeaderPointerOverBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="ExpanderHeaderPressedBackground" Color="Transparent" />
+                </Expander.Resources>
+                <StackPanel Height="240">
+                    <grids:DiveInGenres />
+                    <grids:TopTracks Visibility="Collapsed" />
+                </StackPanel>
+            </Expander>
+
+
+
+        </Grid>
+    </ScrollViewer>
+
 </Page>

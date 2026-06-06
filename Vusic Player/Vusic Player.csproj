@@ -20,6 +20,7 @@
     <None Remove="Pages\Views\HomeView.xaml" />
     <None Remove="Pages\Views\LoggerPage.xaml" />
     <None Remove="Pages\Views\MusicLibrary.xaml" />
+    <None Remove="Pages\Views\PlaylistView.xaml" />
     <None Remove="Pages\Views\QueuePage.xaml" />
     <None Remove="Pages\Views\SearchResults.xaml" />
     <None Remove="Pages\Views\SettingsPage.xaml" />
@@ -41,15 +42,18 @@
     <None Remove="UI\UserViews\Controls\PanelControlsAudioPlayer.xaml" />
     <None Remove="UI\UserViews\Controls\PlaybackMainControls.xaml" />
     <None Remove="UI\UserViews\Controls\PlayPauseControls.xaml" />
-    <None Remove="UI\UserViews\Controls\UserPlaylists.xaml" />
     <None Remove="UI\UserViews\Controls\VideoControls.xaml" />
     <None Remove="UI\UserViews\Controls\VideoLibraryControls\RecommendedVideos.xaml" />
     <None Remove="UI\UserViews\Controls\VideoLibraryControls\UserShows.xaml" />
     <None Remove="UI\UserViews\Controls\VolumeSlider.xaml" />
     <None Remove="UI\UserViews\Grids\ContinuePlayingRecentsVideo.xaml" />
+    <None Remove="UI\UserViews\Grids\DiveInGenres.xaml" />
     <None Remove="UI\UserViews\Grids\Favourites.xaml" />
+    <None Remove="UI\UserViews\Grids\InstantPlaylists.xaml" />
     <None Remove="UI\UserViews\Grids\MusicListHome.xaml" />
     <None Remove="UI\UserViews\Grids\RecentMusicList.xaml" />
+    <None Remove="UI\UserViews\Grids\TopTracks.xaml" />
+    <None Remove="UI\UserViews\Grids\UserPlaylists.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -96,6 +100,31 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Views\PlaylistView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Grids\TopTracks.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Grids\DiveInGenres.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Grids\InstantPlaylists.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Grids\UserPlaylists.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\UserViews\Controls\GridViewRecentMusic.xaml">
@@ -159,11 +188,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\UserViews\Controls\VideoLibraryControls\RecommendedVideos.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\UserPlaylists.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
