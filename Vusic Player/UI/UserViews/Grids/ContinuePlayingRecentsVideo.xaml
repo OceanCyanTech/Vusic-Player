@@ -12,8 +12,8 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-    
-        <Grid MaxWidth="440" MaxHeight="400" Grid.Column="0" PointerEntered="grdHighlightVideo_PointerEntered" PointerExited="grdHighlightVideo_PointerExited" RenderTransformOrigin="0.5,0.5" Name="grdHighlightVideo">
+
+        <Grid MaxWidth="440"  Height="250" Visibility="Visible" Grid.Column="0" PointerEntered="grdHighlightVideo_PointerEntered" PointerExited="grdHighlightVideo_PointerExited" RenderTransformOrigin="0.5,0.5" Name="grdHighlightVideo">
             <Grid.RenderTransform>
                 <ScaleTransform x:Name="GridScale" ScaleX="1" ScaleY="1" />
             </Grid.RenderTransform>
@@ -42,7 +42,7 @@
                     </VisualState>
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
-            <Border CornerRadius="12">
+            <Border CornerRadius="12" MaxHeight="500">
                 <Grid>
 
                     <Border CornerRadius="12">
@@ -70,7 +70,7 @@
                 </Grid>
             </Border>
 
-            <StackPanel VerticalAlignment="Bottom" Padding="20" Spacing="16">
+            <StackPanel VerticalAlignment="Bottom" Padding="20"  Spacing="16">
                 <Viewbox Stretch="UniformToFill">
                         <TextBlock TextTrimming="CharacterEllipsis" MaxWidth="450" MaxLines="2" TextWrapping="Wrap"  Name="txtFileName" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
                 </Viewbox>

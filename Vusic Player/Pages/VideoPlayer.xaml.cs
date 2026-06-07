@@ -133,102 +133,11 @@ namespace Vusic_Player.Pages
         private async void Masterplayer_OpenCompleted(object? sender, OpenCompletedArgs e)
         {
             if (PlayerService.Masterplayer == null) return;
+            if (PlayerService.CurrentPlayingPath == null) return;
             FadeInOutStoryboardPanel.Begin();
             ShowInformation($"'{PlayerService.CurrentPlayingPath}' opened");
 
             // Assign it to the UI grid
-
-
-            if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
-            {
-                PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
-                if (vdprg.IsSubtitlesDisabled == true)
-                {
-                    PlayerService.Masterplayer.Config.Subtitles.Enabled = false;
-                }
-                else
-                {
-                    PlayerService.Masterplayer.Config.Subtitles.Enabled = true;
-                }
-                Debug.WriteLine(vdprg.SubtitleIndex + " is the subtitle index");
-                if (vdprg.SubtitleIndex >= 0)
-                {
-                    var streamindex = PlayerService.Masterplayer.Subtitles.Streams[vdprg.SubtitleIndex ?? 0];
-                    Configuration.Helper.SubtitlesProperties.Stream.Set(streamindex);
-                }
-                var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
-                mediacontroller.CurrentPosition = curTime.TotalSeconds;
-                ShowInformation($"Opened playback of '{PlayerService.CurrentPlayingPath}' at {mediacontroller.RunningDurationString}");
-                if (vdprg.IsEpisode == true)
-                {
-                    if (vdprg.FilePath == null) return;
-                    Debug.WriteLine("Yes Episode");
-                    isEpisodeVideo = true;
-                    btnNextEpisode.Visibility = Visibility.Visible;
-                    videoControls.ViewEpisodeVisibility = Visibility.Visible;
-                    //     ShowManager.UpdateCurrentSeason(vdprg.FilePath);
-                    var listofotherepisodes = EpisodeDirectory.GetEpisodeShowInfo(vdprg.FilePath);
-                    var sorted = listofotherepisodes
-     .OrderBy(p => int.Parse(p.EpisodeName?.Replace("Episode ", "") ?? "0"));
-                    ShowManager.totalepisodecount = listofotherepisodes.Count;
-                    var filePathsToRemove = sorted.Select(item => item.FilePath).ToHashSet();
-
-                    // Optimize VusicQueue removal
-                    for (int i = QueueService.VusicQueue.Count - 1; i >= 0; i--)
-                    {
-                        if (filePathsToRemove.Contains(QueueService.VusicQueue[i].FilePath))
-                        {
-                            QueueService.VusicQueue.RemoveAt(i);
-                        }
-                    }
-
-                    // Optimize VusicQueueNext removal
-                    for (int i = QueueService.VusicQueueNext.Count - 1; i >= 0; i--)
-                    {
-                        if (filePathsToRemove.Contains(QueueService.VusicQueueNext[i].FilePath))
-                        {
-                            QueueService.VusicQueueNext.RemoveAt(i);
-                        }
-                    }
-                    QueueService.VusicQueue.Clear();
-                    QueueService.VusicQueueNext.Clear();
-                    foreach (var item in sorted)
-                    {
-                        var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-                        var vidprops = await file.Properties.GetVideoPropertiesAsync();
-                        var title = vidprops.Title;
-                        if (title == "")
-                        {
-                            title = Path.GetFileName(item.FilePath);
-                        }
-                        QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
-                    }
-                    foreach (var item in QueueService.VusicQueue)
-                    {
-                        QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
-                    }
-                    var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
-                    if (exist != null)
-                    {
-                        QueueService.VusicQueueNext.Remove(exist);
-                    }
-                    foreach (var item in QueueService.VusicQueueNext)
-                    {
-                        Debug.WriteLine(item.FilePath + " Next");
-
-                    }
-                    ShowManager.LoadAvailableShow(vdprg.FilePath);
-
-                }
-                else
-                {
-                    Debug.WriteLine("Not Episode");
-
-                    btnNextEpisode.Visibility = Visibility.Collapsed;
-                    videoControls.ViewEpisodeVisibility = Visibility.Collapsed;
-                }
-
-            }
             PlayerService.Masterplayer.Config.Video.SDRDisplayNits = 55;
             SubtitleTimer?.Start();
             SaveTimer = new DispatcherTimer();
@@ -281,6 +190,120 @@ namespace Vusic_Player.Pages
                 await SettingsLoader.SaveSettingsAsync(settings);
             };
             SaveTimer?.Start();
+
+            //if (isEpisodeVideo == true)
+            //{
+            //    Debug.WriteLine("Yes it is a show");
+            //    Debug.WriteLine(PlayerService.CurrentPlayingPath);
+            //    ShowManager.LoadAvailableShow(PlayerService.CurrentPlayingPath);
+            //    return;
+            //}
+            if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
+            {
+                PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
+                if (vdprg.IsSubtitlesDisabled == true)
+                {
+                    PlayerService.Masterplayer.Config.Subtitles.Enabled = false;
+                }
+                else
+                {
+                    PlayerService.Masterplayer.Config.Subtitles.Enabled = true;
+                }
+                Debug.WriteLine(vdprg.SubtitleIndex + " is the subtitle index");
+                if (vdprg.SubtitleIndex >= 0)
+                {
+                    var streamindex = PlayerService.Masterplayer.Subtitles.Streams[vdprg.SubtitleIndex ?? 0];
+                    Configuration.Helper.SubtitlesProperties.Stream.Set(streamindex);
+                }
+                var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
+                mediacontroller.CurrentPosition = curTime.TotalSeconds;
+                ShowInformation($"Opened playback of '{PlayerService.CurrentPlayingPath}' at {mediacontroller.RunningDurationString}");
+                if (vdprg.IsEpisode == true )
+                {
+                    if (vdprg.FilePath == null) return;
+                    Debug.WriteLine("Yes Episode");
+                    btnNextEpisode.Visibility = Visibility.Visible;
+                    videoControls.ViewEpisodeVisibility = Visibility.Visible;
+                    //     ShowManager.UpdateCurrentSeason(vdprg.FilePath);
+                    var listofotherepisodes = EpisodeDirectory.GetEpisodeShowInfo(vdprg.FilePath);
+                    var sorted = listofotherepisodes
+     .OrderBy(p => int.Parse(p.EpisodeName?.Replace("Episode ", "") ?? "0"));
+                    ShowManager.totalepisodecount = listofotherepisodes.Count;
+                    var filePathsToRemove = sorted.Select(item => item.FilePath).ToHashSet();
+
+                    // Optimize VusicQueue removal
+                    for (int i = QueueService.VusicQueue.Count - 1; i >= 0; i--)
+                    {
+                        if (filePathsToRemove.Contains(QueueService.VusicQueue[i].FilePath))
+                        {
+                            QueueService.VusicQueue.RemoveAt(i);
+                        }
+                    }
+
+                    // Optimize VusicQueueNext removal
+                    for (int i = QueueService.VusicQueueNext.Count - 1; i >= 0; i--)
+                    {
+                        if (filePathsToRemove.Contains(QueueService.VusicQueueNext[i].FilePath))
+                        {
+                            QueueService.VusicQueueNext.RemoveAt(i);
+                        }
+                    }
+                    QueueService.VusicQueue.Clear();
+                    QueueService.VusicQueueNext.Clear();
+                    foreach (var item in sorted)
+                    {
+                        var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
+                        var vidprops = await file.Properties.GetVideoPropertiesAsync();
+                        var title = vidprops.Title;
+                        if (title == "")
+                        {
+                            title = Path.GetFileName(item.FilePath);
+                        }
+                        QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
+                    }
+                    foreach (var item in QueueService.VusicQueue)
+                    {
+                        QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
+                    }
+                    var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
+                    if (exist != null)
+                    {
+                        int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
+
+                        // Ensure the item was actually found (-1 means not found)
+                        if (indexbefore != -1)
+                        {
+                            // Loop indexbefore + 1 times to include the 'exist' item itself
+                            int itemsToRemove = indexbefore + 1;
+
+                            for (int i = 0; i < itemsToRemove; i++)
+                            {
+                                if (QueueService.VusicQueueNext.Count > 0)
+                                {
+                                    QueueService.VusicQueueNext.RemoveAt(0);
+                                }
+                            }
+                        }
+                        //        QueueService.VusicQueueNext.Remove(exist);
+                    }
+                    foreach (var item in QueueService.VusicQueueNext)
+                    {
+                        Debug.WriteLine(item.FilePath + " Next");
+
+                    }
+                    ShowManager.LoadAvailableShow(vdprg.FilePath);
+
+                }
+                else
+                {
+                    Debug.WriteLine("Not Episode");
+
+                    btnNextEpisode.Visibility = Visibility.Collapsed;
+                    videoControls.ViewEpisodeVisibility = Visibility.Collapsed;
+                }
+
+            }
+           
             //LoadSettings();
             //LoadOptions();
 
@@ -347,13 +370,24 @@ namespace Vusic_Player.Pages
             }
             else if (e.Parameter is EpisodeModel episode)
             {
+                Debug.WriteLine("Yesss111");
                 btnNextEpisode.Visibility = Visibility.Visible;
                 videoControls.ViewEpisodeVisibility = Visibility.Visible;
                 if (episode.FilePath == null) return;
+                Debug.WriteLine("Yesss222");
+
                 VideoPath = episode.FilePath;
                 isEpisodeVideo = true;
             }
+            if(PlayerService.Masterplayer == null)
+            {
+                PlayerService.Masterplayer = new Player();
+            }
+            PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
+            PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted;
+
             PlayerService.OpenPath(VideoPath);
+
 
             if (PlayerService.Masterplayer != null)
             {
@@ -361,7 +395,6 @@ namespace Vusic_Player.Pages
                 SplashGrid.Visibility = Visibility.Collapsed;
                 MainGrid.Visibility = Visibility.Visible;
                 hostMedia.Player = PlayerService.Masterplayer;
-                PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted;
 
             }
             else
@@ -414,6 +447,7 @@ namespace Vusic_Player.Pages
 
                 if (PlayerService.Masterplayer == null) return;
                 PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
+                Debug.WriteLine(QueueService.VusicQueueNext.Count + " is the count");
                 var nextindex = QueueService.VusicQueueNext[0];
                 if (nextindex == null) return;
                 Debug.WriteLine("Nanan1");

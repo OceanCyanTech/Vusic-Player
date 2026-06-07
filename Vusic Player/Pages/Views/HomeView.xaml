@@ -40,7 +40,7 @@
                 </Button>
             </StackPanel>
 
-            <Expander  IsExpanded="True"  Expanding="expRecentsVideo_Expanding" Name="expRecentsVideo" HorizontalContentAlignment="Stretch" Header="Continue Playing" HorizontalAlignment="Stretch"  Grid.Row="2">
+            <Expander  IsExpanded="True"  Expanding="expRecentsVideo_Expanding" Name="expRecentsVideo" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Header="Continue Playing" HorizontalAlignment="Stretch"  Grid.Row="2">
                 <grids:ContinuePlayingRecentsVideo Margin="0, 10"/>
             </Expander>
 

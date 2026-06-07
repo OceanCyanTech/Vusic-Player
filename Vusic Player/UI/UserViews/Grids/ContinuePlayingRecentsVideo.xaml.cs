@@ -182,14 +182,29 @@ namespace Vusic_Player.UI.UserViews.Grids
             else grdvRecents.SelectedItems.Clear();
         }
 
-        private void btnRemoveFromContinueWatchingSelected_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void btnRemoveFromContinueWatchingSelected_Click_1(object sender, RoutedEventArgs e)
+        private async void btnRemoveFromContinueWatchingSelected_Click(object sender, RoutedEventArgs e)
         {
 
+            var selecteditems = grdvRecents.SelectedItems.Cast<VideoProgress>();
+            var settings = await SettingsLoader.LoadSettingsAsync();
+            var videoprogress = settings.SavedVideoProgress;
+            foreach (var item in selecteditems)
+            {
+                var exist = videoprogress.FirstOrDefault(p => p.FilePath == item.FilePath);
+                var exist2 = VideoProgressList.FirstOrDefault(p => p.FilePath == item.FilePath);
+                if(exist2 != null)
+                {
+
+                    VideoProgressList.Remove(exist2);
+                }
+                if(exist != null)
+                {
+                    videoprogress.Remove(exist);
+                }
+            }
+            await SettingsLoader.SaveSettingsAsync(settings);
         }
+
 
         private void StackPanel_PointerEntered(object sender, PointerRoutedEventArgs e)
         {

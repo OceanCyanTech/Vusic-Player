@@ -20,14 +20,25 @@
                         <Border.Shadow>
                             <ThemeShadow />
                         </Border.Shadow>
-                        <Image Name="imgPoster" Stretch="Uniform"></Image>
+                        <Border.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Edit Show Name" Name="mnftEditShowName" Click="mnftEditShowName_Click"/>
+                                <MenuFlyoutItem Text="Edit Show Poster" Name="mnftEditPoster" Click="mnftEditPoster_Click"  />
+                            </MenuFlyout>
+                        </Border.ContextFlyout>
+                        <Grid>
+                            
+                            <Image Source="/Assets/oceanglow.png" MaxWidth="1000" Name="imgPoster" Stretch="Uniform"></Image>
+                            <Border HorizontalAlignment="Center"  x:Name="HoverOverlay" CornerRadius="20"  Margin="10, 20" VerticalAlignment="Bottom"   Padding="20"  Opacity="0.7">
+                                <Border.Background>
+                                    <media:BackdropBlurBrush Opacity="1" Amount="120.0" x:Name="BackdropBlur"/>
+                                </Border.Background>
+                            
+                                <TextBlock Foreground="White" Width="1000" Name="txtShowName" FontSize="140" TextWrapping="Wrap" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                            </Border>
+                        </Grid>
                     </Border>
-                    <Border HorizontalAlignment="Center"  x:Name="HoverOverlay" CornerRadius="20"  Margin="10, 20" VerticalAlignment="Bottom"   Padding="20"  Opacity="0.7">
-                        <Border.Background>
-                            <media:BackdropBlurBrush Amount="120.0" x:Name="BackdropBlur"/>
-                        </Border.Background>
-                        <TextBlock Foreground="White" Width="1000" Name="txtShowName" FontSize="140" TextWrapping="Wrap" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                    </Border>
+                    
                 </Grid>
             </Viewbox>
 
@@ -53,16 +64,18 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
                         <TextBlock  Text="About" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
-                        <Button   Background="Transparent">
+                        <Button ToolTipService.ToolTip="Edit" Click="Button_Click_2"  Background="Transparent">
                             <FontIcon Glyph="d"></FontIcon>
                         </Button>
                     </StackPanel>
                     <StackPanel Name="stkReleaseDate" Orientation="Horizontal" Spacing="5" Grid.Row="1">
                         <TextBlock Text="• Release Date:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
-                        <TextBlock IsTextSelectionEnabled="True" Name="txtReleaseDate"></TextBlock>
+                        <DatePicker Visibility="Collapsed" Name="dtPickerReleaseDate"></DatePicker>
+                        <TextBlock Visibility="Visible" IsTextSelectionEnabled="True" Name="txtReleaseDate"></TextBlock>
                     </StackPanel>
                     <StackPanel Name="stkGenre" Orientation="Horizontal" Spacing="5" Grid.Row="2">
                         <TextBlock Text="• Genre:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        <TextBox AcceptsReturn="True" TextWrapping="Wrap" Name="txtGenreEdit" Visibility="Collapsed"></TextBox>
                         <TextBlock IsTextSelectionEnabled="True" Name="txtGenre"></TextBlock>
                     </StackPanel>
                 </Grid>
@@ -90,11 +103,11 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
                         <TextBlock Text="Creators" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
-                        <Button  Click="btnEdit_Click" Background="Transparent">
+                        <Button  Click="btnEditCreators_Click" Name="btnEditCreators" Background="Transparent">
                             <FontIcon Glyph="d"></FontIcon>
                         </Button>
                     </StackPanel>
-                    <GridView Name="grdViewCreators" Grid.Row="1" SelectionMode="None" HorizontalAlignment="Stretch">
+                    <GridView  Name="grdViewCreators" Grid.Row="1" SelectionMode="None" HorizontalAlignment="Stretch">
                         <GridView.ItemContainerStyle>
                             <Style TargetType="GridViewItem">
                                 <Setter Property="Width" Value="250" />
@@ -124,6 +137,47 @@
                     </GridView>
 
                 </Grid>
+                <TeachingTip  IsOpen="False" Title="Edit Crew" Name="ttEditCrew">
+              
+                    <Grid Margin="0, 10" RowSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Spacing="5">
+                            <TextBox Name="txtAddCrewMember" PlaceholderText="Enter name..."/>
+                            <Button Content="Add" Name="btnAddtoListName"  Click="btnAddToListName_Click"/>
+                            <Button Content="Sort"  Click="Button_Click_5"/>
+
+                        </StackPanel>
+                        <Button Content="Remove" Name="btnRemoveName" Click="btnRemoveName_Click" Grid.Row="1" Visibility="Collapsed"></Button>
+                        <ListView CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionMode="Multiple" SelectionChanged="lstViewNamesCrew_SelectionChanged" Grid.Row="2" Name="lstViewNamesCrew">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="ContextFlyout">
+                                        <Setter.Value>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="Edit" 
+                                        Icon="Edit" 
+                                        Click="MenuFlyoutItem_Click_2" />
+                                                <MenuFlyoutItem Text="Delete" 
+                                        Icon="Delete" 
+                                        Click="MenuFlyoutItem_Click_3" 
+                                        Foreground="Red" />
+                                            </MenuFlyout>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10">
+                            <Button Content="Save" Style="{StaticResource AccentButtonStyle}" Click="Button_Click_4"/>
+                            <Button Content="Cancel" Click="Button_Click_3"/>
+                        </StackPanel>
+                     </Grid>
+                </TeachingTip>
                 <Grid Margin="0,  0, 15, 0" Name="grdCrew" RowSpacing="10" Grid.Row="7">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -131,7 +185,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
                         <TextBlock Text="Crew" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
-                        <Button  Click="btnEdit_Click" Background="Transparent">
+                        <Button Name="btnEditCrew"  Click="btnEditCrew_Click" Background="Transparent">
                             <FontIcon Glyph="d"></FontIcon>
                         </Button>
                     </StackPanel>

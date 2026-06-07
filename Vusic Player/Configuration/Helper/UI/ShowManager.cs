@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -52,11 +53,14 @@ namespace Vusic_Player.Configuration.Helper.UI
                 var directorypath = show.Directory;
                 if (directorypath != null)
                 {
+                    Debug.WriteLine("not null " + directorypath);
                     bool isInsideAndExists = IsFileInDirectory(directorypath, EpisodePath)
                                 && File.Exists(EpisodePath);
                     if (isInsideAndExists)
                     {
+                        Debug.WriteLine("not null and exists");
                         CurrentShow = show;
+                        Debug.WriteLine("Season count: " + CurrentShow.SeasonCount);
                         return;
                     }
                 }

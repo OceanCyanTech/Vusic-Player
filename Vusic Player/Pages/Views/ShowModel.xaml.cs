@@ -16,6 +16,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
@@ -587,12 +588,20 @@ namespace Vusic_Player.Pages.Views
         }
 
         bool isEditMode = false;
-        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        private async void btnEdit_Click(object sender, RoutedEventArgs e)
         {
+            if (currentshow == null) return;
             if (isEditMode)
             {
-                txtDescription.Text = txtEditableDescription.Text;
-
+          
+                var currentsettings = await SettingsLoader.LoadSettingsAsync();
+                var shows = currentsettings.Shows;
+                var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+                if (exist != null)
+                {
+                    exist.Description = txtDescription.Text = txtEditableDescription.Text;
+                }
+                await SettingsLoader.SaveSettingsAsync(currentsettings);
                 txtEditableDescription.Visibility = Visibility.Collapsed;
                 txtDescription.Visibility = Visibility.Visible;
                 isEditMode = false;
@@ -669,11 +678,34 @@ namespace Vusic_Player.Pages.Views
 
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
+
+            var observablesongcollection = new ObservableCollection<SongModel>();
+
+            foreach (var item in EpisodesList)
+            {
+                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
+            }
+            foreach(var item in observablesongcollection)
+            {
+                QueueService.VusicQueue.Add(item);
+            }
+            foreach (var item in observablesongcollection)
+            {
+                QueueService.VusicQueueNext.Add(item);
+            }
+            QueueService.VusicQueueNext.RemoveAt(0);
             if (App.NavigationFrame != null)
             {
                 App.NavigationFrame.Navigate(typeof(VideoPlayer), EpisodesList[0]);
             }
-
+            var first = EpisodesList[0];
+            if(first.FilePath != null)
+            {
+                Debug.WriteLine("Yesa");
+                Debug.WriteLine(first.FilePath);
+                ShowManager.LoadAvailableShow(first.FilePath);
+                ShowManager.totalepisodecount = EpisodesList.Count;
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -682,9 +714,174 @@ namespace Vusic_Player.Pages.Views
             {
                 if (App.NavigationFrame != null)
                 {
+                    QueueService.VusicQueue.Clear();
+                    QueueService.VusicQueueNext.Clear();
+                    var observablesongcollection = new ObservableCollection<SongModel>();
+
+                    foreach (var item in EpisodesList)
+                    {
+                        observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
+                    }
+                    foreach (var item in observablesongcollection)
+                    {
+                        QueueService.VusicQueue.Add(item);
+                    }
+                    foreach (var item in observablesongcollection)
+                    {
+                        QueueService.VusicQueueNext.Add(item);
+                    }
+             
+                    var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == episode.FilePath);
+                    if (exist != null)
+                    {
+                        int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
+
+                        // Ensure the item was actually found (-1 means not found)
+                        if (indexbefore != -1)
+                        {
+                            // Loop indexbefore + 1 times to include the 'exist' item itself
+                            int itemsToRemove = indexbefore + 1;
+
+                            for (int i = 0; i < itemsToRemove; i++)
+                            {
+                                if (QueueService.VusicQueueNext.Count > 0)
+                                {
+                                    QueueService.VusicQueueNext.RemoveAt(0);
+                                }
+                            }
+                        }
+                        //   QueueService.VusicQueueNext.Remove(exist);
+                    }
                     App.NavigationFrame.Navigate(typeof(VideoPlayer), episode);
                 }
             }
+        }
+        bool iseditabout = true;
+        private async void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            if (currentshow == null) return;
+            if(sender is Button btn)
+            {
+                if (iseditabout)
+                {
+                    ToolTipService.SetToolTip(btn, "Save");
+                    iseditabout = false;
+                    txtGenre.Visibility = Visibility.Collapsed;
+                    txtReleaseDate.Visibility = Visibility.Collapsed;
+                    dtPickerReleaseDate.Visibility = Visibility.Visible;
+                    txtGenreEdit.Visibility = Visibility.Visible;
+                    dtPickerReleaseDate.Date = currentshow.ReleaseDate;
+                    txtGenreEdit.Text = txtGenre.Text;
+                }
+                else
+                { 
+                    ToolTipService.SetToolTip(btn, "Edit");
+                   
+                   
+                 
+                
+                 
+                  
+                    currentshow.Genre = txtGenreEdit.Text;
+                    var currentsettings = await SettingsLoader.LoadSettingsAsync();
+                    var shows = currentsettings.Shows;
+                    var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+                    if(exist != null)
+                    {
+                        exist.Genre = txtGenre.Text = txtGenreEdit.Text;
+                        exist.ReleaseDate = currentshow.ReleaseDate = dtPickerReleaseDate.SelectedDate ?? DateTime.Now;
+                        txtReleaseDate.Text = dtPickerReleaseDate.SelectedDate?.ToString("dd MMMM yyyy") ?? "07 October 2008";
+                    }
+                    await SettingsLoader.SaveSettingsAsync(currentsettings);
+                    iseditabout = true;
+                    txtGenre.Visibility = Visibility.Visible;
+                    txtReleaseDate.Visibility = Visibility.Visible;
+                    dtPickerReleaseDate.Visibility = Visibility.Collapsed;
+                    txtGenreEdit.Visibility = Visibility.Collapsed;
+
+                }
+            }
+        }
+
+        private void mnftEditPoster_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnftEditShowName_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnEditCreators_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnEditCrew_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentshow == null) return;
+            lstViewNamesCrew.Items.Clear();
+            ttEditCrew.Target = btnEditCrew;
+            ttEditCrew.IsOpen = true;
+            var showcrew = currentshow.Crew.Split(",");
+            foreach(var name in showcrew)
+            {
+                lstViewNamesCrew.Items.Add(name);
+            }
+        }
+
+        private void btnAddToListName_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtAddCrewMember.Text == "") return;
+            if (lstViewNamesCrew.Items.Contains(txtAddCrewMember.Text)) return;
+
+            lstViewNamesCrew.Items.Insert(0, txtAddCrewMember.Text);
+        }
+
+        private void btnRemoveName_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in lstViewNamesCrew.SelectedItems)
+            {
+                lstViewNamesCrew.Items.Remove(item);
+            }
+        }
+
+        private void MenuFlyoutItem_Click_2(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MenuFlyoutItem_Click_3(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void lstViewNamesCrew_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(lstViewNamesCrew.SelectedItems.Count == 0)
+            {
+                btnRemoveName.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btnRemoveName.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 
