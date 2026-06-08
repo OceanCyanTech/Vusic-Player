@@ -605,6 +605,8 @@ namespace Vusic_Player.Pages
             Debug.WriteLine("Nanan2");
 
             if (ShowManager.CurrentShow == null) return;
+            Debug.WriteLine("Nanan2.5");
+
             if (path == "") return;
             Debug.WriteLine("Nanan3");
 

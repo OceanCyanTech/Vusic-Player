@@ -177,7 +177,7 @@
                     </Button>
                 </StackPanel>
             </StackPanel>
-            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"
+            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Top"
  x:Name="grdvRecents" SelectionMode="Single" IsItemClickEnabled="True" 
 ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 20" SelectionChanged="GridContinuePlaying_SelectionChanged" ScrollViewer.HorizontalScrollMode="Enabled"
           ScrollViewer.HorizontalScrollBarVisibility="Auto">
@@ -188,7 +188,7 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 20" SelectionChanged="Grid
                 </GridView.ItemsPanel>
                 <GridView.ItemTemplate>
                     <DataTemplate >
-                        <StackPanel ToolTipService.ToolTip="{Binding FileName}" Orientation="Vertical" VerticalAlignment="Stretch"
+                        <StackPanel ToolTipService.ToolTip="{Binding FileName}" Orientation="Vertical" VerticalAlignment="Top"
                           PointerEntered="StackPanel_PointerEntered" PointerExited="StackPanel_PointerExited"
       >
                             <ani:Implicit.Animations>
@@ -196,7 +196,7 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 20" SelectionChanged="Grid
                                     <ani:ScaleAnimation Duration="0:0:0.2" />
                                 </ani:ImplicitAnimationSet>
                             </ani:Implicit.Animations>
-                            <Grid Width="200" Height="100" VerticalAlignment="Stretch">
+                            <Grid Width="200" Height="100" VerticalAlignment="Top">
                                 <Grid.ContextFlyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Resume from previous playback">
@@ -242,7 +242,7 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 20" SelectionChanged="Grid
                                 <vusic_player:OceanSlider VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="-5, 0" x:Name="prgContinuePlaying" Maximum="{Binding TotalDuration}" Value="{Binding CurrentDuration}" Width="200" IsEnabled="False" IsThumbVisible="Collapsed"></vusic_player:OceanSlider>
 
                             </Grid>
-                            <TextBlock Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" Width="200" TextWrapping="Wrap" />
+                            <TextBlock Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Height="60" Width="200" TextWrapping="Wrap" />
                         </StackPanel>
                     </DataTemplate>
                 </GridView.ItemTemplate>

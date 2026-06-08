@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.WindowsAppSDK;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -60,6 +61,9 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 imgShowPoster.Source = new BitmapImage(new Uri(image.Path));
                 posterpath = image.Path;
             }
+            ObservableCollection<string> name = new();
+            var item = name.FirstOrDefault(p => p == "desiredvalue");
+        
         }
     }
 

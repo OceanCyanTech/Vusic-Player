@@ -21,6 +21,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Windows.Devices.Power;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -54,6 +55,51 @@ namespace Vusic_Player.Pages.Views
 
             // EnumerateDirectories avoids loading all folder names into memory at once
             return Directory.EnumerateDirectories(folderPath).Any();
+        }
+        private void LoadCreators(Show show)
+        {
+            if (show.Creators != null)
+            {
+                creators.Clear();
+                var splitcreators = show.Creators.Split(",");
+                foreach (var creator in splitcreators)
+                {
+                    creators.Add(new ArtistShow { ArtistName = creator });
+                }
+                if (creators.Count != 0)
+                {
+                    grdCreators.Visibility = Visibility.Visible;
+
+                    grdViewCreators.ItemsSource = creators;
+                }
+                else
+                {
+                    grdCreators.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+        private void LoadCrew(Show show)
+        {
+            if (show.Crew != null)
+            {
+                crewlist.Clear();
+                var splitcrew = show.Crew.Split(",");
+                foreach (var crew in splitcrew)
+                {
+                    crewlist.Add(new ArtistShow { ArtistName = crew });
+                }
+                if (crewlist.Count != 0)
+                {
+                    grdCrew.Visibility = Visibility.Visible;
+
+                    grdViewCast.ItemsSource = crewlist;
+                }
+                else
+                {
+                    grdCrew.Visibility = Visibility.Collapsed;
+                }
+            }
+
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -100,7 +146,7 @@ namespace Vusic_Player.Pages.Views
 
     // 6. Absolute / Standalone numbers: "Show - 02.mp4" 
     @"(?<=\s+|-|_|#)(\d+)(?=\.\w+$|\s+|-|_)"
-};                        
+};
                             //                            // 2. Get only the files that match your video extensions
                             //                            // 1. Grab files and immediately turn it into a list to prevent multiple enumerations
 
@@ -305,7 +351,9 @@ namespace Vusic_Player.Pages.Views
                             {
                                 lstViewEpisodes.ItemsSource = EpisodesList;
                             }
-
+                            ShowManager.currentseason = pl.SeasonIndex;
+                            currentseasonindex = pl.SeasonIndex;
+                            Debug.WriteLine(ShowManager.currentseason + " is the current season index");
                             // 1. Pre-populate the list on the UI thread so items stay perfectly sorted
                             var episodePlaceholders = new List<EpisodeModel>();
 
@@ -342,7 +390,7 @@ namespace Vusic_Player.Pages.Views
                                     Description = "Loading...",
                                     Duration = "--:--:--",
                                     FilePath = filePath,
-                                   
+
                                     CurrentShowDirectory = Path.GetDirectoryName(filePath)
                                 };
 
@@ -457,44 +505,8 @@ namespace Vusic_Player.Pages.Views
                 txtShowName.Width = imgPoster.Width;
                 txtReleaseDate.Text = show.ReleaseDate.ToString("dd MMMM yyyy");
                 txtGenre.Text = show.Genre;
-                if (show.Creators != null)
-                {
-                    creators.Clear();
-                    var splitcreators = show.Creators.Split(",");
-                    foreach (var creator in splitcreators)
-                    {
-                        creators.Add(new ArtistShow { ArtistName = creator });
-                    }
-                    if (creators.Count != 0)
-                    {
-                        grdCreators.Visibility = Visibility.Visible;
-
-                        grdViewCreators.ItemsSource = creators;
-                    }
-                    else
-                    {
-                        grdCreators.Visibility = Visibility.Collapsed;
-                    }
-                }
-                if (show.Crew != null)
-                {
-                    crewlist.Clear();
-                    var splitcrew = show.Crew.Split(",");
-                    foreach (var crew in splitcrew)
-                    {
-                        crewlist.Add(new ArtistShow { ArtistName = crew });
-                    }
-                    if (crewlist.Count != 0)
-                    {
-                        grdCrew.Visibility = Visibility.Visible;
-
-                        grdViewCast.ItemsSource = crewlist;
-                    }
-                    else
-                    {
-                        grdCrew.Visibility = Visibility.Collapsed;
-                    }
-                }
+                LoadCreators(show);
+                LoadCrew(show);
                 if (show.Directory == null) return;
                 Debug.WriteLine("Negative 2 check");
                 string rootPath = show.Directory;
@@ -564,13 +576,24 @@ namespace Vusic_Player.Pages.Views
                             }
                         }
                     }
-
                     // Update WinUI 3 UI Elements
-                    txtSeasonCount.Text = $"• {seasons.Count} {(seasons.Count == 1 ? "season" : "seasons")}";
                     var currentSettings = await SettingsLoader.LoadSettingsAsync();
                     var shows = currentSettings.Shows;
                     var exist = shows.FirstOrDefault(p => p.Name == show.Name);
-                    if(exist != null)
+                    if (exist == null) return;
+                    var Paths = exist.AddedSeasons;
+                    foreach (var path in Paths)
+                    {
+                        var existingseason = seasons.FirstOrDefault(p => p.PlaylistId == path);
+                        if (existingseason == null)
+                        {
+                            AddSeasonToList(path);
+                        }
+                    }
+                    CheckForUnlinkedSeasons();
+                    txtSeasonCount.Text = $"• {seasons.Count} {(seasons.Count == 1 ? "season" : "seasons")}";
+
+                    if (exist != null)
                     {
                         exist.SeasonCount = seasons.Count;
                     }
@@ -578,6 +601,13 @@ namespace Vusic_Player.Pages.Views
                     if (seasons.Count != 0)
                     {
                         var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
+                        for (int i = 0; i < seasonsRearranged.Count; i++)
+                        {
+                            if (seasonsRearranged[i] != null)
+                            {
+                                seasonsRearranged[i].SeasonIndex = i;
+                            }
+                        }
                         grdViewSeasons.ItemsSource = null;
                         grdViewSeasons.ItemsSource = seasonsRearranged;
                         grdViewSeasons.Visibility = Visibility.Visible;
@@ -586,14 +616,33 @@ namespace Vusic_Player.Pages.Views
             }
             base.OnNavigatedTo(e);
         }
+        private async void CheckForUnlinkedSeasons()
+        {
+            if (currentshow == null) return;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var shows = currentSettings.Shows;
+            var current = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+            if (current != null)
+            {
+                foreach (var path in current.UnlinkedSeasons)
+                {
+                    var existingseason = seasons.FirstOrDefault(k => k.PlaylistId == path);
+                    if (existingseason != null)
+                    {
+                        seasons.Remove(existingseason);
+                    }
+                }
+            }
+            txtSeasonCount.Text = $"• {seasons.Count} {(seasons.Count == 1 ? "season" : "seasons")}";
 
+        }
         bool isEditMode = false;
         private async void btnEdit_Click(object sender, RoutedEventArgs e)
         {
             if (currentshow == null) return;
             if (isEditMode)
             {
-          
+
                 var currentsettings = await SettingsLoader.LoadSettingsAsync();
                 var shows = currentsettings.Shows;
                 var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
@@ -617,11 +666,126 @@ namespace Vusic_Player.Pages.Views
             }
         }
 
-        private void btnAddSeason_Click(object sender, RoutedEventArgs e)
+        private async void btnAddSeason_Click(object sender, RoutedEventArgs e)
         {
+            if (currentshow == null) return;
+            if (App.MainWindowInstance == null) return;
+            var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Choose folder to add as season", Windows.Storage.Pickers.PickerLocationId.VideosLibrary);
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var shows = currentSettings.Shows;
+            var currentShow = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+            if (currentShow == null) return;
+            if (folder != null)
+            {
+                Debug.WriteLine("1TEST");
+                var existingfolder = currentShow.AddedSeasons.FirstOrDefault(p => p == folder.Path);
+                var existingSeason = seasons.FirstOrDefault(k => k.PlaylistId == folder.Path);
+                if (existingSeason != null) return;
+                Debug.WriteLine("2TEST");
 
+                if (existingfolder != null) return;
+                Debug.WriteLine("3TEST");
+
+                currentShow.AddedSeasons.Add(folder.Path);
+                AddSeasonToList(folder.Path);
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
+        private void AddSeasonToList(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                Debug.WriteLine("3TEST");
 
+                if (currentshow == null) return;
+                Debug.WriteLine("4TEST");
+
+                if (currentshow.Directory == null) return;
+                Debug.WriteLine("5TEST");
+
+                string pattern = @"\b(season\s*|s)(\d+)\b";
+
+                string rootPath = currentshow.Directory;
+                string folderName = Path.GetFileName(path);
+                Match match = Regex.Match(folderName, pattern, RegexOptions.IgnoreCase);
+
+                if (path == rootPath) match = Regex.Match(new DirectoryInfo(rootPath).Name, pattern, RegexOptions.IgnoreCase);
+                Debug.WriteLine("6TEST");
+
+                if (match.Success)
+                {
+                    Debug.WriteLine("7TEST");
+
+                    int seasonNum = Convert.ToInt32(match.Groups[2].Value);
+                    string seasonName = $"Season {seasonNum}";
+
+                    int episodeCount = 0;
+
+                    // This variable will track the actual deep folder where files are found!
+                    string actualContentPath = path;
+
+                    foreach (var ext in Extensions.VideoExtensions.List)
+                    {
+                        string searchPattern = $"*{ext.ToLower()}";
+                        Debug.WriteLine("8TEST");
+
+                        // Get the full path details of any matching video files inside
+                        var foundFiles = Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
+
+                        if (foundFiles.Any())
+                        {
+                            Debug.WriteLine("9TEST");
+
+                            episodeCount += foundFiles.Count;
+
+                            // Grab the directory name of the first video file found. 
+                            // This is guaranteed to be the real folder containing the episodes!
+                            actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
+                        }
+                    }
+
+                    string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
+
+                    var existingSeason = seasons.FirstOrDefault(p => p.PlaylistName == seasonName);
+                    if (existingSeason == null)
+                    {
+                        Debug.WriteLine("10TEST");
+                        if (Directory.Exists(actualContentPath))
+                        {
+                            seasons.Add(new PlaylistItem
+                            {
+                                PlaylistName = seasonName,
+                                PlaylistCount = episodeCountString,
+
+                                // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
+                                PlaylistId = actualContentPath,
+
+                                SeasonNumber = seasonNum
+                            });
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("11TEST");
+
+                        existingSeason.PlaylistCount = episodeCountString;
+                        existingSeason.PlaylistId = actualContentPath; // Update path if found
+                    }
+                }
+                var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
+                for (int i = 0; i < seasonsRearranged.Count; i++)
+                {
+                    if (seasonsRearranged[i] != null)
+                    {
+                        seasonsRearranged[i].SeasonIndex = i;
+                    }
+                }
+                grdViewSeasons.ItemsSource = null;
+                grdViewSeasons.ItemsSource = seasonsRearranged;
+                txtSeasonCount.Text = $"• {seasons.Count} {(seasons.Count == 1 ? "season" : "seasons")}";
+                CheckForUnlinkedSeasons();
+            }
+        }
         private void ppArtist_Tapped(object sender, TappedRoutedEventArgs e)
         {
 
@@ -631,7 +795,7 @@ namespace Vusic_Player.Pages.Views
         {
 
         }
-
+        int currentseasonindex = 0;
         private void grdViewSeasons_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (e.ClickedItem is PlaylistItem season)
@@ -685,7 +849,7 @@ namespace Vusic_Player.Pages.Views
             {
                 observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
             }
-            foreach(var item in observablesongcollection)
+            foreach (var item in observablesongcollection)
             {
                 QueueService.VusicQueue.Add(item);
             }
@@ -699,7 +863,7 @@ namespace Vusic_Player.Pages.Views
                 App.NavigationFrame.Navigate(typeof(VideoPlayer), EpisodesList[0]);
             }
             var first = EpisodesList[0];
-            if(first.FilePath != null)
+            if (first.FilePath != null)
             {
                 Debug.WriteLine("Yesa");
                 Debug.WriteLine(first.FilePath);
@@ -710,10 +874,14 @@ namespace Vusic_Player.Pages.Views
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if(sender is Button btn && btn.DataContext is EpisodeModel episode)
+            //Play clicked on single item
+            if (sender is Button btn && btn.DataContext is EpisodeModel episode)
             {
                 if (App.NavigationFrame != null)
                 {
+                    if (episode.FilePath == null) return;
+                    ShowManager.LoadAvailableShow(episode.FilePath);
+
                     QueueService.VusicQueue.Clear();
                     QueueService.VusicQueueNext.Clear();
                     var observablesongcollection = new ObservableCollection<SongModel>();
@@ -730,7 +898,7 @@ namespace Vusic_Player.Pages.Views
                     {
                         QueueService.VusicQueueNext.Add(item);
                     }
-             
+
                     var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == episode.FilePath);
                     if (exist != null)
                     {
@@ -752,6 +920,10 @@ namespace Vusic_Player.Pages.Views
                         }
                         //   QueueService.VusicQueueNext.Remove(exist);
                     }
+
+                    ShowManager.totalepisodecount = EpisodesList.Count;
+                    //   ShowManager.currentseason = currentseasonindex;
+
                     App.NavigationFrame.Navigate(typeof(VideoPlayer), episode);
                 }
             }
@@ -760,7 +932,7 @@ namespace Vusic_Player.Pages.Views
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
             if (currentshow == null) return;
-            if(sender is Button btn)
+            if (sender is Button btn)
             {
                 if (iseditabout)
                 {
@@ -774,19 +946,19 @@ namespace Vusic_Player.Pages.Views
                     txtGenreEdit.Text = txtGenre.Text;
                 }
                 else
-                { 
+                {
                     ToolTipService.SetToolTip(btn, "Edit");
-                   
-                   
-                 
-                
-                 
-                  
+
+
+
+
+
+
                     currentshow.Genre = txtGenreEdit.Text;
                     var currentsettings = await SettingsLoader.LoadSettingsAsync();
                     var shows = currentsettings.Shows;
                     var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
-                    if(exist != null)
+                    if (exist != null)
                     {
                         exist.Genre = txtGenre.Text = txtGenreEdit.Text;
                         exist.ReleaseDate = currentshow.ReleaseDate = dtPickerReleaseDate.SelectedDate ?? DateTime.Now;
@@ -803,63 +975,92 @@ namespace Vusic_Player.Pages.Views
             }
         }
 
-        private void mnftEditPoster_Click(object sender, RoutedEventArgs e)
+        private async void mnftEditPoster_Click(object sender, RoutedEventArgs e)
         {
-
+            if (App.MainWindowInstance == null) return;
+            if (currentshow == null) return;
+            var image = await FilePickers.MediaPicker.PickSingleImageFileAsync(App.MainWindowInstance, "Choose poster");
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var shows = currentSettings.Shows;
+            var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+            if (image != null)
+            {
+                imgPoster.Source = new BitmapImage(new Uri(image.Path));
+                if (exist != null)
+                {
+                    exist.Poster = image.Path;
+                }
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
         private void mnftEditShowName_Click(object sender, RoutedEventArgs e)
         {
-
+            ttRename.IsOpen = true;
+            txtRenameShow.Text = txtShowName.Text;
         }
 
         private void btnEditCreators_Click(object sender, RoutedEventArgs e)
         {
-
+            if (currentshow == null) return;
+            crewNames.Clear();
+            ttEditCrew.Target = btnEditCreators;
+            ttEditCrew.Title = "Edit Creators";
+            ttEditCrew.IsOpen = true;
+            var showcrew = currentshow.Creators.Split(",");
+            foreach (var name in showcrew)
+            {
+                crewNames.Add(new CrewName { Name = name });
+            }
+            lstViewNamesCrew.ItemsSource = crewNames;
         }
 
         private void btnEditCrew_Click(object sender, RoutedEventArgs e)
         {
             if (currentshow == null) return;
-            lstViewNamesCrew.Items.Clear();
+            crewNames.Clear();
             ttEditCrew.Target = btnEditCrew;
+            ttEditCrew.Title = "Edit Crew";
             ttEditCrew.IsOpen = true;
             var showcrew = currentshow.Crew.Split(",");
-            foreach(var name in showcrew)
+            foreach (var name in showcrew)
             {
-                lstViewNamesCrew.Items.Add(name);
+                crewNames.Add(new CrewName { Name = name });
             }
+            lstViewNamesCrew.ItemsSource = crewNames;
         }
 
         private void btnAddToListName_Click(object sender, RoutedEventArgs e)
         {
             if (txtAddCrewMember.Text == "") return;
-            if (lstViewNamesCrew.Items.Contains(txtAddCrewMember.Text)) return;
-
-            lstViewNamesCrew.Items.Insert(0, txtAddCrewMember.Text);
+            var exist = crewNames.FirstOrDefault(p => p.Name.ToLower() == txtAddCrewMember.Text.ToLower());
+            if (exist == null)
+            {
+                crewNames.Insert(0, new CrewName { Name = txtAddCrewMember.Text });
+            }
         }
 
         private void btnRemoveName_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in lstViewNamesCrew.SelectedItems)
+            var selectedItems = lstViewNamesCrew.SelectedItems.Cast<CrewName>().ToList();
+            foreach (var item in selectedItems)
             {
-                lstViewNamesCrew.Items.Remove(item);
+                crewNames.Remove(item);
             }
         }
-
-        private void MenuFlyoutItem_Click_2(object sender, RoutedEventArgs e)
-        {
-
-        }
+        ObservableCollection<CrewName> crewNames = new();
 
         private void MenuFlyoutItem_Click_3(object sender, RoutedEventArgs e)
         {
-
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is CrewName crewName)
+            {
+                crewNames.Remove(crewName);
+            }
         }
 
         private void lstViewNamesCrew_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(lstViewNamesCrew.SelectedItems.Count == 0)
+            if (lstViewNamesCrew.SelectedItems.Count == 0)
             {
                 btnRemoveName.Visibility = Visibility.Collapsed;
             }
@@ -871,15 +1072,140 @@ namespace Vusic_Player.Pages.Views
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-
+            ttEditCrew.IsOpen = false;
         }
 
-        private void Button_Click_4(object sender, RoutedEventArgs e)
+
+        private async void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            if (currentshow == null) return;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var shows = currentSettings.Shows;
+            var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+            if (exist == null) return;
+
+            // Fix: Efficiently join names with commas, automatically avoiding a trailing comma
+            string crew = string.Join(",", crewNames.Select(item => item.Name));
+
+            if (ttEditCrew.Title == "Edit Crew")
+            {
+                currentshow.Crew = crew;
+
+                exist.Crew = crew;
+                LoadCrew(new Show { Crew = crew });
+            }
+            else
+            {
+                currentshow.Creators = crew;
+
+                exist.Creators = crew;
+                LoadCreators(new Show { Creators = crew });
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+        bool isAtoZ = true;
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            if (isAtoZ == true)
+            {
+                isAtoZ = false;
+                // Sort A to Z
+                var sorted = crewNames.OrderBy(p => p.Name).ToList();
+
+                // Rebuild the ObservableCollection safely
+                crewNames.Clear();
+                foreach (var item in sorted)
+                {
+                    crewNames.Add(item);
+                }
+            }
+            else
+            {
+                isAtoZ = true;
+                // Sort Z to A
+                var sorted = crewNames.OrderByDescending(p => p.Name).ToList();
+
+                crewNames.Clear();
+                foreach (var item in sorted)
+                {
+                    crewNames.Add(item);
+                }
+            }
+        }
+
+        private void mnftOpenSeason_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void Button_Click_5(object sender, RoutedEventArgs e)
+        private async void btnOfficialRename_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentshow == null) return;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var shows = currentSettings.Shows;
+            var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+            if (exist != null)
+            {
+                string baseName = txtRenameShow.Text.Trim();
+
+                if (string.IsNullOrEmpty(baseName)) baseName = "Show";
+
+                string finalName = baseName;
+                int counter = 1;
+                while (currentSettings.Shows.Any(p =>
+                    string.Equals(p.Name, finalName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    finalName = $"{baseName} ({counter++})";
+                }
+                exist.Name = finalName;
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            txtShowName.Text = txtRenameShow.Text;
+            ttRename.IsOpen = false;
+        }
+
+        private async void mnftUnlinkSeason_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is PlaylistItem season)
+            {
+                if (currentshow == null) return;
+                if (season.PlaylistId == null) return;
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var shows = currentSettings.Shows;
+                var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+                if (exist != null)
+                {
+                    var existunlink = exist.UnlinkedSeasons.FirstOrDefault(p => p == season.PlaylistId);
+                    if(existunlink == null)
+                    {
+                        exist.UnlinkedSeasons.Add(season.PlaylistId);
+
+                        seasons.Remove(season); 
+                        var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
+                        for (int i = 0; i < seasonsRearranged.Count; i++)
+                        {
+                            if (seasonsRearranged[i] != null)
+                            {
+                                seasonsRearranged[i].SeasonIndex = i;
+                            }
+                        }
+                        grdViewSeasons.ItemsSource = null;
+                        grdViewSeasons.ItemsSource = seasonsRearranged;
+                        grdViewSeasons.Visibility = Visibility.Visible;
+                        txtSeasonCount.Text = $"• {seasons.Count} {(seasons.Count == 1 ? "season" : "seasons")}";
+                    }
+                }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+        }
+
+        private void hypViewUnlinkedSeasons_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MenuFlyout_Opened(object sender, object e)
         {
 
         }

@@ -23,22 +23,22 @@
                         <Border.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Text="Edit Show Name" Name="mnftEditShowName" Click="mnftEditShowName_Click"/>
-                                <MenuFlyoutItem Text="Edit Show Poster" Name="mnftEditPoster" Click="mnftEditPoster_Click"  />
+                                <MenuFlyoutItem Text="Change Show Poster" Name="mnftEditPoster" Click="mnftEditPoster_Click"  />
                             </MenuFlyout>
                         </Border.ContextFlyout>
                         <Grid>
-                            
+
                             <Image Source="/Assets/oceanglow.png" MaxWidth="1000" Name="imgPoster" Stretch="Uniform"></Image>
                             <Border HorizontalAlignment="Center"  x:Name="HoverOverlay" CornerRadius="20"  Margin="10, 20" VerticalAlignment="Bottom"   Padding="20"  Opacity="0.7">
                                 <Border.Background>
                                     <media:BackdropBlurBrush Opacity="1" Amount="120.0" x:Name="BackdropBlur"/>
                                 </Border.Background>
-                            
+
                                 <TextBlock Foreground="White" Width="1000" Name="txtShowName" FontSize="140" TextWrapping="Wrap" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                             </Border>
                         </Grid>
                     </Border>
-                    
+
                 </Grid>
             </Viewbox>
 
@@ -137,8 +137,16 @@
                     </GridView>
 
                 </Grid>
+                <TeachingTip Title="Rename Show" Target="{x:Bind txtShowName}" IsOpen="True" Name="ttRename">
+                    <StackPanel Orientation="Vertical" Spacing="5">
+                        <TextBox Name="txtRenameShow" PlaceholderText="Rename show..."></TextBox>
+                        <Button HorizontalAlignment="Stretch" Name="btnOfficialRename" Click="btnOfficialRename_Click">
+                            <Image Source="/Assets/tickicon.png" Width="20"/>
+                        </Button>
+                    </StackPanel>
+                </TeachingTip>
                 <TeachingTip  IsOpen="False" Title="Edit Crew" Name="ttEditCrew">
-              
+
                     <Grid Margin="0, 10" RowSpacing="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -149,34 +157,36 @@
                         <StackPanel Orientation="Horizontal" Grid.Row="0" Spacing="5">
                             <TextBox Name="txtAddCrewMember" PlaceholderText="Enter name..."/>
                             <Button Content="Add" Name="btnAddtoListName"  Click="btnAddToListName_Click"/>
-                            <Button Content="Sort"  Click="Button_Click_5"/>
+                            <Button Content="Sort"  Click="Button_Click_5">
+
+                            </Button>
 
                         </StackPanel>
                         <Button Content="Remove" Name="btnRemoveName" Click="btnRemoveName_Click" Grid.Row="1" Visibility="Collapsed"></Button>
                         <ListView CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionMode="Multiple" SelectionChanged="lstViewNamesCrew_SelectionChanged" Grid.Row="2" Name="lstViewNamesCrew">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="ContextFlyout">
-                                        <Setter.Value>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ContextFlyout>
                                             <MenuFlyout>
-                                                <MenuFlyoutItem Text="Edit" 
-                                        Icon="Edit" 
-                                        Click="MenuFlyoutItem_Click_2" />
+
                                                 <MenuFlyoutItem Text="Delete" 
                                         Icon="Delete" 
                                         Click="MenuFlyoutItem_Click_3" 
                                         Foreground="Red" />
                                             </MenuFlyout>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ListView.ItemContainerStyle>
+                                        </Grid.ContextFlyout>
+                                        <TextBlock Text="{Binding Name}"/>
+
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                         <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10">
                             <Button Content="Save" Style="{StaticResource AccentButtonStyle}" Click="Button_Click_4"/>
                             <Button Content="Cancel" Click="Button_Click_3"/>
                         </StackPanel>
-                     </Grid>
+                    </Grid>
                 </TeachingTip>
                 <Grid Margin="0,  0, 15, 0" Name="grdCrew" RowSpacing="10" Grid.Row="7">
                     <Grid.RowDefinitions>
@@ -226,13 +236,14 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="20" Grid.Row="0">
-                        <TextBlock Text="Seasons" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+                        <TextBlock Name="txtSeasonsHead" Text="Seasons" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button Margin="0, 5" VerticalAlignment="Center" CornerRadius="12"   Grid.Column="0" Name="btnAddSeason" Click="btnAddSeason_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="20" Source="/Assets/addicon.png"></Image>
                                 <TextBlock Margin="5, 0" Text="Add Season" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                             </StackPanel>
                         </Button>
+                        <HyperlinkButton Content="View Unlinked Seasons" Name="hypViewUnlinkedSeasons" Click="hypViewUnlinkedSeasons_Click"/>
                     </StackPanel>
                     <TextBlock Name="txtSeasonCount" Text="• 5 Seasons" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                     <GridView  Grid.Row="2" Visibility="Visible"  VerticalAlignment="Stretch"
@@ -257,13 +268,17 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" SelectionChanged="grdViewSe
                                     </ani:Implicit.Animations>
                                     <StackPanel  VerticalAlignment="Stretch" Orientation="Vertical" Margin="10, 15">
                                         <StackPanel.ContextFlyout>
-                                            <MenuFlyout >
-                                                <MenuFlyoutItem Name="mnftOpenSeason"  Text="Open Season">
+                                            <MenuFlyout Opened="MenuFlyout_Opened">
+                                                <MenuFlyoutItem Name="mnftOpenSeason" Click="mnftOpenSeason_Click" Text="Open Season">
                                                     <MenuFlyoutItem.Icon>
                                                         <FontIcon Glyph="d"></FontIcon>
                                                     </MenuFlyoutItem.Icon>
                                                 </MenuFlyoutItem>
-                                                <MenuFlyoutSeparator/>
+                                                <MenuFlyoutItem Name="mnftUnlinkSeason" Click="mnftUnlinkSeason_Click" Text="Unlink Season">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="d"></FontIcon>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
                                             </MenuFlyout>
                                         </StackPanel.ContextFlyout>
 
