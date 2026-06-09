@@ -209,6 +209,9 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 20" SelectionChanged="Grid
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
+                                        
+                                        <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem Name="mnftRemoveRec" Text="Remove from Continue Playing">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"></FontIcon>

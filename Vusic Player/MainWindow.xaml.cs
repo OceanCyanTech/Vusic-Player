@@ -46,7 +46,10 @@ namespace Vusic_Player
             rootGrid.Loaded += RootGrid_Loaded;
            
         }
-
+        public async void ShowFileInfo(string filepath)
+        {
+           // FileInfo.LoadFileInfo(filepath, rootgrid.XamlRoot);
+        }
         private void RootGrid_Loaded(object sender, RoutedEventArgs e)
         {
             //var island = rootGrid.XamlRoot?.ContentIsland;

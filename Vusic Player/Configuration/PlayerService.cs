@@ -12,8 +12,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Pages;
 using Vusic_Player.UI.UserViews.Controls;
 using Windows.Devices.Spi;
 using Windows.Storage;
@@ -44,7 +47,7 @@ namespace Vusic_Player.Configuration
         public static bool isProgress = true;
         private static bool _isDragging = false;
         public static long curtimetemp;
-        public static TimeSpan curtime; 
+        public static TimeSpan curtime;
         public static bool InVideoPage = false;
 
 
@@ -100,7 +103,7 @@ namespace Vusic_Player.Configuration
                 {
                     Debug.WriteLine("ssh2");
 
-               //     QueueService.PlayNext();
+                    //     QueueService.PlayNext();
                     return;
                 }
             }
@@ -141,7 +144,7 @@ namespace Vusic_Player.Configuration
             PlayerService.Masterplayer.SeekAccurate(targetMs);
             var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
             UIController.CurrentPosition = curTime.TotalSeconds;
-         //   Helper.SeekInfoService.ShowSeek(10);
+            //   Helper.SeekInfoService.ShowSeek(10);
         }
         public static async void OpenPath(string fiPath)
         {
@@ -345,6 +348,32 @@ namespace Vusic_Player.Configuration
                 UIController.Thumbnail = bitm;
                 maintimer?.Start();
             });
+            NavigateToVideoPage();
+        }
+        private static async void NavigateToVideoPage()
+        {
+            if (Masterplayer == null) return;
+            var file = await StorageFile.GetFileFromPathAsync(CurrentPlayingPath);
+
+            string fileExtension = file.FileType.ToLowerInvariant();
+            bool isVideo = false;
+            if (Extensions.VideoExtensions.List.Contains(fileExtension))
+            {
+                isVideo = true;
+            }
+            if (isVideo)
+            {
+                if (App.NavigationFrame != null)
+                {
+                    var videoprogress = new VideoProgress { FilePath = CurrentPlayingPath, CurrentDuration = Masterplayer.CurTime, TotalDuration = Masterplayer.Duration, ShowInformationOfOpen = false };
+                    ContinuePlaying.videoProgressMain = videoprogress;
+                    if (InVideoPage == false)
+                    {
+                        App.NavigationFrame.Navigate(typeof(VideoPlayer), true);
+                    }
+
+                }
+            }
         }
         private static void Masterplayer_OpenCompleted1(object? sender, OpenCompletedArgs e)
         {
@@ -364,18 +393,18 @@ namespace Vusic_Player.Configuration
             Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var videoprogress = currentSettings.SavedVideoProgress;
-       
-            var FileToBePlayed =Path;
+
+            var FileToBePlayed = Path;
             Debug.WriteLine("Looking for video Progress of " + FileToBePlayed);
             var exist = videoprogress.FirstOrDefault(p => p.FilePath == FileToBePlayed);
             if (exist != null)
             {
                 curtimetemp = (long)exist.CurrentDuration;
-     //           PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
+                //           PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
 
                 Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
             }
-           
+
         }
         private static async void Masterplayer_PlaybackStopped(object? sender, PlaybackStoppedArgs e)
         {
@@ -398,7 +427,7 @@ namespace Vusic_Player.Configuration
                         UIController.Thumbnail = bitm;
                         maintimer?.Stop();
 
-                       // QueueService.PlayNext();
+                        // QueueService.PlayNext();
                     });
 
 

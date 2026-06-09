@@ -67,7 +67,13 @@ namespace Vusic_Player.UI.UserViews.Grids
                         item.FileName = Path.GetFileNameWithoutExtension(path);
                         item.Thumbnail = await FileThumbnailObtain.GetVideoFrameAsync(path, 0.25);
                     }
-                    VideoProgressList.Add(item);
+                    var totalduration = item.TotalDuration;
+                    var currentduration = item.CurrentDuration;
+                    var percent97 = 97 / 100 * totalduration;
+                    if (currentduration < totalduration && currentduration <= percent97)
+                    {
+                        VideoProgressList.Add(item);
+                    }
                     grdvRecents.ItemsSource = VideoProgressList;
                 }
                 // You can now use lastSavedItem.CurrentDuration to resume playback

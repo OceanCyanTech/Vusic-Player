@@ -1,8 +1,10 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vusic_Player.Extensions;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using WinRT.Interop;
 using FileOpenPicker = Windows.Storage.Pickers.FileOpenPicker;
 
@@ -10,6 +12,54 @@ namespace Vusic_Player.FilePickers
 {
     public class MediaPicker
     {
+        public static async Task<IReadOnlyList<StorageFile>> PickMultipleAudioFilesAsync(Window window, string commitbuttontext)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.CommitButtonText = commitbuttontext;
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            picker.ViewMode = PickerViewMode.List;
+
+
+            var types = AudioExtensions.List;
+
+            foreach (var type in types) picker.FileTypeFilter.Add(type);
+            return await picker.PickMultipleFilesAsync();
+        }
+        public static async Task<IReadOnlyList<StorageFile>> PickMultipleVideoFilesAsync(Window window, string commitbuttontext)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.CommitButtonText = commitbuttontext;
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            picker.ViewMode = PickerViewMode.Thumbnail;
+
+
+            var types = VideoExtensions.List;
+
+            foreach (var type in types) picker.FileTypeFilter.Add(type);
+            return await picker.PickMultipleFilesAsync();
+        }
+        public static async Task<IReadOnlyList<StorageFile>> PickMultipleMediaFilesAsync(Window window, string commitbuttontext)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.CommitButtonText = commitbuttontext;
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            picker.ViewMode = PickerViewMode.Thumbnail;
+
+
+            var types = VideoExtensions.List;
+            var audiotypes = AudioExtensions.List;
+
+            foreach (var type in types) picker.FileTypeFilter.Add(type);
+            foreach (var type in audiotypes) picker.FileTypeFilter.Add(type);
+            return await picker.PickMultipleFilesAsync();
+        }
+
         public static async Task<StorageFile?> PickSingleVideo(Window window, string commitbuttontext)
         {
             var openPicker = new FileOpenPicker();

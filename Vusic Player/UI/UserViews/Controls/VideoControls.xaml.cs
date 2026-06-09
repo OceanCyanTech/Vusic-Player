@@ -70,14 +70,14 @@ namespace Vusic_Player.UI.UserViews.Controls
             WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             return AppWindow.GetFromWindowId(myWndId);
         }
-
+        public event Action<bool>? FullScreenToggled;
         private void FullScreenToggle()
         {
             _appWindow ??= GetAppWindowForCurrentWindow();
             var targetPresenter = btnFullScreen.IsChecked == true ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default;
             var toolTipText = btnFullScreen.IsChecked == true ? "Resize to Normal Window" : "Set Full Screen";
             _appWindow.SetPresenter(targetPresenter);
-
+            FullScreenToggled?.Invoke(btnFullScreen.IsChecked == true);
             string fullscreentext = btnFullScreen.IsChecked == false ? "Resized to Normal" : " Full Screen";
             GeneralInfoService.ShowInfo(fullscreentext);
             ToolTipService.SetToolTip(btnFullScreen, toolTipText);

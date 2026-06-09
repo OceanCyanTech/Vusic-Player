@@ -129,13 +129,16 @@ namespace Vusic_Player.Pages
         }
         bool isEpisodeVideo = false;
         public Configuration.Helper.SubtitlesProperties.Stream ViewModelSubtitles { get; } = new();
-
+        bool ShowInformationOpened = true;
         private async void Masterplayer_OpenCompleted(object? sender, OpenCompletedArgs e)
         {
             if (PlayerService.Masterplayer == null) return;
             if (PlayerService.CurrentPlayingPath == null) return;
             FadeInOutStoryboardPanel.Begin();
-            ShowInformation($"'{PlayerService.CurrentPlayingPath}' opened");
+            if (ShowInformationOpened)
+            {
+                ShowInformation($"'{PlayerService.CurrentPlayingPath}' opened");
+            }
 
             // Assign it to the UI grid
             PlayerService.Masterplayer.Config.Video.SDRDisplayNits = 55;
@@ -150,16 +153,19 @@ namespace Vusic_Player.Pages
                 var item = settings.SavedVideoProgress.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
                 if (item != null)
                 {
+                    //Already Exists
                     int originalindex = settings.SavedVideoProgress.IndexOf(item);
                     if (originalindex != -1)
                     {
                         int lastIndex = settings.SavedVideoProgress.Count - 1;
                         settings.SavedVideoProgress.Move(originalindex, lastIndex);
                     }
+                   
                     var currentStream = ViewModelSubtitles.CurrentStream;
                     var index = PlayerService.Masterplayer.Subtitles.Streams.IndexOf(currentStream);
                     int indexofSubtitle = index;
                     bool isSubtitlesEnabled = PlayerService.Masterplayer.Config.Subtitles.Enabled;
+                    item.PlayCount++;
                     item.IsSubtitlesDisabled = !isSubtitlesEnabled;
                     item.CurrentDuration = PlayerService.Masterplayer.CurTime;
                     item.TotalDuration = PlayerService.Masterplayer.Duration;
@@ -210,14 +216,29 @@ namespace Vusic_Player.Pages
                     PlayerService.Masterplayer.Config.Subtitles.Enabled = true;
                 }
                 Debug.WriteLine(vdprg.SubtitleIndex + " is the subtitle index");
-                if (vdprg.SubtitleIndex >= 0)
-                {
-                    var streamindex = PlayerService.Masterplayer.Subtitles.Streams[vdprg.SubtitleIndex ?? 0];
-                    Configuration.Helper.SubtitlesProperties.Stream.Set(streamindex);
-                }
+                //if (vdprg.SubtitleIndex >= 0)
+                //{
+                //    var streamindex = PlayerService.Masterplayer.Subtitles.Streams[vdprg.SubtitleIndex ?? 0];
+                //    Configuration.Helper.SubtitlesProperties.Stream.Set(streamindex);
+                //}
+
+
+
+
+
+
+
+
+
+
+
+
                 var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
                 mediacontroller.CurrentPosition = curTime.TotalSeconds;
-                ShowInformation($"Opened playback of '{PlayerService.CurrentPlayingPath}' at {mediacontroller.RunningDurationString}");
+                if (ShowInformationOpened)
+                {
+                    ShowInformation($"Opened playback of '{PlayerService.CurrentPlayingPath}' at {mediacontroller.RunningDurationString}");
+                }
                 if (vdprg.IsEpisode == true )
                 {
                     if (vdprg.FilePath == null) return;
@@ -361,6 +382,7 @@ namespace Vusic_Player.Pages
             {
                 VideoPath = path;
                 LoadingProgress = true;
+                ShowInformationOpened = vditem.ShowInformationOfOpen;
             }
             else if (e.Parameter is string Path)
             {
@@ -378,6 +400,26 @@ namespace Vusic_Player.Pages
 
                 VideoPath = episode.FilePath;
                 isEpisodeVideo = true;
+            }
+            else if(e.Parameter is bool breakofnavigation)
+            {
+                if (breakofnavigation == true)
+                {
+                    if (PlayerService.Masterplayer != null)
+                    {
+                        // Convert ticks to milliseconds and force an accurate seek
+                        SplashGrid.Visibility = Visibility.Collapsed;
+                        MainGrid.Visibility = Visibility.Visible;
+                        hostMedia.Player = PlayerService.Masterplayer;
+
+                    }
+                    else
+                    {
+                        txtSplash.Text = "An unexpected error occured! Check log page under App Settings for more details";
+                        Logger.Log("[ERR-PLY-001] Media player instance is null. Unable to initialize playback.", "VideoPlayerPage.OpenVideo", Logger.LogLevelType.Error);
+                    }
+                    return;
+                }
             }
             if(PlayerService.Masterplayer == null)
             {
@@ -1008,6 +1050,40 @@ namespace Vusic_Player.Pages
                 }
             }
 
+        }
+
+       
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.NavigationFrame != null)
+            {
+                if (PlayerService.InVideoPage == true)
+                {
+                    App.NavigationFrame.GoBack();
+                    if (PlayerService.Masterplayer != null)
+                    {
+                        if (PlayerService.Masterplayer.IsPlaying)
+                        {
+                            PlayerService.Pause();
+                        }
+                    }
+                    PlayerService.InVideoPage = false;
+                }
+
+            }
+        }
+
+        private void videoControls_FullScreenToggled(bool obj)
+        {
+            if(obj == true)
+            {
+                btnBack.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btnBack.Visibility = Visibility.Visible;
+            }
         }
     }
 }

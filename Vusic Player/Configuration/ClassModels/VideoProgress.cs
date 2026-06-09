@@ -14,8 +14,10 @@ namespace Vusic_Player.Configuration.ClassModels
         public string? FilePath { get; set; }
         public bool? IsNew { get; set; } = false;
         public bool? IsSubtitlesDisabled { get; set; } = false;
-        public int? SubtitleIndex { get; set; } = 0;
+        public int SubtitleIndex { get; set; } = 0;
+        public int PlayCount { get; set; } = 0;
         public bool? IsEpisode { get; set; } = false;
+        public bool ShowInformationOfOpen { get; set; } = true;
         public double CurrentDuration { get; set; }
         public double TotalDuration { get; set; }
         public string ShowAssociatedID { get; set; } = "";
