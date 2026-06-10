@@ -14,6 +14,7 @@ namespace Vusic_Player.Configuration.Helper.UI
 {
     public class ShowManager
     {
+        public static bool isLastEpisode = false;
         public static int currentseason = 0;
         public static int currentepisode = 1;
         public static int totalepisodecount = 1;

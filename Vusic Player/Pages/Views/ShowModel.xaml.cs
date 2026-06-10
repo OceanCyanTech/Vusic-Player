@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
@@ -717,6 +718,12 @@ namespace Vusic_Player.Pages.Views
                     if (exist != null)
                     {
                         int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
+                      
+                       
+                        if (indexbefore == QueueService.VusicQueueNext.Count - 1)
+                        {
+                            ShowManager.isLastEpisode = true;
+                        }
 
                         // Ensure the item was actually found (-1 means not found)
                         if (indexbefore != -1)

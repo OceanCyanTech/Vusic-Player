@@ -160,12 +160,12 @@ namespace Vusic_Player.Pages
                         int lastIndex = settings.SavedVideoProgress.Count - 1;
                         settings.SavedVideoProgress.Move(originalindex, lastIndex);
                     }
-                   
+
                     var currentStream = ViewModelSubtitles.CurrentStream;
                     var index = PlayerService.Masterplayer.Subtitles.Streams.IndexOf(currentStream);
                     int indexofSubtitle = index;
                     bool isSubtitlesEnabled = PlayerService.Masterplayer.Config.Subtitles.Enabled;
-                  //  item.PlayCount++;
+                    //  item.PlayCount++;
                     item.IsSubtitlesDisabled = !isSubtitlesEnabled;
                     item.CurrentDuration = PlayerService.Masterplayer.CurTime;
                     item.TotalDuration = PlayerService.Masterplayer.Duration;
@@ -240,7 +240,7 @@ namespace Vusic_Player.Pages
                 {
                     ShowInformation($"Opened playback of '{PlayerService.CurrentPlayingPath}' at {mediacontroller.RunningDurationString}");
                 }
-                if (vdprg.IsEpisode == true )
+                if (vdprg.IsEpisode == true)
                 {
                     if (vdprg.FilePath == null) return;
                     Debug.WriteLine("Yes Episode");
@@ -288,18 +288,18 @@ namespace Vusic_Player.Pages
                         QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
                     }
                     var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
-              
+
                     if (exist != null)
                     {
-                      
-                     
-                            int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
+
+
+                        int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
                         if (indexbefore == QueueService.VusicQueueNext.Count - 1)
                         {
                             btnNextEpisode.Content = "Next Season";
                         }
-                            // Ensure the item was actually found (-1 means not found)
-                            if (indexbefore != -1)
+                        // Ensure the item was actually found (-1 means not found)
+                        if (indexbefore != -1)
                         {
                             // Loop indexbefore + 1 times to include the 'exist' item itself
                             int itemsToRemove = indexbefore + 1;
@@ -331,7 +331,10 @@ namespace Vusic_Player.Pages
                 }
 
             }
-           
+            else
+            {
+
+            }
             //LoadSettings();
             //LoadOptions();
 
@@ -405,10 +408,12 @@ namespace Vusic_Player.Pages
                 if (episode.FilePath == null) return;
                 Debug.WriteLine("Yesss222");
 
+
+
                 VideoPath = episode.FilePath;
                 isEpisodeVideo = true;
             }
-            else if(e.Parameter is bool breakofnavigation)
+            else if (e.Parameter is bool breakofnavigation)
             {
                 if (breakofnavigation == true)
                 {
@@ -428,7 +433,7 @@ namespace Vusic_Player.Pages
                     return;
                 }
             }
-            if(PlayerService.Masterplayer == null)
+            if (PlayerService.Masterplayer == null)
             {
                 PlayerService.Masterplayer = new Player();
             }
@@ -437,7 +442,11 @@ namespace Vusic_Player.Pages
 
             PlayerService.OpenPath(VideoPath);
 
-
+            if (ShowManager.isLastEpisode == true)
+            {
+                btnNextEpisode.Content = "Next Season";
+                ShowManager.isLastEpisode = false;
+            }
             if (PlayerService.Masterplayer != null)
             {
                 // Convert ticks to milliseconds and force an accurate seek
@@ -822,8 +831,8 @@ namespace Vusic_Player.Pages
                         string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
 
                         seasons.Add(new PlaylistItem { PlaylistName = seasonName, PlaylistId = actualContentPath, PlaylistCount = episodeCountString, SeasonNumber = seasonNum });
-                         
-                        
+
+
                     }
                 }
                 var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
@@ -835,7 +844,7 @@ namespace Vusic_Player.Pages
                         Tag = item.PlaylistId   // Use the property from 'item'
                     });
                 }
-                if(selbarSeasons.Items.Count != 0)
+                if (selbarSeasons.Items.Count != 0)
                 {
                     selbarSeasons.SelectedItem = selbarSeasons.Items[ShowManager.currentseason];
 
@@ -906,8 +915,8 @@ namespace Vusic_Player.Pages
     @"(?<=\s+|-|_|#)(\d+)(?=\.\w+$|\s+|-|_)"
 };
 
-          
-               
+
+
                     var videoFiles = Directory.EnumerateFiles(folderpath)
     .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
     .OrderBy(file => file)
@@ -915,7 +924,7 @@ namespace Vusic_Player.Pages
 
                     EpisodesList.Clear();
 
-            
+
 
                     // 1. Pre-populate the list on the UI thread so items stay perfectly sorted
                     var episodePlaceholders = new List<EpisodeModel>();
@@ -1074,7 +1083,7 @@ namespace Vusic_Player.Pages
 
         }
 
-       
+
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
@@ -1098,7 +1107,7 @@ namespace Vusic_Player.Pages
 
         private void videoControls_FullScreenToggled(bool obj)
         {
-            if(obj == true)
+            if (obj == true)
             {
                 btnBack.Visibility = Visibility.Collapsed;
             }
