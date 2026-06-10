@@ -164,17 +164,18 @@ namespace Vusic_Player.Configuration.Playback
             }
             //VusicQueueView.Filter = x => VusicQueue.IndexOf((SongModel)x) > videoindex;
         }
-        //public static void MarkSongCompleted()
-        //{
-        //    var song2 = VusicQueue.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
+        public static void MarkSongCompleted()
+        {
+            var song2 = VusicQueue.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
 
-        //    if (song2 != null)
-        //    {
-        //        song2.IsCompleted = true;
-        //        song2.VisibilityOfStrikeThrough = Microsoft.UI.Xaml.Visibility.Visible;
-        //        Debug.WriteLine(song2.FilePath + " is to be removed now");
+            if (song2 != null)
+            {
+                song2.IsCompleted = true;
+                song2.VisibilityOfStrikeThrough = Microsoft.UI.Xaml.Visibility.Visible;
+                Debug.WriteLine(song2.FilePath + " is to be removed now");
 
-        //    }
+            }
+        }
 
 
         //}
@@ -184,68 +185,68 @@ namespace Vusic_Player.Configuration.Playback
         //    if (queue == null || queue.Count == 0) return;
 
 
-        //    var item = queue[0];
-        //    Debug.WriteLine(item.FilePath + " is to be played now");
-        //    if (string.IsNullOrEmpty(item.FilePath)) return;
+            //    var item = queue[0];
+            //    Debug.WriteLine(item.FilePath + " is to be played now");
+            //    if (string.IsNullOrEmpty(item.FilePath)) return;
 
-        //    // 3. Update state and play
-        //    //    videoindex = targetIndex;
-        //    var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
+            //    // 3. Update state and play
+            //    //    videoindex = targetIndex;
+            //    var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
 
-        //    string fileExtension = file.FileType.ToLowerInvariant();
-        //    bool isVideo = false;
-        //    if (Extensions.VideoExtensions.List.Contains(fileExtension))
-        //    {
-        //        isVideo = true;
-        //    }
-        //    if (isVideo)
-        //    {
-        //        Debug.WriteLine("True");
-        //        if(App.NavigationFrame != null)
-        //        {
-        //            if (PlayerService.InVideoPage == false)
-        //            {
-        //                App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
-        //            }
+            //    string fileExtension = file.FileType.ToLowerInvariant();
+            //    bool isVideo = false;
+            //    if (Extensions.VideoExtensions.List.Contains(fileExtension))
+            //    {
+            //        isVideo = true;
+            //    }
+            //    if (isVideo)
+            //    {
+            //        Debug.WriteLine("True");
+            //        if(App.NavigationFrame != null)
+            //        {
+            //            if (PlayerService.InVideoPage == false)
+            //            {
+            //                App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
+            //            }
 
-        //        }
+            //        }
 
 
-        //    }
-        //    PlayerService.OpenPath(item.FilePath);
-        //}
-        //private static async Task PlayandRemoveAsync()
-        //{
-        //    if (VusicQueueNext == null || VusicQueueNext.Count == 0) return;
+            //    }
+            //    PlayerService.OpenPath(item.FilePath);
+            //}
+            //private static async Task PlayandRemoveAsync()
+            //{
+            //    if (VusicQueueNext == null || VusicQueueNext.Count == 0) return;
 
-        //    // Capture the target item BEFORE we do anything asynchronous
-        //    var firstitem2 = VusicQueueNext[0];
+            //    // Capture the target item BEFORE we do anything asynchronous
+            //    var firstitem2 = VusicQueueNext[0];
 
-        //    // Await the media player initialization completely
-        //    await PlayMediaAtIndex();
+            //    // Await the media player initialization completely
+            //    await PlayMediaAtIndex();
 
-        //    Debug.WriteLine("Supposed to get removed is " + firstitem2.FilePath);
-        //    if (firstitem2 != null)
-        //    {
-        //        Debug.WriteLine("Supposed to get removed is2 " + firstitem2.FilePath);
-        //        VusicQueueNext.Remove(firstitem2);
-        //    }
+            //    Debug.WriteLine("Supposed to get removed is " + firstitem2.FilePath);
+            //    if (firstitem2 != null)
+            //    {
+            //        Debug.WriteLine("Supposed to get removed is2 " + firstitem2.FilePath);
+            //        VusicQueueNext.Remove(firstitem2);
+            //    }
 
-        //    foreach (var item in VusicQueueNext)
-        //    {
-        //        Debug.WriteLine(item.FilePath + " is new list");
-        //    }
+            //    foreach (var item in VusicQueueNext)
+            //    {
+            //        Debug.WriteLine(item.FilePath + " is new list");
+            //    }
 
-        //    if (IsShuffleTrue && firstitem2 != null)
-        //    {
-        //        var itemtoremove = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == firstitem2.FilePath);
-        //        if (itemtoremove != null)
-        //        {
-        //            OriginalVusicQueueNext.Remove(itemtoremove);
-        //        }
-        //    }
-        //}
-        //      REWRITE WHOLE CODE AGAIN FOR NEXT, MEDIA AT INDEX AND REMOVAL
+            //    if (IsShuffleTrue && firstitem2 != null)
+            //    {
+            //        var itemtoremove = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == firstitem2.FilePath);
+            //        if (itemtoremove != null)
+            //        {
+            //            OriginalVusicQueueNext.Remove(itemtoremove);
+            //        }
+            //    }
+            //}
+            //      REWRITE WHOLE CODE AGAIN FOR NEXT, MEDIA AT INDEX AND REMOVAL
         public static async void PlayNext()
         {
             if (VusicQueueNext.Count != 0)

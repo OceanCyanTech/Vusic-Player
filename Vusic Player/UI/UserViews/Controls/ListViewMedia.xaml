@@ -5,10 +5,413 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters"
     mc:Ignorable="d">
 
-    <Grid>
+    <UserControl.Resources>
+        <converters:FavoriteToGlyphConverter x:Key="FavoritetoGlyphConv"/>
+        <converters:FavoriteToColorConverter x:Key="FavoritetoColorConv"/>
 
+        <MenuFlyout x:Key="mnftMainContext" Opened="mnftContext_Opened"  x:Name="mnftContext" >
+            <MenuFlyoutItem Text="{Binding Title}"  IsEnabled="False" Name="txtHeaderContext"></MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem Text="Play"  Name="mnftPlaySong" Click="mnftPlaySong_Click" Icon="Play"></MenuFlyoutItem>
+            <MenuFlyoutItem Text="Play Next"  Name="mnftPlaySongNext" Click="mnftPlaySongNext_Click" Icon="Play"></MenuFlyoutItem>
+            <MenuFlyoutItem Text="Add to Play Queue"    Name="mnftAddtoQueue" Click="mnftAddtoQueue_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE81E;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem Text="Go to artist"   Name="mnftGoToArtist" Click="mnftGoToArtist_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE77B;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Go to album"  Name="mnftGoToAlbum" Click="mnftGoToAlbum_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE93C;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="File Details"  Name="mnftSongDetails" Click="mnftSongDetails_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE946;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Edit info"  Name="mnftEditInfo" Click="mnftSongDetails_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE70F;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutSubItem Text="Add to Playlist"  x:Name="mnftAddtoPlaylist" >
+                <MenuFlyoutSubItem.Icon>
+                    <FontIcon Glyph="&#xECC8;"></FontIcon>
+                </MenuFlyoutSubItem.Icon>
+            </MenuFlyoutSubItem>
+            <MenuFlyoutItem Text="{Binding IsFavourite, Converter={StaticResource FavToolTipConverter}}" Tag="Favo"  x:Name="mnftAddToFavourites" Click="mnftAddToFavourites_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Name="OutlineHeart" 
+Glyph="{Binding IsFavourite, Converter={StaticResource FavoritetoGlyphConv}, Mode=OneWay}" 
+Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}, Mode=OneWay}"
+                                          FontSize="16"/>
+                </MenuFlyoutItem.Icon>
+
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator Visibility="{Binding IsMovableItem}"></MenuFlyoutSeparator>
+            <MenuFlyoutItem Text="Move up" Visibility="{Binding IsMovableItem}"  Name="mnftMoveup" Click="mnftMoveup_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE70E;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Move down" Visibility="{Binding IsMovableItem}"  Name="mnftMovedown" Click="mnftMovedown_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE70D;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Move to top" Visibility="{Binding IsMovableItem}"  Name="mnftMovetotop" Click="mnftMovetotop_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE74A;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Move to bottom" Visibility="{Binding IsMovableItem}"  Name="mnftMovetobottom" Click="mnftMovetobottom_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE74B;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem Text="{Binding Remove}" Name="mnftRemoveSong" Click="mnftRemoveSong_Click" Icon="Delete"></MenuFlyoutItem>
+            <MenuFlyoutSeparator Visibility="Collapsed"></MenuFlyoutSeparator>
+            <MenuFlyoutItem Visibility="Collapsed" Text="Tools"  Name="mnftTools" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE713;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+        </MenuFlyout>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TeachingTip IsOpen="False" Name="ttAddToPlaylist"  Title="Add Selected Items to Playlist">
+            <Grid RowSpacing="20" Margin="0, 10">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Name="txtItemsCountAddtoPl"  Text="0 items selected" Grid.Row="0"></TextBlock>
+                <ListView SelectionChanged="lstViewPlaylists_SelectionChanged" SelectionMode="Multiple" Grid.Row="1" Name="lstViewPlaylists" Header="Add to Selected Playlists"></ListView>
+                <Button IsEnabled="False" Name="btnAddFinalPlaylists" Click="btnAdd_Click" Style="{StaticResource AccentButtonStyle}" Content="Add" Grid.Row="2"></Button>
+            </Grid>
+        </TeachingTip>
+        <TeachingTip Name="ttAddedToPlaylist" Title="Added to Playlist" IsOpen="False">
+            <HyperlinkButton Name="hypPlaylistAdded" Click="hypPlaylistAdded_Click"></HyperlinkButton>
+        </TeachingTip>
+        <TeachingTip IsOpen="False" Name="ttError">
+            <TextBlock Name="txtError"></TextBlock>
+        </TeachingTip>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Background="Transparent" BorderBrush="Transparent" Name="btnSortItems" Click="btnSortItems_Click" 
+ToolTipService.ToolTip="Sort items">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <RadioMenuFlyoutItem Name="mnftSortName" Text="Sort by Name" Click="mnftSortName_Click">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem Name="mnftSortDuration" Text="Sort by Duration" Click="mnftSortDuration_Click">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem Name="mnftSortbyArtist" Text="Sort by Artist Name" Click="mnftSortbyArtist_Click">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem Name="mnftSortbyAlbum" Text="Sort by Album Name" Click="mnftSortbyAlbum_Click">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem Name="mnftSortbyDateMod" Text="Sort by Date Modified" Click="mnftSortbyDateMod_Click">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem Name="mnftSortbyDateCreated" Text="Sort by Date Created" Click="mnftSortbyDateCreated_Click">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem Name="mnftSortbyMediaType" Text="Sort by Media Type" Click="mnftSortbyMediaType_Click">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+
+                    </MenuFlyout>
+                </Button.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="25" Source="/Assets/sorticon.png" />
+                </StackPanel>
+            </Button>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="Collapsed" Spacing="10" Name="stkMultiOptions">
+                <Button Name="btnRemoveSelections" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Remove from playlist" Margin="0, 10" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                    </StackPanel>
+                    <Button.Flyout>
+                        <Flyout x:Name="flyoutDelete">
+                            <StackPanel Orientation="Vertical" Spacing="10">
+                                <TextBlock Text="Confirm removing the selected items from the playlist."></TextBlock>
+                                <Button Content="Remove" Click="btnRemoveSelectionsConfirm_Click" Name="btnRemoveSelectionsConfirm"></Button>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+                <Button Name="btnEditAlbumMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Edit Album property" Margin="0, 10" Click="btnEditAlbumMass_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                    </StackPanel>
+                </Button>
+                <Button Name="btnEditArtistMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Edit Artist property" Margin="0, 10" Click="btnEditAlbumMass_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                    </StackPanel>
+                </Button>
+                <Button Name="btnAddtoPlaylistMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Add selected items to a playlist" Margin="0, 10" Click="btnAddtoPlaylistMass_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                    </StackPanel>
+                </Button>
+
+                <Button Name="btnSelectAll" ToolTipService.ToolTip="Select All" Margin="0, 10" Click="btnSelectAll_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                    </StackPanel>
+                </Button>
+                <Button Name="btnClearSelection" ToolTipService.ToolTip="Clear Selection" Margin="0, 10" Click="btnClearSelection_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                    </StackPanel>
+                </Button>
+                <Button Name="btnRemoveSelectionsFromFavourites"  ToolTipService.ToolTip="Favourites" Margin="0, 10" Click="btnRemoveSelectionsFromFavourites_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/favicon.png" Width="20"></Image>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" >
+            <Button Visibility="{x:Bind VisiblityofViewButton, Mode=OneWay}" Background="Transparent" BorderBrush="Transparent" Name="btnViewMode" 
+ToolTipService.ToolTip="View Mode">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <RadioMenuFlyoutItem Name="mnftViewList" IsChecked="True" Text="List" Click="mnftViewList_Click">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem Name="mnftViewIcons" Text="Thumbnails Grid" Click="mnftViewIcons_Click">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"></FontIcon>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+
+                    </MenuFlyout>
+                </Button.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="25" Source="/Assets/appicon.png" />
+                </StackPanel>
+            </Button>
+
+            <AutoSuggestBox Name="asbSearch" HorizontalAlignment="Left" Visibility="{x:Bind SearchVisibility}" TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" Margin="10, 5" Grid.Row="1" Width="200" QueryIcon="Find" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" PlaceholderText="Search..."></AutoSuggestBox>
+        </StackPanel>
+        <Grid  Grid.Row="2"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Name="btnCloseSearch" CornerRadius="12" Background="Transparent" BorderBrush="Transparent" Click="btnCloseSearch_Click" ToolTipService.ToolTip="Close Search Results" HorizontalAlignment="Right" Margin="20, 0">
+                <FontIcon Glyph="&#xE711;" FontSize="36"></FontIcon>
+            </Button>
+            <Frame VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Name="frmSearchResultsNOMATCH"></Frame>
+
+        </Grid>
+        <CheckBox Visibility="Collapsed" Name="chckSelectGridView" Checked="chckSelectGridView_Checked" Unchecked="chckSelectGridView_Checked" Content="Select" Grid.Row="2" Margin="10, 5" HorizontalAlignment="Left"></CheckBox>
+        <GridView SelectionChanged="lstViewPlaylist_SelectionChanged" Visibility="Collapsed"  Margin="0, 10" ItemsSource="{Binding ItemsSource}" Grid.Row="3" Name="grdViewMain" CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionMode="Single">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal" VerticalAlignment="Stretch" ItemWidth="140" ItemHeight="220"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ContextFlyout="{StaticResource mnftMainContext}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10, 0" RowSpacing="4" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+
+                        </Grid.RowDefinitions>
+                        <Image Grid.Row="0" Width="120" Height="120" Source="{Binding VideoThumbnail}"/>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" >
+                            <HyperlinkButton Padding="0" Name="btnGlyphVideo" MinHeight="0" MinWidth="0" Margin="0, 0" Width="35" Grid.Column="0"  Click="btnGlyph_Click" Visibility="Visible" BorderThickness="0" >
+                                <TextBlock Text="{Binding Glyph}" Foreground="{Binding TitleColor, Mode=OneWay}"  FontFamily="Segoe Fluent Icons"></TextBlock>
+                            </HyperlinkButton>
+                            <HyperlinkButton Click="hypTitle_Click" Padding="2" Grid.Column="1" Name="hypTitleVideo"   Visibility="Visible"  Margin="0, 0">
+                                <Grid>
+                                    <TextBlock Text="{Binding Title}"    ToolTipService.ToolTip="{Binding Title}" Foreground="{Binding TitleColor, Mode=OneWay}"></TextBlock>
+                                    <Border Height="2" 
+Background="Cyan" 
+VerticalAlignment="Center" 
+Margin="0,2,0,0"
+                                CornerRadius="4"
+Visibility="{Binding VisibilityOfStrikeThrough}" />
+                                </Grid>
+                            </HyperlinkButton>
+                        </StackPanel>
+                        <Grid Grid.Row="2" MaxWidth="110" HorizontalAlignment="Center" Visibility="{Binding VisibilityofAudioMeta}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="0" Source="/Assets/defaultartist.png" Width="15" Height="15" Margin="0,0,4,0" VerticalAlignment="Center" ToolTipService.ToolTip="Artist"/>
+
+                            <HyperlinkButton Grid.Column="1" Click="hypArtist_Click" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Grid>
+                                    <TextBlock Text="{Binding Artist}" FontSize="10" 
+                       TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxLines="2"
+                       ToolTipService.ToolTip="{Binding Artist}" 
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Border Height="2" Background="Cyan" VerticalAlignment="Center" Margin="0,2,0,0"
+                    CornerRadius="4" Visibility="{Binding VisibilityOfStrikeThrough}" />
+                                </Grid>
+                            </HyperlinkButton>
+                        </Grid>
+
+                        <Grid Grid.Row="3" Margin="0, 4, 0, 0" MaxWidth="110" HorizontalAlignment="Center" Visibility="{Binding VisibilityofAudioMeta}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="0" Source="/Assets/defaultalbum.png" Width="15" Height="15" Margin="0,0,4,0" VerticalAlignment="Center" ToolTipService.ToolTip="Album"/>
+
+                            <HyperlinkButton Grid.Column="1" Click="hypAlbum_Click" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Grid>
+                                    <TextBlock Text="{Binding AlbumName}" FontSize="10" 
+                       TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxLines="2"
+                       ToolTipService.ToolTip="{Binding AlbumName}" 
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Border Height="2" Background="Cyan" VerticalAlignment="Center" Margin="0,2,0,0"
+                    CornerRadius="4" Visibility="{Binding VisibilityOfStrikeThrough}" />
+                                </Grid>
+                            </HyperlinkButton>
+                        </Grid>
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" ToolTipService.ToolTip="{Binding FavString}" Padding="3" Margin="0, 0" x:Name="btnFavourite" 
+Click="btnFavourite_Click"
+Background="Transparent" 
+BorderThickness="0"
+                                            >
+                                <Grid>
+                                    <FontIcon x:Name="HeartIcon" FontSize="16" RenderTransformOrigin="0.5,0.5" Glyph="{Binding IsFavourite, Converter={StaticResource FavoritetoGlyphConv}, Mode=OneWay}" Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}, Mode=OneWay}"
+  >
+                                        <FontIcon.RenderTransform>
+                                            <ScaleTransform x:Name="HeartScale" ScaleX="1" ScaleY="1"/>
+                                        </FontIcon.RenderTransform>
+                                    </FontIcon>
+                                </Grid>
+                            </Button>
+
+                            <TextBlock Grid.Column="1" ToolTipService.ToolTip="{Binding FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding FormattedDuration}" Visibility="Visible" TextWrapping="Wrap" Margin="0,5" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+        <ListView   Margin="0, 0" Grid.Row="2" CanDragItems="True" Visibility="Visible" CanReorderItems="True" AllowDrop="True"
+SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   Name="lstViewPlaylist" ItemsSource="{Binding ItemsSource}">
+
+            <ListView.ItemTemplate>
+                <DataTemplate >
+                    <Grid ContextFlyout="{StaticResource mnftMainContext}" Margin="0, 5" VerticalAlignment="Stretch" Background="Transparent" HorizontalAlignment="Stretch">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <HyperlinkButton Padding="0" Name="btnGlyph" MinHeight="0" MinWidth="0" Margin="0, 0" Width="35" Grid.Column="0"  Click="btnGlyph_Click" Visibility="Visible" BorderThickness="0" >
+                            <TextBlock Text="{Binding Glyph}" Foreground="{Binding TitleColor, Mode=OneWay}"  FontFamily="Segoe Fluent Icons"></TextBlock>
+                        </HyperlinkButton>
+                        <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle"   Visibility="Visible"  Margin="0, 0">
+                            <Grid>
+                                <TextBlock Text="{Binding Title}"    ToolTipService.ToolTip="{Binding Title}" Foreground="{Binding TitleColor, Mode=OneWay}"></TextBlock>
+                                <Border Height="2" 
+            Background="Cyan" 
+            VerticalAlignment="Center" 
+            Margin="0,2,0,0"
+                                            CornerRadius="4"
+            Visibility="{Binding VisibilityOfStrikeThrough}" />
+                            </Grid>
+                        </HyperlinkButton>
+                        <StackPanel Visibility="{Binding VisibilityofAudioMeta}" Orientation="Horizontal" Grid.Column="2">
+                            <Image ToolTipService.ToolTip="Artist" Width="25" Source="/Assets/defaultartist.png" ></Image>
+                            <HyperlinkButton Grid.Column="2" Name="hypArtist" ToolTipService.ToolTip="{Binding Artist}" Click="hypArtist_Click"   Visibility="Visible"  Margin="0, 0">
+                                <TextBlock Text="{Binding Artist}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                            </HyperlinkButton>
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding VisibilityofVideoInfo}"  Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
+
+                            <TextBlock VerticalAlignment="Center" Text="Video File"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding VisibilityofAudioMeta}"  Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
+                            <Image ToolTipService.ToolTip="Album" Width="25" Source="/Assets/defaultalbum.png" ></Image>
+                            <HyperlinkButton ToolTipService.ToolTip="{Binding AlbumName}" Grid.Column="3" Name="hypAlbum" Click="hypAlbum_Click"   Visibility="Visible"  Margin="0, 0">
+                                <TextBlock Text="{Binding AlbumName}"   FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                            </HyperlinkButton>
+                        </StackPanel>
+                        <TextBlock ToolTipService.ToolTip="{Binding FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{Binding FormattedDuration}" Visibility="Visible" TextWrapping="Wrap" Margin="0, 20"/>
+                        <Button ToolTipService.ToolTip="{Binding FavString}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" 
+Click="btnFavourite_Click"
+Background="Transparent" 
+BorderThickness="0"
+                                            >
+                            <Grid>
+                                <FontIcon x:Name="HeartIcon" RenderTransformOrigin="0.5,0.5" Glyph="{Binding IsFavourite, Converter={StaticResource FavoritetoGlyphConv}, Mode=TwoWay}" Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}, Mode=TwoWay}"
+  >
+                                    <FontIcon.RenderTransform>
+                                        <ScaleTransform x:Name="HeartScale" ScaleX="1" ScaleY="1"/>
+                                    </FontIcon.RenderTransform>
+                                </FontIcon>
+                            </Grid>
+                        </Button>
+
+                    </Grid>
+                </DataTemplate>
+
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
+
 </UserControl>

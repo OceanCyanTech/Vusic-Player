@@ -165,7 +165,7 @@ namespace Vusic_Player.Pages
                     var index = PlayerService.Masterplayer.Subtitles.Streams.IndexOf(currentStream);
                     int indexofSubtitle = index;
                     bool isSubtitlesEnabled = PlayerService.Masterplayer.Config.Subtitles.Enabled;
-                    item.PlayCount++;
+                  //  item.PlayCount++;
                     item.IsSubtitlesDisabled = !isSubtitlesEnabled;
                     item.CurrentDuration = PlayerService.Masterplayer.CurTime;
                     item.TotalDuration = PlayerService.Masterplayer.Duration;
@@ -206,6 +206,7 @@ namespace Vusic_Player.Pages
             //}
             if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
             {
+                isEpisodeVideo = vdprg.IsEpisode ?? false;
                 PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
                 if (vdprg.IsSubtitlesDisabled == true)
                 {
@@ -232,7 +233,7 @@ namespace Vusic_Player.Pages
 
 
 
-
+                LoadingProgress = false;
                 var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
                 mediacontroller.CurrentPosition = curTime.TotalSeconds;
                 if (ShowInformationOpened)
@@ -287,12 +288,18 @@ namespace Vusic_Player.Pages
                         QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
                     }
                     var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
+              
                     if (exist != null)
                     {
-                        int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
-
-                        // Ensure the item was actually found (-1 means not found)
-                        if (indexbefore != -1)
+                      
+                     
+                            int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
+                        if (indexbefore == QueueService.VusicQueueNext.Count - 1)
+                        {
+                            btnNextEpisode.Content = "Next Season";
+                        }
+                            // Ensure the item was actually found (-1 means not found)
+                            if (indexbefore != -1)
                         {
                             // Loop indexbefore + 1 times to include the 'exist' item itself
                             int itemsToRemove = indexbefore + 1;
@@ -313,7 +320,7 @@ namespace Vusic_Player.Pages
 
                     }
                     ShowManager.LoadAvailableShow(vdprg.FilePath);
-
+                    UpdateNextEpisodeButtonContent(vdprg.FilePath);
                 }
                 else
                 {
@@ -585,9 +592,24 @@ namespace Vusic_Player.Pages
 
                 if (seasons.Count != 0)
                 {
+                    if (PlayerService.CurrentPlayingPath == null) return;
                     Debug.WriteLine("TEST6");
-
                     var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
+
+                    foreach (var seas in seasonsRearranged)
+                    {
+                        var path = seas.PlaylistId;
+                        if (path != null)
+                        {
+                            // Check if the current file path starts with the season's directory path
+                            if (PlayerService.CurrentPlayingPath.StartsWith(path, StringComparison.OrdinalIgnoreCase))
+                            {
+                                var curindex = seasonsRearranged.IndexOf(seas);
+                                ShowManager.currentseason = curindex;
+                                break; // Found it, no need to keep looping
+                            }
+                        }
+                    }
                     ShowManager.currentseason++;
                     Debug.WriteLine(ShowManager.currentseason + " is the current season now");
                     foreach (var item in seasonsRearranged)

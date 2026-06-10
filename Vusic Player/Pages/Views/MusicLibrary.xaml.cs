@@ -74,7 +74,7 @@ namespace Vusic_Player.Pages.Views
 
         private void NavigationToPlaylist_NavigCalled()
         {
-            this.Frame.Navigate(typeof(PlaylistView),NavigationToPlaylist.playlisttosend);
+            this.Frame.Navigate(typeof(PlaylistView), NavigationToPlaylist.playlisttosend);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -94,7 +94,7 @@ namespace Vusic_Player.Pages.Views
         {
             PlaylistCreation.CallPlaylistCreation();
             OceanContentDialog.HideDlg();
- //           MainWindow.ShowWindow();
+            MainWindow.ShowWindow();
 
         }
 

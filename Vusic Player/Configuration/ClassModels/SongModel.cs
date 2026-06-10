@@ -17,6 +17,7 @@ namespace Vusic_Player.Configuration.ClassModels
       
         private Brush _titleColor = new SolidColorBrush(Microsoft.UI.Colors.White); // Safe for any thread!
         private int _year;
+        private int seasonindexassociated;
         private Visibility visibilityofstrikethrough = Visibility.Collapsed;
         private Visibility visibilityofaudiometadata = Visibility.Visible;
         private Visibility visibilityofvidinfo = Visibility.Collapsed;
@@ -28,6 +29,11 @@ namespace Vusic_Player.Configuration.ClassModels
         {
             get => _year;
             set { _year = value; OnPropertyChanged(); }
+        }
+        public int SeasonIndexAssoc
+        {
+            get => seasonindexassociated;
+            set { seasonindexassociated = value; OnPropertyChanged(); }
         }
         public Visibility QueueControls
         {

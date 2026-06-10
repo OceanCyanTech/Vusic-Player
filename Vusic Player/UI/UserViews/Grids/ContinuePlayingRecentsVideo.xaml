@@ -179,7 +179,7 @@
             </StackPanel>
             <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Top"
  x:Name="grdvRecents" SelectionMode="Single" IsItemClickEnabled="True" 
-ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 20" SelectionChanged="GridContinuePlaying_SelectionChanged" ScrollViewer.HorizontalScrollMode="Enabled"
+ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridContinuePlaying_SelectionChanged" ScrollViewer.HorizontalScrollMode="Enabled"
           ScrollViewer.HorizontalScrollBarVisibility="Auto">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>

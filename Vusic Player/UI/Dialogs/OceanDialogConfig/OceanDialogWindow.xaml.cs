@@ -235,38 +235,40 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             MassEdit.Visibility = Visibility.Collapsed;
             ShowMod.Visibility = Visibility.Collapsed;
             if (contentType == ContentType.PlaylistCreation || contentType == ContentType.PlaylistEdit)
-            { }
-            //    PlaylistCreation.Visibility = Visibility.Visible;
-            //    PlaylistCreation.ClearStuff();
-            //    PlaylistCreation.AllSongs = existingitems;
-            //    PlaylistCreation.PlaylistNameSuggested = SuggestedPlaylistName;
-            //    if (isAudioPlaylist == false)
-            //    {
-            //        Debug.WriteLine("Hhaha");
+            {  
+                PlaylistCreation.Visibility = Visibility.Visible;
+                PlaylistCreation.ClearStuff();
+                PlaylistCreation.AllSongs = existingitems;
+                PlaylistCreation.PlaylistNameSuggested = SuggestedPlaylistName;
+                if (isAudioPlaylist == false)
+                {
+                    Debug.WriteLine("Hhaha");
 
-            //        PlaylistCreation.VisibilityOfGenreProperty = Visibility.Visible;
-            //        PlaylistCreation.AddedMediaHeader = "Added Videos";
-            //        PlaylistCreation.AddedSongsButton = "Add Videos";
-            //        PlaylistCreation.EmptyListDisplay = "No videos have been added yet!";
-            //        PlaylistCreation.IsVideoPlaylist = true;
-            //        PlaylistCreation.SearchPlaceHolderText = "Find videos that you added...";
-            //    }
-            //    else
-            //    {
-            //        Debug.WriteLine("Hhaha2");
+                    PlaylistCreation.VisibilityOfGenreProperty = Visibility.Visible;
+                    PlaylistCreation.AddedMediaHeader = "Added Videos";
+                    PlaylistCreation.AddedSongsButton = "Add Videos";
+                    PlaylistCreation.EmptyListDisplay = "No videos have been added yet!";
+                    PlaylistCreation.IsVideoPlaylist = true;
+                    PlaylistCreation.SearchPlaceHolderText = "Find videos that you added...";
+                }
+                else
+                {
+                    Debug.WriteLine("Hhaha2");
 
-            //        PlaylistCreation.VisibilityOfGenreProperty = Visibility.Visible;
-            //        PlaylistCreation.AddedMediaHeader = "Added Songs";
-            //        PlaylistCreation.AddedSongsButton = "Add Songs";
-            //        PlaylistCreation.EmptyListDisplay = "No songs have been added yet!";
-            //        PlaylistCreation.IsVideoPlaylist = true;
-            //        PlaylistCreation.SearchPlaceHolderText = "Find songs that you added...";
-            //    }
-            //    if (isPlaylistEdit == true)
-            //    {
-            //        Debug.WriteLine("YES EDIT");
-            //        PlaylistCreation.PlaylistEdit(playlist);
-            //    }
+                    PlaylistCreation.VisibilityOfGenreProperty = Visibility.Visible;
+                    PlaylistCreation.AddedMediaHeader = "Added Songs";
+                    PlaylistCreation.AddedSongsButton = "Add Songs";
+                    PlaylistCreation.EmptyListDisplay = "No songs have been added yet!";
+                    PlaylistCreation.IsVideoPlaylist = true;
+                    PlaylistCreation.SearchPlaceHolderText = "Find songs that you added...";
+                }
+                if (isPlaylistEdit == true)
+                {
+                    Debug.WriteLine("YES EDIT");
+                    PlaylistCreation.PlaylistEdit(playlist);
+                }
+            }
+
             //}
             //else if (contentType == ContentType.FileInformation)
             //{

@@ -3,14 +3,24 @@
     x:Class="Vusic_Player.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Vusic_Player">
+    xmlns:local="using:Vusic_Player" xmlns:converter="using:Vusic_Player.Configuration.Helper.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
-            <!-- Other app resources here -->
+            <converter:BoolToOpacityConverter x:Key="BoolToOpacityConverter"
+                     />
+            <converter:BoolToTextConverter x:Key="FavToolTipConverter" 
+             TrueText="Remove from Favourites" 
+             FalseText="Add to Favourites"/>
+            <converter:BoolToTextConverter x:Key="FavGlyph" 
+    TrueText="&#xEB52;" 
+    FalseText="&#xEB51;"/>
+            <converter:BoolToBrushConverter x:Key="FavColor" 
+    TrueBrush="Red" 
+    FalseBrush="White"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

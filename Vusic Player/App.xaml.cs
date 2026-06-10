@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration.ClassModels;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -32,20 +33,17 @@ namespace Vusic_Player
         public static Frame? NavigationFrame { get; set; }
         public static Frame? MasterFrame { get; set; }
         public static Frame? VideoPlayerFrame { get; set; }
+        public AlbumContext? SelectedAlbum { get; set; }
+
         public App()
         {
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Invoked when the application is launched.
-        /// </summary>
-        /// <param name="args">Details about the launch request and process.</param>
+     
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            _window = new MainWindow();
-            MainWindowInstance = _window;
-            _window.Activate();
+            MainWindow.ShowWindow();
         }
     }
 }

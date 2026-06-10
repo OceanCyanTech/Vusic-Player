@@ -12,14 +12,18 @@
     <WinUISDKReferences>false</WinUISDKReferences>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
+	  <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\MainPage.xaml" />
     <None Remove="Pages\VideoPlayer.xaml" />
+    <None Remove="Pages\Views\AlbumView.xaml" />
+    <None Remove="Pages\Views\ArtistView.xaml" />
     <None Remove="Pages\Views\EntireMusicLibrary.xaml" />
     <None Remove="Pages\Views\HomeView.xaml" />
     <None Remove="Pages\Views\LoggerPage.xaml" />
     <None Remove="Pages\Views\MusicLibrary.xaml" />
+    <None Remove="Pages\Views\NoSearchResultsPage.xaml" />
     <None Remove="Pages\Views\PlaylistView.xaml" />
     <None Remove="Pages\Views\QueuePage.xaml" />
     <None Remove="Pages\Views\SearchResults.xaml" />
@@ -94,12 +98,24 @@
     <ProjectReference Include="..\..\..\..\..\Tes\Flyleaf\FlyleafLib\FlyleafLib.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\VideoPlayer.xaml">
+    <Page Update="Pages\Views\NoSearchResultsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Converters\" />
+    <Page Update="Pages\Views\AlbumView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Views\ArtistView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\VideoPlayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Views\PlaylistView.xaml">

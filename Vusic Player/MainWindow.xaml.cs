@@ -44,8 +44,36 @@ namespace Vusic_Player
             //mainengine.Player = pl;
             this.ExtendsContentIntoTitleBar = true;
             rootGrid.Loaded += RootGrid_Loaded;
-           
+
         }
+        private static MainWindow? instance;
+        public static MainWindow? HideWindow()
+        {
+            if (instance != null)
+            {
+                instance.AppWindow.Hide();
+            }
+            return instance;
+        }
+        public static MainWindow ShowWindow()
+        {
+            if (instance == null)
+            {
+                instance = new MainWindow();
+
+                //       instance.Closed += (_, __) => instance = null; // Reset when closed
+                instance.Activate();
+            }
+            else
+            {
+                
+                instance.Activate(); // Bring existing window to front
+            }
+            App.MainWindowInstance = instance;
+            //    instance.CheckForFileArguments();
+            return instance;
+        }
+
         public async void ShowFileInfo(string filepath)
         {
            // FileInfo.LoadFileInfo(filepath, rootgrid.XamlRoot);

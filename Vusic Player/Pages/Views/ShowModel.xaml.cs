@@ -739,12 +739,13 @@ namespace Vusic_Player.Pages.Views
                     //   ShowManager.currentseason = currentseasonindex;
 
                     App.NavigationFrame.Navigate(typeof(VideoPlayer), episode);
+                    Debug.WriteLine("Current Season index are " + ShowManager.currentseason);
                 }
             }
         }
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //Play clicked on single item
+            //Play Episode
             if (sender is FrameworkElement btn)
             {
                 PlaySingleItem(btn);
