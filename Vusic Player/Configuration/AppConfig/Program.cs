@@ -45,6 +45,22 @@ namespace Vusic_Player.Configuration.AppConfig
 
                     if (file != null)
                     {
+                        string filePath = file.Path;
+
+                        string extension = System.IO.Path.GetExtension(filePath).ToLower();
+
+                        string[] videoExtensions = Extensions.VideoExtensions.List;
+                        string[] audioExtensions = Extensions.AudioExtensions.List;
+                        if (videoExtensions.Contains(extension))
+                        {
+
+                        }
+                        else if (audioExtensions.Contains(extension))
+                        {
+                         //   MainWindow.ShowWindow();
+                            PlayerService.OpenPath(filePath);
+                            return;
+                        }
                         //string filePath = file.Path;
 
                         //string extension = Path.GetExtension(filePath).ToLower();

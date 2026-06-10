@@ -6,23 +6,26 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Vusic_Player
 {
-   
+
     public partial class App : Application
     {
         private Window? _window;
@@ -40,10 +43,37 @@ namespace Vusic_Player
             InitializeComponent();
         }
 
-     
+
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            var activatedArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+            if (activatedArgs.Kind == ExtendedActivationKind.File)
+            {
+                var fileArgs = (FileActivatedEventArgs)activatedArgs.Data;
+                var file = fileArgs.Files.FirstOrDefault();
+
+                if (file != null)
+                {
+                    string filePath = file.Path;
+
+                    string extension = System.IO.Path.GetExtension(filePath).ToLower();
+
+                    string[] videoExtensions = Extensions.VideoExtensions.List;
+                    string[] audioExtensions = Extensions.AudioExtensions.List;
+                    if (videoExtensions.Contains(extension))
+                    {
+
+                    }
+                    else if (audioExtensions.Contains(extension))
+                    {
+                        MainWindow.ShowWindow();
+                        PlayerService.OpenPath(filePath);
+                        return;
+                    }
+                }
+            }
             MainWindow.ShowWindow();
+
         }
     }
 }

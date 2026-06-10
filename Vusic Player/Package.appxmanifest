@@ -34,6 +34,48 @@
     <Application Id="App"
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
+		<Extensions>
+			<uap:Extension Category="windows.fileTypeAssociation">
+				<uap:FileTypeAssociation Name="vusicplayermp4handler">
+					<uap:SupportedFileTypes>
+						<uap:FileType>.mp4</uap:FileType>
+				
+					</uap:SupportedFileTypes>
+					<uap:DisplayName>MP4 Video File (Vusic Player)</uap:DisplayName>
+					<uap:Logo>Assets\videofile.png</uap:Logo>
+				</uap:FileTypeAssociation>
+			</uap:Extension>
+			<uap:Extension Category="windows.fileTypeAssociation">
+				<uap:FileTypeAssociation Name="vusicplayermkvhandler">
+					<uap:SupportedFileTypes>
+						<uap:FileType>.mkv</uap:FileType>
+
+					</uap:SupportedFileTypes>
+					<uap:DisplayName>MKV Video File (Vusic Player)</uap:DisplayName>
+					<uap:Logo>Assets\videofile.png</uap:Logo>
+				</uap:FileTypeAssociation>
+			</uap:Extension>
+			<uap:Extension Category="windows.fileTypeAssociation">
+				<uap:FileTypeAssociation Name="vusicplayermp3handler">
+					<uap:SupportedFileTypes>
+						<uap:FileType>.mp3</uap:FileType>
+
+					</uap:SupportedFileTypes>
+					<uap:DisplayName>MP3 Audio File (Vusic Player)</uap:DisplayName>
+					<uap:Logo>Assets\audiofile.png</uap:Logo>
+				</uap:FileTypeAssociation>
+			</uap:Extension>
+			<uap:Extension Category="windows.fileTypeAssociation">
+				<uap:FileTypeAssociation Name="vusicplayerwavhandler">
+					<uap:SupportedFileTypes>
+						<uap:FileType>.wav</uap:FileType>
+
+					</uap:SupportedFileTypes>
+					<uap:DisplayName>WAV Audio File (Vusic Player)</uap:DisplayName>
+					<uap:Logo>Assets\audiofile.png</uap:Logo>
+				</uap:FileTypeAssociation>
+			</uap:Extension>
+		</Extensions>
       <uap:VisualElements
         DisplayName="Vusic Player"
         Description="Vusic Player"
