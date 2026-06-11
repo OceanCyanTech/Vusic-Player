@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
@@ -70,9 +71,17 @@ namespace Vusic_Player.Pages.Views
             }
         }
 
-        private void btnOpenFolder_Click(object sender, RoutedEventArgs e)
+        private async void btnOpenFolder_Click(object sender, RoutedEventArgs e)
         {
-
+            if (App.MainWindowInstance == null) return;
+            var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Open Folder", Windows.Storage.Pickers.PickerLocationId.Downloads);
+            if(folder != null)
+            {
+                if(App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(FolderView), new FolderModel { FolderName = Path.GetFileName(folder.Path), FolderPath = folder.Path });
+                }
+            }
         }
 
         private void expRecentsVideo_Expanding(Expander sender, ExpanderExpandingEventArgs args)

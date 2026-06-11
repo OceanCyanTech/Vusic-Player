@@ -223,5 +223,21 @@ namespace Vusic_Player.Pages
         {
             PlayerService.SldMain_DragStarted();
         }
+
+        private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(ArtistView), mediacontroller.ArtistDisplayName);
+            }
+        }
+
+        private void HyperlinkButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(AlbumView), mediacontroller.AlbumDisplayName);
+            }
+        }
     }
 }

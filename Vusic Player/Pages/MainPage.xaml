@@ -11,84 +11,99 @@
     <Grid>
         <Frame Name="frmVid" Visibility="Collapsed"></Frame>
         <Frame Name="frmRoot">
-        <Grid Name="grdRoot" Visibility="Visible" >
-            <Grid.Background>
-                <ImageBrush x:Name="imgSourceBackground" ImageSource="/Assets/oceanglow.png" 
+            <Grid Name="grdRoot" Visibility="Visible" >
+                <Grid.Background>
+                    <ImageBrush x:Name="imgSourceBackground" ImageSource="/Assets/oceanglow.png" 
 Stretch="UniformToFill"/>
-            </Grid.Background>
-            <Border CornerRadius="20" x:Name="Bordermain">
-                <Border.Background>
-                    <media:BackdropBlurBrush Amount="10.0" x:Name="BackdropBlur"/>
-                </Border.Background>
-                <Grid ColumnSpacing="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition ></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition MaxWidth="700" MinWidth="280" x:Name="ColumnMaster" Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <NavigationView IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="nvgMain_BackRequested" Grid.Column="0" Background="Transparent" Name="nvgMain" PaneDisplayMode="Top" IsSettingsVisible="True" SelectionChanged="nvgMain_SelectionChanged">
+                </Grid.Background>
+                <Border CornerRadius="20" x:Name="Bordermain">
+                    <Border.Background>
+                        <media:BackdropBlurBrush Amount="10.0" x:Name="BackdropBlur"/>
+                    </Border.Background>
+                    <Grid ColumnSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition ></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition MaxWidth="700" MinWidth="280" x:Name="ColumnMaster" Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <NavigationView IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="nvgMain_BackRequested" Grid.Column="0" Background="Transparent" Name="nvgMain" PaneDisplayMode="Top" IsSettingsVisible="True" SelectionChanged="nvgMain_SelectionChanged">
 
-                        <NavigationView.MenuItems>
-                            <NavigationViewItem Name="nvgitHome" Content="Home" Tag="HomePage"></NavigationViewItem>
-                            <NavigationViewItem Name="nvgitMusic" Content="Music Library" Tag="MusicLibrary"></NavigationViewItem>
-                            <NavigationViewItem Name="nvgitVideo" Content="Video Library"></NavigationViewItem>
-                            <NavigationViewItem Name="nvgitQueue" Content="Play Queue" Visibility="Visible"></NavigationViewItem>
-                        </NavigationView.MenuItems>
-                        <NavigationView.AutoSuggestBox>
-                            <AutoSuggestBox Name="asbMaster" TextChanged="asbMaster_TextChanged" QuerySubmitted="asbMaster_QuerySubmitted" SuggestionChosen="asbMaster_SuggestionChosen" QueryIcon="Find" PlaceholderText="Search for media across your libraries"  AutomationProperties.Name="Search" >
-                                <AutoSuggestBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" Spacing="10">
-                                            <FontIcon Glyph="&#xEC4F;" FontFamily="Segoe Fluent Icons" FontSize="16"/>
-                                            <TextBlock Text="{Binding Title}" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </AutoSuggestBox.ItemTemplate>
-                            </AutoSuggestBox>
-                        </NavigationView.AutoSuggestBox>
-                        <Grid>
+                            <NavigationView.MenuItems>
+                                <NavigationViewItem Name="nvgitHome" Content="Home" Tag="HomePage"></NavigationViewItem>
+                                <NavigationViewItem Name="nvgitMusic" Content="Music Library" Tag="MusicLibrary"></NavigationViewItem>
+                                <NavigationViewItem Name="nvgitVideo" Content="Video Library"></NavigationViewItem>
+                                <NavigationViewItem Name="nvgitQueue" Content="Play Queue" Visibility="Visible"></NavigationViewItem>
+                            </NavigationView.MenuItems>
+                            <NavigationView.AutoSuggestBox>
+                                <AutoSuggestBox Name="asbMaster" TextChanged="asbMaster_TextChanged" QuerySubmitted="asbMaster_QuerySubmitted" SuggestionChosen="asbMaster_SuggestionChosen" QueryIcon="Find" PlaceholderText="Search for media across your libraries"  AutomationProperties.Name="Search" >
+                                    <AutoSuggestBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <FontIcon Glyph="&#xEC4F;" FontFamily="Segoe Fluent Icons" FontSize="16"/>
+                                                <TextBlock Text="{Binding Title}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </AutoSuggestBox.ItemTemplate>
+                                </AutoSuggestBox>
+                            </NavigationView.AutoSuggestBox>
+                            <Grid>
 
-                            <Frame Name="frmMain" Navigated="FrmMain_Navigated" Background="Transparent">
+                                <Frame Name="frmMain" Navigated="FrmMain_Navigated" Background="Transparent">
 
-                            </Frame>
-                        </Grid>
-                    </NavigationView>
-                    <controls:GridSplitter Grid.Column="1" 
+                                </Frame>
+                            </Grid>
+                        </NavigationView>
+                        <controls:GridSplitter Grid.Column="1" 
     Width="12" Margin="0, 0" Padding="0" x:Name="grdsplittr"
     ResizeBehavior="BasedOnAlignment">
 
-                    </controls:GridSplitter>
-                    <Grid Visibility="Visible" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20, 0" Name="MusicPlayerMaster" Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Image Name="imgThumbnailCover" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}" Width="150" Grid.Row="0"></Image>
+                        </controls:GridSplitter>
+                        <Grid Visibility="Visible" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20, 0" Name="MusicPlayerMaster" Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Image Name="imgThumbnailCover" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}" Width="150" Grid.Row="0"></Image>
 
-                            <TextBlock Margin="0, 20" HorizontalAlignment="Center" Name="txtSongName" TextTrimming="CharacterEllipsis" MaxWidth="{x:Bind ColumnMaster.ActualWidth}" MaxLines="1" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" >
+                            <TextBlock Margin="0, 20" HorizontalAlignment="Center" Name="txtSongName" TextTrimming="CharacterEllipsis" MaxWidth="{x:Bind ColumnMaster.ActualWidth, Mode=TwoWay}" MaxLines="1" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" >
 
-                        </TextBlock>
-                        <playback_views:PlayPauseControls SpaceWidth="10" Margin="0, 5" Grid.Row="4" HorizontalAlignment="Center"></playback_views:PlayPauseControls>
-                        <playback_views:OceanSlider x:Name="sldMain" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted"  IsEnabled="True" Grid.Row="2" HorizontalAlignment="Stretch" ></playback_views:OceanSlider>
-                        <Grid x:Name="grdTexts" Margin="5,10,0, 0" Grid.Row="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="11" Opacity="0.8"/>
-                            <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="11" Opacity="0.8"/>
+                            </TextBlock>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <HyperlinkButton Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName}">
+                                    
+                                </HyperlinkButton>
+                                <HyperlinkButton Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName}">
+
+                                </HyperlinkButton>
+                            </Grid>
+                            <playback_views:OceanSlider x:Name="sldMain" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted"  IsEnabled="True" Grid.Row="3" HorizontalAlignment="Stretch" ></playback_views:OceanSlider>
+
+                            <Grid x:Name="grdTexts" Margin="5,10,0, 0" Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="11" Opacity="0.8"/>
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="11" Opacity="0.8"/>
+                            </Grid>
+
+                            <playback_views:PlayPauseControls SpaceWidth="10" Margin="0, 5" Grid.Row="5" HorizontalAlignment="Center"></playback_views:PlayPauseControls>
+                            <playback_views:VolumeSlider Margin="0, 0" Grid.Row="6"></playback_views:VolumeSlider>
+                            <playback_views:PanelControlsAudioPlayer ExpandedViewButtonToolTip="Expanded View" Grid.Row="7"></playback_views:PanelControlsAudioPlayer>
                         </Grid>
-                        <playback_views:VolumeSlider Margin="0, 10" Grid.Row="5"></playback_views:VolumeSlider>
-                            <playback_views:PanelControlsAudioPlayer ExpandedViewButtonToolTip="Expanded View" Grid.Row="6"></playback_views:PanelControlsAudioPlayer>
-                        </Grid>
-                </Grid>
-            </Border>
-        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
         </Frame>
     </Grid>
 </Page>
