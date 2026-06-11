@@ -58,7 +58,7 @@ Stretch="UniformToFill"/>
     ResizeBehavior="BasedOnAlignment">
 
                         </controls:GridSplitter>
-                        <Grid Visibility="Visible" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20, 0" Name="MusicPlayerMaster" Grid.Column="2">
+                        <Grid RowSpacing="5" Visibility="Visible" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20, 0" Name="MusicPlayerMaster" Grid.Column="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
@@ -66,27 +66,27 @@ Stretch="UniformToFill"/>
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Image Name="imgThumbnailCover" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}" Width="150" Grid.Row="0"></Image>
 
-                            <TextBlock Margin="0, 20" HorizontalAlignment="Center" Name="txtSongName" TextTrimming="CharacterEllipsis" MaxWidth="{x:Bind ColumnMaster.ActualWidth, Mode=TwoWay}" MaxLines="1" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" >
+                            <TextBlock Margin="0, 20, 0, 0" HorizontalAlignment="Center" Width="{x:Bind MusicPlayerMaster.Width, Mode=OneWay}" Name="txtSongName" TextTrimming="CharacterEllipsis" MaxLines="1" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" >
 
                             </TextBlock>
-                            <Grid Grid.Row="2">
+                            <Grid Grid.Row="2" Margin="0, 5, 0, 0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <HyperlinkButton Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName}">
+                                <HyperlinkButton Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}">
                                     
                                 </HyperlinkButton>
-                                <HyperlinkButton Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName}">
+                                <HyperlinkButton Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName,Mode=OneWay}">
 
                                 </HyperlinkButton>
                             </Grid>
-                            <playback_views:OceanSlider x:Name="sldMain" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted"  IsEnabled="True" Grid.Row="3" HorizontalAlignment="Stretch" ></playback_views:OceanSlider>
+                            <playback_views:OceanSlider Margin="0, 5, 0, 0" x:Name="sldMain" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted"  IsEnabled="True" Grid.Row="3" HorizontalAlignment="Stretch" ></playback_views:OceanSlider>
 
                             <Grid x:Name="grdTexts" Margin="5,10,0, 0" Grid.Row="4">
                                 <Grid.ColumnDefinitions>
