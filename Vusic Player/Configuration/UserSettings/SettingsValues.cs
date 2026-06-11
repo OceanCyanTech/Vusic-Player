@@ -15,7 +15,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public ObservableCollection<FoldersListOpened> SavedFoldersVideoLibraryRecommendations { get; set; } = new ObservableCollection<FoldersListOpened>();
 
         public ObservableCollection<int> VersionCounter { get; set; } = new();
-        //public ObservableCollection<FolderModel> FoldersRecent { get; set; } = new();
+        public ObservableCollection<FolderModel> FoldersRecent { get; set; } = new();
         public ObservableCollection<ArtistModel> ArtistsList { get; set; } = new();
         public ObservableCollection<AlbumModel> AlbumsList { get; set; } = new();
         public ObservableCollection<PlaylistItem> SavedPlaylists { get; set; } = new();

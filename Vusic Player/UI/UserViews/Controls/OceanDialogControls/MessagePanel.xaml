@@ -9,6 +9,11 @@
     mc:Ignorable="d">
 
     <Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Image Width="50" Name="imgSeverity" Grid.Column="0"></Image>
+        <TextBlock Name="txtMessage" Margin="10, 0" VerticalAlignment="Center" Grid.Column="1" Style="{StaticResource BodyStrongTextBlockStyle}"></TextBlock>
     </Grid>
 </UserControl>

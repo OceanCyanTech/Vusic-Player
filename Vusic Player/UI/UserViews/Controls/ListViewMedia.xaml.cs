@@ -107,6 +107,29 @@ namespace Vusic_Player.UI.UserViews.Controls
         typeof(Visibility),
         typeof(ListViewMedia),
         new PropertyMetadata(Visibility.Visible));
+
+        public Visibility FolderFileProperties
+        {
+            get => (Visibility)GetValue(folderfiprops);
+            set => SetValue(folderfiprops, value);
+        }
+        public static readonly DependencyProperty folderfiprops =
+    DependencyProperty.Register(
+        nameof(FolderFileProperties),
+        typeof(Visibility),
+        typeof(ListViewMedia),
+        new PropertyMetadata(Visibility.Collapsed));
+        public bool IsFolderItems
+        {
+            get => (bool)GetValue(isfolderit);
+            set => SetValue(isfolderit, value);
+        }
+        public static readonly DependencyProperty isfolderit =
+    DependencyProperty.Register(
+        nameof(IsFolderItems),
+        typeof(bool),
+        typeof(ListViewMedia),
+        new PropertyMetadata(false));
         public Visibility ExtraOptions
         {
             get => (Visibility)GetValue(extraopt);
@@ -1670,6 +1693,26 @@ namespace Vusic_Player.UI.UserViews.Controls
                 }
 
             }
+        }
+
+        private void mnftRenameFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnftDeleteFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnftPreviewFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnftMoveFile_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

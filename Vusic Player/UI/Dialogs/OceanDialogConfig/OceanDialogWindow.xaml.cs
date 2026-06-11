@@ -268,19 +268,19 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
                     PlaylistCreation.PlaylistEdit(playlist);
                 }
             }
-
+            else if (contentType == ContentType.MessageShow)
+            {
+                MessageBox.Visibility = Visibility.Visible;
+                MessageBox.UpdateImage(mssgimageicon);
+                MessageBox.UpdateMessage(mssgtext);
+            }
             //}
             //else if (contentType == ContentType.FileInformation)
             //{
             //    InfoBoxControl.Visibility = Visibility.Visible;
             //    InfoBoxControl.ScrollIntoView();
             //}
-            //else if (contentType == ContentType.MessageShow)
-            //{
-            //    MessageBox.Visibility = Visibility.Visible;
-            //    MessageBox.UpdateImage(mssgimageicon);
-            //    MessageBox.UpdateMessage(mssgtext);
-            //}
+
             // else if (contentType == ContentType.OnlineArtistPicture)
             // {
             //     OnlineArtistPic.Visibility = Visibility.Visible;

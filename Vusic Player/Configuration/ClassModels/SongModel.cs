@@ -23,6 +23,7 @@ namespace Vusic_Player.Configuration.ClassModels
         private Visibility visibilityofvidinfo = Visibility.Collapsed;
         private string? _artist;
         private string? _albumName;
+        private string? _fileTypeName = "Video File";
         private bool? _isEpisode;
         private Visibility _isQueueItem = Visibility.Visible;
         public int Year
@@ -54,6 +55,11 @@ namespace Vusic_Player.Configuration.ClassModels
         {
             get => _albumName;
             set { _albumName = value; OnPropertyChanged(); }
+        }
+        public string? FileTypeName
+        {
+            get => _fileTypeName;
+            set { _fileTypeName = value; OnPropertyChanged(); }
         }
         public Brush TitleColor
         {

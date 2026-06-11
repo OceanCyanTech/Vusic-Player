@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,14 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
         public MessagePanel()
         {
             InitializeComponent();
+        }
+        public void UpdateImage(string image)
+        {
+            imgSeverity.Source = new BitmapImage(new Uri($"ms-appx:///Assets/{image}.png"));
+        }
+        public void UpdateMessage(string Message)
+        {
+            txtMessage.Text = Message;
         }
     }
 }

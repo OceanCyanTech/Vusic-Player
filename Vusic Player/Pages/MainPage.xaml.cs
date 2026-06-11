@@ -128,6 +128,11 @@ namespace Vusic_Player.Pages
                 //    nvgMain.Header = "Video Library";
                 //}
             }
+            else if(e.SourcePageType == typeof(FolderView))
+            {
+                nvgMain.Header = "";
+                nvgMain.SelectedItem = null;
+            }
             else if (e.SourcePageType == typeof(QueuePage))
             {
                 MusicPlayerMaster.Visibility = Visibility.Collapsed;
