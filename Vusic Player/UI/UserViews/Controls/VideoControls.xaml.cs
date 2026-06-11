@@ -668,6 +668,22 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void mnftHome_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            if (App.NavigationFrame != null)
+            {
+                if (PlayerService.InVideoPage == true)
+                {
+                    App.NavigationFrame.GoBack();
+                    if (PlayerService.Masterplayer != null)
+                    {
+                        if (PlayerService.Masterplayer.IsPlaying)
+                        {
+                            PlayerService.Pause();
+                        }
+                    }
+                    PlayerService.InVideoPage = false;
+                }
+
+            }
         }
 
         private void mnftMiniPlayer_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

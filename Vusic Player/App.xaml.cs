@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Pages;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -41,6 +42,11 @@ namespace Vusic_Player
         public App()
         {
             InitializeComponent();
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            {
+                string logPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "winui_crash.txt");
+                File.WriteAllText(logPath, args.ExceptionObject.ToString());
+            };
         }
 
 
@@ -62,7 +68,16 @@ namespace Vusic_Player
                     string[] audioExtensions = Extensions.AudioExtensions.List;
                     if (videoExtensions.Contains(extension))
                     {
+                        MainWindow.ShowWindow();
+                        if (App.NavigationFrame != null)
+                        {
+                            if (PlayerService.InVideoPage == false)
+                            {
+                                App.NavigationFrame.Navigate(typeof(VideoPlayer), filePath);
+                            }
 
+                        }
+                        return;
                     }
                     else if (audioExtensions.Contains(extension))
                     {

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Vusic_Player.Pages;
 using Windows.ApplicationModel.Activation;
 
 namespace Vusic_Player.Configuration.AppConfig
@@ -53,7 +54,13 @@ namespace Vusic_Player.Configuration.AppConfig
                         string[] audioExtensions = Extensions.AudioExtensions.List;
                         if (videoExtensions.Contains(extension))
                         {
-
+                            if (App.NavigationFrame != null)
+                            {
+                                if (PlayerService.InVideoPage == false)
+                                {
+                                    App.NavigationFrame.Navigate(typeof(VideoPlayer), filePath);
+                                }
+                            }
                         }
                         else if (audioExtensions.Contains(extension))
                         {

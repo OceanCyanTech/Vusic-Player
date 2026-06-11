@@ -22,7 +22,8 @@ namespace Vusic_Player.Configuration.Helper.UI
             try
             {
                 // 1. Get Duration using ffprobe
-                string durationRaw = await RunProcessAsync(@"C:\Users\bnara\Videos\FFmpeg\ffprobe.exe",
+                string ffprobePath = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffprobe.exe");
+                string durationRaw = await RunProcessAsync(ffprobePath,
                     $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"{path}\"");
 
                 if (!double.TryParse(durationRaw.Trim(), out double totalSeconds))
@@ -32,8 +33,11 @@ namespace Vusic_Player.Configuration.Helper.UI
 
                 // 2. Extract Frame
                 string tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.jpg");
-                string ffmpegArgs = $"-ss {seekSeconds} -i \"{path}\" -vf \"zscale=t=linear:npl=100,format=gbrp,zscale=p=bt709,tonemap=tonemap=mobius:peak=100,format=yuv420p,eq=brightness=0.18:contrast=1.1\" -frames:v 1 -q:v 2 -update 1 \"{tempFile}\" -y";                // CRITICAL: You must call RunProcessAsync BEFORE checking if the file exists
-                await RunProcessAsync(@"C:\Users\bnara\Videos\FFmpeg\ffmpeg.exe", ffmpegArgs);
+                string ffmpegArgs = $"-ss {seekSeconds} -i \"{path}\" -vf \"zscale=t=linear:npl=100,format=gbrp,zscale=p=bt709,tonemap=tonemap=mobius:peak=100,format=yuv420p,eq=brightness=0.18:contrast=1.1\" -frames:v 1 -q:v 2 -update 1 \"{tempFile}\" -y";
+                // CRITICAL: You must call RunProcessAsync BEFORE checking if the file exists
+                string ffmpegexec = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffmpeg.exe");
+
+                await RunProcessAsync(ffmpegexec, ffmpegArgs);
 
                 if (File.Exists(tempFile))
                 {
@@ -58,8 +62,10 @@ namespace Vusic_Player.Configuration.Helper.UI
         {
             try
             {
+                string ffprobePath = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffprobe.exe");
+
                 // 1. Get Duration using ffprobe
-                string durationRaw = await RunProcessAsync(@"C:\Users\bnara\Videos\FFmpeg\ffprobe.exe",
+                string durationRaw = await RunProcessAsync(ffprobePath,
                     $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"{path}\"");
 
                 if (!double.TryParse(durationRaw.Trim(), out double totalSeconds))
@@ -70,7 +76,10 @@ namespace Vusic_Player.Configuration.Helper.UI
                 // 2. Extract Frame to Temp Path
                 string tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.jpg");
                 //string ffmpegArgs = $"-ss {seekSeconds} -i \"{path}\" -vf \"zscale=t=linear:npl=100,format=gbrp,zscale=p=bt709,tonemap=tonemap=mobius:peak=100,format=yuv420p,eq=brightness=0.18:contrast=1.1\" -frames:v 1 -q:v 2 -update 1 \"{tempFile}\" -y";
-                string ffmpegArgs = $"-ss {seekSeconds} -i \"{path}\" -vf \"zscale=p=bt2020:t=smpte2084:m=bt2020nc,zscale=p=bt709:t=bt709:m=bt709:r=tv,eq=brightness=0.22:contrast=1.15\" -frames:v 1 -q:v 2 -update 1 \"{tempFile}\" -y"; await RunProcessAsync(@"C:\Users\bnara\Videos\FFmpeg\ffmpeg.exe", ffmpegArgs);
+
+                string ffmpegexec = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffmpeg.exe");
+
+                string ffmpegArgs = $"-ss {seekSeconds} -i \"{path}\" -vf \"zscale=p=bt2020:t=smpte2084:m=bt2020nc,zscale=p=bt709:t=bt709:m=bt709:r=tv,eq=brightness=0.22:contrast=1.15\" -frames:v 1 -q:v 2 -update 1 \"{tempFile}\" -y"; await RunProcessAsync(ffmpegexec, ffmpegArgs);
 
                 if (File.Exists(tempFile))
                 {

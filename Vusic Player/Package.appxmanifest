@@ -8,88 +8,810 @@
   xmlns:systemai="http://schemas.microsoft.com/appx/manifest/systemai/windows10"
   IgnorableNamespaces="uap rescap systemai">
 
-  <Identity
-    Name="725d86a0-1eff-4eef-8dd7-8456297ef965"
-    Publisher="CN=bnara"
-    Version="1.0.0.0" />
+	<Identity
+	  Name="OceanCyanTech.2212247558119"
+	  Publisher="CN=OceanCyan Tech"
+	  Version="1.0.9.9" />
 
-  <mp:PhoneIdentity PhoneProductId="725d86a0-1eff-4eef-8dd7-8456297ef965" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="a831f905-0ea4-4264-a418-c2d4b3e6cd70" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
-  <Properties>
-    <DisplayName>Vusic Player</DisplayName>
-    <PublisherDisplayName>bnara</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
-  </Properties>
+	<Properties>
+		<DisplayName>Vusic Player</DisplayName>
+		<PublisherDisplayName>OceanCyan Tech</PublisherDisplayName>
+		<Logo>Assets\StoreLogo.png</Logo>
+	</Properties>
 
-  <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
-  </Dependencies>
+	<Dependencies>
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
+		<TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
+	</Dependencies>
 
-  <Resources>
-    <Resource Language="x-generate"/>
-  </Resources>
+	<Resources>
+		<Resource Language="x-generate"/>
+	</Resources>
 
-  <Applications>
-    <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="$targetentrypoint$">
-		<Extensions>
-			<uap:Extension Category="windows.fileTypeAssociation">
-				<uap:FileTypeAssociation Name="vusicplayermp4handler">
-					<uap:SupportedFileTypes>
-						<uap:FileType>.mp4</uap:FileType>
-				
-					</uap:SupportedFileTypes>
-					<uap:DisplayName>MP4 Video File (Vusic Player)</uap:DisplayName>
-					<uap:Logo>Assets\videofile.png</uap:Logo>
-				</uap:FileTypeAssociation>
-			</uap:Extension>
-			<uap:Extension Category="windows.fileTypeAssociation">
-				<uap:FileTypeAssociation Name="vusicplayermkvhandler">
-					<uap:SupportedFileTypes>
-						<uap:FileType>.mkv</uap:FileType>
+	<Applications>
+		<Application Id="App"
+		  Executable="$targetnametoken$.exe"
+		  EntryPoint="$targetentrypoint$">
+			<Extensions>
+				<!-- #region Video Extensions -->
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermp4handler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mp4</uap:FileType>
 
-					</uap:SupportedFileTypes>
-					<uap:DisplayName>MKV Video File (Vusic Player)</uap:DisplayName>
-					<uap:Logo>Assets\videofile.png</uap:Logo>
-				</uap:FileTypeAssociation>
-			</uap:Extension>
-			<uap:Extension Category="windows.fileTypeAssociation">
-				<uap:FileTypeAssociation Name="vusicplayermp3handler">
-					<uap:SupportedFileTypes>
-						<uap:FileType>.mp3</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MP4 Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermkvhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mkv</uap:FileType>
 
-					</uap:SupportedFileTypes>
-					<uap:DisplayName>MP3 Audio File (Vusic Player)</uap:DisplayName>
-					<uap:Logo>Assets\audiofile.png</uap:Logo>
-				</uap:FileTypeAssociation>
-			</uap:Extension>
-			<uap:Extension Category="windows.fileTypeAssociation">
-				<uap:FileTypeAssociation Name="vusicplayerwavhandler">
-					<uap:SupportedFileTypes>
-						<uap:FileType>.wav</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MKV Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayeravihandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.avi</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>AVI Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
 
-					</uap:SupportedFileTypes>
-					<uap:DisplayName>WAV Audio File (Vusic Player)</uap:DisplayName>
-					<uap:Logo>Assets\audiofile.png</uap:Logo>
-				</uap:FileTypeAssociation>
-			</uap:Extension>
-		</Extensions>
-      <uap:VisualElements
-        DisplayName="Vusic Player"
-        Description="Vusic Player"
-        BackgroundColor="transparent"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
-      </uap:VisualElements>
-    </Application>
-  </Applications>
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermovhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mov</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MOV Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
 
-  <Capabilities>
-    <rescap:Capability Name="runFullTrust" />
-    <systemai:Capability Name="systemAIModels"/>
-  </Capabilities>
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerwmvhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.wmv</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>WMV Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerflvhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.flv</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>FLV Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerwebmhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.webm</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>WEBM Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayertshandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.ts</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>TS Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerm2tshandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.m2ts</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>M2TS Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermtshandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mts</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MTS Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerm4vhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.m4v</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>M4V Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayer3gphandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.3gp</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>3GP Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayer3g2handler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.3g2</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>3G2 Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerogvhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.ogv</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>OGV Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermpeghandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mpeg</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MPEG Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermpghandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mpg</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MPG Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayervobhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.vob</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>VOB Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerrmvbhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.rmvb</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>RMVB Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerasfhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.asf</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>ASF Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerm2phandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.m2p</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>M2P Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermxfhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mxf</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MXF Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayergxfrhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.gxfr</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>GXFR Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerdvhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.dv</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>DV Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerdifhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.dif</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>DIF Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayernuthandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.nut</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>NUT Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerdivxhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.divx</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>DIVX Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerxvidhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.xvid</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>XVID Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayeramvhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.amv</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>AMV Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermtvhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mtv</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MTV Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerf4vhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.f4v</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>F4V Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerm3u8handler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.m3u8</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>M3U8 Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerm3uhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.m3u</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>M3U Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermpdhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mpd</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MPD Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerismvhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.ismv</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>ISMV Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermjpeghandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mjpeg</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MJPEG Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermjpghandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mjpg</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MJPG Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayery4mhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.y4m</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>Y4M Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayersmkhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.smk</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>SMK Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerbikhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.bik</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>BIK Video File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\videofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+				<!-- #endregion -->
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermp3handler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mp3</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MP3 Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerwavhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.wav</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>WAV Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerogghandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.ogg</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>OGG Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerm4ahandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.m4a</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>M4A Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayeraachandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.aac</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>AAC Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerwmahandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.wma</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>WMA Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerflachandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.flac</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>FLAC Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerac3handler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.ac3</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>AC3 Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayeralachandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.alac</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>ALAC Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayeraiffhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.aiff</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>AIFF Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayeropushandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.opus</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>OPUS Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerapehandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.ape</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>APE Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerwvhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.wv</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>WV Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerttahandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.tta</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>TTA Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerdsfhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.dsf</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>DSF Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerdffhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.dff</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>DFF Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermp2handler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mp2</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MP2 Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayeramrhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.amr</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>AMR Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerauhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.au</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>AU Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayersndhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.snd</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>SND Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermkahandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mka</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MKA Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerdtshandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.dts</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>DTS Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayereac3handler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.eac3</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>EAC3 Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerthdhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.thd</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>THD Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermlphandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mlp</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MLP Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayercafhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.caf</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>CAF Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerm4bhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.m4b</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>M4B Audiobook File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerm4rhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.m4r</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>M4R Ringtone File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerogahandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.oga</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>OGA Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerspxhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.spx</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>SPX Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayergsmhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.gsm</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>GSM Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerrahandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.ra</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>RealAudio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayervochandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.voc</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>VOC Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerw64handler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.w64</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>W64 Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerpcmhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.pcm</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>PCM Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayeradxhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.adx</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>ADX Audio File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayermodhandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.mod</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>MOD Tracker Module (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\audiofile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
+			</Extensions>
+			<uap:VisualElements
+			  DisplayName="Vusic Player"
+			  Description="Vusic Player"
+			  BackgroundColor="transparent"
+			  Square150x150Logo="Assets\Square150x150Logo.png"
+			  Square44x44Logo="Assets\Square44x44Logo.png">
+				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+				<uap:SplashScreen Image="Assets\SplashScreen.png" />
+			</uap:VisualElements>
+		</Application>
+	</Applications>
+
+	<Capabilities>
+		<rescap:Capability Name="runFullTrust" />
+		<systemai:Capability Name="systemAIModels"/>
+	</Capabilities>
 </Package>

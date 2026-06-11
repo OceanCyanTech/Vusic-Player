@@ -71,7 +71,7 @@
             </Border>
 
             <StackPanel VerticalAlignment="Bottom" Padding="20"  Spacing="16">
-                <Viewbox Stretch="UniformToFill">
+                <Viewbox MaxHeight="50" MaxWidth="450" HorizontalAlignment="Left" Stretch="Uniform">
                         <TextBlock TextTrimming="CharacterEllipsis" MaxWidth="450" MaxLines="2" TextWrapping="Wrap"  Name="txtFileName" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
                 </Viewbox>
                 <vusic_player:OceanSlider IsThumbVisible="Collapsed" Value="0" x:Name="prgHighlight"></vusic_player:OceanSlider>
