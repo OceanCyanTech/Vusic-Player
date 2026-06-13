@@ -21,6 +21,8 @@ namespace Vusic_Player.Configuration.Helper.UI
 
             try
             {
+                Debug.WriteLine("Nanan2");
+
                 // 1. Get Duration using ffprobe
                 string ffprobePath = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffprobe.exe");
                 string durationRaw = await RunProcessAsync(ffprobePath,
@@ -41,6 +43,7 @@ namespace Vusic_Player.Configuration.Helper.UI
 
                 if (File.Exists(tempFile))
                 {
+                    Debug.WriteLine("Nanan");
                     var bitmap = new BitmapImage();
                     using (var stream = File.OpenRead(tempFile))
                     {
@@ -58,8 +61,52 @@ namespace Vusic_Player.Configuration.Helper.UI
             // 3. Fallback: If everything above fails or file doesn't exist
             return new BitmapImage(fallbackUri);
         }
+        public static async Task<string> ExtractVidThumbnailBasic(string FILEpath, double percentage = 0.22)
+        {
+            var fallbackUri = "ms-appx:///Assets/default.png";
+
+            Debug.WriteLine("Requested Path is " + FILEpath);
+            try
+            {
+                var storagefile = await StorageFile.GetFileFromPathAsync(FILEpath);
+                var props = await storagefile.Properties.GetVideoPropertiesAsync();
+                var durationtotal = props.Duration.TotalSeconds;
+                var percent = percentage * durationtotal;
+                string tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.jpg");
+                string output = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.jpg");
+                string ffmpegexec = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffmpeg.exe");
+                string ffmpegArgs = $" -ss {percent} -i \"{FILEpath}\" -vframes 1 -q:v 2   \"{output}\"";
+                using var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = ffmpegexec,
+                        Arguments = ffmpegArgs,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        //RedirectStandardError = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                process.Start();
+                string output2 = await process.StandardOutput.ReadToEndAsync();
+                await process.WaitForExitAsync();
+                if (process.ExitCode == 0)
+                {
+                    Debug.WriteLine("Successful exit");
+                    return output;
+                }
+            }  catch (Exception ex)
+            {
+                Debug.WriteLine("ERR: " + ex.Message);
+                return fallbackUri;
+            }
+            return fallbackUri;
+        }
         public static async Task<string> ExtractVideoFrameToFileAsync(string path, double percentage = 0.20)
         {
+            Debug.WriteLine("Requested Path is " + path);
             try
             {
                 string ffprobePath = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffprobe.exe");
@@ -79,7 +126,8 @@ namespace Vusic_Player.Configuration.Helper.UI
 
                 string ffmpegexec = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffmpeg.exe");
 
-                string ffmpegArgs = $"-ss {seekSeconds} -i \"{path}\" -vf \"zscale=p=bt2020:t=smpte2084:m=bt2020nc,zscale=p=bt709:t=bt709:m=bt709:r=tv,eq=brightness=0.22:contrast=1.15\" -frames:v 1 -q:v 2 -update 1 \"{tempFile}\" -y"; await RunProcessAsync(ffmpegexec, ffmpegArgs);
+                string ffmpegArgs = $"-ss {seekSeconds} -i \"{path}\" -vf \"zscale=p=bt2020:t=smpte2084:m=bt2020nc,zscale=p=bt709:t=bt709:m=bt709:r=tv,eq=brightness=0.22:contrast=1.15\" -frames:v 1 -q:v 2 -update 1 \"{tempFile}\" -y";
+                await RunProcessAsync(ffmpegexec, ffmpegArgs);
 
                 if (File.Exists(tempFile))
                 {
@@ -95,22 +143,32 @@ namespace Vusic_Player.Configuration.Helper.UI
         }
         private static async Task<string> RunProcessAsync(string fileName, string args)
         {
-            using var process = new Process
+            Debug.WriteLine("Nanan3");
+            try
             {
-                StartInfo = new ProcessStartInfo
+                using var process = new Process
                 {
-                    FileName = fileName,
-                    Arguments = args,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
-            };
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = fileName,
+                        Arguments = args,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
+                    }
+                };
 
-            process.Start();
-            string output = await process.StandardOutput.ReadToEndAsync();
-            await process.WaitForExitAsync();
-            return output;
+                process.Start();
+                string output = await process.StandardOutput.ReadToEndAsync();
+                await process.WaitForExitAsync();
+                return output;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Catastrophic error: " + ex.Message);
+            }
+            return string.Empty;
         }
 
         public static async Task<BitmapImage> GetFileThumbnailAsync(string path)

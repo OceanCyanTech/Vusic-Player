@@ -171,19 +171,19 @@ namespace Vusic_Player
 
         public async void LoadVersion()
         {
-            //var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            //var counter = currentSettings.VersionCounter;
-            //if (counter.Count == 0)
-            //{
-            //    counter.Add(0);
-            //}
-            //int counter2 = counter.FirstOrDefault() + 1;
-            //counter.Clear();
-            //counter.Add(counter2);
-            //await SettingsLoader.SaveSettingsAsync(currentSettings);
-       
-            txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} 110626";
-            //txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} {DateTime.Now.ToString("MMddyy")}.{counter2}";
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var counter = currentSettings.VersionCounter;
+            if (counter.Count == 0)
+            {
+                counter.Add(0);
+            }
+            int counter2 = counter.FirstOrDefault() + 1;
+            counter.Clear();
+            counter.Add(counter2);
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+      //      txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} 150626";
+            txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} {DateTime.Now.ToString("MMddyy")}.{counter2}";
 
         }
 

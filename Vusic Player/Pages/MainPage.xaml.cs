@@ -150,6 +150,7 @@ namespace Vusic_Player.Pages
                 ColumnMaster.MinWidth = 0;
                 MusicPlayerMaster.Visibility = Visibility.Collapsed;
                 grdRoot.Background = null;
+                ColumnMaster.Width = GridLength.Auto;
             }
             else if (e.SourcePageType == typeof(SettingsPage))
                 nvgMain.Header = "App Settings";
