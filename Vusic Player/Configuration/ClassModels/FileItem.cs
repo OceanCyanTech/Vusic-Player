@@ -13,12 +13,50 @@ namespace Vusic_Player.Configuration.ClassModels
 {
     public class FileItem : INotifyPropertyChanged
     {
-        public string Name { get; set; } = "File";
         public string OpenContext { get; set; } = "Play";
         public string OpenContextGlyph { get; set; } = "\uE768";
         public string FileInfoContext { get; set; } = "File Info";
-        public string Path { get; set; } = "";
-        public string FileHoverInfo { get; set; } = "";
+        private string _filePath = "";
+        private string _fileName = "File";
+        private string _filehoverinfo = "File";
+
+        public string Path
+        {
+            get => _filePath;
+            set
+            {
+                if (_filePath != value)
+                {
+                    _filePath = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string FileHoverInfo
+        {
+            get => _filehoverinfo;
+            set
+            {
+                if (_filehoverinfo != value)
+                {
+                    _filehoverinfo = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string Name
+        {
+            get => _fileName;
+            set
+            {
+                if (_fileName != value)
+                {
+                    _fileName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         public bool isFavourite { get; set; } = false;
         public long FileSize { get; set; } = 0;
         public bool isFolder { get; set; } = false;

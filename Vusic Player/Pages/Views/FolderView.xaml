@@ -7,197 +7,273 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
-
-    <Grid RowSpacing="20" Margin="20, 20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0" ColumnSpacing="20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Name="txtFolderName" IsTextSelectionEnabled="True" MaxWidth="800" TextTrimming="CharacterEllipsis" MaxLines="2" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
-            <Button Name="btnRenameFolder" Click="btnRenameFolder_Click" ToolTipService.ToolTip="rename fol" Grid.Column="1">
-                <Image Width="20" Source="/Assets/appicon.png"/>
-            </Button>
-            <Button Name="btnOpenFolderLoc" Click="btnOpenFolderLoc_Click" ToolTipService.ToolTip="Open folder locati" Grid.Column="2">
-                <Image Width="20" Source="/Assets/appicon.png"/>
-            </Button>
-            <Button Name="btnCopyFolderLocation" Click="btnCopyFolderLocation_Click" ToolTipService.ToolTip="Copy Folder Location" Grid.Column="3">
-                <Image Name="imgCopyButton" Width="20" Source="/Assets/appicon.png"/>
-            </Button>
+    <Grid>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Name="grdMissingDirectory" RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Image Name="imgMissingInfo" Width="130" Source="/Assets/appicon.png" Grid.Row="0"/>
+            <TextBlock  HorizontalAlignment="Center" Name="txtMissingInfo" Grid.Row="1" Style="{StaticResource TitleTextBlockStyle}" Text="The requested directory is missing or inaccessible!"/>
+            <Button Content="Go to Home Page" Grid.Row="2" HorizontalAlignment="Center" Click="Button_Click"/>
         </Grid>
-        <BreadcrumbBar ItemClicked="brdcrumBarMain_ItemClicked" Name="brdcrumBarMain" Grid.Row="1" >
-            <BreadcrumbBar.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="{Binding FolderName}">
-                        <TextBlock.ContextFlyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="Copy Location"/>
-                            </MenuFlyout>
-                        </TextBlock.ContextFlyout>
-                    </TextBlock>
-                </DataTemplate>
-            </BreadcrumbBar.ItemTemplate>
-        </BreadcrumbBar>
-        <TeachingTip Name="ttRenameFolder" Title="Rename Folder">
-            <StackPanel Orientation="Vertical" Spacing="20" Margin="0,10">
-                <TextBox Name="txtRenameFolder" PlaceholderText="Rename folder..."/>
-                <Button HorizontalAlignment="Stretch" Name="btnConfirmRename" Click="btnConfirmRename_Click">
-                    <Image Width="20" Source="/Assets/tickicon.png"/>
+        <Grid Name="rootGrid" RowSpacing="20" Margin="20, 20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" ColumnSpacing="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Name="txtFolderName" IsTextSelectionEnabled="True" MaxWidth="800" TextTrimming="CharacterEllipsis" MaxLines="2" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+                <Button IsEnabled="False" Name="btnRenameFolder" Click="btnRenameFolder_Click" ToolTipService.ToolTip="rename fol" Grid.Column="1">
+                    <Image Width="20" Source="/Assets/appicon.png"/>
                 </Button>
-            </StackPanel>
-        </TeachingTip>
-        <StackPanel Spacing="20" Orientation="Horizontal" Grid.Row="2">
-            <Button Name="btnSort" ToolTipService.ToolTip="Sort Media" Click="btnPlay_Click" Visibility="Visible" >
-                <Button.Flyout>
-                    <MenuFlyout>
-                        <RadioMenuFlyoutItem Click="MenuFlyoutItem_Click" Text="Sort by Name"/>
-                        <RadioMenuFlyoutItem Text="Sort by Date Created" Name="mnftSortByDateCreation" Click="mnftSortByDateCreation_Click"/>
-                        <RadioMenuFlyoutItem Text="Sort by Date Modified" Name="mnftSortByDateModified" Click="mnftSortByDateModified_Click"/>
-                        <RadioMenuFlyoutItem Text="Sort by Size" Name="mnftSortBySize" Click="mnftSortBySize_Click"/>
-                        <RadioMenuFlyoutItem Text="Sort by Extension" Name="mnftByExtension" Click="mnftByExtension_Click"/>
-                    </MenuFlyout>
-                </Button.Flyout>
-                <Image Width="20" Source="/Assets/sorticon.png"/>
-
-            </Button>
-            <Button Name="btnPlay" ToolTipService.ToolTip="Play Media" Click="btnPlay_Click" Visibility="Collapsed" >
-                <Image Width="20" Source="/Assets/play.png"/>
-            </Button>
-
-            <Button Name="btnRenameFiles" ToolTipService.ToolTip="Rename File(s)" Click="btnRenameFiles_Click" Visibility="Collapsed" >
-                <Image Width="20" Source="/Assets/appicon.png"/>
-            </Button>
-            <Button Name="btnMoveFiles" ToolTipService.ToolTip="Move File(s)" Click="btnMoveFiles_Click" Visibility="Collapsed" >
-                <Image Width="20" Source="/Assets/appicon.png"/>
-            </Button>
-            <Button Name="btnAddToPlaylist" ToolTipService.ToolTip="Add Selected Media to Playlist(s)" Click="btnAddToPlaylist_Click" Visibility="Collapsed" >
-                <Image Width="20" Source="/Assets/appicon.png"/>
-            </Button>
-            <Button Name="btnAddtoQueue" ToolTipService.ToolTip="Add to Queue" Click="btnAddtoQueue_Click" Visibility="Collapsed" >
-                <Image Width="20" Source="/Assets/play.png"/>
-            </Button>
-            <Button Name="btnDeleteFiles" ToolTipService.ToolTip="Delete File(s)" Click="btnDeleteFiles_Click" Visibility="Collapsed" >
-                <Image Width="20" Source="/Assets/appicon.png"/>
-            </Button>
-            <Button Name="btnCreateShow" ToolTipService.ToolTip="Create a Show from this folder" Click="btnCreateShow_Click" Visibility="Visible" >
-                <Image Width="20" Source="/Assets/appicon.png"/>
-            </Button>
-        </StackPanel>
-        <AutoSuggestBox QueryIcon="Find" TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" PlaceholderText="Search..." Grid.Row="3"></AutoSuggestBox>
-        <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="4">
-            <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="• Folder"></TextBlock>
-            <CheckBox Name="chckSelect" Grid.Row="4" Content="Select" Checked="chckSelect_Checked" Unchecked="chckSelect_Checked"></CheckBox>
-            <Button Name="btnSelectAll" ToolTipService.ToolTip="Select All" Margin="0, 10" Click="btnSelectAll_Click">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                <Button Name="btnOpenFolderLoc" Click="btnOpenFolderLoc_Click" ToolTipService.ToolTip="Open folder locati" Grid.Column="2">
+                    <Image Width="20" Source="/Assets/appicon.png"/>
+                </Button>
+                <Button Name="btnCopyFolderLocation" Click="btnCopyFolderLocation_Click" ToolTipService.ToolTip="Copy Folder Location" Grid.Column="3">
+                    <Image Name="imgCopyButton" Width="20" Source="/Assets/appicon.png"/>
+                </Button>
+            </Grid>
+            <BreadcrumbBar ItemClicked="brdcrumBarMain_ItemClicked" Name="brdcrumBarMain" Grid.Row="1" >
+                <BreadcrumbBar.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="{Binding FolderName}">
+                            <TextBlock.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Copy Location"/>
+                                </MenuFlyout>
+                            </TextBlock.ContextFlyout>
+                        </TextBlock>
+                    </DataTemplate>
+                </BreadcrumbBar.ItemTemplate>
+            </BreadcrumbBar>
+            <TeachingTip Name="ttRenameFolder" Title="Rename Folder">
+                <StackPanel Orientation="Vertical" Spacing="20" Margin="0,10">
+                    <InfoBar Name="ifbRenameInfo" IsOpen="False"/>
+                    <TextBox Name="txtRenameFolder" PlaceholderText="Rename folder..."/>
+                    <Button HorizontalAlignment="Stretch" Name="btnConfirmRename" Click="btnConfirmRename_Click">
+                        <Image Width="20" Source="/Assets/tickicon.png"/>
+                    </Button>
                 </StackPanel>
-            </Button>
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="Collapsed" Spacing="10" Name="stkMultiOptions">
-               
-                <Button Name="btnEditAlbumMass" ToolTipService.ToolTip="Edit Album property" Margin="0, 10" Click="btnEditAlbumMass_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
-                    </StackPanel>
-                </Button>
-                <Button Name="btnEditArtistMass" ToolTipService.ToolTip="Edit Artist property" Margin="0, 10" Click="btnEditArtistMass_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
-                    </StackPanel>
-                </Button>
-                
+            </TeachingTip>
+            <StackPanel Spacing="20" Orientation="Horizontal" Grid.Row="2">
+                <Button Name="btnSort" ToolTipService.ToolTip="Sort Media" Click="btnPlay_Click" Visibility="Visible" >
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <RadioMenuFlyoutItem Click="MenuFlyoutItem_Click" Text="Sort by Name"/>
+                            <RadioMenuFlyoutItem Text="Sort by Date Created" Name="mnftSortByDateCreation" Click="mnftSortByDateCreation_Click"/>
+                            <RadioMenuFlyoutItem Text="Sort by Date Modified" Name="mnftSortByDateModified" Click="mnftSortByDateModified_Click"/>
+                            <RadioMenuFlyoutItem Text="Sort by Size" Name="mnftSortBySize" Click="mnftSortBySize_Click"/>
+                            <RadioMenuFlyoutItem Text="Sort by Extension" Name="mnftByExtension" Click="mnftByExtension_Click"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                    <Image Width="20" Source="/Assets/sorticon.png"/>
 
-             
-                <Button Name="btnClearSelection" ToolTipService.ToolTip="Clear Selection" Margin="0, 10" Click="btnClearSelection_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
-                    </StackPanel>
                 </Button>
-                <Button Name="btnRemoveSelectionsFromFavourites"  ToolTipService.ToolTip="Favourites" Margin="0, 10" Click="btnRemoveSelectionsFromFavourites_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/favicon.png" Width="20"></Image>
-                    </StackPanel>
+                <Button Name="btnPlay" ToolTipService.ToolTip="Play Media" Click="btnPlay_Click" Visibility="Collapsed" >
+                    <Image Width="20" Source="/Assets/play.png"/>
+                </Button>
+
+                <Button Name="btnRenameFiles" ToolTipService.ToolTip="Rename File(s)" Click="btnRenameFiles_Click" Visibility="Collapsed" >
+                    <Image Width="20" Source="/Assets/appicon.png"/>
+                </Button>
+                <Button Name="btnMoveFiles" ToolTipService.ToolTip="Move File(s)" Click="btnMoveFiles_Click" Visibility="Collapsed" >
+                    <Image Width="20" Source="/Assets/appicon.png"/>
+                </Button>
+                <Button Name="btnAddToPlaylist" ToolTipService.ToolTip="Add Selected Media to Playlist(s)" Click="btnAddToPlaylist_Click" Visibility="Collapsed" >
+                    <Image Width="20" Source="/Assets/appicon.png"/>
+                </Button>
+                <Button Name="btnAddtoQueue" ToolTipService.ToolTip="Add to Queue" Click="btnAddtoQueue_Click" Visibility="Collapsed" >
+                    <Image Width="20" Source="/Assets/play.png"/>
+                </Button>
+                <Button Name="btnDeleteFiles" ToolTipService.ToolTip="Delete File(s)" Click="btnDeleteFiles_Click" Visibility="Collapsed" >
+                    <Image Width="20" Source="/Assets/appicon.png"/>
+                </Button>
+                <Button Name="btnCreateShow" ToolTipService.ToolTip="Create a Show from this folder" Click="btnCreateShow_Click" Visibility="Visible" >
+                    <Image Width="20" Source="/Assets/appicon.png"/>
                 </Button>
             </StackPanel>
+            <AutoSuggestBox QueryIcon="Find" TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" PlaceholderText="Search..." Grid.Row="3"></AutoSuggestBox>
+            <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="4">
+                <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="• Folder"></TextBlock>
+                <CheckBox Name="chckSelect" Grid.Row="4" Content="Select" Checked="chckSelect_Checked" Unchecked="chckSelect_Checked"></CheckBox>
+                <Button Name="btnSelectAll" ToolTipService.ToolTip="Select All" Margin="0, 10" Click="btnSelectAll_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                    </StackPanel>
+                </Button>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="Collapsed" Spacing="10" Name="stkMultiOptions">
 
-        </StackPanel>
+                    <Button Name="btnEditAlbumMass" ToolTipService.ToolTip="Edit Album property" Margin="0, 10" Click="btnEditAlbumMass_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        </StackPanel>
+                    </Button>
+                    <Button Name="btnEditArtistMass" ToolTipService.ToolTip="Edit Artist property" Margin="0, 10" Click="btnEditArtistMass_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        </StackPanel>
+                    </Button>
 
-        <GridView IsItemClickEnabled="True" ItemClick="grdViewMain_ItemClick" SelectionMode="Single" SelectionChanged="grdViewMain_SelectionChanged" Name="grdViewMain" Grid.Row="5">
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal"   />
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
-            <GridView.ItemTemplate>
-                <DataTemplate>
-                    <Grid  ToolTipService.ToolTip="{Binding FileHoverInfo}">
-                        <Grid.ContextFlyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="{Binding OpenContext}">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="{Binding OpenContextGlyph}"/>
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Preview">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Rename">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Move">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="{Binding FileInfoContext}">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Add to Favourites" Visibility="{Binding VisibilityOfFileProperties}">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutSeparator/>
-                                <MenuFlyoutItem Text="Delete">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                            </MenuFlyout>
-                        </Grid.ContextFlyout>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
 
-                        <Image Stretch="Uniform" Width="180" Source="{Binding Thumbnail}"/>
+                    <Button Name="btnClearSelection" ToolTipService.ToolTip="Clear Selection" Margin="0, 10" Click="btnClearSelection_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        </StackPanel>
+                    </Button>
+                    <Button Name="btnRemoveSelectionsFromFavourites"  ToolTipService.ToolTip="Favourites" Margin="0, 10" Click="btnRemoveSelectionsFromFavourites_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Assets/favicon.png" Width="20"></Image>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
 
-                        <HyperlinkButton Foreground="White" Click="hypItemName_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
-                            <TextBlock Width="170" TextWrapping="Wrap" Text="{Binding Name}"/>
-                        </HyperlinkButton>
-                    </Grid>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
-        <ProgressRing IsIndeterminate="True" Grid.Row="5" Name="prgLoading" Visibility="Collapsed"/>
-        <Frame Name="frmNoSearchResults" Grid.Row="5" Visibility="Collapsed"/>
-        <TextBlock Grid.Row="6" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtFolderInfo"/>
+            </StackPanel>
+
+            <GridView IsItemClickEnabled="True" ItemClick="grdViewMain_ItemClick" SelectionMode="Single" SelectionChanged="grdViewMain_SelectionChanged" Name="grdViewMain" Grid.Row="5">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal"   />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid  ToolTipService.ToolTip="{Binding FileHoverInfo}">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="{Binding OpenContext}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="{Binding OpenContextGlyph}"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Preview">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Rename">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Move">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="{Binding FileInfoContext}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Add to Favourites" Visibility="{Binding VisibilityOfFileProperties}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem Text="Delete">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Image Stretch="Uniform" Width="180" Source="{Binding Thumbnail}"/>
+
+                            <HyperlinkButton Foreground="White" Click="hypItemName_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
+                                <TextBlock Width="170" TextWrapping="Wrap" Text="{Binding Name}"/>
+                            </HyperlinkButton>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+            <ProgressRing IsIndeterminate="True" Grid.Row="5" Name="prgLoading" Visibility="Collapsed"/>
+            <Grid Grid.Row="5"  HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Name="grdNoFiles" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Image  Width="90" Source="/Assets/appicon.png" Grid.Row="0"/>
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Grid.Row="1" Text="No folders or media files in this directory!"/>
+            </Grid>
+
+            <Frame Name="frmNoSearchResults" Grid.Row="5" Visibility="Collapsed"/>
+            <TextBlock Grid.Row="6" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtFolderInfo"/>
+            <TeachingTip PreferredPlacement="Auto" Name="ttRenameFiles" Title="Rename selected">
+                <StackPanel Orientation="Vertical" Spacing="20" Margin="0,10">
+                    <InfoBar Name="ifbRenameFiles" IsOpen="False"/>
+                    <TextBox Name="txtRenameFiles" PlaceholderText="Rename..."/>
+                    <Button HorizontalAlignment="Stretch" Name="btnConfirmRenameFiles" Click="btnConfirmRenameFiles_Click">
+                        <Image Width="20" Source="/Assets/tickicon.png"/>
+                    </Button>
+                    <RadioButtons>
+                        <RadioButton Name="rdIncludeNumberAtStart" Content="Include Number at Start"/>
+
+                        <RadioButton IsChecked="True" Name="rdIncludeNumberAtEnd" Content="Include Number at End"/>
+                    </RadioButtons>
+                </StackPanel>
+            </TeachingTip>
+            <TeachingTip Name="ttMoveFiles" PreferredPlacement="Bottom" Title="Move selected">
+                <Grid RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <InfoBar Name="ifbInfoMove" IsOpen="False"/>
+                    <TreeView Name="treeViewFoldersMove" Grid.Row="1">
+                        <TreeView.ItemTemplate>
+                            <DataTemplate >
+                                <TreeViewItem>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xED41;" FontFamily="Segoe MDL2 Assets" Foreground="Gold"/>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </StackPanel>
+                                </TreeViewItem>
+                            </DataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="4">
+                        <TextBox PlaceholderText="Enter directory path..." Name="txtPathEnterMove"/>
+                        <Button Style="{StaticResource AccentButtonStyle}" Content="Move"/>
+                    </StackPanel>
+                </Grid>
+            </TeachingTip>
+            <TeachingTip Name="ttDeletedFiles" Title="Delete">
+                <StackPanel Margin="0, 10" Orientation="Vertical" Spacing="10">
+                    <InfoBar Name="ifbDeleteFiles"/>
+                    <Button Name="btnOpenRecycleBin" Content="Open Recycle Bin" Click="btnOpenRecycleBin_Click"></Button>
+                </StackPanel>
+            </TeachingTip>
+            <TeachingTip Name="ttAddtoPlaylist" PreferredPlacement="Bottom" Title="Add to Playlist">
+                <StackPanel Orientation="Vertical" Spacing="10">
+                    <ListView Name="lstAddToPlaylists"></ListView>
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <Button Content="New Playlist"/>
+                        <Button Content="Add" Style="{StaticResource AccentButtonStyle}"></Button>
+                    </StackPanel>
+                </StackPanel>
+            </TeachingTip>
+        </Grid>
     </Grid>
 </Page>

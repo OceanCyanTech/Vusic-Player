@@ -24,7 +24,7 @@ Stretch="UniformToFill"/>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition ></ColumnDefinition>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
-                            <ColumnDefinition MaxWidth="700" MinWidth="280" x:Name="ColumnMaster" Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition MaxWidth="700" MinWidth="280" x:Name="ColumnMaster" Width="300"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <NavigationView IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="nvgMain_BackRequested" Grid.Column="0" Background="Transparent" Name="nvgMain" PaneDisplayMode="Top" IsSettingsVisible="True" SelectionChanged="nvgMain_SelectionChanged">
 
@@ -71,7 +71,7 @@ Stretch="UniformToFill"/>
                             </Grid.RowDefinitions>
                             <Image Name="imgThumbnailCover" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}" Width="150" Grid.Row="0"></Image>
 
-                            <TextBlock Margin="0, 20, 0, 0" HorizontalAlignment="Center" Width="{x:Bind MusicPlayerMaster.Width, Mode=OneWay}" Name="txtSongName" TextTrimming="CharacterEllipsis" MaxLines="1" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" >
+                            <TextBlock  Margin="0, 20, 0, 0" HorizontalAlignment="Center"  Name="txtSongName" TextTrimming="CharacterEllipsis" MaxLines="1" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="NoWrap" >
 
                             </TextBlock>
                             <Grid Grid.Row="2" Margin="0, 5, 0, 0">

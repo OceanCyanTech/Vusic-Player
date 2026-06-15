@@ -47,10 +47,12 @@ namespace Vusic_Player.Configuration.Helper.UI
         public static async void LoadAvailableShow(string EpisodePath)
         {
             EpisodeList.Clear();
+            Debug.WriteLine("Yes there are shows");
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var shows = currentSettings.Shows;
             foreach(var show in shows)
             {
+                Debug.WriteLine(show.Name + " Show Name");
                 var directorypath = show.Directory;
                 if (directorypath != null)
                 {

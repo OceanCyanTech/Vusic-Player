@@ -108,7 +108,7 @@ namespace Vusic_Player.Pages
             grdsplittr.Visibility = Visibility.Visible;
             ColumnMaster.MinWidth = 280;
             MusicPlayerMaster.Visibility = Visibility.Visible;
-            SetGridBackground();
+        //    SetGridBackground();
             if (e.SourcePageType == typeof(HomeView))
                 nvgMain.Header = "Home";
 
@@ -149,7 +149,7 @@ namespace Vusic_Player.Pages
                 grdsplittr.Visibility = Visibility.Collapsed;
                 ColumnMaster.MinWidth = 0;
                 MusicPlayerMaster.Visibility = Visibility.Collapsed;
-                grdRoot.Background = null;
+            //    grdRoot.Background = null;
                 ColumnMaster.Width = GridLength.Auto;
             }
             else if (e.SourcePageType == typeof(SettingsPage))
@@ -227,6 +227,7 @@ namespace Vusic_Player.Pages
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
+            if (mediacontroller.ArtistDisplayName == "Unknown Artist") return;
             if(App.NavigationFrame != null)
             {
                 App.NavigationFrame.Navigate(typeof(ArtistView), mediacontroller.ArtistDisplayName);
@@ -235,6 +236,8 @@ namespace Vusic_Player.Pages
 
         private void HyperlinkButton_Click_1(object sender, RoutedEventArgs e)
         {
+            if (mediacontroller.ArtistDisplayName == "Unknown Album") return;
+
             if (App.NavigationFrame != null)
             {
                 App.NavigationFrame.Navigate(typeof(AlbumView), mediacontroller.AlbumDisplayName);

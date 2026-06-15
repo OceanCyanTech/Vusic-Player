@@ -171,8 +171,17 @@ namespace Vusic_Player.Configuration
             string title = !string.IsNullOrWhiteSpace(musicProps.Title) ? musicProps.Title : Path.GetFileNameWithoutExtension(file.Path);
 
             UIController.MediaDisplayName = title;
+            
             UIController.AlbumDisplayName = musicProps.Album;
+            if(musicProps.Album == "")
+            {
+                UIController.AlbumDisplayName = "Unknown Album";
+            } 
             UIController.ArtistDisplayName = musicProps.Artist;
+            if (musicProps.Artist == "")
+            {
+                UIController.ArtistDisplayName = "Unknown Artist";
+            }
             string fileExtension = file.FileType.ToLowerInvariant();
             bool isAudio = false;
             if (Extensions.AudioExtensions.List.Contains(fileExtension))
@@ -197,7 +206,7 @@ namespace Vusic_Player.Configuration
             }
 
             filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-            Masterplayer.Open(fiPath);
+            Masterplayer.Open(filestreamcurrent);
 
 
 
@@ -210,14 +219,15 @@ namespace Vusic_Player.Configuration
                 {
                     byte[] bin = tfile.Tag.Pictures[0].Data.Data;
 
-                    using (var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream())
+                    // 1. Create a standard .NET MemoryStream from your byte array
+                    using (var memoryStream = new System.IO.MemoryStream(bin))
                     {
-                        using (var writer = new Windows.Storage.Streams.DataWriter(stream.GetOutputStreamAt(0)))
+                        // 2. Convert it to a WinRT IRandomAccessStream using System.IO extensions
+                        using (var randomAccessStream = memoryStream.AsRandomAccessStream())
                         {
-                            writer.WriteBytes(bin);
-                            await writer.StoreAsync();
+                            // 3. Set the source safely
+                            await image.SetSourceAsync(randomAccessStream);
                         }
-                        await image.SetSourceAsync(stream);
                     }
                 }
                 catch (Exception ex)

@@ -771,7 +771,10 @@ namespace Vusic_Player.Pages
 
         private void videoControls_ViewEpisodeClick()
         {
+            Debug.WriteLine("Show Episodes Clicked");
             if (ShowManager.CurrentShow == null) return;
+            Debug.WriteLine("Show Episodes Clicked2");
+
             FadeInStoryboardShowInfo.Begin();
             txtShowTitle.Text = ShowManager.CurrentShow.Name;
             txtShowSeasonCount.Text = $"• {ShowManager.CurrentShow.SeasonCount} {(ShowManager.CurrentShow.SeasonCount == 1 ? "season" : "seasons")}";
@@ -1009,7 +1012,7 @@ namespace Vusic_Player.Pages
 
                                     try { durationString = await tcsDuration.Task; } catch { /* Fallback to default */ }
                                     // C. HEAVY IO: Run FFmpeg to extract the image (Safe for background thread)
-                                    string tempFile = await FileThumbnailObtain.ExtractVideoFrameToFileAsync(filePath);
+                                    string tempFile = await FileThumbnailObtain.ExtractVidThumbnailBasic(filePath);
 
                                     // D. WINRT CALL: Convert the temp image file into a BitmapImage
                                     // BitmapImage MUST be created and assigned on the UI thread
