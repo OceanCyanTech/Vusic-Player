@@ -457,7 +457,7 @@ namespace Vusic_Player.Pages.Views
 
         private void OceanContentDialog_PrimaryRequested()
         {
-           
+
             OceanContentDialog.HideDlg();
             MainWindow.ShowWindow();
             DeleteFiles();
@@ -477,10 +477,24 @@ namespace Vusic_Player.Pages.Views
                 Logger.Log(ex.Message, "DeleteFileFolderPage", Logger.LogLevelType.Error);
             }
         }
+        private async Task DeleteSingleFolderAsync(string path)
+        {
+            try
+            {
+                var storagefolder = await StorageFolder.GetFolderFromPathAsync(path);
+                await storagefolder.DeleteAsync(StorageDeleteOption.Default);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("An unexpected error occured. Check log page for more details");
+                Logger.Log(ex.Message, "DeleteFolder_FolderPage", Logger.LogLevelType.Error);
+            }
+        }
+        ObservableCollection<string> PathsIncomplete = new();
+
         private async void DeleteFiles()
         {
             var selecteditems = grdViewMain.SelectedItems.Cast<FileItem>().ToList();
-            List<string> PathsIncomplete = new();
             foreach (var item in selecteditems)
             {
                 Debug.WriteLine("DELETE FILE: " + item.Path);
@@ -489,9 +503,16 @@ namespace Vusic_Player.Pages.Views
                 if (lockingprocesses.Count == 0)
                 {
                     Debug.WriteLine("ZERO PROCESS: " + item.Path);
-                    await DeleteSingleFileAsync(item.Path);
+                    if (item.isFolder)
+                    {
+                        await DeleteSingleFolderAsync(item.Path);
+                    }
+                    else
+                    {
+                        await DeleteSingleFileAsync(item.Path);
+                    }
                     var exist = MainItems.FirstOrDefault(p => p.Path == item.Path);
-                    if(exist != null)
+                    if (exist != null)
                     {
                         MainItems.Remove(exist);
                     }
@@ -529,24 +550,62 @@ namespace Vusic_Player.Pages.Views
             else
             {
                 if (App.MainWindowInstance == null) return;
-                OceanContentDialog.Show("File in Use", "Try Again", "", "Skip", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 500, 500, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", $"The selected file '{PathsIncomplete[0]}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.");
+                string currentFile = PathsIncomplete[0];
+                PathsIncomplete.Remove(currentFile);
+
+                // 2. Safely hook up the event handler (unsubscribe first to avoid duplicates)
+
+                // 3. Show the dialog for this specific file
+                OceanContentDialog.Show(
+                    "File in Use", "Skip", "", "Try Again",
+                    OceanDialogWindow.ContentType.MessageShow,
+                    OceanContentDialogDefault.Primary,
+                    XamlRoot, 500, 500,
+                    OceanContentDialogType.Elevated,
+                    App.MainWindowInstance, "", "", "",
+                    new ObservableCollection<SongModel>(), "",
+                    $"The selected file '{currentFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again."
+                );
                 OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
-                OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1; ;
+                OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1;
+
             }
 
-            //var selecteditems = lstViewMain.SelectedItems.Cast<SongModel>();
-            //if(selecteditems != null)
-            //{
-            //    foreach(var item in selecteditems)
-            //    {
-            //       FileSystem.DeleteFile
-            //    }
-            //}
+
         }
 
         private void OceanContentDialog_PrimaryRequested1()
         {
-            
+            Debug.WriteLine("USd");
+            if (PathsIncomplete.Count == 0)
+            {
+                Debug.WriteLine("Yes Compelt");
+                OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
+                return;
+            }
+
+            if (App.MainWindowInstance == null) return;
+
+            // Pull the next file from the top of the list
+            string nextFile = PathsIncomplete[0];
+            Debug.WriteLine(nextFile + " is to be removed");
+            PathsIncomplete.Remove(nextFile);
+            foreach (var item in PathsIncomplete)
+            {
+                Debug.WriteLine(item);
+            }
+
+            // Show the dialog for the next file
+            OceanContentDialog.Show(
+                "File in Used", "Skip", "", "Try Again",
+                OceanDialogWindow.ContentType.MessageShow,
+                OceanContentDialogDefault.Primary,
+                XamlRoot, 500, 500,
+                OceanContentDialogType.Elevated,
+                App.MainWindowInstance, "", "", "",
+                new ObservableCollection<SongModel>(), "",
+                $"The selected file '{nextFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again."
+            );
         }
 
         private void btnCreateShow_Click(object sender, RoutedEventArgs e)
@@ -701,6 +760,18 @@ namespace Vusic_Player.Pages.Views
                 btnEditAlbumMass.Visibility = Visibility.Collapsed;
                 btnEditArtistMass.Visibility = Visibility.Collapsed;
                 btnRemoveSelectionsFromFavourites.Visibility = Visibility.Collapsed;
+                ToolTipService.SetToolTip(btnDeleteFiles, "Delete Selected");
+            }
+            else
+            {
+                if (grdViewMain.SelectedItems.Count == 1)
+                {
+                    ToolTipService.SetToolTip(btnDeleteFiles, "Delete file");
+                }
+                else
+                {
+                    ToolTipService.SetToolTip(btnDeleteFiles, "Delete files");
+                }
             }
 
         }
