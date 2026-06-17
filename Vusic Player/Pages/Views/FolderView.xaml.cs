@@ -1,8 +1,10 @@
 using CommunityToolkit.WinUI;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -19,6 +21,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -154,12 +157,14 @@ namespace Vusic_Player.Pages.Views
                         string durationText = musicprops.Duration.TotalHours >= 1
     ? musicprops.Duration.ToString(@"h\:mm\:ss")
     : musicprops.Duration.ToString(@"m\:ss");
+                        string text = isFav ? "Remove from Favourites" : "Add to Favourites";
                         MainItems.Add(new FileItem
                         {
                             Path = file.Path,
                             Name = Path.GetFileNameWithoutExtension(file.Path),
                             Thumbnail = await FileThumbnailObtain.GetFileThumbnailAsync(file.Path),
-                            isFavourite = isFav,
+                            IsFavourite = isFav,
+                            FavString = text,
                             FileHoverInfo = Path.GetFileName(file.Path) + Environment.NewLine + filesize + Environment.NewLine + "Length: " + durationText
 
                             //Title = Path.GetFileName(file.Path),
@@ -186,7 +191,7 @@ namespace Vusic_Player.Pages.Views
                         var newFileItem = new FileItem
                         {
                             Path = file.Path,
-                            isFavourite = isFav,
+                            IsFavourite = isFav,
                             Name = Path.GetFileNameWithoutExtension(file.Path),
                             FileSize = fileInfo.Length,
                             FileCreationTime = fileInfo.CreationTime,
@@ -247,7 +252,113 @@ namespace Vusic_Player.Pages.Views
 
             }
         }
+        private async void mnftAddToFavourites_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FileItem song)
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var Favourites = currentSettings.Favourites;
+                var pathtocheck = song.Path;
+                if (pathtocheck == null) return;
+                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
+                if (existing != null)
+                {
+                    song.IsFavourite = false;
+                    Favourites.Remove(existing);
+                    song.FavString = "Add to Favourites";
+
+                }
+                else
+                {
+                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
+                    song.IsFavourite = true;
+                    song.FavString = "Remove from Favourites";
+
+                }
+
+
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+        }
         public ObservableCollection<FolderModel> BreadcrumbItems { get; set; } = new();
+        private async void btnFavourite_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Content is Grid rootGrid && btn.DataContext is FileItem song)
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var Favourites = currentSettings.Favourites;
+                var pathtocheck = song.Path;
+                if (pathtocheck == null) return;
+                var fillHeartIcon = rootGrid.FindName("HeartIcon") as FontIcon;
+                if (fillHeartIcon == null) return;
+                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
+                if (existing == null)
+                {
+                    fillHeartIcon.Glyph = "\uEB52";
+                    song.IsFavourite = true;
+                    AnimateHeartFull(fillHeartIcon, true);
+                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
+                    song.FavString = "Remove from Favourites";
+
+                }
+                else
+                {
+                    song.IsFavourite = false;
+                    fillHeartIcon.Glyph = "\uEB51";
+                    AnimateHeartFull(fillHeartIcon, false);
+                    Favourites.Remove(existing);
+                    song.FavString = "Add to Favourites";
+
+
+                }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+            }
+            // Favourite button click logic
+        }
+        private void AnimateHeartFull(FontIcon targetIcon, bool isBecomingFavorite)
+        {
+            // 1. Get the Visual and Compositor
+            var visual = ElementCompositionPreview.GetElementVisual(targetIcon);
+            var compositor = visual.Compositor;
+
+            // 2. Setup Scale Animation (The "Pop")
+            var scaleAnim = compositor.CreateScalarKeyFrameAnimation();
+            scaleAnim.InsertKeyFrame(0.0f, 1.0f);
+            scaleAnim.InsertKeyFrame(0.5f, 1.4f); // Pulse size
+            scaleAnim.InsertKeyFrame(1.0f, 1.0f);
+            scaleAnim.Duration = TimeSpan.FromMilliseconds(400);
+
+            visual.CenterPoint = new Vector3((float)targetIcon.ActualWidth / 2, (float)targetIcon.ActualHeight / 2, 0);
+            visual.StartAnimation("Scale.X", scaleAnim);
+            visual.StartAnimation("Scale.Y", scaleAnim);
+
+            // 3. Setup Color Animation (The "Fill")
+            // Note: We animate the 'Brush.Color' of the visual
+            var colorAnim = compositor.CreateColorKeyFrameAnimation();
+            colorAnim.Duration = TimeSpan.FromMilliseconds(400);
+
+            if (isBecomingFavorite)
+            {
+                colorAnim.InsertKeyFrame(0.0f, Colors.Gray);
+                colorAnim.InsertKeyFrame(1.0f, Colors.Red);
+            }
+            else
+            {
+                colorAnim.InsertKeyFrame(0.0f, Colors.Red);
+                colorAnim.InsertKeyFrame(1.0f, Colors.Gray);
+            }
+
+            // Create a Brush if one doesn't exist on the visual layer
+            var brush = compositor.CreateColorBrush();
+            visual.Properties.InsertColor("Color", isBecomingFavorite ? Colors.Red : Colors.Gray);
+
+            // Start the color transition
+            // Note: For FontIcon, it's often easier to just swap the Glyph 
+            // and let the Composition color animation handle the tint.
+            targetIcon.Foreground = new SolidColorBrush(isBecomingFavorite ? Colors.Red : Colors.Gray);
+        }
+
         private void InitializeBreadcrumb(string path)
         {
             BreadcrumbItems.Clear();
@@ -438,12 +549,21 @@ namespace Vusic_Player.Pages.Views
         {
             ttMoveFiles.IsOpen = true;
         }
-
-        private void btnAddToPlaylist_Click(object sender, RoutedEventArgs e)
+        ObservableCollection<PlaylistItem> playlistsaddto = new();
+        private async void btnAddToPlaylist_Click(object sender, RoutedEventArgs e)
         {
+            playlistsaddto.Clear();
             if (grdViewMain.SelectedItems.Count > 0)
             {
                 ttAddtoPlaylist.IsOpen = true;
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var playlists = currentSettings.SavedPlaylists;
+                foreach (var playlist in playlists)
+                {
+
+                    playlistsaddto.Add(new PlaylistItem { PlaylistName = playlist.PlaylistName, PlaylistId = playlist.PlaylistId });
+                }
+                lstAddToPlaylists.ItemsSource = playlistsaddto;
             }
         }
 
@@ -451,7 +571,8 @@ namespace Vusic_Player.Pages.Views
         {
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Confirm Delete", "Delete", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", "The selected items will be sent to the Recycle Bin. You can restore them from the Recycle Bin if needed.");
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            UnsubscribeAllEventsOceanDialog();
+
             OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
         }
 
@@ -494,6 +615,7 @@ namespace Vusic_Player.Pages.Views
 
         private async void DeleteFiles()
         {
+            PathsIncomplete.Clear();
             var selecteditems = grdViewMain.SelectedItems.Cast<FileItem>().ToList();
             foreach (var item in selecteditems)
             {
@@ -534,7 +656,7 @@ namespace Vusic_Player.Pages.Views
                     //        }
                     //    }
 
-
+                    Debug.WriteLine("ADDING: " + item.Path);
                     PathsIncomplete.Add(item.Path);
                 }
 
@@ -549,29 +671,51 @@ namespace Vusic_Player.Pages.Views
             }
             else
             {
+                Debug.WriteLine("DDHJLFHJOOFH");
                 if (App.MainWindowInstance == null) return;
                 string currentFile = PathsIncomplete[0];
                 PathsIncomplete.Remove(currentFile);
+                currentFileInactive = currentFile;
+                ifbFileInUse.IsOpen = true;
+                ifbFileInUse.Severity = InfoBarSeverity.Error;
+                ifbFileInUse.Message = $"The selected item '{currentFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                chckSkipForAllFiles.IsChecked = false;
+                if (App.MainWindowInstance.Content != null)
+                {
+                    ttInaccessibleFiles.XamlRoot = App.MainWindowInstance.Content.XamlRoot;
+                }
 
-                // 2. Safely hook up the event handler (unsubscribe first to avoid duplicates)
+                // FIX 2: Prevent "ContentDialog is already open" or visual tree tracking errors
+                try
+                {
+                    await ttInaccessibleFiles.ShowAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Dialog failed to show: {ex.Message}");
+                }
+                //                ttInaccessibleFiles.IsOpen = true;
 
-                // 3. Show the dialog for this specific file
-                OceanContentDialog.Show(
-                    "File in Use", "Skip", "", "Try Again",
-                    OceanDialogWindow.ContentType.MessageShow,
-                    OceanContentDialogDefault.Primary,
-                    XamlRoot, 500, 500,
-                    OceanContentDialogType.Elevated,
-                    App.MainWindowInstance, "", "", "",
-                    new ObservableCollection<SongModel>(), "",
-                    $"The selected file '{currentFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again."
-                );
-                OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
-                OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1;
+
 
             }
 
 
+        }
+
+        private void OceanContentDialog_PrimaryRequested2()
+        {
+            if (PathsIncomplete.Count == 0)
+            {
+                Debug.WriteLine("Yes Compelt");
+                OceanContentDialog.HideDlg();
+                MainWindow.ShowWindow();
+            }
+            else
+            {
+                Debug.WriteLine(PathsIncomplete[0] + " is to be remd");
+                PathsIncomplete.RemoveAt(0);
+            }
         }
 
         private void OceanContentDialog_PrimaryRequested1()
@@ -604,13 +748,19 @@ namespace Vusic_Player.Pages.Views
                 OceanContentDialogType.Elevated,
                 App.MainWindowInstance, "", "", "",
                 new ObservableCollection<SongModel>(), "",
-                $"The selected file '{nextFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again."
+                $"The selected item '{nextFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again."
             );
         }
 
         private void btnCreateShow_Click(object sender, RoutedEventArgs e)
         {
+            if (currentFolder == null) return;
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Create New Show Model", "Create", "", "Cancel", OceanDialogWindow.ContentType.ShowModel, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "", "", "", "", "", new PlaylistItem(), false, false);
+            UnsubscribeAllEventsOceanDialog();
 
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested4;
+            PlaylistCreation.CallExistingShowDirectory(currentFolder.FolderPath);
         }
         public async Task<bool> RenameStorageFileAsync(StorageFile file, string newName)
         {
@@ -956,7 +1106,7 @@ namespace Vusic_Player.Pages.Views
             }
         }
 
-        private void hypItemName_Click(object sender, RoutedEventArgs e)
+        private async void hypItemName_Click(object sender, RoutedEventArgs e)
         {
             if (sender is HyperlinkButton hyp && hyp.DataContext is FileItem item)
             {
@@ -969,18 +1119,57 @@ namespace Vusic_Player.Pages.Views
                 else
                 {
                     string fileExtension = Path.GetExtension(item.Path).ToLower();
-
-                    if (AudioExtensions.List.Contains(fileExtension))
+                    //          var lockedprocesses = GetLockingProcess.GetLockingProcesses(item.Path);
+                    var storagefile = await StorageFile.GetFileFromPathAsync(item.Path);
+                    if (await IsStorageFileReadableAsync(storagefile))
                     {
-                        PlayerService.OpenPath(item.Path);
+                        if (AudioExtensions.List.Contains(fileExtension))
+                        {
+                            PlayerService.OpenPath(item.Path);
+                        }
+                        else if (VideoExtensions.List.Contains(fileExtension))
+                        {
+                            if (File.Exists(item.Path))
+                                Frame.Navigate(typeof(VideoPlayer), item.Path);
+                        }
                     }
-                    else if (VideoExtensions.List.Contains(fileExtension))
+                    else
                     {
-                        if (File.Exists(item.Path))
-                            Frame.Navigate(typeof(VideoPlayer), item.Path);
+                        if (App.MainWindowInstance == null) return;
+                        OceanContentDialog.Show("File Locked", "Delete", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", $"The file {item.Path} is denied read access by one or more processes");
+                        UnsubscribeAllEventsOceanDialog();
+
+                        OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested6;
                     }
                 }
             }
+        }
+        public async Task<bool> IsStorageFileReadableAsync(StorageFile file)
+        {
+            try
+            {
+                // Attempt to open the stream
+                using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                // 0x80070020 = Sharing Violation (Locked)
+                // 0x80070005 = Access Denied
+                if (ex.HResult == unchecked((int)0x80070020) || ex.HResult == unchecked((int)0x80070005))
+                {
+                    return false;
+                }
+                throw;
+            }
+        }
+
+        private void OceanContentDialog_PrimaryRequested6()
+        {
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
         }
 
         private void grdViewMain_ItemClick(object sender, ItemClickEventArgs e)
@@ -1016,15 +1205,41 @@ namespace Vusic_Player.Pages.Views
                 }
             }
         }
+        private async void MassEdit()
+        {
+            var selected = grdViewMain.SelectedItems.Cast<FileItem>().ToList();
 
+            var observable = new ObservableCollection<SongModel>();
+            foreach (var item in selected)
+            {
+                var file = await StorageFile.GetFileFromPathAsync(item.Path);
+                var props = await file.Properties.GetMusicPropertiesAsync();
+                var title = props.Title;
+                if (string.IsNullOrEmpty(title))
+                {
+                    title = Path.GetFileNameWithoutExtension(item.Path);
+                }
+                observable.Add(new SongModel { Title = title, FilePath = item.Path, SongDuration = props.Duration, AlbumName = props.Album, Artist = props.Artist, Glyph = "\uEC4F", IsAudioItem = true });
+            }
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Edit Properties for Multiple", "Close", "", "", OceanDialogWindow.ContentType.MassEditing, OceanContentDialogDefault.Primary, XamlRoot, 950, 900, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", observable, "", "", "", "", "");
+            UnsubscribeAllEventsOceanDialog();
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested5;
+        }
         private void btnEditAlbumMass_Click(object sender, RoutedEventArgs e)
         {
+            MassEdit();
+        }
 
+        private void OceanContentDialog_PrimaryRequested5()
+        {
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
         }
 
         private void btnEditArtistMass_Click(object sender, RoutedEventArgs e)
         {
-
+            MassEdit();
         }
 
         private void btnSelectAll_Click(object sender, RoutedEventArgs e)
@@ -1047,8 +1262,56 @@ namespace Vusic_Player.Pages.Views
 
         }
 
-        private void btnRemoveSelectionsFromFavourites_Click(object sender, RoutedEventArgs e)
+        private async void btnRemoveSelectionsFromFavourites_Click(object sender, RoutedEventArgs e)
         {
+            var songss = grdViewMain.SelectedItems.Cast<FileItem>().ToList(); // Converting to a list is safer if you evaluate multiple times
+            bool allAreFavorites = songss.All(item => item.IsFavourite);
+
+            bool noneAreFavorites = !songss.Any(item => item.IsFavourite);
+
+            bool partialFavorites = songss.Any(item => item.IsFavourite) && !songss.All(item => item.IsFavourite);
+            if (songss.Any(item => item.IsFavourite))
+            {
+                Debug.WriteLine("All/Partial");
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var Favourites = currentSettings.Favourites;
+                foreach (var item in songss)
+                {
+                    var pathtocheck = item.Path;
+                    if (pathtocheck == null) return;
+                    var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
+
+                    if (existing != null)
+                    {
+                        item.IsFavourite = false;
+                        item.FavString = "Add to Favourites";
+                        Favourites.Remove(existing);
+                    }
+
+                }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+            else if (noneAreFavorites)
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var Favourites = currentSettings.Favourites;
+                foreach (var item in songss)
+                {
+                    var pathtocheck = item.Path;
+                    if (pathtocheck == null) return;
+                    var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
+
+                    if (existing == null)
+                    {
+                        item.IsFavourite = true;
+                        item.FavString = "Remove from Favourites";
+
+                        Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
+                    }
+
+                }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
 
         }
 
@@ -1059,7 +1322,7 @@ namespace Vusic_Player.Pages.Views
                 App.NavigationFrame.Navigate(typeof(HomeView));
             }
         }
-        private async void RenameSingleFile(FileItem file, string newname, bool toreopen = false)
+        private async void RenameSingleFile(FileItem file, string newname, bool toreopen = false, bool issinglefile = false)
         {
             Debug.WriteLine("Renameoccured");
 
@@ -1071,16 +1334,23 @@ namespace Vusic_Player.Pages.Views
                 directory = fileInfo.DirectoryName;
             }
             string newPath = Path.Combine(directory, newname + Path.GetExtension(file.Path));
+            InfoBar ifb = new InfoBar();
+            ifb = ifbRenameFiles;
+            if (issinglefile)
+            {
+                ifb = ifbRenameFile;
+            }
             if (await RenameStorageFileAsync(storagefile, newname + Path.GetExtension(file.Path)))
             {
                 file.Name = newname;
                 file.Path = newPath;
                 string fileExtension = Path.GetExtension(newPath).ToLower();
                 var newstoragefile = await StorageFile.GetFileFromPathAsync(newPath);
-                ifbRenameFiles.Severity = InfoBarSeverity.Success;
-                ifbRenameFiles.Title = "Completed";
-                ifbRenameFiles.Message = "File has been renamed";
-                ifbRenameFiles.IsOpen = true;
+
+                ifb.Severity = InfoBarSeverity.Success;
+                ifb.Title = "Completed";
+                ifb.Message = "File has been renamed";
+                ifb.IsOpen = true;
                 if (toreopen == true)
                 {
                     PlayerService.JustDisposed = true;
@@ -1118,10 +1388,10 @@ namespace Vusic_Player.Pages.Views
             }
             else
             {
-                ifbRenameFiles.Severity = InfoBarSeverity.Error;
-                ifbRenameFiles.Title = "Error";
-                ifbRenameFiles.Message = "An unexpected error occured, check log page for details.";
-                ifbRenameFiles.IsOpen = true;
+                ifb.Severity = InfoBarSeverity.Error;
+                ifb.Title = "Error";
+                ifb.Message = "An unexpected error occured, check log page for details.";
+                ifb.IsOpen = true;
                 if (toreopen == true)
                 {
                     PlayerService.JustDisposed = true;
@@ -1138,20 +1408,27 @@ namespace Vusic_Player.Pages.Views
                 }
             }
         }
-        private async void RenameSingleFolder(FileItem file)
+        private async void RenameSingleFolder(FileItem file, bool issinglefile = false)
         {
+            InfoBar ifb = new InfoBar();
+            ifb = ifbRenameFiles;
+            if (issinglefile)
+            {
+                ifb = ifbRenameFile;
+            }
             try
             {
+
                 StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(file.Path);
 
                 await folder.RenameAsync(txtRenameFiles.Text, NameCollisionOption.FailIfExists);
                 DirectoryInfo dirInfo = new DirectoryInfo(folder.Path);
                 var totalsize2 = dirInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(file => file.Length);
                 var finalsize = GetFileOrFolderSizeInString(totalsize2);
-                ifbRenameFiles.Severity = InfoBarSeverity.Success;
-                ifbRenameFiles.Title = "Completed";
-                ifbRenameFiles.Message = "Folder has been renamed";
-                ifbRenameFiles.IsOpen = true;
+                ifb.Severity = InfoBarSeverity.Success;
+                ifb.Title = "Completed";
+                ifb.Message = "Folder has been renamed";
+                ifb.IsOpen = true;
                 file.FileHoverInfo = Path.GetFileName(folder.Path) + Environment.NewLine + "(Folder)" + Environment.NewLine + finalsize;
                 file.Path = folder.Path;
                 file.Name = txtRenameFiles.Text;
@@ -1159,10 +1436,10 @@ namespace Vusic_Player.Pages.Views
             }
             catch
             {
-                ifbRenameFiles.Severity = InfoBarSeverity.Error;
-                ifbRenameFiles.Title = "Error";
-                ifbRenameFiles.Message = "An unexpected error occured, check log page for details.";
-                ifbRenameFiles.IsOpen = true;
+                ifb.Severity = InfoBarSeverity.Error;
+                ifb.Title = "Error";
+                ifb.Message = "An unexpected error occured, check log page for details.";
+                ifb.IsOpen = true;
             }
         }
         private async void btnConfirmRenameFiles_Click(object sender, RoutedEventArgs e)
@@ -1340,6 +1617,519 @@ namespace Vusic_Player.Pages.Views
                 Arguments = "shell:RecycleBinFolder",
                 UseShellExecute = true
             });
+
+        }
+
+        private async void ttInaccessibleFiles_CloseButtonClick(TeachingTip sender, object args)
+        {
+
+
+        }
+
+        private async void ttInaccessibleFiles_CloseButtonClick_1(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            if (PathsIncomplete.Count > 0)
+            {
+                args.Cancel = true;
+                // Remove the file they just read about
+                string removedFile = PathsIncomplete[0];
+                Debug.WriteLine(removedFile + " is removed from queue");
+                PathsIncomplete.RemoveAt(0); // More efficient than Remove(string)
+
+                // If there is ANOTHER file left in the queue, show the tip again
+                //  await ttInaccessibleFiles.ShowAsync();
+
+                string nextFile = PathsIncomplete[0];
+                ifbFileInUse.Message = $"The selected file '{nextFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+
+                // Re-open cleanly now that the previous one is fully shut
+                //      ttInaccessibleFiles.IsOpen = true;
+
+
+                //if(PathsIncomplete.Count != 0)
+                //{
+
+                //    string nextFile = PathsIncomplete[0];
+                //    Debug.WriteLine(nextFile + " is to be removed");
+                //    PathsIncomplete.Remove(nextFile);
+                //    ifbFileInUse.Message = $"The selected file '{nextFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                //    ttInaccessibleFiles.IsOpen = true;
+                //}
+            }
+        }
+        private string currentFileInactive = "";
+        private void ttInaccessibleFiles_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            if (PathsIncomplete.Count > 0)
+            {
+                if (chckSkipForAllFiles.IsChecked == false)
+                {
+                    args.Cancel = true;
+                    Debug.WriteLine("yess");
+                    string removedFile = PathsIncomplete[0];
+                    currentFileInactive = removedFile;
+                    Debug.WriteLine(removedFile + " is removed from queue");
+                    PathsIncomplete.Remove(removedFile);
+                    ifbFileInUse.Message = $"The selected file '{removedFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                }
+            }
+        }
+
+        private async void ttInaccessibleFiles_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+
+            args.Cancel = true;
+            var item = currentFileInactive;
+            var lockingprocesses = GetLockingProcess.GetLockingProcesses(item);
+            if (lockingprocesses.Count == 0)
+            {
+                var exist2 = PathsIncomplete.FirstOrDefault(p => p == currentFileInactive);
+                if (exist2 != null)
+                {
+                    PathsIncomplete.Remove(exist2);
+                }
+                Debug.WriteLine("ZERO PROCESS: " + item);
+                if (Directory.Exists(item))
+                {
+                    await DeleteSingleFolderAsync(item);
+                }
+                else if (File.Exists(item))
+                {
+                    await DeleteSingleFileAsync(item);
+                }
+                var exist = MainItems.FirstOrDefault(p => p.Path == item);
+                if (exist != null)
+                {
+                    MainItems.Remove(exist);
+                }
+                if (PathsIncomplete.Count != 0)
+                {
+                    var currentFile = PathsIncomplete[0];
+                    ifbFileInUse.IsOpen = true;
+                    ifbFileInUse.Severity = InfoBarSeverity.Error;
+                    ifbFileInUse.Message = $"The selected file '{currentFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                }
+                else
+                {
+                    ttInaccessibleFiles.Hide();
+                }
+            }
+            else
+            {
+                if (App.MainWindowInstance == null) return;
+                string currentFile = item;
+
+                ifbFileInUse.IsOpen = true;
+                ifbFileInUse.Severity = InfoBarSeverity.Error;
+                ifbFileInUse.Message = $"The selected file '{currentFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                //                ttInaccessibleFiles.IsOpen = true;
+
+
+
+            }
+
+        }
+
+        private void mnftRename_Click(object sender, RoutedEventArgs e)
+        {
+            ttRenameFileSingle.IsOpen = true;
+            ifbRenameFile.IsOpen = false;
+
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FileItem file)
+            {
+                txtRenameFile.Text = file.Name;
+                currentcontextfileitem = file;
+            }
+
+        }
+
+        private void mnftDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FileItem file)
+            {
+                if (App.MainWindowInstance == null) return;
+                currentcontextfileitem = file;
+                OceanContentDialog.Show("Confirm Delete", "Delete", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", $"'{file.Name}' will be sent to the Recycle Bin. You can restore it from the Recycle Bin if needed.");
+                UnsubscribeAllEventsOceanDialog();
+
+                OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested7;
+            }
+        }
+
+        private async void OceanContentDialog_PrimaryRequested7()
+        {
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+            PathsIncomplete.Clear();
+            var item = currentcontextfileitem;
+            Debug.WriteLine("DELETE FILE: " + item.Path);
+
+            var lockingprocesses = GetLockingProcess.GetLockingProcesses(item.Path);
+            if (lockingprocesses.Count == 0)
+            {
+                Debug.WriteLine("ZERO PROCESS: " + item.Path);
+                if (item.isFolder)
+                {
+                    await DeleteSingleFolderAsync(item.Path);
+                }
+                else
+                {
+                    await DeleteSingleFileAsync(item.Path);
+                }
+                var exist = MainItems.FirstOrDefault(p => p.Path == item.Path);
+                if (exist != null)
+                {
+                    MainItems.Remove(exist);
+                }
+            }
+            else
+            {
+                Debug.WriteLine("MULTI PROCESS: " + item.Path);
+                //bool onlyVusicPlayer = lockingprocesses.All(p => p.ProcessName == "Vusic Player");
+                //if (onlyVusicPlayer)
+                //{
+                //    if (PlayerService.Masterplayer != null)
+                //    {
+                //        PlayerService.filestreamcurrent?.Dispose();
+                //        var filelocked2 = GetLockingProcess.GetLockingProcesses(item.Path);
+                //        if (filelocked2.Count == 0)
+                //        {
+
+
+                //        }
+                //    }
+
+                Debug.WriteLine("ADDING: " + item.Path);
+                PathsIncomplete.Add(item.Path);
+
+
+            }
+            if (PathsIncomplete.Count == 0)
+            {
+                ttDeletedFiles.IsOpen = true;
+                ifbDeleteFiles.IsOpen = true;
+                ifbDeleteFiles.Title = "Completed";
+                ifbDeleteFiles.Severity = InfoBarSeverity.Success;
+                ifbDeleteFiles.Message = "Successfully deleted! You can restore it from the Recycle Bin if needed.";
+            }
+            else
+            {
+                Debug.WriteLine("DDHJLFHJOOFH");
+                if (App.MainWindowInstance == null) return;
+                string currentFile = PathsIncomplete[0];
+                PathsIncomplete.Remove(currentFile);
+                currentFileInactive = currentFile;
+                ifbFileInUse.IsOpen = true;
+                ifbFileInUse.Severity = InfoBarSeverity.Error;
+                ifbFileInUse.Message = $"The selected item '{currentFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                chckSkipForAllFiles.IsChecked = false;
+                if (App.MainWindowInstance.Content != null)
+                {
+                    ttInaccessibleFiles.XamlRoot = App.MainWindowInstance.Content.XamlRoot;
+                }
+
+                // FIX 2: Prevent "ContentDialog is already open" or visual tree tracking errors
+                try
+                {
+                    await ttInaccessibleFiles.ShowAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Dialog failed to show: {ex.Message}");
+                }
+                //                ttInaccessibleFiles.IsOpen = true;
+
+
+
+            }
+        }
+
+        private async void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            ifbPlaylistAddTo.IsOpen = false;
+            var selecteditems = grdViewMain.SelectedItems.Cast<FileItem>().ToList();
+            var temporaryobservable = new ObservableCollection<SongModel>();
+            foreach (var item in selecteditems)
+            {
+                var storagefile = await StorageFile.GetFileFromPathAsync(item.Path);
+                string fileExtension = Path.GetExtension(item.Path).ToLower();
+
+                if (AudioExtensions.List.Contains(fileExtension))
+                {
+                    var properties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    temporaryobservable.Add(new SongModel { FilePath = item.Path, Title = Path.GetFileNameWithoutExtension(item.Path), IsAudioItem = true, Glyph = "\uEC4F", SongDuration = properties.Duration });
+                }
+                else
+                {
+                    var properties = await storagefile.Properties.GetVideoPropertiesAsync();
+                    temporaryobservable.Add(new SongModel { FilePath = item.Path, Title = Path.GetFileNameWithoutExtension(item.Path), IsAudioItem = true, Glyph = "\uE8B2", SongDuration = properties.Duration });
+                }
+            }
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", temporaryobservable, "Playlist");
+            UnsubscribeAllEventsOceanDialog();
+
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested3;
+            PlaylistCreation.CallExistingItems(temporaryobservable);
+        }
+        private void UnsubscribeAllEventsOceanDialog()
+        {
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested2;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested3;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested4;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested5;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested6;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested7;
+        }
+        private void OceanContentDialog_PrimaryRequested4()
+        {
+            PlaylistCreation.CallShowCreation();
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+        }
+
+        private void OceanContentDialog_PrimaryRequested3()
+        {
+            PlaylistCreation.CallPlaylistCreation();
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+            ifbPlaylistAddTo.IsOpen = true;
+            ifbPlaylistAddTo.Severity = InfoBarSeverity.Success;
+            ifbPlaylistAddTo.Title = "Playlist Created";
+            ifbPlaylistAddTo.Message = "Requested playlist has been created successfully!";
+
+        }
+
+        private async void btnAddToPlaylists_Click(object sender, RoutedEventArgs e)
+        {
+            var selecteditems = grdViewMain.SelectedItems.Cast<FileItem>().ToList();
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var playlists = currentSettings.SavedPlaylists;
+            foreach (var selectedplaylist in lstAddToPlaylists.SelectedItems)
+            {
+                if (selectedplaylist is PlaylistItem playlist)
+                {
+                    Debug.WriteLine("Yes selected item is playlist: " + playlist.PlaylistName);
+                    var existplaylist = playlists.FirstOrDefault(p => p.PlaylistId == playlist.PlaylistId);
+                    if (existplaylist != null)
+                    {
+                        Debug.WriteLine("Yes selected item is not null: " + existplaylist.PlaylistName);
+
+                        foreach (var item in selecteditems)
+                        {
+                            var exist = existplaylist.SongsPaths.FirstOrDefault(p => p == item.Path);
+                            if (exist == null)
+                            {
+                                existplaylist.SongsPaths.Add(item.Path);
+                            }
+                        }
+                        var count = existplaylist.SongsPaths.Count;
+                        existplaylist.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
+                        ;
+                    }
+
+                }
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            ifbPlaylistAddTo.IsOpen = true;
+            ifbPlaylistAddTo.Severity = InfoBarSeverity.Success;
+            ifbPlaylistAddTo.Title = "Added";
+            ifbPlaylistAddTo.Message = "Selected item(s) have been added to the selected playlist(s)";
+        }
+
+        private async void MenuFlyout_Opened(object sender, object e)
+        {
+            var flyout = sender as MenuFlyout;
+            if (flyout == null) return;
+            var addToPlaylist = flyout?.Items
+      .OfType<MenuFlyoutSubItem>()
+      .FirstOrDefault(x => x.Text == "Add to Playlist");
+
+            if (addToPlaylist == null)
+                return;
+
+            addToPlaylist.Items.Clear();
+            var selectedsong = addToPlaylist?.DataContext as FileItem;
+            if (selectedsong == null) return;
+
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var Playlists = currentSettings.SavedPlaylists;
+            foreach (var playliitem in Playlists)
+            {
+                MenuFlyoutItem playlistitem = new MenuFlyoutItem();
+                playlistitem.Text = playliitem.PlaylistName;
+                addToPlaylist?.Items.Add(playlistitem);
+                playlistitem.Click += async (sender, e) =>
+                {
+                    var path = selectedsong?.Path;
+
+                    if (path != null)
+                    {
+                        if (playliitem.SongsPaths.Contains(path))
+                        {
+                            ttAddedToPlaylist.Title = $"{Path.GetFileNameWithoutExtension(path)} already exists in {playliitem.PlaylistName}";
+                        }
+                        else
+                        {
+                            playliitem.SongsPaths.Add(path);
+                            int count = playliitem.SongsPaths.Count;
+                            playliitem.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
+                            await SettingsLoader.SaveSettingsAsync(currentSettings);
+                            ttAddedToPlaylist.Title = $"{Path.GetFileNameWithoutExtension(path)} has been added to {playliitem.PlaylistName}";
+
+                        }
+                        hypPlaylistAdded.Content = playliitem.PlaylistName;
+                        hypPlaylistAdded.Tag = playliitem;
+                        ttAddedToPlaylist.IsOpen = true;
+                        await Task.Delay(3000);
+                        ttAddedToPlaylist.IsOpen = false;
+                    }
+                };
+
+            }
+            var mnftAddtoFav = flyout?.Items
+   .OfType<MenuFlyoutItem>()
+   .FirstOrDefault(x => x.Name == "mnftAddToFavourites");
+
+            if (mnftAddtoFav == null) return;
+            if (selectedsong.IsFavourite == true)
+            {
+                mnftAddtoFav.Text = "Remove from Favourites";
+            }
+            else
+            {
+
+                mnftAddtoFav.Text = "Add to Favourites";
+            }
+        }
+        private void hypPlaylistAdded_Click(object sender, RoutedEventArgs e)
+        {
+            if (hypPlaylistAdded.Tag is PlaylistItem playlistItem)
+            {
+                if (App.NavigationFrame != null)
+                    App.NavigationFrame.Navigate(typeof(PlaylistView), playlistItem);
+            }
+        }
+        private async void mnftPlay_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is FileItem item)
+            {
+                if (item.isFolder)
+                {
+                    if (App.NavigationFrame == null) return;
+                    App.NavigationFrame.Navigate(typeof(FolderView), new FolderModel { FolderName = item.Name, FolderPath = item.Path });
+
+                }
+                else
+                {
+                    string fileExtension = Path.GetExtension(item.Path).ToLower();
+                    //          var lockedprocesses = GetLockingProcess.GetLockingProcesses(item.Path);
+                    var storagefile = await StorageFile.GetFileFromPathAsync(item.Path);
+                    if (await IsStorageFileReadableAsync(storagefile))
+                    {
+                        if (AudioExtensions.List.Contains(fileExtension))
+                        {
+                            PlayerService.OpenPath(item.Path);
+                        }
+                        else if (VideoExtensions.List.Contains(fileExtension))
+                        {
+                            if (File.Exists(item.Path))
+                                Frame.Navigate(typeof(VideoPlayer), item.Path);
+                        }
+                    }
+                    else
+                    {
+                        if (App.MainWindowInstance == null) return;
+                        OceanContentDialog.Show("File Locked", "Delete", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", $"The file {item.Path} is denied read access by one or more processes");
+                        UnsubscribeAllEventsOceanDialog();
+
+                        OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested6;
+                    }
+                }
+            }
+
+        }
+
+        private void mnftFileInfo_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FileItem file)
+            {
+                if (App.MainWindowInstance is MainWindow wind)
+                {
+                    wind.ShowFileInfo(file.Path);
+                }
+            }
+        }
+        FileItem currentcontextfileitem = new();
+        private void btnConfirmRenameFile_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtRenameFile.Text == "") return;
+            if (currentcontextfileitem is FileItem file)
+            {
+
+                var newname = txtRenameFile.Text;
+                var lockingprocesses = GetLockingProcess.GetLockingProcesses(file.Path);
+                if (lockingprocesses.Count == 0)
+                {
+                    Debug.WriteLine("JUST 1 PROCESS LOCKING");
+                    if (file.isFolder)
+                    {
+                        RenameSingleFolder(file, true);
+                    }
+                    else
+                    {
+                        RenameSingleFile(file, newname, false, true);
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Yes Multiple");
+                    bool onlyVusicPlayer = lockingprocesses.All(p => p.ProcessName == "Vusic Player");
+                    if (onlyVusicPlayer)
+                    {
+                        Debug.WriteLine("Yes Only Vusic Player");
+
+                        if (PlayerService.Masterplayer != null)
+                        {
+                            Debug.WriteLine("Yes Not Null");
+
+                            var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
+                            PlayerService.curtime = curTime;
+                            PlayerService.curtimetemp = PlayerService.Masterplayer.CurTime;
+                            if (PlayerService.filestreamcurrent == null)
+                            {
+                                Debug.WriteLine("File stream is null");
+                                Debug.WriteLine("File req is " + file.Path);
+                            }
+                            PlayerService.filestreamcurrent?.Dispose();
+                            var filelocked2 = GetLockingProcess.GetLockingProcesses(file.Path);
+                            if (filelocked2.Count == 0)
+                            {
+                                Debug.WriteLine("Yes Disposesd");
+
+                                if (file.isFolder)
+                                {
+                                    RenameSingleFolder(file);
+                                }
+                                else
+                                {
+                                    RenameSingleFile(file, newname, true, true);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ifbRenameFile.IsOpen = true;
+                        ifbRenameFile.Severity = InfoBarSeverity.Error;
+                        ifbRenameFile.Title = "Error";
+                        var stringprocess = lockingprocesses.Count == 1 ? "Process" : "Processes";
+                        ifbRenameFile.Message = $"Unable to Rename as selected file(s) may be in use by {lockingprocesses.Count} other {stringprocess}";
+                    }
+                }
+            }
 
         }
     }

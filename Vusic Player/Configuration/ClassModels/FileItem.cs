@@ -19,6 +19,7 @@ namespace Vusic_Player.Configuration.ClassModels
         private string _filePath = "";
         private string _fileName = "File";
         private string _filehoverinfo = "File";
+        private string _FavString = "File";
 
         public string Path
         {
@@ -28,6 +29,18 @@ namespace Vusic_Player.Configuration.ClassModels
                 if (_filePath != value)
                 {
                     _filePath = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string FavString
+        {
+            get => _FavString;
+            set
+            {
+                if (_FavString != value)
+                {
+                    _FavString = value;
                     OnPropertyChanged();
                 }
             }
@@ -57,10 +70,34 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
-        public bool isFavourite { get; set; } = false;
+        public bool IsFavourite
+        {
+            get => isFavourite;
+            set
+            {
+                if (isFavourite != value)
+                {
+                    isFavourite = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public Visibility VisibilityOfFileProperties
+        {
+            get => _VisibilityOfFileProperties;
+            set
+            {
+                if (_VisibilityOfFileProperties != value)
+                {
+                    _VisibilityOfFileProperties = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private bool isFavourite { get; set; } = false;
         public long FileSize { get; set; } = 0;
         public bool isFolder { get; set; } = false;
-        public Visibility VisibilityOfFileProperties { get; set; } = Visibility.Visible;
+        public Visibility _VisibilityOfFileProperties { get; set; } = Visibility.Visible;
         public DateTime FileCreationTime { get; set; } = DateTime.Now;
         public DateTime FileModifiedTime { get; set; } = DateTime.Now;
         public string Extension { get; set; } = "mp4";

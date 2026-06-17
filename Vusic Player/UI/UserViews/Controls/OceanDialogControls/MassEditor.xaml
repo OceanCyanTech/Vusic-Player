@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Controls.OceanDialogControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local1="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
 
     <Grid>
@@ -14,7 +14,7 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="200"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <!--<local:ListViewMedia ExtraOptions="Collapsed" Grid.Column="0" x:Name="lstViewDisplay"></local:ListViewMedia>-->
+        <local1:ListViewMedia ExtraOptions="Collapsed" Grid.Column="0" x:Name="lstViewDisplay"></local1:ListViewMedia>
         <ScrollViewer Grid.Column="1">
             <Grid Grid.Column="1" Margin="10, 0">
                 <Grid.RowDefinitions>

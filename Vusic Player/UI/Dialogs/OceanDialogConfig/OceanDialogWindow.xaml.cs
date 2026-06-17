@@ -235,7 +235,7 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             MassEdit.Visibility = Visibility.Collapsed;
             ShowMod.Visibility = Visibility.Collapsed;
             if (contentType == ContentType.PlaylistCreation || contentType == ContentType.PlaylistEdit)
-            {  
+            {
                 PlaylistCreation.Visibility = Visibility.Visible;
                 PlaylistCreation.ClearStuff();
                 PlaylistCreation.AllSongs = existingitems;
@@ -291,16 +291,16 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             //     AlbumEditorBox.Visibility = Visibility.Visible;
             //   //  AlbumEditorBox.LoadAlbum(AlbumDetails);
             // }
-            // else if (contentType == ContentType.MassEditing)
-            // {
-            //     MassEdit.Visibility = Visibility.Visible;
-            //  //   MassEdit.LoadItems(existingitems);
-            // }
+            else if (contentType == ContentType.MassEditing)
+            {
+                MassEdit.Visibility = Visibility.Visible;
+                MassEdit.LoadItems(existingitems);
+            }
             else if (contentType == ContentType.ShowModel)
             {
                 ShowMod.Visibility = Visibility.Visible;
             }
-             cnt = contentType;
+            cnt = contentType;
             SetImage(imgPrimary, pbi);
             SetImage(imgSecondary, sbi);
             SetImage(imgClose, cbi);
@@ -474,6 +474,8 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             CloseRequested?.Invoke();
+            MainWindow.ShowWindow();
+
         }
 
         private void btnSecondary_Click(object sender, RoutedEventArgs e)
@@ -492,8 +494,8 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
 
                 if (cnt == ContentType.OnlineArtistPicture)
                 {
-              //      string image = OnlineArtistPic.GetSelectedImage();
-                  //  await OnlineArtistPic.DownloadImageAsync(image);
+                    //      string image = OnlineArtistPic.GetSelectedImage();
+                    //  await OnlineArtistPic.DownloadImageAsync(image);
                 }
                 else if (cnt == ContentType.PlaylistEdit)
                 {

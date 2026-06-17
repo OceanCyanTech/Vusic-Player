@@ -29,6 +29,13 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             InitializeComponent();
             PlaylistCreation.ShowCreationCall -= PlaylistCreation_ShowCreationCall;
             PlaylistCreation.ShowCreationCall += PlaylistCreation_ShowCreationCall;
+            PlaylistCreation.ExistingShowDirectory -= PlaylistCreation_ExistingShowDirectory;
+            PlaylistCreation.ExistingShowDirectory += PlaylistCreation_ExistingShowDirectory;
+        }
+
+        private void PlaylistCreation_ExistingShowDirectory()
+        {
+            txtFolderPath.Text = PlaylistCreation.ExistingShowDir;
         }
 
         private void PlaylistCreation_ShowCreationCall()

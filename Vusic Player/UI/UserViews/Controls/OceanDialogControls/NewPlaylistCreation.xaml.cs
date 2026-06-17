@@ -110,7 +110,22 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             InitializeComponent();
             PlaylistCreation.CreationCall -= PlaylistCreation_CreationCall;
             PlaylistCreation.CreationCall += PlaylistCreation_CreationCall;
+            PlaylistCreation.ExistingItems -= PlaylistCreation_ExistingItems1;
+            PlaylistCreation.ExistingItems += PlaylistCreation_ExistingItems1;
             this.Unloaded += NewPlaylistCreation_Unloaded;
+        }
+
+        private void PlaylistCreation_ExistingItems1()
+        {
+            AllSongs.Clear();
+            foreach (var item in PlaylistCreation.existingitems)
+            {
+                AllSongs.Add(item);
+            }
+            
+            lstViewPlaylistAddedSongs.StartBringIntoView();
+            lstViewPlaylistAddedSongs.ItemsSource = AllSongs;
+            UpdateUI();
         }
 
         private void NewPlaylistCreation_Unloaded(object sender, RoutedEventArgs e)

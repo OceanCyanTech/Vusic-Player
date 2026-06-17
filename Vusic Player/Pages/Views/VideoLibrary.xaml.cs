@@ -80,7 +80,7 @@ namespace Vusic_Player.Pages.Views
             Debug.WriteLine("Yes create");
             PlaylistCreation.CallShowCreation();
             OceanContentDialog.HideDlg();
-         //   MainWindow.ShowWindow();
+           MainWindow.ShowWindow();
         }
     }
 

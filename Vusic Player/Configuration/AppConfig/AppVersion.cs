@@ -10,7 +10,7 @@ namespace Vusic_Player.Configuration.AppConfig
 {
     public class AppVersion
     {
-        public static string VersionString = "1.0.9.9";
+        public static string VersionString = "1.1.0.0";
 
         static int counter2;
         public static async void LoadBuildCounter()
@@ -30,7 +30,7 @@ namespace Vusic_Player.Configuration.AppConfig
             Debug.WriteLine(BuildNumber + " hshs");
         }
         public static string BuildNumber = "";
-        public static string VersionType = "Development Preview Milestone 2";
+        public static string VersionType = "Development Preview BETA 1 (BRANCH DEV)";
     }
 
 }

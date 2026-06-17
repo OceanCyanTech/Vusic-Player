@@ -15,11 +15,13 @@ namespace Vusic_Player.Configuration.Helper.UI
         public static event Action? CreationCall;
         public static event Action? ShowCreationCall;
         public static event Action? ExistingItems;
+        public static event Action? ExistingShowDirectory;
         public static event Action? CreationCallAdd;
         public static event Action? ShowCreationCallAdd;
         public static PlaylistItem? playlistItem;
         public static Show? showitem;
         public static string? suggestedplaylistname = "Playlist";
+        public static string? ExistingShowDir = "";
         public static void CallPlaylistCreation()
         {
             CreationCall?.Invoke();
@@ -38,6 +40,11 @@ namespace Vusic_Player.Configuration.Helper.UI
                 existingitems.Add(item);
             }
             ExistingItems?.Invoke();
+        }
+        public static void CallExistingShowDirectory(string FolderPath)
+        {
+            ExistingShowDir = FolderPath;
+            ExistingShowDirectory?.Invoke();
         }
         public static void CallPlaylistCreationAdd()
         {
