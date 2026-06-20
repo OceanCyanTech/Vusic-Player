@@ -48,8 +48,8 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private async void btnOpenVid_Click(object sender, RoutedEventArgs e)
         {
-         //   if (App.MainWindowInstance != null)
-              
+            //   if (App.MainWindowInstance != null)
+
         }
 
         private void sldVol_ValueChanged(double obj)
@@ -258,7 +258,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftCustomSubDelay_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-        //    var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 2, 0, 17);
+            //    var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 2, 0, 17);
 
         }
 
@@ -276,15 +276,15 @@ namespace Vusic_Player.UI.UserViews.Controls
                 {
                     if (resource is Style selectedStyle)
                     {
-//SubtitlesProperties.Customize.style = selectedStyle;
+                        //SubtitlesProperties.Customize.style = selectedStyle;
                     }
                 }
 
                 if (double.TryParse(fontSizeStr, out double size))
                 {
-            //        SubtitlesProperties.Customize.FontSize = size;
+                    //        SubtitlesProperties.Customize.FontSize = size;
                 }
-        //        SubtitlesProperties.Customize.Call();
+                //        SubtitlesProperties.Customize.Call();
             }
         }
 
@@ -366,7 +366,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 if (PlayerService.Masterplayer.IsRecording)
                 {
-                   Screen.StopRecordRequest();
+                    Screen.StopRecordRequest();
                 }
                 else
                 {
@@ -384,7 +384,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                 if (double.TryParse(tagValue, System.Globalization.NumberStyles.Any,
                     System.Globalization.CultureInfo.InvariantCulture, out double speed))
                 {
-     //             SpeedService.Set(speed);
+                    SpeedService.Set(speed);
                 }
             }
         }
@@ -392,13 +392,13 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftCustomSpeed_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-    //        var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 3);
+            //        var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 3);
 
         }
 
         private void mnftReversePlayback_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-    //        ReverseService.Reverse(mnftReversePlayback.IsChecked);
+            //        ReverseService.Reverse(mnftReversePlayback.IsChecked);
         }
 
         private void mnftZoomItem_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -431,7 +431,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                         }
                         break;
                 }
-               GeneralInfoService.ShowInfo($"{tagValue}% zoom");
+                GeneralInfoService.ShowInfo($"{tagValue}% zoom");
             }
         }
 
@@ -439,7 +439,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
 
             if (App.MainWindowInstance == null) { return; }
-          //  var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 1);
+            //  var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 1);
 
         }
 
@@ -449,11 +449,11 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 if (selectedText == "Default")
                 {
-        //            Aspect.SetDefault();
+                    //            Aspect.SetDefault();
                 }
                 else
                 {
-//Aspect.SetAspectRatio(selectedText);
+                    //Aspect.SetAspectRatio(selectedText);
                 }
             }
         }
@@ -461,19 +461,19 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftCustomAspectRatio_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-          //  var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 3, 8);
+            //  var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 3, 8);
 
         }
 
         private void mnftSearchVideoTracks_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-     //       var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 0);
+            //       var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 0);
         }
 
         private void mnftDisableVideoTracks_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-         //   VideoProperties.Stream.Disable(mnftDisableVideoTracks.IsChecked);
+            //   VideoProperties.Stream.Disable(mnftDisableVideoTracks.IsChecked);
 
         }
 
@@ -485,18 +485,18 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftSnapshotDirectory_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-      //      var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 2);
+            //      var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 2);
         }
 
         private void mnftVideoOptions_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-  //          var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 0);
+            //          var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 0);
         }
         private void mnftRecordDirectory_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-     //       var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 4);
+            //       var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 4);
         }
 
         #endregion
@@ -572,7 +572,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 if (selectedItem.Tag is AudioStream stream)
                 {
-         //           AudioProperties.Stream.Set(stream);
+                    //           AudioProperties.Stream.Set(stream);
                 }
 
             }
@@ -594,14 +594,14 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftCustomVolume_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-      //      var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 16);
+            //      var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 16);
 
         }
 
         private void mnftSearchAudioTracks_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-       //     var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 10);
+            //     var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 10);
 
         }
 
@@ -623,18 +623,18 @@ namespace Vusic_Player.UI.UserViews.Controls
 
                 if (tagValue == "reset")
                 {
-            //        Delay.Reset();
+                    //        Delay.Reset();
                     return;
                 }
 
-        //        Delay.Apply(tagValue);
+                //        Delay.Apply(tagValue);
             }
         }
 
         private void mnftCustomAudioDelay_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-    //        var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 12);
+            //        var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 12);
         }
 
         private void mnftPitchItem_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -646,7 +646,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                 if (double.TryParse(tagValue, System.Globalization.NumberStyles.Any,
                     System.Globalization.CultureInfo.InvariantCulture, out double pitch))
                 {
-                //    Pitch.Apply(pitch);
+                    //    Pitch.Apply(pitch);
                 }
             }
         }
@@ -654,13 +654,13 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftCustomAudioPitch_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-         //   var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 9);
+            //   var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 9);
         }
 
         private void mnftAudioOptions_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
-      //      var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 10);
+            //      var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 10);
         }
 
         #endregion

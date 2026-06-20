@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
@@ -49,11 +50,11 @@ namespace Vusic_Player.Pages.Views
 
                     if (File.Exists(media.Path))
                     {
-                        //ObservableCollection<SongModel> single = new();
-                        //string Title = Path.GetFileNameWithoutExtension(media.Path);
+                        ObservableCollection<SongModel> single = new();
+                        string Title = Path.GetFileNameWithoutExtension(media.Path);
 
-                        //single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
-                        //QueueService.PlayMedia(single, false, false);
+                        single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
+                        QueueService.PlayMedia(single, false, false);
                     }
                 }
                 else if (isVideo)

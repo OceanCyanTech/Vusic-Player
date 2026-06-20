@@ -140,7 +140,7 @@ namespace Vusic_Player.Configuration.ClassModels
     : "00:00";
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        private string? _filePath;
+        private string _filePath = "";
         private bool isCompleted = false;
 
         public Visibility VisibilityOfStrikeThrough
@@ -243,7 +243,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 OnPropertyChanged(nameof(Title));
             }
         }
-        public string? FilePath
+        public string FilePath
         {
             get => _filePath;
             set

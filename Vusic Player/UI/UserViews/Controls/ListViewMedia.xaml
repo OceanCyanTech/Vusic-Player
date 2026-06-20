@@ -30,12 +30,12 @@
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Text="Go to artist"   Name="mnftGoToArtist" Click="mnftGoToArtist_Click" >
+            <MenuFlyoutItem Text="Go to artist" Visibility="{Binding VisibilityofAudioMeta}"  Name="mnftGoToArtist" Click="mnftGoToArtist_Click" >
                 <MenuFlyoutItem.Icon>
                     <FontIcon Glyph="&#xE77B;"></FontIcon>
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="Go to album"  Name="mnftGoToAlbum" Click="mnftGoToAlbum_Click" >
+            <MenuFlyoutItem Text="Go to album" Visibility="{Binding VisibilityofAudioMeta}" Name="mnftGoToAlbum" Click="mnftGoToAlbum_Click" >
                 <MenuFlyoutItem.Icon>
                     <FontIcon Glyph="&#xE93C;"></FontIcon>
                 </MenuFlyoutItem.Icon>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Vusic_Player.Pages.Views.MusicPlayerFull"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.Pages.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:playback_views="using:Vusic_Player.UI.UserViews.Controls" xmlns:media="using:CommunityToolkit.WinUI.Media"
+    mc:Ignorable="d">
+
+    <Grid CornerRadius="20" HorizontalAlignment="Center"  VerticalAlignment="Center">
+        <Grid.Background>
+            <ImageBrush ImageSource="/Assets/oceancyan.png" 
+  Stretch="UniformToFill"/>
+        </Grid.Background>
+        <Border CornerRadius="20">
+            <Border.Background>
+                <media:BackdropBlurBrush Amount="5.0" />
+            </Border.Background>
+            <Grid CornerRadius="20" RowSpacing="20" Padding="30">
+                <Grid.Background>
+                    <AcrylicBrush TintColor="Black" 
+TintOpacity="0.05" 
+                   Opacity="0.8"
+FallbackColor="Black" 
+AlwaysUseFallback="False"/>
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Image HorizontalAlignment="Center" Width="150" Grid.Row="0" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}"></Image>
+                <TextBlock Margin="0, 0, 0, 0" TextWrapping="NoWrap" HorizontalAlignment="Center" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="1"></TextBlock>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <HyperlinkButton Click="txtArtist_Click" Name="txtArtist" ToolTipService.ToolTip="Artist" HorizontalAlignment="Left" FontSize="15" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                        <StackPanel Orientation="Horizontal" Spacing="3">
+                            <TextBlock Text="• "></TextBlock>
+                            <TextBlock Name="txtArtistDisplay" Text="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}"></TextBlock>
+                        </StackPanel>
+                    </HyperlinkButton>
+                    <HyperlinkButton Click="txtAlbum_Click" ToolTipService.ToolTip="Album" Name="txtAlbum" Grid.Column="1" HorizontalAlignment="Right" FontSize="15" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                        <StackPanel Orientation="Horizontal" Spacing="3">
+                            <TextBlock Text="• "></TextBlock>
+                            <TextBlock Name="txtAlbumDisplay" Text="{x:Bind mediacontroller.AlbumDisplayName, Mode=OneWay}"></TextBlock>
+                        </StackPanel>
+                    </HyperlinkButton>
+                </Grid>
+                <playback_views:OceanSlider Margin="0, 0" x:Name="sldMain" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted"  IsEnabled="True" Grid.Row="3" HorizontalAlignment="Stretch" ></playback_views:OceanSlider>
+                <Grid x:Name="grdTexts" Margin="5,0,0, 0" Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="18" Opacity="0.8"/>
+                    <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="18" Opacity="0.8"/>
+                </Grid>
+
+                <Grid Width="300" Grid.Row="5" Margin="0, 0" Padding="15" CornerRadius="16">
+                    <Grid.Background>
+                        <AcrylicBrush TintColor="Black" 
+TintOpacity="0.2" 
+           
+FallbackColor="Transparent" 
+AlwaysUseFallback="False"/>
+                    </Grid.Background>
+                    <playback_views:PlayPauseControls SpaceWidth="20" ImageWidth="32" HorizontalAlignment="Center"></playback_views:PlayPauseControls>
+                </Grid>
+
+                <Grid Grid.Row="6" CornerRadius="16">
+                    <Grid.Background>
+                        <AcrylicBrush TintColor="Black" 
+TintOpacity="0.1" 
+           
+FallbackColor="Transparent" 
+AlwaysUseFallback="False"/>
+                    </Grid.Background>
+                    <playback_views:VolumeSlider />
+
+                </Grid>
+                <Grid Grid.Row="7" CornerRadius="16">
+                    <Grid.Background>
+                        <AcrylicBrush TintColor="Black" 
+TintOpacity="0.1" 
+           
+FallbackColor="Transparent" 
+AlwaysUseFallback="False"/>
+                    </Grid.Background>
+                    <playback_views:PanelControlsAudioPlayer ExpandedViewButtonToolTip="Normal View" />
+
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+
+</Page>

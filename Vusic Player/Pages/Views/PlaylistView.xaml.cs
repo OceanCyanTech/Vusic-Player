@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -99,7 +100,9 @@ namespace Vusic_Player.Pages.Views
             foreach (var item in SongCollection)
             {
                 item.IsCompleted = false;
+                Debug.WriteLine("Check 1: " + item.Glyph);
             }
+           
             QueueService.PlayMedia(SongCollection, btnShuffle.IsChecked ?? false, btnLoop.IsChecked ?? false);
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var playlists = currentSettings.SavedPlaylists;
@@ -382,63 +385,66 @@ namespace Vusic_Player.Pages.Views
 
                 foreach (string path in playlist.SongsPaths)
                 {
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-                    MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
-
-                    string title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
-                    string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
-                    string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
-
-                    bool isfav = favSet.Any(f => f.FilePath == path);
-                    ts += properties.Duration;
-                    var colorbrush = new SolidColorBrush(Microsoft.UI.Colors.White);
-
-                    var glyph = "\uEC4F";
-
-                    string fileExtension = file.FileType.ToLowerInvariant();
-                    Visibility visibility = Visibility.Visible;
-                    Visibility visibilityofvidtext = Visibility.Collapsed;
-                    if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                    if (File.Exists(path))
                     {
+                        StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                        MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
 
-                        glyph = "\uE8B2";
-                        visibility = Visibility.Collapsed;
-                        visibilityofvidtext = Visibility.Visible;
-                    }
-                    if (PlayerService.CurrentPlayingPath == file.Path)
-                    {
-                        colorbrush = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
-                        if (PlayerService.Masterplayer!.IsPlaying)
+                        string title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
+                        string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
+                        string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
 
-                            glyph = "\uE769";
-                        else
+                        bool isfav = favSet.Any(f => f.FilePath == path);
+                        ts += properties.Duration;
+                        var colorbrush = new SolidColorBrush(Microsoft.UI.Colors.White);
+
+                        var glyph = "\uEC4F";
+
+                        string fileExtension = file.FileType.ToLowerInvariant();
+                        Visibility visibility = Visibility.Visible;
+                        Visibility visibilityofvidtext = Visibility.Collapsed;
+                        if (Extensions.VideoExtensions.List.Contains(fileExtension))
                         {
-                            glyph = "\uE768";
+
+                            glyph = "\uE8B2";
+                            visibility = Visibility.Collapsed;
+                            visibilityofvidtext = Visibility.Visible;
                         }
+                        if (PlayerService.CurrentPlayingPath == file.Path)
+                        {
+                            colorbrush = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
+                            if (PlayerService.Masterplayer!.IsPlaying)
+
+                                glyph = "\uE769";
+                            else
+                            {
+                                glyph = "\uE768";
+                            }
+                        }
+
+                        double opac = isfav ? 1.0 : 0.0;
+                        string text = isfav ? "Remove from Favourites" : "Add to Favourites";
+                        SongCollection.Add(new SongModel
+                        {
+                            Title = title,
+                            AlbumName = album,
+                            Artist = artist,
+                            SongDuration = properties.Duration,
+                            FilePath = file.Path,
+                            FavOpacity = opac,
+                            FavString = text,
+                            VisibilityofAudioMeta = visibility,
+                            VisibilityofVideoInfo = visibilityofvidtext,
+                            IsFavourite = favSet.Any(f => f.FilePath == file.Path),
+                            Glyph = glyph,
+                            TitleColor = colorbrush,
+                        });
+                        lstViewUnified.ItemsSource = SongCollection;
+
+
+
+
                     }
-
-                    double opac = isfav ? 1.0 : 0.0;
-                    string text = isfav ? "Remove from Favourites" : "Add to Favourites";
-                    SongCollection.Add(new SongModel
-                    {
-                        Title = title,
-                        AlbumName = album,
-                        Artist = artist,
-                        SongDuration = properties.Duration,
-                        FilePath = file.Path,
-                        FavOpacity = opac,
-                        FavString = text,
-                        VisibilityofAudioMeta = visibility,
-                        VisibilityofVideoInfo = visibilityofvidtext,
-                        IsFavourite = favSet.Any(f => f.FilePath == file.Path),
-                        Glyph = glyph,
-                        TitleColor = colorbrush,
-                    });
-                    lstViewUnified.ItemsSource = SongCollection;
-
-
-
-
                 }
                 bool hasVideo = SongCollection.Any(song =>
           !string.IsNullOrEmpty(song.FilePath) &&
@@ -489,10 +495,10 @@ namespace Vusic_Player.Pages.Views
             if (e.Parameter is PlaylistItem playlist)
             {
                 currentPlaylist = playlist;
-            //   FileInfo.RefreshValues -= FileInfo_RefreshValues;
-              // FileInfo.RefreshValues += FileInfo_RefreshValues;
+                Vusic_Player.Configuration.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
+                Vusic_Player.Configuration.Helper.FileInfo.RefreshValues += FileInfo_RefreshValues;
                 txtPlaylistName.Text = playlist.PlaylistName;
-                //playlistID = playlist.PlaylistId;
+                playlistID = playlist.PlaylistId;
                 genreList.Clear();
                 if (playlist.PlaylistGenre != null)
                 {

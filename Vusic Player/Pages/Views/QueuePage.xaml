@@ -5,10 +5,232 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vusic="using:Vusic_Player.UI.UserViews.Controls" xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Margin="40, 0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MaxWidth="450"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" VerticalAlignment="Stretch" Name="grdNowPlaying">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition ></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Now Playing" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Grid.Row="0"></TextBlock>
+            <Frame Name="frmNowPlaying" Margin="0, 10" Grid.Row="1" Grid.Column="0"></Frame>
+        </Grid>
+        <Grid Grid.Column="1" HorizontalAlignment="Stretch">
+
+            <Border x:Name="ShadowTarget2" />
+            <Grid 
+      Name="grdQueue"
+      CornerRadius="20"
+      Margin="50,0">
+                <Grid.Background>
+                    <AcrylicBrush TintColor="Black" 
+TintOpacity="0" 
+                   
+FallbackColor="Black" 
+AlwaysUseFallback="False"/>
+                </Grid.Background>
+                <ui:Effects.Shadow>
+                    <ui:AttachedDropShadow CastTo="{x:Bind ShadowTarget2}" CornerRadius="20" BlurRadius="20" Opacity="0.5" Offset="0,0" />
+                </ui:Effects.Shadow>
+                <ScrollViewer>
+                    <Grid>
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Add Media" Click="btnAddtoQueue_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+
+                        <!-- HEADER -->
+                        <Grid Grid.Row="0" Padding="30,30,30,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="300"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                <TextBlock Text="Queue" 
+                   Style="{StaticResource TitleTextBlockStyle}"/>
+                                <TextBlock Margin="10,10" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Playlist will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                            </StackPanel>
+                            <AutoSuggestBox QuerySubmitted="asbFindQueue_QuerySubmitted"  IsEnabled="True" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"  Grid.Column="1" Name="asbFindQueue" TextChanged="asbFindQueue_TextChanged"
+                        QueryIcon="Find"
+                        PlaceholderText="Find in queue..."
+                        HorizontalAlignment="Stretch" Height="35" Width="300"/>
+                        </Grid>
+
+
+                        <!-- QUEUE INFO + CONTROLS -->
+                        <Grid Grid.Row="1" Padding="30,0,30,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Queue information -->
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="{x:Bind mediacontroller.ItemsCount, Mode=OneWay}"
+                       Name="txtCount"
+                       Style="{StaticResource BaseTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <TextBlock Text="{x:Bind mediacontroller.TotalQueueRuntime, Mode=OneWay}"
+                       Name="txtTotalDurQueue"
+                       ToolTipService.ToolTip="Runtime Duration of queue"
+                       Style="{StaticResource BaseTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+
+
+                            <!-- Controls -->
+                            <StackPanel Grid.Column="1"
+                    Orientation="Horizontal"
+                    Spacing="10">
+
+                                <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" IsEnabled="True" Name="btnRemoveSelectionFromQueue" Click="btnRemoveSelectionFromQueue_Click"
+                    ToolTipService.ToolTip="Remove selection from queue">
+                                    <Image Width="20" Source="/Assets/deleteicon.png"/>
+                                </Button>
+
+                                <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Checked="tglShuffleQueue_Checked" Unchecked="tglShuffleQueue_Checked" Name="tglShuffleQueue"
+                          ToolTipService.ToolTip="Shuffle Play Queue">
+                                    <Image Width="20" Source="/Assets/shuffleicon.png"/>
+                                    <ToggleButton.ContextFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Shuffle and play all" Name="mnftShuffleandPlayAll">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"></FontIcon>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </ToggleButton.ContextFlyout>
+                                </ToggleButton>
+
+                                <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" IsEnabled="True"  Background="Transparent" Name="tglLoopQueue" Checked="tglLoopQueue_Checked" Unchecked="tglLoopQueue_Checked"
+                          ToolTipService.ToolTip="Loop list">
+                                    <Image Width="20" Source="/Assets/StoreLogo.png"/>
+                                </ToggleButton>
+
+                                <Button  IsEnabled="True"  Background="Transparent" Name="btnClearQueue" Click="btnClearQueue_Click"
+                    ToolTipService.ToolTip="Clear Queue">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <Image Width="20" Source="/Assets/StoreLogo.png"/>
+                                        <TextBlock Name="txtClearQueue" Text="Clear queue"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button  IsEnabled="True"  Background="Transparent" Name="btnSaveQueue" Click="btnSaveQueue_Click"
+                    ToolTipService.ToolTip="Save Queue to Playlist">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <Image Width="20" Source="/Assets/saveicon.png"/>
+                                        <TextBlock Text="Save Queue to Playlist"/>
+                                    </StackPanel>
+                                </Button>
+
+                            </StackPanel>
+                        </Grid>
+
+
+                        <!-- SECTION LABEL -->
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="10">
+                            <TextBlock 
+               Text="Up Next"
+               Margin="30,0,0,10"
+               FontSize="18" Name="txtUpNext"
+               FontWeight="SemiBold"
+               Opacity="0.85"/>
+
+                            <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Checked="btnViewQueue_Checked" Unchecked="btnViewQueue_Checked"  Name="btnViewQueue"
+>
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <Image Width="20" Source="/Assets/StoreLogo.png"/>
+                                    <TextBlock Text="View full queue"/>
+                                </StackPanel>
+                            </ToggleButton>
+                            <Button IsEnabled="True" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnAddtoQueue" Click="btnAddtoQueue_Click"
+ToolTipService.ToolTip="Add music to queue">
+                                <Image Width="20" Source="/Assets/addicon.png"/>
+                            </Button>
+                            <Button IsEnabled="True" Visibility="Collapsed" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnRestartandPlay" Click="btnRestartandPlay_Click"
+ToolTipService.ToolTip="Play all from start">
+                                <Image Width="20" Source="/Assets/appicon.png"/>
+                            </Button>
+                        </StackPanel>
+
+
+                        <!-- QUEUE LIST -->
+
+                        <ScrollView VerticalAlignment="Stretch" Margin="10, 0" Name="ListPanel"  Grid.Row="4">
+                            <StackPanel  Orientation="Vertical">
+
+                                <InfoBar IsOpen="False" Severity="Warning" Name="iBMissingFiles" Title="Missing files">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock x:Name="infoBarMessage" Text="Some files could not be located." Margin="0,0,8,0"/>
+                                        <Button Content="Relocate" Name="btnRelocate" Click="btnRelocate_Click"/>
+                                    </StackPanel>
+                                </InfoBar>
+
+                            </StackPanel>
+                        </ScrollView>
+
+                        <vusic:ListViewMedia SearchVisibility="Collapsed"  MediaSource="QueueList" ItemsSource="{x:Bind VusicQueueList}" Margin="30, 10" x:Name="lstViewQueue" Grid.Row="4"></vusic:ListViewMedia>
+                        <Grid  Grid.Row="3"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Row="0" Name="btnCloseSearch" CornerRadius="12" Background="Transparent" BorderBrush="Transparent" Click="btnCloseSearch_Click" ToolTipService.ToolTip="Close Search Results" HorizontalAlignment="Right" Margin="20, 0">
+                                <FontIcon Glyph="&#xE711;" FontSize="36"></FontIcon>
+                            </Button>
+                            <Frame VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Name="frmSearchResultsNOMATCH"></Frame>
+
+                        </Grid>
+
+                        <StackPanel Visibility="{x:Bind mediacontroller.QueuePageEmptyVisibility, Mode=OneWay}" Orientation="Vertical" Grid.Row="3" Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center" Name="grdEmptyQueue">
+                            <StackPanel Spacing="20" Orientation="Horizontal">
+                                <Image Source="/Assets/appicon.png" Width="100"></Image>
+                                <TextBlock Text="Your play queue is empty!" VerticalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                            </StackPanel>
+
+                            <Button CornerRadius="10" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Center" Click="btnAddtoQueue_Click" Name="btnOpenMediaFile">
+                                <Button.Background>
+                                    <AcrylicBrush TintColor="Black" 
+TintOpacity="0.4" 
+                   
+FallbackColor="Black" 
+AlwaysUseFallback="False"/>
+                                </Button.Background>
+                                <Button.KeyboardAccelerators>
+                                    <KeyboardAccelerator Modifiers="Control" Key="O"></KeyboardAccelerator>
+                                </Button.KeyboardAccelerators>
+                                <StackPanel  Orientation="Horizontal" Spacing="10">
+
+                                    <Image Width="26" Source="/Assets/appicon.png"></Image>
+                                    <TextBlock Foreground="White" Text="Open Media" Margin="0, 5">
+
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
 
     </Grid>
 </Page>

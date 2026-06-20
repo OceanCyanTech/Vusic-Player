@@ -58,10 +58,24 @@ namespace Vusic_Player.Pages
         public VideoPlayer()
         {
             InitializeComponent();
+            InitiateInfoText();
+
             SubtitleTimer = new();
             SubtitleTimer.Interval = TimeSpan.FromMilliseconds(250);
             SubtitleTimer.Tick += SubtitleTimer_Tick;
         }
+        private void InitiateInfoText()
+        {
+            GeneralInfoService.OnInfoRequest += (text) =>
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    txtInformation.Text = text;
+                    FadeInOutStoryboard.Begin();
+                });
+            };
+        }
+
         private void SubtitleTimer_Tick(object? sender, object e)
         {
             if (PlayerService.Masterplayer == null) return;

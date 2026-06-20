@@ -36,7 +36,7 @@ namespace Vusic_Player.Configuration.Playback
 
                 foreach (var item in currentQueue)
                 {
-              //      totalDuration += item.SongDuration ?? TimeSpan.Zero;
+                   totalDuration += item.SongDuration ?? TimeSpan.Zero;
                 }
 
                 if (totalDuration.TotalHours < 1)

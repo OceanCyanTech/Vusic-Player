@@ -21,14 +21,10 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Page = Microsoft.UI.Xaml.Controls.Page;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Vusic_Player.Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+   
     public sealed partial class MainPage : Page
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
@@ -107,6 +103,7 @@ namespace Vusic_Player.Pages
             nvgMain.IsPaneVisible = true;
             grdsplittr.Visibility = Visibility.Visible;
             ColumnMaster.MinWidth = 280;
+            ColumnMaster.Width = new GridLength(300);
             MusicPlayerMaster.Visibility = Visibility.Visible;
         //    SetGridBackground();
             if (e.SourcePageType == typeof(HomeView))
@@ -137,6 +134,7 @@ namespace Vusic_Player.Pages
             {
                 MusicPlayerMaster.Visibility = Visibility.Collapsed;
                 ColumnMaster.MinWidth = 0;
+                ColumnMaster.Width = new GridLength(0);
                 grdsplittr.Visibility = Visibility.Collapsed;
                 nvgMain.Header = "";
 

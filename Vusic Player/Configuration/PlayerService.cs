@@ -153,6 +153,12 @@ namespace Vusic_Player.Configuration
                 //conf.Video.VideoProcessor = VideoProcessors.Flyleaf;
                 //conf.Video.SuperResolution = true;
                 Masterplayer = new Player();
+                QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
+
+                QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
+
+                QueueService.VusicQueue.CollectionChanged -= QueueService.VusicQueue_CollectionChanged;
+                QueueService.VusicQueue.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
 
             }
             CurrentPlayingPath = fiPath;
@@ -171,12 +177,12 @@ namespace Vusic_Player.Configuration
             string title = !string.IsNullOrWhiteSpace(musicProps.Title) ? musicProps.Title : Path.GetFileNameWithoutExtension(file.Path);
 
             UIController.MediaDisplayName = title;
-            
+
             UIController.AlbumDisplayName = musicProps.Album;
-            if(musicProps.Album == "")
+            if (musicProps.Album == "")
             {
                 UIController.AlbumDisplayName = "Unknown Album";
-            } 
+            }
             UIController.ArtistDisplayName = musicProps.Artist;
             if (musicProps.Artist == "")
             {
@@ -207,7 +213,7 @@ namespace Vusic_Player.Configuration
 
             filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
             Masterplayer.Open(filestreamcurrent);
-
+            PlayCalled?.Invoke();
 
 
             var tfile = TagLib.File.Create(fiPath);
@@ -260,6 +266,10 @@ namespace Vusic_Player.Configuration
                 keyConfig.Remove(Key.Right, shift: true);
             }
             Play();
+        }
+        public static void ProcessUsageInvoke()
+        {
+            CheckProcesses?.Invoke();
         }
         public static async void SaveRecents()
         {

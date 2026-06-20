@@ -222,36 +222,60 @@ namespace Vusic_Player.UI.UserViews.Controls
             InitializeComponent();
             this.DataContext = this;
             PlayerService.PlayCalled += PlayerService_PlayCalled;
+            UpdateGlyphs();
         }
-
-        private void PlayerService_PlayCalled()
+        public async void UpdateGlyphs()
         {
+            Debug.WriteLine("Called 1");
+
             if (this.IsLoaded == false || ItemsSource == null) return;
+            Debug.WriteLine("Called 2");
+
             foreach (var item in ItemsSource.ToList())
             {
                 item.TitleColor = new SolidColorBrush(Microsoft.UI.Colors.White);
 
-                item.Glyph = "\uEC4F";
-                if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(item.FilePath)))
+                var storagefile = await StorageFile.GetFileFromPathAsync(item.FilePath);
+
+                string fileExtension = Path.GetExtension(item.FilePath ?? "").ToLower();
+                if (Extensions.VideoExtensions.List.Contains(fileExtension))
                 {
+                    Debug.WriteLine("Called 3" + item.FilePath);
+
                     item.Glyph = "\uE8B2";
+                }
+                else if (Extensions.AudioExtensions.List.Contains(fileExtension))
+                {
+                    Debug.WriteLine("Called 4" + item.FilePath);
+
+                    item.Glyph = "\uEC4F";
                 }
             }
             var exist = ItemsSource.ToList().FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
             if (exist == null) return;
+            Debug.WriteLine("TRUHAM 1");
             exist.TitleColor = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
             if (PlayerService.Masterplayer!.IsPlaying)
             {
+                Debug.WriteLine("Called 5" + exist.FilePath);
+
                 exist.Glyph = "\uE769";
             }
             else
             {
+                Debug.WriteLine("Called 6 " + exist.FilePath);
+
                 exist.Glyph = "\uE768";
             }
-            if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(exist.FilePath)))
-            {
-                exist.Glyph = "\uE8B2";
-            }
+            //if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(exist.FilePath)))
+
+        }
+        private async void PlayerService_PlayCalled()
+        {
+            UpdateGlyphs();
+            //{
+            //    exist.Glyph = "\uE8B2";
+            //}
 
         }
 
@@ -868,7 +892,11 @@ namespace Vusic_Player.UI.UserViews.Controls
             int index = ItemsSource.IndexOf(song);
             if (index <= 0) return;
 
+
             ItemsSource.Move(index, 0);
+
+
+
         }
 
         private void mnftMovetobottom_Click(object sender, RoutedEventArgs e)
@@ -917,13 +945,80 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         private void PlaySongQueueVersion(SongModel song)
         {
-            var item = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == song.FilePath);
-            if (item != null && item.FilePath != null)
+            var selectedSong = song;
+            if (selectedSong == null || string.IsNullOrEmpty(selectedSong.FilePath)) return;
+
+            try
             {
-                QueueService.MarkSongCompleted();
-                QueueService.VusicQueueNext.Remove(item);
-                PlayerService.OpenPath(item.FilePath);
+                // 1. FREEZE HANDLERS: Lock mutations to prevent layout recalculation mid-click
+                QueueService.IsLooping = true;
+
+                // 2. Find where the clicked song sits in the master list
+                int targetIndex = QueueService.VusicQueue.IndexOf(selectedSong);
+                if (targetIndex < 0) return;
+
+                // 3. Update the state of EVERY song based on its new position relative to the clicked song
+                for (int i = 0; i < QueueService.VusicQueue.Count; i++)
+                {
+                    var track = QueueService.VusicQueue[i];
+
+                    if (i < targetIndex)
+                    {
+                        // Everything before the clicked song becomes historical past
+                        track.IsCompleted = true;
+                        track.VisibilityOfStrikeThrough = Visibility.Visible;
+                        track.QueueControls = Visibility.Collapsed;
+                    }
+                    else if (i == targetIndex)
+                    {
+                        // The clicked song is now active playing
+                        track.IsCompleted = false;
+                        track.VisibilityOfStrikeThrough = Visibility.Collapsed;
+                        track.QueueControls = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        // Everything after the clicked song becomes clean upcoming future tracks
+                        track.IsCompleted = false;
+                        track.VisibilityOfStrikeThrough = Visibility.Collapsed;
+                        track.QueueControls = Visibility.Collapsed;
+                    }
+                }
+
+                // 4. Update VusicQueueNext and Shuffle Backups cleanly using structural updates
+                QueueService.VusicQueueNext.Clear();
+                QueueService.OriginalVusicQueueNext.Clear();
+
+                for (int i = targetIndex + 1; i < QueueService.VusicQueue.Count; i++)
+                {
+                    QueueService.VusicQueueNext.Add(QueueService.VusicQueue[i]);
+                    QueueService.OriginalVusicQueueNext.Add(QueueService.VusicQueue[i]);
+                }
+
+                // 5. If shuffle is currently active, randomize the newly created upcoming layout right away!
+                if (QueueService.IsShuffleTrue)
+                {
+                    // Re-shuffle just the new upcoming pool
+                    var shuffledList = QueueService.ShuffleItems(QueueService.VusicQueueNext.ToList());
+                    QueueService.VusicQueueNext.Clear();
+                    foreach (var item in shuffledList)
+                    {
+                        QueueService.VusicQueueNext.Add(item);
+                    }
+                }
+
+                // 6. Set active file path and open stream execution
+                PlayerService.CurrentPlayingPath = selectedSong.FilePath;
+                PlayerService.OpenPath(selectedSong.FilePath);
             }
+            finally
+            {
+                // 7. Unblock and unleash synchronization
+                QueueService.IsLooping = false;
+            }
+
+            // 8. Force complete master UI consistency
+            QueueService.SyncFullQueueFromNext();
         }
         private void hypTitle_Click(object sender, RoutedEventArgs e)
         {
