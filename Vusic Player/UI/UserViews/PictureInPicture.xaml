@@ -5,15 +5,116 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:oceancyan="using:Vusic_Player.UI.UserViews.Controls" xmlns:winui="using:FlyleafLib.Controls.WinUI"
     mc:Ignorable="d"
     Title="PictureInPicture">
 
-    <Window.SystemBackdrop>
-        <MicaBackdrop />
-    </Window.SystemBackdrop>
+    <Grid PointerEntered="Grid_PointerEntered" Name="rootGrid" PointerMoved="Grid_PointerMoved">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition ></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
 
-    <Grid>
+            <winui:FlyleafHost RenderTransformOrigin="0.5, 0.5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" x:Name="hostMedia">
+                <winui:FlyleafHost.RenderTransform>
+                    <RotateTransform x:Name="mediaRotation" 
+                />
+                </winui:FlyleafHost.RenderTransform>
+            </winui:FlyleafHost>
 
+
+            <oceancyan:OceanSlider x:Name="sldMain" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted" Grid.Row="1" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" IsThumbVisible="Collapsed" VerticalAlignment="Bottom"></oceancyan:OceanSlider>
+            <Grid x:Name="CustomTitleBar" 
+          Background="Transparent" 
+          VerticalAlignment="Stretch">
+                <Grid Name="grdOverlay" Background="#99000000" Opacity="0">
+                    <Grid.Resources>
+                        <Storyboard x:Name="FadeInOutStoryboard">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="grdOverlay"
+                           Storyboard.TargetProperty="Opacity">
+                                <LinearDoubleKeyFrame KeyTime="0:0:0.05" Value="1.0" />
+
+                                <LinearDoubleKeyFrame KeyTime="0:0:0.90" Value="1.0" />
+
+                                <LinearDoubleKeyFrame KeyTime="0:0:1.00" Value="0.0" />
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </Grid.Resources>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" VerticalAlignment="Center" >
+                        <Button BorderBrush="Transparent"  Background="Transparent" CornerRadius="20" ToolTipService.ToolTip="Play">
+                            <Image Source="/Assets/previous.png" Width="26"></Image>
+                        </Button>
+                        <Button Name="btnPlayPause" Click="btnPlayPause_Click"  CornerRadius="20" ToolTipService.ToolTip="{x:Bind mediacontroller.PlayPauseToolTip, Mode=OneWay}" Background="Transparent" BorderBrush="Transparent">
+                            <Image Name="imgPlayPause" Source="{x:Bind mediacontroller.Thumbnail, Mode=OneWay}" Width="26"  />
+                        </Button>
+                        <Button BorderBrush="Transparent"   Background="Transparent" CornerRadius="20" ToolTipService.ToolTip="Play">
+                            <Image Source="/Assets/next.png" Width="26"></Image>
+                        </Button>
+                    </StackPanel>
+                    <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" BorderBrush="Transparent"   Background="Transparent" Name="btnRestore" CornerRadius="16" ToolTipService.ToolTip="Restore" Click="btnRestore_Click">
+                        <Image Source="/Assets/miniplayer.png" Width="26"></Image>
+                    </Button>
+                    <StackPanel Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Top" 
+                    Margin="6">
+                        <Button x:Name="CloseButton" 
+        Content="&#xE8BB;" 
+        Click="CloseButton_Click" 
+        FontFamily="Segoe MDL2 Assets" 
+        FontSize="12"
+        Width="45" Height="32"
+        Background="Transparent"
+        BorderBrush="Transparent">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="4">
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup x:Name="CommonStates">
+
+                                                <VisualState x:Name="Normal">
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetName="RootGrid" 
+                                Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)" 
+                                To="Transparent" Duration="0:0:0.3"/>
+                                                        <ColorAnimation Storyboard.TargetName="Content" 
+                                Storyboard.TargetProperty="(ContentPresenter.Foreground).(SolidColorBrush.Color)" 
+                                To="White" Duration="0:0:0.3"/>
+                                                    </Storyboard>
+                                                </VisualState>
+
+                                                <VisualState x:Name="PointerOver">
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetName="RootGrid" 
+                                Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)" 
+                                To="#E81123" Duration="0:0:0.1"/>
+                                                        <ColorAnimation Storyboard.TargetName="Content" 
+                                Storyboard.TargetProperty="(ContentPresenter.Foreground).(SolidColorBrush.Color)" 
+                                To="White" Duration="0:0:0.1"/>
+                                                    </Storyboard>
+                                                </VisualState>
+
+                                                <VisualState x:Name="Pressed">
+                                                    <Storyboard>
+                                                        <ColorAnimation Storyboard.TargetName="RootGrid" 
+                                Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)" 
+                                To="Crimson" Duration="0"/>
+                                                    </Storyboard>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <ContentPresenter x:Name="Content"
+                                  Content="{TemplateBinding Content}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

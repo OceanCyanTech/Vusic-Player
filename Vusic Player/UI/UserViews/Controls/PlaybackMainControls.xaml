@@ -13,7 +13,7 @@
 HorizontalAlignment="Stretch" 
 Margin="0,7,0,10"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Spacing="200">
-            <TextBlock Text="{x:Bind mediacontroller.MediaDisplayName,Mode=OneWay}" Visibility="{x:Bind FileNameTextVisibility, Mode=OneWay}" Margin="0, 0, 0, 10" Foreground="White" Style="{StaticResource BodyStrongTextBlockStyle}" Name="txtFileName"></TextBlock>
+            <TextBlock Text="{x:Bind mediacontroller.MediaDisplayName,Mode=OneWay}" Visibility="{x:Bind mediacontroller.DisplayTextVisibility, Mode=OneWay}" Margin="0, 0, 0, 10" Foreground="White" Style="{StaticResource BodyStrongTextBlockStyle}" Name="txtFileName"></TextBlock>
         </StackPanel>
         <Grid x:Name="grdTexts" Margin="5,0,5, 0">
             <Grid.ColumnDefinitions>

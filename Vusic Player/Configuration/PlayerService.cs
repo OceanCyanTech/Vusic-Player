@@ -41,6 +41,7 @@ namespace Vusic_Player.Configuration
 
         public static event Action? OnVideoCalled;
         public static event Action? PlayCalled;
+        public static event Action? PIPRestore;
         public static event Action? CheckProcesses;
         public static List<Process>? processlocklist;
         public static bool FileRenameIssue = false;
@@ -52,6 +53,10 @@ namespace Vusic_Player.Configuration
 
 
         public static bool JustDisposed = false;
+        public static void PIPRestoreAction()
+        {
+            PIPRestore?.Invoke();
+        }
         private static void Maintimer_Tick(object? sender, object e)
         {
             if (!_isDragging && Masterplayer != null)

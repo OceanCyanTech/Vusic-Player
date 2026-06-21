@@ -75,6 +75,7 @@ namespace Vusic_Player.Configuration.Playback
         private string _volumeGlyph = "\uE767";
         private string _playPauseToolTip = "Play";
         private Visibility queuepageemtpyvisibility = Visibility.Visible;
+        private Visibility textdisplay = Visibility.Visible;
         private Brush _volumeForeground = new SolidColorBrush(Colors.White);
         private ImageSource _thumbnail = new BitmapImage(new Uri("ms-appx:///Assets/play.png"));
         private ImageSource _thumbnail2 = new BitmapImage(new Uri("ms-appx:///Assets/appicon.png"));
@@ -100,6 +101,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _volumeValue, value))
                 {
                     OnPropertyChanged(nameof(VolumeValue));
+                }
+            }
+        }
+        public Visibility DisplayTextVisibility
+        {
+            get => textdisplay;
+            set
+            {
+                if (SetProperty(ref textdisplay, value))
+                {
+                    OnPropertyChanged(nameof(DisplayTextVisibility));
                 }
             }
         }

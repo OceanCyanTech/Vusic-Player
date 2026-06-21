@@ -71,11 +71,20 @@ namespace Vusic_Player.Pages
             RecordTimer.Interval = TimeSpan.FromMilliseconds(300);
             RecordTimer.Tick += RecordTimer_Tick;
             InitiateRecord();
+            PlayerService.PIPRestore -= PlayerService_PIPRestore;
+            PlayerService.PIPRestore += PlayerService_PIPRestore;
 
             SubtitleTimer = new();
             SubtitleTimer.Interval = TimeSpan.FromMilliseconds(250);
             SubtitleTimer.Tick += SubtitleTimer_Tick;
         }
+
+        private void PlayerService_PIPRestore()
+        {
+            hostMedia.Player = PlayerService.Masterplayer;
+
+        }
+
         private void InitiateRecord()
         {
             Screen.OnRecordRequest += () =>
@@ -524,6 +533,7 @@ namespace Vusic_Player.Pages
         }
         private void ShowPanel()
         {
+            
             if (isPinned == false)
             {
                 //ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
@@ -693,7 +703,8 @@ namespace Vusic_Player.Pages
                 // Alignment & Stretch
                 grdRootPlayback.HorizontalAlignment = ControlsOverlay.HorizontalAlignment = GlassRoot.HorizontalAlignment = grdPlayback.HorizontalAlignment = grdUnpinnedControls.HorizontalAlignment = HorizontalAlignment.Stretch;
                 grdRootPlayback.VerticalAlignment = grdUnpinnedControls.VerticalAlignment = ControlsOverlay.VerticalAlignment = GlassRoot.VerticalAlignment = VerticalAlignment.Stretch;
-
+                grdPlayback.Children.Remove(txtSubtitle);
+                MainGrid.Children.Add(txtSubtitle);
                 // Appearance
                 GlassRoot.CornerRadius = new CornerRadius(0);
                 GlassRoot.Margin = new Thickness(0);
@@ -701,7 +712,7 @@ namespace Vusic_Player.Pages
 
                 // Visibility & Text
 
-                playbackMainControls.FileNameTextVisibility = Visibility.Collapsed;
+                mediacontroller.DisplayTextVisibility = Visibility.Collapsed;
                 btnPin.Visibility = Visibility.Collapsed;
                 txtPinFileName.Visibility = btnPin2.Visibility = Visibility.Visible;
                 IsNameVisible = Visibility.Collapsed;
@@ -725,6 +736,9 @@ namespace Vusic_Player.Pages
                 Grid.SetRow(grdPlayback, 0);
                 FadeInOutStoryboardPanel.Begin();
                 grdUnpinnedControls.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Colors.Transparent);
+                MainGrid.Children.Remove(txtSubtitle);
+
+                grdPlayback.Children.Add(txtSubtitle);
                 // Reset Alignment
                 grdRootPlayback.HorizontalAlignment = grdUnpinnedControls.HorizontalAlignment = ControlsOverlay.HorizontalAlignment = GlassRoot.HorizontalAlignment = grdPlayback.HorizontalAlignment = HorizontalAlignment.Center;
                 grdRootPlayback.VerticalAlignment = grdUnpinnedControls.VerticalAlignment = ControlsOverlay.VerticalAlignment = GlassRoot.VerticalAlignment = VerticalAlignment.Bottom;
@@ -738,7 +752,7 @@ namespace Vusic_Player.Pages
                 // Reset Visibility
                 txtPinFileName.Visibility = btnPin2.Visibility = Visibility.Collapsed;
                 btnPin.Visibility = Visibility.Visible;
-                playbackMainControls.FileNameTextVisibility = Visibility.Visible;
+                mediacontroller.DisplayTextVisibility = Visibility.Visible;
             }
 
         }
@@ -1041,6 +1055,7 @@ namespace Vusic_Player.Pages
 
         private void MainGrid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+          
             ShowPanel();
         }
 

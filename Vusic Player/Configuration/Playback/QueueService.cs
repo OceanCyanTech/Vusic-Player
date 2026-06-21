@@ -116,36 +116,58 @@ namespace Vusic_Player.Configuration.Playback
         }
         public static void PlayMedia(ObservableCollection<SongModel> media, bool IsShuffleEnabled, bool IsLoopEnabled)
         {
-            if (media != null)
+            if (media == null || media.Count == 0) return;
+
+            try
             {
+                // 1. SILENCE HANDLERS: Stop collection cross-talk during global initialization
+                IsVusicQueueNextChanging = true;
+                IsShuffleTrue = IsShuffleEnabled;
+
+                // 2. Reset master queue state flags cleanly
                 PlayerService.CurrentPlayingPath = "";
                 VusicQueue.Clear();
+                VusicQueueNext.Clear();
+                OriginalVusicQueueNext.Clear();
 
+                // 3. Populate Master Queue and reset item states
                 foreach (var item in media)
                 {
-                    Debug.WriteLine("Check 2: " + item.Glyph);
-
+                    item.IsCompleted = false;
+                    item.VisibilityOfStrikeThrough = Visibility.Collapsed;
+                    item.QueueControls = Visibility.Collapsed;
                     VusicQueue.Add(item);
                 }
 
-                if (IsShuffleEnabled)
+                // 4. Handle Shuffle Scenario
+                if (IsShuffleTrue)
                 {
-                    IsShuffleTrue = IsShuffleEnabled;
+                    // Shuffle the master list completely
                     ShuffleList();
                 }
-                VusicQueueNext.Clear();
-                foreach (var item in media)
-                {
-                    Debug.WriteLine("Check 3: " + item.Glyph);
 
-                    VusicQueueNext.Add(item);
+                // 5. Select the first track to start playback
+                var firstTrack = VusicQueue[0];
+                PlayerService.CurrentPlayingPath = firstTrack.FilePath;
+
+                // 6. Populate upcoming queues with everything AFTER the first song
+                for (int i = 1; i < VusicQueue.Count; i++)
+                {
+                    VusicQueueNext.Add(VusicQueue[i]);
+                    OriginalVusicQueueNext.Add(VusicQueue[i]); // Keep backup pristine
                 }
 
-
-
-                PlayNext();
-
+                // 7. Fire up the audio stream engine for the first track
+                PlayerService.OpenPath(firstTrack.FilePath);
             }
+            finally
+            {
+                // 8. Re-open event notifications
+                IsVusicQueueNextChanging = false;
+            }
+
+            // 9. Sync UI layouts immediately
+            SyncFullQueueFromNext();
         }
         public static void ShuffleAll()
         {
@@ -282,7 +304,7 @@ namespace Vusic_Player.Configuration.Playback
                     VusicQueue.Add(item);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Log("Error occured: " + ex.Message, "Shuffle Queue", Logger.LogLevelType.Error);
             }
