@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local1="using:Vusic_Player.UI.UserViews.Controls" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:PercentStringConverter x:Key="PercentConverter"/>
+        <converters:RoundedPercentStringConverter x:Key="RoundedPercentConverter"/>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical" Spacing="10">
+        <StackPanel Spacing="12" Name="stkZoom">
+            <TextBlock Text="View" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Zoom Level (%)" 
+   Style="{StaticResource CaptionTextBlockStyle}" 
+   Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+
+                <StackPanel Orientation="Horizontal">
+                    <local1:OceanSlider x:Name="sldZoom" 
+               ValueChanged="sldZoom_ValueChanged" 
+               IsTooltipEnabled="False" 
+               Minimum="25" 
+               Maximum="300" 
+               Value="{x:Bind mediacontroller.ZoomValue, Mode=TwoWay}" 
+               Width="200"
+               VerticalAlignment="Center"/>
+
+                    <TextBlock x:Name="txtZoomDisplay" 
+       Text="{x:Bind sldZoom.Value, Converter={StaticResource RoundedPercentConverter}, Mode=OneWay}" 
+       Margin="10,0" 
+       VerticalAlignment="Center" 
+       Width="50"/>
+
+                    <Button Content="Reset" 
+    Click="btnResetZoom_Click" 
+    VerticalAlignment="Center"
+    Padding="8,4" Margin="0, 0"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Spacing="10" Margin="0,8,0,0">
+                <StackPanel Orientation="Horizontal" Spacing="20">
+                    <CheckBox Name="chkGlow" 
+  Content="Enable Glow Effect"  IsChecked="True"
+  />
+                    <ToggleButton Content="More Options" Name="tglMoreGlowOptions" Checked="tglMoreGlowOptions_Checked" Unchecked="tglMoreGlowOptions_Unchecked"></ToggleButton>
+                </StackPanel>
+
+                <StackPanel x:Name="GlowSettingsPanel" Visibility="Collapsed" Spacing="15" Margin="0,0,0,0">
+
+                    <TextBlock Text="Glow Customization" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                    <StackPanel Spacing="4" HorizontalAlignment="Left">
+                        <TextBlock Text="Glow Color" Style="{StaticResource BodyTextBlockStyle}"/>
+                        <Button Name="btnChooseGlowColor" >
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <Rectangle Name="rctColorGlow" Width="40" Height="18" Fill="White" Stroke="Gray" StrokeThickness="1" RadiusX="2" RadiusY="2"/>
+                                <TextBlock Text="Choose Color" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Button.Flyout>
+                                <Flyout>
+                                    <ColorPicker Name="glowColorPicker" 
+      
+             IsAlphaEnabled="True" 
+             IsColorSliderVisible="True"
+                                                                             ColorChanged="glowColorPicker_ColorChanged"/>
+                                </Flyout>
+                            </Button.Flyout>
+
+                        </Button>
+                    </StackPanel>
+                    <ToggleSwitch Visibility="Collapsed" Name="switchRGB"  Toggled="switchRGB_Toggled"
+          Header="RGB Rainbow Mode" 
+          OnContent="Active" 
+          OffContent="Inactive"
+       />
+
+                    <ToggleSwitch Name="switchMoving" 
+          Header="Animated Glow"  Toggled="switchMoving_Toggled"
+          OnContent="Running" 
+          OffContent="Stopped"
+         />
+                    <StackPanel>
+                        <TextBlock Text="Animation Speed" Style="{StaticResource CaptionTextBlockStyle}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <local1:OceanSlider x:Name="speedSlider" 
+    Minimum="0.1" 
+    Maximum="5.0" 
+                  Margin="10, 0"
+                                                IsTooltipEnabled="False"
+ ValueChanged="speedSlider_ValueChanged"
+    Value="1.0" 
+    Width="200"/>
+                            <TextBlock Text="{x:Bind FormatSpeed(speedSlider.Value),Mode=OneWay}" Name="txtAnimationSpeed" Margin="0, 5"></TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <Rectangle Height="1" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>
+
+    </StackPanel>
+
+</UserControl>

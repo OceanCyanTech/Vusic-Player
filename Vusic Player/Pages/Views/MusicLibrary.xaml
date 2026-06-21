@@ -66,7 +66,7 @@ AlwaysUseFallback="False"/>
                 </Expander.ContextFlyout>
                 <grids:RecentMusicList />
             </Expander>
-            <TextBlock Text="My Playlists" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Tapped="TextBlock_Tapped" Text="My Playlists" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
 
             <Expander Grid.Row="3"  
           Header="View My Playlists"
@@ -80,7 +80,7 @@ AlwaysUseFallback="False"/>
                 </Expander.Resources>
                 <grids:UserPlaylists x:Name="userplaylists" HorizontalAlignment="Left"/>
             </Expander>
-            <TextBlock Text="Instant Playlists for you" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Tapped="TextBlock_Tapped_1" Text="Instant Playlists for you" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
 
             <Expander Grid.Row="5" 
           Header="Recommendations"
@@ -96,7 +96,7 @@ AlwaysUseFallback="False"/>
 
             </Expander>
 
-            <TextBlock Text="Dive into the mood" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Tapped="TextBlock_Tapped_2" Text="Dive into the mood" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
 
             <Expander Grid.Row="7"  Background="Transparent"
           Header="Explore Genres"

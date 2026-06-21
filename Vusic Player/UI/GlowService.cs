@@ -1,26 +1,39 @@
 ﻿using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 using Windows.UI;
+using DispatcherTimer = Microsoft.UI.Xaml.DispatcherTimer;
 
 namespace Vusic_Player.UI
 {
     public class GlowService : INotifyPropertyChanged
     {
         #region Fields
-        private static DispatcherTimer? _rgbTimer;
+        private static Microsoft.UI.Xaml.DispatcherTimer? _rgbTimer;
         private static double _hue = 0;
+        private static Visibility _glowEffectVisiblity = Visibility.Visible;
+        private Color glowcolorprop = Colors.Crimson;
+
         #endregion
         public static GlowService Instance { get; } = new GlowService();
-        private Color glowcolorprop = Colors.Crimson;
         public Color GlowColor
         {
             get => glowcolorprop;
             set
             {
                 glowcolorprop = value;
+                OnPropertyChanged();
+            }
+        }
+        public Visibility GlowEffectVisibility
+        {
+            get => _glowEffectVisiblity;
+            set
+            {
+                _glowEffectVisiblity = value;
                 OnPropertyChanged();
             }
         }

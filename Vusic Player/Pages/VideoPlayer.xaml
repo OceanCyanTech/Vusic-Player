@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:winui="using:FlyleafLib.Controls.WinUI" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:playbackviews="using:Vusic_Player.UI.UserViews.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:winui="using:FlyleafLib.Controls.WinUI" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:playbackviews="using:Vusic_Player.UI.UserViews.Controls" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters"
     mc:Ignorable="d">
     <Page.Resources>
         <!--<converter:DoubleToFormatConverter x:Key="FormatConverter"/>
@@ -67,10 +67,12 @@
                 </DiscreteObjectKeyFrame>
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
+        <converters:FavoriteToGlyphConverter x:Key="FavoritetoGlyphConv"/>
+        <converters:FavoriteToColorConverter x:Key="FavoritetoColorConv"/>
     </Page.Resources>
 
     <Grid Name="RootGrid" PreviewKeyDown="MainGrid_PreviewKeyDown">
-       
+
         <Grid Name="SplashGrid" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
@@ -344,29 +346,35 @@ CornerRadius="16" >
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Margin="0, 0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Opacity="1" x:Name="txtSubtitle" Style="{StaticResource TitleTextBlockStyle}" ></TextBlock>
+                <Grid Grid.Row="1" Name="grdRootPlayback" VerticalAlignment="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition ></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition ></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid  Margin="0, 10" Grid.Column="1" Background="Transparent" HorizontalAlignment="Center" Name="grdUnpinnedControls">
 
-                <Grid Grid.Row="1" Name="grdRootPlayback" VerticalAlignment="Bottom" Margin="0, 10" HorizontalAlignment="Center">
-                    <Grid.Resources>
-                        <Storyboard x:Name="NeonPulseStoryboard" RepeatBehavior="Forever" AutoReverse="True">
-                            <DoubleAnimation 
+                        <Grid.Resources>
+                            <Storyboard x:Name="NeonPulseStoryboard" RepeatBehavior="Forever" AutoReverse="True">
+                                <DoubleAnimation 
            Storyboard.TargetName="NeonGlow" 
            Storyboard.TargetProperty="Opacity" 
            From="0" To="0.9" Duration="0:0:1"/>
-                        </Storyboard>
-                    </Grid.Resources>
-                    <Border        Margin="0,0,0,20" Grid.Column="1" CornerRadius="24" BorderThickness="1" Name="GlowSurround" Background="Transparent">
-                        <ui:Effects.Shadow>
-                            <ui:AttachedDropShadow 
+                            </Storyboard>
+                        </Grid.Resources>
+                        <Border Visibility="{x:Bind Glow.GlowEffectVisibility, Mode=OneWay}"       Margin="0,0,0,20" Grid.Column="1" CornerRadius="24" BorderThickness="1" Name="GlowSurround" Background="Transparent">
+                            <ui:Effects.Shadow>
+                                <ui:AttachedDropShadow 
 x:Name="NeonGlow"
 Color="{x:Bind Glow.GlowColor, Mode=OneWay}" 
 BlurRadius="30" 
                             CastTo="{x:Bind GlowSurround}"
 Opacity="0.9" 
 Offset="0,0,0">
-                            </ui:AttachedDropShadow>
-                        </ui:Effects.Shadow>
-                    </Border>
-                    <Border x:Name="GlassRoot" Grid.Column="1"
+                                </ui:AttachedDropShadow>
+                            </ui:Effects.Shadow>
+                        </Border>
+                        <Border x:Name="GlassRoot" Grid.Column="1"
         HorizontalAlignment="Center" 
         VerticalAlignment="Bottom"
         Margin="0,0,0,20"
@@ -374,34 +382,62 @@ Offset="0,0,0">
         BorderThickness="0"
         IsHitTestVisible="True">
 
-                        <Border.BorderBrush>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Color="#66FFFFFF" Offset="0.0" />
-                                <GradientStop Color="#11FFFFFF" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.BorderBrush>
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#66FFFFFF" Offset="0.0" />
+                                    <GradientStop Color="#11FFFFFF" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
 
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Color="#CC1A1A1A" Offset="0.0" />
-                                <GradientStop Color="#E60A0A0A" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#CC1A1A1A" Offset="0.0" />
+                                    <GradientStop Color="#E60A0A0A" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
 
-                        <Grid Margin="20" HorizontalAlignment="Stretch">
-                            <StackPanel Name="ControlsOverlay" Width="650" Padding="20,0,20,0">
-                                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
-                                    <Button Content="Next Episode" Background="Transparent" Name="btnNextEpisode" Click="btnNextEpisode_Click" Visibility="Collapsed"></Button>
-                                    <Button Click="btnPin_Click" Visibility="Visible" Background="Transparent" Padding="6" ToolTipService.ToolTip="Pin this panel" HorizontalAlignment="Right" Name="btnPin" >
-                                        <FontIcon FontSize="14" Glyph="&#xE718;" Name="fntPin"></FontIcon>
-                                    </Button>
+                            <Grid Margin="20" HorizontalAlignment="Stretch">
+                                <StackPanel Name="ControlsOverlay" Width="650" Padding="20,0,20,0">
+                                    <Grid HorizontalAlignment="Stretch" ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button HorizontalAlignment="Left" Grid.Column="0" ToolTipService.ToolTip="Add to Favourites" Padding="3" Margin="0, 0" x:Name="btnFavourite" 
+Click="btnFavourite_Click"
+Background="Transparent" 
+BorderThickness="0"
+                                            >
+                                            <Grid>
+                                                <FontIcon x:Name="HeartIcon" FontSize="16" RenderTransformOrigin="0.5,0.5" Glyph="&#xEB51;" 
+  >
+                                                    <FontIcon.RenderTransform>
+                                                        <ScaleTransform x:Name="HeartScale" ScaleX="1" ScaleY="1"/>
+                                                    </FontIcon.RenderTransform>
+                                                </FontIcon>
+                                            </Grid>
+                                        </Button>
+
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+
+                                            <Button Content="Next Episode" Background="Transparent" Name="btnNextEpisode" Click="btnNextEpisode_Click" Visibility="Collapsed"></Button>
+                                            <Button Click="btnPin_Click" Visibility="Visible" Background="Transparent" Padding="6" ToolTipService.ToolTip="Pin this panel" HorizontalAlignment="Right" Name="btnPin" >
+                                                <FontIcon FontSize="14" Glyph="&#xE718;" Name="fntPin"></FontIcon>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                    <playbackviews:PlaybackMainControls FileNameTextVisibility="Collapsed" x:Name="playbackMainControls"></playbackviews:PlaybackMainControls>
+                                    <playbackviews:VideoControls x:Name="videoControls" FullScreenToggled="videoControls_FullScreenToggled"  ViewEpisodeClick="videoControls_ViewEpisodeClick"/>
+
                                 </StackPanel>
-                                <playbackviews:PlaybackMainControls></playbackviews:PlaybackMainControls>
-                                <playbackviews:VideoControls x:Name="videoControls" FullScreenToggled="videoControls_FullScreenToggled" ViewEpisodeClick="videoControls_ViewEpisodeClick"/>
-                                
-                            </StackPanel>
-                        </Grid>
-                    </Border>
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20, 0" Name="txtPinFileName" TextWrapping="Wrap"  Text="{x:Bind mediacontroller.MediaDisplayName,Mode=OneWay}"  Visibility="Collapsed" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
+                    <Button Grid.Column="2" Visibility="Collapsed" Margin="20, 0" Background="Transparent" Padding="2" ToolTipService.ToolTip="Unpin this panel" HorizontalAlignment="Right" Name="btnPin2" Click="btnPin_Click" >
+                        <FontIcon FontSize="25" Glyph="&#xE718;" Name="fntPin2"></FontIcon>
+                    </Button>
                 </Grid>
             </Grid>
 

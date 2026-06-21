@@ -45,7 +45,7 @@
             </Expander>
 
             <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="10">
-                <TextBlock Text="Your Recently Listened" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock Tapped="TextBlock_Tapped" Text="Your Recently Listened" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             </StackPanel>
 
             <Expander HorizontalContentAlignment="Stretch" Header="Recent Music" HorizontalAlignment="Stretch" Grid.Row="4"  IsExpanded="False"  Expanding="expRecentsVideo_Expanding" Name="expRecentMusic">
@@ -54,7 +54,7 @@
             </Expander>
 
             <StackPanel Orientation="Horizontal" Grid.Row="5" Spacing="10">
-                <TextBlock Text="Music Mix" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock Tapped="TextBlock_Tapped_1" Text="Music Mix" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             </StackPanel>
 
             <Expander Grid.Row="6" HorizontalContentAlignment="Stretch" Header="Music Suggestions" HorizontalAlignment="Stretch" IsExpanded="False" Expanding="expRecentsVideo_Expanding" Name="expMusicMix">
@@ -63,7 +63,7 @@
             </Expander>
 
             <StackPanel Orientation="Horizontal" Grid.Row="7" Spacing="10" Margin="0, 10">
-                <TextBlock Text="Jump back to your favourites" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock Tapped="TextBlock_Tapped_2" Text="Jump back to your favourites" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                 <HyperlinkButton Content="View all favourites" FontSize="16" Margin="0, 10"></HyperlinkButton>
             </StackPanel>
 

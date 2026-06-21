@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.VideoFilters.Filters"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoFilters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:oceancyan="using:Vusic_Player.UI.UserViews.Controls" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:PercentStringConverter x:Key="PercentConverter"></converters:PercentStringConverter>
+    </UserControl.Resources>
+    <StackPanel Name="stkFilters" Spacing="24" Margin="10, 0">
+        <Button Style="{StaticResource AccentButtonStyle}" Content="Reset All Filters" Name="btnResetAll" Click="btnResetAll_Click" />
+
+        <StackPanel Spacing="8">
+            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Brightness" FontWeight="SemiBold"/>
+            <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="12">
+                <oceancyan:OceanSlider HorizontalAlignment="Stretch" x:Name="sldBrightness" 
+                                   TickFrequency="18" TicksEnabled="True" IsSnapToTickEnabled="True"
+                                   MaxWidth="400" MinWidth="200"
+                                   Maximum="180" Minimum="-180" Value="0" 
+                                   IsTooltipEnabled="False"
+                                   ValueChanged="sldBrightness_ValueChanged"/>
+
+                <NumberBox x:Name="numBrightness" Value="0" Minimum="-180" Maximum="180" 
+                       SpinButtonPlacementMode="Inline"
+                       ValueChanged="numBrightness_ValueChanged"/>
+
+                <TextBlock x:Name="txtBrightnessPercentage" VerticalAlignment="Center" Text="0%" 
+                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+            </StackPanel>
+            <Button x:Name="btnResetBrightness" Content="Reset to Default" HorizontalAlignment="Left" Click="btnResetBrightness_Click"/>
+        </StackPanel>
+
+        <StackPanel Spacing="20">
+            <StackPanel Spacing="8">
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Hue" FontWeight="SemiBold"/>
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <oceancyan:OceanSlider x:Name="sldHue" Width="200" 
+                                       TickFrequency="18" TicksEnabled="True" IsSnapToTickEnabled="True" 
+                                       Minimum="-180" Maximum="180" Value="0" 
+                                       IsTooltipEnabled="False" 
+                                       ValueChanged="sldHue_ValueChanged"/>
+                    <NumberBox x:Name="numHue" Value="0" Minimum="-180" Maximum="180" 
+                           SpinButtonPlacementMode="Inline" 
+                           ValueChanged="numHue_ValueChanged"/>
+                    <TextBlock x:Name="txtHueDisplay" VerticalAlignment="Center" Text="0%" 
+                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                </StackPanel>
+                <Button Content="Reset Hue" HorizontalAlignment="Left" Click="btnResetHue_Click"/>
+            </StackPanel>
+
+            <StackPanel Spacing="8">
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Contrast" FontWeight="SemiBold"/>
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <oceancyan:OceanSlider x:Name="sldContrast" Width="200" 
+                                       TickFrequency="18" TicksEnabled="True" IsSnapToTickEnabled="True" 
+                                       Minimum="-100" Maximum="100" Value="0" 
+                                       IsTooltipEnabled="False" 
+                                       ValueChanged="sldContrast_ValueChanged"/>
+                    <NumberBox x:Name="numContrast" Value="0" Minimum="-100" Maximum="100" 
+                           SpinButtonPlacementMode="Inline" 
+                           ValueChanged="numContrast_ValueChanged"/>
+                    <TextBlock x:Name="txtContrastDisplay" VerticalAlignment="Center" 
+                           Text="{x:Bind sldContrast.Value, Converter={StaticResource PercentConverter}, Mode=OneWay}" 
+                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                </StackPanel>
+                <Button Content="Reset Contrast" HorizontalAlignment="Left" Click="btnResetContrast_Click"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="8">
+            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Saturation" FontWeight="SemiBold"/>
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <oceancyan:OceanSlider x:Name="sldSaturation" Width="200" 
+                                   TickFrequency="18" TicksEnabled="True" IsSnapToTickEnabled="True" 
+                                   Minimum="-100" Maximum="100" Value="0" 
+                                   IsTooltipEnabled="False"
+                                   ValueChanged="sldSaturation_ValueChanged"/>
+                <NumberBox x:Name="numSaturation" Value="0" Minimum="-100" Maximum="100" 
+                       SpinButtonPlacementMode="Inline" 
+                       ValueChanged="numSaturation_ValueChanged"/>
+                <TextBlock x:Name="txtSaturationDisplay" VerticalAlignment="Center" Text="0%" 
+                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+            </StackPanel>
+            <Button Content="Reset Saturation" HorizontalAlignment="Left" Click="btnResetSaturation_Click"/>
+        </StackPanel>
+    </StackPanel>
+
+</UserControl>

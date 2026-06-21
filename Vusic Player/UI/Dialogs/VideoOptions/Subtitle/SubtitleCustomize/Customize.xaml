@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.Subtitle.SubtitleCustomize.Customize"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle.SubtitleCustomize"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:oceancyan="using:Vusic_Player.UI.UserViews.Controls" xmlns:converter="using:Vusic_Player.Configuration.Helper.Converters"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converter:DoubleToFormatConverter x:Key="FormatConverter"/>
+
+    </UserControl.Resources>
+    <Grid Margin="0, 0" x:Name="grdSubtitlesCustomize" Visibility="Visible" >
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition FromVerticalOffset="20" />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <StackPanel Margin="24" Spacing="20" HorizontalAlignment="Left">
+            <Grid RowSpacing="16" ColumnSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Font Family" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <ComboBox Grid.Row="0" Grid.Column="1" Name="cmbFonts" HorizontalAlignment="Stretch" SelectionChanged="cmbFonts_SelectionChanged" PlaceholderText="Select a font"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Text Styles" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <ComboBox Grid.Row="1" Grid.Column="1"  x:Name="cmbStyles" HorizontalAlignment="Stretch" SelectionChanged="cmbStyles_SelectionChanged" PlaceholderText="Select a style">
+                    <ComboBoxItem Content="Display" Tag="DisplayTextBlockStyle"/>
+                    <ComboBoxItem Content="Title Large" Tag="TitleLargeTextBlockStyle"/>
+                    <ComboBoxItem Content="Title" Tag="TitleTextBlockStyle" IsSelected="True"/>
+                    <ComboBoxItem Content="Subtitle" Tag="SubtitleTextBlockStyle"/>
+                    <ComboBoxItem Content="Body Strong" Tag="BodyStrongTextBlockStyle"/>
+                    <ComboBoxItem Content="Body" Tag="BodyTextBlockStyle"/>
+                    <ComboBoxItem Content="Caption" Tag="CaptionTextBlockStyle"/>
+                </ComboBox>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" Spacing="10">
+                    <ToggleButton HorizontalAlignment="Stretch" Name="tglItalics" Content="Italics" Checked="tglItalics_Checked" Unchecked="tglItalics_Unchecked" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    <ToggleButton HorizontalAlignment="Center" Name="tglBold" Content="Bold" Checked="tglBold_Checked" Unchecked="tglBold_Unchecked" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Font Size" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <NumberBox Grid.Row="3" Grid.Column="1" Name="numFontSize" Minimum="14" Maximum="72" Value="28" SpinButtonPlacementMode="Inline" SmallChange="1" ValueChanged="numFontSize_ValueChanged" HorizontalAlignment="Stretch"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Text Color" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" Padding="8,4">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Rectangle Name="rctColor" Width="40" Height="18" Fill="White" Stroke="Gray" StrokeThickness="1" RadiusX="2" RadiusY="2"/>
+                        <TextBlock Text="Change Color" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Flyout>
+                        <Flyout>
+                            <ColorPicker Name="clrPicker" ColorSpectrumShape="Ring" IsMoreButtonVisible="False" ColorChanged="clrPicker_ColorChanged" IsAlphaEnabled="False" />
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Position" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <ComboBox Grid.Row="5" Grid.Column="1" Name="cmbPosition" HorizontalAlignment="Stretch" SelectionChanged="cmbPosition_SelectionChanged">
+                    <ComboBoxItem Content="Bottom Center" IsSelected="True" Tag="BottomCenter"/>
+                    <ComboBoxItem Content="Bottom Left" Tag="BottomLeft"/>
+                    <ComboBoxItem Content="Bottom Right" Tag="BottomRight"/>
+                    <ComboBoxItem Content="Top Center" Tag="TopCenter"/>
+                </ComboBox>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Vertical Offset" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" Spacing="10">
+                    <oceancyan:OceanSlider Margin="10,0" Grid.Row="6" Grid.Column="1" Width="300" x:Name="sldMargin" Minimum="0" Maximum="200" Value="0" IsSnapToTickEnabled="True" TicksEnabled="True" IsTooltipEnabled="False" TickFrequency="10" ValueChanged="sldMargin_ValueChanged" HorizontalAlignment="Stretch"/>
+                    <TextBlock Foreground="Cyan" Text="{x:Bind sldMargin.Value, Mode=OneWay,Converter={StaticResource FormatConverter}}" Grid.Row="6" HorizontalAlignment="Right" Grid.Column="1" Margin="0, 0"></TextBlock>
+
+                </StackPanel>
+                <Button Grid.Row="7" Grid.Column="1" 
+        Content="Reset Placement" 
+        HorizontalAlignment="Left" 
+        FontSize="12"
+        Padding="10,4" Name="btnResetPlacement"
+        Click="btnResetPlacement_Click">
+                    <Button.Resources>
+                        <SolidColorBrush x:Key="ButtonBackground" Color="Transparent"/>
+                        <SolidColorBrush x:Key="ButtonBorderBrush" Color="Gray"/>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+
+            <TextBlock Text="Preview" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+            <Border Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" Padding="20" CornerRadius="8" BorderThickness="1" >
+                <TextBlock Name="txtSample" Text="This is how your subtitles will appear" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Content="Apply" Name="btnApplySettings" Click="btnApplySettings_Click" >
+                    <Button.Resources>
+
+                        <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ButtonBackground" />
+
+                        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="ButtonForeground" />
+
+                        <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ButtonBackground" />
+
+                        <LinearGradientBrush x:Key="ShimmerBrush" StartPoint="0,0" EndPoint="1,0">
+
+                            <GradientStop Color="Transparent" Offset="0" />
+
+                            <GradientStop x:Name="ShineStop" Color="#80FFFFFF" Offset="-0.5" />
+
+                            <GradientStop Color="Transparent" Offset="1" />
+
+                        </LinearGradientBrush>
+
+                    </Button.Resources>
+
+
+                </Button>
+                <Button Content="Reset" Name="btnResetSubtitleSettings" Click="btnResetSubtitleSettings_Click"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

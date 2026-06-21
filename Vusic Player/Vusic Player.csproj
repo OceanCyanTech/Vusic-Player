@@ -45,6 +45,28 @@
     <None Remove="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml" />
     <None Remove="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml" />
     <None Remove="UI\Dialogs\VideoOptionsWindow.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\AudioReverb.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioEqualizer\Equalizer.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Delay.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Device.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\General.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Pitch.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Volume.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\PlayerSettingsHost.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleCustomize\Customize.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\Delay.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\General.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\SubtitleOnlineSearch.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatio.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatioCustom.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoFilters\Filters.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\PlaybackSpeed.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\Record.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\Snapshot.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\VideoStream.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\View.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
     <None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml" />
@@ -58,6 +80,7 @@
     <None Remove="UI\UserViews\Controls\PanelControlsAudioPlayer.xaml" />
     <None Remove="UI\UserViews\Controls\PlaybackMainControls.xaml" />
     <None Remove="UI\UserViews\Controls\PlayPauseControls.xaml" />
+    <None Remove="UI\UserViews\Controls\SearchControl.xaml" />
     <None Remove="UI\UserViews\Controls\VideoControls.xaml" />
     <None Remove="UI\UserViews\Controls\VideoLibraryControls\RecommendedVideos.xaml" />
     <None Remove="UI\UserViews\Controls\VideoLibraryControls\UserShows.xaml" />
@@ -70,6 +93,7 @@
     <None Remove="UI\UserViews\Grids\RecentMusicList.xaml" />
     <None Remove="UI\UserViews\Grids\TopTracks.xaml" />
     <None Remove="UI\UserViews\Grids\UserPlaylists.xaml" />
+    <None Remove="UI\UserViews\PictureInPicture.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -143,6 +167,76 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\PictureInPicture.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\SearchControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\SubtitleOnlineSearch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\Delay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Volume.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Device.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Delay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Pitch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatioCustom.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\VideoStream.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\Snapshot.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\Record.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Views\MusicPlayerFull.xaml">
@@ -366,6 +460,56 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\UserViews\Controls\PlaybackMainControls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\PlayerSettingsHost.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\PlaybackSpeed.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoFilters\Filters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatio.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\General.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioEqualizer\Equalizer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\AudioReverb.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\General.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleCustomize\Customize.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

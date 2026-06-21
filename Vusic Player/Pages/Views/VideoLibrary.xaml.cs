@@ -82,6 +82,21 @@ namespace Vusic_Player.Pages.Views
             OceanContentDialog.HideDlg();
            MainWindow.ShowWindow();
         }
+
+        private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            expRecommended.IsExpanded = true;
+        }
+
+        private void TextBlock_Tapped_1(object sender, TappedRoutedEventArgs e)
+        {
+            expVideoPlaylists.IsExpanded = true;
+        }
+
+        private void TextBlock_Tapped_2(object sender, TappedRoutedEventArgs e)
+        {
+            expShows.IsExpanded = true;
+        }
     }
 
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.VideoAspectRatio.AspectRatioCustom"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoAspectRatio"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" Spacing="10">
+        <TextBlock Text="Custom Ratio" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+
+        <Grid ColumnSpacing="8" Name="grdcustomAspectRatio">
+            <Grid.ColumnDefinitions>
+
+            </Grid.ColumnDefinitions>
+
+            <StackPanel  Spacing="8">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <NumberBox x:Name="numARWidth" 
+               Header="Width" 
+               Value="{x:Bind AspectValues.Width, Mode=OneWay}" 
+               SpinButtonPlacementMode="Compact" 
+               ValueChanged="numARWidth_ValueChanged"/>
+
+                    <TextBlock Text=":" 
+               VerticalAlignment="Bottom" 
+               Margin="0,0,0,8" 
+               Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                    <NumberBox x:Name="numARHeight" 
+               Header="Height" 
+     Value="{x:Bind AspectValues.Height, Mode=OneWay}" 
+               SpinButtonPlacementMode="Compact" 
+               ValueChanged="numARHeight_ValueChanged"/>
+                </StackPanel>
+                <CheckBox Visibility="Collapsed" x:Name="LockRatioCheckBox" Checked="LockRatioCheckBox_Checked" Unchecked="LockRatioCheckBox_Unchecked"
+              Content="Lock Aspect Ratio" 
+              IsChecked="False" 
+              VerticalAlignment="Bottom" 
+              Margin="8,0,0,4"/>
+                <CheckBox Visibility="Collapsed" x:Name="RoundToIntegersCheckBox" 
+Content="Round off to nearest whole number" Checked="RoundToIntegersCheckBox_Checked" Unchecked="RoundToIntegersCheckBox_Unchecked"
+IsChecked="False" 
+VerticalAlignment="Bottom" 
+Margin="8,0,0,4"/>
+                <Button Content="Set Ratio" Name="btnSetCustomRatio" Margin="0, 5" VerticalAlignment="Bottom" Style="{StaticResource AccentButtonStyle}" Click="btnSetCustomRatio_Click"></Button>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</UserControl>

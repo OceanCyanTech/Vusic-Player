@@ -90,6 +90,7 @@ namespace Vusic_Player.Configuration
                 > 100 => Colors.Yellow,   // Yellow for 101-149
                 _ => Colors.White     // White for 0-100
             };
+            UIController.VolumeValue = vol;
 
             UIController.VolumeForeground = new SolidColorBrush(iconColor);
         }

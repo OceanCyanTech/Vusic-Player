@@ -67,7 +67,7 @@ AlwaysUseFallback="False"/>
                 </Expander.ContextFlyout>
                 <grids:ContinuePlayingRecentsVideo/>
             </Expander>
-            <TextBlock Text="Recommended" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Text="Recommended" Tapped="TextBlock_Tapped" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
             <Expander Grid.Row="3"  Expanding="Expander_Expanding" Name="expRecommended"
           Header="Recommended from your libraries"
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
@@ -83,7 +83,7 @@ AlwaysUseFallback="False"/>
                 </Expander.ContextFlyout>
                 <videolibcontrols:RecommendedVideos/>
             </Expander>
-            <TextBlock Text="My Playlists" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Text="My Playlists" Tapped="TextBlock_Tapped_1" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
             <Expander Grid.Row="5"  Expanding="Expander_Expanding" Name="expVideoPlaylists"
           Header="My Playlists"
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
@@ -99,7 +99,7 @@ AlwaysUseFallback="False"/>
                 </Expander.ContextFlyout>
                 <grids:UserPlaylists HorizontalAlignment="Left"/>
             </Expander>
-            <TextBlock Text="Shows" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Text="Shows" Tapped="TextBlock_Tapped_2" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
             <Expander Grid.Row="7" Expanding="Expander_Expanding" Name="expShows"  Header="My Shows"
  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
  IsExpanded="False">

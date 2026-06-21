@@ -1,18 +1,23 @@
 
 using FlyleafLib;
 using FlyleafLib.MediaPlayer;
+using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -29,8 +34,10 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.FilePickers;
 using Vusic_Player.MediaProperties.VideoProperties;
+using Vusic_Player.Pages.Views;
 using Vusic_Player.UI;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 using Logger = Vusic_Player.Configuration.AppConfig.Logger;
@@ -42,14 +49,14 @@ using Orientation = Vusic_Player.MediaProperties.VideoProperties.Orientation;
 namespace Vusic_Player.Pages
 {
 
-    public sealed partial class VideoPlayer : Page
+    public sealed partial class VideoPlayer : Page, INotifyPropertyChanged
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
         bool isPinned = false;
 
         DateTime recordStartTime;
         DispatcherTimer? SubtitleTimer;
-        DispatcherTimer? RecordTimer;
+        DispatcherTimer RecordTimer;
         DispatcherTimer? SaveTimer;
         bool LoadingProgress = false;
         public GlowService Glow => GlowService.Instance;
@@ -59,11 +66,95 @@ namespace Vusic_Player.Pages
         {
             InitializeComponent();
             InitiateInfoText();
+            UpdateSubtitleStyle();
+            RecordTimer = new();
+            RecordTimer.Interval = TimeSpan.FromMilliseconds(300);
+            RecordTimer.Tick += RecordTimer_Tick;
+            InitiateRecord();
 
             SubtitleTimer = new();
             SubtitleTimer.Interval = TimeSpan.FromMilliseconds(250);
             SubtitleTimer.Tick += SubtitleTimer_Tick;
         }
+        private void InitiateRecord()
+        {
+            Screen.OnRecordRequest += () =>
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    if (PlayerService.Masterplayer == null) return;
+                    stkRecording.Visibility = Visibility.Visible;
+                    RecFrame.Visibility = Visibility.Visible;
+                    RecFrame.Opacity = 1;
+                    RecFrame.Width = PlayerService.Masterplayer.Video.Width;
+                    RecFrame.Height = PlayerService.Masterplayer.Video.Height;
+                    recordStartTime = DateTime.Now;
+                    RecordTimer.Start();
+                });
+            };
+            Screen.OnRecordStopRequest += () =>
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    StopRecording();
+                });
+            };
+        }
+        private void UpdateSubtitleStyle()
+        {
+            Configuration.Helper.SubtitlesProperties.Customize.OnSubtitleCustomizeRequest += () =>
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    SyncToActualSubtitle();
+                });
+            };
+        }
+        private void SyncToActualSubtitle()
+        {
+            if (txtSubtitle == null) return;
+
+
+            txtSubtitle.FontFamily = Configuration.Helper.SubtitlesProperties.Customize.fontFamily;
+            txtSubtitle.FontSize = Configuration.Helper.SubtitlesProperties.Customize.FontSize;
+            txtSubtitle.FontWeight = Configuration.Helper.SubtitlesProperties.Customize.FontWeight;
+            txtSubtitle.FontStyle = Configuration.Helper.SubtitlesProperties.Customize.FontStyle;
+            txtSubtitle.FontStretch = Configuration.Helper.SubtitlesProperties.Customize.FontStretch;
+
+            txtSubtitle.Foreground = Configuration.Helper.SubtitlesProperties.Customize.Foreground;
+            txtSubtitle.TextDecorations = Configuration.Helper.SubtitlesProperties.Customize.TextDecorations;
+            txtSubtitle.CharacterSpacing = Configuration.Helper.SubtitlesProperties.Customize.CharacterSpacing;
+            txtSubtitle.TextAlignment = Configuration.Helper.SubtitlesProperties.Customize.TextAlignment;
+            txtSubtitle.Margin = Configuration.Helper.SubtitlesProperties.Customize.thickness;
+            txtSubtitle.Style = Configuration.Helper.SubtitlesProperties.Customize.style;
+            txtSubtitle.VerticalAlignment = Configuration.Helper.SubtitlesProperties.Customize.verticalAlignment;
+            txtSubtitle.HorizontalAlignment = Configuration.Helper.SubtitlesProperties.Customize.horizontalAlignment;
+        }
+
+
+        private void RecordTimer_Tick(object? sender, object e)
+        {
+            if (PlayerService.Masterplayer == null) return;
+            if (PlayerService.Masterplayer.IsRecording)
+            {
+                TimeSpan elapsed = DateTime.Now - recordStartTime;
+                txtRecordingTimeFrame.Text = elapsed.ToString(@"hh\:mm\:ss");
+            }
+            else
+            {
+                StopRecording();
+            }
+        }
+        private void StopRecording()
+        {
+            RecordTimer?.Stop();
+            stkRecording.Visibility = Visibility.Collapsed;
+            RecFrame.Visibility = Visibility.Collapsed;
+            Screen.StopRecord();
+            videoControls.StopRecording();
+        }
+
+
         private void InitiateInfoText()
         {
             GeneralInfoService.OnInfoRequest += (text) =>
@@ -87,6 +178,84 @@ namespace Vusic_Player.Pages
                 ".ts", ".m2ts", ".mts", ".m4v", ".3gp", ".3g2", ".ogv",
                 ".mpeg", ".mpg", ".vob", ".rmvb", ".asf", ".m2p"
             };
+        private void AnimateHeartFull(FontIcon targetIcon, bool isBecomingFavorite)
+        {
+            // 1. Get the Visual and Compositor
+            var visual = ElementCompositionPreview.GetElementVisual(targetIcon);
+            var compositor = visual.Compositor;
+
+            // 2. Setup Scale Animation (The "Pop")
+            var scaleAnim = compositor.CreateScalarKeyFrameAnimation();
+            scaleAnim.InsertKeyFrame(0.0f, 1.0f);
+            scaleAnim.InsertKeyFrame(0.5f, 1.4f); // Pulse size
+            scaleAnim.InsertKeyFrame(1.0f, 1.0f);
+            scaleAnim.Duration = TimeSpan.FromMilliseconds(400);
+
+            visual.CenterPoint = new Vector3((float)targetIcon.ActualWidth / 2, (float)targetIcon.ActualHeight / 2, 0);
+            visual.StartAnimation("Scale.X", scaleAnim);
+            visual.StartAnimation("Scale.Y", scaleAnim);
+
+            // 3. Setup Color Animation (The "Fill")
+            // Note: We animate the 'Brush.Color' of the visual
+            var colorAnim = compositor.CreateColorKeyFrameAnimation();
+            colorAnim.Duration = TimeSpan.FromMilliseconds(400);
+
+            if (isBecomingFavorite)
+            {
+                colorAnim.InsertKeyFrame(0.0f, Colors.Gray);
+                colorAnim.InsertKeyFrame(1.0f, Colors.Red);
+            }
+            else
+            {
+                colorAnim.InsertKeyFrame(0.0f, Colors.Red);
+                colorAnim.InsertKeyFrame(1.0f, Colors.Gray);
+            }
+
+            // Create a Brush if one doesn't exist on the visual layer
+            var brush = compositor.CreateColorBrush();
+            visual.Properties.InsertColor("Color", isBecomingFavorite ? Colors.Red : Colors.Gray);
+
+            // Start the color transition
+            // Note: For FontIcon, it's often easier to just swap the Glyph 
+            // and let the Composition color animation handle the tint.
+            targetIcon.Foreground = new SolidColorBrush(isBecomingFavorite ? Colors.Red : Colors.Gray);
+        }
+
+        private async void btnFavourite_Click(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var Favourites = currentSettings.Favourites;
+            var pathtocheck = PlayerService.CurrentPlayingPath;
+            if (pathtocheck == null) return;
+            var fillHeartIcon = HeartIcon;
+            if (fillHeartIcon == null) return;
+            var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
+            if (existing == null)
+            {
+                fillHeartIcon.Glyph = "\uEB52";
+                ToolTipService.SetToolTip(btnFavourite, "Remove from Favourites");
+                AnimateHeartFull(fillHeartIcon, true);
+                Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
+                // song.FavString = "Remove from Favourites";
+
+            }
+            else
+            {
+
+                fillHeartIcon.Glyph = "\uEB51";
+                AnimateHeartFull(fillHeartIcon, false);
+                Favourites.Remove(existing);
+                ToolTipService.SetToolTip(btnFavourite, "Add to Favourites");
+
+
+
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+
+            // Favourite button click logic
+        }
+
         private async void btnOpenVidSplash_Click(object sender, RoutedEventArgs e)
         {
 
@@ -474,9 +643,23 @@ namespace Vusic_Player.Pages
                 txtSplash.Text = "An unexpected error occured! Check log page under App Settings for more details";
                 Logger.Log("[ERR-PLY-001] Media player instance is null. Unable to initialize playback.", "VideoPlayerPage.OpenVideo", Logger.LogLevelType.Error);
             }
+            CheckForFavourite();
             base.OnNavigatedTo(e);
         }
+        private async void CheckForFavourite()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var favourites = currentSettings.Favourites;
+            var exist = favourites.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
+            if (exist != null)
+            {
+                HeartIcon.Glyph = "\uEB52";
 
+                AnimateHeartFull(HeartIcon, true);
+                ToolTipService.SetToolTip(btnFavourite, "Remove from Favourites");
+
+            }
+        }
         private void mnftSubtitleOptions_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
         }
@@ -501,15 +684,93 @@ namespace Vusic_Player.Pages
 
         private void btnPin_Click(object sender, RoutedEventArgs e)
         {
+            if (!isPinned)
+            {
+                isPinned = true;
+                Grid.SetRow(grdPlayback, 1);
+                FadeInOutStoryboardPanel.Stop();
+
+                // Alignment & Stretch
+                grdRootPlayback.HorizontalAlignment = ControlsOverlay.HorizontalAlignment = GlassRoot.HorizontalAlignment = grdPlayback.HorizontalAlignment = grdUnpinnedControls.HorizontalAlignment = HorizontalAlignment.Stretch;
+                grdRootPlayback.VerticalAlignment = grdUnpinnedControls.VerticalAlignment = ControlsOverlay.VerticalAlignment = GlassRoot.VerticalAlignment = VerticalAlignment.Stretch;
+
+                // Appearance
+                GlassRoot.CornerRadius = new CornerRadius(0);
+                GlassRoot.Margin = new Thickness(0);
+                grdUnpinnedControls.Margin = new Thickness(0);
+
+                // Visibility & Text
+
+                playbackMainControls.FileNameTextVisibility = Visibility.Collapsed;
+                btnPin.Visibility = Visibility.Collapsed;
+                txtPinFileName.Visibility = btnPin2.Visibility = Visibility.Visible;
+                IsNameVisible = Visibility.Collapsed;
+                fntPin2.Glyph = "\uE77A";
+
+                // Gradient Brush
+                grdRootPlayback.Background = new LinearGradientBrush(new GradientStopCollection
+                    {
+                        new GradientStop { Color = ColorHelper.FromArgb(0xCC, 0x1A, 0x1A, 0x1A), Offset = 0.0 },
+                        new GradientStop { Color = ColorHelper.FromArgb(0xE6, 0x0A, 0x0A, 0x0A), Offset = 1.0 }
+                    }, 0)
+                {
+                    StartPoint = new Windows.Foundation.Point(0, 0),
+                    EndPoint = new Windows.Foundation.Point(0, 1)
+                };
+            }
+            else
+            {
+                isPinned = false;
+
+                Grid.SetRow(grdPlayback, 0);
+                FadeInOutStoryboardPanel.Begin();
+                grdUnpinnedControls.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Colors.Transparent);
+                // Reset Alignment
+                grdRootPlayback.HorizontalAlignment = grdUnpinnedControls.HorizontalAlignment = ControlsOverlay.HorizontalAlignment = GlassRoot.HorizontalAlignment = grdPlayback.HorizontalAlignment = HorizontalAlignment.Center;
+                grdRootPlayback.VerticalAlignment = grdUnpinnedControls.VerticalAlignment = ControlsOverlay.VerticalAlignment = GlassRoot.VerticalAlignment = VerticalAlignment.Bottom;
+
+                // Reset Appearance
+                grdRootPlayback.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                GlassRoot.CornerRadius = new CornerRadius(24);
+                GlassRoot.Margin = new Thickness(0, 0, 0, 20);
+                grdUnpinnedControls.Margin = new Thickness(0, 0, 0, 10);
+
+                // Reset Visibility
+                txtPinFileName.Visibility = btnPin2.Visibility = Visibility.Collapsed;
+                btnPin.Visibility = Visibility.Visible;
+                playbackMainControls.FileNameTextVisibility = Visibility.Visible;
+            }
 
         }
+        private Visibility _isNameVisible = Visibility.Visible;
+        public Visibility IsNameVisible
+        {
+            get => _isNameVisible;
+            set
+            {
+                if (_isNameVisible != value)
+                {
+                    _isNameVisible = value;
+                    OnPropertyChanged(nameof(IsNameVisible));
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         private void btnStopRecording_Click(object sender, RoutedEventArgs e)
         {
+            StopRecording();
         }
 
         private void btnSettings_Click(object sender, RoutedEventArgs e)
         {
-            //  this.Frame.Navigate(typeof(Pages.SettingsPage));
+            if (App.NavigationFrame != null)
+            {
+                PlayerService.InVideoPage = false;
+                App.NavigationFrame.Navigate(typeof(SettingsPage));
+            }
         }
         private async void btnNextEpisode_Click(object sender, RoutedEventArgs e)
         {

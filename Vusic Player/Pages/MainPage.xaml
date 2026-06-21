@@ -47,6 +47,7 @@ Stretch="UniformToFill"/>
                                 </AutoSuggestBox>
                             </NavigationView.AutoSuggestBox>
                             <Grid>
+                                <Grid Visibility="Collapsed" Name="blackBackground" Background="Black" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></Grid>
 
                                 <Frame Name="frmMain" Navigated="FrmMain_Navigated" Background="Transparent">
 
@@ -105,5 +106,6 @@ Stretch="UniformToFill"/>
                 </Border>
             </Grid>
         </Frame>
+        
     </Grid>
 </Page>

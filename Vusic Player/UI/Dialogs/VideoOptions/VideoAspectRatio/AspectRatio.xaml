@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.VideoAspectRatio.AspectRatio"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoAspectRatio"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="16">
+        <TextBlock Text="Aspect Ratio" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+        <Button Style="{StaticResource AccentButtonStyle}" Name="btnDefaultRatio" Content="Default Ratio" Click="btnDefaultRatio_Click" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+
+        <ItemsControl x:Name="RatioGrid">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VariableSizedWrapGrid Orientation="Horizontal" ItemWidth="70" ItemHeight="45" MaximumRowsOrColumns="4"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <Button Name="tglPresetAR1" Content="1:1" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Button Name="tglPresetAR2" Content="4:3" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Button Name="tglPresetAR3" Content="16:9" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Button Name="tglPresetAR4" Content="21:9" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </ItemsControl>
+        <TextBlock Text="{x:Bind AspectValues.AspectDisplay, Mode=OneWay}" Margin="10" ToolTipService.ToolTip="{x:Bind SetAspectRatioDisplay.Text}" Style="{StaticResource SubtitleTextBlockStyle}" Name="SetAspectRatioDisplay"></TextBlock>
+
+        <MenuFlyoutSeparator />
+    </StackPanel>
+
+</UserControl>

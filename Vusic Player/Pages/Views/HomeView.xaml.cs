@@ -59,11 +59,16 @@ namespace Vusic_Player.Pages.Views
                 }
                 else if (isVideo)
                 {
-                    if (File.Exists(media.Path))
-                        Frame.Navigate(typeof(VideoPlayer), media.Path);
-                    //PlayerService.SendPath = media.Path;
-                    //PlayerService.isProgress = false;
-                    //PlayerService.VideoInvoke();
+                    if (PlayerService.InVideoPage == false)
+                    {
+                        if (File.Exists(media.Path))
+                            Frame.Navigate(typeof(VideoPlayer), media.Path);
+                    }
+                    else
+                    {
+                        PlayerService.OpenPath(media.Path);
+                    }
+                    
                 }
                 else
                 {
@@ -96,6 +101,21 @@ namespace Vusic_Player.Pages.Views
             if (sender != expMusicMix) expMusicMix.IsExpanded = false;
 
             if (sender != expFav) expFav.IsExpanded = false;
+        }
+
+        private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            expRecentMusic.IsExpanded = true;
+        }
+
+        private void TextBlock_Tapped_1(object sender, TappedRoutedEventArgs e)
+        {
+            expMusicMix.IsExpanded = true;
+        }
+
+        private void TextBlock_Tapped_2(object sender, TappedRoutedEventArgs e)
+        {
+            expFav.IsExpanded = true;
         }
     }
 }

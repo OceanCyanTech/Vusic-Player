@@ -102,6 +102,7 @@ namespace Vusic_Player.Pages
             nvgMain.Header = _originalHeader;
             nvgMain.IsPaneVisible = true;
             grdsplittr.Visibility = Visibility.Visible;
+            blackBackground.Visibility = Visibility.Collapsed;
             ColumnMaster.MinWidth = 280;
             ColumnMaster.Width = new GridLength(300);
             MusicPlayerMaster.Visibility = Visibility.Visible;
@@ -143,6 +144,7 @@ namespace Vusic_Player.Pages
             {
                 nvgMain.AlwaysShowHeader = false;
                 nvgMain.Header = null;
+                blackBackground.Visibility = Visibility.Visible;
                 nvgMain.IsPaneVisible = false;
                 grdsplittr.Visibility = Visibility.Collapsed;
                 ColumnMaster.MinWidth = 0;

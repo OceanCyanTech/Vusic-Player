@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.Dialogs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:Vusic_Player.UI.UserViews.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:Vusic_Player.UI.UserViews.Controls" xmlns:videoplayersettings="using:Vusic_Player.UI.Dialogs.VideoOptions"
     mc:Ignorable="d"
     Title="VideoOptionsWindow">
 
@@ -145,7 +145,7 @@
                     </Grid.RowDefinitions>
                     <TextBlock Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" Name="txtTitle" Text="Options" HorizontalAlignment="Left" Grid.Row="0"></TextBlock>
                     <Grid Margin="0, 10" Name="Contents" Grid.Row="1">
-                        <!--<videoplayersettings:PlayerSettingsHost x:Name="playersettings"/>-->
+                        <videoplayersettings:PlayerSettingsHost x:Name="playersettings"/>
                     </Grid>
 
 

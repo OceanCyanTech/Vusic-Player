@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.UserViews.Controls.SearchControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.UserViews.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Storyboard x:Name="ClosePopupAnimation">
+            <DoubleAnimation Storyboard.TargetName="PopupTransform"
+                             Storyboard.TargetProperty="ScaleX"
+                             To="0.8" Duration="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <ExponentialEase Exponent="6" EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="PopupTransform"
+                             Storyboard.TargetProperty="ScaleY"
+                             To="0.8" Duration="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <ExponentialEase Exponent="6" EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="SubtitleSearch"
+                             Storyboard.TargetProperty="Opacity"
+                             To="0.0" Duration="0:0:0.15"/>
+        </Storyboard>
+
+    </UserControl.Resources>
+    <Grid Name="SearchPanel">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="0">
+            <TextBlock Text="Search" Style="{StaticResource BaseTextBlockStyle}"></TextBlock>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
+                <AutoSuggestBox PreviewKeyDown="asbSearch_PreviewKeyDown" QuerySubmitted="asbSearch_QuerySubmitted" Width="200" Name="asbSearch" TextChanged="asbSearch_TextChanged"  PlaceholderText="{x:Bind SearchPlaceHolderText, Mode=OneWay}" QueryIcon="Find" Grid.Row="0">
+                </AutoSuggestBox>
+                <Button Name="btnCloseSubtitleSearch" Click="btnCloseSubtitleSearch_Click" ToolTipService.ToolTip="Close Search" Background="Transparent" BorderBrush="Transparent">
+                    <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Escape"></KeyboardAccelerator>
+                    </Button.KeyboardAccelerators>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+        <ListView Margin="0, 10" Grid.Row="1" SelectionMode="Single" ItemClick="lstViewSearchResults_ItemClick" SelectionChanged="lstViewSearchResults_SelectionChanged" Name="lstViewSearchResults">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="40" Padding="8,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding ResultString}" 
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"/>
+
+
+                    </Grid>
+                </DataTemplate>
+
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackPanel Margin="0, 10" Grid.Row="1" Orientation="Horizontal" Name="stkNoSearchResultsFound" Visibility="Collapsed" Spacing="5">
+            <Image Width="20" Source="/Assets/searchicon.png"></Image>
+            <TextBlock Text="{x:Bind NoSearchResultsDisplayString, Mode=OneWay}"></TextBlock>
+        </StackPanel>
+    </Grid>
+</UserControl>

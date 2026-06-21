@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral.Delay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" Spacing="10">
+        <StackPanel Name="stkAudioDelay" Spacing="8" Grid.Row="4">
+            <TextBlock Text="Audio Delay (ms)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+            <Grid ColumnSpacing="8" Name="grdAudioDelay">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <RepeatButton Grid.Column="0" Content="-" Width="40" Click="rptbtnDecreaseAudioDel_Click" Name="rptbtnDecreaseAudioDel"/>
+                <NumberBox Name="numAudioDelay" ValueChanged="numAudioDelay_ValueChanged" Grid.Column="1" Value="{x:Bind Delayvalue.DelayValue, Mode=TwoWay}" SpinButtonPlacementMode="Inline" SmallChange="10"/>
+                <RepeatButton Grid.Column="2" Content="+" Width="40" Click="rptbtnIncreaseAudioDel_Click" Name="rptbtnIncreaseAudioDel"/>
+                <Button Grid.Column="3" Content="Reset" Name="btnAudioDelayReset" Click="btnAudioDelayReset_Click"/>
+            </Grid>
+        </StackPanel>
+        <Rectangle Height="1" Grid.Row="5" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>
+
+    </StackPanel>
+</UserControl>

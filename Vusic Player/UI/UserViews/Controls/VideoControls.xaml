@@ -92,7 +92,7 @@
                             <FontIcon Glyph="&#xE8D2;" />
                         </MenuFlyoutSubItem.Icon>
                         <MenuFlyoutItem x:Name="mnftSearchSubtitles" Text="Search" Icon="Find" Click="mnftSearchSubtitles_Click" />
-                        <MenuFlyoutItem x:Name="mnftSearchSubtitlesOnline" Text="Search Online..." Click="mnftSearchSubtitlesOnline_Click">
+                        <MenuFlyoutItem Visibility="Collapsed" x:Name="mnftSearchSubtitlesOnline" Text="Search Online..." Click="mnftSearchSubtitlesOnline_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE774;"></FontIcon>
                             </MenuFlyoutItem.Icon>
@@ -183,7 +183,7 @@
                         </MenuFlyoutItem>
                     </MenuFlyoutSubItem>
 
-                    <ToggleMenuFlyoutItem x:Name="mnftReversePlayback" Text="Reverse Playback" Click="mnftReversePlayback_Click">
+                    <ToggleMenuFlyoutItem x:Name="mnftReversePlayback" Text="Reverse Playback" IsChecked="{x:Bind mediacontroller.IsReversePlayback, Mode=TwoWay}" Click="mnftReversePlayback_Click">
                         <ToggleMenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xEB3F;" />
                         </ToggleMenuFlyoutItem.Icon>
@@ -367,7 +367,7 @@
                             <FontIcon Glyph="&#xE80F;"></FontIcon>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftViewEpisodes" Text="View Episodes"  Click="mnftViewEpisodes_Click">
+                    <MenuFlyoutItem x:Name="mnftViewEpisodes" Visibility="{x:Bind ViewEpisodeVisibility, Mode=OneWay}" Text="View Episodes"  Click="mnftViewEpisodes_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE80F;"></FontIcon>
                         </MenuFlyoutItem.Icon>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.VideoOrientation.Rotation"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoOrientation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:oceancyan="using:Vusic_Player.UI.UserViews.Controls"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" Spacing="10">
+        <StackPanel Spacing="12" Name="stkRotation">
+            <TextBlock Text="Video Rotation" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+            <Grid x:Name="DialControl" Width="150" Height="150" Background="Transparent"
+              PointerPressed="Dial_PointerPressed"
+              PointerMoved="Dial_PointerMoved"
+              PointerReleased="Dial_PointerReleased"
+              HorizontalAlignment="Center">
+
+                <Ellipse Stroke="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" 
+                     StrokeThickness="12" Margin="10"/>
+
+                <Rectangle x:Name="DialNeedle" Width="6" Height="60" Fill="Cyan" 
+                       VerticalAlignment="Top" HorizontalAlignment="Center" 
+                       Margin="0,15,0,0" RadiusX="3" RadiusY="3" 
+                       RenderTransformOrigin="0.5,1">
+                    <Rectangle.RenderTransform>
+                        <RotateTransform x:Name="NeedleRotation" 
+                                     Angle="{x:Bind RotationAngle, Mode=OneWay}"/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+
+                <Ellipse Width="16" Height="16" Fill="Cyan"/>
+
+                <TextBlock x:Name="txtRotationValue" 
+                       Text="0°" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       Margin="0,80,0,0" FontWeight="Bold"/>
+            </Grid>
+
+            <oceancyan:OceanSlider IsTooltipEnabled="False" x:Name="sldRotation" Width="200"
+                               HorizontalAlignment="Center"
+                               Minimum="0" Maximum="360" 
+                               ValueChanged="sldRotation_ValueChanged" />
+
+            <Button Margin="0, 10" Style="{StaticResource AccentButtonStyle}" 
+                Content="Reset Rotation" Name="btnResetRotation" 
+                Click="btnResetRotation_Click" HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8" Margin="0,10,0,0">
+            <RepeatButton Click="BtnRotateMinus_Click" 
+                      Content="&#xE108;" 
+                      FontFamily="Segoe MDL2 Assets" 
+                      Width="40" Height="32" 
+                      ToolTipService.ToolTip="Decrease 1°"/>
+
+            <RepeatButton Click="BtnRotatePlus_Click" 
+                      Content="&#xE109;" 
+                      FontFamily="Segoe MDL2 Assets" 
+                      Width="40" Height="32" 
+                      ToolTipService.ToolTip="Increase 1°"/>
+        </StackPanel>
+
+        <Rectangle Height="1" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+    </StackPanel>
+
+</UserControl>

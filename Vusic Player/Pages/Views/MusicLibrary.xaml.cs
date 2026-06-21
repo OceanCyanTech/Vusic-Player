@@ -122,6 +122,21 @@ namespace Vusic_Player.Pages.Views
 
             if (sender != expRecommend) expRecommend.IsExpanded = false;
         }
+
+        private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            expPlaylists.IsExpanded = true;
+        }
+
+        private void TextBlock_Tapped_1(object sender, TappedRoutedEventArgs e)
+        {
+            expRecommend.IsExpanded = true;
+        }
+
+        private void TextBlock_Tapped_2(object sender, TappedRoutedEventArgs e)
+        {
+            expGenres.IsExpanded = true;
+        }
     }
 
 }

@@ -538,6 +538,10 @@ namespace Vusic_Player.Configuration.Playback
                                     {
                                         App.NavigationFrame.Navigate(typeof(VideoPlayer), firstItemOfNewLoop.FilePath);
                                     }
+                                    else
+                                    {
+                                        PlayerService.OpenPath(firstItemOfNewLoop.FilePath);
+                                    }
 
                                 }
                             }
@@ -592,6 +596,10 @@ namespace Vusic_Player.Configuration.Playback
                             {
                                 App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
                             }
+                            else
+                            {
+                                PlayerService.OpenPath(item.FilePath);
+                            }
 
                         }
                     }
@@ -634,6 +642,10 @@ namespace Vusic_Player.Configuration.Playback
                                 if (PlayerService.InVideoPage == false)
                                 {
                                     App.NavigationFrame.Navigate(typeof(VideoPlayer), firstitem.FilePath);
+                                }
+                                else
+                                {
+                                    PlayerService.OpenPath(firstitem.FilePath);
                                 }
 
                             }

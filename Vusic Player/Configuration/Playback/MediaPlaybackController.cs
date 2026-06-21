@@ -65,7 +65,13 @@ namespace Vusic_Player.Configuration.Playback
         private string _artistName = "Unknown Artist";
         private string _artistNameInfo = "Unknown Artist";
         private string _albumNameInfo = "Unknown Artist";
+        //private string _aspectRatio = "16:9";
         private string _volumeText = "100%";
+        private double _volumeValue = 100;
+        private bool _isReversePlayback = false;
+        private double _zoomValue = 100;
+        private double _speedValue = 1;
+        private double _pitchValue = 1;
         private string _volumeGlyph = "\uE767";
         private string _playPauseToolTip = "Play";
         private Visibility queuepageemtpyvisibility = Visibility.Visible;
@@ -83,6 +89,61 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _currentPosition, value))
                 {
                     OnPropertyChanged(nameof(RunningDurationString));
+                }
+            }
+        }
+        public double VolumeValue
+        {
+            get => _volumeValue;
+            set
+            {
+                if (SetProperty(ref _volumeValue, value))
+                {
+                    OnPropertyChanged(nameof(VolumeValue));
+                }
+            }
+        }
+        public bool IsReversePlayback
+        {
+            get => _isReversePlayback;
+            set
+            {
+                if (SetProperty(ref _isReversePlayback, value))
+                {
+                    OnPropertyChanged(nameof(IsReversePlayback));
+                }
+            }
+        }
+        public double ZoomValue
+        {
+            get => _zoomValue;
+            set
+            {
+                if (SetProperty(ref _zoomValue, value))
+                {
+                    OnPropertyChanged(nameof(ZoomValue));
+                }
+            }
+        }
+        public double SpeedValue
+        {
+            get => _speedValue;
+            set
+            {
+                if (SetProperty(ref _speedValue, value))
+                {
+                    OnPropertyChanged(nameof(SpeedValue));
+                }
+            }
+        }
+        public double PitchValue
+        {
+            get => _pitchValue;
+            set
+            {
+                if (SetProperty(ref _pitchValue, value))
+                {
+                    OnPropertyChanged(nameof(PitchValue));
                 }
             }
         }

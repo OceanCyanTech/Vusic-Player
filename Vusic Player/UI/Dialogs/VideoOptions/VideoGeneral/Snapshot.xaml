@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral.Snapshot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" Spacing="10">
+        <StackPanel Spacing="12" Name="stkSnapshot">
+            <TextBlock Text="Snapshot" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+            <StackPanel Spacing="12">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Save Location" 
+       Style="{StaticResource CaptionTextBlockStyle}" 
+       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <Grid Width="280" HorizontalAlignment="Left">
+                        <TextBox TextChanged="txtSnapshotPath_TextChanged" Name="txtSnapshotPath" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Default Pictures Folder"/>
+                        <Button Background="Transparent" BorderBrush="Transparent" 
+        VerticalAlignment="Stretch" HorizontalAlignment="Right" Name="btnSnapshotDirectory" 
+        Content="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" 
+        Click="btnSnapshotDirectory_Click"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Capture Options" 
+       Style="{StaticResource CaptionTextBlockStyle}" 
+       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+
+                    <CheckBox Name="chkIncludePosition" Checked="chkIncludePosition_Checked" Unchecked="chkIncludePosition_Unchecked" Content="Include media position" />
+                    <CheckBox Name="chkIncludeTimestamp" Checked="chkIncludeTimestamp_Checked" Unchecked="chkIncludeTimestamp_Unchecked" Content="Include current date/time" />
+                </StackPanel>
+
+                <Button Name="btnSnapshot" 
+Style="{StaticResource AccentButtonStyle}" 
+HorizontalAlignment="Stretch" 
+Click="btnSnapshot_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE722;" />
+                        <TextBlock Text="Capture Frame"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+        <Rectangle Height="1" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>
+
+    </StackPanel>
+
+</UserControl>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral.PlaybackSpeed"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local1="using:Vusic_Player.UI.UserViews.Controls"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" Spacing="10">
+        <StackPanel Name="stkPlaybackSpeed" Spacing="12">
+            <TextBlock Text="Playback Settings" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+            <StackPanel  Spacing="4">
+                <TextBlock Text="Playback Speed" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <local1:OceanSlider x:Name="sldSpeed" Margin="10, 0"
+           Width="{x:Bind SliderWidth, Mode=OneWay}" 
+           Minimum="0.25" 
+           Maximum="8.0" 
+           Value="{x:Bind mediacontroller.SpeedValue, Mode=TwoWay}" 
+           IsTooltipEnabled="False"
+           ValueChanged="sldSpeed_ValueChanged"/>
+
+                    <NumberBox x:Name="numSpeed" 
+   
+   Value="{x:Bind mediacontroller.SpeedValue, Mode=TwoWay}" 
+   Minimum="0.25" 
+   Maximum="9.0" 
+   SmallChange="0.1"
+   LargeChange="1.0"
+   SpinButtonPlacementMode="Inline"
+   ValueChanged="numSpeed_ValueChanged"/>
+
+                    <TextBlock x:Name="txtSpeedDisplay" 
+Text="{x:Bind FormatSpeed(sldSpeed.Value), Mode=OneWay}"
+                               Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                </StackPanel>
+            </StackPanel>
+            <Button Content="Default Speed" Name="btnDefaultSpeed" Click="btnDefaultSpeed_Click"></Button>
+            <ToggleSwitch Name="tsReverse" Header="Reverse Playback" IsOn="{x:Bind mediacontroller.IsReversePlayback, Mode=TwoWay}" Toggled="tsReverse_Toggled" />
+            <ToggleSwitch Toggled="tsLoop_Toggled" Name="tsLoop" Header="Loop Media" IsOn="False" />
+        </StackPanel>
+
+        <Rectangle Height="1" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>
+
+    </StackPanel>
+
+</UserControl>

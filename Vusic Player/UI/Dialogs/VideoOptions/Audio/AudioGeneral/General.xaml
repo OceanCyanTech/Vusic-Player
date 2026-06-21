@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral.General"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:oceancyan="using:Vusic_Player.UI.UserViews.Controls" xmlns:flyleaf="using:FlyleafLib.MediaFramework.MediaStream"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" Spacing="10">
+        <StackPanel Name="stkAudioStream" Spacing="8" Margin="0,0,0,10" Grid.Row="0">
+            <TextBlock Text="Audio Stream" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <oceancyan:SearchControl Margin="0, 10" CloseSearch="srchAudio_CloseSearch" SearchPlaceHolderText="Search audio streams..."  NoSearchResultsDisplayString="No audio stream found based on your search!" MaxHeight="200" Width="320" HorizontalAlignment="Left" Visibility="Collapsed" ItemSelected="srchAudio_ItemSelected" x:Name="srchAudio">
+
+            </oceancyan:SearchControl>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <ComboBox Name="cmbAudioTrack"  VerticalAlignment="Stretch"
+HorizontalAlignment="Stretch" 
+PlaceholderText="Select Audio Track"  ItemsSource="{x:Bind ViewModel.AudStreams, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.CurrentStream, Mode=TwoWay}"
+
+SelectionChanged="cmbAudioTrack_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="flyleaf:AudioStream">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE8D6;" FontSize="16" Foreground="Cyan"/>
+
+                                <TextBlock VerticalAlignment="Center">
+       <Run Text="Stream"/>
+       <Run Text="{x:Bind StreamIndex}"/>
+       <Run Text="["/>
+       <Run Text="{x:Bind Language}"/>
+       <Run Text="]"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Click="btnSearchAudio_Click" ToolTipService.ToolTip="Search Audio Tracks" Name="btnSearchAudio" VerticalAlignment="Stretch" Background="Transparent" BorderBrush="Transparent" Grid.Column="1" Margin="4,0,0,0" Padding="4">
+                    <Image Source="ms-appx:///Assets/searchicon.png" Width="16" Height="16"/>
+                </Button>
+            </Grid>
+            <ToggleButton Checked="tglDisableAudioTrack_Checked" 
+Unchecked="tglDisableAudioTrack_Unchecked" Name="tglDisableAudioTrack"
+Content="Disable Audio" 
+HorizontalAlignment="Left"/>
+        </StackPanel>
+        <Rectangle Height="1" Grid.Row="1" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>
+
+    </StackPanel>
+
+</UserControl>

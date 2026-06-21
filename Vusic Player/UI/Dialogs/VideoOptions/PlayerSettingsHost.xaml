@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.PlayerSettingsHost"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters" 
+     xmlns:subtitlegeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle.SubtitleGeneral" 
+    xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral"
+    xmlns:videofilters="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoFilters" xmlns:videoorientation="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoOrientation" xmlns:subtitlecustomize="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle.SubtitleCustomize" xmlns:videoaspectratio="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoAspectRatio" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral" xmlns:audioequalizer="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:PercentStringConverter x:Key="PercentConverter"></converters:PercentStringConverter>
+    </UserControl.Resources>
+    <Grid Name="grdOptions" >
+        <Grid  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <AutoSuggestBox Grid.Row="0" Name="asbSearchOptions" PlaceholderText="Search for options..." PreviewKeyDown="asbSearchOptions_PreviewKeyDown"
+QuerySubmitted="asbSearchOptions_QuerySubmitted" QueryIcon="Find" TextChanged="asbSearchOptions_TextChanged">
+
+            </AutoSuggestBox>
+            <Grid Grid.Row="1" Name="tbViewHolder">
+                <Grid.ChildrenTransitions>
+                    <EntranceThemeTransition FromVerticalOffset="30"></EntranceThemeTransition>
+                </Grid.ChildrenTransitions>
+                <TabView Grid.Row="1" IsAddTabButtonVisible="False" HorizontalAlignment="Stretch" Name="tbViewOptions" Visibility="Visible">
+                    <TabViewItem IsClosable="False" Header="Video Options" Name="tbviVideoOptions">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Vertical" Margin="0, 30" Spacing="10" Grid.Row="0">
+                                <TextBlock Text="Video Settings" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold"/>
+                                <TextBlock Text="Configure how you see video on your screen." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
+                            </StackPanel>
+                            <SelectorBar Grid.Row="1" Name="voSelectorBar" HorizontalAlignment="Center" SelectionChanged="voSelectorBar_SelectionChanged">
+                                <SelectorBarItem Text="General" Name="sbiGeneral" IsSelected="True"></SelectorBarItem>
+                                <SelectorBarItem Text="Filters" Name="sbiFilters"></SelectorBarItem>
+                                <SelectorBarItem Text="Orientation" Name="sbiOrientation"></SelectorBarItem>
+                                <SelectorBarItem Text="Aspect Ratio" Name="sbiAspectRatio"></SelectorBarItem>
+                            </SelectorBar>
+                            <ScrollViewer Grid.Row="2" Margin="0, 30">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Name="voGeneral" Grid.Row="1" Visibility="Visible" Margin="12, 0">
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <EntranceThemeTransition FromVerticalOffset="20" />
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
+
+                                        <ScrollViewer >
+                                            <StackPanel  Spacing="20">
+                                                <videogeneral:VideoStream x:Name="ctlVideoStream"></videogeneral:VideoStream>
+                                                <!--<StackPanel Spacing="8" Margin="0,0,0,10" Name="stkVideoDevices">
+                                        <TextBlock Text="Video Device" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                                        <local:SearchControl Margin="0, 10" 
+             CloseSearch="srchDevice_CloseSearch" 
+             SearchPlaceHolderText="Search video devices..."  
+             NoSearchResultsDisplayString="No video device found!" 
+             MaxHeight="200" Width="300" 
+             HorizontalAlignment="Left" 
+             Visibility="Collapsed" 
+             ItemSelected="srchDevice_ItemSelected" 
+             x:Name="srchDevice">
+                                        </local:SearchControl>
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <ComboBox Name="cmbVideoDevice" 
+      VerticalAlignment="Stretch"
+      HorizontalAlignment="Stretch" 
+      PlaceholderText="Select Video Device" 
+      SelectionChanged="cmbVideoDevice_SelectionChanged"/>
+
+                                            <Button ToolTipService.ToolTip="Search Video Devices" 
+    Name="btnSearchDevice" 
+    VerticalAlignment="Stretch" 
+    Click="btnSearchDevice_Click" 
+    Background="Transparent" 
+    BorderBrush="Transparent" 
+    Grid.Column="1" 
+    Margin="4,0,0,0" 
+    Padding="4">
+                                                <Image Source="ms-appx:///Assets/searchicon.png" Width="16" Height="16"/>
+                                            </Button>
+                                        </Grid>
+
+
+                                    </StackPanel>-->
+                                                <videogeneral:PlaybackSpeed x:Name="ctlPlaybackSpeed" />
+                                                <videogeneral:View x:Name="ctlViewSettings" />
+                                                <videogeneral:Snapshot x:Name="ctlSnapshotSettings" />
+                                                <videogeneral:Record x:Name="ctlRecordSettings" />
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </Grid>
+                                    <Grid Name="voFilters" Margin="0, 0" Grid.Row="1" Visibility="Collapsed">
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <EntranceThemeTransition FromVerticalOffset="20" />
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                            <videofilters:Filters x:Name="ctlVideoFilters"/>
+                                        </ScrollViewer>
+                                    </Grid>
+                                    <Grid Name="voOrientation" Grid.Row="1" Visibility="Collapsed" Margin="12, 0">
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <EntranceThemeTransition FromVerticalOffset="20" />
+
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                            <StackPanel Name="stkOrientation" Spacing="24">
+
+                                                <videoorientation:Rotation x:Name="ctlVideoRotation"/>
+                                                <videoorientation:Flip x:Name="ctlFlip"/>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </Grid>
+                                    <Grid Name="voAspectRatio" Grid.Row="1" Margin="0, 0" Visibility="Collapsed">
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <EntranceThemeTransition FromVerticalOffset="20" />
+
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
+                                        <StackPanel Margin="0, 0" Spacing="16">
+                                            <videoaspectratio:AspectRatio x:Name="ctlAspectRatioPresets" />
+                                            <videoaspectratio:AspectRatioCustom x:Name="ctlCustomAspectRatio" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+
+
+                            </ScrollViewer>
+                        </Grid>
+                    </TabViewItem>
+                    <TabViewItem IsClosable="False" Name="tbviAudio" Header="Audio Options">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="0" Margin="0, 30">
+                                <TextBlock Text="Audio Settings" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold"/>
+                                <TextBlock Text="Configure how you hear audio on your device." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
+                            </StackPanel>
+                            <SelectorBar Grid.Row="1" Name="selBarAudioOptions"
+HorizontalAlignment="Center"
+Margin="0,12,0,0"
+SelectionChanged="selBarAudioOptions_SelectionChanged">
+                                <SelectorBarItem x:Name="GeneralTab" Text="General" IsSelected="True" />
+                                <SelectorBarItem Visibility="Collapsed" x:Name="EqualizerTab" Text="Equalizer" />
+                            </SelectorBar>
+
+                            <ScrollView Grid.Row="2" ContentOrientation="Vertical" Padding="20,0,20,20">
+                                <Grid RowSpacing="30">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="1" x:Name="GeneralView" RowSpacing="30"  Visibility="Visible"  HorizontalAlignment="Stretch">
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <EntranceThemeTransition FromVerticalOffset="20" />
+
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <audiogeneral:General x:Name="ctlAudioGeneral" Grid.Row="0" />
+                                        <audiogeneral:Volume x:Name="ctlAudioVolume" Grid.Row="1" />
+                                        <audiogeneral:Device x:Name="ctlAudioDevice" Grid.Row="2" />
+                                        <audiogeneral:Delay x:Name="ctlAudioDelay" Grid.Row="3" />
+                                        <audiogeneral:Pitch x:Name="ctlAudioPitch" Grid.Row="4" />
+                                    </Grid>
+                                    <Grid RowSpacing="10" Grid.Row="1" x:Name="EqualizerView" Visibility="Collapsed" >
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <EntranceThemeTransition FromVerticalOffset="20" />
+
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
+                                        <audioequalizer:Equalizer x:Name="ctlEqualizer"/>
+
+                                    </Grid>
+                                </Grid>
+                            </ScrollView>
+                        </Grid>
+                    </TabViewItem>
+                    <TabViewItem IsClosable="False" Name="tbvitSubtitle" Header="Subtitle Options">
+                        <Grid Margin="0, 0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <SelectorBar HorizontalAlignment="Center" Grid.Row="1" Name="voSelectorBarSubtitles" SelectionChanged="voSelectorBarSubtitles_SelectionChanged">
+                                <SelectorBarItem Text="Tracks" IsSelected="True" Name="selBarTracksSub"></SelectorBarItem>
+                                <SelectorBarItem Text="Customize" Name="selBarCustomizeSub">
+
+                                </SelectorBarItem>
+                            </SelectorBar>
+                            <StackPanel Spacing="4" Grid.Row="0" Margin="0, 30">
+                                <TextBlock Text="Subtitle Settings" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold"/>
+                                <TextBlock Text="Configure how subtitles appear on screen." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
+                            </StackPanel>
+                            <ScrollViewer Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Margin="0,20" VerticalScrollBarVisibility="Auto">
+                                <Grid >
+                                    <Grid Margin="0, 0" Name="grdSubTracks" HorizontalAlignment="Stretch" RowSpacing="24">
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <EntranceThemeTransition FromVerticalOffset="20" />
+
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <subtitlegeneral:General Grid.Row="0" x:Name="ctlSubtitleGeneral" />
+                                        <subtitlegeneral:Delay Grid.Row="1" x:Name="ctlDelay"/>
+
+                                    </Grid>
+                                    <Grid Name="grdSubCustomize">
+                                        <subtitlecustomize:Customize x:Name="ctlSubtitleCustomize" />
+
+                                    </Grid>
+                                </Grid>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabViewItem>
+                </TabView>
+            </Grid>
+            <Popup HorizontalAlignment="Stretch"  Name="popupSearch" Grid.Row="1"   IsLightDismissEnabled="True" >
+
+                <Border AllowFocusOnInteraction="False"  CornerRadius="0, 0, 16, 16" >
+                    <Border.Background>
+                        <AcrylicBrush TintColor="Black" 
+TintOpacity="0.8" 
+           
+FallbackColor="Transparent" 
+AlwaysUseFallback="False"/>
+                    </Border.Background>
+                    <ListView Width="{Binding ElementName=asbSearchOptions, Path=ActualWidth}" AllowFocusOnInteraction="False" HorizontalAlignment="Stretch"   VerticalAlignment="Top" Grid.Row="1" Name="lstViewSearchOptions" Visibility="Collapsed" SelectionMode="Single" ItemClick="lstViewSearchOptions_ItemClick" SelectionChanged="lstViewSearchOptions_SelectionChanged">
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Height="40" Padding="8,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding Name}" 
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"/>
+
+
+                                </Grid>
+                            </DataTemplate>
+
+                        </ListView.ItemTemplate>
+
+                    </ListView>
+                </Border>
+            </Popup>
+            <StackPanel Name="spSearchResults" Grid.Row="1" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" Orientation="Horizontal">
+                <StackPanel.ChildrenTransitions>
+                    <EntranceThemeTransition FromVerticalOffset="30"></EntranceThemeTransition>
+                </StackPanel.ChildrenTransitions>
+                <Image Width="50" Source="/Assets/searchicon.png"></Image>
+                <TextBlock Text="Hmm... we couldn't find that. Try something else!" VerticalAlignment="Center" TextWrapping="Wrap" Style="{StaticResource SubtitleTextBlockStyle}" ></TextBlock>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+</UserControl>

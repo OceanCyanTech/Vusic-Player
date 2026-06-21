@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.VideoOrientation.Flip"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoOrientation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Name="stkFlip" Spacing="12">
+        <TextBlock Text="Mirroring" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <ToggleButton Name="btnFlipHorizontal" Content="Flip Horizontal" Checked="btnFlipHorizontal_Checked" Unchecked="btnFlipHorizontal_Unchecked" Padding="12,8"/>
+            <ToggleButton Name="btnFlipVertical" Content="Flip Vertical" Checked="btnFlipVertical_Checked" Unchecked="btnFlipVertical_Unchecked" Padding="12,8"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

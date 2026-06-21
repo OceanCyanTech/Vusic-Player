@@ -23,6 +23,17 @@ namespace Vusic_Player.UI.UserViews.Controls
     public sealed partial class PlaybackMainControls : UserControl
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
+        public Visibility FileNameTextVisibility
+        {
+            get => (Visibility)GetValue(filenametextvis);
+            set => SetValue(filenametextvis, value);
+        }
+        public static readonly DependencyProperty filenametextvis =
+    DependencyProperty.Register(
+        nameof(FileNameTextVisibility),
+        typeof(Visibility),
+        typeof(PlaybackMainControls),
+        new PropertyMetadata(Visibility.Visible));
 
         public PlaybackMainControls()
         {

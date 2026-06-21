@@ -7,6 +7,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
+using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Media3D;
 using Vusic_Player.Configuration.Helper.UI;
@@ -17,9 +19,6 @@ using WinRT.Interop;
 
 namespace Vusic_Player.UI.Dialogs
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class VideoOptionsWindow : Window
     {
         public event Action? CloseRequested;
@@ -225,7 +224,7 @@ where T : DependencyObject
         public static void HideDialog()
         {
             if (_appWindow == null) return;
-        //    MainWindow.ShowWindow();
+            MainWindow.ShowWindow();
             _appWindow.Hide();
         }
 
@@ -235,7 +234,6 @@ where T : DependencyObject
             {
                 DispatcherQueue.EnsureSystemDispatcherQueue();
 
-                // Hooking up the policy object
                 configurationSource = new SystemBackdropConfiguration();
                 Activated += Window_Activated;
 
@@ -243,7 +241,6 @@ where T : DependencyObject
                 Closed += Window_Closed;
                 ((FrameworkElement)Content).ActualThemeChanged += Window_ThemeChanged;
 
-                // Initial configuration state.
                 configurationSource.IsInputActive = true;
                 SetConfigurationSourceTheme();
 
@@ -369,18 +366,48 @@ where T : DependencyObject
             {
                 _instance = new VideoOptionsWindow();
             }
+            App.VideoDialogInstance = _instance;
             _instance.Navigate(TabIndex, SubTabIndex, PanelIndex);
             _instance.ResizeWind(800, 800);
             _instance.Activate();
             return _instance;
         }
-        private void Navigate(int TabIndex, int SubTabIndex, int PanelIndex)
+        private  void Navigate(int TabIndex, int SubTabIndex, int PanelIndex)
         {
-            if (_instance == null) return;
-            TabInd = TabIndex;
-            SubTabInd = SubTabIndex;
-            PanInd = PanelIndex;
-          //  _instance.playersettings.Loaded += Playersettings_Loaded;
+            //if (_instance == null) return;
+            //TabInd = TabIndex;
+            //SubTabInd = SubTabIndex;
+            //PanInd = PanelIndex;
+            //_instance.playersettings.Loaded -= Playersettings_Loaded;
+            //_instance.playersettings.Loaded += Playersettings_Loaded;
+            //if(_instance.playersettings.IsLoaded)
+            //{
+            //    Debug.WriteLine("LOOKED AT UR PICTURE AND CRIED LIKE A BABY2: " + TabInd + " " + SubTabInd + " " + PanInd);
+
+            //    ManualNavigationVideoSettings.TabIndex = TabInd;
+            //    ManualNavigationVideoSettings.SubtabIndex = SubTabInd;
+            //    ManualNavigationVideoSettings.PanelIndex = PanInd;
+            //    ManualNavigationVideoSettings.CallNavig();
+            //}
+            //Debug.WriteLine("I KNOW YOU HATE ME: " + TabIndex + " " + SubTabIndex + " " + PanelIndex);
+            if (playersettings == null) return;
+
+            if (playersettings.IsLoaded)
+            {
+                // If the control is already up and running, navigate immediately
+                playersettings.ExecuteNavigation(TabIndex, SubTabIndex, PanelIndex);
+            }
+            else
+            {
+                // If it's still initializing, wait for it to load, then navigate
+                RoutedEventHandler? loadedHandler = null;
+                loadedHandler = (s, e) =>
+                {
+                    playersettings.Loaded -= loadedHandler;
+                    playersettings.ExecuteNavigation(TabIndex, SubTabIndex, PanelIndex);
+                };
+                playersettings.Loaded += loadedHandler;
+            }
 
         }
         private int TabInd = 0;
@@ -390,6 +417,8 @@ where T : DependencyObject
 
         private void Playersettings_Loaded(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("LOOKED AT UR PICTURE AND CRIED LIKE A BABY: " + TabInd + " " + SubTabInd + " " + PanInd);
+
             ManualNavigationVideoSettings.TabIndex = TabInd;
             ManualNavigationVideoSettings.SubtabIndex = SubTabInd;
             ManualNavigationVideoSettings.PanelIndex = PanInd;
@@ -402,6 +431,7 @@ where T : DependencyObject
             {
                 _instance = new VideoOptionsWindow();
             }
+            Debug.WriteLine("eesd");
             App.OceanDialogInstance = _instance;
 
             _instance.Setup(contents, ShowActionButtons);
