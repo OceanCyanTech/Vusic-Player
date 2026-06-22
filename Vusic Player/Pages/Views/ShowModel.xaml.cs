@@ -631,7 +631,7 @@ namespace Vusic_Player.Pages.Views
             {
                 if (App.MainWindowInstance is MainWindow wind)
                 {
-                    //          wind.ShowFileInfo(filepath);
+                              wind.ShowFileInfo(filepath);
                 }
             }
         }

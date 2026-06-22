@@ -102,7 +102,7 @@ namespace Vusic_Player.Pages.Views
                 item.IsCompleted = false;
                 Debug.WriteLine("Check 1: " + item.Glyph);
             }
-           
+
             QueueService.PlayMedia(SongCollection, btnShuffle.IsChecked ?? false, btnLoop.IsChecked ?? false);
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var playlists = currentSettings.SavedPlaylists;
@@ -320,9 +320,10 @@ namespace Vusic_Player.Pages.Views
                                     glyph = "\uE768";
                                 }
                             }
-                            string fileExtension = file.FileType.ToLowerInvariant();
+                          
                             Visibility visibility = Visibility.Visible;
                             Visibility visibilityofvidtext = Visibility.Collapsed;
+                            string fileExtension = file.FileType.ToLowerInvariant();
                             if (Extensions.VideoExtensions.List.Contains(fileExtension))
                             {
                                 Debug.WriteLine("Yes is video");
@@ -368,7 +369,7 @@ namespace Vusic_Player.Pages.Views
         {
 
         }
-        bool isVidPlaylist = false;
+
         private async void LoadItemsOnly(PlaylistItem playlist)
         {
             if (_isLoadingData) return;
@@ -480,8 +481,8 @@ namespace Vusic_Player.Pages.Views
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-  //          Vusic_Player.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
-      //      lstViewUnified.ListViewRemoved -= LstViewUnified_ListViewRemoved;
+            //          Vusic_Player.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
+            //      lstViewUnified.ListViewRemoved -= LstViewUnified_ListViewRemoved;
 
             OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
             base.OnNavigatedFrom(e);
@@ -495,8 +496,8 @@ namespace Vusic_Player.Pages.Views
             if (e.Parameter is PlaylistItem playlist)
             {
                 currentPlaylist = playlist;
-                Vusic_Player.Configuration.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
-                Vusic_Player.Configuration.Helper.FileInfo.RefreshValues += FileInfo_RefreshValues;
+                Configuration.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
+                Configuration.Helper.FileInfo.RefreshValues += FileInfo_RefreshValues;
                 txtPlaylistName.Text = playlist.PlaylistName;
                 playlistID = playlist.PlaylistId;
                 genreList.Clear();

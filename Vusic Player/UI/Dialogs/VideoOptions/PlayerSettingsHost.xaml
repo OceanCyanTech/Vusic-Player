@@ -21,11 +21,23 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
+            <Grid HorizontalAlignment="Stretch">
+                <TextBox Grid.Row="0" Name="asbSearchOptions" PlaceholderText="Search for options..." PreviewKeyDown="asbSearchOptions_PreviewKeyDown"
+TextChanged="asbSearchOptions_TextChanged_1"/>
+                <Button x:Name="btnSearchQuery"
+            Click="btnSearchQuery_Click"
+            Content="&#xE721;" 
+            FontFamily="{ThemeResource SymbolThemeFontFamily}"
+            Background="Transparent"
+            BorderBrush="Transparent"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Width="40"
+            Height="32"
+            Margin="0,0,0,0"/>
+            </Grid>
 
-            <AutoSuggestBox Grid.Row="0" Name="asbSearchOptions" PlaceholderText="Search for options..." PreviewKeyDown="asbSearchOptions_PreviewKeyDown"
-QuerySubmitted="asbSearchOptions_QuerySubmitted" QueryIcon="Find" TextChanged="asbSearchOptions_TextChanged">
-
-            </AutoSuggestBox>
+            
             <Grid Grid.Row="1" Name="tbViewHolder">
                 <Grid.ChildrenTransitions>
                     <EntranceThemeTransition FromVerticalOffset="30"></EntranceThemeTransition>
@@ -260,7 +272,7 @@ SelectionChanged="selBarAudioOptions_SelectionChanged">
                     </TabViewItem>
                 </TabView>
             </Grid>
-            <Popup HorizontalAlignment="Stretch"  Name="popupSearch" Grid.Row="1"   IsLightDismissEnabled="True" >
+            <Popup PreviewKeyDown="popupSearch_PreviewKeyDown" HorizontalAlignment="Stretch"  Name="popupSearch" Grid.Row="1"   IsLightDismissEnabled="True" >
 
                 <Border AllowFocusOnInteraction="False"  CornerRadius="0, 0, 16, 16" >
                     <Border.Background>
@@ -270,7 +282,7 @@ TintOpacity="0.8"
 FallbackColor="Transparent" 
 AlwaysUseFallback="False"/>
                     </Border.Background>
-                    <ListView Width="{Binding ElementName=asbSearchOptions, Path=ActualWidth}" AllowFocusOnInteraction="False" HorizontalAlignment="Stretch"   VerticalAlignment="Top" Grid.Row="1" Name="lstViewSearchOptions" Visibility="Collapsed" SelectionMode="Single" ItemClick="lstViewSearchOptions_ItemClick" SelectionChanged="lstViewSearchOptions_SelectionChanged">
+                    <ListView Width="{Binding ElementName=asbSearchOptions, Path=ActualWidth}" HorizontalAlignment="Stretch"   VerticalAlignment="Top" Grid.Row="1" Name="lstViewSearchOptions" Visibility="Collapsed" SelectionMode="Single" ItemClick="lstViewSearchOptions_ItemClick" >
 
                         <ListView.ItemTemplate>
                             <DataTemplate>

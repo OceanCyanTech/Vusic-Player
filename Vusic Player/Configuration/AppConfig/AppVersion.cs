@@ -27,7 +27,7 @@ namespace Vusic_Player.Configuration.AppConfig
             counter.Add(counter2);
             await SettingsLoader.SaveSettingsAsync(currentSettings);
             BuildNumber = $"{DateTime.Now.ToString("MMddyy")}.{counter2}";
-            Debug.WriteLine(BuildNumber + " hshs");
+          //  Debug.WriteLine(BuildNumber + " hshs");
         }
         public static string BuildNumber = "";
         public static string VersionType = "Development Preview BETA 1 (BRANCH DEV)";

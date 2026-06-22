@@ -98,7 +98,7 @@
         <Grid Name="MainGrid"  Visibility="Visible" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PointerMoved="MainGrid_PointerMoved" PointerEntered="MainGrid_PointerEntered">
             <Grid.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem x:Name="mnftOpenVideo" Text="Open Video" Click="mnftOpenVideo_Click">
+                    <MenuFlyoutItem x:Name="mnftOpenVideo" Text="Open Another Media" Click="mnftOpenVideo_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="d"/>
                         </MenuFlyoutItem.Icon>
@@ -109,7 +109,19 @@
                             <FontIcon Glyph="d"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
+                    
 
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="d"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="d"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
                     <MenuFlyoutSeparator />
 
                     <MenuFlyoutItem x:Name="mnftPrevious" Text="Previous" Click="mnftPrevious_Click">
@@ -124,7 +136,7 @@
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftPlay" Text="Play" Click="mnftPlay_Click">
+                    <MenuFlyoutItem x:Name="mnftPlay" Text="{x:Bind mediacontroller.PlayPauseToolTip, Mode=OneWay}" Click="mnftPlay_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="d"/>
                         </MenuFlyoutItem.Icon>
@@ -144,7 +156,7 @@
 
                     <MenuFlyoutSeparator />
 
-                    <ToggleMenuFlyoutItem x:Name="mnftFullScreen" Text="Full Screen" Click="mnftFullScreen_Click">
+                    <ToggleMenuFlyoutItem x:Name="mnftFullScreen" IsChecked="{x:Bind mediacontroller.IsFullScreen, Mode=TwoWay}" Text="{x:Bind mediacontroller.FullScreenToolTip, Mode=OneWay}" Click="mnftFullScreen_Click">
                         <ToggleMenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE740;"/>
                         </ToggleMenuFlyoutItem.Icon>
@@ -337,7 +349,22 @@ CornerRadius="16" >
                     </Grid>
                 </Border>
             </Grid>
+            <TeachingTip Name="ttVolume" PreferredPlacement="Center" Title="Volume">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Name="volStackPanel" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
+                        <playbackviews:OceanSlider x:Name="sldVol" IsTooltipEnabled="False" Margin="10, 0" IsEnabled="True" ValueChanged="sldVol_ValueChanged" Maximum="250" Value="100" Width="200">
+                            <ToolTipService.ToolTip>
+                                <ToolTip Visibility="Visible" x:Name="VolumeToolTip" Content="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" />
+                            </ToolTipService.ToolTip>
+                        </playbackviews:OceanSlider>
+                        <StackPanel Margin="0, 10" Orientation="Horizontal" >
+                            <TextBlock FontSize="12" Foreground="White" Name="txtVolumepercent" />
+                            <TextBlock FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
 
+            </TeachingTip>
             <TextBlock Grid.Row="0" Margin="10, 0"  VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" Opacity="0" x:Name="txtSeek" Style="{StaticResource DisplayTextBlockStyle}" ></TextBlock>
 
             <Grid Grid.Row="0" Name="grdPlayback" Opacity="1">
@@ -440,7 +467,7 @@ BorderThickness="0"
                         <FontIcon FontSize="25" Glyph="&#xE718;" Name="fntPin2"></FontIcon>
                     </Button>
                 </Grid>
-                
+
             </Grid>
 
         </Grid>

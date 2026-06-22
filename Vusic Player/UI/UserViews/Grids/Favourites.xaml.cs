@@ -28,7 +28,7 @@ namespace Vusic_Player.UI.UserViews.Grids
         public Favourites()
         {
             InitializeComponent();
-            InitializeRecommendations();
+       //     InitializeRecommendations();
         }
         ObservableCollection<FavouritesRecommend> FinalList = new();
         private async void InitializeRecommendations()

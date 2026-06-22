@@ -108,7 +108,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 OnPropertyChanged(nameof(DateModified));
             }
         }
-        private bool isFav;
+        
         private Visibility isMovableitem = Visibility.Visible;
         public Visibility IsMovableItem
         {

@@ -152,7 +152,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 if (App.MainWindowInstance is MainWindow wind)
                 {
-               //     wind.ShowFileInfo(selectedSong.SongPath);
+                   wind.ShowFileInfo(selectedSong.SongPath);
                 }
             }
         }

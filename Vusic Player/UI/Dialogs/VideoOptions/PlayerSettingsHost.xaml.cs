@@ -37,10 +37,105 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions
             ctlAudioDelay, ctlEqualizer, ctlSubtitleGeneral, ctlSubtitleCustomize,
             ctlAudioVolume, ctlDelay
         };
+            lstViewSearchOptions.ItemsSource = searchres;
 
+            lstViewSearchOptions.AddHandler(
+         UIElement.PreviewKeyDownEvent,
+         new KeyEventHandler(lstViewSearchOptions_AlwaysPreviewKeyDown),
+         true
+     
+    );
+            //  this.PreviewKeyDown += PlayerSettingsHost_PreviewKeyDown; ;
             SearchVideoOptions.IndexResults(ctlViewSettings, ctlPlaybackSpeed, ctlVideoStream, ctlSnapshotSettings, ctlRecordSettings, ctlVideoFilters, ctlVideoRotation, ctlFlip, ctlCustomAspectRatio, ctlAudioPitch, ctlAudioGeneral, ctlAudioDevice, ctlAudioDelay, ctlEqualizer, ctlSubtitleGeneral, ctlSubtitleGeneral, ctlSubtitleCustomize, ctlDelay);
             ManualNavigationVideoSettings.NavigCalled += ManualNavigationVideoSettings_NavigCalled;
         }
+        private void lstViewSearchOptions_AlwaysPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            int currentIndex = lstViewSearchOptions.SelectedIndex;
+            int totalItems = lstViewSearchOptions.Items.Count;
+
+            // 1. Handle Enter Key
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                e.Handled = true;
+                if (currentIndex >= 0 && currentIndex < totalItems)
+                {
+                    if (lstViewSearchOptions.Items[currentIndex] is SettingSearchResult selected)
+                    {
+                        CommitSelection(selected);
+                    }
+                }
+                return;
+            }
+
+            // 2. Handle Up Arrow at the very top
+            if (e.Key == Windows.System.VirtualKey.Up && currentIndex == 0)
+            {
+                e.Handled = true; // Stop WinUI from changing selection
+                lstViewSearchOptions.SelectedIndex = -1;
+                asbSearchOptions.Focus(FocusState.Programmatic);
+                return;
+            }
+
+            // 3. Handle Down Arrow at the very bottom
+            if (e.Key == Windows.System.VirtualKey.Down && currentIndex == totalItems - 1)
+            {
+                e.Handled = true; // Stop WinUI from dead-ending
+                lstViewSearchOptions.SelectedIndex = 0; // Explicitly loop to top
+                return;
+            }
+            if ((e.Key >= Windows.System.VirtualKey.A && e.Key <= Windows.System.VirtualKey.Z) ||
+        (e.Key >= Windows.System.VirtualKey.Number0 && e.Key <= Windows.System.VirtualKey.Number9) ||
+        (e.Key >= Windows.System.VirtualKey.NumberPad0 && e.Key <= Windows.System.VirtualKey.NumberPad9) ||
+        e.Key == Windows.System.VirtualKey.Space ||
+        e.Key == Windows.System.VirtualKey.Back)
+            {
+                // Clear the list selection highlight
+                lstViewSearchOptions.SelectedIndex = -1;
+
+                // Shift focus back to the TextBox
+                asbSearchOptions.Focus(FocusState.Programmatic);
+
+                // Move the cursor to the very end of the text box string so typing appends cleanly
+                asbSearchOptions.SelectionStart = asbSearchOptions.Text.Length;
+                asbSearchOptions.SelectionLength = 0;
+
+                // Do NOT set e.Handled = true here! 
+                // Leaving it false allows WinUI to pass the letter directly into the newly-focused TextBox.
+            }
+        }
+        private void CommitSelection(SettingSearchResult selected)
+        {
+            popupSearch.IsOpen = false;
+            ListViewSelected(selected);
+        }
+        private void PlayerSettingsHost_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (popupSearch.IsOpen == true)
+            {
+                if (e.Key == Windows.System.VirtualKey.Enter)
+                {
+                    Debug.WriteLine("Can you brave you most");
+                    if (lstViewSearchOptions.SelectedIndex >= 0)
+                    {
+                        // Mark it as handled so nothing else processes it
+                        e.Handled = true;
+
+                        int index = lstViewSearchOptions.SelectedIndex;
+                        if (lstViewSearchOptions.Items[index] is SettingSearchResult selected)
+                        {
+                            ListViewSelected(selected);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void PlayerSettingsHost_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+         
+        }
+
         public void ExecuteNavigation(int tabIdx, int subTabIdx, int panelIdx)
         {
             // 1. Set main tab
@@ -352,7 +447,26 @@ DependencyProperty.Register(
 
 
 
+        private void btnSearchQuery_Click(object sender, RoutedEventArgs e)
+        {
+            ExecuteSearchQuery();
+        }
 
+        // Consolidate your search trigger into one reusable method
+        private void ExecuteSearchQuery()
+        {
+            if (lstViewSearchOptions.Items.Count > 0)
+            {
+                lstViewSearchOptions.SelectedIndex = 0;
+                lstViewSearchOptions.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                popupSearch.IsOpen = false;
+                spSearchResults.Visibility = Visibility.Visible;
+                tbViewHolder.Visibility = Visibility.Collapsed;
+            }
+        }
         private void asbSearchOptions_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (lstViewSearchOptions.Items.Count > 0)
@@ -370,8 +484,43 @@ DependencyProperty.Register(
 
         private void asbSearchOptions_PreviewKeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
-            // Occurs before the key down event. 
-            // Useful for intercepting specific keys (like Escape or Tab) before the control handles them.
+            if (lstViewSearchOptions.Items.Count == 0 || lstViewSearchOptions.Visibility != Visibility.Visible) return;
+
+            if (e.Key == Windows.System.VirtualKey.Down)
+            {
+                e.Handled = true; // Prevent cursor from moving in TextBox
+
+                popupSearch.IsOpen = true;
+                lstViewSearchOptions.Focus(FocusState.Programmatic);
+
+                // Only force index 0 if nothing is selected yet
+                if (lstViewSearchOptions.SelectedIndex == -1)
+                {
+                    lstViewSearchOptions.SelectedIndex = 0;
+                }
+            }
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                e.Handled = true;
+
+                if (lstViewSearchOptions.Items.Count > 0)
+                {
+                    // 1. Force the selection index so SelectedItem updates
+                    lstViewSearchOptions.SelectedIndex = 0;
+
+                    // 2. Grab the item and immediately execute it!
+                    if (lstViewSearchOptions.Items[0] is SettingSearchResult selected)
+                    {
+                        CommitSelection(selected); // This closes the popup and navigates
+                    }
+                }
+                else
+                {
+                    popupSearch.IsOpen = false;
+                    spSearchResults.Visibility = Visibility.Visible;
+                    tbViewHolder.Visibility = Visibility.Collapsed;
+                }
+            }
         }
 
         #endregion
@@ -525,6 +674,7 @@ DependencyProperty.Register(
 
         private void lstViewSearchOptions_ItemClick(object sender, ItemClickEventArgs e)
         {
+            
             popupSearch.IsOpen = false;
 
             var selected = e.ClickedItem as SettingSearchResult;
@@ -534,12 +684,80 @@ DependencyProperty.Register(
 
         private void lstViewSearchOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            popupSearch.IsOpen = false;
+          
+            //popupSearch.IsOpen = false;
 
-            var selected = lstViewSearchOptions.SelectedItem as SettingSearchResult;
-            if (selected != null)
-                ListViewSelected(selected);
+            //var selected = lstViewSearchOptions.SelectedItem as SettingSearchResult;
+            //if (selected != null)
+            //    ListViewSelected(selected);
 
+        }
+        /// <summary>
+        /// NOTES: KEYBOARD SHORTCUT OR TYPING SHOULD FOCUS ON SEARCH
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lstViewSearchOptions_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Up && lstViewSearchOptions.SelectedIndex == 0)
+            {
+                e.Handled = true;
+
+                // Clear selection if you want a clean state when moving back up
+                lstViewSearchOptions.SelectedIndex = -1;
+
+                // Shift focus back to the textbox
+                asbSearchOptions.Focus(FocusState.Programmatic);
+            }
+         
+        }
+
+        private void popupSearch_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+
+        }
+        // Place this at the top of your UserControl class with your other variables
+        private ObservableCollection<SettingSearchResult> searchres = new ObservableCollection<SettingSearchResult>();
+        private void asbSearchOptions_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+            tbViewHolder.Visibility = Visibility.Visible;
+            spSearchResults.Visibility = Visibility.Collapsed;
+
+            var query = asbSearchOptions.Text.ToLower();
+
+            searchres.Clear();
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                var suggestions = SearchVideoOptions.searchIndex.Where(s =>
+                    s.Keywords != null &&
+                    s.Keywords.Any(k => k.ToLower().Contains(query)));
+
+                foreach (var item in suggestions)
+                {
+                    searchres.Add(item);
+                }
+            }
+
+            if (searchres.Count == 0 || string.IsNullOrWhiteSpace(query))
+            {
+                popupSearch.IsOpen = false;
+                lstViewSearchOptions.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                popupSearch.IsOpen = true;
+                lstViewSearchOptions.Visibility = Visibility.Visible;
+
+                if (query.Length == 1)
+                {
+                    asbSearchOptions.Focus(FocusState.Programmatic);
+
+                    // Keep the cursor flashing at the end of the single letter
+                    asbSearchOptions.SelectionStart = asbSearchOptions.Text.Length;
+                    asbSearchOptions.SelectionLength = 0;
+                }
+            }
         }
     }
 }

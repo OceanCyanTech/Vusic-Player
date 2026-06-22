@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Pages.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -88,7 +89,11 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void btnFullView_Click(object sender, RoutedEventArgs e)
         {
-
+            if (App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(MusicPlayerFull));
+                
+            }
         }
 
         private void btnLyrics_Click(object sender, RoutedEventArgs e)
@@ -120,7 +125,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (App.MainWindowInstance is MainWindow wind)
             {
 
-       //         wind.ShowFileInfo(PlayerService.CurrentPlayingPath);
+                wind.ShowFileInfo(PlayerService.CurrentPlayingPath);
             }
         }
 

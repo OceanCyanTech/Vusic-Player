@@ -37,7 +37,7 @@ namespace Vusic_Player.Configuration
 
         public static DispatcherTimer? maintimer { get; set; }
         public static FileStream? filestreamcurrent;
-        public static string? CurrentPlayingPath { get; set; }
+        public static string CurrentPlayingPath { get; set; } = "";
 
         public static event Action? OnVideoCalled;
         public static event Action? PlayCalled;
@@ -283,6 +283,7 @@ namespace Vusic_Player.Configuration
             StorageFile file = await StorageFile.GetFileFromPathAsync(CurrentPlayingPath);
 
             string fileExtension = file.FileType.ToLowerInvariant();
+
 
             if (Extensions.VideoExtensions.List.Contains(fileExtension))
             {

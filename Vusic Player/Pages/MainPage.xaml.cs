@@ -140,6 +140,15 @@ namespace Vusic_Player.Pages
                 nvgMain.Header = "";
 
             }
+            else if (e.SourcePageType == typeof(MusicPlayerFull))
+            {
+                MusicPlayerMaster.Visibility = Visibility.Collapsed;
+                ColumnMaster.MinWidth = 0;
+                ColumnMaster.Width = new GridLength(0);
+                grdsplittr.Visibility = Visibility.Collapsed;
+                nvgMain.Header = "";
+
+            }
             else if(e.SourcePageType == typeof(VideoPlayer))
             {
                 nvgMain.AlwaysShowHeader = false;

@@ -17,6 +17,7 @@ namespace Vusic_Player.Configuration.Helper.UI
         public static async Task<BitmapImage> GetVideoFrameAsync(string path, double percentage = 0.20)
         {
             // Define your fallback URI
+            Debug.WriteLine("Get video frame async called");
             Uri fallbackUri = new Uri("ms-appx:///Assets/default.png");
 
             try
@@ -63,19 +64,28 @@ namespace Vusic_Player.Configuration.Helper.UI
         }
         public static async Task<string> ExtractVidThumbnailBasic(string FILEpath, double percentage = 0.22)
         {
+            Debug.WriteLine("extract vid thumbnail basic async called");
+
             var fallbackUri = "ms-appx:///Assets/default.png";
 
-            Debug.WriteLine("Requested Path is " + FILEpath);
+            if (string.IsNullOrEmpty(FILEpath) || !File.Exists(FILEpath))
+                return fallbackUri;
+
             try
             {
                 var storagefile = await StorageFile.GetFileFromPathAsync(FILEpath);
                 var props = await storagefile.Properties.GetVideoPropertiesAsync();
                 var durationtotal = props.Duration.TotalSeconds;
+
+                // Fast-seek target timestamp
                 var percent = percentage * durationtotal;
-                string tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.jpg");
+
                 string output = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.jpg");
                 string ffmpegexec = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffmpeg.exe");
-                string ffmpegArgs = $" -ss {percent} -i \"{FILEpath}\" -vframes 1 -q:v 2   \"{output}\"";
+
+                // Putting -ss BEFORE -i enables "Fast Seeking" so FFmpeg doesn't read the whole file up to that point
+                string ffmpegArgs = $"-ss {percent} -i \"{FILEpath}\" -vframes 1 -q:v 2 \"{output}\"";
+
                 using var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -84,28 +94,37 @@ namespace Vusic_Player.Configuration.Helper.UI
                         Arguments = ffmpegArgs,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
-                        //RedirectStandardError = true,
+                        RedirectStandardError = true, // Crucial for FFmpeg to prevent hanging locks
                         CreateNoWindow = true
                     }
                 };
 
                 process.Start();
-                string output2 = await process.StandardOutput.ReadToEndAsync();
-                await process.WaitForExitAsync();
-                if (process.ExitCode == 0)
+
+                // Read both streams asynchronously to keep the OS buffers clean
+                Task readOutput = process.StandardOutput.ReadToEndAsync();
+                Task readError = process.StandardError.ReadToEndAsync();
+
+                await Task.WhenAll(readOutput, readError, process.WaitForExitAsync());
+
+                if (process.ExitCode == 0 && File.Exists(output))
                 {
-                    Debug.WriteLine("Successful exit");
-                    return output;
+                    Debug.WriteLine("Successful thumbnail extraction.");
+                    return output; // Make sure to delete this temp file elsewhere in your UI logic when done!
                 }
-            }  catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Debug.WriteLine("ERR: " + ex.Message);
                 return fallbackUri;
             }
+
             return fallbackUri;
         }
         public static async Task<string> ExtractVideoFrameToFileAsync(string path, double percentage = 0.20)
         {
+            Debug.WriteLine("extract vid frame basic async called");
+
             Debug.WriteLine("Requested Path is " + path);
             try
             {
@@ -143,6 +162,8 @@ namespace Vusic_Player.Configuration.Helper.UI
         }
         private static async Task<string> RunProcessAsync(string fileName, string args)
         {
+            Debug.WriteLine("run vid process basic async called");
+
             Debug.WriteLine("Nanan3");
             try
             {
@@ -173,6 +194,8 @@ namespace Vusic_Player.Configuration.Helper.UI
 
         public static async Task<BitmapImage> GetFileThumbnailAsync(string path)
         {
+            Debug.WriteLine("get file thumbnail basic async called");
+
             // Define your fallback asset
             Uri fallbackUri = new Uri("ms-appx:///Assets/default.png");
 

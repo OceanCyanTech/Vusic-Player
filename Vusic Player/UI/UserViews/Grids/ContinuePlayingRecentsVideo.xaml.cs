@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Windows.Storage;
+using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 
 namespace Vusic_Player.UI.UserViews.Grids
 {
@@ -32,11 +34,17 @@ namespace Vusic_Player.UI.UserViews.Grids
         public ContinuePlayingRecentsVideo()
         {
             InitializeComponent();
+            grdvRecents.ItemsSource = VideoProgressList;
+
             ContinuePlaying.InvokeList += ContinuePlaying_InvokeList;
-            LoadSettings();
+            LoadItems();
+        }
+        private async void LoadItems()
+        {
+            await LoadSettings();
         }
         ObservableCollection<VideoProgress> VideoProgressList = new();
-        private async void LoadSettings()
+        private async Task LoadSettings()
         {
             var settings = await SettingsLoader.LoadSettingsAsync();
 
@@ -56,6 +64,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             }
             if (remainingItems.Count > 0)
             {
+
                 grdRecents.Visibility = Visibility.Visible;
                 grdEmptyRecents.Visibility = Visibility.Collapsed;
 
@@ -64,18 +73,58 @@ namespace Vusic_Player.UI.UserViews.Grids
                 {
                     if (item.FilePath is string path)
                     {
-                        item.FileName = Path.GetFileNameWithoutExtension(path);
-                        item.Thumbnail = await FileThumbnailObtain.GetVideoFrameAsync(path, 0.25);
+                        if (File.Exists(path))
+                        {
+                            var videoprogressitem = new VideoProgress { FilePath = path };
+                            var file = await StorageFile.GetFileFromPathAsync(path);
+                            string fileExtension = file.FileType.ToLowerInvariant();
+                            if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                            {
+                                Debug.WriteLine("REQ PATH SI " + path);
+                                videoprogressitem.FileName = Path.GetFileNameWithoutExtension(path);
+                            }
+                            //    item.Thumbnail = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, 0.25);
+
+                            var totalduration = item.TotalDuration;
+                            var currentduration = item.CurrentDuration;
+                            var percent97 = 0.97 * totalduration;
+                            if (currentduration < totalduration && currentduration <= percent97)
+                            {
+                                videoprogressitem.CurrentDuration = currentduration;
+                                videoprogressitem.TotalDuration = totalduration;
+                                VideoProgressList.Add(videoprogressitem);
+                                var fallbackUri = "ms-appx:///Assets/default.png";
+                                videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
+                                var task = Task.Run(async () =>
+                                {
+                                    var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path);
+                                    Debug.WriteLine("The thumbnail path is " + thumb);
+                                    DispatcherQueue.TryEnqueue(async () =>
+                                    {
+                                        try
+                                        {
+                                            var bitmap = new BitmapImage();
+                                            using (var stream = File.OpenRead(thumb))
+                                            {
+                                                await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                                            }
+                                            videoprogressitem.Thumbnail = bitmap;
+
+                                            File.Delete(thumb);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Debug.WriteLine("An unexpected error occured: " + ex.Message);
+                                        }
+                                    });
+
+                                });
+                            }
+                        }
                     }
-                    var totalduration = item.TotalDuration;
-                    var currentduration = item.CurrentDuration;
-                    var percent97 = 97 / 100 * totalduration;
-                    if (currentduration < totalduration && currentduration <= percent97)
-                    {
-                        VideoProgressList.Add(item);
-                    }
-                    grdvRecents.ItemsSource = VideoProgressList;
                 }
+
+
                 // You can now use lastSavedItem.CurrentDuration to resume playback
             }
             else
@@ -96,29 +145,66 @@ namespace Vusic_Player.UI.UserViews.Grids
                     var videoprops = await storagefile.Properties.GetVideoPropertiesAsync();
 
                     txtFileName.Text = videoprops.Title;
+                    Debug.WriteLine(videoprops.Title);
                     if (txtFileName.Text == "")
                     {
                         txtFileName.Text = Path.GetFileNameWithoutExtension(path);
                     }
                     ToolTipService.SetToolTip(grdHighlightVideo, Path.GetFileNameWithoutExtension(path));
-                    CoverBackground.ImageSource = await FileThumbnailObtain.GetVideoFrameAsync(path, 0.25);
-                }
-                prgHighlight.Maximum = vd.TotalDuration;
-                prgHighlight.Value = vd.CurrentDuration;
-                prgHighlight.IsEnabled = false;
+                    var task = Task.Run(async () =>
+                    {
+                        var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path);
+                        Debug.WriteLine("The thumbnail path is " + thumb);
 
+                        DispatcherQueue.TryEnqueue(async () =>
+                        {
+                            try
+                            {
+                                var bitmap = new BitmapImage();
+
+                                //    Check if the path is our app asset URI string
+                                if (thumb.StartsWith("ms-appx://"))
+                                {
+                                    //    Assign the URI directly to the BitmapImage
+                                    bitmap.UriSource = new Uri(thumb);
+                                }
+                                else if (File.Exists(thumb))
+                                {
+                                    //     It's a real generated file path in the Temp folder! Read the stream.
+                                    using (var stream = File.OpenRead(thumb))
+                                    {
+                                        await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                                    }
+
+                                    //       Delete the file immediately after the stream closes safely
+                                    File.Delete(thumb);
+                                }
+
+                                CoverBackground.ImageSource = bitmap;
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("An unexpected error occurred: " + ex.Message);
+                            }
+                        });
+                    });
+                    prgHighlight.Maximum = vd.TotalDuration;
+                    prgHighlight.Value = vd.CurrentDuration;
+                    prgHighlight.IsEnabled = false;
+
+                }
             }
         }
 
         private async void btnResume_Click(object sender, RoutedEventArgs e)
         {
-            if(App.NavigationFrame != null)
+            if (App.NavigationFrame != null)
             {
                 prgAwaitResume.Visibility = Visibility.Visible;
                 prgAwaitResume.IsActive = true;
                 App.NavigationFrame.Navigate(typeof(VideoPlayer), ContinuePlaying.videoProgressMain);
             }
-         
+
 
         }
         private void AnimateScale(double Scale)
@@ -148,10 +234,10 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private void GridContinuePlaying_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if(e.ClickedItem is VideoProgress videoprogress)
+            if (e.ClickedItem is VideoProgress videoprogress)
             {
                 ContinuePlaying.videoProgressMain = videoprogress;
-                if(App.NavigationFrame != null)
+                if (App.NavigationFrame != null)
                 {
                     App.NavigationFrame.Navigate(typeof(VideoPlayer), videoprogress);
                 }
@@ -198,12 +284,12 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 var exist = videoprogress.FirstOrDefault(p => p.FilePath == item.FilePath);
                 var exist2 = VideoProgressList.FirstOrDefault(p => p.FilePath == item.FilePath);
-                if(exist2 != null)
+                if (exist2 != null)
                 {
 
                     VideoProgressList.Remove(exist2);
                 }
-                if(exist != null)
+                if (exist != null)
                 {
                     videoprogress.Remove(exist);
                 }
@@ -243,7 +329,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     {
                         App.NavigationFrame.Navigate(typeof(VideoPlayer), ContinuePlaying.videoProgressMain.FilePath);
                     }
-           
+
             }
         }
 
@@ -256,7 +342,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             if (lastSavedItem != null)
                 settings.SavedVideoProgress.Remove(lastSavedItem);
             await SettingsLoader.SaveSettingsAsync(settings);
-            LoadSettings();
+            await LoadSettings();
         }
 
         private void mnftAddToFavCW_Click(object sender, RoutedEventArgs e)
@@ -266,7 +352,32 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private void mnftFileInfoCW_Click(object sender, RoutedEventArgs e)
         {
+            if (App.MainWindowInstance is MainWindow wind)
+            {
+                if (ContinuePlaying.videoProgressMain != null && ContinuePlaying.videoProgressMain.FilePath != null)
+                    wind.ShowFileInfo(ContinuePlaying.videoProgressMain.FilePath);
+                FileInfo.RefreshValues -= FileInfo_RefreshValues;
+                FileInfo.RefreshValues += FileInfo_RefreshValues;
+            }
+        }
 
+        private async void FileInfo_RefreshValues()
+        {
+            if (FileInfo.JustUpdatedRenamePath == HighlightVideoPath)
+            {
+                var storagefile = await StorageFile.GetFileFromPathAsync(HighlightVideoPath);
+                var videoprops = await storagefile.Properties.GetVideoPropertiesAsync();
+
+                txtFileName.Text = videoprops.Title;
+            }
+            else
+            {
+                if (ContinuePlaying.videoProgressMain != null)
+                {
+                    ContinuePlaying.videoProgressMain.FilePath = FileInfo.JustUpdatedRenamePath;
+                    ContinuePlaying.InvokeCall();
+                }
+            }
         }
 
         private async void mnftOpenFileLocCW_Click(object sender, RoutedEventArgs e)
@@ -299,5 +410,24 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         }
 
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("US");
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var savedRecents = currentSettings.SavedVideoProgress;
+            savedRecents.Clear();
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+        private void mnftFileInfoRec_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vd)
+            {
+                if (App.MainWindowInstance is MainWindow wind)
+                {
+                    wind.ShowFileInfo(vd.FilePath);
+                }
+            }
+        }
     }
 }

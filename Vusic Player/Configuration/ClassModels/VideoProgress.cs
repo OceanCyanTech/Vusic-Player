@@ -1,28 +1,69 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
-    public class VideoProgress
+    public class VideoProgress : INotifyPropertyChanged
     {
-        public string? FileName { get; set; }
-        public string? FilePath { get; set; }
+        private string? _fileName;
+        public string? FileName
+        {
+            get => _fileName;
+            set { _fileName = value; OnPropertyChanged(); }
+        }
+
+        private string _filePath = "";
+        public string FilePath
+        {
+            get => _filePath;
+            set { _filePath = value; OnPropertyChanged(); }
+        }
+
+        private double _currentDuration;
+        public double CurrentDuration
+        {
+            get => _currentDuration;
+            set { _currentDuration = value; OnPropertyChanged(); }
+        }
+
+        private double _totalDuration;
+        public double TotalDuration
+        {
+            get => _totalDuration;
+            set { _totalDuration = value; OnPropertyChanged(); }
+        }
         public bool? IsNew { get; set; } = false;
         public bool? IsSubtitlesDisabled { get; set; } = false;
         public int SubtitleIndex { get; set; } = 0;
         public int PlayCount { get; set; } = 0;
         public bool? IsEpisode { get; set; } = false;
         public bool ShowInformationOfOpen { get; set; } = true;
-        public double CurrentDuration { get; set; }
-        public double TotalDuration { get; set; }
+        
         public string ShowAssociatedID { get; set; } = "";
         public int SeasonAssociated { get; set; } = 1;
         [JsonIgnore]
-        public BitmapImage? Thumbnail { get; set; }
+        private BitmapImage _thumbnail = new();
+
+        public BitmapImage Thumbnail
+        {
+            get => _thumbnail;
+            set
+            {
+                _thumbnail = value;
+                OnPropertyChanged(); // Crucial for telling WinUI to draw the image
+            }
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

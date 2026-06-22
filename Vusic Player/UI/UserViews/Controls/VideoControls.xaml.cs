@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -133,7 +134,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             FullScreenToggled?.Invoke(btnFullScreen.IsChecked == true);
             string fullscreentext = btnFullScreen.IsChecked == false ? "Resized to Normal" : " Full Screen";
             GeneralInfoService.ShowInfo(fullscreentext);
-            ToolTipService.SetToolTip(btnFullScreen, toolTipText);
+            mediacontroller.FullScreenToolTip = toolTipText;
         }
 
 
@@ -795,6 +796,55 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftViewEpisodes_Click(object sender, RoutedEventArgs e)
         {
             ViewEpisodeClick?.Invoke();
+        }
+        public void OpenSubtitlesMenu()
+        {
+            if(btnSubtitles.Flyout != null)
+            {
+                btnSubtitles.Flyout.ShowAt(btnSubtitles);
+            }
+        }
+        public void OpenVideoMenu()
+        {
+            if (btnVideo.Flyout != null)
+            {
+                btnVideo.Flyout.ShowAt(btnVideo);
+            }
+        }
+        public void OpenAudioMenu()
+        {
+            if (btnAudio.Flyout != null)
+            {
+                btnAudio.Flyout.ShowAt(btnAudio);
+            }
+        }
+        
+        public void ShowFileInfo()
+        {
+            if (App.MainWindowInstance is MainWindow wind)
+            {
+                if (PlayerService.CurrentPlayingPath != null)
+                {
+                    wind.ShowFileInfo(PlayerService.CurrentPlayingPath);
+                }
+            }
+        }
+        public void OpenFileLocation()
+        {
+            if (PlayerService.CurrentPlayingPath == null) return;
+            if (File.Exists(PlayerService.CurrentPlayingPath))
+            {
+                Process.Start("explorer.exe", $"/select,\"{PlayerService.CurrentPlayingPath}\"");
+            }
+        }
+        private void mnftFileInfo_Click(object sender, RoutedEventArgs e)
+        {
+            ShowFileInfo();
+        }
+
+        private void mnftOpenFileLocation_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileLocation();
         }
     }
 }

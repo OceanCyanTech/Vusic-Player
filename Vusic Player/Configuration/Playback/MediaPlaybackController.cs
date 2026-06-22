@@ -69,12 +69,16 @@ namespace Vusic_Player.Configuration.Playback
         private string _volumeText = "100%";
         private double _volumeValue = 100;
         private bool _isReversePlayback = false;
+        private bool _isFullScreen = false;
         private double _zoomValue = 100;
         private double _speedValue = 1;
         private double _pitchValue = 1;
         private string _volumeGlyph = "\uE767";
+        private string _fullScreenToolTip = "Set Full Screen";
         private string _playPauseToolTip = "Play";
         private Visibility queuepageemtpyvisibility = Visibility.Visible;
+        private Visibility _audiometadatavisibilityfileinfo = Visibility.Visible;
+        private Visibility _videometadatavisibilityfileinfo = Visibility.Collapsed;
         private Visibility textdisplay = Visibility.Visible;
         private Brush _volumeForeground = new SolidColorBrush(Colors.White);
         private ImageSource _thumbnail = new BitmapImage(new Uri("ms-appx:///Assets/play.png"));
@@ -90,6 +94,28 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _currentPosition, value))
                 {
                     OnPropertyChanged(nameof(RunningDurationString));
+                }
+            }
+        }
+        public Visibility AudioMetadataVisibilityFileInfo
+        {
+            get => _audiometadatavisibilityfileinfo;
+            set
+            {
+                if (SetProperty(ref _audiometadatavisibilityfileinfo, value))
+                {
+                    OnPropertyChanged(nameof(AudioMetadataVisibilityFileInfo));
+                }
+            }
+        }
+        public Visibility VideoMetadataVisibilityFileInfo
+        {
+            get => _videometadatavisibilityfileinfo;
+            set
+            {
+                if (SetProperty(ref _videometadatavisibilityfileinfo, value))
+                {
+                    OnPropertyChanged(nameof(VideoMetadataVisibilityFileInfo));
                 }
             }
         }
@@ -123,6 +149,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _isReversePlayback, value))
                 {
                     OnPropertyChanged(nameof(IsReversePlayback));
+                }
+            }
+        }
+        public bool IsFullScreen
+        {
+            get => _isFullScreen;
+            set
+            {
+                if (SetProperty(ref _isFullScreen, value))
+                {
+                    OnPropertyChanged(nameof(IsFullScreen));
                 }
             }
         }
@@ -201,6 +238,55 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _fileName, value))
                 {
                     OnPropertyChanged(nameof(FileName));
+                }
+            }
+        }
+        private string _codec = "";
+        public string Codec
+        {
+            get => _codec;
+            set
+            {
+                if (SetProperty(ref _codec, value))
+                {
+                    OnPropertyChanged(nameof(Codec));
+                }
+            }
+        }
+
+        private string _frameRate = "";
+        public string FrameRate
+        {
+            get => _frameRate;
+            set
+            {
+                if (SetProperty(ref _frameRate, value))
+                {
+                    OnPropertyChanged(nameof(FrameRate));
+                }
+            }
+        }
+
+        private string _displayResolution = "";
+        public string DisplayResolution
+        {
+            get => _displayResolution;
+            set
+            {
+                if (SetProperty(ref _displayResolution, value))
+                {
+                    OnPropertyChanged(nameof(DisplayResolution));
+                }
+            }
+        }
+        public string FullScreenToolTip
+        {
+            get => _fullScreenToolTip;
+            set
+            {
+                if (SetProperty(ref _fullScreenToolTip, value))
+                {
+                    OnPropertyChanged(nameof(FullScreenToolTip));
                 }
             }
         }
@@ -292,7 +378,7 @@ namespace Vusic_Player.Configuration.Playback
             get => _rating;
             set => SetProperty(ref _rating, value);
         }
-        private string _speed = "";
+        private string _speed = "1x";
         public string Speed
         {
             get => _speed;
@@ -311,13 +397,13 @@ namespace Vusic_Player.Configuration.Playback
             get => _channels;
             set => SetProperty(ref _channels, value);
         }
-        private BitmapImage _albumart;
+        private BitmapImage _albumart = new BitmapImage();
         public BitmapImage AlbumArt
         {
             get => _albumart;
             set => SetProperty(ref _albumart, value);
         }
-        private string _storagefilealbumart;
+        private string _storagefilealbumart = "";
         public string AlbumArtFile
         {
             get => _storagefilealbumart;

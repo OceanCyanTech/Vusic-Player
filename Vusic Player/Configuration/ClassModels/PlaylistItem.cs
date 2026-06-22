@@ -10,11 +10,11 @@ namespace Vusic_Player.Configuration.ClassModels
     public class PlaylistItem : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-        public string? PlaylistId { get; set; }
+        public string PlaylistId { get; set; } = "";
         public int SeasonNumber { get; set; } = 1;
         public int SeasonIndex { get; set; } = 0;
-        public string? PlaylistName { get; set; } = "";
-        public string? PlaylistCount { get; set; } = "";
+        public string PlaylistName { get; set; } = "Playlist";
+        public string PlaylistCount { get; set; } = "0 items";
         public string? PlaylistNowPlaying { get; set; } = "";
 
         public Uri? Thumbnail { get; set; }

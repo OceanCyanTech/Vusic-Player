@@ -18,28 +18,22 @@ using Vusic_Player.Configuration.UserSettings;
 using WinRT.Interop;
 using WinRT;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class OceanDialogWindow : Window
     {
-        Microsoft.UI.Composition.SystemBackdrops.DesktopAcrylicController? acrylicController;
-        Microsoft.UI.Composition.SystemBackdrops.SystemBackdropConfiguration? configurationSource;
+        DesktopAcrylicController? acrylicController;
+        SystemBackdropConfiguration? configurationSource;
         private void Window_Activated(object sender, WindowActivatedEventArgs args)
         {
 
             if (configurationSource != null)
             {
                 configurationSource.IsInputActive =
-                    args.WindowActivationState != WindowActivationState.Deactivated;
+                args.WindowActivationState != WindowActivationState.Deactivated;
             }
 
-            // Reattach acrylic if needed
             if (acrylicController == null && DesktopAcrylicController.IsSupported())
             {
                 TrySetAcrylicBackdrop(true);
@@ -172,10 +166,8 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
         }
 
         private string _titleText = "Title";
-        private string _primarybuttonText = "";
         private string _closebuttonText = "Close";
-        private string _secondarybuttonText = "Close";
-        private bool _isSecondaryButtonVisible = false;
+
         public string TitleText
         {
             get => _titleText;
@@ -275,11 +267,11 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
                 MessageBox.UpdateMessage(mssgtext);
             }
             //}
-            //else if (contentType == ContentType.FileInformation)
-            //{
-            //    InfoBoxControl.Visibility = Visibility.Visible;
-            //    InfoBoxControl.ScrollIntoView();
-            //}
+            else if (contentType == ContentType.FileInformation)
+            {
+                InfoBoxControl.Visibility = Visibility.Visible;
+                InfoBoxControl.ScrollIntoView();
+            }
 
             // else if (contentType == ContentType.OnlineArtistPicture)
             // {

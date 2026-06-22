@@ -27,15 +27,18 @@ using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.SubtitlesProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
 using Vusic_Player.MediaProperties.VideoProperties;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI;
+using Vusic_Player.UI.Dialogs;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
@@ -301,8 +304,7 @@ namespace Vusic_Player.Pages
         {
             int safetyThrottle = 0;
 
-            // Keep incrementing until the counter reaches 0 or above, 
-            // with a protection cutoff at 10 iterations.
+            
             while (ShowCursor(true) < 0 && safetyThrottle < 10)
             {
                 safetyThrottle++;
@@ -320,6 +322,12 @@ namespace Vusic_Player.Pages
 
         }
         bool isEpisodeVideo = false;
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            SaveTimer?.Stop();
+            base.OnNavigatedFrom(e);
+        }
+        
         public Configuration.Helper.SubtitlesProperties.Stream ViewModelSubtitles { get; } = new();
         bool ShowInformationOpened = true;
         private async void Masterplayer_OpenCompleted(object? sender, OpenCompletedArgs e)
@@ -340,7 +348,7 @@ namespace Vusic_Player.Pages
             SaveTimer.Tick += async (s, e) =>
             {
                 if (string.IsNullOrEmpty(PlayerService.CurrentPlayingPath) || PlayerService.Masterplayer == null) return;
-
+                
                 var settings = await SettingsLoader.LoadSettingsAsync();
                 var item = settings.SavedVideoProgress.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
                 if (item != null)
@@ -473,7 +481,10 @@ namespace Vusic_Player.Pages
                         {
                             title = Path.GetFileName(item.FilePath);
                         }
-                        QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
+                        if (item.FilePath != null)
+                        {
+                            QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
+                        }
                     }
                     foreach (var item in QueueService.VusicQueue)
                     {
@@ -540,39 +551,91 @@ namespace Vusic_Player.Pages
                 FadeInOutStoryboardPanel.Begin();
             }
         }
-        string CurrentShowDir = "";
+       
         #region Context Menu Events
 
-        private void mnftOpenVideo_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void mnftOpenVideo_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            if (App.MainWindowInstance == null) return;
+            var media = await MediaPicker.PickSingle(App.MainWindowInstance, "Open Media");
+            if (media != null)
+            {
+                bool isAudio = AudioExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                bool isVideo = VideoExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                if (isAudio)
+                {
+
+                    if (File.Exists(media.Path))
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            if (PlayerService.InVideoPage == true)
+                            {
+                                App.NavigationFrame.GoBack();
+                                if (PlayerService.Masterplayer != null)
+                                {
+                                    if (PlayerService.Masterplayer.IsPlaying)
+                                    {
+                                        PlayerService.Pause();
+                                    }
+                                }
+                                PlayerService.InVideoPage = false;
+                            }
+
+
+                            ObservableCollection<SongModel> single = new();
+                            string Title = Path.GetFileNameWithoutExtension(media.Path);
+
+                            single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
+                            QueueService.PlayMedia(single, false, false);
+                        }
+                    }
+                }
+                else if (isVideo)
+                {
+                    PlayerService.OpenPath(media.Path);
+                }
+                else
+                {
+                    //Handle other cases
+                }
+            }
+
         }
 
         private void mnftVolume_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            ttVolume.IsOpen = true;
         }
 
         private void mnftPrevious_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            QueueService.PlayPrevious();
         }
 
         private void mnftSkipBack_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            PlayerService.SeekBefore();
         }
 
         private void mnftPlay_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            PlayerService.PlayPause();
         }
 
         private void mnftSkipForward_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            PlayerService.SeekAhead();
         }
 
         private void mnftNext_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            QueueService.PlayNext();
         }
 
         private void mnftFullScreen_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            FullScreen.FullScreenToggle();
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -672,23 +735,47 @@ namespace Vusic_Player.Pages
         }
         private void mnftSubtitleOptions_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            if (App.MainWindowInstance == null) { return; }
+            var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 2, 0, 14);
+
         }
 
         private void mnftVideoOptions_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            if (App.MainWindowInstance == null) { return; }
+            var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 0, 0);
         }
 
         private void mnftAudioOptions_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            if (App.MainWindowInstance == null) { return; }
+            var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 0, 10);
         }
 
         private void mnftHome_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            if (App.NavigationFrame != null)
+            {
+                if (PlayerService.InVideoPage == true)
+                {
+                    App.NavigationFrame.GoBack();
+                    if (PlayerService.Masterplayer != null)
+                    {
+                        if (PlayerService.Masterplayer.IsPlaying)
+                        {
+                            PlayerService.Pause();
+                        }
+                    }
+                    PlayerService.InVideoPage = false;
+                }
+
+            }
         }
 
         #endregion
         private void btnCloseInformation_Click(object sender, RoutedEventArgs e)
         {
+            grdInfo.Opacity = 0;
 
         }
 
@@ -770,7 +857,7 @@ namespace Vusic_Player.Pages
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         private void btnStopRecording_Click(object sender, RoutedEventArgs e)
@@ -939,7 +1026,10 @@ namespace Vusic_Player.Pages
                             {
                                 title = Path.GetFileName(item.FilePath);
                             }
-                            QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
+                            if (item.FilePath != null)
+                            {
+                                QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
+                            }
                         }
                         foreach (var item in QueueService.VusicQueue)
                         {
@@ -1408,6 +1498,21 @@ namespace Vusic_Player.Pages
             {
                 btnBack.Visibility = Visibility.Visible;
             }
+        }
+
+        private void sldVol_ValueChanged(double obj)
+        {
+            PlayerService.VolumeChange(obj);
+        }
+
+        private void mnftOpenFileLocation_Click(object sender, RoutedEventArgs e)
+        {
+            videoControls.OpenFileLocation();
+        }
+
+        private void mnftFileInfo_Click(object sender, RoutedEventArgs e)
+        {
+            videoControls.ShowFileInfo();
         }
     }
 }

@@ -17,11 +17,13 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
+using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -41,7 +43,7 @@ namespace Vusic_Player
             frmMain.Navigate(typeof(MainPage));
             AppVersion.LoadBuildCounter();
             LoadVersion();
-          
+
             //Player pl = new Player();
             //pl.Open(@"C:\Users\bnara\Downloads\Heartstopper Season 4\E08 Apart.mp4");
             //mainengine.Player = pl;
@@ -69,7 +71,7 @@ namespace Vusic_Player
             }
             else
             {
-                
+
                 instance.Activate(); // Bring existing window to front
             }
             Debug.WriteLine("Launched again");
@@ -105,7 +107,7 @@ namespace Vusic_Player
                                 }
                                 else if (audioExtensions.Contains(extension))
                                 {
-                                 //   MainWindow.ShowWindow();
+                                    //   MainWindow.ShowWindow();
                                     PlayerService.OpenPath(filePath);
                                     return;
                                 }
@@ -138,7 +140,7 @@ namespace Vusic_Player
                                     }
                                     else if (audioExtensions.Contains(extension))
                                     {
-                                   //     MainWindow.ShowWindow();
+                                        //     MainWindow.ShowWindow();
                                         PlayerService.OpenPath(filePath);
                                         return;
                                     }
@@ -156,7 +158,7 @@ namespace Vusic_Player
         }
         public async void ShowFileInfo(string filepath)
         {
-           // FileInfo.LoadFileInfo(filepath, rootgrid.XamlRoot);
+            FileInfo.LoadFileInfo(filepath, rootGrid.XamlRoot);
         }
         private void RootGrid_Loaded(object sender, RoutedEventArgs e)
         {
@@ -182,7 +184,7 @@ namespace Vusic_Player
             counter.Add(counter2);
             await SettingsLoader.SaveSettingsAsync(currentSettings);
 
-      //      txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} 150626";
+            //      txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} 150626";
             txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} {DateTime.Now.ToString("MMddyy")}.{counter2}";
 
         }

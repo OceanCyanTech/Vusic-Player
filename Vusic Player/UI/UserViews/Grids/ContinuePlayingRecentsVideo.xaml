@@ -69,7 +69,6 @@
                     </Border>
                 </Grid>
             </Border>
-
             <StackPanel VerticalAlignment="Bottom" Padding="20"  Spacing="16">
                 <Viewbox MaxHeight="50" MaxWidth="450" HorizontalAlignment="Left" Stretch="Uniform">
                         <TextBlock TextTrimming="CharacterEllipsis" MaxWidth="450" MaxLines="2" TextWrapping="Wrap"  Name="txtFileName" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
@@ -166,6 +165,7 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="20">
+
                 <TextBlock Text="Recents" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                 <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Unchecked"></CheckBox>
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
@@ -222,7 +222,7 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftFileInfoRec" Text= "File Info">
+                                        <MenuFlyoutItem Name="mnftFileInfoRec" Text= "File Info" Click="mnftFileInfoRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>

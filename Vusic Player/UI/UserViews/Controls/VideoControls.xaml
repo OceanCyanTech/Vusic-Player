@@ -52,7 +52,7 @@
         </Button>
 
         <local:PlayPauseControls Grid.Column="2" Margin="15, 0" HorizontalAlignment="Center"></local:PlayPauseControls>
-        <ToggleButton Grid.Column="3" Name="btnFullScreen" Checked="btnFullScreen_Checked" Unchecked="btnFullScreen_Unchecked" Padding="5" Margin="10, 0" ToolTipService.ToolTip="Full Screen" Background="Transparent" BorderBrush="Transparent" IsEnabled="True">
+        <ToggleButton Grid.Column="3" Name="btnFullScreen" IsChecked="{x:Bind mediacontroller.IsFullScreen, Mode=TwoWay}" Checked="btnFullScreen_Checked" Unchecked="btnFullScreen_Unchecked" Padding="5" Margin="10, 0" ToolTipService.ToolTip="{x:Bind mediacontroller.FullScreenToolTip, Mode=OneWay}" Background="Transparent" BorderBrush="Transparent" IsEnabled="True">
             <ToggleButton.KeyboardAccelerators>
                 <KeyboardAccelerator Key="F"></KeyboardAccelerator>
             </ToggleButton.KeyboardAccelerators>
@@ -64,7 +64,7 @@
             </Button.KeyboardAccelerators>
             <FontIcon Glyph="&#xED1E;" Foreground="White" FontSize="14"/>
             <Button.Flyout>
-                <MenuFlyout x:Name="SubtitleMenu" Opened="SubtitleMenu_Opened">
+                <MenuFlyout  x:Name="SubtitleMenu" Opened="SubtitleMenu_Opened">
                     <MenuFlyoutSubItem x:Name="mnftLoadSub" Text="External Subtitles..." >
                         <MenuFlyoutSubItem.Icon>
                             <FontIcon Glyph="&#xED25;" />
@@ -384,6 +384,17 @@
                             <FontIcon Glyph="&#xF4A5;"></FontIcon>
                         </ToggleMenuFlyoutItem.Icon>
                     </ToggleMenuFlyoutItem>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="d"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="d"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
                 </MenuFlyout>
             </Button.Flyout>
             <FontIcon Glyph="&#xE712;" Foreground="White" FontSize="14"/>

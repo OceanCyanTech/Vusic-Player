@@ -8,7 +8,375 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <ScrollViewer>
+        <StackPanel Spacing="24"  Margin="0,0,12,0">
+            <InfoBar Name="ifbError" IsOpen="False"></InfoBar>
+            <StackPanel Spacing="8" Name="stkMain">
+                <Image Name="albumArt" Width="200" ToolTipService.ToolTip="Album Art" Source="{x:Bind media.AlbumArt}"></Image>
+                <Button Content="Change Media Art" HorizontalAlignment="Center" Name="btnChangeAlbumArt" Click="btnChangeAlbumArt_Click" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"></Button>
+                <TextBlock Text="File Name" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                <TextBox 
+                    Text="{x:Bind media.FileName, Mode=TwoWay}"
+                    CornerRadius="12"
+                Background="Transparent"
+                    BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                    BorderThickness="1"/>
+                <TextBlock Text="File Size" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                <TextBlock 
+        Text="{x:Bind media.FileSize, Mode=OneWay}"
+       IsTextSelectionEnabled="True"
+        />
+            </StackPanel>
 
-    </Grid>
+            <MenuFlyoutSeparator />
+
+            <StackPanel Spacing="16">
+                <Grid RowSpacing="16" Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Title" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.Title, Mode=TwoWay}" 
+                     PlaceholderText="Enter song title..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="0" Grid.Column="1" Spacing="4">
+                        <TextBlock Text="Artist" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.ArtistNameInfo, Mode=TwoWay}" 
+                     PlaceholderText="Enter artist name..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+
+                    <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="1" Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Album" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.AlbumNameInfo , Mode=TwoWay}" 
+                     PlaceholderText="Enter album title..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo , Mode=OneWay}" Grid.Row="1" Grid.Column="1" Spacing="4">
+                        <TextBlock Text="Contributing Artists" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.ContributingArtists, Mode=TwoWay}" 
+                     PlaceholderText="List featured artists..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+
+                    <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo , Mode=OneWay}" Grid.Row="2" Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Track" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.TrackNumber, Mode=TwoWay}"
+                     PlaceholderText="Track number..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="1" Spacing="4">
+                        <TextBlock Text="Genre" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.Genre, Mode=TwoWay}"
+                     PlaceholderText="Enter genre..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Year" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.Year, Mode=TwoWay}"
+                     PlaceholderText="Release year..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+                </Grid>
+                <Grid RowSpacing="16" Visibility="{x:Bind media.VideoMetadataVisibilityFileInfo, Mode=OneWay}" ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Title" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.Title, Mode=TwoWay}" 
+                     PlaceholderText="Enter song title..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{x:Bind media.VideoMetadataVisibilityFileInfo}" Grid.Row="0" Grid.Column="1" Spacing="4">
+                        <TextBlock Text="Codec" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.Codec, Mode=OneWay}" 
+                     IsReadOnly="True"
+                     CornerRadius="12" 
+                                 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{x:Bind media.VideoMetadataVisibilityFileInfo}" Grid.Row="1" Grid.Column="0" Spacing="4">
+                        <TextBlock  Text="Frame Rate" 
+     Style="{ThemeResource CaptionTextBlockStyle}" 
+     Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.FrameRate , Mode=OneWay}" 
+   IsReadOnly="True"
+   CornerRadius="12" 
+   Background="Transparent"
+   BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+   BorderThickness="1"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{x:Bind media.VideoMetadataVisibilityFileInfo}" Grid.Row="1" Grid.Column="1" Spacing="4">
+                        <TextBlock Text="Display Resolution" 
+   Style="{ThemeResource CaptionTextBlockStyle}" 
+   Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.DisplayResolution, Mode=OneWay}" 
+ IsReadOnly="True"
+ CornerRadius="12" 
+ Background="Transparent"
+ BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+ BorderThickness="1"/>
+                    </StackPanel>
+
+
+                    <StackPanel Grid.Row="2" Grid.Column="1" Spacing="4">
+                        <TextBlock Text="Genre" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.Genre, Mode=TwoWay}"
+                     PlaceholderText="Enter genre..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Year" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.Year, Mode=TwoWay}"
+                     PlaceholderText="Release year..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+                </Grid>
+                <MenuFlyoutSeparator Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}"/>
+
+                <Grid Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" RowSpacing="16" ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo , Mode=OneWay}" Grid.Row="0" Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Composers" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.Composers, Mode=TwoWay}"
+                     PlaceholderText="Composers..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo , Mode=OneWay}" Grid.Row="0" Grid.Column="1" Spacing="4">
+                        <TextBlock Text="Conductors" 
+                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                       Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBox Text="{x:Bind media.Conductors, Mode=TwoWay}"
+                     PlaceholderText="Conductors..."
+                     CornerRadius="12" 
+                     Background="Transparent"
+                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                     BorderThickness="1"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+            <MenuFlyoutSeparator />
+
+            <Grid Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" RowSpacing="16" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="Duration" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind media.Duration, Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="Bitrate" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind media.Bitrate , Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="0" Grid.Column="2">
+                    <TextBlock Text="Sample Rate" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind media.SampleRate , Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="Channels" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind media.Channels, Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="File Type" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind media.FileType, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="2">
+                    <TextBlock Text="Speed" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind media.Speed, Mode=OneWay}" IsTextSelectionEnabled="True"   Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+            </Grid>
+            <Grid Visibility="{x:Bind media.VideoMetadataVisibilityFileInfo, Mode=OneWay}" RowSpacing="16" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="Duration" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind media.Duration, Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+
+          
+
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="File Type" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind media.FileType, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="0" Grid.Column="2">
+                    <TextBlock Text="Speed" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind media.Speed, Mode=OneWay}" IsTextSelectionEnabled="True"   Style="{ThemeResource BodyTextBlockStyle}"/>
+                </StackPanel>
+            </Grid>
+
+            <MenuFlyoutSeparator />
+
+            <StackPanel Spacing="16">
+                <StackPanel Spacing="4" Visibility="Collapsed">
+                    <TextBlock Text="Rating" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <RatingControl Value="{x:Bind media.Rating}"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Comments" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBox     CornerRadius="12"
+Background="Transparent"
+    BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+    BorderThickness="1" AcceptsReturn="True" MinHeight="60" TextWrapping="Wrap" Text="{x:Bind media.Comments, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TeachingTip Name="ttFilePath" Target="{x:Bind hypFilePath}" IsOpen="False">
+                        <TextBlock Text="Copied file path ✔️"></TextBlock>
+                    </TeachingTip>
+                    <TextBlock Text="File Path" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <HyperlinkButton Name="hypFilePath" ToolTipService.ToolTip="{x:Bind media.FilePath, Mode=OneWay}"  Content="{x:Bind media.FilePath, Mode=OneWay}"  Click="HyperlinkButton_Click">
+                        <HyperlinkButton.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Open File Location" Name="mnftOpenFileLoc" Click="mnftOpenFileLoc_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Copy Path" Name="mnftCopyPath" Click="mnftCopyPath_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </HyperlinkButton.ContextFlyout>
+                    </HyperlinkButton>
+                </StackPanel>
+
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Created on" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBlock Text="{x:Bind media.DateCreated, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock Text="Last Modified" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBlock  Text="{x:Bind media.DateModified, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+
 </UserControl>
