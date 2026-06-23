@@ -540,7 +540,7 @@ namespace Vusic_Player.Pages
             }
             //LoadSettings();
             //LoadOptions();
-
+            PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
         }
         private void ShowPanel()
         {
@@ -641,7 +641,7 @@ namespace Vusic_Player.Pages
         {
             PlayerService.InVideoPage = true;
             btnNextEpisode.Visibility = Visibility.Collapsed;
-
+            Debug.WriteLine("SJDHDHDHDHAUHIU4GU");
             string VideoPath = "";
             isEpisodeVideo = false;
             if (e.Parameter is VideoProgress vditem && vditem.FilePath is string path)

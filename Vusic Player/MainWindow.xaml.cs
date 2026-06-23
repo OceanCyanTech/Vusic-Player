@@ -158,7 +158,7 @@ namespace Vusic_Player
         }
         public async void ShowFileInfo(string filepath)
         {
-            FileInfo.LoadFileInfo(filepath, rootGrid.XamlRoot);
+            FileInfo.GetFileInfo(filepath, rootGrid.XamlRoot);
         }
         private void RootGrid_Loaded(object sender, RoutedEventArgs e)
         {

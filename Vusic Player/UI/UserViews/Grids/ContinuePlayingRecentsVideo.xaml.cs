@@ -357,6 +357,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                 if (ContinuePlaying.videoProgressMain != null && ContinuePlaying.videoProgressMain.FilePath != null)
                     wind.ShowFileInfo(ContinuePlaying.videoProgressMain.FilePath);
                 FileInfo.RefreshValues -= FileInfo_RefreshValues;
+                FileInfo.RefreshValues -= FileInfo_RefreshValues1;
                 FileInfo.RefreshValues += FileInfo_RefreshValues;
             }
         }
@@ -378,6 +379,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     ContinuePlaying.InvokeCall();
                 }
             }
+
         }
 
         private async void mnftOpenFileLocCW_Click(object sender, RoutedEventArgs e)
@@ -425,9 +427,23 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 if (App.MainWindowInstance is MainWindow wind)
                 {
+                    FileInfo.RefreshValues -= FileInfo_RefreshValues;
+                    FileInfo.RefreshValues -= FileInfo_RefreshValues1;
+                    FileInfo.RefreshValues += FileInfo_RefreshValues1;
                     wind.ShowFileInfo(vd.FilePath);
+
                 }
+
             }
+        }
+
+        private async void FileInfo_RefreshValues1()
+        {
+            VideoProgressList.Clear();
+           //  await Task.Delay(1500);
+            Debug.WriteLine("CKAUH");
+           await LoadSettings();
+
         }
     }
 }

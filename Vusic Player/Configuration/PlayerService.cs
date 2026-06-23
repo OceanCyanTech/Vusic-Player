@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
@@ -347,6 +348,7 @@ namespace Vusic_Player.Configuration
         {
             if (JustDisposed == true)
             {
+                GeneralInfoService.ShowInfo("Reloading video with updated properties...");
                 Debug.WriteLine("disposed file stream");
                 JustDisposed = false;
                 if (Masterplayer == null) return;
@@ -379,6 +381,7 @@ namespace Vusic_Player.Configuration
         }
         private static async void NavigateToVideoPage()
         {
+
             if (Masterplayer == null) return;
             var file = await StorageFile.GetFileFromPathAsync(CurrentPlayingPath);
 
@@ -396,6 +399,7 @@ namespace Vusic_Player.Configuration
                     ContinuePlaying.videoProgressMain = videoprogress;
                     if (InVideoPage == false)
                     {
+                        Debug.WriteLine("TRUEU");
                         App.NavigationFrame.Navigate(typeof(VideoPlayer), true);
                     }
 

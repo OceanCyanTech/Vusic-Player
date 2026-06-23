@@ -1,19 +1,22 @@
-﻿using FlyleafLib.MediaPlayer;
+﻿using FlyleafLib;
+using FlyleafLib.MediaPlayer;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Extensions;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using File = System.IO.File;
+using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 
 namespace Vusic_Player.Configuration.Helper
 {
@@ -26,6 +29,528 @@ namespace Vusic_Player.Configuration.Helper
             RefreshValues?.Invoke();
         }
         public static MediaPlaybackController media => MediaPlaybackController.Instance;
+        public static string HighlightError = "";
+        public static string HighlightErrorTitle = "";
+        private static void ReopenPlayer()
+        {
+            Debug.WriteLine("EVERY NIGHT");
+            if (HaveToReopen == false) return;
+            if (PlayerService.Masterplayer == null) return;
+            if (PlayerService.Masterplayer.IsPlaying && PlayerService.CurrentPlayingPath != null)
+            {
+                PlayerService.Play();
+            }
+        }
+        public static bool SetFileInfo(string FilePath)
+        {
+            Debug.WriteLine("NANA");
+            if (File.Exists(FilePath))
+            {
+                var filename = Path.GetFileNameWithoutExtension(FilePath);
+                if (media.FileName != filename)
+                {
+                    RenameFile(FilePath);
+                }
+                else
+                {
+                    Debug.WriteLine("NSHDHD");
+                    var lockingprocesses = GetLockingProcess.GetLockingProcesses(FilePath);
+                    if (lockingprocesses.Count == 0)
+                    {
+                        Debug.WriteLine("ZERO COUNT");
+                        SetInternalValues(FilePath);
+
+                        OceanContentDialog.HideDlg();
+                        MainWindow.ShowWindow();
+                        HaveToReopen = false;
+                        return true;
+                    }
+                    else if (lockingprocesses.Count > 0)
+                    {
+                        Debug.WriteLine("MULTIPLE COUNT");
+
+                        bool onlyVusicPlayer = lockingprocesses.All(p => p.ProcessName == "Vusic Player");
+                        foreach (Process process in lockingprocesses)
+                        {
+                            Debug.WriteLine(process.ProcessName + " locker " + process.MainModule?.FileName);
+                        }
+                        if (onlyVusicPlayer)
+                        {
+                            if (PlayerService.Masterplayer == null) return false;
+                            Debug.WriteLine("Only Vusic Player");
+                            PlayerService.filestreamcurrent?.Dispose();
+                            HaveToReopen = true;
+                            var filelocked2 = GetLockingProcess.GetLockingProcesses(FilePath);
+                            var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
+                            PlayerService.curtime = curTime;
+                            PlayerService.curtimetemp = PlayerService.Masterplayer.CurTime;
+                            PlayerService.JustDisposed = true;
+                            if (filelocked2.Count == 0)
+                            {
+                                try
+                                {
+                                    SetInternalValues(FilePath);
+                                    OceanContentDialog.HideDlg();
+                                    MainWindow.ShowWindow();
+                                    return true;
+                                }
+                                catch
+                                {
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            // Filter out the process named "Vusic Player"
+                            var filteredLocks = lockingprocesses
+                                .Where(p => !string.Equals(p.ProcessName, "Vusic Player", StringComparison.OrdinalIgnoreCase))
+                                .ToList();
+
+                            int count = filteredLocks.Count;
+
+                            HighlightError = count == 1
+                                ? $"File is locked by another process: {filteredLocks.First().ProcessName}"
+                                : $"File is locked by other processes: {string.Join(", ", filteredLocks.Select(p => p.ProcessName))}";
+                            HighlightErrorTitle = "File Error";
+                            ErrorShow?.Invoke();
+                            return false;
+                        }
+                    }
+                }
+                return false;
+            }
+            else
+            {
+                HighlightError = "File doesn't exist.";
+                HighlightErrorTitle = "File Error";
+                ErrorShow?.Invoke();
+                return false;
+            }
+        }
+        public static async void GetFileInfo(string FilePath, XamlRoot Xamlroot)
+        {
+            if (File.Exists(FilePath))
+            {
+                filepathmaster = FilePath;
+                media.AlbumArt = new BitmapImage(new Uri("ms-appx:///Assets/appicon.png"));
+                if (App.MainWindowInstance == null) return;
+
+                var storagefile = await StorageFile.GetFileFromPathAsync(FilePath);
+                string fileextension = storagefile.FileType.ToLowerInvariant();
+                media.FileName = Path.GetFileNameWithoutExtension(storagefile.Path);
+
+                media.FilePath = storagefile.Path;
+                media.FileType = Path.GetExtension(storagefile.Path);
+                media.Speed = PlayerService.Masterplayer != null ? media.SpeedValue + "x" : "1.0x";
+                var image = new BitmapImage();
+
+                using (var tfile = TagLib.File.Create(storagefile.Path))
+                {
+                    // 1. Handle Ratings via ID3v2 safely
+                    int starDisplay = 0;
+                    if (tfile.GetTag(TagLib.TagTypes.Id3v2) is TagLib.Id3v2.Tag id3v2Tag)
+                    {
+                        var frame = TagLib.Id3v2.PopularimeterFrame.Get(id3v2Tag, "no@email", false);
+                        if (frame != null)
+                        {
+                            starDisplay = frame.Rating switch
+                            {
+                                >= 243 => 5,
+                                >= 182 => 4,
+                                >= 114 => 3,
+                                >= 49 => 2,
+                                >= 1 => 1,
+                                _ => 0
+                            };
+                        }
+                    }
+                    media.Rating = starDisplay;
+
+                    // 2. Extract Album Art from the same open file handle
+                    if (tfile.Tag.Pictures.Length > 0)
+                    {
+                        try
+                        {
+                            byte[] bin = tfile.Tag.Pictures[0].Data.Data;
+                            using (var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream())
+                            {
+                                using (var writer = new Windows.Storage.Streams.DataWriter(stream.GetOutputStreamAt(0)))
+                                {
+                                    writer.WriteBytes(bin);
+                                    await writer.StoreAsync();
+                                }
+                                stream.Seek(0);
+                                await image.SetSourceAsync(stream);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"Failed to load album art: {ex.Message}");
+                            image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                        }
+                    }
+                    else
+                    {
+                        image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                    }
+                } // Handle is cleanly closed and unlocked right here!
+
+                media.AlbumArt = image;
+
+                // 3. File System Timestamps
+                media.DateCreated = storagefile.DateCreated.ToString("G");
+                var basicProps = await storagefile.GetBasicPropertiesAsync();
+                media.DateModified = basicProps.DateModified.ToString("G");
+                media.FileSize = FormatFileSize(basicProps.Size);
+
+                //AUDIO METADATA
+                if (Extensions.AudioExtensions.List.Contains(fileextension))
+                {
+                    using (var tfile = TagLib.File.Create(FilePath))
+                    {
+                        media.Title = tfile.Tag.Title;
+                        media.ArtistNameInfo = string.Join("; ", tfile.Tag.AlbumArtists);
+                        media.AlbumNameInfo = tfile.Tag.Album;
+                        media.Year = tfile.Tag.Year > 0 ? tfile.Tag.Year.ToString() : "";
+                        media.Bitrate = (tfile.Properties.AudioBitrate / 1000).ToString() + " kbps";
+                        media.Duration = tfile.Properties.Duration.ToString(@"hh\:mm\:ss");
+                        media.TrackNumber = tfile.Tag.Track.ToString();
+                        media.SampleRate = $"{(tfile.Properties.AudioSampleRate / 1000.0):0.#} kHz";
+                        media.Channels = $"{tfile.Properties.AudioChannels} Channel{(tfile.Properties.AudioChannels == 1 ? "" : "s")}";
+
+                        media.Comments = tfile.Tag.Comment;
+                        media.Genre = tfile.Tag.Genres.Length > 0
+    ? string.Join("; ", tfile.Tag.Genres)
+    : "Unknown Genre";
+
+                        if (tfile.Tag.Performers != null)
+                        {
+                            media.ContributingArtists = string.Join(", ", tfile.Tag.Performers);
+                        }
+                        media.Composers = tfile.Tag.Composers?.Length > 0 ? string.Join(", ", tfile.Tag.Composers) : "Unknown Composer";
+                        media.Composers = tfile.Tag.Conductor?.Length > 0 ? string.Join(", ", tfile.Tag.Conductor) : "Unknown Conductor";
+
+                        media.AudioMetadataVisibilityFileInfo = Visibility.Visible;
+                        media.VideoMetadataVisibilityFileInfo = Visibility.Collapsed;
+                    }
+                }
+                //VIDEO METADATA
+                else if (Extensions.VideoExtensions.List.Contains(fileextension))
+                {
+                    media.AudioMetadataVisibilityFileInfo = Visibility.Collapsed;
+                    media.VideoMetadataVisibilityFileInfo = Visibility.Visible;
+
+                    using (var filetag = TagLib.File.Create(storagefile.Path))
+                    {
+                        Debug.WriteLine("THE TITLE IS " + filetag.Tag.Title);
+                        string? rawTitle = null;
+
+                        // Look into low-level MKV structures first
+                        if (filetag.GetTag(TagLib.TagTypes.Xiph) is TagLib.Ogg.XiphComment xiphTag)
+                        {
+                            rawTitle = xiphTag.GetField("TITLE")?.FirstOrDefault();
+                        }
+
+                        // If empty, look into low-level MP4 structures
+                        if (string.IsNullOrEmpty(rawTitle) && filetag.GetTag(TagLib.TagTypes.Apple) is TagLib.Mpeg4.AppleTag appleTag)
+                        {
+                            // Apple tag layout sometimes maps name directly
+                            rawTitle = appleTag.Title;
+                        }
+
+                        // If still empty, check legacy ID3v2 structures
+                        if (string.IsNullOrEmpty(rawTitle) && filetag.GetTag(TagLib.TagTypes.Id3v2) is TagLib.Id3v2.Tag id3Tag)
+                        {
+                            rawTitle = id3Tag.Title;
+                        }
+
+                        // Final Fallback chain: Container Tag -> File Name
+                        media.Title = !string.IsNullOrEmpty(rawTitle) ? rawTitle
+                                     : (!string.IsNullOrEmpty(filetag.Tag.Title) ? filetag.Tag.Title
+                                     : media.FileName);
+                        media.Year = filetag.Tag.Year > 0 ? filetag.Tag.Year.ToString() : "";
+                        media.Comments = filetag.Tag.Comment;
+                        media.Genre = filetag.Tag.Genres.Length > 0 ? string.Join("; ", filetag.Tag.Genres) : "Unknown Genre";
+                        media.Duration = filetag.Properties.Duration.ToString(@"hh\:mm\:ss");
+
+
+
+                    }
+
+                    var fileinfo = await VideoMetadata.GetVideoMetadata(storagefile.Path);
+                    media.Codec = fileinfo.Codec;
+                    media.FrameRate = fileinfo.FrameRate + " FPS";
+                    media.DisplayResolution = fileinfo.DisplayResolution;
+                }
+                OceanContentDialog.Show($"File Info - {media.Title}", "Save Properties", "", "Close", OceanDialogWindow.ContentType.FileInformation, OceanContentDialogDefault.Primary, Xamlroot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "saveicon", "", "", new System.Collections.ObjectModel.ObservableCollection<Configuration.ClassModels.SongModel>(), "");
+                OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+                OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+
+            }
+        }
+        private static async void SetInternalValues(string FilePath)
+        {
+            Debug.WriteLine("Set Internal Values called");
+            string fileExtension = Path.GetExtension(FilePath).ToLowerInvariant();
+            if (fileExtension == ".mkv")
+            {
+                System.Threading.Thread.Sleep(50);
+                using (var mkvFile = new TagLib.Matroska.File(FilePath, TagLib.ReadStyle.Average))
+                {
+                    var mkvTag = mkvFile.GetTag(TagLib.TagTypes.Matroska, true) as TagLib.Matroska.Tag;
+                    if (mkvTag != null)
+                    {
+                        mkvTag.Title = media.Title;
+                        mkvTag.Comment = media.Comments;
+                        mkvTag.Year = uint.TryParse(media.Year, out uint y) ? y : (uint)DateTime.Now.Year;
+                    }
+
+                    mkvFile.Tag.Title = media.Title;
+
+                    mkvFile.Save();
+                    Debug.WriteLine("MKV Title updated perfectly via low-level Matroska engine!");
+
+                }
+            }
+            else
+            {
+                using (var tfile = TagLib.File.Create(FilePath))
+                {
+                    tfile.Tag.Title = media.Title;
+                    if (AudioExtensions.List.Contains(fileExtension))
+                    {
+                        tfile.Tag.Album = media.AlbumNameInfo;
+                        tfile.Tag.Conductor = media.Conductors;
+                        tfile.Tag.Composers = [media.Composers];
+                        tfile.Tag.Track = uint.TryParse(media.TrackNumber, out uint trackNum) ? trackNum : 0;
+                        tfile.Tag.AlbumArtists = string.IsNullOrWhiteSpace(media.ArtistNameInfo) ? Array.Empty<string>() : media.ArtistNameInfo.Split(',').Select(a => a.Trim()).ToArray();
+                        tfile.Tag.Performers = string.IsNullOrWhiteSpace(media.ContributingArtists) ? Array.Empty<string>() : media.ContributingArtists.Split(',').Select(p => p.Trim()).ToArray();
+                    }
+                    tfile.Tag.Comment = media.Comments;
+
+                    tfile.Tag.Genres = string.IsNullOrWhiteSpace(media.Genre) ? Array.Empty<string>() : media.Genre.Split(';').Select(g => g.Trim()).ToArray();
+
+                    tfile.Tag.Year = uint.TryParse(media.Year, out uint yearNum) ? yearNum : (uint)DateTime.Now.Year;
+
+                    if (tfile.GetTag(TagLib.TagTypes.Xiph) is TagLib.Ogg.XiphComment xiphTag)
+                    {
+                        xiphTag.SetField("TITLE", media.Title);
+                        xiphTag.SetField("DATE_RELEASED", tfile.Tag.Year.ToString());
+                        xiphTag.SetField("DATE", tfile.Tag.Year.ToString());
+                    }
+
+                    if (tfile.GetTag(TagLib.TagTypes.Apple) is TagLib.Mpeg4.AppleTag appleTag)
+                    {
+                        appleTag.SetDashBox("©nam", "©nam", media.Title);
+                        appleTag.SetDashBox("©day", "©day", tfile.Tag.Year.ToString());
+                    }
+
+                    if (tfile.GetTag(TagLib.TagTypes.Id3v2) is TagLib.Id3v2.Tag id3v2Tag)
+                    {
+                        id3v2Tag.Title = media.Title;
+                    }
+
+                    if (!string.IsNullOrEmpty(media.AlbumArtFile) && File.Exists(media.AlbumArtFile))
+                    {
+                        string ext = Path.GetExtension(media.AlbumArtFile).ToLowerInvariant();
+                        string mimeType = (ext == ".jpg" || ext == ".jpeg") ? "image/jpeg" : "image/png";
+                        tfile.Tag.Pictures = new TagLib.IPicture[] {
+                new TagLib.Picture(media.AlbumArtFile) { Type = TagLib.PictureType.FrontCover, MimeType = mimeType, Description = "cover" }
+            };
+                    }
+
+                    tfile.Save();
+                }
+
+            }
+            RefreshCall();
+
+            ReopenPlayer();
+        }
+        public static event Action? ErrorShow;
+        public static bool IsStrictlyValidWindowsFileName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return false;
+
+            // 1. Check for invalid characters
+            if (name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) return false;
+
+            // 2. Check for Windows reserved device names
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(name).ToUpperInvariant();
+            string[] reservedNames = { "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9" };
+
+            if (reservedNames.Contains(fileNameWithoutExtension)) return false;
+
+            // 3. Check for trailing dots or spaces which Windows doesn't like
+            if (name.EndsWith(" ") || name.EndsWith(".")) return false;
+
+            return true;
+        }
+        private static async void RenameFile(string FilePath)
+        {
+            var oldPath = FilePath;
+            string newFileName = media.FileName.Trim();
+            if (IsStrictlyValidWindowsFileName(newFileName))
+            {
+                string extension = Path.GetExtension(FilePath);
+                string directory = Path.GetDirectoryName(FilePath)!;
+                string newPath = Path.Combine(directory, newFileName + extension);
+                if (File.Exists(newPath))
+                {
+                    HighlightErrorTitle = "Rename Error";
+                    HighlightError = $"The file with the name {newFileName} already exists.";
+                    ErrorShow?.Invoke();
+                }
+                else
+                {
+                    var lockingprocesses = GetLockingProcess.GetLockingProcesses(oldPath);
+                    if (lockingprocesses.Count == 0)
+                    {
+                        File.Move(oldPath, newPath);
+                        JustUpdatedRenamePath = newPath;
+                        var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                        string fileExtension = Path.GetExtension(newPath).ToLowerInvariant();
+
+                        if (AudioExtensions.List.Contains(fileExtension))
+                        {
+                            var savedmusics = currentSettings.RecentMusic;
+                            var exist = savedmusics.FirstOrDefault(p => p.SongPath == oldPath);
+                            if (exist != null)
+                            {
+                                exist.SongPath = newPath;
+                            }
+                        }
+                        else if (VideoExtensions.List.Contains(fileExtension))
+                        {
+                            var saved = currentSettings.SavedVideoProgress;
+                            var exist = saved.FirstOrDefault(p => p.FilePath == oldPath);
+                            if (exist != null)
+                            {
+                                exist.FilePath = newPath;
+                            }
+                        }
+                        await SettingsLoader.SaveSettingsAsync(currentSettings);
+                        SetInternalValues(newPath);
+
+                        OceanContentDialog.HideDlg();
+                        MainWindow.ShowWindow();
+                    }
+                    else
+                    {
+                        bool onlyVusicPlayer = lockingprocesses.All(p => p.ProcessName == "Vusic Player");
+                        foreach (Process process in lockingprocesses)
+                        {
+                            Debug.WriteLine(process.ProcessName + " locker " + process.MainModule?.FileName);
+                        }
+                        if (onlyVusicPlayer)
+                        {
+                            if (PlayerService.Masterplayer == null) return;
+                            Debug.WriteLine("Only Vusic Player");
+                            PlayerService.filestreamcurrent?.Dispose();
+                            HaveToReopen = true;
+                            var filelocked2 = GetLockingProcess.GetLockingProcesses(FilePath);
+                            var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
+                            PlayerService.curtime = curTime;
+                            PlayerService.curtimetemp = PlayerService.Masterplayer.CurTime;
+                            PlayerService.JustDisposed = true;
+
+                            if (filelocked2.Count == 0)
+                            {
+
+
+                                try
+                                {
+                                    if (PlayerService.CurrentPlayingPath == oldPath)
+                                    {
+                                        PlayerService.CurrentPlayingPath = newPath;
+                                    }
+                                    Debug.WriteLine("TURN AROUNDDD");
+                                    File.Move(oldPath, newPath);
+                                  
+                                    JustUpdatedRenamePath = newPath;
+                                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                                    string fileExtension = Path.GetExtension(newPath).ToLowerInvariant();
+                                    if (AudioExtensions.List.Contains(fileExtension))
+                                    {
+                                        var savedmusics = currentSettings.RecentMusic;
+                                        var exist = savedmusics.FirstOrDefault(p => p.SongPath == oldPath);
+                                        if (exist != null)
+                                        {
+                                            exist.SongPath = newPath;
+                                        }
+                                    }
+                                    else if (VideoExtensions.List.Contains(fileExtension))
+                                    {
+                                        var saved = currentSettings.SavedVideoProgress;
+                                        var exist = saved.FirstOrDefault(p => p.FilePath == oldPath);
+                                        if (exist != null)
+                                        {
+                                            exist.FilePath = newPath;
+                                        }
+                                    }
+                                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                                    SetInternalValues(newPath);
+                                    OceanContentDialog.HideDlg();
+                                    MainWindow.ShowWindow();
+
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    HighlightError = "An unexpected error occured. Check log page for more details";
+                                    Logger.Log(ex.Message, "Rename in File Info", Logger.LogLevelType.Error);
+                                    HighlightErrorTitle = "Rename Error";
+                                    ErrorShow?.Invoke();
+                                }
+                            }
+                            else
+                            {
+                                // Filter out the process named "Vusic Player"
+                                var filteredLocks = filelocked2
+                                    .Where(p => !string.Equals(p.ProcessName, "Vusic Player", StringComparison.OrdinalIgnoreCase))
+                                    .ToList();
+
+                                int count = filteredLocks.Count;
+
+                                HighlightError = count == 1
+                                    ? $"File is locked by another process: {filteredLocks.First().ProcessName}"
+                                    : $"File is locked by other processes: {string.Join(", ", filteredLocks.Select(p => p.ProcessName))}";
+                                HighlightErrorTitle = "Rename Error";
+                                ErrorShow?.Invoke();
+                            }
+                        }
+                        else
+                        {
+                            // Filter out the process named "Vusic Player"
+                            var filteredLocks = lockingprocesses
+                                .Where(p => !string.Equals(p.ProcessName, "Vusic Player", StringComparison.OrdinalIgnoreCase))
+                                .ToList();
+
+                            int count = filteredLocks.Count;
+
+                            HighlightError = count == 1
+                                ? $"File is locked by another process: {filteredLocks.First().ProcessName}"
+                                : $"File is locked by other processes: {string.Join(", ", filteredLocks.Select(p => p.ProcessName))}";
+                            HighlightErrorTitle = "File Error";
+                            ErrorShow?.Invoke();
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                HighlightErrorTitle = "Rename Error";
+                HighlightError = $"The file name is invalid on Windows or has invalid characters that are not allowed on Windows.";
+                ErrorShow?.Invoke();
+            }
+
+        }
         public static async void LoadFileInfo(string FilePath, XamlRoot Xamlroot)
         {
             filepathmaster = FilePath;
@@ -236,7 +761,9 @@ namespace Vusic_Player.Configuration.Helper
             _isClosing = true;
             try
             {
-                UpdateAllFileProperties(filepathmaster);
+                Debug.WriteLine("DFUCKE");
+                SetFileInfo(filepathmaster);
+
             }
             finally
             {
@@ -254,15 +781,7 @@ namespace Vusic_Player.Configuration.Helper
             FileInfoRequested?.Invoke(this, path);
         }
         public static event Action<string>? FileInfoCalled;
-        public static void TriggerFileInfoDialog(string filepath)
-        {
-            if (FileInfoCalled == null)
-            {
-                Debug.WriteLine("NULLMUNDA");
-            }
-            FileInfoCalled?.Invoke(filepath);
-            Debug.WriteLine("CHEHE1");
-        }
+
         private static bool _isClosing = false;
         private static long curtimetemp;
         private static TimeSpan curtime;
@@ -529,6 +1048,7 @@ namespace Vusic_Player.Configuration.Helper
                 PlayerService.Play();
             }
         }
+        private static bool HaveToReopen = false;
         public static async void UpdateFileMetadata(string path)
         {
             if (path == null) return;

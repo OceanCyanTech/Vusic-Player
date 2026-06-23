@@ -15,12 +15,14 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Web;
+using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,9 +36,21 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
         {
             InitializeComponent();
             PlayerService.CheckProcesses += PlayerService_CheckProcesses;
+            FileInfo.ErrorShow -= FileInfo_ErrorShow;
+            FileInfo.ErrorShow += FileInfo_ErrorShow;
         }
+
+        private void FileInfo_ErrorShow()
+        {
+            ifbError.IsOpen = true;
+            ifbError.Message = FileInfo.HighlightError;
+            ifbError.Title = FileInfo.HighlightErrorTitle;
+            ifbError.Severity = InfoBarSeverity.Error;
+        }
+
         public void ScrollIntoView()
         {
+            ifbError.IsOpen = false;
             stkMain.StartBringIntoView(new BringIntoViewOptions()
             {
                 AnimationDesired = true,
