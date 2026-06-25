@@ -7,26 +7,50 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:playback_views="using:Vusic_Player.UI.UserViews.Controls" xmlns:media="using:CommunityToolkit.WinUI.Media"
     mc:Ignorable="d">
-    <Grid HorizontalAlignment="Stretch">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Margin="90, 0" Grid.Column="0" HorizontalAlignment="Center">
 
+        <Grid x:Name="LyricContainer" 
+          Grid.Column="0" 
+          Margin="40,0" 
+          HorizontalAlignment="Center" 
+          VerticalAlignment="Center">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Viewbox MaxHeight="90" Grid.Row="0" MaxWidth="320">
-                <TextBlock Name="txtLyricRealTime" Style="{StaticResource TitleLargeTextBlockStyle}" HorizontalAlignment="Center" Text="But I want back"/>
-            </Viewbox>
-            <Button Grid.Row="1" Content="Open Lyric File" Click="Button_Click"/>
+
+            <ScrollViewer Grid.Row="0" 
+                      VerticalScrollBarVisibility="Hidden" 
+                      HorizontalScrollBarVisibility="Disabled"
+                      MaxHeight="180" 
+                      MaxWidth="450"
+                      Margin="0,0,0,20">
+                <TextBlock Name="txtLyricRealTime" 
+                       Style="{StaticResource TitleLargeTextBlockStyle}" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap" 
+                           IsTextSelectionEnabled="True"
+                       Text=""/>
+            </ScrollViewer>
+            <Button Content="Copy Lyric" Click="Button_Click_3" HorizontalAlignment="Center" Grid.Row="1"></Button>
+            <StackPanel  Grid.Row="2" Margin="0, 20" Orientation="Horizontal" Spacing="10">
+            <Button Grid.Row="1" Content="Open Lyric File" Click="Button_Click" HorizontalAlignment="Center"/>
+                <Button Margin="0, 0" Grid.Row="2" Name="btnFullLyrics" Content="View Full Lyrics" Click="Button_Click_1" HorizontalAlignment="Center"/>
+                <Button Margin="0, 0" Grid.Row="2" Content="Find Lyrics Online" Click="Button_Click_2" HorizontalAlignment="Center"/>
+            </StackPanel>
         </Grid>
-        <Grid CornerRadius="20" Margin="0, 30" Grid.Column="1" HorizontalAlignment="Center"  VerticalAlignment="Center">
+
+        <Grid Grid.Column="1" CornerRadius="20" Margin="20, 30" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.Background>
-                <ImageBrush ImageSource="/Assets/oceancyan.png" 
-  Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="/Assets/oceancyan.png" Stretch="UniformToFill"/>
             </Grid.Background>
             <Border CornerRadius="20">
                 <Border.Background>
@@ -34,14 +58,10 @@
                 </Border.Background>
                 <Grid CornerRadius="20" RowSpacing="20" Padding="30">
                     <Grid.Background>
-                        <AcrylicBrush TintColor="Black" 
-TintOpacity="0.05" 
-                   Opacity="0.8"
-FallbackColor="Black" 
-AlwaysUseFallback="False"/>
+                        <AcrylicBrush TintColor="Black" TintOpacity="0.05" Opacity="0.8" FallbackColor="Black" AlwaysUseFallback="False"/>
                     </Grid.Background>
                     <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -50,8 +70,10 @@ AlwaysUseFallback="False"/>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
+
                     <Image HorizontalAlignment="Center" Width="150" Grid.Row="0" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}"></Image>
-                    <TextBlock Margin="0, 0, 0, 0" TextWrapping="NoWrap" HorizontalAlignment="Center" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="1"></TextBlock>
+                    <TextBlock Margin="0,0,0,0" TextWrapping="NoWrap" HorizontalAlignment="Center" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="1"></TextBlock>
+
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -70,7 +92,9 @@ AlwaysUseFallback="False"/>
                             </StackPanel>
                         </HyperlinkButton>
                     </Grid>
-                    <playback_views:OceanSlider Margin="0, 0" x:Name="sldMain" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted"  IsEnabled="True" Grid.Row="3" HorizontalAlignment="Stretch" ></playback_views:OceanSlider>
+
+                    <playback_views:OceanSlider Margin="0, 0" x:Name="sldMain" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted" IsEnabled="True" Grid.Row="3" HorizontalAlignment="Stretch" ></playback_views:OceanSlider>
+
                     <Grid x:Name="grdTexts" Margin="5,0,0, 0" Grid.Row="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -82,39 +106,40 @@ AlwaysUseFallback="False"/>
 
                     <Grid Width="300" Grid.Row="5" Margin="0, 0" Padding="15" CornerRadius="16">
                         <Grid.Background>
-                            <AcrylicBrush TintColor="Black" 
-TintOpacity="0.2" 
-           
-FallbackColor="Transparent" 
-AlwaysUseFallback="False"/>
+                            <AcrylicBrush TintColor="Black" TintOpacity="0.2" FallbackColor="Transparent" AlwaysUseFallback="False"/>
                         </Grid.Background>
                         <playback_views:PlayPauseControls SpaceWidth="20" ImageWidth="32" HorizontalAlignment="Center"></playback_views:PlayPauseControls>
                     </Grid>
 
                     <Grid Grid.Row="6" CornerRadius="16">
                         <Grid.Background>
-                            <AcrylicBrush TintColor="Black" 
-TintOpacity="0.1" 
-           
-FallbackColor="Transparent" 
-AlwaysUseFallback="False"/>
+                            <AcrylicBrush TintColor="Black" TintOpacity="0.1" FallbackColor="Transparent" AlwaysUseFallback="False"/>
                         </Grid.Background>
                         <playback_views:VolumeSlider />
-
                     </Grid>
+
                     <Grid Grid.Row="7" CornerRadius="16">
                         <Grid.Background>
-                            <AcrylicBrush TintColor="Black" 
-TintOpacity="0.1" 
-           
-FallbackColor="Transparent" 
-AlwaysUseFallback="False"/>
+                            <AcrylicBrush TintColor="Black" TintOpacity="0.1" FallbackColor="Transparent" AlwaysUseFallback="False"/>
                         </Grid.Background>
                         <playback_views:PanelControlsAudioPlayer ExpandedViewButtonToolTip="Normal View" />
-
                     </Grid>
                 </Grid>
             </Border>
+        </Grid>
+        <Grid Grid.Column="2" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtLyricHeader"></TextBlock>
+        <ScrollViewer Grid.Row="1">
+            <RichTextBlock Name="txtLyricsFull" 
+                  FontSize="48"
+                   HorizontalAlignment="Center" 
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"/>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Page>

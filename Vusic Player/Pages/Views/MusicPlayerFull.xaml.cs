@@ -2,22 +2,30 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Windows.Devices.Spi;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Paragraph = Microsoft.UI.Xaml.Documents.Paragraph;
+using Run = Microsoft.UI.Xaml.Documents.Run;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,7 +40,25 @@ namespace Vusic_Player.Pages.Views
         public MusicPlayerFull()
         {
             InitializeComponent();
+            PlayerService.PlayCalled -= PlayerService_PlayCalled;
+            PlayerService.PlayCalled += PlayerService_PlayCalled;
         }
+
+        private void PlayerService_PlayCalled()
+        {
+            if(PlayerService.Masterplayer != null )
+            {
+                if (PlayerService.Masterplayer.IsPlaying)
+                {
+                    lyrictimer.Start();
+                }
+                else
+                {
+                    lyrictimer.Stop();
+                }
+            }
+        }
+
         public event EventHandler<Type>? NavigationRequested;
         private void sldMain_DragStarted()
         {
@@ -60,7 +86,7 @@ namespace Vusic_Player.Pages.Views
         {
             if (App.NavigationFrame == null) return;
             App.NavigationFrame.Navigate(typeof(AlbumView), mediacontroller.AlbumDisplayName);
-      
+
         }
 
         public async Task LoadLyricsFromFileAsync(string filePath)
@@ -90,9 +116,14 @@ namespace Vusic_Player.Pages.Views
 
                             // 3. Extract the text
                             string lyricText = match.Groups["text"].Value;
-                            LyricsList.Add(new LyricLineModel { Line = lyricText, TimeSpan = timestamp.ToString(@"hh\:mm\:ss\.ff") });
+                            Debug.WriteLine(lyricText);
+                            Debug.WriteLine(timestamp.ToString(@"hh\:mm\:ss\.ff"));
+
+                            LyricsList.Add(new LyricLineModel { Line = lyricText, Timestamp = timestamp });
                         }
+                        
                     }
+                    btnFullLyrics.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -105,18 +136,76 @@ namespace Vusic_Player.Pages.Views
                 // Handle potential I/O exceptions
                 System.Diagnostics.Debug.WriteLine($"Error loading LRC file: {ex.Message}");
             }
-}
+        }
 
 
-private async void Button_Click(object sender, RoutedEventArgs e)
-{
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            txtLyricRealTime.Text = "";
+            Debug.WriteLine("REQUESTED TICKING");
 
-    lyrictimer = new DispatcherTimer();
-    // Tick frequently enough for smooth sub-second line changes (e.g., every 100ms)
-    lyrictimer.Interval = TimeSpan.FromMilliseconds(100);
-    await LoadLyricsFromFileAsync(@"C:\Users\bnara\OneDrive\Documents\housethatalwaysrainslyrics.lrc");
-    //lyrictimer.Tick += Timer_Tick;
-    //     StartPlayback();
-}
+            LyricsList.Clear();
+            lyrictimer = new DispatcherTimer();
+            // Tick frequently enough for smooth sub-second line changes (e.g., every 100ms)
+            lyrictimer.Interval = TimeSpan.FromMilliseconds(100);
+            await LoadLyricsFromFileAsync(@"C:\Users\bnara\OneDrive\Documents\housethatalwaysrainslyrics.lrc");
+            lyrictimer.Tick += Lyrictimer_Tick;
+            lyrictimer.Start();
+            //     StartPlayback();
+        }
+
+        private void Lyrictimer_Tick(object? sender, object e)
+        {
+            if (PlayerService.Masterplayer == null) return;
+
+            var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
+
+            // Find the current lyric line that matches the playback window
+            var currentLyric = LyricsList
+                .Where(p => p.Timestamp <= curTime)
+                .LastOrDefault();
+
+            if (currentLyric != null && txtLyricRealTime.Text != currentLyric.Line)
+            {
+                // Only update the UI text block if the lyric actually changed
+                txtLyricRealTime.Text = currentLyric.Line;
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            txtLyricHeader.Text = "Full lyrics";
+            txtLyricsFull.Blocks.Clear();
+            foreach(var line in LyricsList)
+            {
+                Run textRun = new Run { Text = line.Line };
+                Paragraph paragraph = new Paragraph();
+                textRun.FontSize = 24;
+                // Add space below this specific line so lyrics don't look crammed
+                paragraph.Margin = new Thickness(0, 0, 0, 14);
+                paragraph.Inlines.Add(textRun);
+
+                // 4. Add the paragraph block straight to your RichTextBlock
+                txtLyricsFull.Blocks.Add(paragraph);
+            }
+        }
+
+        private async void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Find Lyrics Online", "Load Lyrics", "", "Cancel", OceanDialogWindow.ContentType.LyricSearchOnline, OceanContentDialogDefault.Primary, XamlRoot, 900, 960, OceanContentDialogType.Elevated, App.MainWindowInstance, "appicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "");
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested; ;
+        }
+
+        private void OceanContentDialog_PrimaryRequested()
+        {
+    
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            CopyToClipboard.CopyStringToClipboard(txtLyricRealTime.Text);
+        }
     }
 }

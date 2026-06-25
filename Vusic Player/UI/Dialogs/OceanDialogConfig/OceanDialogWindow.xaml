@@ -113,6 +113,7 @@
                         <controls:AlbumEditor x:Name="AlbumEditorBox" Visibility="Collapsed"></controls:AlbumEditor>
                         <controls:MassEditor x:Name="MassEdit" Visibility="Collapsed"/>
                         <controls:ShowModelCreation x:Name="ShowMod" Visibility="Collapsed"/>
+                        <controls:OnlineLyrics x:Name="LyricOnline" Visibility="Collapsed"/>
                     </Grid>
 
                     <Grid Grid.Row="2" Name="smokegrid" Background="Black" Opacity="0">

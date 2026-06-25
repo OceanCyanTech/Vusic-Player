@@ -8,7 +8,7 @@ namespace Vusic_Player.Configuration.ClassModels
 {
     public class LyricLineModel
     {
-        public string TimeSpan { get; set; } = "00:00:00.00";
+        public TimeSpan Timestamp { get; set; } 
         public string Line { get; set; } = "";
     }
 }

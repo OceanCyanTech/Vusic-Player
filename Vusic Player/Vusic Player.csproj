@@ -75,6 +75,7 @@
     <None Remove="UI\UserViews\Controls\OceanDialogControls\MessagePanel.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\NewPlaylistCreation.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\OnlineArtistPicture.xaml" />
+    <None Remove="UI\UserViews\Controls\OceanDialogControls\OnlineLyrics.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\ShowModelCreation.xaml" />
     <None Remove="UI\UserViews\Controls\OceanSlider.xaml" />
     <None Remove="UI\UserViews\Controls\PanelControlsAudioPlayer.xaml" />
@@ -167,6 +168,11 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\OceanDialogControls\OnlineLyrics.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\UserViews\PictureInPicture.xaml">

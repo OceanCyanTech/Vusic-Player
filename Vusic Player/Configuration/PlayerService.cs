@@ -222,39 +222,48 @@ namespace Vusic_Player.Configuration
             Masterplayer.Open(filestreamcurrent);
             PlayCalled?.Invoke();
 
-
-            var tfile = TagLib.File.Create(fiPath);
-            var image = new BitmapImage();
-
-            if (tfile.Tag.Pictures.Length > 0)
+            try
             {
-                try
-                {
-                    byte[] bin = tfile.Tag.Pictures[0].Data.Data;
+                var tfile = TagLib.File.Create(fiPath);
+                var image = new BitmapImage();
 
-                    // 1. Create a standard .NET MemoryStream from your byte array
-                    using (var memoryStream = new System.IO.MemoryStream(bin))
+                if (tfile.Tag.Pictures.Length > 0)
+                {
+                    try
                     {
-                        // 2. Convert it to a WinRT IRandomAccessStream using System.IO extensions
-                        using (var randomAccessStream = memoryStream.AsRandomAccessStream())
+                        byte[] bin = tfile.Tag.Pictures[0].Data.Data;
+
+                        // 1. Create a standard .NET MemoryStream from your byte array
+                        using (var memoryStream = new System.IO.MemoryStream(bin))
                         {
-                            // 3. Set the source safely
-                            await image.SetSourceAsync(randomAccessStream);
+                            // 2. Convert it to a WinRT IRandomAccessStream using System.IO extensions
+                            using (var randomAccessStream = memoryStream.AsRandomAccessStream())
+                            {
+                                // 3. Set the source safely
+                                await image.SetSourceAsync(randomAccessStream);
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error loading metadata image: {ex.Message}");
+                        image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Debug.WriteLine($"Error loading metadata image: {ex.Message}");
                     image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
                 }
-            }
-            else
-            {
-                image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
-            }
+                
+                UIController.CoverThumbnail = image;
 
-            UIController.CoverThumbnail = image;
+            }
+            catch
+            {
+                var image = new BitmapImage();
+                image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                UIController.CoverThumbnail = image;
+            }
 
             MediaCompleted = false;
             Masterplayer.PlaybackStopped -= Masterplayer_PlaybackStopped;
