@@ -18,6 +18,7 @@ namespace Vusic_Player.Configuration
                                    //   PluginsPath = ":Plugins",
                 FFmpegPath = ":FFmpeg",
             });
+       
         }
     }
 }

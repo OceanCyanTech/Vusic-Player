@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Shapes;
 using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -42,6 +43,10 @@ namespace Vusic_Player
         public App()
         {
             InitializeComponent();
+            this.UnhandledException += (sender, e) =>
+            {
+                Debug.WriteLine("UNHANDLED EXCEPTION; "+ e.Exception);
+            };
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 string logPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "winui_crash.txt");

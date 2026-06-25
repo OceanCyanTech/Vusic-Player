@@ -39,6 +39,7 @@ using Vusic_Player.MediaProperties.VideoProperties;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI;
 using Vusic_Player.UI.Dialogs;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
@@ -76,10 +77,27 @@ namespace Vusic_Player.Pages
             InitiateRecord();
             PlayerService.PIPRestore -= PlayerService_PIPRestore;
             PlayerService.PIPRestore += PlayerService_PIPRestore;
-
             SubtitleTimer = new();
             SubtitleTimer.Interval = TimeSpan.FromMilliseconds(250);
             SubtitleTimer.Tick += SubtitleTimer_Tick;
+            PlayerService.ErrorCalled -= PlayerService_ErrorCalled; ;
+            PlayerService.ErrorCalled += PlayerService_ErrorCalled; ;
+
+        }
+
+        private void PlayerService_ErrorCalled()
+        {
+            if (App.MainWindowInstance == null) return;
+
+            Debug.WriteLine("ERROR CALLED");
+            OceanContentDialog.Show("Error", "OK", "", "", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", mediacontroller.ErrorMessage, "error");
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+        }
+        private static void OceanContentDialog_PrimaryRequested()
+        {
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
         }
 
         private void PlayerService_PIPRestore()
@@ -304,7 +322,7 @@ namespace Vusic_Player.Pages
         {
             int safetyThrottle = 0;
 
-            
+
             while (ShowCursor(true) < 0 && safetyThrottle < 10)
             {
                 safetyThrottle++;
@@ -327,7 +345,7 @@ namespace Vusic_Player.Pages
             SaveTimer?.Stop();
             base.OnNavigatedFrom(e);
         }
-        
+
         public Configuration.Helper.SubtitlesProperties.Stream ViewModelSubtitles { get; } = new();
         bool ShowInformationOpened = true;
         private async void Masterplayer_OpenCompleted(object? sender, OpenCompletedArgs e)
@@ -348,7 +366,7 @@ namespace Vusic_Player.Pages
             SaveTimer.Tick += async (s, e) =>
             {
                 if (string.IsNullOrEmpty(PlayerService.CurrentPlayingPath) || PlayerService.Masterplayer == null) return;
-                
+
                 var settings = await SettingsLoader.LoadSettingsAsync();
                 var item = settings.SavedVideoProgress.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
                 if (item != null)
@@ -544,14 +562,14 @@ namespace Vusic_Player.Pages
         }
         private void ShowPanel()
         {
-            
+
             if (isPinned == false)
             {
                 //ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
                 FadeInOutStoryboardPanel.Begin();
             }
         }
-       
+
         #region Context Menu Events
 
         private async void mnftOpenVideo_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -1145,7 +1163,7 @@ namespace Vusic_Player.Pages
 
         private void MainGrid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-          
+
             ShowPanel();
         }
 

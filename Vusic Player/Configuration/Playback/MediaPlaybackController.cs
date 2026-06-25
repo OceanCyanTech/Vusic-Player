@@ -441,6 +441,7 @@ namespace Vusic_Player.Configuration.Playback
             set => SetProperty(ref _fileType, value);
         }
         private string _title = "";
+        private string _errormessage = "";
 
         public string Title
         {
@@ -450,6 +451,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _title, value))
                 {
                     OnPropertyChanged(nameof(Title));
+                }
+            }
+        }
+        public string ErrorMessage
+        {
+            get => _errormessage;
+            set
+            {
+                if (SetProperty(ref _errormessage, value))
+                {
+                    OnPropertyChanged(nameof(ErrorMessage));
                 }
             }
         }

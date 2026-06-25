@@ -39,6 +39,7 @@ namespace Vusic_Player.Pages
             App.VideoPlayerFrame = frmVid;
             App.MasterFrame = frmRoot;
             frmMain.Navigate(typeof(HomeView));
+            PlayerService.mainXamlRoot = XamlRoot;
 
             _originalHeader = nvgMain.Header;
         }

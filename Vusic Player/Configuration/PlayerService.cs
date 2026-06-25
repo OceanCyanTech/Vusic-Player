@@ -6,22 +6,26 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Vusic_Player.UI.UserViews.Controls;
 using Windows.Devices.Spi;
 using Windows.Storage;
 using Windows.UI;
+using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 
 namespace Vusic_Player.Configuration
 {
@@ -41,6 +45,8 @@ namespace Vusic_Player.Configuration
         public static string CurrentPlayingPath { get; set; } = "";
 
         public static event Action? OnVideoCalled;
+        public static event Action? ErrorCalled;
+        public static string ErrorString { get; set; } = "";
         public static event Action? PlayCalled;
         public static event Action? PIPRestore;
         public static event Action? CheckProcesses;
@@ -155,134 +161,160 @@ namespace Vusic_Player.Configuration
         }
         public static async void OpenPath(string fiPath)
         {
-            if (Masterplayer == null)
+            if (File.Exists(fiPath))
             {
-                //conf.Video.VideoProcessor = VideoProcessors.Flyleaf;
-                //conf.Video.SuperResolution = true;
-                Masterplayer = new Player();
-                QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
-
-                QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
-
-                QueueService.VusicQueue.CollectionChanged -= QueueService.VusicQueue_CollectionChanged;
-                QueueService.VusicQueue.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
-
-            }
-            CurrentPlayingPath = fiPath;
-            PlayCalled?.Invoke();
-            StorageFile file = await StorageFile.GetFileFromPathAsync(fiPath);
-            var musicProps = await file.Properties.GetMusicPropertiesAsync();
-            if (maintimer == null)
-            {
-                maintimer = new DispatcherTimer();
-                maintimer.Interval = TimeSpan.FromMilliseconds(250);
-                maintimer.Tick += Maintimer_Tick;
-            }
-
-            TimeSpan duration = musicProps.Duration;
-            UIController.TotalDuration = duration.TotalSeconds;
-            string title = !string.IsNullOrWhiteSpace(musicProps.Title) ? musicProps.Title : Path.GetFileNameWithoutExtension(file.Path);
-
-            UIController.MediaDisplayName = title;
-
-            UIController.AlbumDisplayName = musicProps.Album;
-            if (musicProps.Album == "")
-            {
-                UIController.AlbumDisplayName = "Unknown Album";
-            }
-            UIController.ArtistDisplayName = musicProps.Artist;
-            if (musicProps.Artist == "")
-            {
-                UIController.ArtistDisplayName = "Unknown Artist";
-            }
-            string fileExtension = file.FileType.ToLowerInvariant();
-            bool isAudio = false;
-            if (Extensions.AudioExtensions.List.Contains(fileExtension))
-            {
-                isAudio = true;
-            }
-            if (isAudio)
-            {
-                //if (InVideoPage == true)
-                //{
-                //    if (App.UltimateFrame != null && App.RootFrameAudio != null)
-                //    {
-                //        App.UltimateFrame.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-                //        App.RootFrameAudio.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-                //        App.UltimateFrame.Content = null;
-                //        NavigationManager.AlreadyNavigated = false;
-
-                //        InVideoPage = false;
-                //    }
-                //}
-
-            }
-
-            filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-            Masterplayer.Open(filestreamcurrent);
-            PlayCalled?.Invoke();
-
-            try
-            {
-                var tfile = TagLib.File.Create(fiPath);
-                var image = new BitmapImage();
-
-                if (tfile.Tag.Pictures.Length > 0)
+                if (Masterplayer == null)
                 {
-                    try
-                    {
-                        byte[] bin = tfile.Tag.Pictures[0].Data.Data;
+                    //conf.Video.VideoProcessor = VideoProcessors.Flyleaf;
+                    //conf.Video.SuperResolution = true;
+                    Masterplayer = new Player();
+                    QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
 
-                        // 1. Create a standard .NET MemoryStream from your byte array
-                        using (var memoryStream = new System.IO.MemoryStream(bin))
-                        {
-                            // 2. Convert it to a WinRT IRandomAccessStream using System.IO extensions
-                            using (var randomAccessStream = memoryStream.AsRandomAccessStream())
-                            {
-                                // 3. Set the source safely
-                                await image.SetSourceAsync(randomAccessStream);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"Error loading metadata image: {ex.Message}");
-                        image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
-                    }
+                    QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
+
+                    QueueService.VusicQueue.CollectionChanged -= QueueService.VusicQueue_CollectionChanged;
+                    QueueService.VusicQueue.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
+
+                }
+                CurrentPlayingPath = fiPath;
+                PlayCalled?.Invoke();
+                StorageFile file = await StorageFile.GetFileFromPathAsync(fiPath);
+                var musicProps = await file.Properties.GetMusicPropertiesAsync();
+                if (maintimer == null)
+                {
+                    maintimer = new DispatcherTimer();
+                    maintimer.Interval = TimeSpan.FromMilliseconds(250);
+                    maintimer.Tick += Maintimer_Tick;
+                }
+
+                TimeSpan duration = musicProps.Duration;
+                UIController.TotalDuration = duration.TotalSeconds;
+                string title = !string.IsNullOrWhiteSpace(musicProps.Title) ? musicProps.Title : Path.GetFileNameWithoutExtension(file.Path);
+
+                UIController.MediaDisplayName = title;
+
+                UIController.AlbumDisplayName = musicProps.Album;
+                if (musicProps.Album == "")
+                {
+                    UIController.AlbumDisplayName = "Unknown Album";
+                }
+                UIController.ArtistDisplayName = musicProps.Artist;
+                if (musicProps.Artist == "")
+                {
+                    UIController.ArtistDisplayName = "Unknown Artist";
+                }
+                string fileExtension = file.FileType.ToLowerInvariant();
+                bool isAudio = false;
+                if (Extensions.AudioExtensions.List.Contains(fileExtension))
+                {
+                    isAudio = true;
+                }
+                if (isAudio)
+                {
+                    //if (InVideoPage == true)
+                    //{
+                    //    if (App.UltimateFrame != null && App.RootFrameAudio != null)
+                    //    {
+                    //        App.UltimateFrame.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                    //        App.RootFrameAudio.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+                    //        App.UltimateFrame.Content = null;
+                    //        NavigationManager.AlreadyNavigated = false;
+
+                    //        InVideoPage = false;
+                    //    }
+                    //}
+
+                }
+
+                filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                Masterplayer.Open(filestreamcurrent);
+                PlayCalled?.Invoke();
+                if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
+                {
+                    Debug.WriteLine("SJDHDH23hd");
                 }
                 else
                 {
-                    image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                    Debug.WriteLine("FSEC092" + Masterplayer.MainDemuxer.Status.ToString());
                 }
-                
-                UIController.CoverThumbnail = image;
+                try
+                {
+                    var tfile = TagLib.File.Create(fiPath);
+                    var image = new BitmapImage();
 
+                    if (tfile.Tag.Pictures.Length > 0)
+                    {
+                        try
+                        {
+                            byte[] bin = tfile.Tag.Pictures[0].Data.Data;
+
+                            // 1. Create a standard .NET MemoryStream from your byte array
+                            using (var memoryStream = new System.IO.MemoryStream(bin))
+                            {
+                                // 2. Convert it to a WinRT IRandomAccessStream using System.IO extensions
+                                using (var randomAccessStream = memoryStream.AsRandomAccessStream())
+                                {
+                                    // 3. Set the source safely
+                                    await image.SetSourceAsync(randomAccessStream);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"Error loading metadata image: {ex.Message}");
+                            image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                        }
+                    }
+                    else
+                    {
+                        image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                    }
+
+                    UIController.CoverThumbnail = image;
+
+                }
+                catch
+                {
+                    var image = new BitmapImage();
+                    image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                    UIController.CoverThumbnail = image;
+                }
+                Masterplayer.PropertyChanged += Masterplayer_PropertyChanged;
+                MediaCompleted = false;
+                Masterplayer.PlaybackStopped -= Masterplayer_PlaybackStopped;
+                Masterplayer.PlaybackStopped += Masterplayer_PlaybackStopped;
+                SaveRecents();
+                if (Masterplayer != null)
+                {
+                    var keyConfig = Masterplayer.Config.Player.KeyBindings;
+
+                    keyConfig.Remove(Key.Left);
+                    keyConfig.Remove(Key.Right);
+
+                    keyConfig.Remove(Key.Left, ctrl: true);
+                    keyConfig.Remove(Key.Right, ctrl: true);
+                    keyConfig.Remove(Key.Left, shift: true);
+                    keyConfig.Remove(Key.Right, shift: true);
+                }
+                Play();
             }
-            catch
-            {
-                var image = new BitmapImage();
-                image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
-                UIController.CoverThumbnail = image;
-            }
-
-            MediaCompleted = false;
-            Masterplayer.PlaybackStopped -= Masterplayer_PlaybackStopped;
-            Masterplayer.PlaybackStopped += Masterplayer_PlaybackStopped;
-            SaveRecents();
-            if (Masterplayer != null)
-            {
-                var keyConfig = Masterplayer.Config.Player.KeyBindings;
-
-                keyConfig.Remove(Key.Left);
-                keyConfig.Remove(Key.Right);
-
-                keyConfig.Remove(Key.Left, ctrl: true);
-                keyConfig.Remove(Key.Right, ctrl: true);
-                keyConfig.Remove(Key.Left, shift: true);
-                keyConfig.Remove(Key.Right, shift: true);
-            }
-            Play();
         }
+
+        private static void Masterplayer_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            //Debug.WriteLine("SJHFUH");
+            //if (Masterplayer != null)
+            //{
+            //    if (Masterplayer.Status == Status.Failed || Masterplayer.Status == Status.Stopped)
+            //    {
+            //        Debug.WriteLine("FATAL ERROR:");
+            //        filestreamcurrent?.Dispose();
+            //        JustDisposed = true;
+            //        Masterplayer.Stop();
+            //    }
+            //}
+        }
+
         public static void ProcessUsageInvoke()
         {
             CheckProcesses?.Invoke();
@@ -367,7 +399,24 @@ namespace Vusic_Player.Configuration
                 if (System.IO.File.Exists(CurrentPlayingPath))
                 {
                     Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
+                    Debug.WriteLine("CALLEDS");
+                    if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
+                    {
+                        Debug.WriteLine("SJDHDH223");
+                    }
+                    else
+                    {
+                        Debug.WriteLine("FSEC2" + Masterplayer.MainDemuxer.Status.ToString());
+                    }
                     OpenPath(CurrentPlayingPath);
+                    if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
+                    {
+                        Debug.WriteLine("SJDHDH");
+                    }
+                    else
+                    {
+                        Debug.WriteLine( "FSEC"+ Masterplayer.MainDemuxer.Status.ToString());
+                    }
                 }
                 return;
             }
@@ -375,6 +424,21 @@ namespace Vusic_Player.Configuration
             if (MediaCompleted == true)
             {
                 Masterplayer.CurTime = 0;
+            }
+            if (CurrentPlayingPath == "") return;
+            if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
+            {
+                Debug.WriteLine("DFIH FAILURE");
+                UIController.ErrorMessage = "The file path is unavailable or access to it is denied. Please reopen the file to continue playing it.";
+
+                ErrorCalled?.Invoke();
+
+                Logger.Log("Unexpected error: Failed/Stopped Demuxer", "PlayerService.Play", Logger.LogLevelType.Error);
+                //Masterplayer.Stop();
+                // filestreamcurrent?.Dispose();
+                JustDisposed = true;
+
+                return;
             }
             PlayPauseChanged?.Invoke();
             Masterplayer.Play();
@@ -388,6 +452,14 @@ namespace Vusic_Player.Configuration
             });
             NavigateToVideoPage();
         }
+
+        private static void OceanContentDialog_PrimaryRequested()
+        {
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+        }
+
+        public static XamlRoot? mainXamlRoot;
         private static async void NavigateToVideoPage()
         {
 
@@ -488,13 +560,26 @@ namespace Vusic_Player.Configuration
         }
         public static void SldMain_DragCompleted(OceanSlider slider)
         {
+            if (Masterplayer == null) return;
+
+            if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
+            {
+                Debug.WriteLine("DFIH FAILURE");
+                UIController.ErrorMessage = "The file path is unavailable or access to it is denied. Please reopen the file to continue playing it.";
+
+                ErrorCalled?.Invoke();
+                //   Masterplayer.Stop();
+                //filestreamcurrent?.Dispose();
+                JustDisposed = true;
+                return;
+            }
             if (JustDisposed == true)
             {
                 curtime = TimeSpan.FromSeconds(slider.Value);
                 curtimetemp = TimeSpan.FromSeconds(slider.Value).Ticks;
                 JustDisposed = false;
             }
-            if (Masterplayer == null) return;
+
             Masterplayer.CurTime = TimeSpan.FromSeconds(slider.Value).Ticks;
 
             _isDragging = false;

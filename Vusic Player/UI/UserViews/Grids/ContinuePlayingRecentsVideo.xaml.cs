@@ -140,58 +140,60 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 if (vd.FilePath is string path)
                 {
-                    HighlightVideoPath = path;
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path);
-                    var videoprops = await storagefile.Properties.GetVideoPropertiesAsync();
-
-                    txtFileName.Text = videoprops.Title;
-                    Debug.WriteLine(videoprops.Title);
-                    if (txtFileName.Text == "")
+                    if (File.Exists(path))
                     {
-                        txtFileName.Text = Path.GetFileNameWithoutExtension(path);
-                    }
-                    ToolTipService.SetToolTip(grdHighlightVideo, Path.GetFileNameWithoutExtension(path));
-                    var task = Task.Run(async () =>
-                    {
-                        var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path);
-                        Debug.WriteLine("The thumbnail path is " + thumb);
+                        HighlightVideoPath = path;
+                        var storagefile = await StorageFile.GetFileFromPathAsync(path);
+                        var videoprops = await storagefile.Properties.GetVideoPropertiesAsync();
 
-                        DispatcherQueue.TryEnqueue(async () =>
+                        txtFileName.Text = videoprops.Title;
+                        Debug.WriteLine(videoprops.Title);
+                        if (txtFileName.Text == "")
                         {
-                            try
-                            {
-                                var bitmap = new BitmapImage();
+                            txtFileName.Text = Path.GetFileNameWithoutExtension(path);
+                        }
+                        ToolTipService.SetToolTip(grdHighlightVideo, Path.GetFileNameWithoutExtension(path));
+                        var task = Task.Run(async () =>
+                        {
+                            var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path);
+                            Debug.WriteLine("The thumbnail path is " + thumb);
 
-                                //    Check if the path is our app asset URI string
-                                if (thumb.StartsWith("ms-appx://"))
+                            DispatcherQueue.TryEnqueue(async () =>
+                            {
+                                try
                                 {
-                                    //    Assign the URI directly to the BitmapImage
-                                    bitmap.UriSource = new Uri(thumb);
-                                }
-                                else if (File.Exists(thumb))
-                                {
-                                    //     It's a real generated file path in the Temp folder! Read the stream.
-                                    using (var stream = File.OpenRead(thumb))
+                                    var bitmap = new BitmapImage();
+
+                                    //    Check if the path is our app asset URI string
+                                    if (thumb.StartsWith("ms-appx://"))
                                     {
-                                        await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                                        //    Assign the URI directly to the BitmapImage
+                                        bitmap.UriSource = new Uri(thumb);
+                                    }
+                                    else if (File.Exists(thumb))
+                                    {
+                                        //     It's a real generated file path in the Temp folder! Read the stream.
+                                        using (var stream = File.OpenRead(thumb))
+                                        {
+                                            await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                                        }
+
+                                        //       Delete the file immediately after the stream closes safely
+                                        File.Delete(thumb);
                                     }
 
-                                    //       Delete the file immediately after the stream closes safely
-                                    File.Delete(thumb);
+                                    CoverBackground.ImageSource = bitmap;
                                 }
-
-                                CoverBackground.ImageSource = bitmap;
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine("An unexpected error occurred: " + ex.Message);
-                            }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine("An unexpected error occurred: " + ex.Message);
+                                }
+                            });
                         });
-                    });
-                    prgHighlight.Maximum = vd.TotalDuration;
-                    prgHighlight.Value = vd.CurrentDuration;
-                    prgHighlight.IsEnabled = false;
-
+                        prgHighlight.Maximum = vd.TotalDuration;
+                        prgHighlight.Value = vd.CurrentDuration;
+                        prgHighlight.IsEnabled = false;
+                    }
                 }
             }
         }
