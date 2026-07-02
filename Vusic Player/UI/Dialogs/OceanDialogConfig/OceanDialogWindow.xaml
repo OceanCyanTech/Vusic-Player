@@ -121,7 +121,7 @@
 
                     </Grid>
                     <StackPanel  Spacing="10" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0, 0">
-                        <local1:OceanButton  Style="{StaticResource OceanShimmer}" x:Name="btnPrimary" Click="btnPrimary_Click">
+                        <local1:OceanButton   Style="{StaticResource OceanShimmer}" x:Name="btnPrimary"  Click="btnPrimary_Click" IsEnabled="{x:Bind mediacontroller.PrimaryButtonEnable, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="20" Name="imgPrimary"></Image>
                                 <TextBlock FontSize="16" Name="txtPrimary" Margin="5, 0" Text="Primary"></TextBlock>

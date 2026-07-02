@@ -797,6 +797,16 @@
 					</uap:FileTypeAssociation>
 				</uap:Extension>
 
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="vusicplayerlrchandler">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.lrc</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>LRC Lyric File (Vusic Player)</uap:DisplayName>
+						<uap:Logo>Assets\lyricfile.png</uap:Logo>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+
 			</Extensions>
 			<uap:VisualElements
 			  DisplayName="Vusic Player"

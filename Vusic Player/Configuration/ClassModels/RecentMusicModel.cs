@@ -16,6 +16,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public string FolderName { get; set; } = "";
         public string PlayCountDisplay { get; set; } = "0 times";
         public string LastPlayed { get; set; } = "";
+        public string LastLyricPath { get; set; } = "";
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string name) =>

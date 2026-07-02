@@ -229,14 +229,7 @@ namespace Vusic_Player.Configuration
                 filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
                 Masterplayer.Open(filestreamcurrent);
                 PlayCalled?.Invoke();
-                if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
-                {
-                    Debug.WriteLine("SJDHDH23hd");
-                }
-                else
-                {
-                    Debug.WriteLine("FSEC092" + Masterplayer.MainDemuxer.Status.ToString());
-                }
+             
                 try
                 {
                     var tfile = TagLib.File.Create(fiPath);
@@ -279,11 +272,18 @@ namespace Vusic_Player.Configuration
                     image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
                     UIController.CoverThumbnail = image;
                 }
-                Masterplayer.PropertyChanged += Masterplayer_PropertyChanged;
                 MediaCompleted = false;
                 Masterplayer.PlaybackStopped -= Masterplayer_PlaybackStopped;
                 Masterplayer.PlaybackStopped += Masterplayer_PlaybackStopped;
                 SaveRecents();
+                if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
+                {
+                    Debug.WriteLine("SJDHDH23hd");
+                }
+                else
+                {
+                    Debug.WriteLine("FSEC092" + Masterplayer.MainDemuxer.Status.ToString());
+                }
                 if (Masterplayer != null)
                 {
                     var keyConfig = Masterplayer.Config.Player.KeyBindings;
@@ -296,7 +296,13 @@ namespace Vusic_Player.Configuration
                     keyConfig.Remove(Key.Left, shift: true);
                     keyConfig.Remove(Key.Right, shift: true);
                 }
-                Play();
+                App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
+                {
+                    var bitm = new BitmapImage(new Uri("ms-appx:///Assets/pause.png"));
+                    UIController.PlayPauseToolTip = "Pause";
+                    UIController.Thumbnail = bitm;
+                    maintimer?.Start();
+                });
             }
         }
 

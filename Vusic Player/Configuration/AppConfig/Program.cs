@@ -7,7 +7,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Vusic_Player.Extensions;
 using Vusic_Player.Pages;
+using Vusic_Player.Pages.Views;
 using Windows.ApplicationModel.Activation;
 
 namespace Vusic_Player.Configuration.AppConfig
@@ -52,6 +54,7 @@ namespace Vusic_Player.Configuration.AppConfig
 
                         string[] videoExtensions = Extensions.VideoExtensions.List;
                         string[] audioExtensions = Extensions.AudioExtensions.List;
+                        string[] lyricExtensions = LyricExtensions.List;
                         if (videoExtensions.Contains(extension))
                         {
                             if (App.NavigationFrame != null)
@@ -67,6 +70,15 @@ namespace Vusic_Player.Configuration.AppConfig
                          //   MainWindow.ShowWindow();
                             PlayerService.OpenPath(filePath);
                             return;
+                        }
+                        else if (lyricExtensions.Contains(extension))
+                        {
+                            MainWindow.ShowWindow();
+                            if (App.NavigationFrame != null)
+                            {
+
+                                App.NavigationFrame.Navigate(typeof(MusicPlayerFull), filePath);
+                            }
                         }
                         //string filePath = file.Path;
 

@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Vusic_Player;
+using Vusic_Player.Configuration.ClassModels;
 
 namespace Vusic_Player.Configuration.Playback
 {
@@ -441,6 +442,7 @@ namespace Vusic_Player.Configuration.Playback
             set => SetProperty(ref _fileType, value);
         }
         private string _title = "";
+        private bool _primaryButtonEnable = true;
         private string _errormessage = "";
 
         public string Title
@@ -451,6 +453,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _title, value))
                 {
                     OnPropertyChanged(nameof(Title));
+                }
+            }
+        }
+        public bool PrimaryButtonEnable
+        {
+            get => _primaryButtonEnable;
+            set
+            {
+                if (SetProperty(ref _primaryButtonEnable, value))
+                {
+                    OnPropertyChanged(nameof(PrimaryButtonEnable));
                 }
             }
         }
@@ -466,7 +479,18 @@ namespace Vusic_Player.Configuration.Playback
             }
         }
         private string _path = "";
-
+        private LrcTrack _lyricocean = new LrcTrack();
+        public LrcTrack LyricModel
+        {
+            get => _lyricocean;
+            set
+            {
+                if (SetProperty(ref _lyricocean, value))
+                {
+                    OnPropertyChanged(nameof(LyricModel));
+                }
+            }
+        }
         public string FilePath
         {
             get => _path;

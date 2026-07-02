@@ -9,10 +9,19 @@
     mc:Ignorable="d">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition x:Name="colLyricContainer" Width="*"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Button Name="btnOpenMedia" Visibility="Visible" VerticalAlignment="Top" Margin="20, 0" CornerRadius="12" ToolTipService.ToolTip="(Ctrl + O) Open and play any video or audio" Click="btnOpenMedia_Click">
+            <StackPanel Orientation="Horizontal">
+                <Image Width="20" Source="/Assets/importicon.png"></Image>
+                <TextBlock Margin="5,0" Text="Open Media"  Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+            </StackPanel>
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Modifiers="Control" Key="O"></KeyboardAccelerator>
+            </Button.KeyboardAccelerators>
+        </Button>
 
         <Grid x:Name="LyricContainer" 
           Grid.Column="0" 
@@ -21,6 +30,7 @@
           VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -40,15 +50,88 @@
                            IsTextSelectionEnabled="True"
                        Text=""/>
             </ScrollViewer>
-            <Button Content="Copy Lyric" Click="Button_Click_3" HorizontalAlignment="Center" Grid.Row="1"></Button>
-            <StackPanel  Grid.Row="2" Margin="0, 20" Orientation="Horizontal" Spacing="10">
-            <Button Grid.Row="1" Content="Open Lyric File" Click="Button_Click" HorizontalAlignment="Center"/>
-                <Button Margin="0, 0" Grid.Row="2" Name="btnFullLyrics" Content="View Full Lyrics" Click="Button_Click_1" HorizontalAlignment="Center"/>
-                <Button Margin="0, 0" Grid.Row="2" Content="Find Lyrics Online" Click="Button_Click_2" HorizontalAlignment="Center"/>
+            <Button Visibility="Collapsed" Name="btnCopyLyric" Content="Copy Lyric" Click="Button_Click_3" HorizontalAlignment="Center" Grid.Row="1"></Button>
+            <StackPanel  Visibility="Collapsed" Name="stkLyricFunctions" Grid.Row="2" Margin="0, 20" Orientation="Horizontal" Spacing="10">
+                <Button Grid.Row="1" Content="Open Lyric File"  HorizontalAlignment="Center">
+                    <Button.Flyout>
+                        <MenuFlyout Opened="MenuFlyout_Opened">
+                            <MenuFlyoutItem Text="Open From PC" Name="mnftOpenFromPC" Click="mnftOpenFromPC_Click"/>
+                            <MenuFlyoutItem Text="Open Previously Loaded" Name="mnftOpenPrevLyrics" Click="mnftOpenPrevLyrics_Click"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+                <Button Margin="0, 0" Grid.Row="2" IsEnabled="False" Name="btnFullLyrics" Content="View Full Lyrics" Click="Button_Click_1" HorizontalAlignment="Center"/>
+                <Button Name="btnFindLyricsOnline"  Margin="0, 0" Grid.Row="2" Content="Find Lyrics Online" Click="Button_Click_2" HorizontalAlignment="Center"/>
             </StackPanel>
+            <Button Visibility="Collapsed" Grid.Row="3" HorizontalAlignment="Center" Name="btnCustomizeLyricText" Click="btnCustomizeLyricText_Click" Content="Customize Lyric Text"/>
+            <TeachingTip x:Name="FontSettingsTip"
+                 Target="{x:Bind btnCustomizeLyricText}"
+                 Title="Text Formatting Options"
+                PreferredPlacement="Auto"
+                         >
+                <TeachingTip.Content>
+                    <StackPanel Margin="0, 10" Spacing="12" Width="280">
+                        <Button Content="Reset to default" HorizontalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Name="btnResetToDefault" Click="btnResetToDefault_Click"/>
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Font Family" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <ComboBox SelectionChanged="FontFamilyCombo_SelectionChanged" x:Name="FontFamilyCombo" HorizontalAlignment="Stretch" MaxDropDownHeight="200">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <TextBlock Text="{x:Bind}" FontFamily="{x:Bind}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Font Size" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox x:Name="FontSizeCombo" 
+                                  Grid.Column="0" 
+                                  Margin="0,0,4,0"
+                                  HorizontalAlignment="Stretch"
+                                  SelectionChanged="FontSizeCombo_SelectionChanged">
+                                    <x:Double>9</x:Double>
+                                    <x:Double>10</x:Double>
+                                    <x:Double>11</x:Double>
+                                    <x:Double>12</x:Double>
+                                    <x:Double>14</x:Double>
+                                    <x:Double>16</x:Double>
+                                    <x:Double>18</x:Double>
+                                    <x:Double>24</x:Double>
+                                    <x:Double>32</x:Double>
+                                </ComboBox>
+                                <NumberBox x:Name="FontSizeNumber" 
+                                   Grid.Column="1" 
+                                   Margin="4,0,0,0"
+                                   Value="36" 
+                                   Minimum="1" 
+                                   Maximum="120"
+                                   SpinButtonPlacementMode="Compact" 
+                                   ValueChanged="FontSizeNumber_ValueChanged" />
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Font Color" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <ColorPicker x:Name="FontColorPicker" 
+                                 IsColorSliderVisible="True" 
+                                 IsColorChannelTextInputVisible="False"
+                                 IsHexInputVisible="True"
+                                         ColorChanged="FontColorPicker_ColorChanged"
+                                 IsAlphaEnabled="False" />
+                        </StackPanel>
+
+                    </StackPanel>
+                </TeachingTip.Content>
+            </TeachingTip>
         </Grid>
 
-        <Grid Grid.Column="1" CornerRadius="20" Margin="20, 30" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Name="musicPlayerMaster" Grid.Column="1" CornerRadius="20" Margin="20, 30" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.Background>
                 <ImageBrush ImageSource="/Assets/oceancyan.png" Stretch="UniformToFill"/>
             </Grid.Background>
@@ -127,19 +210,36 @@
                 </Grid>
             </Border>
         </Grid>
-        <Grid Grid.Column="2" RowSpacing="30">
+        <Grid Grid.Column="2" Name="fulllyrics" RowSpacing="30">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtLyricHeader"></TextBlock>
-        <ScrollViewer Grid.Row="1">
-            <RichTextBlock Name="txtLyricsFull" 
+
+            <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="1">
+                <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtLyricHeader"></TextBlock>
+                <Button Visibility="Collapsed" ToolTipService.ToolTip="Close full lyrics" Name="btnCloseFullLyrics" Click="btnCloseFullLyrics_Click" Background="Transparent" BorderBrush="Transparent">
+                    <Image Width="20" Source="/Assets/removeicon.png"/>
+                </Button>
+            </StackPanel>
+            <StackPanel Visibility="Collapsed" Name="stkLyricOptions" Orientation="Horizontal" Spacing="10" Grid.Row="2">
+                <Button  Content="Save Lyrics to File" Click="btnSaveSelectedLyricsToFile_Click" Name="btnSaveSelectedLyricsToFile" >
+                </Button>
+                <Button  Name="btnCopyLyrics" Click="btnCopyLyrics_Click" Content="Copy Lyrics"/>
+            </StackPanel>
+            <ScrollViewer Grid.Row="3">
+                <RichTextBlock Name="txtLyricsFull" 
                   FontSize="48"
                    HorizontalAlignment="Center" 
                    TextAlignment="Center"
                    TextWrapping="Wrap"/>
             </ScrollViewer>
         </Grid>
+        <TeachingTip Name="ttJustSaved">
+            <HyperlinkButton Name="hypPathSaved" Click="hypPathSaved_Click"/>
+        </TeachingTip>
+
     </Grid>
 </Page>

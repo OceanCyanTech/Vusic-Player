@@ -100,6 +100,11 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
         {
             txtSearchResHeader.Visibility = Visibility.Collapsed;
             txtLyricHeader.Visibility = Visibility.Collapsed;
+            txtLyricsFull.Blocks.Clear();
+            btnSaveSelectedLyricsToFile.Visibility = Visibility.Collapsed;
+            btnCopyLyrics.Visibility = Visibility.Collapsed;
+            txtLyricHeader.Visibility = Visibility.Collapsed;
+            btnSearch.IsEnabled = false;
             if (txtQuery.Text == "") return;
             if (CheckInternet.IsInternetAvailable())
             {
@@ -144,6 +149,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             }
             else
             {
+                btnSearch.IsEnabled = true;
                 ifbError.Title = "You're not connected to the internet";
                 ifbError.Severity = InfoBarSeverity.Error;
                 ifbError.ActionButton.Visibility = Visibility.Visible;
@@ -159,6 +165,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             Debug.WriteLine("OR SOMEONE OUT THERE");
             if (e.ClickedItem is LrcTrack lrc)
             {
+                mediacontroller.LyricModel = lrc;
                 btnCopyLyrics.Visibility = Visibility.Visible;
                 btnSaveSelectedLyricsToFile.Visibility = Visibility.Visible;
                 txtLyricHeader.Visibility = Visibility.Visible;
@@ -180,9 +187,12 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 if (string.IsNullOrWhiteSpace(lrc.SyncedLyrics))
                 {
                     txtLyricHeader.Text = "Lyrics Preview";
+                    mediacontroller.PrimaryButtonEnable = false;
                 }
                 else
                 {
+                    mediacontroller.PrimaryButtonEnable = true;
+
                     txtLyricHeader.Text = "Lyrics Preview (synced with time)";
                 }
                 // 3. Loop through each line and add it to the UI
@@ -197,11 +207,6 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                     txtLyricsFull.Blocks.Add(paragraph);
                 }
             }
-        }
-
-        private void lstViewQueryResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
 
 

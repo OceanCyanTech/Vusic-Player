@@ -16,6 +16,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Pages;
+using Vusic_Player.Pages.Views;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -45,7 +46,7 @@ namespace Vusic_Player
             InitializeComponent();
             this.UnhandledException += (sender, e) =>
             {
-                Debug.WriteLine("UNHANDLED EXCEPTION; "+ e.Exception);
+                Debug.WriteLine("UNHANDLED EXCEPTION; " + e.Exception);
             };
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
@@ -71,16 +72,16 @@ namespace Vusic_Player
 
                     string[] videoExtensions = Extensions.VideoExtensions.List;
                     string[] audioExtensions = Extensions.AudioExtensions.List;
+                    string[] lyricExtensions = Extensions.LyricExtensions.List;
                     if (videoExtensions.Contains(extension))
                     {
                         MainWindow.ShowWindow();
-                        if (App.NavigationFrame != null)
+                        if (NavigationFrame != null)
                         {
                             if (PlayerService.InVideoPage == false)
                             {
-                                App.NavigationFrame.Navigate(typeof(VideoPlayer), filePath);
+                                NavigationFrame.Navigate(typeof(VideoPlayer), filePath);
                             }
-
                         }
                         return;
                     }
@@ -90,10 +91,18 @@ namespace Vusic_Player
                         PlayerService.OpenPath(filePath);
                         return;
                     }
+                    else if (lyricExtensions.Contains(extension))
+                    {
+                        MainWindow.ShowWindow();
+                        if (NavigationFrame != null)
+                        {
+                          
+                                NavigationFrame.Navigate(typeof(MusicPlayerFull), filePath);
+                        }
+                    }
                 }
             }
             MainWindow.ShowWindow();
-
         }
     }
 }

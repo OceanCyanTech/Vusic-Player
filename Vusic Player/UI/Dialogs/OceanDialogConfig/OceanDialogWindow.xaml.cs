@@ -17,6 +17,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.UserSettings;
 using WinRT.Interop;
 using WinRT;
+using Vusic_Player.Configuration.Playback;
 
 
 namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
@@ -25,6 +26,8 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
     {
         DesktopAcrylicController? acrylicController;
         SystemBackdropConfiguration? configurationSource;
+        public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
+
         private void Window_Activated(object sender, WindowActivatedEventArgs args)
         {
 
