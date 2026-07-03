@@ -109,7 +109,7 @@ namespace Vusic_Player.Configuration
 
         public static void PlayPause()
         {
-            if (PlayerService.CurrentPlayingPath == "" || PlayerService.CurrentPlayingPath == null)
+            if (CurrentPlayingPath == "" || CurrentPlayingPath == null)
             {
                 Debug.WriteLine("ssh");
                 if (QueueService.VusicQueueNext.Count != 0)
@@ -131,33 +131,35 @@ namespace Vusic_Player.Configuration
             }
             if (Masterplayer == null) return;
 
-            if (Masterplayer.IsPlaying) PlayerService.Pause();
-            else PlayerService.Play();
+            if (Masterplayer.IsPlaying) Pause();
+            else Play();
         }
 
         public static void SeekBefore()
         {
             if (Masterplayer == null) return;
-            long currentMs = Masterplayer.CurTime / 10000;
+            var currentTicks = Masterplayer.CurTime;
+            var targetTime = TimeSpan.FromTicks(currentTicks).Subtract(TimeSpan.FromSeconds(10));
+            if (targetTime < TimeSpan.Zero) targetTime = TimeSpan.Zero;
 
-
-            int targetMs = (int)(currentMs - 10000);
-            PlayerService.Masterplayer.SeekAccurate(targetMs);
-            var curTime = TimeSpan.FromTicks(Masterplayer.CurTime);
-            UIController.CurrentPosition = curTime.TotalSeconds;
-            //Helper.SeekInfoService.ShowSeek(-10);
+            // 2. Seek using the clean millisecond conversion
+            Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
+   //         UIController.CurrentPosition = targetTime.TotalSeconds;
+            Configuration.Helper.UI.SeekInfoService.ShowSeek(-10);
         }
         public static void SeekAhead()
         {
-            if (PlayerService.Masterplayer == null) return;
-            long currentMs = PlayerService.Masterplayer.CurTime / 10000;
+            if (Masterplayer == null) return;
 
+            // 1. Calculate the new time (Adding 10 seconds via TimeSpan)
+            var currentTicks = Masterplayer.CurTime;
+            var targetTime = TimeSpan.FromTicks(currentTicks).Add(TimeSpan.FromSeconds(10));
+            // 2. Seek to the target (TotalMilliseconds handles the math safely)
+            Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
 
-            int targetMs = (int)(currentMs + 10000);
-            PlayerService.Masterplayer.SeekAccurate(targetMs);
-            var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
-            UIController.CurrentPosition = curTime.TotalSeconds;
-            //   Helper.SeekInfoService.ShowSeek(10);
+            // 3. Update UI based on the intended target time
+          //  UIController.CurrentPosition = targetTime.TotalSeconds;
+            Configuration.Helper.UI.SeekInfoService.ShowSeek(10);
         }
         public static async void OpenPath(string fiPath)
         {
@@ -174,6 +176,20 @@ namespace Vusic_Player.Configuration
 
                     QueueService.VusicQueue.CollectionChanged -= QueueService.VusicQueue_CollectionChanged;
                     QueueService.VusicQueue.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
+                    Masterplayer.SeekCompleted += (sender, completedMs) =>
+                    {
+                        if (completedMs != -1)
+                        {
+                            if (App.MainWindowInstance != null)
+                            {
+                                // Safely jump back onto the WinUI 3 UI Thread
+                                App.MainWindowInstance.DispatcherQueue.TryEnqueue(() =>
+                                {
+                                    UIController.CurrentPosition = TimeSpan.FromMilliseconds(completedMs).TotalSeconds;
+                                });
+                            }
+                        }
+                    };
 
                 }
                 CurrentPlayingPath = fiPath;
@@ -229,7 +245,7 @@ namespace Vusic_Player.Configuration
                 filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
                 Masterplayer.Open(filestreamcurrent);
                 PlayCalled?.Invoke();
-             
+
                 try
                 {
                     var tfile = TagLib.File.Create(fiPath);
@@ -306,20 +322,6 @@ namespace Vusic_Player.Configuration
             }
         }
 
-        private static void Masterplayer_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            //Debug.WriteLine("SJHFUH");
-            //if (Masterplayer != null)
-            //{
-            //    if (Masterplayer.Status == Status.Failed || Masterplayer.Status == Status.Stopped)
-            //    {
-            //        Debug.WriteLine("FATAL ERROR:");
-            //        filestreamcurrent?.Dispose();
-            //        JustDisposed = true;
-            //        Masterplayer.Stop();
-            //    }
-            //}
-        }
 
         public static void ProcessUsageInvoke()
         {
@@ -421,7 +423,7 @@ namespace Vusic_Player.Configuration
                     }
                     else
                     {
-                        Debug.WriteLine( "FSEC"+ Masterplayer.MainDemuxer.Status.ToString());
+                        Debug.WriteLine("FSEC" + Masterplayer.MainDemuxer.Status.ToString());
                     }
                 }
                 return;
@@ -495,18 +497,28 @@ namespace Vusic_Player.Configuration
         }
         private static void Masterplayer_OpenCompleted1(object? sender, OpenCompletedArgs e)
         {
+            Debug.WriteLine("SKHDHD");
             if (Masterplayer == null) return;
             Masterplayer.SeekAccurate((int)(curtimetemp / 10000));
-            UIController.CurrentPosition = curtime.TotalSeconds;
+            Debug.WriteLine("DONGD " + curtime.TotalSeconds);
+            var curTime = TimeSpan.FromTicks(Masterplayer.CurTime);
+            UIController.CurrentPosition = curTime.TotalSeconds;
+            Debug.WriteLine("DONGDd " + TimeSpan.FromSeconds(curtime.TotalSeconds).ToString(@"hh\:mm\:ss"));
+            GeneralInfoService.ShowInfo($"Opened playback of '{CurrentPlayingPath}' at {TimeSpan.FromSeconds(curTime.TotalSeconds).ToString(@"hh\:mm\:ss")}");
+
             curtime = TimeSpan.Zero;
             curtimetemp = 0;
 
             Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
 
         }
+        public static bool DONTSHOWGENERALINFORMATION = false;
         public static async void LookForProgressForNextVideo(string Path)
         {
-            if (Masterplayer == null) return;
+            if (Masterplayer == null)
+            {
+                Masterplayer = new Player();
+            }
             Debug.WriteLine("Looking for video Progress");
             Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
@@ -517,12 +529,13 @@ namespace Vusic_Player.Configuration
             var exist = videoprogress.FirstOrDefault(p => p.FilePath == FileToBePlayed);
             if (exist != null)
             {
+                Debug.WriteLine(exist.FileName + " found " + exist.CurrentDuration);
                 curtimetemp = (long)exist.CurrentDuration;
                 //           PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
-
+                DONTSHOWGENERALINFORMATION = true;
                 Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
             }
-
+            OpenPath(Path);
         }
         private static async void Masterplayer_PlaybackStopped(object? sender, PlaybackStoppedArgs e)
         {
@@ -586,7 +599,10 @@ namespace Vusic_Player.Configuration
                 JustDisposed = false;
             }
 
-            Masterplayer.CurTime = TimeSpan.FromSeconds(slider.Value).Ticks;
+            int targetMs = (int)TimeSpan.FromSeconds(slider.Value).TotalMilliseconds;
+
+            // FIX 2: Use SeekAccurate so it doesn't roll back to the nearest keyframe
+            Masterplayer.SeekAccurate(targetMs);
 
             _isDragging = false;
             maintimer?.Start();

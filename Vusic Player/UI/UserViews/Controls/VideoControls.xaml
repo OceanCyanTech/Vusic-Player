@@ -53,9 +53,7 @@
 
         <local:PlayPauseControls Grid.Column="2" Margin="15, 0" HorizontalAlignment="Center"></local:PlayPauseControls>
         <ToggleButton Grid.Column="3" Name="btnFullScreen" IsChecked="{x:Bind mediacontroller.IsFullScreen, Mode=TwoWay}" Checked="btnFullScreen_Checked" Unchecked="btnFullScreen_Unchecked" Padding="5" Margin="10, 0" ToolTipService.ToolTip="{x:Bind mediacontroller.FullScreenToolTip, Mode=OneWay}" Background="Transparent" BorderBrush="Transparent" IsEnabled="True">
-            <ToggleButton.KeyboardAccelerators>
-                <KeyboardAccelerator Key="F"></KeyboardAccelerator>
-            </ToggleButton.KeyboardAccelerators>
+            
             <FontIcon Glyph="&#xE740;" Foreground="White" FontSize="16"/>
         </ToggleButton>
         <Button Name="btnSubtitles" Grid.Column="4" ToolTipService.ToolTip="Subtitles" Margin="0, 0" Background="Transparent" BorderBrush="Transparent">

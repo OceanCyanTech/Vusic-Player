@@ -95,9 +95,11 @@ namespace Vusic_Player.UI.UserViews.Grids
                                 VideoProgressList.Add(videoprogressitem);
                                 var fallbackUri = "ms-appx:///Assets/default.png";
                                 videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
+                                var percentage = (videoprogressitem.CurrentDuration / videoprogressitem.TotalDuration);
+
                                 var task = Task.Run(async () =>
                                 {
-                                    var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path);
+                                    var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, percentage);
                                     Debug.WriteLine("The thumbnail path is " + thumb);
                                     DispatcherQueue.TryEnqueue(async () =>
                                     {
@@ -153,9 +155,12 @@ namespace Vusic_Player.UI.UserViews.Grids
                             txtFileName.Text = Path.GetFileNameWithoutExtension(path);
                         }
                         ToolTipService.SetToolTip(grdHighlightVideo, Path.GetFileNameWithoutExtension(path));
+                        var percentage = (vd.CurrentDuration / vd.TotalDuration) ;
+                        Debug.WriteLine(percentage + " is the current percentage");
+
                         var task = Task.Run(async () =>
                         {
-                            var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path);
+                            var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, percentage);
                             Debug.WriteLine("The thumbnail path is " + thumb);
 
                             DispatcherQueue.TryEnqueue(async () =>

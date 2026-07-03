@@ -76,6 +76,7 @@ namespace Vusic_Player.Configuration.Helper.UI
                 var storagefile = await StorageFile.GetFileFromPathAsync(FILEpath);
                 var props = await storagefile.Properties.GetVideoPropertiesAsync();
                 var durationtotal = props.Duration.TotalSeconds;
+                Debug.WriteLine(percentage + " is the current percentage here also");
 
                 // Fast-seek target timestamp
                 var percent = percentage * durationtotal;

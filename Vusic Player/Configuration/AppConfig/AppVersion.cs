@@ -30,7 +30,7 @@ namespace Vusic_Player.Configuration.AppConfig
           //  Debug.WriteLine(BuildNumber + " hshs");
         }
         public static string BuildNumber = "";
-        public static string VersionType = "Development Preview BETA 1 (BRANCH DEV)";
+        public static string VersionType = "Development Preview BETA 1";
     }
 
 }

@@ -70,6 +70,7 @@ namespace Vusic_Player.Pages
         {
             InitializeComponent();
             InitiateInfoText();
+            InitiateSeekText();
             UpdateSubtitleStyle();
             RecordTimer = new();
             RecordTimer.Interval = TimeSpan.FromMilliseconds(300);
@@ -84,7 +85,18 @@ namespace Vusic_Player.Pages
             PlayerService.ErrorCalled += PlayerService_ErrorCalled; ;
 
         }
-
+        private void InitiateSeekText()
+        {
+            Configuration.Helper.UI.SeekInfoService.OnSeekRequest += (text, isForward) =>
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    txtSeek.Text = text;
+                    txtSeek.HorizontalAlignment = isForward ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+                    FadeInOutSeek.Begin();
+                });
+            };
+        }
         private void PlayerService_ErrorCalled()
         {
             if (App.MainWindowInstance == null) return;
@@ -355,7 +367,10 @@ namespace Vusic_Player.Pages
             FadeInOutStoryboardPanel.Begin();
             if (ShowInformationOpened)
             {
-                ShowInformation($"'{PlayerService.CurrentPlayingPath}' opened");
+                if (PlayerService.DONTSHOWGENERALINFORMATION == false)
+                {
+                    ShowInformation($"'{PlayerService.CurrentPlayingPath}' opened");
+                }
             }
 
             // Assign it to the UI grid
@@ -552,13 +567,16 @@ namespace Vusic_Player.Pages
                 }
 
             }
-            else
+            else if (LoadingProgress == false)
             {
+                PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
 
+                return;
             }
             //LoadSettings();
             //LoadOptions();
             PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
+
         }
         private void ShowPanel()
         {
@@ -712,9 +730,11 @@ namespace Vusic_Player.Pages
                 PlayerService.Masterplayer = new Player();
             }
             PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
-            PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted;
 
-            PlayerService.OpenPath(VideoPath);
+            PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted;
+            PlayerService.LookForProgressForNextVideo(VideoPath);
+
+
 
             if (ShowManager.isLastEpisode == true)
             {
@@ -1275,6 +1295,11 @@ namespace Vusic_Player.Pages
             else if (e.Key == Windows.System.VirtualKey.Right)
             {
                 PlayerService.SeekAhead();
+            }
+            else if (e.Key == Windows.System.VirtualKey.F)
+            {
+                mediacontroller.IsFullScreen = !mediacontroller.IsFullScreen;
+                FullScreen.FullScreenToggle();
             }
         }
         ObservableCollection<EpisodeModel> EpisodesList = new();
