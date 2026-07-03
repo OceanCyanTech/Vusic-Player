@@ -69,6 +69,7 @@
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
+    <None Remove="UI\UserViews\Controls\GroupedCollectionView.xaml" />
     <None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml" />
@@ -169,6 +170,11 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\GroupedCollectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Views\LyricViewer.xaml">

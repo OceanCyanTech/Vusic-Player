@@ -5,10 +5,229 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls1="using:CommunityToolkit.WinUI.Controls" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Margin="30, 0" Name="grdMaster">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition ></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Name="grdLegend" Margin="0, 30" HorizontalAlignment="Center"  Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ToggleButton  IsChecked="True" CornerRadius="16" Click="ToggleButton_Checked" Name="btnAllMusic" FontSize="26" Padding="15" Content="All Music" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0"></ToggleButton>
+            <ToggleButton Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnPlaylists" FontSize="26" Padding="15" Content="Playlists" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="1"></ToggleButton>
+            <ToggleButton CornerRadius="16" Click="ToggleButton_Checked" Name="btnArtists" FontSize="26" Padding="15" Content="Artists" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="2"></ToggleButton>
+            <ToggleButton  Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnAlbums" FontSize="26" Padding="15" Content="Albums" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="3"></ToggleButton>
+            <ToggleButton CornerRadius="16" Click="ToggleButton_Checked" Name="btnGenres" FontSize="26" Padding="15" Content="Genres" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="4"></ToggleButton>
+            <ToggleButton  Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnHistory" FontSize="26" Padding="15" Content="Music History" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="5"></ToggleButton>
+        </Grid>
 
+        <Grid Name="grdAllMusic" Margin="20, 30" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" ></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition ></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid HorizontalAlignment="Left" Grid.Row="0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition ></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Name="txtAllMusicHeader" Text="All music across your libraries" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <Button Margin="40, 0" Grid.Column="1" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                        <Image Width="25" Source="/Assets/play.png"></Image>
+                        <TextBlock Style="{StaticResource BodyLargeTextBlockStyle}" Text="Play all" Margin="0, 4"></TextBlock>
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <controls1:WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="0, 20" >
+                <GridView SelectionMode="None" Name="grdViewFolders" Grid.Row="1">
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" ItemWidth="NaN" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <ToggleButton IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Click="btnAll_Click" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Unchecked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+                                <ToggleButton.ContextFlyout>
+                                    <MenuFlyout >
+                                        <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+
+                                </ToggleButton.ContextFlyout>
+                            </ToggleButton>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+
+                <Button CornerRadius="16" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <TextBlock Text="Add Folder"></TextBlock>
+                    </StackPanel>
+                </Button>
+            </controls1:WrapPanel>
+            <controls1:WrapPanel Visibility="Collapsed" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0, 20" Grid.Row="1" x:Name="stkFolders">
+
+                <ToggleButton  CornerRadius="16" Click="btnAll_Click" Name="btnMusic" FontSize="16" Padding="10" Content="Music Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+
+                </ToggleButton>
+                <ToggleButton  CornerRadius="16" Click="btnAll_Click" Name="btnPictures" FontSize="16" Padding="10" Content="Pictures Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="1"></ToggleButton>
+                <ToggleButton   CornerRadius="16" Click="btnAll_Click" Name="btnVideos" FontSize="16" Padding="10" Content="Videos Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="2"></ToggleButton>
+                <ToggleButton  CornerRadius="16" Click="btnAll_Click" Name="btnDocuments" FontSize="16" Padding="10" Content="Documents Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="3"></ToggleButton>
+                <ToggleButton CornerRadius="16" Click="btnAll_Click" Name="btnDownloads" FontSize="16" Padding="10" Content="Downloads Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="4"></ToggleButton>
+
+                <controls1:WrapPanel Orientation="Horizontal" x:Name="stkAddedFolders" HorizontalSpacing="10" VerticalSpacing="10"></controls1:WrapPanel>
+            </controls1:WrapPanel>
+            <Border Grid.Row="2" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
+                <controls:GroupedCollectionView ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" x:Name="AllMusicGroupedCollection" Grid.Row="2"  DisplayMemberPath="Title">
+                    <controls:GroupedCollectionView.ItemContentTemplate>
+                        <DataTemplate >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <HyperlinkButton Padding="0" Name="btnGlyph" MinHeight="0" MinWidth="0" Margin="0, 0" Width="35" Grid.Column="0"  Click="btnGlyph_Click" Visibility="Visible" BorderThickness="0" >
+                                    <TextBlock Text="{Binding Glyph}" Foreground="{Binding TitleColor, Mode=OneWay}"  FontFamily="Segoe Fluent Icons"></TextBlock>
+                                </HyperlinkButton>
+                                <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle"   Visibility="Visible"  Margin="0, 0">
+                                    <Grid>
+                                        <TextBlock Text="{Binding Title}"    ToolTipService.ToolTip="{Binding Title}" Foreground="{Binding TitleColor, Mode=OneWay}"></TextBlock>
+                                        <Border Height="2" 
+            Background="Cyan" 
+            VerticalAlignment="Center" 
+            Margin="0,2,0,0"
+                                            CornerRadius="4"
+            Visibility="{Binding VisibilityOfStrikeThrough}" />
+                                    </Grid>
+                                </HyperlinkButton>
+                                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                    <Image ToolTipService.ToolTip="Artist" Width="25" Source="/Assets/defaultartist.png" ></Image>
+                                    <HyperlinkButton Grid.Column="2" Name="hypArtist" ToolTipService.ToolTip="{Binding Artist}" Click="hypArtist_Click"   Visibility="Visible"  Margin="0, 0">
+                                        <TextBlock Text="{Binding Artist}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                                    </HyperlinkButton>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
+                                    <Image ToolTipService.ToolTip="Album" Width="25" Source="/Assets/defaultalbum.png" ></Image>
+                                    <HyperlinkButton ToolTipService.ToolTip="{Binding AlbumName}" Grid.Column="3" Name="hypAlbum" Click="hypAlbum_Click"   Visibility="Visible"  Margin="0, 0">
+                                        <TextBlock Text="{Binding AlbumName}"   FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                                    </HyperlinkButton>
+                                </StackPanel>
+                                <TextBlock ToolTipService.ToolTip="{Binding FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{Binding FormattedDuration}" Visibility="Visible" TextWrapping="Wrap" Margin="0, 20"/>
+                                <Button ToolTipService.ToolTip="{Binding FavString}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" 
+Click="btnFavourite_Click"
+Background="Transparent" 
+BorderThickness="0"
+                                            >
+                                    <Grid>
+                                        <FontIcon Name="OutlineHeart2" 
+    Glyph="&#xEB51;" 
+    FontFamily="{StaticResource SymbolThemeFontFamily}" 
+    Foreground="Gray"
+                                              FontSize="16"/>
+
+                                        <FontIcon Name="FillHeart" 
+    Glyph="&#xEB52;" Opacity="{Binding FavOpacity, Mode=OneWay}"
+    FontFamily="{StaticResource SymbolThemeFontFamily}" 
+    Foreground="Red" 
+    RenderTransformOrigin="0.5,0.5"  FontSize="16">
+                                            <FontIcon.RenderTransform>
+                                                <ScaleTransform ScaleX="{Binding FavOpacity, Mode=OneWay}" 
+                        ScaleY="{Binding FavOpacity, Mode=OneWay}"/>
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                    </Grid>
+                                </Button>
+
+                            </Grid>
+
+                        </DataTemplate>
+                    </controls:GroupedCollectionView.ItemContentTemplate>
+                </controls:GroupedCollectionView>
+            </Border>
+        </Grid>
+        <Grid Name="grdAllMusicHistory" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtHistoryHeading" Text="History of music you've listened to on this app" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+            <StackPanel Orientation="Horizontal" Spacing="20" Grid.Row="1" Margin="0, 30">
+                <Button Content="Play All" Name="btnPlayAll"  Click="btnPlayAll_Click"></Button>
+                <Button Content="Clear History" Name="btnClearHistory" Click="btnClearHistory_Click"></Button>
+                <Button Content="Disable Saving to History" Name="btnDisableHistory" Click="btnDisableHistory_Click"></Button>
+                <AutoSuggestBox Width="250" CornerRadius="12" Name="asbRecents" HorizontalAlignment="Right" PlaceholderText="Search..." TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" QueryIcon="Find" Grid.Row="1"></AutoSuggestBox>
+            </StackPanel>
+            <StackPanel Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkEmptyHistory" Spacing="20">
+                <StackPanel Spacing="20" Orientation="Horizontal">
+                    <Image Width="50" Source="/Assets/emptystuffgreen.png"></Image>
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="You have no history!" Name="txtEmptyHistory"></TextBlock>
+                </StackPanel>
+                <HyperlinkButton HorizontalAlignment="Center" Visibility="Collapsed" Content="Go to Settings" FontSize="24" Margin="0, 0" Padding="0"></HyperlinkButton>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="20">
+
+                <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+
+                <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
+                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
+                    <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromHistory_Click"  Name="btnRemoveFromHistory" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+            <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="3" x:Name="grdViewAllRecentMusic"></controls:GridViewRecentMusic>
+            <Grid  Grid.Row="3"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Name="btnCloseSearch" CornerRadius="12" Background="Transparent" BorderBrush="Transparent" Click="btnCloseSearch_Click" ToolTipService.ToolTip="Close Search Results" HorizontalAlignment="Right" Margin="20, 0">
+                    <FontIcon Glyph="&#xE711;" FontSize="36"></FontIcon>
+                </Button>
+                <Frame VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Name="frmSearchResultsNOMATCH"></Frame>
+
+            </Grid>
+        </Grid>
+        <Grid Name="grdPlaylists" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
+        <Grid Name="grdArtists" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
+        <Grid Name="grdAlbums" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
+        <Grid Name="grdGenres" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
     </Grid>
 </Page>

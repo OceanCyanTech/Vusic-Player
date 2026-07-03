@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -19,9 +20,21 @@ namespace Vusic_Player.Configuration.ClassModels
         public string LastLyricPath { get; set; } = "";
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged(string name) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         [JsonIgnore]
-        public BitmapImage? Thumbnail { get; set; } = null;
+        private BitmapImage _thumbnail = new();
+
+        public BitmapImage Thumbnail
+        {
+            get => _thumbnail;
+            set
+            {
+                _thumbnail = value;
+                OnPropertyChanged(); // Crucial for telling WinUI to draw the image
+            }
+        }
     }
 }
