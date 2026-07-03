@@ -11,7 +11,7 @@
 	<Identity
 	  Name="OceanCyanTech.2212247558119"
 	  Publisher="CN=OceanCyan Tech"
-	  Version="1.0.9.9" />
+	  Version="1.1.0.0" />
 
 	<mp:PhoneIdentity PhoneProductId="a831f905-0ea4-4264-a418-c2d4b3e6cd70" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
