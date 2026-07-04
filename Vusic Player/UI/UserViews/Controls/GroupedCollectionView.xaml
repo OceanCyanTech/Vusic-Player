@@ -10,7 +10,9 @@
 
     <UserControl.Resources>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-        <DataTemplate x:Key="SharedSongItemTemplate">
+        <converter:FavoriteToGlyphConverter x:Key="FavoritetoGlyphConv"/>
+        <converter:FavoriteToColorConverter x:Key="FavoritetoColorConv"/>
+        <DataTemplate x:Key="SharedSongItemTemplate" x:DataType="classmodel:SongModel">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -22,38 +24,38 @@
                 </Grid.ColumnDefinitions>
 
                 <HyperlinkButton Padding="0" Name="btnGlyph" MinHeight="0" MinWidth="0" Width="35" Grid.Column="0" Click="btnGlyph_Click">
-                    <TextBlock Text="{Binding Glyph}" Foreground="{Binding TitleColor, Mode=OneWay}" FontFamily="Segoe Fluent Icons"/>
+                    <TextBlock Text="{x:Bind Glyph, Mode=OneWay}" Foreground="{x:Bind TitleColor, Mode=OneWay}" FontFamily="Segoe Fluent Icons"/>
                 </HyperlinkButton>
 
                 <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle">
                     <Grid>
-                        <TextBlock Text="{Binding Title}" ToolTipService.ToolTip="{Binding Title}" Foreground="{Binding TitleColor, Mode=OneWay}"/>
-                        <Border Height="2" Background="Cyan" VerticalAlignment="Center" Margin="0,2,0,0" CornerRadius="4" Visibility="{Binding VisibilityOfStrikeThrough}" />
+                        <TextBlock Text="{x:Bind Title, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Title, Mode=OneWay}" Foreground="{x:Bind TitleColor, Mode=OneWay}"/>
+                        <Border Height="2" Background="Cyan" VerticalAlignment="Center" Margin="0,2,0,0" CornerRadius="4" Visibility="{x:Bind VisibilityOfStrikeThrough, Mode=OneWay}" />
                     </Grid>
                 </HyperlinkButton>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                     <Image ToolTipService.ToolTip="Artist" Width="25" Source="/Assets/defaultartist.png"/>
-                    <HyperlinkButton Name="hypArtist" ToolTipService.ToolTip="{Binding Artist}" Click="hypArtist_Click">
-                        <TextBlock Text="{Binding Artist}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <HyperlinkButton Name="hypArtist" ToolTipService.ToolTip="{x:Bind Artist, Mode=OneWay}" Click="hypArtist_Click">
+                        <TextBlock Text="{x:Bind Artist, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </HyperlinkButton>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
                     <Image ToolTipService.ToolTip="Album" Width="25" Source="/Assets/defaultalbum.png"/>
-                    <HyperlinkButton ToolTipService.ToolTip="{Binding AlbumName}" Name="hypAlbum" Click="hypAlbum_Click">
-                        <TextBlock Text="{Binding AlbumName}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <HyperlinkButton ToolTipService.ToolTip="{x:Bind AlbumName, Mode=OneWay}" Name="hypAlbum" Click="hypAlbum_Click">
+                        <TextBlock Text="{x:Bind AlbumName, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </HyperlinkButton>
                 </StackPanel>
 
-                <TextBlock ToolTipService.ToolTip="{Binding FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{Binding FormattedDuration}" TextWrapping="Wrap" Margin="0, 20"/>
+                <TextBlock ToolTipService.ToolTip="{x:Bind FormattedDuration, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{x:Bind FormattedDuration, Mode=OneWay}" TextWrapping="Wrap" Margin="0, 20"/>
 
-                <Button ToolTipService.ToolTip="{Binding FavString}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" Click="btnFavourite_Click" Background="Transparent" BorderThickness="0">
+                <Button ToolTipService.ToolTip="{x:Bind FavString, Mode=OneWay}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" Click="btnFavourite_Click" Background="Transparent" BorderThickness="0">
                     <Grid>
                         <FontIcon Name="OutlineHeart2" Glyph="&#xEB51;" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Gray" FontSize="16"/>
-                        <FontIcon Name="FillHeart" Glyph="&#xEB52;" Opacity="{Binding FavOpacity, Mode=OneWay}" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Red" RenderTransformOrigin="0.5,0.5" FontSize="16">
+                        <FontIcon Name="FillHeart" Glyph="&#xEB52;" Opacity="{x:Bind FavOpacity, Mode=OneWay}" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Red" RenderTransformOrigin="0.5,0.5" FontSize="16">
                             <FontIcon.RenderTransform>
-                                <ScaleTransform ScaleX="{Binding FavOpacity, Mode=OneWay}" ScaleY="{Binding FavOpacity, Mode=OneWay}"/>
+                                <ScaleTransform ScaleX="{x:Bind FavOpacity, Mode=OneWay}" ScaleY="{x:Bind FavOpacity, Mode=OneWay}"/>
                             </FontIcon.RenderTransform>
                         </FontIcon>
                     </Grid>
@@ -75,12 +77,65 @@
                     </Border>
                 </Grid>
 
-                <ContentPresenter Grid.Column="1" 
-                          Content="{x:Bind Data}" 
-                          ContentTemplate="{StaticResource SharedSongItemTemplate}"
-                          x:Name="ExternalContentPresenter" 
-                          Loading="ExternalContentPresenter_Loading"
-                          Margin="10,0,0,0"/>
+                <Grid  Grid.Column="1"  Margin="0, 5" VerticalAlignment="Stretch" Background="Transparent" HorizontalAlignment="Stretch">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <HyperlinkButton Padding="0" Name="btnGlyph" MinHeight="0" MinWidth="0" Margin="0, 0" Width="35" Grid.Column="0"  Click="btnGlyph_Click" Visibility="Visible" BorderThickness="0" >
+                        <TextBlock Text="{Binding Data.Glyph}" Foreground="{Binding Data.TitleColor}"  FontFamily="Segoe Fluent Icons"></TextBlock>
+                    </HyperlinkButton>
+                    <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle"   Visibility="Visible"  Margin="0, 0">
+                        <Grid>
+                            <TextBlock Text="{Binding Data.Title}"    ToolTipService.ToolTip="{Binding Data.TitleColor}" Foreground="{Binding Data.TitleColor, Mode=OneWay}"></TextBlock>
+                            <Border Height="2" 
+            Background="Cyan" 
+            VerticalAlignment="Center" 
+            Margin="0,2,0,0"
+                                            CornerRadius="4"
+            Visibility="{Binding Data.VisibilityOfStrikeThrough}" />
+                        </Grid>
+                    </HyperlinkButton>
+                    <StackPanel Visibility="{Binding Data.VisibilityofAudioMeta}" Orientation="Horizontal" Grid.Column="2">
+                        <Image ToolTipService.ToolTip="Artist" Width="25" Source="/Assets/defaultartist.png" ></Image>
+                        <HyperlinkButton Grid.Column="2" Name="hypArtist" ToolTipService.ToolTip="{Binding Data.Artist}" Click="hypArtist_Click"   Visibility="Visible"  Margin="0, 0">
+                            <TextBlock Text="{Binding Data.Artist}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        </HyperlinkButton>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding Data.VisibilityofVideoInfo}"  Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
+
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Data.FileTypeName}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding Data.VisibilityofAudioMeta}"  Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
+                        <Image ToolTipService.ToolTip="Album" Width="25" Source="/Assets/defaultalbum.png" ></Image>
+                        <HyperlinkButton ToolTipService.ToolTip="{Binding Data.AlbumName}" Grid.Column="3" Name="hypAlbum" Click="hypAlbum_Click"   Visibility="Visible"  Margin="0, 0">
+                            <TextBlock Text="{Binding Data.AlbumName}"   FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        </HyperlinkButton>
+                    </StackPanel>
+                    <TextBlock ToolTipService.ToolTip="{Binding Data.FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{Binding Data.FormattedDuration}" Visibility="Visible" TextWrapping="Wrap" Margin="0, 20"/>
+                    <Button ToolTipService.ToolTip="{Binding Data.FavString}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" 
+Click="btnFavourite_Click"
+Background="Transparent" 
+BorderThickness="0"
+                                            >
+                        <Grid>
+                            <FontIcon x:Name="HeartIcon" RenderTransformOrigin="0.5,0.5" Glyph="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoGlyphConv}, Mode=TwoWay}" Foreground="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoColorConv}, Mode=TwoWay}"
+  >
+                                <FontIcon.RenderTransform>
+                                    <ScaleTransform x:Name="HeartScale" ScaleX="1" ScaleY="1"/>
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                        </Grid>
+                    </Button>
+
+                </Grid>
+
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
@@ -90,10 +145,10 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <AutoSuggestBox Name="asbSearch" PlaceholderText="{x:Bind SearchPlaceHolderText, Mode=OneWay}" QueryIcon="Find" Margin="10, 0" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"></AutoSuggestBox>
+        <AutoSuggestBox TextChanged="asbSearch_TextChanged" QuerySubmitted="asbSearch_QuerySubmitted" Name="asbSearch" PlaceholderText="{x:Bind SearchPlaceHolderText, Mode=OneWay}" QueryIcon="Find" Margin="10, 0" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"></AutoSuggestBox>
         <ListView Grid.Row="1" x:Name="MainTimelineList"
                   ItemsSource="{x:Bind TimelineCollection, Mode=TwoWay}"
-                  ItemTemplate="{StaticResource TimelineSongTemplate}"
+         ItemTemplate="{StaticResource TimelineSongTemplate}"
      >
         </ListView>
         <TeachingTip x:Name="MapTip"

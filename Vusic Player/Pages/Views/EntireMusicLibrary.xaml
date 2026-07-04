@@ -106,7 +106,7 @@
                 <controls1:WrapPanel Orientation="Horizontal" x:Name="stkAddedFolders" HorizontalSpacing="10" VerticalSpacing="10"></controls1:WrapPanel>
             </controls1:WrapPanel>
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
-                <controls:GroupedCollectionView ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" x:Name="AllMusicGroupedCollection" Grid.Row="2"  DisplayMemberPath="Title">
+                <!--<controls:GroupedCollectionView ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" x:Name="AllMusicGroupedCollection" Grid.Row="2"  DisplayMemberPath="Title">
                     <controls:GroupedCollectionView.ItemContentTemplate>
                         <DataTemplate >
                             <Grid>
@@ -174,7 +174,11 @@ BorderThickness="0"
 
                         </DataTemplate>
                     </controls:GroupedCollectionView.ItemContentTemplate>
-                </controls:GroupedCollectionView>
+                </controls:GroupedCollectionView>-->
+                <controls:GroupedCollectionView x:Name="AllMusicGroupedCollection" 
+                                Grid.Row="2" 
+                                ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" 
+                                DisplayMemberPath="Title" />
             </Border>
         </Grid>
         <Grid Name="grdAllMusicHistory" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">

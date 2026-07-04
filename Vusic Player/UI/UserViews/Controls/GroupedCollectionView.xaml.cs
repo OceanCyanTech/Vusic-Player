@@ -8,12 +8,18 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Pages.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Core;
+using Windows.Storage;
+using static Vusic_Player.UI.UserViews.Controls.ListViewMedia;
 
 
 namespace Vusic_Player.UI.UserViews.Controls
@@ -89,20 +95,77 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
 
         }
+        private async void PlaySelection(SongModel selectedSong)
+        {
+            if (selectedSong.FilePath != null)
+            {
+                if (File.Exists(selectedSong.FilePath))
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
+                    string fileExtension = file.FileType.ToLowerInvariant();
+                    bool isVideo = false;
+                    if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                    {
+                        isVideo = true;
+                    }
+                    if (isVideo == false)
+                    {
+                        ObservableCollection<SongModel> single = new();
+                        string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
+                        single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title });
+                        QueueService.PlayMedia(single, false, false);
+                    }
+                    else
+                    {
+                        //if (App.UltimateFrame != null)
+                        //{
+                        //    if (App.NavigationFrame == null) return;
+                        //    NavigationManager.LastContentPageType = App.NavigationFrame.CurrentSourcePageType;
+                        //    App.UltimateFrame.Navigate(typeof(VideoPlay), selectedSong.FilePath);
+                        //}
+
+                    }
+                }
+            }
+        }
 
         private void hypTitle_Click(object sender, RoutedEventArgs e)
         {
-
+            Debug.WriteLine("SONG1");
+            if (sender is HyperlinkButton hyperlin)
+            {
+                Debug.WriteLine(hyperlin.DataContext.ToString());
+            }
+            if (sender is HyperlinkButton hyperlink && hyperlink.DataContext is GroupedCollectionModel song && song.Data is SongModel songmodel)
+            {
+                Debug.WriteLine("SONG");
+                PlaySelection(songmodel);
+            }
         }
 
         private void hypArtist_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is HyperlinkButton hyperlink && hyperlink.DataContext is GroupedCollectionModel song && song.Data is SongModel songmodel)
+            {
+
+                if (App.NavigationFrame == null) return;
+                App.NavigationFrame.Navigate(typeof(ArtistView), songmodel.Artist);
+            }
 
         }
 
         private void hypAlbum_Click(object sender, RoutedEventArgs e)
         {
-
+            if (sender is HyperlinkButton hyperlink && hyperlink.DataContext is GroupedCollectionModel song && song.Data is SongModel songmodel && songmodel.AlbumName is string str)
+            {
+                if (App.NavigationFrame == null) return;
+                var myApp = (App)Application.Current;
+                if (myApp.SelectedAlbum == null)
+                {
+                    myApp.SelectedAlbum = new AlbumContext { Name = str };
+                }
+                App.NavigationFrame.Navigate(typeof(AlbumView), myApp.SelectedAlbum);
+            }
         }
         private void GenerateTimeline(IEnumerable<SongModel> items)
         {
@@ -111,9 +174,9 @@ namespace Vusic_Player.UI.UserViews.Controls
             // 1. Helper to get the string value dynamically
             Func<object, string> getStringValue = (obj) =>
             {
-                if (string.IsNullOrEmpty(DisplayMemberPath)) return obj.ToString();
+                if (string.IsNullOrEmpty(DisplayMemberPath)) return obj.ToString() ?? "";
                 var prop = obj.GetType().GetProperty(DisplayMemberPath);
-                return prop?.GetValue(obj)?.ToString() ?? obj.ToString();
+                return prop?.GetValue(obj)?.ToString() ?? obj.ToString() ?? "";
             };
 
             // 2. Sort by the dynamic value
@@ -358,6 +421,16 @@ namespace Vusic_Player.UI.UserViews.Controls
                 // Set the template directly from the UserControl's property
                 presenter.ContentTemplate = this.ItemContentTemplate;
             }
+        }
+
+        private void asbSearch_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+
+        }
+
+        private void asbSearch_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+
         }
     }
 }
