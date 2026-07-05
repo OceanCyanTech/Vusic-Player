@@ -34,6 +34,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" ></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
 
@@ -51,8 +52,8 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <controls1:WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="0, 20" >
-                <GridView SelectionMode="None" Name="grdViewFolders" Grid.Row="1">
+            <controls1:WrapPanel VerticalAlignment="Stretch" Orientation="Horizontal" Grid.Row="1" Margin="0, 20" >
+                <GridView SelectionMode="None" VerticalAlignment="Stretch" Name="grdViewFolders" Grid.Row="1">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsWrapGrid Orientation="Horizontal" ItemWidth="NaN" />
@@ -60,7 +61,7 @@
                     </GridView.ItemsPanel>
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <ToggleButton IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Click="btnAll_Click" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Unchecked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+                            <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Click="btnAll_Click" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Unchecked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
                                 <ToggleButton.ContextFlyout>
                                     <MenuFlyout >
                                         <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
@@ -86,14 +87,14 @@
                     </GridView.ItemTemplate>
                 </GridView>
 
-                <Button CornerRadius="16" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
+                <Button CornerRadius="16" VerticalAlignment="Stretch" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Image Width="20" Source="/Assets/addicon.png"></Image>
                         <TextBlock Text="Add Folder"></TextBlock>
                     </StackPanel>
                 </Button>
             </controls1:WrapPanel>
-            <controls1:WrapPanel Visibility="Collapsed" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0, 20" Grid.Row="1" x:Name="stkFolders">
+            <controls1:WrapPanel VerticalAlignment="Center" Visibility="Collapsed" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0, 20" Grid.Row="1" x:Name="stkFolders">
 
                 <ToggleButton  CornerRadius="16" Click="btnAll_Click" Name="btnMusic" FontSize="16" Padding="10" Content="Music Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
 
@@ -105,7 +106,8 @@
 
                 <controls1:WrapPanel Orientation="Horizontal" x:Name="stkAddedFolders" HorizontalSpacing="10" VerticalSpacing="10"></controls1:WrapPanel>
             </controls1:WrapPanel>
-            <Border Grid.Row="2" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
+            <CheckBox Name="chkIncludeSubDirectories" IsChecked="True" Content="Include files from sub directories" Grid.Row=" 2"></CheckBox>
+            <Border  Grid.Row="3" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
                 <!--<controls:GroupedCollectionView ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" x:Name="AllMusicGroupedCollection" Grid.Row="2"  DisplayMemberPath="Title">
                     <controls:GroupedCollectionView.ItemContentTemplate>
                         <DataTemplate >
@@ -175,11 +177,18 @@ BorderThickness="0"
                         </DataTemplate>
                     </controls:GroupedCollectionView.ItemContentTemplate>
                 </controls:GroupedCollectionView>-->
+                
                 <controls:GroupedCollectionView x:Name="AllMusicGroupedCollection" 
                                 Grid.Row="2" 
                                 ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" 
                                 DisplayMemberPath="Title" />
+                
             </Border>
+            <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoading" Orientation="Horizontal" Spacing="20" Grid.Row="3">
+                <ProgressRing IsIndeterminate="True"/>
+                <TextBlock Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
+            </StackPanel>
+
         </Grid>
         <Grid Name="grdAllMusicHistory" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
             <Grid.RowDefinitions>
@@ -217,7 +226,7 @@ BorderThickness="0"
             </StackPanel>
 
             <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="3" x:Name="grdViewAllRecentMusic"></controls:GridViewRecentMusic>
-            <Grid  Grid.Row="3"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
+            <Grid  Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition></RowDefinition>

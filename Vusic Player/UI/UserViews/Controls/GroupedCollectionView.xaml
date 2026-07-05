@@ -92,7 +92,7 @@
                     </HyperlinkButton>
                     <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle"   Visibility="Visible"  Margin="0, 0">
                         <Grid>
-                            <TextBlock Text="{Binding Data.Title}"    ToolTipService.ToolTip="{Binding Data.TitleColor}" Foreground="{Binding Data.TitleColor, Mode=OneWay}"></TextBlock>
+                            <TextBlock Text="{Binding Data.Title}"    ToolTipService.ToolTip="{Binding Data.Title}" Foreground="{Binding Data.TitleColor, Mode=OneWay}"></TextBlock>
                             <Border Height="2" 
             Background="Cyan" 
             VerticalAlignment="Center" 
@@ -147,10 +147,22 @@ BorderThickness="0"
         </Grid.RowDefinitions>
         <AutoSuggestBox TextChanged="asbSearch_TextChanged" QuerySubmitted="asbSearch_QuerySubmitted" Name="asbSearch" PlaceholderText="{x:Bind SearchPlaceHolderText, Mode=OneWay}" QueryIcon="Find" Margin="10, 0" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"></AutoSuggestBox>
         <ListView Grid.Row="1" x:Name="MainTimelineList"
-                  ItemsSource="{x:Bind TimelineCollection, Mode=TwoWay}"
+                  ItemsSource="{x:Bind TimelineCollection, Mode=OneWay}"
          ItemTemplate="{StaticResource TimelineSongTemplate}"
      >
         </ListView>
+        <Grid  Grid.Row="1"  Margin="0, 20"    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Name="btnCloseSearch" CornerRadius="12" Background="Transparent" BorderBrush="Transparent" Click="btnCloseSearch_Click" ToolTipService.ToolTip="Close Search Results" HorizontalAlignment="Right" Margin="20, 0">
+                <FontIcon Glyph="&#xE711;" FontSize="36"></FontIcon>
+            </Button>
+            <Frame VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Name="frmSearchResultsNOMATCH"></Frame>
+
+        </Grid>
+
         <TeachingTip x:Name="MapTip"
             IsOpen="False"
              IsLightDismissEnabled="True">

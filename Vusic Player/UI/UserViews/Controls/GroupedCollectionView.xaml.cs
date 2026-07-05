@@ -4,14 +4,17 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.DirectoryServices;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Pages.Views;
@@ -215,6 +218,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         public static readonly DependencyProperty DisplayMemberPathProperty =
             DependencyProperty.Register("DisplayMemberPath", typeof(string),
             typeof(GroupedCollectionView), new PropertyMetadata(null));
+
         //private void LoadDummyData()
         //{
         //    // A - Astronomy
@@ -422,15 +426,99 @@ namespace Vusic_Player.UI.UserViews.Controls
                 presenter.ContentTemplate = this.ItemContentTemplate;
             }
         }
+        ObservableCollection<GroupedCollectionModel> searchresults = new();
 
+        private IEnumerable<GroupedCollectionModel> GetFilteredResults(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return Enumerable.Empty<GroupedCollectionModel>();
+
+            var rawQuery = query.Trim();
+
+            var minMatch = Regex.Match(rawQuery, @"(\d+)\s*(?:min|m)", RegexOptions.IgnoreCase);
+            var secMatch = Regex.Match(rawQuery, @"(\d+)\s*(?:sec|s)", RegexOptions.IgnoreCase);
+
+            int searchSeconds = 0;
+            if (minMatch.Success) searchSeconds += int.Parse(minMatch.Groups[1].Value) * 60;
+            if (secMatch.Success) searchSeconds += int.Parse(secMatch.Groups[1].Value);
+
+            var textQuery = rawQuery;
+            if (minMatch.Success) textQuery = textQuery.Replace(minMatch.Value, "");
+            if (secMatch.Success) textQuery = textQuery.Replace(secMatch.Value, "");
+            textQuery = textQuery.Trim();
+
+            return TimelineCollection.Where(s =>
+            {
+                bool textMatch = !string.IsNullOrEmpty(textQuery) && (
+                    (s.Data.Title?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Data.Artist?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Data.AlbumName?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Data.Year.ToString().Contains(textQuery))
+                );
+
+                bool durationMatch = (searchSeconds > 0 && s.Data.SongDuration.HasValue &&
+                                     Math.Abs(s.Data.SongDuration.Value.TotalSeconds - searchSeconds) < 2);
+
+                return textMatch || durationMatch;
+            })
+            .OrderByDescending(s => s.Data.Title?.StartsWith(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+            .ThenBy(s => s.Data.Title);
+        }
+        private void btnCloseSearch_Click(object sender, RoutedEventArgs e)
+        {
+            asbSearch.Text = "";
+            MainTimelineList.Focus(FocusState.Programmatic);
+            asbSearch.ItemsSource = null;
+        }
         private void asbSearch_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
+            if (string.IsNullOrEmpty(sender.Text))
+            {
+                searchresults.Clear();
+                grdNoSearchResults.Visibility = Visibility.Collapsed;
 
+                MainTimelineList.ItemsSource = TimelineCollection;
+                MainTimelineList.Visibility = Visibility.Visible;
+
+                return;
+            }
+
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var results = GetFilteredResults(sender.Text);
+
+                searchresults.Clear();
+                foreach (var item in results) searchresults.Add(item);
+
+                sender.ItemsSource = results.Any() ? null : new List<string> { "No matches found!" };
+
+                MainTimelineList.ItemsSource = searchresults;
+            }
         }
+
+
 
         private void asbSearch_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
+            var results = GetFilteredResults(sender.Text);
 
+            if (results.Any())
+            {
+                grdNoSearchResults.Visibility = Visibility.Collapsed;
+
+                MainTimelineList.Visibility = Visibility.Visible;
+                //       Grid.SetRow(grdNoSearchResults, 2);
+
+                searchresults.Clear();
+                foreach (var item in results) searchresults.Add(item);
+            }
+            else if (TimelineCollection.Count > 0)
+            {
+
+                MainTimelineList.Visibility = Visibility.Collapsed;
+
+                grdNoSearchResults.Visibility = Visibility.Visible;
+                frmSearchResultsNOMATCH.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
+            }
         }
     }
 }

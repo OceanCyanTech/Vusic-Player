@@ -42,7 +42,7 @@ namespace Vusic_Player.Pages.Views
         public EntireMusicLibrary()
         {
             InitializeComponent();
-
+            stkLoading.Visibility = Visibility.Visible;
             LoadFolders();
             //        LoadDummy();
         }
@@ -233,6 +233,24 @@ namespace Vusic_Player.Pages.Views
         {
 
         }
+        public async Task<List<StorageFile>> GetAllFilesRecursivelyAsync(StorageFolder folder)
+        {
+            var fileList = new List<StorageFile>();
+
+            // 1. Get surface files
+            var surfaceFiles = await folder.GetFilesAsync();
+            fileList.AddRange(surfaceFiles);
+
+            // 2. Loop through subfolders and recurse
+            var subfolders = await folder.GetFoldersAsync();
+            foreach (var subfolder in subfolders)
+            {
+                var subfolderFiles = await GetAllFilesRecursivelyAsync(subfolder);
+                fileList.AddRange(subfolderFiles);
+            }
+
+            return fileList;
+        }
         public ObservableCollection<SongModel> AllAvailableSongs = new ObservableCollection<SongModel>();
         private async Task LoadAllFiles(List<string> searchPaths)
         {
@@ -243,23 +261,31 @@ namespace Vusic_Player.Pages.Views
                 try
                 {
                     StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
-                    //          var queryOptions = new QueryOptions(CommonFileQuery.OrderByMusicProperties, AudioExtensions.List);
-                    var files = await folder.GetFilesAsync();
+                    var queryOptions = new QueryOptions(CommonFileQuery.OrderByName, AudioExtensions.List);
+                    queryOptions.FolderDepth = FolderDepth.Deep; // <--- This does the recursion safely!
 
-                    //        var files = await query.GetFilesAsync();
+                    var queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+                    var files = await queryResult.GetFilesAsync();
                     foreach (var file in files)
                     {
-                        string fileExtension = Path.GetExtension(file.Path).ToLowerInvariant();
-                        if (AudioExtensions.List.Contains(fileExtension))
-                        {
-                            allFoundFiles.Add(file);
-                        }
+                        // No extension check needed here anymore, QueryOptions filtered them already!
+                        Debug.WriteLine(file.Path + " is found being added to allFoundFiles");
+                        allFoundFiles.Add(file);
                     }
+
+                    Debug.WriteLine($"Finished processing path: {path}. Current total in list: {allFoundFiles.Count}");
                 }
-                catch { /* Handle access denied */ }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"CRASHED INSIDE FOREACH LOOP: {ex.GetType().Name} - {ex.Message}");
+                }
             }
+
+            Debug.WriteLine($"Total files collected in list: {allFoundFiles.Count}");
+            Debug.WriteLine($"Total files collected in list: {allFoundFiles.Count}");
             if (allFoundFiles.Count > 0)
             {
+                Debug.WriteLine("IT IS FOUND");
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 var favourites = currentSettings.Favourites;
                 foreach (var file in allFoundFiles)
@@ -450,6 +476,7 @@ namespace Vusic_Player.Pages.Views
             }
             AllAvailableSongs.Clear();
             await LoadAllFiles(fpaths);
+            stkLoading.Visibility = Visibility.Collapsed;
         }
         ObservableCollection<FoldersListOpened> foldersListOpened = new();
         private void LoadDummy()
@@ -625,7 +652,19 @@ namespace Vusic_Player.Pages.Views
 
         private async void btnGenericFolder_Checked(object sender, RoutedEventArgs e)
         {
-
+            if (sender is ToggleButton tgl)
+            {
+                if (tgl.IsChecked == true)
+                {
+                    if (tgl.DataContext is FoldersListOpened folder)
+                    {
+                        var folderpath = folder.FolderPath;
+                        var list = new List<string>();
+                        list.Add(folderpath);
+                        await LoadAllFiles(list);
+                    }
+                }
+            }
             //if (sender is ToggleButton tgl)
             //{
 
@@ -652,7 +691,27 @@ namespace Vusic_Player.Pages.Views
 
         private void btnGenericFolder_Unchecked(object sender, RoutedEventArgs e)
         {
+            if (sender is ToggleButton btn && btn.DataContext is FoldersListOpened folder)
+            {
+                if (btn.IsChecked == false)
+                {
+                    var folderpath = folder.FolderPath;
+                    string folderWithBackslash = folderpath.EndsWith(Path.DirectorySeparatorChar.ToString())
+                ? folderpath
+                : folderpath + Path.DirectorySeparatorChar;
 
+                    // 2. Use .Any() to see if AT LEAST ONE song is in this folder
+                    var songsInThisFolder = AllAvailableSongs.Where(p =>
+            p.FilePath.StartsWith(folderWithBackslash, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+                    // Now you have the songs! For example, if you want to remove them:
+                    foreach (var song in songsInThisFolder)
+                    {
+                        AllAvailableSongs.Remove(song);
+                    }
+                }
+            }
         }
 
         private async void btnClearHistory_Click(object sender, RoutedEventArgs e)
