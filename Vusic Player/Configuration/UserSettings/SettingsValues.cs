@@ -26,6 +26,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public ObservableCollection<FavouriteItems> Favourites { get; set; } = new();
         public ObservableCollection<MediaOptions> VideoFilesOptions { get; set; } = new();
         public bool IsTimeStampEnabledOnSnapshot { get; set; } = false;
+        public bool IncludeSubDirMusLib { get; set; } = true;
         public string FolderPathSnapshot { get; set; } = "";
         public bool IsPlayerTimeStampEnabledOnSnapshot { get; set; } = false;
         public bool IsHorizontalFlip { get; set; } = false;

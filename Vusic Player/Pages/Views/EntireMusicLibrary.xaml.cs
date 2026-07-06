@@ -42,6 +42,8 @@ namespace Vusic_Player.Pages.Views
         public EntireMusicLibrary()
         {
             InitializeComponent();
+            LoadSettings();
+
             stkLoading.Visibility = Visibility.Visible;
             LoadFolders();
             //        LoadDummy();
@@ -78,7 +80,7 @@ namespace Vusic_Player.Pages.Views
             }
             base.OnNavigatedTo(e);
         }
-        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        private async void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             var selectedBtn = sender as ToggleButton;
             if (selectedBtn == null) return;
@@ -111,8 +113,45 @@ namespace Vusic_Player.Pages.Views
             {
                 grdAllMusic.Visibility = Visibility.Visible;
             }
+            else if (category == "Playlists")
+            {
+                grdPlaylists.Visibility = Visibility.Visible;
+                Debug.WriteLine("Playlst");
+                LoadAllPlaylists();
+            }
+            else if (category == "Artists")
+            {
+                grdArtists.Visibility = Visibility.Visible;
+                Debug.WriteLine("Playlst");
+                await LoadArtists();
+            }
+            else if (category == "Albums")
+            {
+                grdAlbums.Visibility = Visibility.Visible;
+                Debug.WriteLine("Album");
+                await LoadAlbums();
+            }
+        }
+        private async void LoadAllPlaylists()
+        {
+            Debug.WriteLine("Playlst2");
+
+            var currentset = await SettingsLoader.LoadSettingsAsync();
+            var playlists = currentset.SavedPlaylists;
+            playlistsAll.Clear();
+
+            foreach (var playlist in playlists)
+            {
+                Debug.WriteLine("PLAYLIST BEING ADDED IS :" + playlist.PlaylistName);
+                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, Thumbnail = playlist.Thumbnail });
+            }
+            Debug.WriteLine("Playlst3");
+
         }
         ObservableCollection<RecentMusicModel> recentMusics = new();
+        ObservableCollection<PlaylistItem> playlistsAll = new();
+        ObservableCollection<ArtistShow> artistsAll = new();
+        ObservableCollection<ArtistDiscAlbumModel> albumsAll = new();
         private async void LoadHistory()
         {
             recentMusics.CollectionChanged += RecentMusics_CollectionChanged;
@@ -251,6 +290,75 @@ namespace Vusic_Player.Pages.Views
 
             return fileList;
         }
+        private async Task LoadArtists()
+        {
+            if (AllAvailableSongs.Count > 0)
+            {
+                artistsAll.Clear();
+                var artistSongCounts = AllAvailableSongs
+        .Where(song => song.Artist != null && !string.IsNullOrEmpty(song.Artist)) // Ensure artist isn't null/empty
+        .GroupBy(song => song.Artist) // Group songs together by the artist's name
+        .Select(group => new
+        {
+            ArtistName = group.Key,     // The name we grouped by
+            SongCount = group.Count()    // Total number of items in this group
+        })
+        .OrderBy(result => result.ArtistName) // Optional: alphabetize by artist name
+        .ToList();
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var artists = currentSettings.ArtistsList;
+                foreach (var artist in artistSongCounts)
+                {
+                    string fallbackUri = "ms-appx:///Assets/defaultartist.png";
+
+                    var existartist = artists.FirstOrDefault(p => p.Name == artist.ArtistName);
+                    if (existartist != null)
+                    {
+                        fallbackUri = existartist.Thumbnail;
+                    }
+                    var artistsongcount = $"• {artist.SongCount} {(artist.SongCount == 1 ? "item" : "items")}";
+                    artistsAll.Add(new ArtistShow { ArtistName = artist.ArtistName, ArtistSongCount = artistsongcount, ArtistThumbnail = fallbackUri });
+                }
+            }
+        }
+        private async Task LoadAlbums()
+        {
+            if (AllAvailableSongs.Count > 0)
+            {
+                albumsAll.Clear();
+                var albumsSongCounts = AllAvailableSongs
+        .Where(song => song.AlbumName != null && !string.IsNullOrEmpty(song.AlbumName)) // Ensure artist isn't null/empty
+        .GroupBy(song => song.AlbumName) // Group songs together by the artist's name
+        .Select(group => new
+        {
+            AlbumName = group.Key,     // The name we grouped by
+            SongCount = group.Count(),
+            Artists = group// Total number of items in this group
+        })
+        .OrderBy(result => result.ArtistName) // Optional: alphabetize by artist name
+        .ToList();
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var artists = currentSettings.ArtistsList;
+                foreach (var artist in artistSongCounts)
+                {
+                    string fallbackUri = "ms-appx:///Assets/defaultartist.png";
+
+                    var existartist = artists.FirstOrDefault(p => p.Name == artist.ArtistName);
+                    if (existartist != null)
+                    {
+                        fallbackUri = existartist.Thumbnail;
+                    }
+                    var artistsongcount = $"• {artist.SongCount} {(artist.SongCount == 1 ? "item" : "items")}";
+                    artistsAll.Add(new ArtistShow { ArtistName = artist.ArtistName, ArtistSongCount = artistsongcount, ArtistThumbnail = fallbackUri });
+                }
+            }
+        }
+
+        private async void LoadSettings()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            chkIncludeSubDirectories.IsChecked = currentSettings.IncludeSubDirMusLib;
+        }
         public ObservableCollection<SongModel> AllAvailableSongs = new ObservableCollection<SongModel>();
         private async Task LoadAllFiles(List<string> searchPaths)
         {
@@ -262,10 +370,18 @@ namespace Vusic_Player.Pages.Views
                 {
                     StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
                     var queryOptions = new QueryOptions(CommonFileQuery.OrderByName, AudioExtensions.List);
-                    queryOptions.FolderDepth = FolderDepth.Deep; // <--- This does the recursion safely!
-
+                    if (chkIncludeSubDirectories.IsChecked == true)
+                    {
+                        queryOptions.FolderDepth = FolderDepth.Deep;
+                    } // <--- This does the recursion safely!
+                    else
+                    {
+                        queryOptions.FolderDepth = FolderDepth.Shallow;
+                    }
                     var queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+
                     var files = await queryResult.GetFilesAsync();
+
                     foreach (var file in files)
                     {
                         // No extension check needed here anymore, QueryOptions filtered them already!
@@ -305,13 +421,17 @@ namespace Vusic_Player.Pages.Views
      ? Path.GetFileNameWithoutExtension(file.Path)
      : tag.Title;
                         string album = string.IsNullOrWhiteSpace(tag.Album)
-    ? "Unknown Album"
-    : tag.Album;
+                ? "Unknown Album"
+                : tag.Album;
                         string artist = string.IsNullOrWhiteSpace(string.Join("; ", tag.AlbumArtists))
-  ? "Unknown Artist"
-  : string.Join("; ", tag.AlbumArtists);
+                ? "Unknown Artist"
+                : string.Join("; ", tag.AlbumArtists);
+                        var exist = AllAvailableSongs.FirstOrDefault(p => p.FilePath == file.Path);
                         var song = new SongModel { Title = title, AlbumName = album, Artist = artist, FilePath = file.Path, SongDuration = tagFile.Properties.Duration, IsFavourite = isFav, Glyph = "\uEC4F" };
-                        AllAvailableSongs.Add(song);
+                        if (exist == null)
+                        {
+                            AllAvailableSongs.Add(song);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -913,6 +1033,24 @@ namespace Vusic_Player.Pages.Views
             selectMoreOptions.Visibility = Visibility.Collapsed;
 
             grdViewAllRecentMusic.RemoveSelection();
+        }
+
+        private async void chkIncludeSubDirectories_Checked(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            stkLoading.Visibility = Visibility.Visible;
+
+            currentSettings.IncludeSubDirMusLib = chkIncludeSubDirectories.IsChecked ?? true;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            List<string> fpaths = new();
+            foreach (var item in foldersListOpened)
+            {
+                fpaths.Add(item.FolderPath);
+            }
+            AllAvailableSongs.Clear();
+            await LoadAllFiles(fpaths);
+            stkLoading.Visibility = Visibility.Collapsed;
+
         }
     }
 }

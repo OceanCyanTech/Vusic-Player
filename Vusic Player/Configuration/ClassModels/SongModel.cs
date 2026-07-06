@@ -21,7 +21,7 @@ namespace Vusic_Player.Configuration.ClassModels
         private Visibility visibilityofstrikethrough = Visibility.Collapsed;
         private Visibility visibilityofaudiometadata = Visibility.Visible;
         private Visibility visibilityofvidinfo = Visibility.Collapsed;
-        private string? _artist;
+        private string _artist = "";
         private string? _albumName;
         private string? _fileTypeName = "Video File";
         private bool? _isEpisode;
@@ -41,7 +41,7 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _isQueueItem;
             set { _isQueueItem = value; OnPropertyChanged(); }
         }
-        public string? Artist
+        public string Artist
         {
             get => _artist;
             set { _artist = value; OnPropertyChanged(); }

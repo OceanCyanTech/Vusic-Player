@@ -8,7 +8,63 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid  Margin="30, 30">
+        <NavigationView IsBackButtonVisible="Collapsed" PaneDisplayMode="Top" IsSettingsVisible="False"  Name="nvgNavigationMain">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Home Page Options"/>
+                <NavigationViewItem Content="Music Options"/>
+                <NavigationViewItem Content="Video Options"/>
+                <NavigationViewItem Content="About &amp; Help"/>
+            </NavigationView.MenuItems>
+            <ScrollViewer>
+                <Grid Background="Transparent" Margin="30, 30">
 
+                    <Grid Name="frmAboutOptions" RowSpacing="30">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Spacing="15">
+                            <StackPanel Orientation="Horizontal" Spacing="20">
+                                <Image VerticalAlignment="Center" Width="50" Source="/Assets/appicon.png"></Image>
+                                <TextBlock IsTextSelectionEnabled="True" VerticalAlignment="Center" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Vusic Player"></TextBlock>
+                            </StackPanel>
+                            <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.1.0.0"></TextBlock>
+                            <TextBlock IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="Preview (Beta 2)"></TextBlock>
+                            <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech"></TextBlock>
+                            <Image Margin="0, 30" Width="300" Source="/Assets/OceanCyan Logo High.png"></Image>
+                        </StackPanel>
+                        <MenuFlyoutSeparator Grid.Row="2"/>
+                        <TextBlock Text="Updates" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
+                            <Image Width="30" Source="/Assets/success.png"/>
+                            <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="You are on the latest version of Vusic Player!"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Spacing="20" Grid.Row="5">
+                            <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" Text="The Microsoft Store handles updates automatically. But if you want to double-check right now, you can trigger a manual check below."/>
+
+                            <Button Style="{StaticResource AccentButtonStyle}" Content="Check For Updates"/>
+                        </StackPanel>
+                        <MenuFlyoutSeparator Grid.Row="6"/>
+                        <TextBlock Text="Help" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="8" Text="Vusic Player is an open source project!"/>
+                        <HyperlinkButton Content="View Source on GitHub" Grid.Row="9"/>
+                        <HyperlinkButton Content="Documentation and Support" Grid.Row="10"/>
+                        <HyperlinkButton Content="Share your feedback to help us improve the app" Grid.Row="11"/>
+                    </Grid>
+                </Grid>
+            </ScrollViewer>
+        </NavigationView>
     </Grid>
 </Page>

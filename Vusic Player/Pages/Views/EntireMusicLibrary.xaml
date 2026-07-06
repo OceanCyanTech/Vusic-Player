@@ -106,7 +106,7 @@
 
                 <controls1:WrapPanel Orientation="Horizontal" x:Name="stkAddedFolders" HorizontalSpacing="10" VerticalSpacing="10"></controls1:WrapPanel>
             </controls1:WrapPanel>
-            <CheckBox Name="chkIncludeSubDirectories" IsChecked="True" Content="Include files from sub directories" Grid.Row=" 2"></CheckBox>
+            <CheckBox Name="chkIncludeSubDirectories" IsChecked="True" Checked="chkIncludeSubDirectories_Checked" Unchecked="chkIncludeSubDirectories_Checked" Content="Include files from sub directories" Grid.Row="2"></CheckBox>
             <Border  Grid.Row="3" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
                 <!--<controls:GroupedCollectionView ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" x:Name="AllMusicGroupedCollection" Grid.Row="2"  DisplayMemberPath="Title">
                     <controls:GroupedCollectionView.ItemContentTemplate>
@@ -177,12 +177,13 @@ BorderThickness="0"
                         </DataTemplate>
                     </controls:GroupedCollectionView.ItemContentTemplate>
                 </controls:GroupedCollectionView>-->
-                
+
                 <controls:GroupedCollectionView x:Name="AllMusicGroupedCollection" 
                                 Grid.Row="2" 
+                                TemplateMode="Media"
                                 ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" 
                                 DisplayMemberPath="Title" />
-                
+
             </Border>
             <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoading" Orientation="Horizontal" Spacing="20" Grid.Row="3">
                 <ProgressRing IsIndeterminate="True"/>
@@ -238,8 +239,32 @@ BorderThickness="0"
 
             </Grid>
         </Grid>
-        <Grid Name="grdPlaylists" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
-        <Grid Name="grdArtists" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
+        <Grid Name="grdPlaylists" RowSpacing="20" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtAllPlaylists" Text="All Playlists " Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+
+            <controls:GroupedCollectionView x:Name="AllPlaylistGroupedCollection" 
+                      Grid.Row="1" 
+                      TemplateMode="Playlists"
+                      ItemsSource="{x:Bind playlistsAll, Mode=OneWay}" SearchPlaceHolderText="Search for playlists..."
+                      DisplayMemberPath="PlaylistName" />
+        </Grid>
+        <Grid Name="grdArtists" Margin="20, 30" RowSpacing="15" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+               
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtArtistsAll" Text="Artists " Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <controls:GroupedCollectionView x:Name="ArtistsGroupedCollection" 
+             Grid.Row="1" 
+             TemplateMode="Artist"
+             ItemsSource="{x:Bind artistsAll, Mode=OneWay}" SearchPlaceHolderText="Search for artists associated with songs on this PC..."
+             DisplayMemberPath="ArtistName" />
+        </Grid>
         <Grid Name="grdAlbums" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
         <Grid Name="grdGenres" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
     </Grid>

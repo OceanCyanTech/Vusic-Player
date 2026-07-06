@@ -29,9 +29,69 @@ namespace Vusic_Player.UI.UserViews.Controls
 {
     public sealed partial class GroupedCollectionView : UserControl
     {
+        public enum TimelineTemplateMode
+        {
+            Media,
+            Playlists,
+            Artist,
+            Album,
+            Genre
+        }
         public GroupedCollectionView()
         {
             InitializeComponent();
+        }
+        public static readonly DependencyProperty TemplateModeProperty =
+               DependencyProperty.Register(
+                   nameof(TemplateMode),
+                   typeof(TimelineTemplateMode),
+                   typeof(GroupedCollectionView),
+                   new PropertyMetadata(TimelineTemplateMode.Media, OnTemplateModeChanged));
+
+        public TimelineTemplateMode TemplateMode
+        {
+            get => (TimelineTemplateMode)GetValue(TemplateModeProperty);
+            set => SetValue(TemplateModeProperty, value);
+        }
+        private static void OnTemplateModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.WriteLine("UPDATE3");
+
+            if (d is GroupedCollectionView control)
+            {
+                Debug.WriteLine("UPDATE4");
+
+                control.UpdateListViewTemplate();
+            }
+        }
+
+        // Switch the template based on the enum selection
+        private void UpdateListViewTemplate()
+        {
+            Debug.WriteLine("UPDATE1");
+            string resourceKey = TemplateMode switch
+            {
+                TimelineTemplateMode.Media => "TimelineSongTemplate",
+                TimelineTemplateMode.Album => "AlbumTimelineTemplate",
+                TimelineTemplateMode.Artist => "ArtistTimelineTemplate",
+                TimelineTemplateMode.Playlists => "PlaylistTimelineTemplate",
+                TimelineTemplateMode.Genre => "GenreTimelineTemplate",
+                _ => "TimelineSongTemplate" // Fallback default
+            };
+
+            if (this.Resources.TryGetValue(resourceKey, out object templateObj)
+                && templateObj is DataTemplate template)
+            {
+                Debug.WriteLine("UPDATE2");
+
+                MainTimelineList.ItemTemplate = template;
+            }
+        }
+
+        // Ensure the default template loads correctly on startup
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateListViewTemplate();
         }
         public DataTemplate ItemContentTemplate
         {
@@ -81,13 +141,55 @@ namespace Vusic_Player.UI.UserViews.Controls
                         newList.CollectionChanged += control.OnCollectionChanged;
                     }
                 }
+                else if (e.NewValue is IEnumerable<PlaylistItem> list2)
+                {
+                    Debug.WriteLine("Playlst4");
+
+                    control.GenerateTimelinePlaylist(list2);
+                    Debug.WriteLine("Playlst7");
+
+                    // 2. Subscribe to the new collection's changes
+                    if (e.NewValue is System.Collections.Specialized.INotifyCollectionChanged newList)
+                    {
+                        Debug.WriteLine("Playlst8");
+
+                        newList.CollectionChanged += control.OnCollectionChanged;
+                    }
+                }
+                else if (e.NewValue is IEnumerable<ArtistShow> list3)
+                {
+                    Debug.WriteLine("Playlst4");
+
+                    control.GenerateTimelineArtist(list3);
+                    Debug.WriteLine("Playlst7");
+
+                    // 2. Subscribe to the new collection's changes
+                    if (e.NewValue is System.Collections.Specialized.INotifyCollectionChanged newList)
+                    {
+                        Debug.WriteLine("Playlst8");
+
+                        newList.CollectionChanged += control.OnCollectionChanged;
+                    }
+                }
+
+                }
             }
-        }
         private void OnCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (ItemsSource is IEnumerable<SongModel> list)
             {
+                MainTimelineList.ItemsSource = TimelineCollection;
                 GenerateTimeline(list);
+            }
+            else if (ItemsSource is IEnumerable<PlaylistItem> list2)
+            {
+                MainTimelineList.ItemsSource = TimelineCollectionPlaylist;
+                GenerateTimelinePlaylist(list2);
+            }
+            else if (ItemsSource is IEnumerable<ArtistShow> list3)
+            {
+                MainTimelineList.ItemsSource = TimelineCollectionArtist;
+                GenerateTimelineArtist(list3);
             }
         }
         private void btnGlyph_Click(object sender, RoutedEventArgs e)
@@ -170,6 +272,98 @@ namespace Vusic_Player.UI.UserViews.Controls
                 App.NavigationFrame.Navigate(typeof(AlbumView), myApp.SelectedAlbum);
             }
         }
+        private void GenerateTimelinePlaylist(IEnumerable<PlaylistItem> items)
+        {
+            Debug.WriteLine("Playlst5");
+
+
+            TimelineCollectionPlaylist.Clear();
+
+            // 1. Helper to get the string value dynamically
+            Func<object, string> getStringValue = (obj) =>
+            {
+                if (string.IsNullOrEmpty(DisplayMemberPath)) return obj.ToString() ?? "";
+                var prop = obj.GetType().GetProperty(DisplayMemberPath);
+                return prop?.GetValue(obj)?.ToString() ?? obj.ToString() ?? "";
+            };
+
+            // 2. Sort by the dynamic value
+            var sorted = items.OrderBy(x => getStringValue(x)).ToList();
+            string lastLetter = "";
+
+            foreach (var item in sorted)
+            {
+                string currentTitle = getStringValue(item);
+                string firstLetter = string.IsNullOrEmpty(currentTitle) ? "#" :
+                                     char.IsDigit(currentTitle[0]) ? "#" :
+                                     currentTitle[0].ToString().ToUpper();
+
+                bool isStart = firstLetter != lastLetter;
+                if (isStart) lastLetter = firstLetter;
+                Debug.WriteLine(item.PlaylistName);
+
+                TimelineCollectionPlaylist.Add(new GroupedCollectionModelPlaylist
+                {
+
+                    Data = item,
+                    Letter = firstLetter,
+                    IsGroupStart = isStart
+                });
+            }
+
+            MapGridView.ItemsSource = TimelineCollectionPlaylist
+                .Where(x => x.IsGroupStart)
+                .Select(x => x.Letter)
+                .ToList();
+            Debug.WriteLine("Playlst6");
+
+        }
+        private void GenerateTimelineArtist(IEnumerable<ArtistShow> items)
+        {
+            Debug.WriteLine("Playlst5");
+
+
+            TimelineCollectionArtist.Clear();
+
+            // 1. Helper to get the string value dynamically
+            Func<object, string> getStringValue = (obj) =>
+            {
+                if (string.IsNullOrEmpty(DisplayMemberPath)) return obj.ToString() ?? "";
+                var prop = obj.GetType().GetProperty(DisplayMemberPath);
+                return prop?.GetValue(obj)?.ToString() ?? obj.ToString() ?? "";
+            };
+
+            // 2. Sort by the dynamic value
+            var sorted = items.OrderBy(x => getStringValue(x)).ToList();
+            string lastLetter = "";
+
+            foreach (var item in sorted)
+            {
+                string currentTitle = getStringValue(item);
+                string firstLetter = string.IsNullOrEmpty(currentTitle) ? "#" :
+                                     char.IsDigit(currentTitle[0]) ? "#" :
+                                     currentTitle[0].ToString().ToUpper();
+
+                bool isStart = firstLetter != lastLetter;
+                if (isStart) lastLetter = firstLetter;
+
+                TimelineCollectionArtist.Add(new GroupedCollectionModelArtist
+                {
+
+                    Data = item,
+                    Letter = firstLetter,
+                    IsGroupStart = isStart
+                });
+            }
+
+            MapGridView.ItemsSource = TimelineCollectionArtist
+                .Where(x => x.IsGroupStart)
+                .Select(x => x.Letter)
+                .ToList();
+
+        }
+
+
         private void GenerateTimeline(IEnumerable<SongModel> items)
         {
             TimelineCollection.Clear();
@@ -280,6 +474,10 @@ namespace Vusic_Player.UI.UserViews.Controls
         //}
         public ObservableCollection<GroupedCollectionModel> TimelineCollection { get; set; }
                 = new ObservableCollection<GroupedCollectionModel>();
+        public ObservableCollection<GroupedCollectionModelPlaylist> TimelineCollectionPlaylist { get; set; }
+                = new ObservableCollection<GroupedCollectionModelPlaylist>();
+        public ObservableCollection<GroupedCollectionModelArtist> TimelineCollectionArtist { get; set; }
+        = new ObservableCollection<GroupedCollectionModelArtist>();
         //public void SetDummyDataSource()
         //{
         //    // 1. Create a raw list of mock songs
@@ -427,6 +625,8 @@ namespace Vusic_Player.UI.UserViews.Controls
             }
         }
         ObservableCollection<GroupedCollectionModel> searchresults = new();
+        ObservableCollection<GroupedCollectionModelPlaylist> searchresultsplaylists = new();
+        ObservableCollection<GroupedCollectionModelArtist> searchresultsartists = new();
 
         private IEnumerable<GroupedCollectionModel> GetFilteredResults(string query)
         {
@@ -463,6 +663,61 @@ namespace Vusic_Player.UI.UserViews.Controls
             .OrderByDescending(s => s.Data.Title?.StartsWith(textQuery, StringComparison.OrdinalIgnoreCase) == true)
             .ThenBy(s => s.Data.Title);
         }
+        private IEnumerable<GroupedCollectionModelPlaylist> GetFilteredResultsPlaylist(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return Enumerable.Empty<GroupedCollectionModelPlaylist>();
+
+            var rawQuery = query.Trim();
+
+            var minMatch = Regex.Match(rawQuery, @"(\d+)\s*(?:min|m)", RegexOptions.IgnoreCase);
+            var secMatch = Regex.Match(rawQuery, @"(\d+)\s*(?:sec|s)", RegexOptions.IgnoreCase);
+
+            int searchSeconds = 0;
+            if (minMatch.Success) searchSeconds += int.Parse(minMatch.Groups[1].Value) * 60;
+            if (secMatch.Success) searchSeconds += int.Parse(secMatch.Groups[1].Value);
+
+            var textQuery = rawQuery;
+            if (minMatch.Success) textQuery = textQuery.Replace(minMatch.Value, "");
+            if (secMatch.Success) textQuery = textQuery.Replace(secMatch.Value, "");
+            textQuery = textQuery.Trim();
+
+            return TimelineCollectionPlaylist.Where(s =>
+            {
+                bool textMatch = !string.IsNullOrEmpty(textQuery) && (
+                    (s.Data.PlaylistName?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Data.PlaylistCount?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+
+                );
+
+
+
+                return textMatch;
+            })
+            .OrderByDescending(s => s.Data.PlaylistName?.StartsWith(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+            .ThenBy(s => s.Data.PlaylistName);
+        }
+        private IEnumerable<GroupedCollectionModelArtist> GetFilteredResultsArtist(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return Enumerable.Empty<GroupedCollectionModelArtist>();
+
+            var rawQuery = query.Trim();
+            var textQuery = rawQuery;
+            textQuery = textQuery.Trim();
+
+            return TimelineCollectionArtist.Where(s =>
+            {
+                bool textMatch = !string.IsNullOrEmpty(textQuery) && (
+                    (s.Data.ArtistName?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Data.ArtistSongCount?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+
+                );
+                return textMatch;
+            })
+            .OrderByDescending(s => s.Data.ArtistName?.StartsWith(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+            .ThenBy(s => s.Data.ArtistName);
+        }
+
+
         private void btnCloseSearch_Click(object sender, RoutedEventArgs e)
         {
             asbSearch.Text = "";
@@ -474,9 +729,21 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (string.IsNullOrEmpty(sender.Text))
             {
                 searchresults.Clear();
+                searchresultsplaylists.Clear();
+                searchresultsartists.Clear();
                 grdNoSearchResults.Visibility = Visibility.Collapsed;
-
-                MainTimelineList.ItemsSource = TimelineCollection;
+                if (TemplateMode == TimelineTemplateMode.Playlists)
+                {
+                    MainTimelineList.ItemsSource = TimelineCollectionPlaylist;
+                }
+                else if (TemplateMode == TimelineTemplateMode.Artist)
+                {
+                    MainTimelineList.ItemsSource = TimelineCollectionArtist;
+                }
+                else
+                {
+                    MainTimelineList.ItemsSource = TimelineCollection;
+                }
                 MainTimelineList.Visibility = Visibility.Visible;
 
                 return;
@@ -484,14 +751,37 @@ namespace Vusic_Player.UI.UserViews.Controls
 
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var results = GetFilteredResults(sender.Text);
+                if (TemplateMode == TimelineTemplateMode.Media)
+                {
+                    var results = GetFilteredResults(sender.Text);
+                    searchresults.Clear();
+                    foreach (var item in results) searchresults.Add(item);
 
-                searchresults.Clear();
-                foreach (var item in results) searchresults.Add(item);
+                    sender.ItemsSource = results.Any() ? null : new List<string> { "No matches found!" };
 
-                sender.ItemsSource = results.Any() ? null : new List<string> { "No matches found!" };
+                    MainTimelineList.ItemsSource = searchresults;
+                }
+                else if (TemplateMode == TimelineTemplateMode.Playlists)
+                {
+                    var results = GetFilteredResultsPlaylist(sender.Text);
+                    searchresultsplaylists.Clear();
+                    foreach (var item in results) searchresultsplaylists.Add(item);
 
-                MainTimelineList.ItemsSource = searchresults;
+                    sender.ItemsSource = results.Any() ? null : new List<string> { "No matches found!" };
+
+                    MainTimelineList.ItemsSource = searchresultsplaylists;
+                }
+                else if (TemplateMode == TimelineTemplateMode.Artist)
+                {
+                    var results = GetFilteredResultsArtist(sender.Text);
+                    searchresultsartists.Clear();
+                    foreach (var item in results) searchresultsartists.Add(item);
+
+                    sender.ItemsSource = results.Any() ? null : new List<string> { "No artists found!" };
+
+                    MainTimelineList.ItemsSource = searchresultsartists;
+                }
+
             }
         }
 
@@ -499,26 +789,81 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void asbSearch_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            var results = GetFilteredResults(sender.Text);
-
-            if (results.Any())
+            if (TemplateMode == TimelineTemplateMode.Media)
             {
-                grdNoSearchResults.Visibility = Visibility.Collapsed;
+                var results = GetFilteredResults(sender.Text);
 
-                MainTimelineList.Visibility = Visibility.Visible;
-                //       Grid.SetRow(grdNoSearchResults, 2);
+                if (results.Any())
+                {
+                    grdNoSearchResults.Visibility = Visibility.Collapsed;
 
-                searchresults.Clear();
-                foreach (var item in results) searchresults.Add(item);
+                    MainTimelineList.Visibility = Visibility.Visible;
+                    //       Grid.SetRow(grdNoSearchResults, 2);
+
+                    searchresults.Clear();
+                    foreach (var item in results) searchresults.Add(item);
+                }
+                else if (TimelineCollection.Count > 0)
+                {
+
+                    MainTimelineList.Visibility = Visibility.Collapsed;
+
+                    grdNoSearchResults.Visibility = Visibility.Visible;
+                    frmSearchResultsNOMATCH.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
+                }
             }
-            else if (TimelineCollection.Count > 0)
+            else if (TemplateMode == TimelineTemplateMode.Playlists)
             {
+                var results = GetFilteredResultsPlaylist(sender.Text);
 
-                MainTimelineList.Visibility = Visibility.Collapsed;
+                if (results.Any())
+                {
+                    grdNoSearchResults.Visibility = Visibility.Collapsed;
 
-                grdNoSearchResults.Visibility = Visibility.Visible;
-                frmSearchResultsNOMATCH.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
+                    MainTimelineList.Visibility = Visibility.Visible;
+                    //       Grid.SetRow(grdNoSearchResults, 2);
+
+                    searchresultsplaylists.Clear();
+                    foreach (var item in results) searchresultsplaylists.Add(item);
+                }
+                else if (TimelineCollectionPlaylist.Count > 0)
+                {
+
+                    MainTimelineList.Visibility = Visibility.Collapsed;
+
+                    grdNoSearchResults.Visibility = Visibility.Visible;
+                    frmSearchResultsNOMATCH.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
+                }
             }
+            else if (TemplateMode == TimelineTemplateMode.Artist)
+            {
+                var results = GetFilteredResultsArtist(sender.Text);
+
+                if (results.Any())
+                {
+                    grdNoSearchResults.Visibility = Visibility.Collapsed;
+
+                    MainTimelineList.Visibility = Visibility.Visible;
+                    //       Grid.SetRow(grdNoSearchResults, 2);
+
+                    searchresultsartists.Clear();
+                    foreach (var item in results) searchresultsartists.Add(item);
+                }
+                else if (TimelineCollectionArtist.Count > 0)
+                {
+
+                    MainTimelineList.Visibility = Visibility.Collapsed;
+
+                    grdNoSearchResults.Visibility = Visibility.Visible;
+                    frmSearchResultsNOMATCH.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
+                }
+            }
+
+        }
+
+        private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
