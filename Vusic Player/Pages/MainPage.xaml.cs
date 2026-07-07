@@ -118,6 +118,7 @@ namespace Vusic_Player.Pages
                 nvgMain.Header = "Video Library";
             else if (e.SourcePageType == typeof(EntireMusicLibrary))
             {
+                nvgMain.Header = "Music Library";
                 //if (LibraryStore.IsMusicLibrary)
                 //{
                 //    nvgMain.Header = "Music Library";

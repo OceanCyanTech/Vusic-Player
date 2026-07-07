@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -131,6 +132,12 @@ namespace Vusic_Player.Pages.Views
                 Debug.WriteLine("Album");
                 await LoadAlbums();
             }
+            else if (category == "Genres")
+            {
+                grdGenres.Visibility = Visibility.Visible;
+                Debug.WriteLine("Genre");
+                await LoadGenres();
+            }
         }
         private async void LoadAllPlaylists()
         {
@@ -152,6 +159,7 @@ namespace Vusic_Player.Pages.Views
         ObservableCollection<PlaylistItem> playlistsAll = new();
         ObservableCollection<ArtistShow> artistsAll = new();
         ObservableCollection<ArtistDiscAlbumModel> albumsAll = new();
+        ObservableCollection<GenreModel> genresAll = new();
         private async void LoadHistory()
         {
             recentMusics.CollectionChanged += RecentMusics_CollectionChanged;
@@ -301,7 +309,8 @@ namespace Vusic_Player.Pages.Views
         .Select(group => new
         {
             ArtistName = group.Key,     // The name we grouped by
-            SongCount = group.Count()    // Total number of items in this group
+            SongCount = group.Count(),
+            Songs = group.ToList()// Total number of items in this group
         })
         .OrderBy(result => result.ArtistName) // Optional: alphabetize by artist name
         .ToList();
@@ -317,7 +326,7 @@ namespace Vusic_Player.Pages.Views
                         fallbackUri = existartist.Thumbnail;
                     }
                     var artistsongcount = $"• {artist.SongCount} {(artist.SongCount == 1 ? "item" : "items")}";
-                    artistsAll.Add(new ArtistShow { ArtistName = artist.ArtistName, ArtistSongCount = artistsongcount, ArtistThumbnail = fallbackUri });
+                    artistsAll.Add(new ArtistShow { ArtistName = artist.ArtistName, ArtistSongCount = artistsongcount, ArtistThumbnail = fallbackUri, Songs = artist.Songs });
                 }
             }
         }
@@ -327,32 +336,183 @@ namespace Vusic_Player.Pages.Views
             {
                 albumsAll.Clear();
                 var albumsSongCounts = AllAvailableSongs
-        .Where(song => song.AlbumName != null && !string.IsNullOrEmpty(song.AlbumName)) // Ensure artist isn't null/empty
-        .GroupBy(song => song.AlbumName) // Group songs together by the artist's name
-        .Select(group => new
-        {
-            AlbumName = group.Key,     // The name we grouped by
-            SongCount = group.Count(),
-            Artists = group// Total number of items in this group
-        })
-        .OrderBy(result => result.ArtistName) // Optional: alphabetize by artist name
-        .ToList();
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var artists = currentSettings.ArtistsList;
-                foreach (var artist in artistSongCounts)
-                {
-                    string fallbackUri = "ms-appx:///Assets/defaultartist.png";
+    .Where(song => song.AlbumName != null && !string.IsNullOrEmpty(song.AlbumName))
+    .GroupBy(song => song.AlbumName)
+    .Select(group =>
+    {
 
-                    var existartist = artists.FirstOrDefault(p => p.Name == artist.ArtistName);
-                    if (existartist != null)
+        // 1. Extract years directly from the file tags
+        var years = group
+            .Select(song =>
+            {
+                try
+                {
+                    // Assuming your song model has a Path or FilePath property
+                    using (var file = TagLib.File.Create(song.FilePath))
                     {
-                        fallbackUri = existartist.Thumbnail;
+                        return (int)file.Tag.Year; // Returns 0 if not set
                     }
+                }
+                catch
+                {
+                    return 0; // Fallback for unreadable files
+                }
+            })
+            .Where(year => year > 0)
+            .ToList();
+
+        int finalYear = 0;
+
+        if (years.Any())
+        {
+            var yearGroups = years.GroupBy(y => y).OrderByDescending(g => g.Count()).ToList();
+            bool isAllVaried = yearGroups.All(g => g.Count() == yearGroups.First().Count());
+            finalYear = isAllVaried ? years.First() : yearGroups.First().Key;
+        }
+
+        return new
+        {
+            AlbumName = group.Key,
+            SongCount = group.Count(),
+            CalculatedYear = finalYear,
+            Artists = string.Join(", ", group
+                .Select(song => song.Artist)
+                .Where(name => !string.IsNullOrEmpty(name))
+                .Distinct()
+                .OrderBy(name => name)),
+            Songs = group.ToList()
+        };
+    })
+    .OrderBy(result => result.AlbumName)
+    .ToList();
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var albums = currentSettings.AlbumsList;
+                foreach (var artist in albumsSongCounts)
+                {
+                    string fallbackUri = "ms-appx:///Assets/defaultalbum.png";
+
+                    var existalbum = albums.FirstOrDefault(p => p.Name == artist.AlbumName);
+                    if (existalbum != null)
+                    {
+                        fallbackUri = existalbum.Thumbnail;
+                    }
+
                     var artistsongcount = $"• {artist.SongCount} {(artist.SongCount == 1 ? "item" : "items")}";
-                    artistsAll.Add(new ArtistShow { ArtistName = artist.ArtistName, ArtistSongCount = artistsongcount, ArtistThumbnail = fallbackUri });
+                    albumsAll.Add(new ArtistDiscAlbumModel { AlbumName = artist.AlbumName, AlbumCount = artistsongcount, Thumbnail = fallbackUri, AlbumYear = $"• {artist.CalculatedYear.ToString()}", AlbumArtists = artist.Artists, Songs = artist.Songs });
                 }
             }
         }
+
+        private async Task LoadGenres()
+        {
+            if (AllAvailableSongs.Count > 0)
+            {
+
+                genresAll.Clear();
+
+                grdViewGenres.ItemsSource = genresAll;
+                // 1. Define your presets and add them to your collection first
+                var genrePresets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+{
+    { "Rock", "ms-appx:///Assets/Genres/appicon.png" },
+    { "Pop", "ms-appx:///Assets/Genres/appicon.png" },
+    { "Jazz", "ms-appx:///Assets/Genres/appicon.png" },
+    { "Classical", "ms-appx:///Assets/Genres/appicon.png" },
+    { "Hip-Hop", "ms-appx:///Assets/Genres/appicon.png" }
+};
+
+
+                // 2. Add presets to your collection first
+                foreach (var preset in genrePresets)
+                {
+                    if (!genresAll.Any(g => g.GenreName.Equals(preset.Key, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        genresAll.Add(new GenreModel
+                        {
+                            GenreName = preset.Key,
+                            GenreCount = "• 0 items",
+                            GenreCover = preset.Value // Uses the specific preset cover
+                        });
+                    }
+                }
+
+                // 2. Extract and group genres from your available songs
+                var genresSongCounts = AllAvailableSongs
+                    .Select(song =>
+                    {
+                        string songGenre = "Unknown Genre";
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(song.FilePath))
+                            {
+                                using (var file = TagLib.File.Create(song.FilePath))
+                                {
+                                    var primaryGenre = file.Tag.FirstGenre;
+                                    if (!string.IsNullOrEmpty(primaryGenre))
+                                    {
+                                        songGenre = primaryGenre.Trim();
+                                    }
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            songGenre = "Unknown Genre";
+                        }
+                        return songGenre;
+                    })
+                    .GroupBy(genre => genre)
+                    .Select(group => new
+                    {
+                        GenreName = group.Key,
+                        SongCount = group.Count()
+                    })
+                    .ToList();
+
+                // 3. Merge grouped data into genresAll without causing duplicates
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var genresListFromSettings = currentSettings.GenresList;
+
+                foreach (var genreData in genresSongCounts)
+                {
+                    var itemStringCount = $"• {genreData.SongCount} {(genreData.SongCount == 1 ? "item" : "items")}";
+
+                    // Check if this genre was already added via presets
+                    var existingGenre = genresAll.FirstOrDefault(g => g.GenreName.Equals(genreData.GenreName, StringComparison.OrdinalIgnoreCase));
+
+                    if (existingGenre != null)
+                    {
+                        // Duplicate prevented! Just update the item count for the existing preset
+                        existingGenre.GenreCount = itemStringCount;
+
+                        // Optional: Update thumbnail from settings if available
+                        var existGenreSettings = genresListFromSettings?.FirstOrDefault(p => p.GenreName == existingGenre.GenreName);
+                        if (existGenreSettings != null)
+                        {
+                            existingGenre.GenreCover = existGenreSettings.GenreCover;
+                        }
+                    }
+                    else
+                    {
+                        // Completely new genre found in files, resolve thumbnail and add it
+                        string fallbackUri = "ms-appx:///Assets/defaultgenre.png";
+                        var existGenreSettings = genresListFromSettings?.FirstOrDefault(p => p.GenreName == genreData.GenreName);
+                        if (existGenreSettings != null)
+                        {
+                            fallbackUri = existGenreSettings.GenreCover;
+                        }
+
+                        genresAll.Add(new GenreModel
+                        {
+                            GenreName = genreData.GenreName,
+                            GenreCount = itemStringCount,
+                            GenreCover = fallbackUri
+                        });
+                    }
+                }
+            }
+        }
+
 
         private async void LoadSettings()
         {
@@ -362,85 +522,202 @@ namespace Vusic_Player.Pages.Views
         public ObservableCollection<SongModel> AllAvailableSongs = new ObservableCollection<SongModel>();
         private async Task LoadAllFiles(List<string> searchPaths)
         {
-            List<StorageFile> allFoundFiles = new List<StorageFile>();
+            //List<StorageFile> allFoundFiles = new List<StorageFile>();
+            bool includeSubDirs = chkIncludeSubDirectories.IsChecked == true;
 
-            foreach (var path in searchPaths)
+            // 1. Gather all files
+            //foreach (var path in searchPaths)
+            //{
+            //    try
+            //    {
+            //        StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
+            //        var queryOptions = new QueryOptions(CommonFileQuery.OrderByName, AudioExtensions.List)
+            //        {
+            //            FolderDepth = includeSubDirs ? FolderDepth.Deep : FolderDepth.Shallow
+            //        };
+
+            //        queryOptions.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, null);
+
+            //        var queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+            //        IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync();
+            //        allFoundFiles.AddRange(files);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Debug.WriteLine($"Error scanning path {path}: {ex.Message}");
+            //    }
+            //}
+
+            //if (allFoundFiles.Count == 0) return;
+            Microsoft.UI.Dispatching.DispatcherQueue dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            // 1. Keep the UI-bound settings/existing paths check on the UI thread
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var favourites = currentSettings.Favourites?.ToList() ?? new List<FavouriteItems>();
+
+            // 1. Snapshot currently loaded paths
+            var existingPaths = AllAvailableSongs
+                .Select(s => string.IsNullOrWhiteSpace(s.FilePath) ? "" : Path.GetFullPath(s.FilePath))
+                .Where(p => !string.IsNullOrEmpty(p))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            // 2. Scan and parse completely using the Lite Model
+            List<AudioTrackLite> discoveredTracks = await Task.Run(() =>
             {
-                try
-                {
-                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
-                    var queryOptions = new QueryOptions(CommonFileQuery.OrderByName, AudioExtensions.List);
-                    if (chkIncludeSubDirectories.IsChecked == true)
-                    {
-                        queryOptions.FolderDepth = FolderDepth.Deep;
-                    } // <--- This does the recursion safely!
-                    else
-                    {
-                        queryOptions.FolderDepth = FolderDepth.Shallow;
-                    }
-                    var queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+                var uniqueFilesToParse = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-                    var files = await queryResult.GetFilesAsync();
-
-                    foreach (var file in files)
-                    {
-                        // No extension check needed here anymore, QueryOptions filtered them already!
-                        Debug.WriteLine(file.Path + " is found being added to allFoundFiles");
-                        allFoundFiles.Add(file);
-                    }
-
-                    Debug.WriteLine($"Finished processing path: {path}. Current total in list: {allFoundFiles.Count}");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"CRASHED INSIDE FOREACH LOOP: {ex.GetType().Name} - {ex.Message}");
-                }
-            }
-
-            Debug.WriteLine($"Total files collected in list: {allFoundFiles.Count}");
-            Debug.WriteLine($"Total files collected in list: {allFoundFiles.Count}");
-            if (allFoundFiles.Count > 0)
-            {
-                Debug.WriteLine("IT IS FOUND");
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var favourites = currentSettings.Favourites;
-                foreach (var file in allFoundFiles)
+                foreach (var path in searchPaths)
                 {
                     try
                     {
-                        Debug.WriteLine("EVALUATING: " + file.Path);
-                        var tagFile = TagLib.File.Create(file.Path);
-                        var tag = tagFile.Tag;
-                        var existingfav = favourites.FirstOrDefault(p => p.FilePath == file.Path);
-                        bool isFav = false;
-                        if (existingfav != null)
+                        if (!Directory.Exists(path)) continue;
+
+                        var searchOption = includeSubDirs ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                        var directoryInfo = new DirectoryInfo(path);
+                        var files = directoryInfo.EnumerateFiles("*.*", searchOption)
+                            .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
+
+                        foreach (var file in files)
                         {
-                            isFav = true;
-                        }
-                        string title = string.IsNullOrWhiteSpace(tag.Title)
-     ? Path.GetFileNameWithoutExtension(file.Path)
-     : tag.Title;
-                        string album = string.IsNullOrWhiteSpace(tag.Album)
-                ? "Unknown Album"
-                : tag.Album;
-                        string artist = string.IsNullOrWhiteSpace(string.Join("; ", tag.AlbumArtists))
-                ? "Unknown Artist"
-                : string.Join("; ", tag.AlbumArtists);
-                        var exist = AllAvailableSongs.FirstOrDefault(p => p.FilePath == file.Path);
-                        var song = new SongModel { Title = title, AlbumName = album, Artist = artist, FilePath = file.Path, SongDuration = tagFile.Properties.Duration, IsFavourite = isFav, Glyph = "\uEC4F" };
-                        if (exist == null)
-                        {
-                            AllAvailableSongs.Add(song);
+                            string normalizedPath = Path.GetFullPath(file.FullName);
+                            if (!existingPaths.Contains(normalizedPath))
+                            {
+                                uniqueFilesToParse.Add(normalizedPath);
+                            }
                         }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("ERROR: " + ex.Message);
+                        Debug.WriteLine($"Error scanning path {path}: {ex.Message}");
                     }
                 }
-            }
+
+                var liteList = new List<AudioTrackLite>();
+
+                foreach (var filePath in uniqueFilesToParse)
+                {
+                    try
+                    {
+                        using (var tagFile = TagLib.File.Create(filePath))
+                        {
+                            bool isFav = favourites.Any(p => string.Equals(Path.GetFullPath(p.FilePath), filePath, StringComparison.OrdinalIgnoreCase));
+
+                            string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
+                                ? Path.GetFileNameWithoutExtension(filePath)
+                                : tagFile.Tag.Title;
+
+                            string album = string.IsNullOrWhiteSpace(tagFile.Tag.Album)
+                                ? "Unknown Album"
+                                : tagFile.Tag.Album;
+
+                            string artist = string.IsNullOrWhiteSpace(string.Join(',', tagFile.Tag.AlbumArtists))
+                                ? "Unknown Artist"
+                                : string.Join(',', tagFile.Tag.AlbumArtists);
+
+                            liteList.Add(new AudioTrackLite
+                            {
+                                Title = title,
+                                AlbumName = album,
+                                Artist = artist,
+                                FilePath = filePath,
+                                SongDuration = tagFile.Properties.Duration,
+                                IsFavourite = isFav
+                            });
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"TagLib parsing error for {filePath}: {ex.Message}");
+                    }
+                }
+
+                return liteList;
+            });
+
+            // 3. Batch conversion to your original SongModel on the UI thread
+            int batchSize = 40;
+            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+
+            for (int i = 0; i < discoveredTracks.Count; i += batchSize)
+            {
+                var batch = discoveredTracks.Skip(i).Take(batchSize).ToList();
+
+                dispatcher.TryEnqueue(() =>
+                {
+                    foreach (var liteTrack in batch)
+                    {
+                        // Direct duplicate guard-check against the UI collection
+                        if (AllAvailableSongs.Any(s => string.Equals(Path.GetFullPath(s.FilePath), liteTrack.FilePath, StringComparison.OrdinalIgnoreCase)))
+                            continue;
+
+                        // Instantiate your original SongModel safely inside the UI Thread Context
+                        AllAvailableSongs.Add(new SongModel
+                        {
+                            Title = liteTrack.Title,
+                            AlbumName = liteTrack.AlbumName,
+                            Artist = liteTrack.Artist,
+                            FilePath = liteTrack.FilePath,
+                            SongDuration = liteTrack.SongDuration,
+                            IsFavourite = liteTrack.IsFavourite,
+                            Glyph = "\uEC4F"
+                        });
+                    }
+                });
+
+                // Breath frame for the UI engine
+                await Task.Delay(16);
+            }            // This allows Windows to read all file metadata concurrently in the background safely
+            //var parsingTasks = allFoundFiles.Select(async file =>
+            //{
+            //    if (existingPaths.Contains(file.Path)) return null;
+
+            //    try
+            //    {
+            //        // Safely called on the UI thread context, but executes asynchronously
+            //        var musicProperties = await file.Properties.GetMusicPropertiesAsync();
+            //        bool isFav = favourites.Any(p => p.FilePath == file.Path);
+
+            //        string title = string.IsNullOrWhiteSpace(musicProperties.Title)
+            //            ? file.DisplayName
+            //            : musicProperties.Title;
+
+            //        string album = string.IsNullOrWhiteSpace(musicProperties.Album)
+            //            ? "Unknown Album"
+            //            : musicProperties.Album;
+
+            //        string artist = string.IsNullOrWhiteSpace(musicProperties.Artist)
+            //            ? "Unknown Artist"
+            //            : musicProperties.Artist;
+
+            //        return new SongModel
+            //        {
+            //            Title = title,
+            //            AlbumName = album,
+            //            Artist = artist,
+            //            FilePath = file.Path,
+            //            SongDuration = musicProperties.Duration,
+            //            IsFavourite = isFav,
+            //            Glyph = "\uEC4F"
+            //        };
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Debug.WriteLine($"Native parsing error for {file.Name}: {ex.Message}");
+            //        return null;
+            //    }
+            //});
+
+            //// 3. Await all metadata lookups in parallel. The UI stays 100% fluid here.
+            //var results = await Task.WhenAll(parsingTasks);
+
+            //// 4. Filter out nulls (skipped/failed files) and batch add to your UI collection
+            //foreach (var song in results)
+            //{
+            //    if (song != null)
+            //    {
+            //        AllAvailableSongs.Add(song);
+            //    }
+            //}
         }
-        // Install-Package TagLibSharp
         private async Task ScanAllFoldersAsync(List<string> searchPaths)
         {
             var extensions = AudioExtensions.List;
@@ -1051,6 +1328,94 @@ namespace Vusic_Player.Pages.Views
             await LoadAllFiles(fpaths);
             stkLoading.Visibility = Visibility.Collapsed;
 
+        }
+        private IEnumerable<GenreModel> GetFilteredResultsGenre(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return Enumerable.Empty<GenreModel>();
+
+            var rawQuery = query.Trim();
+
+
+            var textQuery = rawQuery;
+
+            textQuery = textQuery.Trim();
+
+            return genresAll.Where(s =>
+            {
+                bool textMatch = !string.IsNullOrEmpty(textQuery) && (
+                    (s.GenreName?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.GenreCount?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.GenreTag?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+
+                );
+
+
+                return textMatch;
+            })
+            .OrderByDescending(s => s.GenreName?.StartsWith(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+            .ThenBy(s => s.GenreName);
+        }
+        ObservableCollection<GenreModel> searchresultsgenre = new();
+
+        private void asbSearchGenres_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (string.IsNullOrEmpty(sender.Text))
+            {
+                searchresultsgenre.Clear();
+                grdNoSearchResultsGenre.Visibility = Visibility.Collapsed;
+
+                grdViewGenres.ItemsSource = genresAll;
+                grdViewGenres.Visibility = Visibility.Visible;
+
+
+                return;
+            }
+
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var results = GetFilteredResultsGenre(sender.Text);
+
+                searchresultsgenre.Clear();
+                foreach (var item in results) searchresultsgenre.Add(item);
+
+                sender.ItemsSource = results.Any() ? null : new List<string> { "No matches found!" };
+
+                Debug.WriteLine("searching in gridview");
+                grdViewGenres.ItemsSource = searchresultsgenre;
+
+
+            }
+        }
+
+        private void asbSearchGenres_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var results = GetFilteredResultsGenre(sender.Text);
+
+            if (results.Any())
+            {
+                grdNoSearchResultsGenre.Visibility = Visibility.Collapsed;
+
+                grdViewGenres.Visibility = Visibility.Visible;
+
+
+                searchresultsgenre.Clear();
+                foreach (var item in results) searchresultsgenre.Add(item);
+            }
+            else if (genresAll.Count > 0)
+            {
+
+                grdViewGenres.Visibility = Visibility.Collapsed;
+
+                grdNoSearchResultsGenre.Visibility = Visibility.Visible;
+                frmSearchResultsNOMATCHGenre.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
+            }
+        }
+
+        private void btnCloseSearchGenre_Click(object sender, RoutedEventArgs e)
+        {
+            asbSearchGenres.Text = "";
+            grdViewGenres.Focus(FocusState.Programmatic);
+            asbSearchGenres.ItemsSource = null;
         }
     }
 }

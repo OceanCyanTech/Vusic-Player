@@ -18,6 +18,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public ObservableCollection<FolderModel> FoldersRecent { get; set; } = new();
         public ObservableCollection<ArtistModel> ArtistsList { get; set; } = new();
         public ObservableCollection<AlbumModel> AlbumsList { get; set; } = new();
+        public ObservableCollection<GenreModel> GenresList { get; set; } = new();
         public ObservableCollection<PlaylistItem> SavedPlaylists { get; set; } = new();
         //public ObservableCollection<AppPersonalization> UserSettings { get; set; } = new();
         public ObservableCollection<RecentMusicModel> RecentMusic { get; set; } = new();

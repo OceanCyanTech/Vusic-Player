@@ -256,16 +256,98 @@ BorderThickness="0"
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />
-               
+
             </Grid.RowDefinitions>
-            <TextBlock Name="txtArtistsAll" Text="Artists " Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <TextBlock Name="txtArtistsAll" Text="Artists" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             <controls:GroupedCollectionView x:Name="ArtistsGroupedCollection" 
              Grid.Row="1" 
              TemplateMode="Artist"
              ItemsSource="{x:Bind artistsAll, Mode=OneWay}" SearchPlaceHolderText="Search for artists associated with songs on this PC..."
              DisplayMemberPath="ArtistName" />
         </Grid>
-        <Grid Name="grdAlbums" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
-        <Grid Name="grdGenres" Margin="20, 30" Grid.Row="1" Visibility="Collapsed"></Grid>
+        <Grid Name="grdAlbums" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtAlbumsAll" Text="Albums" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <controls:GroupedCollectionView x:Name="AlbumsGroupedCollection" 
+    Grid.Row="1" 
+    TemplateMode="Album"
+    ItemsSource="{x:Bind albumsAll, Mode=OneWay}" SearchPlaceHolderText="Search for albums associated with songs on this PC..."
+    DisplayMemberPath="AlbumName" />
+        </Grid>
+        <Grid Name="grdGenres" RowSpacing="10" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtGenresAll" Text="Genres" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <AutoSuggestBox TextChanged="asbSearchGenres_TextChanged" QuerySubmitted="asbSearchGenres_QuerySubmitted" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" QueryIcon="Find" Name="asbSearchGenres" PlaceholderText="Search genres..." Grid.Row="1"></AutoSuggestBox>
+            <GridView Name="grdViewGenres" Margin="0, 20" Grid.Row="2">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal" VerticalAlignment="Stretch" ItemWidth="140"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid RowSpacing="10">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Play">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Play Shuffled">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Play on Loop">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Play Shuffled and on Loop">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Remove Genre">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Image Width="50" Source="{Binding GenreCover}"/>
+                            <TextBlock Text="{Binding GenreName}" Grid.Row="1"/>
+                            <TextBlock Text="{Binding GenreCount}" Grid.Row="2"/>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+            <Grid  Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResultsGenre" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Name="btnCloseSearchGenre" CornerRadius="12" Background="Transparent" BorderBrush="Transparent" Click="btnCloseSearchGenre_Click" ToolTipService.ToolTip="Close Search Results" HorizontalAlignment="Right" Margin="20, 0">
+                    <FontIcon Glyph="&#xE711;" FontSize="36"></FontIcon>
+                </Button>
+                <Frame VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Name="frmSearchResultsNOMATCHGenre"></Frame>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>

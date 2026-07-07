@@ -277,11 +277,11 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
                 InfoBoxControl.ScrollIntoView();
             }
 
-            // else if (contentType == ContentType.OnlineArtistPicture)
-            // {
-            //     OnlineArtistPic.Visibility = Visibility.Visible;
-            ////     OnlineArtistPic.UpdateArtistName(artist);
-            // }
+            else if (contentType == ContentType.OnlineArtistPicture)
+            {
+                OnlineArtistPic.Visibility = Visibility.Visible;
+                     OnlineArtistPic.UpdateArtistName(artist);
+            }
             // else if (contentType == ContentType.AlbumDetails)
             // {
             //     AlbumEditorBox.Visibility = Visibility.Visible;
@@ -495,8 +495,8 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
 
                 if (cnt == ContentType.OnlineArtistPicture)
                 {
-                    //      string image = OnlineArtistPic.GetSelectedImage();
-                    //  await OnlineArtistPic.DownloadImageAsync(image);
+                    string image = OnlineArtistPic.GetSelectedImage();
+                    await OnlineArtistPic.DownloadImageAsync(image);
                 }
                 else if (cnt == ContentType.PlaylistEdit)
                 {

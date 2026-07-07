@@ -191,6 +191,40 @@ BorderThickness="0"
                     </Border>
                 </Grid>
                 <HyperlinkButton Click="HyperlinkButton_Click" Grid.Column="1">
+                    <HyperlinkButton.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem  Text="View Artist" Name="mnftViewArtist" Click="mnftViewArtist_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play Artist" Name="mnftPlayArtist" Click="mnftPlayArtist_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play Artist Shuffled" Name="mnftPlayArtistShuffled" Click="mnftPlayArtistShuffled_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play Artist On Loop" Name="mnftPlayArtistLoop" Click="mnftPlayArtistLoop_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play Artist Shuffled and On Loop" Name="mnftPlayArtistLoopandShuffle" Click="mnftPlayArtistLoopandShuffle_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Unlink songs from this artist" Name="mnftUnlinkArtist" Click="mnftUnlinkArtist_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </HyperlinkButton.ContextFlyout>
                     <Grid Margin="0, 20" Grid.Column="1" ColumnSpacing="5">
 
                         <Grid.ColumnDefinitions>
@@ -199,7 +233,7 @@ BorderThickness="0"
 
 
                         </Grid.ColumnDefinitions>
-                        <Image Width="90" HorizontalAlignment="Left" Source="{Binding Data.ArtistThumbnail}" Grid.Column="0"/>
+                        <PersonPicture Width="90" HorizontalAlignment="Left" ProfilePicture="{Binding Data.ArtistThumbnail}" Grid.Column="0"/>
                         <Grid Grid.Column="1" RowSpacing="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -208,10 +242,92 @@ BorderThickness="0"
                             </Grid.RowDefinitions>
                             <TextBlock   Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.ArtistName}" Grid.Row="0"/>
                             <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.ArtistSongCount}" Grid.Row="1"/>
-                            <Button Grid.Row="2" Style="{StaticResource AccentButtonStyle}">
+                            <Button Name="btnPlayAllArtistSongs" Click="btnPlayAllArtistSongs_Click" Grid.Row="2" Style="{StaticResource AccentButtonStyle}">
                                 <StackPanel Orientation="Horizontal" Spacing="10">
                                     <FontIcon Glyph="d"/>
                                     <TextBlock Text="Play all songs of Artist"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="AlbumTimelineTemplate" x:DataType="classmodel:GroupedCollectionModelAlbum">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <Rectangle Fill="Cyan" Width="2"/>
+                    <Border Background="#1A1A1A" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="4"
+         Visibility="{x:Bind IsGroupStart, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Button x:Name="TimelineHeaderBtn" Content="{x:Bind Letter}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" FontSize="16" Click="Button_Click_2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                    </Border>
+                </Grid>
+                <HyperlinkButton Click="HyperlinkButton_Click_1" Grid.Column="1">
+                    <HyperlinkButton.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem  Text="View Album" Name="mnftViewAlbum" Click="mnftViewAlbum_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play Album" Name="mnftPlayAlbum" Click="mnftPlayAlbum_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play Album Shuffled" Name="mnftPlayAlbumShuffled" Click="mnftPlayAlbumShuffled_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play Album On Loop" Name="mnftPlayAlbumLoop" Click="mnftPlayAlbumLoop_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play Album Shuffled and On Loop" Name="mnftPlayAlbumLoopAndShuffled" Click="mnftPlayAlbumLoopAndShuffled_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Unlink songs from this album" Name="mnftUnlinkAlbum" Click="mnftUnlinkAlbum_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </HyperlinkButton.ContextFlyout>
+                    <Grid Margin="0, 20" Grid.Column="1" ColumnSpacing="5">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+
+
+                        </Grid.ColumnDefinitions>
+                        <Image Width="90" HorizontalAlignment="Left" Source="{Binding Data.Thumbnail}" Grid.Column="0"/>
+                        <Grid Grid.Column="1" RowSpacing="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock   Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.AlbumName}" Grid.Row="0"/>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumCount}" Grid.Row="1"/>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumArtists}" Grid.Row="2"/>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumYear}" Grid.Row="3"/>
+                            <Button Grid.Row="4" Style="{StaticResource AccentButtonStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <FontIcon Glyph="d"/>
+                                    <TextBlock Text="Play Album"/>
                                 </StackPanel>
                             </Button>
                         </Grid>

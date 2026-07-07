@@ -8,6 +8,9 @@ namespace Vusic_Player.Configuration.ClassModels
 {
     public class GenreModel
     {
+        public string GenreName { get; set; } = "";
+        public string GenreCover { get; set; } = "";
+        public string GenreCount { get; set; } = "";
         public string? GenreTag { get; set; }
     }
 }

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Pages.Views;
 using Windows.Foundation;
@@ -171,9 +172,24 @@ namespace Vusic_Player.UI.UserViews.Controls
                         newList.CollectionChanged += control.OnCollectionChanged;
                     }
                 }
+                else if (e.NewValue is IEnumerable<ArtistDiscAlbumModel> list4)
+                {
+                    Debug.WriteLine("Playlst4");
 
+                    control.GenerateTimelineAlbum(list4);
+                    Debug.WriteLine("Playlst7");
+
+                    // 2. Subscribe to the new collection's changes
+                    if (e.NewValue is System.Collections.Specialized.INotifyCollectionChanged newList)
+                    {
+                        Debug.WriteLine("Playlst8");
+
+                        newList.CollectionChanged += control.OnCollectionChanged;
+                    }
                 }
+
             }
+        }
         private void OnCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (ItemsSource is IEnumerable<SongModel> list)
@@ -190,6 +206,11 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 MainTimelineList.ItemsSource = TimelineCollectionArtist;
                 GenerateTimelineArtist(list3);
+            }
+            else if (ItemsSource is IEnumerable<ArtistDiscAlbumModel> list4)
+            {
+                MainTimelineList.ItemsSource = TimelineCollectionAlbum;
+                GenerateTimelineAlbum(list4);
             }
         }
         private void btnGlyph_Click(object sender, RoutedEventArgs e)
@@ -362,6 +383,50 @@ namespace Vusic_Player.UI.UserViews.Controls
                 .ToList();
 
         }
+        private void GenerateTimelineAlbum(IEnumerable<ArtistDiscAlbumModel> items)
+        {
+            Debug.WriteLine("Playlst5");
+
+
+            TimelineCollectionAlbum.Clear();
+
+            // 1. Helper to get the string value dynamically
+            Func<object, string> getStringValue = (obj) =>
+            {
+                if (string.IsNullOrEmpty(DisplayMemberPath)) return obj.ToString() ?? "";
+                var prop = obj.GetType().GetProperty(DisplayMemberPath);
+                return prop?.GetValue(obj)?.ToString() ?? obj.ToString() ?? "";
+            };
+
+            // 2. Sort by the dynamic value
+            var sorted = items.OrderBy(x => getStringValue(x)).ToList();
+            string lastLetter = "";
+
+            foreach (var item in sorted)
+            {
+                string currentTitle = getStringValue(item);
+                string firstLetter = string.IsNullOrEmpty(currentTitle) ? "#" :
+                                     char.IsDigit(currentTitle[0]) ? "#" :
+                                     currentTitle[0].ToString().ToUpper();
+
+                bool isStart = firstLetter != lastLetter;
+                if (isStart) lastLetter = firstLetter;
+
+                TimelineCollectionAlbum.Add(new GroupedCollectionModelAlbum
+                {
+
+                    Data = item,
+                    Letter = firstLetter,
+                    IsGroupStart = isStart
+                });
+            }
+
+            MapGridView.ItemsSource = TimelineCollectionAlbum
+                .Where(x => x.IsGroupStart)
+                .Select(x => x.Letter)
+                .ToList();
+
+        }
 
 
         private void GenerateTimeline(IEnumerable<SongModel> items)
@@ -413,173 +478,14 @@ namespace Vusic_Player.UI.UserViews.Controls
             DependencyProperty.Register("DisplayMemberPath", typeof(string),
             typeof(GroupedCollectionView), new PropertyMetadata(null));
 
-        //private void LoadDummyData()
-        //{
-        //    // A - Astronomy
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Astronomy", Artist = "Conan Gray", Album = "Superache", Letter = "A", IsGroupStart = true });
-
-        //    // B - Best Friend, Bourgeoisieses
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Best Friend", Artist = "Conan Gray", Album = "Superache", Letter = "B", IsGroupStart = true });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Bourgeoisieses", Artist = "Conan Gray", Album = "Found Heaven", Letter = "B", IsGroupStart = false });
-
-        //    // C - Checkmate, Comfort Crowd, Crush Culture
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Checkmate", Artist = "Conan Gray", Album = "Kid Krow", Letter = "C", IsGroupStart = true });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Comfort Crowd", Artist = "Conan Gray", Album = "Kid Krow", Letter = "C", IsGroupStart = false });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Crush Culture", Artist = "Conan Gray", Album = "Sunset Season", Letter = "C", IsGroupStart = false });
-
-        //    // F - Family Line, Footnote, Found Heaven
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Family Line", Artist = "Conan Gray", Album = "Superache", Letter = "F", IsGroupStart = true });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Footnote", Artist = "Conan Gray", Album = "Superache", Letter = "F", IsGroupStart = false });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Found Heaven", Artist = "Conan Gray", Album = "Found Heaven", Letter = "F", IsGroupStart = false });
-
-        //    // H - Heather, Hollywood
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Heather", Artist = "Conan Gray", Album = "Kid Krow", Letter = "H", IsGroupStart = true });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Hollywood", Artist = "Conan Gray", Album = "Found Heaven", Letter = "H", IsGroupStart = false });
-
-        //    // J - Jigsaw
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Jigsaw", Artist = "Conan Gray", Album = "Superache", Letter = "J", IsGroupStart = true });
-
-        //    // L - Little League, Lookalike
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Little League", Artist = "Conan Gray", Album = "Kid Krow", Letter = "L", IsGroupStart = true });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Lookalike", Artist = "Conan Gray", Album = "Sunset Season", Letter = "L", IsGroupStart = false });
-
-        //    // M - Memories, Maniac
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Memories", Artist = "Conan Gray", Album = "Superache", Letter = "M", IsGroupStart = true });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Maniac", Artist = "Conan Gray", Album = "Kid Krow", Letter = "M", IsGroupStart = false });
-
-        //    // N - Never Ending Song
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Never Ending Song", Artist = "Conan Gray", Album = "Found Heaven", Letter = "N", IsGroupStart = true });
-
-        //    // O - Online Love
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Online Love", Artist = "Conan Gray", Album = "Kid Krow", Letter = "O", IsGroupStart = true });
-
-        //    // P - People Watching
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "People Watching", Artist = "Conan Gray", Album = "Superache", Letter = "P", IsGroupStart = true });
-
-        //    // T - The Exit, Telepath, The King
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "The Exit", Artist = "Conan Gray", Album = "Superache", Letter = "T", IsGroupStart = true });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Telepath", Artist = "Conan Gray", Album = "Single", Letter = "T", IsGroupStart = false });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "The King", Artist = "Conan Gray", Album = "Single", Letter = "T", IsGroupStart = false });
-
-        //    // V - Vengeance
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Vengeance", Artist = "Conan Gray", Album = "Found Heaven", Letter = "V", IsGroupStart = true });
-
-        //    // W - Winner, Wish You Were Sober
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Winner", Artist = "Conan Gray", Album = "Found Heaven", Letter = "W", IsGroupStart = true });
-        //    TimelineCollection.Add(new SemanticZooMitemtest { Title = "Wish You Were Sober", Artist = "Conan Gray", Album = "Kid Krow", Letter = "W", IsGroupStart = false });
-        //    MapGridView.ItemsSource = TimelineCollection
-        //            .Where(x => x.IsGroupStart)
-        //            .Select(x => x.Letter)
-        //            .ToList();        // If you don't have INotifyPropertyChanged, just re-bind the GridView ItemsSource
-        //}
         public ObservableCollection<GroupedCollectionModel> TimelineCollection { get; set; }
                 = new ObservableCollection<GroupedCollectionModel>();
         public ObservableCollection<GroupedCollectionModelPlaylist> TimelineCollectionPlaylist { get; set; }
                 = new ObservableCollection<GroupedCollectionModelPlaylist>();
         public ObservableCollection<GroupedCollectionModelArtist> TimelineCollectionArtist { get; set; }
         = new ObservableCollection<GroupedCollectionModelArtist>();
-        //public void SetDummyDataSource()
-        //{
-        //    // 1. Create a raw list of mock songs
-        //    var rawSongs = new List<SongModel>
-        //    { 
-        //   // A Group
-        //    new SongModel { Title = "Astronomy", Artist = "Conan Gray", AlbumName = "Superache" },
-        //    new SongModel { Title = "Affluenza", Artist = "Conan Gray", AlbumName = "Kid Krow" },
-        //    new SongModel { Title = "Alley Rose", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-
-        //    // B Group
-        //    new SongModel { Title = "Best Friend", Artist = "Conan Gray", AlbumName = "Superache" },
-        //    new SongModel { Title = "Bourgeoisieses", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-        //    new SongModel { Title = "Bubblegum", Artist = "Conan Gray", AlbumName = "Sunset Season" },
-
-        //    // C Group
-        //    new SongModel { Title = "Comfort Crowd", Artist = "Conan Gray", AlbumName = "Kid Krow" },
-        //    new SongModel { Title = "Checkmate", Artist = "Conan Gray", AlbumName = "Kid Krow" },
-        //    new SongModel { Title = "Crush Culture", Artist = "Conan Gray", AlbumName = "Sunset Season" },
-        //    new SongModel { Title = "Cleanup", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-
-        //    // F Group
-        //    new SongModel { Title = "Family Line", Artist = "Conan Gray", AlbumName = "Superache" },
-        //    new SongModel { Title = "Fake", Artist = "Lauv & Conan Gray", AlbumName = "Single" },
-        //    new SongModel { Title = "Footnote", Artist = "Conan Gray", AlbumName = "Superache" },
-        //    new SongModel { Title = "Found Heaven", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-
-        //    // H Group
-        //    new SongModel { Title = "Heather", Artist = "Conan Gray", AlbumName = "Kid Krow" },
-        //    new SongModel { Title = "Holidays", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-
-        //    // J Group
-        //    new SongModel { Title = "Jigsaw", Artist = "Conan Gray", AlbumName = "Superache" },
-
-        //    // L Group
-        //    new SongModel { Title = "Lookalike", Artist = "Conan Gray", AlbumName = "Sunset Season" },
-        //    new SongModel { Title = "Little League", Artist = "Conan Gray", AlbumName = "Kid Krow" },
-        //    new SongModel { Title = "Lonely Dancers", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-
-        //    // M Group
-        //    new SongModel { Title = "Maniac", Artist = "Conan Gray", AlbumName = "Kid Krow" },
-        //    new SongModel { Title = "Memories", Artist = "Conan Gray", AlbumName = "Superache" },
-        //    new SongModel { Title = "Movies", Artist = "Conan Gray", AlbumName = "Superache" },
-        //    new SongModel { Title = "Miss You", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-
-        //    // N Group
-        //    new SongModel { Title = "Never Ending Song", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-        //    new SongModel { Title = "Night Drive", Artist = "Conan Gray", AlbumName = "Single" },
-
-        //    // P Group
-        //    new SongModel { Title = "People Watching", Artist = "Conan Gray", AlbumName = "Superache" },
-
-        //    // T Group
-        //    new SongModel { Title = "The Exit", Artist = "Conan Gray", AlbumName = "Superache" },
-        //    new SongModel { Title = "The King", Artist = "Conan Gray", AlbumName = "Single" },
-        //    new SongModel { Title = "Telepath", Artist = "Conan Gray", AlbumName = "Single" },
-
-        //    // V Group
-        //    new SongModel { Title = "Vengeance", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-
-        //    // W Group
-        //    new SongModel { Title = "Winner", Artist = "Conan Gray", AlbumName = "Found Heaven" },
-        //    new SongModel { Title = "Wish You Were Sober", Artist = "Conan Gray", AlbumName = "Kid Krow" },
-
-        //    // # Group (Numbers/Symbols)
-        //    new SongModel { Title = "80s Stars", Artist = "Conan Gray", AlbumName = "Single" }
-        //    };
-        //    // 2. Group them by the first letter
-        //    SetDataSource(rawSongs, s => char.IsDigit(s.Title![0]) ? "#" : s.Title[0].ToString().ToUpper());
-
-        //}
-        //public void SetDataSource<T>(IEnumerable<T> items, Func<T, string> keySelector)
-        //{
-        ////    var groups = items
-        ////       .GroupBy(keySelector)
-        ////       .Select(g => new GenericGroup
-        ////       {
-        ////           Header = g.Key.ToString().ToUpper(),
-        ////           Items = g.ToList()
-        ////       })
-        ////       .OrderBy(g => g.Header)
-        ////       .ToList(); // Materialize the list first
-
-        ////    // Update the backing collection
-        ////    GroupedCollection.Clear();
-        ////    foreach (var g in groups) GroupedCollection.Add(g);
-
-        ////    // Re-assigning ensures the Repeater resets its scroll position and internal cache
-        ////    MainRepeater.ItemsSource = null;
-        ////    MainRepeater.ItemsSource = GroupedCollection;
-        ////}
-        ////private void Button_Click(object sender, RoutedEventArgs e)
-        ////{
-        ////    var clickedButton = sender as Button;
-
-        ////    // Set the target to the specific button that was just clicked
-        ////    ttJumpMap.Target = clickedButton;
-
-        ////    // Open the tip
-        ////    ttJumpMap.IsOpen = true;
-        ////    grdViewMap.ItemsSource = AllHeaders;
-        //}
+        public ObservableCollection<GroupedCollectionModelAlbum> TimelineCollectionAlbum { get; set; }
+    = new ObservableCollection<GroupedCollectionModelAlbum>();
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
@@ -627,6 +533,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         ObservableCollection<GroupedCollectionModel> searchresults = new();
         ObservableCollection<GroupedCollectionModelPlaylist> searchresultsplaylists = new();
         ObservableCollection<GroupedCollectionModelArtist> searchresultsartists = new();
+        ObservableCollection<GroupedCollectionModelAlbum> searchresultsalbums = new();
 
         private IEnumerable<GroupedCollectionModel> GetFilteredResults(string query)
         {
@@ -716,6 +623,28 @@ namespace Vusic_Player.UI.UserViews.Controls
             .OrderByDescending(s => s.Data.ArtistName?.StartsWith(textQuery, StringComparison.OrdinalIgnoreCase) == true)
             .ThenBy(s => s.Data.ArtistName);
         }
+        private IEnumerable<GroupedCollectionModelAlbum> GetFilteredResultsAlbum(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return Enumerable.Empty<GroupedCollectionModelAlbum>();
+
+            var rawQuery = query.Trim();
+            var textQuery = rawQuery;
+            textQuery = textQuery.Trim();
+
+            return TimelineCollectionAlbum.Where(s =>
+            {
+                bool textMatch = !string.IsNullOrEmpty(textQuery) && (
+                    (s.Data.AlbumName?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Data.AlbumArtists?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Data.AlbumYear?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Data.AlbumCount?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+
+                );
+                return textMatch;
+            })
+            .OrderByDescending(s => s.Data.AlbumName?.StartsWith(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+            .ThenBy(s => s.Data.AlbumName);
+        }
 
 
         private void btnCloseSearch_Click(object sender, RoutedEventArgs e)
@@ -739,6 +668,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                 else if (TemplateMode == TimelineTemplateMode.Artist)
                 {
                     MainTimelineList.ItemsSource = TimelineCollectionArtist;
+                }
+                else if (TemplateMode == TimelineTemplateMode.Album)
+                {
+                    MainTimelineList.ItemsSource = TimelineCollectionAlbum;
                 }
                 else
                 {
@@ -780,6 +713,16 @@ namespace Vusic_Player.UI.UserViews.Controls
                     sender.ItemsSource = results.Any() ? null : new List<string> { "No artists found!" };
 
                     MainTimelineList.ItemsSource = searchresultsartists;
+                }
+                else if (TemplateMode == TimelineTemplateMode.Album)
+                {
+                    var results = GetFilteredResultsAlbum(sender.Text);
+                    searchresultsalbums.Clear();
+                    foreach (var item in results) searchresultsalbums.Add(item);
+
+                    sender.ItemsSource = results.Any() ? null : new List<string> { "No albums found!" };
+
+                    MainTimelineList.ItemsSource = searchresultsalbums;
                 }
 
             }
@@ -858,12 +801,258 @@ namespace Vusic_Player.UI.UserViews.Controls
                     frmSearchResultsNOMATCH.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
                 }
             }
+            else if (TemplateMode == TimelineTemplateMode.Album)
+            {
+                var results = GetFilteredResultsAlbum(sender.Text);
+
+                if (results.Any())
+                {
+                    grdNoSearchResults.Visibility = Visibility.Collapsed;
+
+                    MainTimelineList.Visibility = Visibility.Visible;
+                    //       Grid.SetRow(grdNoSearchResults, 2);
+
+                    searchresultsalbums.Clear();
+                    foreach (var item in results) searchresultsalbums.Add(item);
+                }
+                else if (TimelineCollectionAlbum.Count > 0)
+                {
+
+                    MainTimelineList.Visibility = Visibility.Collapsed;
+
+                    grdNoSearchResults.Visibility = Visibility.Visible;
+                    frmSearchResultsNOMATCH.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
+                }
+            }
 
         }
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is HyperlinkButton mnft && mnft.DataContext is GroupedCollectionModelArtist arist)
+            {
+                if (App.NavigationFrame == null) return;
+                App.NavigationFrame.Navigate(typeof(ArtistView), arist.Data.ArtistName);
+            }
+        }
+        private async void PlaySelectionAlbum(IEnumerable<GroupedCollectionModelAlbum> albumsongs, bool loop = false, bool shuffle = false)
+        {
+            ObservableCollection<SongModel> tempTransfer = new();
+
+            foreach (var item in albumsongs)
+            {
+                var songs = item.Data.Songs;
+                foreach (var song in songs)
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(song.FilePath);
+                    var props = await file.Properties.GetMusicPropertiesAsync();
+                    string Title = props.Title;
+                    if (Title == "")
+                    {
+                        Title = Path.GetFileNameWithoutExtension(file.Path);
+                    }
+                    string AlbumName = string.IsNullOrWhiteSpace(props.Album) ? "Unknown Album" : props.Album;
+                    string Artist = string.IsNullOrWhiteSpace(props.Artist) ? "Unknown Artist" : props.Artist;
+
+                    tempTransfer.Add(new SongModel
+                    {
+                        Title = Title,
+                        AlbumName = AlbumName,
+                        Artist = Artist,
+                        SongDuration = props.Duration,
+                        FilePath = file.Path
+                    });
+                }
+            }
+            QueueService.PlayMedia(tempTransfer, shuffle, loop);
 
         }
+
+        private async void PlaySelectionArtist(IEnumerable<GroupedCollectionModelArtist> artistsongs, bool loop = false, bool shuffle = false)
+        {
+            ObservableCollection<SongModel> tempTransfer = new();
+
+            foreach (var item in artistsongs)
+            {
+                var songs = item.Data.Songs;
+                foreach (var song in songs)
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(song.FilePath);
+                    var props = await file.Properties.GetMusicPropertiesAsync();
+                    string Title = props.Title;
+                    if (Title == "")
+                    {
+                        Title = Path.GetFileNameWithoutExtension(file.Path);
+                    }
+                    string AlbumName = string.IsNullOrWhiteSpace(props.Album) ? "Unknown Album" : props.Album;
+                    string Artist = string.IsNullOrWhiteSpace(props.Artist) ? "Unknown Artist" : props.Artist;
+
+                    tempTransfer.Add(new SongModel
+                    {
+                        Title = Title,
+                        AlbumName = AlbumName,
+                        Artist = Artist,
+                        SongDuration = props.Duration,
+                        FilePath = file.Path
+                    });
+                }
+            }
+            QueueService.PlayMedia(tempTransfer, shuffle, loop);
+
+        }
+        private async void btnPlayAllArtistSongs_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is GroupedCollectionModelArtist artist)
+            {
+                var artistsongs = TimelineCollectionArtist.Where(p => p.Data.ArtistName == artist.Data.ArtistName);
+                PlaySelectionArtist(artistsongs);
+            }
+        }
+
+        private void mnftViewArtist_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModelArtist arist)
+            {
+                if (App.NavigationFrame == null) return;
+                App.NavigationFrame.Navigate(typeof(ArtistView), arist.Data.ArtistName);
+            }
+        }
+
+        private async void mnftPlayArtist_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelArtist artist)
+            {
+                var artistsongs = TimelineCollectionArtist.Where(p => p.Data.ArtistName == artist.Data.ArtistName);
+                PlaySelectionArtist(artistsongs);
+            }
+
+        }
+
+        private async void mnftPlayArtistShuffled_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelArtist artist)
+            {
+                var artistsongs = TimelineCollectionArtist.Where(p => p.Data.ArtistName == artist.Data.ArtistName);
+                PlaySelectionArtist(artistsongs, false, true);
+            }
+        }
+
+        private async void mnftPlayArtistLoop_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelArtist artist)
+            {
+                var artistsongs = TimelineCollectionArtist.Where(p => p.Data.ArtistName == artist.Data.ArtistName);
+                PlaySelectionArtist(artistsongs, true, false);
+            }
+        }
+
+        private void mnftUnlinkArtist_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelArtist artist)
+            {
+                Debug.WriteLine(artist.Data.ArtistName + " unlink");
+                var artistsongs = TimelineCollectionArtist
+                            .Where(p => p.Data.ArtistName == artist.Data.ArtistName)
+                            .ToList();
+                foreach (var artistname in artistsongs)
+                {
+                    TimelineCollectionArtist.Remove(artistname);
+
+                    var songs = artistname.Data.Songs;
+                    foreach(var song in songs)
+                    {
+                        song.Artist = "";
+                        AudioMetadata.ChangeArtistName(song.FilePath, "");
+                    }
+                }
+            }
+        }
+
+        private void mnftViewAlbum_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModelAlbum album)
+            {
+                if (App.NavigationFrame == null) return;
+                App.NavigationFrame.Navigate(typeof(AlbumView), album.Data.AlbumName);
+            }
+        }
+
+        private void mnftPlayAlbum_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelAlbum album)
+            {
+                var albumsongs = TimelineCollectionAlbum.Where(p => p.Data.AlbumName == album.Data.AlbumName);
+                PlaySelectionAlbum(albumsongs);
+            }
+        }
+
+        private void mnftPlayAlbumShuffled_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelAlbum album)
+            {
+                var albumsongs = TimelineCollectionAlbum.Where(p => p.Data.AlbumName == album.Data.AlbumName);
+                PlaySelectionAlbum(albumsongs, false, true);
+            }
+        }
+
+        private void mnftPlayAlbumLoop_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelAlbum album)
+            {
+                var albumsongs = TimelineCollectionAlbum.Where(p => p.Data.AlbumName == album.Data.AlbumName);
+                PlaySelectionAlbum(albumsongs, true, false);
+            }
+        }
+
+        private void mnftUnlinkAlbum_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelAlbum album)
+            {
+                Debug.WriteLine(album.Data.AlbumName + " unlink");
+                var albumsongs = TimelineCollectionAlbum
+                            .Where(p => p.Data.AlbumName == album.Data.AlbumName)
+                            .ToList();
+                foreach (var albumname in albumsongs)
+                {
+                    TimelineCollectionAlbum.Remove(albumname);
+
+                    var songs = albumname.Data.Songs;
+                    foreach (var song in songs)
+                    {
+                        song.AlbumName = "";
+                        AudioMetadata.ChangeAlbumName(song.FilePath, "");
+                    }
+                }
+            }
+
+        }
+
+        private void HyperlinkButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (sender is HyperlinkButton mnft && mnft.DataContext is GroupedCollectionModelAlbum album)
+            {
+                if (App.NavigationFrame == null) return;
+                App.NavigationFrame.Navigate(typeof(AlbumView), album.Data.AlbumName);
+            }
+        }
+
+        private void mnftPlayAlbumLoopAndShuffled_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelAlbum album)
+            {
+                var albumsongs = TimelineCollectionAlbum.Where(p => p.Data.AlbumName == album.Data.AlbumName);
+                PlaySelectionAlbum(albumsongs, true, true);
+            }
+        }
+
+        private void mnftPlayArtistLoopandShuffle_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem btn && btn.DataContext is GroupedCollectionModelArtist artist)
+            {
+                var artistsongs = TimelineCollectionArtist.Where(p => p.Data.ArtistName == artist.Data.ArtistName);
+                PlaySelectionArtist(artistsongs, true, true);
+            }
+        }
     }
-}
+    }
+
