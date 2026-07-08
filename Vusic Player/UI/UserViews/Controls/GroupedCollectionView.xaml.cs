@@ -1,7 +1,10 @@
+using Flyleaf.FFmpeg;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -13,17 +16,29 @@ using System.Diagnostics;
 using System.DirectoryServices;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.AudioProperties;
+using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media.Core;
 using Windows.Storage;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Vusic_Player.UI.UserViews.Controls.ListViewMedia;
+using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 
 
 namespace Vusic_Player.UI.UserViews.Controls
@@ -40,8 +55,16 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         public GroupedCollectionView()
         {
+           
             InitializeComponent();
+     //       FileInfo.RefreshValues += FileInfo_RefreshValues;
         }
+
+        private void FileInfo_RefreshValues()
+        {
+            throw new NotImplementedException();
+        }
+
         public static readonly DependencyProperty TemplateModeProperty =
                DependencyProperty.Register(
                    nameof(TemplateMode),
@@ -215,12 +238,98 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         private void btnGlyph_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is HyperlinkButton hyp && hyp.DataContext is GroupedCollectionModel group && group.Data is SongModel song)
+            {
 
+                if (song.Glyph == "\uE768")
+                {
+                    PlayerService.Play();
+                }
+                else if (song.Glyph == "\uE769")
+                {
+                    PlayerService.Pause();
+                }
+
+            }
         }
-        private void btnFavourite_Click(object sender, RoutedEventArgs e)
+        private async void btnFavourite_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is Button btn && btn.Content is Grid rootGrid && btn.DataContext is GroupedCollectionModel group && group.Data is SongModel song)
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var Favourites = currentSettings.Favourites;
+                var pathtocheck = song.FilePath;
+                if (pathtocheck == null) return;
+                var fillHeartIcon = rootGrid.FindName("HeartIcon") as FontIcon;
+                if (fillHeartIcon == null) return;
+                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
+                if (existing == null)
+                {
+                    fillHeartIcon.Glyph = "\uEB52";
+                    song.IsFavourite = true;
+                    AnimateHeartFull(fillHeartIcon, true);
+                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
+                    song.FavString = "Remove from Favourites";
+
+                }
+                else
+                {
+                    song.IsFavourite = false;
+                    fillHeartIcon.Glyph = "\uEB51";
+                    AnimateHeartFull(fillHeartIcon, false);
+                    Favourites.Remove(existing);
+                    song.FavString = "Add to Favourites";
+
+
+                }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+            }
 
         }
+        private void AnimateHeartFull(FontIcon targetIcon, bool isBecomingFavorite)
+        {
+            // 1. Get the Visual and Compositor
+            var visual = ElementCompositionPreview.GetElementVisual(targetIcon);
+            var compositor = visual.Compositor;
+
+            // 2. Setup Scale Animation (The "Pop")
+            var scaleAnim = compositor.CreateScalarKeyFrameAnimation();
+            scaleAnim.InsertKeyFrame(0.0f, 1.0f);
+            scaleAnim.InsertKeyFrame(0.5f, 1.4f); // Pulse size
+            scaleAnim.InsertKeyFrame(1.0f, 1.0f);
+            scaleAnim.Duration = TimeSpan.FromMilliseconds(400);
+
+            visual.CenterPoint = new Vector3((float)targetIcon.ActualWidth / 2, (float)targetIcon.ActualHeight / 2, 0);
+            visual.StartAnimation("Scale.X", scaleAnim);
+            visual.StartAnimation("Scale.Y", scaleAnim);
+
+            // 3. Setup Color Animation (The "Fill")
+            // Note: We animate the 'Brush.Color' of the visual
+            var colorAnim = compositor.CreateColorKeyFrameAnimation();
+            colorAnim.Duration = TimeSpan.FromMilliseconds(400);
+
+            if (isBecomingFavorite)
+            {
+                colorAnim.InsertKeyFrame(0.0f, Colors.Gray);
+                colorAnim.InsertKeyFrame(1.0f, Colors.Red);
+            }
+            else
+            {
+                colorAnim.InsertKeyFrame(0.0f, Colors.Red);
+                colorAnim.InsertKeyFrame(1.0f, Colors.Gray);
+            }
+
+            // Create a Brush if one doesn't exist on the visual layer
+            var brush = compositor.CreateColorBrush();
+            visual.Properties.InsertColor("Color", isBecomingFavorite ? Colors.Red : Colors.Gray);
+
+            // Start the color transition
+            // Note: For FontIcon, it's often easier to just swap the Glyph 
+            // and let the Composition color animation handle the tint.
+            targetIcon.Foreground = new SolidColorBrush(isBecomingFavorite ? Colors.Red : Colors.Gray);
+        }
+
         private async void PlaySelection(SongModel selectedSong)
         {
             if (selectedSong.FilePath != null)
@@ -959,7 +1068,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     TimelineCollectionArtist.Remove(artistname);
 
                     var songs = artistname.Data.Songs;
-                    foreach(var song in songs)
+                    foreach (var song in songs)
                     {
                         song.Artist = "";
                         AudioMetadata.ChangeArtistName(song.FilePath, "");
@@ -1053,6 +1162,625 @@ namespace Vusic_Player.UI.UserViews.Controls
                 PlaySelectionArtist(artistsongs, true, true);
             }
         }
+
+        private async void mnftContext_Opened(object sender, object e)
+        {
+
+            var flyout = sender as MenuFlyout;
+            if (flyout == null) return;
+
+
+
+
+            var addToPlaylist = flyout?.Items
+        .OfType<MenuFlyoutSubItem>()
+        .FirstOrDefault(x => x.Text == "Add to Playlist");
+
+            if (addToPlaylist == null)
+                return;
+
+            addToPlaylist.Items.Clear();
+            var selectedsong = addToPlaylist?.DataContext as GroupedCollectionModel;
+            if (selectedsong == null) return;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var Playlists = currentSettings.SavedPlaylists;
+            foreach (var playliitem in Playlists)
+            {
+                MenuFlyoutItem playlistitem = new MenuFlyoutItem();
+                playlistitem.Text = playliitem.PlaylistName;
+                addToPlaylist?.Items.Add(playlistitem);
+                playlistitem.Click += async (sender, e) =>
+                {
+                    var path = selectedsong?.Data.FilePath;
+
+                    if (path != null)
+                    {
+                        if (playliitem.SongsPaths.Contains(path))
+                        {
+                            ttAddedToPlaylist.Title = $"{Path.GetFileNameWithoutExtension(path)} already exists in {playliitem.PlaylistName}";
+                        }
+                        else
+                        {
+                            playliitem.SongsPaths.Add(path);
+                            int count = playliitem.SongsPaths.Count;
+                            playliitem.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
+                            await SettingsLoader.SaveSettingsAsync(currentSettings);
+                            ttAddedToPlaylist.Title = $"{Path.GetFileNameWithoutExtension(path)} has been added to {playliitem.PlaylistName}";
+
+                        }
+                        hypPlaylistAdded.Content = playliitem.PlaylistName;
+                        hypPlaylistAdded.Tag = playliitem;
+                        ttAddedToPlaylist.IsOpen = true;
+                        await Task.Delay(3000);
+                        ttAddedToPlaylist.IsOpen = false;
+                    }
+                };
+
+            }
+
+            //Favourites 
+            var mnftAddtoFav = flyout?.Items
+    .OfType<MenuFlyoutItem>()
+    .FirstOrDefault(x => x.Name == "mnftAddToFavourites");
+
+            if (mnftAddtoFav == null) return;
+            if (selectedsong.Data.IsFavourite == true)
+            {
+                mnftAddtoFav.Text = "Remove from Favourites";
+            }
+            else
+            {
+
+                mnftAddtoFav.Text = "Add to Favourites";
+            }
+        }
+
+        private async void mnftPlaySong_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModel group)
+            {
+                if (File.Exists(group.Data.FilePath))
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(group.Data.FilePath);
+                    string fileExtension = file.FileType.ToLowerInvariant();
+                    bool isVideo = false;
+                    if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                    {
+                        isVideo = true;
+                    }
+                    if (isVideo == false)
+                    {
+                        ObservableCollection<SongModel> single = new();
+                        string Title = Path.GetFileNameWithoutExtension(group.Data.FilePath);
+                        single.Add(new SongModel { FilePath = group.Data.FilePath, Title = Title });
+                        QueueService.PlayMedia(single, false, false);
+                    }
+                }
+            }
+        }
+
+        private void mnftPlaySongNext_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModel group)
+            {
+                var item = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == group.Data.FilePath);
+                if (item != null && item.FilePath != null)
+                {
+                    QueueService.VusicQueueNext.Remove(item);
+                    QueueService.VusicQueueNext.Insert(0, item);
+                }
+                else if (item == null)
+                {
+                    QueueService.VusicQueueNext.Insert(0, group.Data);
+                }
+            }
+        }
+
+        private void mnftAddtoQueue_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModel group && group.Data is SongModel song)
+            {
+                QueueService.VusicQueue.Add(song);
+                QueueService.VusicQueueNext.Add(song);
+            }
+        }
+
+        private void mnftGoToArtist_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModel group && group.Data is SongModel song)
+            {
+                if (App.NavigationFrame == null) return;
+                App.NavigationFrame.Navigate(typeof(ArtistView), song.Artist);
+            }
+        }
+
+        private void mnftGoToAlbum_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModel group && group.Data is SongModel song)
+            {
+                if (App.NavigationFrame == null) return;
+                App.NavigationFrame.Navigate(typeof(AlbumView), song.AlbumName);
+            }
+        }
+
+        private async void mnftSongDetails_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModel group && group.Data is SongModel song && song.FilePath is string filepath)
+            {
+                if (App.MainWindowInstance is MainWindow wind)
+                {
+                    FileInfo.RefreshValues += async () =>
+                    {
+                        var storagefile = await StorageFile.GetFileFromPathAsync(filepath);
+                        var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                        string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(filepath) : musicproperties.Title;
+                        string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                        string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
+                        group.Data.Artist = Artist;
+                        group.Data.Title = title;
+                        group.Data.AlbumName = AlbumName;
+                    };
+                    wind.ShowFileInfo(filepath);
+                }
+            }
+        }
+
+        private void lstViewPlaylists_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstViewPlaylists.SelectedItems.Count == 0)
+            {
+                btnAddFinalPlaylists.IsEnabled = false;
+            }
+            else
+            {
+                btnAddFinalPlaylists.IsEnabled = true;
+            }
+
+        }
+
+        private async void btnAddFinalPlaylists_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var SelectedItems = MainTimelineList.SelectedItems;
+                var selected = SelectedItems.Cast<SongModel>().ToList();
+                var selectedplaylists = lstViewPlaylists.SelectedItems.ToList();
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var playlists = currentSettings.SavedPlaylists;
+                foreach (var item in selected)
+                {
+                    if (item != null && item.FilePath is string str)
+                    {
+                        if (File.Exists(str))
+                        {
+                            foreach (var playlist in selectedplaylists)
+                            {
+                                var exist = playlists.FirstOrDefault(p => p.PlaylistName == playlist.ToString());
+                                if (exist != null)
+                                {
+                                    var songspaths = exist.SongsPaths;
+                                    var defaultitem = songspaths.FirstOrDefault(k => k == item.FilePath);
+                                    if (defaultitem == null)
+                                    {
+                                        exist.SongsPaths.Add(item.FilePath);
+                                        exist.PlaylistCount = $"{exist.SongsPaths.Count} {(exist.SongsPaths.Count == 1 ? "item" : "items")}";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, ex.Message, Logger.LogLevelType.Error);
+                ttError.IsOpen = true;
+                txtError.Text = "An unexpected error occured. Please check log page for details";
+            }
+            finally
+            {
+                ttAddToPlaylist.IsOpen = false;
+                ttAddedToPlaylist.IsOpen = true;
+                await Task.Delay(2000);
+                ttAddedToPlaylist.IsOpen = false;
+            }
+
+        }
+
+        private void hypPlaylistAdded_Click(object sender, RoutedEventArgs e)
+        {
+            if (hypPlaylistAdded.Tag is PlaylistItem playlistItem)
+            {
+                if (App.NavigationFrame != null)
+                    App.NavigationFrame.Navigate(typeof(PlaylistView), playlistItem);
+            }
+        }
+
+        private async void mnftAddToFavourites_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModel group && group.Data is SongModel song)
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var Favourites = currentSettings.Favourites;
+                var pathtocheck = song.FilePath;
+                if (pathtocheck == null) return;
+                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
+                if (existing != null)
+                {
+                    song.IsFavourite = false;
+                    Favourites.Remove(existing);
+                    song.FavString = "Add to Favourites";
+
+                }
+                else
+                {
+                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
+                    song.IsFavourite = true;
+                    song.FavString = "Remove from Favourites";
+
+                }
+
+
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+
+        }
+        SongModel currentcontextfileitem = new();
+        private void btnOpenRecycleBin_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                Arguments = "shell:RecycleBinFolder",
+                UseShellExecute = true
+            });
+
+        }
+
+        private void ttInaccessibleFiles_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            if (PathsIncomplete.Count > 0)
+            {
+                if (chckSkipForAllFiles.IsChecked == false)
+                {
+                    args.Cancel = true;
+                    Debug.WriteLine("yess");
+                    string removedFile = PathsIncomplete[0];
+                    currentFileInactive = removedFile;
+                    Debug.WriteLine(removedFile + " is removed from queue");
+                    PathsIncomplete.Remove(removedFile);
+                    ifbFileInUse.Message = $"The selected file '{removedFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                }
+            }
+        }
+
+        private async void ttInaccessibleFiles_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+
+            args.Cancel = true;
+            var item = currentFileInactive;
+            var lockingprocesses = GetLockingProcess.GetLockingProcesses(item);
+            if (lockingprocesses.Count == 0)
+            {
+                var exist2 = PathsIncomplete.FirstOrDefault(p => p == currentFileInactive);
+                if (exist2 != null)
+                {
+                    PathsIncomplete.Remove(exist2);
+                }
+                Debug.WriteLine("ZERO PROCESS: " + item);
+
+                await DeleteSingleFileAsync(item);
+
+                var exist = TimelineCollection.FirstOrDefault(p => p.Data.FilePath == item);
+                if (exist != null)
+                {
+                    TimelineCollection.Remove(exist);
+                    List<SongModel> inenumerable = new List<SongModel>();
+                    foreach (var timelineitem in TimelineCollection)
+                    {
+                        inenumerable.Add(timelineitem.Data);
+                    }
+                    GenerateTimeline(inenumerable);
+                }
+                if (PathsIncomplete.Count != 0)
+                {
+                    var currentFile = PathsIncomplete[0];
+                    ifbFileInUse.IsOpen = true;
+                    ifbFileInUse.Severity = InfoBarSeverity.Error;
+                    ifbFileInUse.Message = $"The selected file '{currentFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                }
+                else
+                {
+                    ttInaccessibleFiles.Hide();
+                }
+            }
+            else
+            {
+                if (App.MainWindowInstance == null) return;
+                string currentFile = item;
+
+                ifbFileInUse.IsOpen = true;
+                ifbFileInUse.Severity = InfoBarSeverity.Error;
+                ifbFileInUse.Message = $"The selected file '{currentFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                //                ttInaccessibleFiles.IsOpen = true;
+
+
+
+            }
+
+        }
+
+
+        private void mnftDeleteFile_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModel file && file.Data is SongModel song)
+            {
+                if (App.MainWindowInstance == null) return;
+                currentcontextfileitem = song;
+                OceanContentDialog.Show("Confirm Delete", "Delete", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", $"'{song.Title}' will be sent to the Recycle Bin. You can restore it from the Recycle Bin if needed.");
+
+                OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested; ;
+                OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested; ;
+            }
+        }
+        ObservableCollection<string> PathsIncomplete = new();
+        private string currentFileInactive = "";
+
+        private async Task DeleteSingleFileAsync(string path)
+        {
+            try
+            {
+                var storagefile = await StorageFile.GetFileFromPathAsync(path);
+                await storagefile.DeleteAsync(StorageDeleteOption.Default);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("An unexpected error occured. Check log page for more details");
+                Logger.Log(ex.Message, "DeleteFileFolderPage", Logger.LogLevelType.Error);
+            }
+        }
+
+        private async void OceanContentDialog_PrimaryRequested()
+        {
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+            PathsIncomplete.Clear();
+            var item = currentcontextfileitem;
+            Debug.WriteLine("DELETE FILE: " + item.FilePath);
+
+            var lockingprocesses = GetLockingProcess.GetLockingProcesses(item.FilePath);
+            if (lockingprocesses.Count == 0)
+            {
+                Debug.WriteLine("ZERO PROCESS: " + item.FilePath);
+
+
+                await DeleteSingleFileAsync(item.FilePath);
+
+                var exist = TimelineCollection.FirstOrDefault(p => p.Data.FilePath == item.FilePath);
+                if (exist != null)
+                {
+                    TimelineCollection.Remove(exist);
+                    List<SongModel> inenumerable = new List<SongModel>();
+                    foreach (var timelineitem in TimelineCollection)
+                    {
+                        inenumerable.Add(timelineitem.Data);
+                    }
+                    GenerateTimeline(inenumerable);
+                }
+            }
+            else
+            {
+                Debug.WriteLine("MULTI PROCESS: " + item.FilePath);
+                //bool onlyVusicPlayer = lockingprocesses.All(p => p.ProcessName == "Vusic Player");
+                //if (onlyVusicPlayer)
+                //{
+                //    if (PlayerService.Masterplayer != null)
+                //    {
+                //        PlayerService.filestreamcurrent?.Dispose();
+                //        var filelocked2 = GetLockingProcess.GetLockingProcesses(item.Path);
+                //        if (filelocked2.Count == 0)
+                //        {
+
+
+                //        }
+                //    }
+
+                Debug.WriteLine("ADDING: " + item.FilePath);
+                PathsIncomplete.Add(item.FilePath);
+
+
+            }
+            if (PathsIncomplete.Count == 0)
+            {
+                ttDeletedFiles.IsOpen = true;
+                ifbDeleteFiles.IsOpen = true;
+                ifbDeleteFiles.Title = "Completed";
+                ifbDeleteFiles.Severity = InfoBarSeverity.Success;
+                ifbDeleteFiles.Message = "Successfully deleted! You can restore it from the Recycle Bin if needed.";
+            }
+            else
+            {
+                Debug.WriteLine("DDHJLFHJOOFH");
+                if (App.MainWindowInstance == null) return;
+                string currentFile = PathsIncomplete[0];
+                PathsIncomplete.Remove(currentFile);
+                currentFileInactive = currentFile;
+                ifbFileInUse.IsOpen = true;
+                ifbFileInUse.Severity = InfoBarSeverity.Error;
+                ifbFileInUse.Message = $"The selected item '{currentFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again.";
+                chckSkipForAllFiles.IsChecked = false;
+                if (App.MainWindowInstance.Content != null)
+                {
+                    ttInaccessibleFiles.XamlRoot = App.MainWindowInstance.Content.XamlRoot;
+                }
+
+                // FIX 2: Prevent "ContentDialog is already open" or visual tree tracking errors
+                try
+                {
+                    await ttInaccessibleFiles.ShowAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Dialog failed to show: {ex.Message}");
+                }
+                //                ttInaccessibleFiles.IsOpen = true;
+
+
+
+            }
+        }
+        private bool _isopening = false;
+
+        private void hypPlaylistClick_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is HyperlinkButton hyp && hyp.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)
+            {
+                if (_isopening) return;
+                try
+                {
+
+                    _isopening = true;
+                    if (App.NavigationFrame == null) return;
+                    App.NavigationFrame.Navigate(typeof(PlaylistView), playlist);
+
+                }
+                finally
+                {
+                    _isopening = false;
+                }
+            }
+        }
+
+        private async void btnPlayAllPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button hyp && hyp.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)
+            {
+                var observabletemp = new ObservableCollection<SongModel>();
+                foreach (var path in playlist.SongsPaths)
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path);
+                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path) : musicproperties.Title;
+                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
+
+                    observabletemp.Add(new SongModel { FilePath = path, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                }
+                QueueService.PlayMedia(observabletemp, false, false);
+            }
+
+        }
+
+        private async void mnftPlayPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)
+            {
+                var observabletemp = new ObservableCollection<SongModel>();
+                foreach (var path in playlist.SongsPaths)
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path);
+                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path) : musicproperties.Title;
+                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
+
+                    observabletemp.Add(new SongModel { FilePath = path, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                }
+                QueueService.PlayMedia(observabletemp, false, false);
+            }
+        }
+
+        private void mnftEditPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem currentPlaylist)
+            {
+                if (App.MainWindowInstance == null) return;
+                PlaylistCreation.playlistItem = currentPlaylist;
+                OceanContentDialog.Show("Edit Playlist", "Save", "", "Cancel", OceanDialogWindow.ContentType.PlaylistEdit, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "saveicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "", "", "", "", "", currentPlaylist, true);
+
+
+                OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+                OceanContentDialog.PrimaryRequested += () =>
+                {
+                    Debug.WriteLine(PlaylistCreation.playlistItem.PlaylistName + " shshd");
+                    currentPlaylist = PlaylistCreation.playlistItem;
+                    foreach(var song in PlaylistCreation.playlistItem.SongsPaths)
+                    {
+                        Debug.WriteLine("DODNG " + song);
+                    }
+                    group.Data.PlaylistName = PlaylistCreation.playlistItem.PlaylistName;
+                    group.Data.PlaylistCount = PlaylistCreation.playlistItem.PlaylistCount;
+                    group.Data.PlaylistGenre = PlaylistCreation.playlistItem.PlaylistGenre;
+                    group.Data.SongsPaths = PlaylistCreation.playlistItem.SongsPaths;
+                    currentPlaylist.PlaylistName = PlaylistCreation.playlistItem.PlaylistName;
+                    OceanContentDialog.HideDlg();
+                    MainWindow.ShowWindow();
+                    List<PlaylistItem> inenumerable = new List<PlaylistItem>();
+                    foreach (var timelineitem in TimelineCollectionPlaylist)
+                    {
+                        inenumerable.Add(timelineitem.Data);
+                    }
+                    GenerateTimelinePlaylist(inenumerable);
+                };
+            }
+        }
+
+        private void mnftOpenPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)
+            {
+                if (_isopening) return;
+                try
+                {
+
+                    _isopening = true;
+                    if (App.NavigationFrame == null) return;
+                    App.NavigationFrame.Navigate(typeof(PlaylistView), playlist);
+
+                }
+                finally
+                {
+                    _isopening = false;
+                }
+            }
+
+        }
+
+        private async void mnftShuffleAndPlayPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)
+            {
+                var observabletemp = new ObservableCollection<SongModel>();
+                foreach (var path in playlist.SongsPaths)
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path);
+                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path) : musicproperties.Title;
+                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
+
+                    observabletemp.Add(new SongModel { FilePath = path, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                }
+                QueueService.PlayMedia(observabletemp, true, false);
+            }
+        }
+
+        private async void mnftDeletePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var playlists = currentSettings.SavedPlaylists;
+                var exist = playlists.FirstOrDefault(p => p.PlaylistId == playlist.PlaylistId);
+                if(exist != null)
+                {
+                    playlists.Remove(exist);
+                }
+                TimelineCollectionPlaylist.Remove(group);
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+        }
     }
-    }
+}
 

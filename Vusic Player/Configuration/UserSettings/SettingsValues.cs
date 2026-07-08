@@ -31,6 +31,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public string FolderPathSnapshot { get; set; } = "";
         public bool IsPlayerTimeStampEnabledOnSnapshot { get; set; } = false;
         public bool IsHorizontalFlip { get; set; } = false;
+        public bool IsFirstTimeLaunchMusicLib { get; set; } = true;
         public bool IsVerticalFlip { get; set; } = false;
         public double VideoRotation { get; set; } = 0;
         public double VideoBrightness { get; set; } = 0;

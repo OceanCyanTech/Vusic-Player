@@ -287,7 +287,12 @@ namespace Vusic_Player.Configuration.Helper
                     media.FrameRate = fileinfo.FrameRate + " FPS";
                     media.DisplayResolution = fileinfo.DisplayResolution;
                 }
-                OceanContentDialog.Show($"File Info - {media.Title}", "Save Properties", "", "Close", OceanDialogWindow.ContentType.FileInformation, OceanContentDialogDefault.Primary, Xamlroot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "saveicon", "", "", new System.Collections.ObjectModel.ObservableCollection<Configuration.ClassModels.SongModel>(), "");
+                var titleheader = media.Title;
+                if (titleheader == "")
+                {
+                    titleheader = Path.GetFileNameWithoutExtension(FilePath);
+                }
+                OceanContentDialog.Show($"File Info - {titleheader}", "Save Properties", "", "Close", OceanDialogWindow.ContentType.FileInformation, OceanContentDialogDefault.Primary, Xamlroot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "saveicon", "", "", new System.Collections.ObjectModel.ObservableCollection<Configuration.ClassModels.SongModel>(), "");
                 OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
                 OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
 
@@ -471,7 +476,7 @@ namespace Vusic_Player.Configuration.Helper
                                     }
                                     Debug.WriteLine("TURN AROUNDDD");
                                     File.Move(oldPath, newPath);
-                                  
+
                                     JustUpdatedRenamePath = newPath;
                                     var currentSettings = await SettingsLoader.LoadSettingsAsync();
                                     string fileExtension = Path.GetExtension(newPath).ToLowerInvariant();
@@ -748,9 +753,13 @@ namespace Vusic_Player.Configuration.Helper
                 media.DateModified = basicProps.DateModified.ToString("G");
                 media.FileSize = FormatFileSize(basicProps.Size);
             }
-
+            var titleheader = media.Title;
+            if (titleheader == "")
+            {
+                titleheader = Path.GetFileNameWithoutExtension(FilePath);
+            }
             // FIX: Change {media.FileName} to {media.Title} so your UI actually renders the updated Tag Title!
-            OceanContentDialog.Show($"File Info - {media.Title}", "Save Properties", "", "Close", OceanDialogWindow.ContentType.FileInformation, OceanContentDialogDefault.Primary, Xamlroot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "saveicon", "", "", new System.Collections.ObjectModel.ObservableCollection<Configuration.ClassModels.SongModel>(), "");
+            OceanContentDialog.Show($"File Info - {titleheader}", "Save Properties", "", "Close", OceanDialogWindow.ContentType.FileInformation, OceanContentDialogDefault.Primary, Xamlroot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "saveicon", "", "", new System.Collections.ObjectModel.ObservableCollection<Configuration.ClassModels.SongModel>(), "");
             OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
             OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
         }

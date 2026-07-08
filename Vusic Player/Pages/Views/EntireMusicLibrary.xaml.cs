@@ -43,14 +43,72 @@ namespace Vusic_Player.Pages.Views
         public EntireMusicLibrary()
         {
             InitializeComponent();
+            FirstTimeLaunch();
+            AllAvailableSongs.CollectionChanged -= AllAvailableSongs_CollectionChanged;
+            AllAvailableSongs.CollectionChanged += AllAvailableSongs_CollectionChanged;
+            foldersListOpened.CollectionChanged -= FoldersListOpened_CollectionChanged;
+            foldersListOpened.CollectionChanged += FoldersListOpened_CollectionChanged;
             LoadSettings();
 
             stkLoading.Visibility = Visibility.Visible;
             LoadFolders();
+
             //        LoadDummy();
         }
+        private async void FirstTimeLaunch()
+        {
+
+            grdViewFolders.ItemsSource = foldersListOpened;
+
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var folders = currentSettings.SavedFoldersOpened;
+            bool isfirsttimelaunch = currentSettings.IsFirstTimeLaunchMusicLib;
+            Debug.WriteLine("DUFUF " + isfirsttimelaunch);
+            if(isfirsttimelaunch == true)
+            {
+                currentSettings.IsFirstTimeLaunchMusicLib = false;
+                var userPaths = UserDataPaths.GetDefault();
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Music Folder", FolderPath = userPaths.Music, isChecked = true, Show=true });
+                folders.Add(new FoldersListOpened { FolderName = "Music Folder", FolderPath = userPaths.Music, isChecked = true, Show=true });
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Pictures Folder", FolderPath = userPaths.Pictures, isChecked = true, Show=true });
+                folders.Add(new FoldersListOpened { FolderName = "Pictures Folder", FolderPath = userPaths.Pictures, isChecked = true, Show=true });
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Videos Folder", FolderPath = userPaths.Videos, isChecked = true, Show=true });
+                folders.Add(new FoldersListOpened { FolderName = "Videos Folder", FolderPath = userPaths.Videos, isChecked = true, Show=true });
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Downloads Folder", FolderPath = userPaths.Downloads, isChecked = true, Show=true });
+                folders.Add(new FoldersListOpened { FolderName = "Downloads Folder", FolderPath = userPaths.Downloads, isChecked = true, Show=true });
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Documents Folder", FolderPath = userPaths.Documents, isChecked = true, Show=true });
+                folders.Add(new FoldersListOpened { FolderName = "Documents Folder", FolderPath = userPaths.Documents, isChecked = true, Show=true });
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+        }
+        private void FoldersListOpened_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (foldersListOpened.Count == 0)
+            {
+                txtNofoldersadded.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                txtNofoldersadded.Visibility = Visibility.Collapsed;
+
+            }
+        }
+
+        private void AllAvailableSongs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if(AllAvailableSongs.Count == 0)
+            {
+                grdEmptyLibrary.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                grdEmptyLibrary.Visibility = Visibility.Collapsed;
+            }
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+
             if (e.Parameter is string str && str == "EntireHistory")
             {
                 ToggleButton[] musicButtons = { btnAllMusic, btnPlaylists, btnArtists, btnAlbums, btnGenres, btnHistory };
@@ -150,7 +208,7 @@ namespace Vusic_Player.Pages.Views
             foreach (var playlist in playlists)
             {
                 Debug.WriteLine("PLAYLIST BEING ADDED IS :" + playlist.PlaylistName);
-                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, Thumbnail = playlist.Thumbnail });
+                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, Thumbnail = playlist.Thumbnail, SongsPaths=playlist.SongsPaths });
             }
             Debug.WriteLine("Playlst3");
 
@@ -256,7 +314,7 @@ namespace Vusic_Player.Pages.Views
 
         }
 
-        private void btnAll_Click(object sender, RoutedEventArgs e)
+        private async void btnAll_Click(object sender, RoutedEventArgs e)
         {
 
         }
@@ -465,7 +523,8 @@ namespace Vusic_Player.Pages.Views
                     .Select(group => new
                     {
                         GenreName = group.Key,
-                        SongCount = group.Count()
+                        SongCount = group.Count(),
+                        SongList = group.ToList()
                     })
                     .ToList();
 
@@ -484,7 +543,7 @@ namespace Vusic_Player.Pages.Views
                     {
                         // Duplicate prevented! Just update the item count for the existing preset
                         existingGenre.GenreCount = itemStringCount;
-
+                    
                         // Optional: Update thumbnail from settings if available
                         var existGenreSettings = genresListFromSettings?.FirstOrDefault(p => p.GenreName == existingGenre.GenreName);
                         if (existGenreSettings != null)
@@ -569,19 +628,26 @@ namespace Vusic_Player.Pages.Views
                 {
                     try
                     {
-                        if (!Directory.Exists(path)) continue;
-
-                        var searchOption = includeSubDirs ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-                        var directoryInfo = new DirectoryInfo(path);
-                        var files = directoryInfo.EnumerateFiles("*.*", searchOption)
-                            .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
-
-                        foreach (var file in files)
+                        var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == path);
+                        if (exist != null)
                         {
-                            string normalizedPath = Path.GetFullPath(file.FullName);
-                            if (!existingPaths.Contains(normalizedPath))
+                            if (exist.isChecked)
                             {
-                                uniqueFilesToParse.Add(normalizedPath);
+                                if (!Directory.Exists(path)) continue;
+
+                                var searchOption = includeSubDirs ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                                var directoryInfo = new DirectoryInfo(path);
+                                var files = directoryInfo.EnumerateFiles("*.*", searchOption)
+                                    .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
+
+                                foreach (var file in files)
+                                {
+                                    string normalizedPath = Path.GetFullPath(file.FullName);
+                                    if (!existingPaths.Contains(normalizedPath))
+                                    {
+                                        uniqueFilesToParse.Add(normalizedPath);
+                                    }
+                                }
                             }
                         }
                     }
@@ -812,24 +878,36 @@ namespace Vusic_Player.Pages.Views
             UserDataPaths paths = UserDataPaths.GetDefault();
 
             // Assigning the system paths to the Tag property
-            btnMusic.Tag = paths.Music;
-            btnPictures.Tag = paths.Pictures;
-            btnVideos.Tag = paths.Videos;
-            btnDocuments.Tag = paths.Documents;
-            btnDownloads.Tag = paths.Downloads;
+
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
 
-            foldersListOpened.Clear();
-            foldersListOpened.Add(new FoldersListOpened { FolderPath = paths.Music, FolderName = "Music Folder", isChecked = true });
-            foldersListOpened.Add(new FoldersListOpened { FolderPath = paths.Pictures, FolderName = "Pictures Folder", isChecked = true });
-            foldersListOpened.Add(new FoldersListOpened { FolderPath = paths.Videos, FolderName = "Videos Folder", isChecked = true });
-            foldersListOpened.Add(new FoldersListOpened { FolderPath = paths.Documents, FolderName = "Documents Folder", isChecked = true });
-            foldersListOpened.Add(new FoldersListOpened { FolderPath = paths.Downloads, FolderName = "Downloads Folder", isChecked = true });
+            var folders = currentSettings.SavedFoldersOpened;
 
             foreach (var item in currentSettings.SavedFoldersOpened)
             {
-                item.FolderName = Path.GetFileName(item.FolderPath);
-                foldersListOpened.Add(item);
+                if (item.Show == true)
+                {
+                    var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == item.FolderPath);
+                    if (exist == null)
+                    {
+                        item.FolderName = Path.GetFileName(item.FolderPath);
+                        foldersListOpened.Add(item);
+                    }
+
+                }
+                else
+                {
+                    Debug.WriteLine("item show = false " + item.FolderPath);
+                    var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == item.FolderPath);
+                    if (exist != null)
+                    {
+                        if (exist.Show == false)
+                        {
+
+                            foldersListOpened.Remove(item);
+                        }
+                    }
+                }
                 //    ToggleButton toggleButton = new();
                 //    if (item.isChecked)
                 //    {
@@ -865,35 +943,19 @@ namespace Vusic_Player.Pages.Views
                 //    stkAddedFolders.Children.Add(toggleButton);
                 //}
             }
-            grdViewFolders.ItemsSource = foldersListOpened;
             List<string> fpaths = new();
             foreach (var item in foldersListOpened)
             {
-                fpaths.Add(item.FolderPath);
+                if (item.isChecked == true)
+                {
+                    fpaths.Add(item.FolderPath);
+                }
             }
             AllAvailableSongs.Clear();
             await LoadAllFiles(fpaths);
             stkLoading.Visibility = Visibility.Collapsed;
         }
         ObservableCollection<FoldersListOpened> foldersListOpened = new();
-        private void LoadDummy()
-        {
-            var list = new ObservableCollection<SongModel>();
-            list.Add(new SongModel { Title = "The Best", Artist = "Conan Gray", AlbumName = "Wishbone Deluxe" });
-            list.Add(new SongModel { Title = "Vodka Cranberry", Artist = "Conan Gray", AlbumName = "Wishbone" });
-            list.Add(new SongModel { Title = "This Song", Artist = "Conan Gray", AlbumName = "Wishbone" });
-            list.Add(new SongModel { Title = "Nauseous", Artist = "Conan Gray", AlbumName = "Wishbone" });
-            list.Add(new SongModel { Title = "Actor", Artist = "Conan Gray", AlbumName = "Wishbone" });
-            list.Add(new SongModel { Title = "Care", Artist = "Conan Gray", AlbumName = "Wishbone" });
-            list.Add(new SongModel { Title = "Conell", Artist = "Conan Gray", AlbumName = "Wishbone" });
-            list.Add(new SongModel { Title = "Class Clown", Artist = "Conan Gray", AlbumName = "Wishbone" });
-            list.Add(new SongModel { Title = "The Exit", Artist = "Conan Gray", AlbumName = "Superache" });
-            list.Add(new SongModel { Title = "Memories", Artist = "Conan Gray", AlbumName = "Superache" });
-            list.Add(new SongModel { Title = "Footnote", Artist = "Conan Gray", AlbumName = "Superache" });
-            list.Add(new SongModel { Title = "Astroonmy", Artist = "Conan Gray", AlbumName = "Superache" });
-            list.Add(new SongModel { Title = "Movies", Artist = "Conan Gray", AlbumName = "Superache" });
-            AllMusicGroupedCollection.ItemsSource = list;
-        }
         private async void LoadItems(List<string> paths)
         {
             var userPaths = UserDataPaths.GetDefault();
@@ -968,6 +1030,7 @@ namespace Vusic_Player.Pages.Views
         }
         private async void btnAddFolders_Click(object sender, RoutedEventArgs e)
         {
+        
             var obser = new ObservableCollection<SongModel>();
 
             if (App.MainWindowInstance == null) return;
@@ -1034,16 +1097,32 @@ namespace Vusic_Player.Pages.Views
 
             {
                 foldersListOpened.Remove(tgl);
+
                 var currentse = await SettingsLoader.LoadSettingsAsync();
                 if (tgl.FolderPath is string str)
                 {
                     var folder = currentse.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == str);
+
+
                     if (folder != null)
                     {
+                        Debug.WriteLine(str);
+
                         currentse.SavedFoldersOpened.Remove(folder);
+
                     }
                     await SettingsLoader.SaveSettingsAsync(currentse);
                 }
+                List<string> fpaths = new();
+                foreach (var item in foldersListOpened)
+                {
+                    if (item.isChecked == true)
+                    {
+                        fpaths.Add(item.FolderPath);
+                    }
+                }
+                AllAvailableSongs.Clear();
+                await LoadAllFiles(fpaths);
             }
         }
 
@@ -1055,6 +1134,20 @@ namespace Vusic_Player.Pages.Views
                 {
                     if (tgl.DataContext is FoldersListOpened folder)
                     {
+                        var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                        var folderssaved = currentSettings.SavedFoldersOpened;
+                        var exist = folderssaved.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+                        if (exist != null)
+                        {
+                            exist.isChecked = true;
+                        }
+                        var exist2 = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+
+                        if (exist2 != null)
+                        {
+                            exist2.isChecked = true;
+                        }
+                        await SettingsLoader.SaveSettingsAsync(currentSettings);
                         var folderpath = folder.FolderPath;
                         var list = new List<string>();
                         list.Add(folderpath);
@@ -1086,12 +1179,26 @@ namespace Vusic_Player.Pages.Views
 
         }
 
-        private void btnGenericFolder_Unchecked(object sender, RoutedEventArgs e)
+        private async void btnGenericFolder_Unchecked(object sender, RoutedEventArgs e)
         {
             if (sender is ToggleButton btn && btn.DataContext is FoldersListOpened folder)
             {
                 if (btn.IsChecked == false)
                 {
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    var folderssaved = currentSettings.SavedFoldersOpened;
+                    var exist = folderssaved.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+                    if (exist != null)
+                    {
+                        exist.isChecked = false;
+                    }
+                    var exist2 = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+
+                    if (exist2 != null)
+                    {
+                        exist2.isChecked = true;
+                    }
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
                     var folderpath = folder.FolderPath;
                     string folderWithBackslash = folderpath.EndsWith(Path.DirectorySeparatorChar.ToString())
                 ? folderpath
@@ -1322,7 +1429,10 @@ namespace Vusic_Player.Pages.Views
             List<string> fpaths = new();
             foreach (var item in foldersListOpened)
             {
-                fpaths.Add(item.FolderPath);
+                if (item.isChecked == true)
+                {
+                    fpaths.Add(item.FolderPath);
+                }
             }
             AllAvailableSongs.Clear();
             await LoadAllFiles(fpaths);
@@ -1416,6 +1526,53 @@ namespace Vusic_Player.Pages.Views
             asbSearchGenres.Text = "";
             grdViewGenres.Focus(FocusState.Programmatic);
             asbSearchGenres.ItemsSource = null;
+        }
+
+        private void btnPlayAllMusic_Click(object sender, RoutedEventArgs e)
+        {
+            QueueService.PlayMedia(AllAvailableSongs, false, false);
+        }
+
+        private void mnftPlayShuffled_Click(object sender, RoutedEventArgs e)
+        {
+            QueueService.PlayMedia(AllAvailableSongs, true, false);
+
+        }
+
+        private void mnftPlayOnLoop_Click(object sender, RoutedEventArgs e)
+        {
+            QueueService.PlayMedia(AllAvailableSongs, false, true);
+
+        }
+
+        private void mnftPlayOnLoopShuffled_Click(object sender, RoutedEventArgs e)
+        {
+            QueueService.PlayMedia(AllAvailableSongs, true, true);
+        }
+
+        private void mnftPlayGenre_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnftPlayGenreShuffled_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnftPlayGenreLoop_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnftPlayGenreLoopShuffle_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnftRemoveGenre_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

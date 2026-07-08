@@ -280,7 +280,7 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             else if (contentType == ContentType.OnlineArtistPicture)
             {
                 OnlineArtistPic.Visibility = Visibility.Visible;
-                     OnlineArtistPic.UpdateArtistName(artist);
+                OnlineArtistPic.UpdateArtistName(artist);
             }
             // else if (contentType == ContentType.AlbumDetails)
             // {
@@ -296,7 +296,7 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             {
                 ShowMod.Visibility = Visibility.Visible;
             }
-            else if(contentType == ContentType.LyricSearchOnline)
+            else if (contentType == ContentType.LyricSearchOnline)
             {
                 LyricOnline.Visibility = Visibility.Visible;
             }
@@ -505,6 +505,7 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
                     var plitem = Configuration.Helper.UI.PlaylistCreation.playlistItem;
                     if (plitem != null && plitem.PlaylistId != null)
                     {
+                        Debug.WriteLine(plitem.PlaylistName);
                         var currentSettings = await SettingsLoader.LoadSettingsAsync();
                         var playlists = currentSettings.SavedPlaylists;
                         var exist = playlists.FirstOrDefault(p => p.PlaylistId == plitem.PlaylistId);
@@ -529,6 +530,10 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
                             }
                             exist.PlaylistName = finalName;
                             exist.PlaylistGenre = playlistItem.PlaylistGenre;
+                            foreach (var sog in playlistItem.SongsPaths)
+                            {
+                                Debug.WriteLine(sog);
+                            }
                             exist.SongsPaths = playlistItem.SongsPaths;
                             exist.Thumbnail = playlistItem.Thumbnail;
                             exist.PlaylistCount = $"{playlistItem.SongsPaths.Count} {(playlistItem.SongsPaths.Count == 1 ? "item" : "items")}";

@@ -16,10 +16,12 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.UserViews.Controls;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -206,14 +208,43 @@ namespace Vusic_Player.UI.UserViews.Grids
             OpenPlaylistClick?.Invoke(sender, e);
         }
 
-        private void mnftPlayAll_Click(object sender, RoutedEventArgs e)
+        private async void mnftPlayAll_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is  PlaylistItem playlist)
+            {
+                var observabletemp = new ObservableCollection<SongModel>();
+                foreach (var path in playlist.SongsPaths)
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path);
+                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path) : musicproperties.Title;
+                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
+
+                    observabletemp.Add(new SongModel { FilePath = path, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                }
+                QueueService.PlayMedia(observabletemp, false, false);
+            }
 
         }
 
-        private void mnftShufflePlay_Click(object sender, RoutedEventArgs e)
+        private async void mnftShufflePlay_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is PlaylistItem playlist)
+            {
+                var observabletemp = new ObservableCollection<SongModel>();
+                foreach (var path in playlist.SongsPaths)
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path);
+                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path) : musicproperties.Title;
+                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
 
+                    observabletemp.Add(new SongModel { FilePath = path, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                }
+                QueueService.PlayMedia(observabletemp, true, false);
+            }
         }
 
         private void mnftEditPlaylist_Click(object sender, RoutedEventArgs e)

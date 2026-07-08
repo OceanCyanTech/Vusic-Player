@@ -45,7 +45,26 @@
                     <ColumnDefinition ></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock Name="txtAllMusicHeader" Text="All music across your libraries" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
-                <Button Margin="40, 0" Grid.Column="1" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" HorizontalAlignment="Center">
+                <Button Name="btnPlayAllMusic" Click="btnPlayAllMusic_Click" Margin="40, 0" Grid.Column="1" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" HorizontalAlignment="Center">
+                    <Button.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Play Shuffled" Name="mnftPlayShuffled" Click="mnftPlayShuffled_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play on Loop" Name="mnftPlayOnLoop" Click="mnftPlayOnLoop_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftPlayOnLoopShuffled" Click="mnftPlayOnLoopShuffled_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </Button.ContextFlyout>
                     <StackPanel Orientation="Horizontal" Spacing="7">
                         <Image Width="25" Source="/Assets/play.png"></Image>
                         <TextBlock Style="{StaticResource BodyLargeTextBlockStyle}" Text="Play all" Margin="0, 4"></TextBlock>
@@ -86,7 +105,7 @@
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-
+                <TextBlock Text="No folders added." Visibility="Collapsed"  Name="txtNofoldersadded" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
                 <Button CornerRadius="16" VerticalAlignment="Stretch" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Image Width="20" Source="/Assets/addicon.png"></Image>
@@ -94,89 +113,8 @@
                     </StackPanel>
                 </Button>
             </controls1:WrapPanel>
-            <controls1:WrapPanel VerticalAlignment="Center" Visibility="Collapsed" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0, 20" Grid.Row="1" x:Name="stkFolders">
-
-                <ToggleButton  CornerRadius="16" Click="btnAll_Click" Name="btnMusic" FontSize="16" Padding="10" Content="Music Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
-
-                </ToggleButton>
-                <ToggleButton  CornerRadius="16" Click="btnAll_Click" Name="btnPictures" FontSize="16" Padding="10" Content="Pictures Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="1"></ToggleButton>
-                <ToggleButton   CornerRadius="16" Click="btnAll_Click" Name="btnVideos" FontSize="16" Padding="10" Content="Videos Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="2"></ToggleButton>
-                <ToggleButton  CornerRadius="16" Click="btnAll_Click" Name="btnDocuments" FontSize="16" Padding="10" Content="Documents Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="3"></ToggleButton>
-                <ToggleButton CornerRadius="16" Click="btnAll_Click" Name="btnDownloads" FontSize="16" Padding="10" Content="Downloads Folder" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="4"></ToggleButton>
-
-                <controls1:WrapPanel Orientation="Horizontal" x:Name="stkAddedFolders" HorizontalSpacing="10" VerticalSpacing="10"></controls1:WrapPanel>
-            </controls1:WrapPanel>
             <CheckBox Name="chkIncludeSubDirectories" IsChecked="True" Checked="chkIncludeSubDirectories_Checked" Unchecked="chkIncludeSubDirectories_Checked" Content="Include files from sub directories" Grid.Row="2"></CheckBox>
             <Border  Grid.Row="3" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
-                <!--<controls:GroupedCollectionView ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" x:Name="AllMusicGroupedCollection" Grid.Row="2"  DisplayMemberPath="Title">
-                    <controls:GroupedCollectionView.ItemContentTemplate>
-                        <DataTemplate >
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <HyperlinkButton Padding="0" Name="btnGlyph" MinHeight="0" MinWidth="0" Margin="0, 0" Width="35" Grid.Column="0"  Click="btnGlyph_Click" Visibility="Visible" BorderThickness="0" >
-                                    <TextBlock Text="{Binding Glyph}" Foreground="{Binding TitleColor, Mode=OneWay}"  FontFamily="Segoe Fluent Icons"></TextBlock>
-                                </HyperlinkButton>
-                                <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle"   Visibility="Visible"  Margin="0, 0">
-                                    <Grid>
-                                        <TextBlock Text="{Binding Title}"    ToolTipService.ToolTip="{Binding Title}" Foreground="{Binding TitleColor, Mode=OneWay}"></TextBlock>
-                                        <Border Height="2" 
-            Background="Cyan" 
-            VerticalAlignment="Center" 
-            Margin="0,2,0,0"
-                                            CornerRadius="4"
-            Visibility="{Binding VisibilityOfStrikeThrough}" />
-                                    </Grid>
-                                </HyperlinkButton>
-                                <StackPanel Orientation="Horizontal" Grid.Column="2">
-                                    <Image ToolTipService.ToolTip="Artist" Width="25" Source="/Assets/defaultartist.png" ></Image>
-                                    <HyperlinkButton Grid.Column="2" Name="hypArtist" ToolTipService.ToolTip="{Binding Artist}" Click="hypArtist_Click"   Visibility="Visible"  Margin="0, 0">
-                                        <TextBlock Text="{Binding Artist}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
-                                    </HyperlinkButton>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
-                                    <Image ToolTipService.ToolTip="Album" Width="25" Source="/Assets/defaultalbum.png" ></Image>
-                                    <HyperlinkButton ToolTipService.ToolTip="{Binding AlbumName}" Grid.Column="3" Name="hypAlbum" Click="hypAlbum_Click"   Visibility="Visible"  Margin="0, 0">
-                                        <TextBlock Text="{Binding AlbumName}"   FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
-                                    </HyperlinkButton>
-                                </StackPanel>
-                                <TextBlock ToolTipService.ToolTip="{Binding FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{Binding FormattedDuration}" Visibility="Visible" TextWrapping="Wrap" Margin="0, 20"/>
-                                <Button ToolTipService.ToolTip="{Binding FavString}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" 
-Click="btnFavourite_Click"
-Background="Transparent" 
-BorderThickness="0"
-                                            >
-                                    <Grid>
-                                        <FontIcon Name="OutlineHeart2" 
-    Glyph="&#xEB51;" 
-    FontFamily="{StaticResource SymbolThemeFontFamily}" 
-    Foreground="Gray"
-                                              FontSize="16"/>
-
-                                        <FontIcon Name="FillHeart" 
-    Glyph="&#xEB52;" Opacity="{Binding FavOpacity, Mode=OneWay}"
-    FontFamily="{StaticResource SymbolThemeFontFamily}" 
-    Foreground="Red" 
-    RenderTransformOrigin="0.5,0.5"  FontSize="16">
-                                            <FontIcon.RenderTransform>
-                                                <ScaleTransform ScaleX="{Binding FavOpacity, Mode=OneWay}" 
-                        ScaleY="{Binding FavOpacity, Mode=OneWay}"/>
-                                            </FontIcon.RenderTransform>
-                                        </FontIcon>
-                                    </Grid>
-                                </Button>
-
-                            </Grid>
-
-                        </DataTemplate>
-                    </controls:GroupedCollectionView.ItemContentTemplate>
-                </controls:GroupedCollectionView>-->
 
                 <controls:GroupedCollectionView x:Name="AllMusicGroupedCollection" 
                                 Grid.Row="2" 
@@ -185,6 +123,14 @@ BorderThickness="0"
                                 DisplayMemberPath="Title" />
 
             </Border>
+            <Grid RowSpacing="20" Name="grdEmptyLibrary" Grid.Row="3" Visibility="Collapsed"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Image Grid.Row="0" Width="70" Source="/Assets/appicon.png"/>
+                <TextBlock Text="There are no songs in the specified folders. Trying adding other folders." Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            </Grid>
             <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoading" Orientation="Horizontal" Spacing="20" Grid.Row="3">
                 <ProgressRing IsIndeterminate="True"/>
                 <TextBlock Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
@@ -299,27 +245,27 @@ BorderThickness="0"
                         <Grid RowSpacing="10">
                             <Grid.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Play">
+                                    <MenuFlyoutItem Text="Play" Name="mnftPlayGenre" Click="mnftPlayGenre_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="d"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Play Shuffled">
+                                    <MenuFlyoutItem Text="Play Shuffled" Name="mnftPlayGenreShuffled" Click="mnftPlayGenreShuffled_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="d"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Play on Loop">
+                                    <MenuFlyoutItem Text="Play on Loop" Name="mnftPlayGenreLoop" Click="mnftPlayGenreLoop_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="d"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Play Shuffled and on Loop">
+                                    <MenuFlyoutItem Text="Play Shuffled and on Loop" Name="mnftPlayGenreLoopShuffle" Click="mnftPlayGenreLoopShuffle_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="d"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Remove Genre">
+                                    <MenuFlyoutItem Text="Remove Genre" Name="mnftRemoveGenre" Click="mnftRemoveGenre_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="d"/>
                                         </MenuFlyoutItem.Icon>

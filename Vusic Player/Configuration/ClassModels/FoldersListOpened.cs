@@ -5,6 +5,7 @@
         public string FolderPath { get; set; } = "";
         public string? FolderName { get; set; }
         public bool isChecked { get; set; } = false;
+        public bool Show { get; set; } = true;
     
     }
 }
