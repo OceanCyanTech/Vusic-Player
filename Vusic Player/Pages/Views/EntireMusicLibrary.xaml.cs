@@ -19,11 +19,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -48,6 +50,9 @@ namespace Vusic_Player.Pages.Views
             AllAvailableSongs.CollectionChanged += AllAvailableSongs_CollectionChanged;
             foldersListOpened.CollectionChanged -= FoldersListOpened_CollectionChanged;
             foldersListOpened.CollectionChanged += FoldersListOpened_CollectionChanged;
+            PlaylistCreation.CreationCallAdd -= PlaylistCreation_CreationCallAdd;
+            PlaylistCreation.CreationCallAdd += PlaylistCreation_CreationCallAdd;
+
             LoadSettings();
 
             stkLoading.Visibility = Visibility.Visible;
@@ -64,20 +69,20 @@ namespace Vusic_Player.Pages.Views
             var folders = currentSettings.SavedFoldersOpened;
             bool isfirsttimelaunch = currentSettings.IsFirstTimeLaunchMusicLib;
             Debug.WriteLine("DUFUF " + isfirsttimelaunch);
-            if(isfirsttimelaunch == true)
+            if (isfirsttimelaunch == true)
             {
                 currentSettings.IsFirstTimeLaunchMusicLib = false;
                 var userPaths = UserDataPaths.GetDefault();
-                foldersListOpened.Add(new FoldersListOpened { FolderName = "Music Folder", FolderPath = userPaths.Music, isChecked = true, Show=true });
-                folders.Add(new FoldersListOpened { FolderName = "Music Folder", FolderPath = userPaths.Music, isChecked = true, Show=true });
-                foldersListOpened.Add(new FoldersListOpened { FolderName = "Pictures Folder", FolderPath = userPaths.Pictures, isChecked = true, Show=true });
-                folders.Add(new FoldersListOpened { FolderName = "Pictures Folder", FolderPath = userPaths.Pictures, isChecked = true, Show=true });
-                foldersListOpened.Add(new FoldersListOpened { FolderName = "Videos Folder", FolderPath = userPaths.Videos, isChecked = true, Show=true });
-                folders.Add(new FoldersListOpened { FolderName = "Videos Folder", FolderPath = userPaths.Videos, isChecked = true, Show=true });
-                foldersListOpened.Add(new FoldersListOpened { FolderName = "Downloads Folder", FolderPath = userPaths.Downloads, isChecked = true, Show=true });
-                folders.Add(new FoldersListOpened { FolderName = "Downloads Folder", FolderPath = userPaths.Downloads, isChecked = true, Show=true });
-                foldersListOpened.Add(new FoldersListOpened { FolderName = "Documents Folder", FolderPath = userPaths.Documents, isChecked = true, Show=true });
-                folders.Add(new FoldersListOpened { FolderName = "Documents Folder", FolderPath = userPaths.Documents, isChecked = true, Show=true });
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Music Folder", FolderPath = userPaths.Music, isChecked = true, Show = true });
+                folders.Add(new FoldersListOpened { FolderName = "Music Folder", FolderPath = userPaths.Music, isChecked = true, Show = true });
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Pictures Folder", FolderPath = userPaths.Pictures, isChecked = true, Show = true });
+                folders.Add(new FoldersListOpened { FolderName = "Pictures Folder", FolderPath = userPaths.Pictures, isChecked = true, Show = true });
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Videos Folder", FolderPath = userPaths.Videos, isChecked = true, Show = true });
+                folders.Add(new FoldersListOpened { FolderName = "Videos Folder", FolderPath = userPaths.Videos, isChecked = true, Show = true });
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Downloads Folder", FolderPath = userPaths.Downloads, isChecked = true, Show = true });
+                folders.Add(new FoldersListOpened { FolderName = "Downloads Folder", FolderPath = userPaths.Downloads, isChecked = true, Show = true });
+                foldersListOpened.Add(new FoldersListOpened { FolderName = "Documents Folder", FolderPath = userPaths.Documents, isChecked = true, Show = true });
+                folders.Add(new FoldersListOpened { FolderName = "Documents Folder", FolderPath = userPaths.Documents, isChecked = true, Show = true });
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
         }
@@ -96,7 +101,7 @@ namespace Vusic_Player.Pages.Views
 
         private void AllAvailableSongs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if(AllAvailableSongs.Count == 0)
+            if (AllAvailableSongs.Count == 0)
             {
                 grdEmptyLibrary.Visibility = Visibility.Visible;
             }
@@ -208,9 +213,12 @@ namespace Vusic_Player.Pages.Views
             foreach (var playlist in playlists)
             {
                 Debug.WriteLine("PLAYLIST BEING ADDED IS :" + playlist.PlaylistName);
-                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, Thumbnail = playlist.Thumbnail, SongsPaths=playlist.SongsPaths });
+                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
             }
             Debug.WriteLine("Playlst3");
+            stkNoPlaylists.Visibility = Visibility.Collapsed;
+            AllPlaylistGroupedCollection.Visibility = Visibility.Visible;
+
 
         }
         ObservableCollection<RecentMusicModel> recentMusics = new();
@@ -220,12 +228,27 @@ namespace Vusic_Player.Pages.Views
         ObservableCollection<GenreModel> genresAll = new();
         private async void LoadHistory()
         {
+            stkLoadingAll.Visibility = Visibility.Visible;
+
             recentMusics.CollectionChanged += RecentMusics_CollectionChanged;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if(currentSettings.IsMusicHistoryDisabled == true)
+            {
+                btnDisableHistory.Visibility = Visibility.Collapsed;
+                grdViewAllRecentMusic.Visibility = Visibility.Collapsed;
+                asbRecents.Visibility = Visibility.Collapsed;
+                chkSelect.Visibility = Visibility.Collapsed;
+                stkDisabledHistory.Visibility = Visibility.Visible;
+                btnPlayAll.Visibility = Visibility.Collapsed;
+                btnClearHistory.Visibility = Visibility.Collapsed;
+                stkEmptyHistory.Visibility = Visibility.Collapsed;
+                return;
+            }
             var recentmusic = currentSettings.RecentMusic;
 
             foreach (var item in recentmusic)
             {
+                Debug.WriteLine("LOADING HISTORY " + item.SongPath);
                 recentMusics.Add(new RecentMusicModel
                 {
                     FolderName = new DirectoryInfo(
@@ -240,30 +263,8 @@ namespace Vusic_Player.Pages.Views
             }
             foreach (var item in recentMusics)
             {
-                var task = Task.Run(async () =>
-                {
-                    var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(item.SongPath);
-                    Debug.WriteLine("The thumbnail path is " + thumb);
-                    DispatcherQueue.TryEnqueue(async () =>
-                    {
-                        try
-                        {
-                            var bitmap = new BitmapImage();
-                            using (var stream = File.OpenRead(thumb))
-                            {
-                                await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
-                            }
-                            item.Thumbnail = bitmap;
+                item.Thumbnail = await FileThumbnailObtain.GetFileThumbnailAsync(item.SongPath);
 
-                            File.Delete(thumb);
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine("An unexpected error occured: " + ex.Message);
-                        }
-                    });
-
-                });
 
             }
             grdViewAllRecentMusic.ItemsSource = recentMusics;
@@ -285,6 +286,8 @@ namespace Vusic_Player.Pages.Views
                 asbRecents.IsEnabled = true;
 
             }
+            stkLoadingAll.Visibility = Visibility.Collapsed;
+
         }
 
         private void RecentMusics_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -292,7 +295,10 @@ namespace Vusic_Player.Pages.Views
             if (recentMusics.Count == 0)
             {
                 grdViewAllRecentMusic.Visibility = Visibility.Collapsed;
-                stkEmptyHistory.Visibility = Visibility.Visible;
+                if (stkDisabledHistory.Visibility == Visibility.Collapsed)
+                {
+                    stkEmptyHistory.Visibility = Visibility.Visible;
+                }
                 btnClearHistory.IsEnabled = false;
                 btnPlayAll.IsEnabled = false;
                 asbRecents.IsEnabled = false;
@@ -386,6 +392,8 @@ namespace Vusic_Player.Pages.Views
                     var artistsongcount = $"• {artist.SongCount} {(artist.SongCount == 1 ? "item" : "items")}";
                     artistsAll.Add(new ArtistShow { ArtistName = artist.ArtistName, ArtistSongCount = artistsongcount, ArtistThumbnail = fallbackUri, Songs = artist.Songs });
                 }
+                stkNoArtists.Visibility = Visibility.Collapsed;
+                ArtistsGroupedCollection.Visibility = Visibility.Visible;
             }
         }
         private async Task LoadAlbums()
@@ -458,6 +466,8 @@ namespace Vusic_Player.Pages.Views
                     var artistsongcount = $"• {artist.SongCount} {(artist.SongCount == 1 ? "item" : "items")}";
                     albumsAll.Add(new ArtistDiscAlbumModel { AlbumName = artist.AlbumName, AlbumCount = artistsongcount, Thumbnail = fallbackUri, AlbumYear = $"• {artist.CalculatedYear.ToString()}", AlbumArtists = artist.Artists, Songs = artist.Songs });
                 }
+                stkNoAlbums.Visibility = Visibility.Collapsed;
+                AlbumsGroupedCollection.Visibility = Visibility.Visible;
             }
         }
 
@@ -494,10 +504,10 @@ namespace Vusic_Player.Pages.Views
                     }
                 }
 
-                // 2. Extract and group genres from your available songs
                 var genresSongCounts = AllAvailableSongs
-                    .Select(song =>
+                    .GroupBy(song =>
                     {
+                        // 1. Determine the genre for each song while keeping the song object intact
                         string songGenre = "Unknown Genre";
                         try
                         {
@@ -515,25 +525,27 @@ namespace Vusic_Player.Pages.Views
                         }
                         catch
                         {
+                            // Fallback if TagLib fails to read the file
                             songGenre = "Unknown Genre";
                         }
                         return songGenre;
                     })
-                    .GroupBy(genre => genre)
                     .Select(group => new
                     {
-                        GenreName = group.Key,
-                        SongCount = group.Count(),
-                        SongList = group.ToList()
+                        GenreName = group.Key,         // The string returned by the GroupBy lambda above
+                        SongCount = group.Count(),     // Total number of songs in this group
+                        SongList = group.ToList()      // This will now correctly be a List of your original song objects
                     })
-                    .ToList();
-
-                // 3. Merge grouped data into genresAll without causing duplicates
+                    .ToList();                // 3. Merge grouped data into genresAll without causing duplicates
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 var genresListFromSettings = currentSettings.GenresList;
 
                 foreach (var genreData in genresSongCounts)
                 {
+                    foreach(var genree in genreData.SongList)
+                    {
+                        Debug.WriteLine(genree.FilePath + "  isshdhd shfgendre to "+ genreData.GenreName);
+                    }
                     var itemStringCount = $"• {genreData.SongCount} {(genreData.SongCount == 1 ? "item" : "items")}";
 
                     // Check if this genre was already added via presets
@@ -543,16 +555,19 @@ namespace Vusic_Player.Pages.Views
                     {
                         // Duplicate prevented! Just update the item count for the existing preset
                         existingGenre.GenreCount = itemStringCount;
-                    
+                        Debug.WriteLine("existing  genree ");
                         // Optional: Update thumbnail from settings if available
                         var existGenreSettings = genresListFromSettings?.FirstOrDefault(p => p.GenreName == existingGenre.GenreName);
                         if (existGenreSettings != null)
                         {
                             existingGenre.GenreCover = existGenreSettings.GenreCover;
                         }
+                        existingGenre.Songs = genreData.SongList;
                     }
                     else
                     {
+                        Debug.WriteLine("no existing genree ");
+
                         // Completely new genre found in files, resolve thumbnail and add it
                         string fallbackUri = "ms-appx:///Assets/defaultgenre.png";
                         var existGenreSettings = genresListFromSettings?.FirstOrDefault(p => p.GenreName == genreData.GenreName);
@@ -565,7 +580,8 @@ namespace Vusic_Player.Pages.Views
                         {
                             GenreName = genreData.GenreName,
                             GenreCount = itemStringCount,
-                            GenreCover = fallbackUri
+                            GenreCover = fallbackUri,
+                            Songs = genreData.SongList
                         });
                     }
                 }
@@ -1030,7 +1046,7 @@ namespace Vusic_Player.Pages.Views
         }
         private async void btnAddFolders_Click(object sender, RoutedEventArgs e)
         {
-        
+
             var obser = new ObservableCollection<SongModel>();
 
             if (App.MainWindowInstance == null) return;
@@ -1227,9 +1243,19 @@ namespace Vusic_Player.Pages.Views
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
-        private void btnDisableHistory_Click(object sender, RoutedEventArgs e)
+        private async void btnDisableHistory_Click(object sender, RoutedEventArgs e)
         {
 
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.IsMusicHistoryDisabled = true;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            btnDisableHistory.Visibility = Visibility.Collapsed;
+            asbRecents.Visibility = Visibility.Collapsed;
+            chkSelect.Visibility = Visibility.Collapsed;
+            grdViewAllRecentMusic.Visibility = Visibility.Collapsed;
+            stkDisabledHistory.Visibility = Visibility.Visible;
+            btnPlayAll.Visibility = Visibility.Collapsed;
+            btnClearHistory.Visibility = Visibility.Collapsed;
         }
 
         private void mnftRemoveFromRecentMusic_Click(object sender, RoutedEventArgs e)
@@ -1259,22 +1285,26 @@ namespace Vusic_Player.Pages.Views
 
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var recentmusic = currentSettings.RecentMusic;
+            Debug.WriteLine("PALSY");
+            var recentmusic = recentMusics;
             if (recentmusic.Count == 0) return;
             ObservableCollection<SongModel> tempTransfer = new();
             foreach (var item in recentmusic)
             {
-                var file = await StorageFile.GetFileFromPathAsync(item.SongPath);
-                var props = await file.Properties.GetMusicPropertiesAsync();
-                string Title = props.Title;
-                if (Title == "")
+                Debug.WriteLine("ITEM FILE APTHS " + item.SongPath);
+                if (File.Exists(item.SongPath))
                 {
-                    Title = Path.GetFileNameWithoutExtension(file.Path);
+                    var file = await StorageFile.GetFileFromPathAsync(item.SongPath);
+                    var props = await file.Properties.GetMusicPropertiesAsync();
+                    string Title = props.Title;
+                    if (Title == "")
+                    {
+                        Title = Path.GetFileNameWithoutExtension(file.Path);
+                    }
+                    string AlbumName = props.Album;
+                    string Artist = props.Artist;
+                    tempTransfer.Add(new SongModel { Title = Title, AlbumName = AlbumName, Artist = Artist, SongDuration = props.Duration, FilePath = file.Path });
                 }
-                string AlbumName = props.Album;
-                string Artist = props.Artist;
-                tempTransfer.Add(new SongModel { Title = Title, AlbumName = AlbumName, Artist = Artist, SongDuration = props.Duration, FilePath = file.Path });
             }
             QueueService.PlayMedia(tempTransfer, false, false);
 
@@ -1550,29 +1580,276 @@ namespace Vusic_Player.Pages.Views
             QueueService.PlayMedia(AllAvailableSongs, true, true);
         }
 
-        private void mnftPlayGenre_Click(object sender, RoutedEventArgs e)
+        private async void mnftPlayGenre_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
+            {
+                var observabletemp = new ObservableCollection<SongModel>();
+                Debug.WriteLine(genre.Songs.Count + " is hthe cout");
+                foreach (var path in genre.Songs)
+                {
+                    Debug.WriteLine("SHD " + path);
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
+                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
+                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
+
+                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                }
+                QueueService.PlayMedia(observabletemp, false, false);
+            }
 
         }
 
-        private void mnftPlayGenreShuffled_Click(object sender, RoutedEventArgs e)
+        private async void mnftPlayGenreShuffled_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
+            {
+                var observabletemp = new ObservableCollection<SongModel>();
+                foreach (var path in genre.Songs)
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
+                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
+                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
+
+                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                }
+                QueueService.PlayMedia(observabletemp, true, false);
+            }
+        }
+
+        private async void mnftPlayGenreLoop_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
+            {
+                var observabletemp = new ObservableCollection<SongModel>();
+                foreach (var path in genre.Songs)
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
+                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
+                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
+
+                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                }
+                QueueService.PlayMedia(observabletemp, false, true);
+            }
 
         }
 
-        private void mnftPlayGenreLoop_Click(object sender, RoutedEventArgs e)
+        private async void mnftPlayGenreLoopShuffle_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
+            {
+                var observabletemp = new ObservableCollection<SongModel>();
+                foreach (var path in genre.Songs)
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
+                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
+                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
+                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
+                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
 
+                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                }
+                QueueService.PlayMedia(observabletemp, true, true);
+            }
         }
 
-        private void mnftPlayGenreLoopShuffle_Click(object sender, RoutedEventArgs e)
+        private async void mnftRemoveGenre_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
+            {
+                Debug.WriteLine("REMOVE GENRE " + genre.GenreName);
+                var songlist = new List<string>();
 
+                // .ToList() creates a copy, so we aren't mutating the collection we are looping through
+                foreach (var song in genre.Songs.ToList())
+                {
+                    Debug.WriteLine("REMOVE GENRE for " + song.FilePath);
+
+                    songlist.Add(song.FilePath);
+                    genre.Songs.Remove(song); // Safe because genre.Songs isn't the loop target anymore
+                }
+                var artistsongcount = $"• {genre.Songs.Count} {(genre.Songs.Count == 1 ? "item" : "items")}";
+
+                genre.GenreCount = artistsongcount;
+                Debug.WriteLine("REMOV EGENRE CONTINUE");
+
+                AudioMetadata.ChangeGenre(songlist, "Unknown Genre");
+              await  LoadGenres();
+            }
         }
 
-        private void mnftRemoveGenre_Click(object sender, RoutedEventArgs e)
+        private void grdViewGenres_ItemClick(object sender, ItemClickEventArgs e)
         {
+            if (e.ClickedItem is GenreModel genre)
+            {
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(GenreView), genre);
+                }
+            }
+        }
 
+        private void mnftOpenGenre_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GenreModel genre)
+            {
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(GenreView), genre);
+                }
+            }
+        }
+
+        private void MenuFlyout_Opened(object sender, object e)
+        {
+            var flyout = sender as MenuFlyout;
+            if (flyout == null) return;
+
+
+
+
+            var mnftPlay = flyout?.Items
+        .OfType<MenuFlyoutItem>()
+        .FirstOrDefault(x => x.Text == "Play");
+
+            var mnftPlayShuffled = flyout?.Items
+     .OfType<MenuFlyoutItem>()
+     .FirstOrDefault(x => x.Text == "Play Shuffled");
+
+            if (mnftPlayShuffled == null)
+                return;
+
+            var mnftPlayonLoop = flyout?.Items
+  .OfType<MenuFlyoutItem>()
+  .FirstOrDefault(x => x.Text == "Play on Loop");
+
+            if (mnftPlayonLoop == null)
+                return;
+
+
+            var mnftPlayonShuffleLoop = flyout?.Items
+  .OfType<MenuFlyoutItem>()
+  .FirstOrDefault(x => x.Text == "Play Shuffled and on Loop");
+
+            if (mnftPlayonShuffleLoop == null)
+                return;
+            var selectedgenre = mnftPlay?.DataContext as GenreModel;
+            if (selectedgenre == null) return;
+            if(selectedgenre.Songs.Count == 0)
+            {
+                if (mnftPlay == null)
+                    return;
+
+                mnftPlay.IsEnabled = false;
+                mnftPlayShuffled.IsEnabled = false;
+                mnftPlayonLoop.IsEnabled = false;
+                mnftPlayonShuffleLoop.IsEnabled = false;
+            }
+            else
+            {
+                if (mnftPlay == null)
+                    return;
+
+                mnftPlay.IsEnabled = true;
+                mnftPlayShuffled.IsEnabled = true;
+                mnftPlayonLoop.IsEnabled = true;
+                mnftPlayonShuffleLoop.IsEnabled = true;
+            }
+        }
+
+        private async void btnEnableHistory_Click(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.IsMusicHistoryDisabled = false;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            btnDisableHistory.Visibility = Visibility.Visible;
+            asbRecents.Visibility = Visibility.Visible;
+            chkSelect.Visibility = Visibility.Visible;
+            grdViewAllRecentMusic.Visibility = Visibility.Visible;
+            stkDisabledHistory.Visibility = Visibility.Collapsed;
+            btnPlayAll.Visibility = Visibility.Visible;
+            btnClearHistory.Visibility = Visibility.Visible;
+            LoadHistory();
+        }
+
+        private void AllPlaylistGroupedCollection_playlistcollectionchanged()
+        {
+            stkNoPlaylists.Visibility = Visibility.Visible;
+            AllPlaylistGroupedCollection.Visibility = Visibility.Collapsed;
+        }
+
+        private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist");
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+        }
+
+        private void OceanContentDialog_PrimaryRequested()
+        {
+            PlaylistCreation.CallPlaylistCreation();
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+
+        }
+        private bool _isSavingPlaylist = false;
+
+        private async void PlaylistCreation_CreationCallAdd()
+        {
+            if (_isSavingPlaylist) return;
+            _isSavingPlaylist = true;
+            try
+            {
+                if (PlaylistCreation.playlistItem != null)
+                {
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    if (PlaylistCreation.playlistItem.PlaylistName is string name)
+                    {
+                        string baseName = name.Trim();
+
+                        if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                        string finalName = baseName;
+                        int counter = 1;
+                        while (currentSettings.SavedPlaylists.Any(p =>
+                            string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            finalName = $"{baseName} ({counter++})";
+                        }
+                        PlaylistCreation.playlistItem.PlaylistName = finalName;
+                    }
+              
+
+                    currentSettings.SavedPlaylists.Add(PlaylistCreation.playlistItem);
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    LoadAllPlaylists();
+                }
+            }
+            finally
+            {
+                _isSavingPlaylist = false;
+            }
+        }
+
+        private void ArtistsGroupedCollection_artistcollectionchanged()
+        {
+            stkNoArtists.Visibility = Visibility.Visible;
+            ArtistsGroupedCollection.Visibility = Visibility.Collapsed;
+        }
+
+        private void AlbumsGroupedCollection_albumcollectionchanged()
+        {
+            stkNoAlbums.Visibility = Visibility.Visible;
+            AlbumsGroupedCollection.Visibility = Visibility.Collapsed;
         }
     }
 }
+

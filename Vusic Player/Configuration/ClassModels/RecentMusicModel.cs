@@ -10,16 +10,64 @@ using System.Text.Json.Serialization;
 namespace Vusic_Player.Configuration.ClassModels
 {
     public class RecentMusicModel : INotifyPropertyChanged
-    {
-        public string SongName { get; set; } = "";
-        public string SongPath { get; set; } = "";
-        public int PlayCount { get; set; } = 0;
-        public string FolderName { get; set; } = "";
-        public string PlayCountDisplay { get; set; } = "0 times";
-        public string LastPlayed { get; set; } = "";
-        public string LastLyricPath { get; set; } = "";
 
+    {
+        // --- Backing Fields ---
+        private string _songName = "";
+        private string _songPath = "";
+        private int _playCount = 0;
+        private string _folderName = "";
+        private string _playCountDisplay = "0 times";
+        private string _lastPlayed = "";
+        private string _lastLyricPath = "";
+
+        // --- Public Properties ---
+        public string SongName
+        {
+            get => _songName;
+            set { _songName = value; OnPropertyChanged(); }
+        }
+
+        public string SongPath
+        {
+            get => _songPath;
+            set { _songPath = value; OnPropertyChanged(); }
+        }
+
+        public int PlayCount
+        {
+            get => _playCount;
+            set { _playCount = value; OnPropertyChanged(); }
+        }
+
+        public string FolderName
+        {
+            get => _folderName;
+            set { _folderName = value; OnPropertyChanged(); }
+        }
+
+        public string PlayCountDisplay
+        {
+            get => _playCountDisplay;
+            set { _playCountDisplay = value; OnPropertyChanged(); }
+        }
+
+        public string LastPlayed
+        {
+            get => _lastPlayed;
+            set { _lastPlayed = value; OnPropertyChanged(); }
+        }
+
+        public string LastLyricPath
+        {
+            get => _lastLyricPath;
+            set { _lastLyricPath = value; OnPropertyChanged(); }
+        }
+
+        // --- Property Changed Notification ---
         public event PropertyChangedEventHandler? PropertyChanged;
+
+     
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

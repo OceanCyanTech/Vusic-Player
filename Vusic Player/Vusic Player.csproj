@@ -31,6 +31,7 @@
     <None Remove="Pages\Views\ArtistView.xaml" />
     <None Remove="Pages\Views\EntireMusicLibrary.xaml" />
     <None Remove="Pages\Views\FolderView.xaml" />
+    <None Remove="Pages\Views\GenreView.xaml" />
     <None Remove="Pages\Views\HomeView.xaml" />
     <None Remove="Pages\Views\LoggerPage.xaml" />
     <None Remove="Pages\Views\LyricViewer.xaml" />
@@ -170,6 +171,11 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Views\GenreView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\UserViews\Controls\GroupedCollectionView.xaml">

@@ -156,7 +156,13 @@
                     <Image Width="50" Source="/Assets/emptystuffgreen.png"></Image>
                     <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="You have no history!" Name="txtEmptyHistory"></TextBlock>
                 </StackPanel>
-                <HyperlinkButton HorizontalAlignment="Center" Visibility="Collapsed" Content="Go to Settings" FontSize="24" Margin="0, 0" Padding="0"></HyperlinkButton>
+            </StackPanel>
+            <StackPanel Visibility="Collapsed"  Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkDisabledHistory" Spacing="20">
+                <StackPanel Spacing="20" Orientation="Horizontal">
+                    <Image Width="50" Source="/Assets/sourceerror.png"></Image>
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Saving to History is disabled." ></TextBlock>
+                </StackPanel>
+                <HyperlinkButton HorizontalAlignment="Center" Visibility="Visible" Content="Enable History" Name="btnEnableHistory" Click="btnEnableHistory_Click" FontSize="24" Margin="0, 0" Padding="0"></HyperlinkButton>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="20">
 
@@ -173,6 +179,10 @@
             </StackPanel>
 
             <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="3" x:Name="grdViewAllRecentMusic"></controls:GridViewRecentMusic>
+            <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoadingAll" Orientation="Horizontal" Spacing="20" Grid.Row="3">
+                <ProgressRing IsIndeterminate="True"/>
+                <TextBlock Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
+            </StackPanel>
             <Grid  Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
@@ -188,12 +198,28 @@
         <Grid Name="grdPlaylists" RowSpacing="20" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Name="txtAllPlaylists" Text="All Playlists " Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
-
+            <Button Name="btnNewPlaylist" Click="btnNewPlaylist_Click" Grid.Row="1">
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="20" Source="/Assets/addicon.png"></Image>
+                    <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                </StackPanel>
+            </Button>
+            <StackPanel Name="stkNoPlaylists" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="2" Orientation="Vertical" Spacing="20">
+                <Image Width="80" Source="/Assets/emptystuffgreen.png"/>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="You have no playlists!"/>
+                <Button HorizontalAlignment="Center" Name="btnCreateNewPlaylist" Click="btnNewPlaylist_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <TextBlock Margin="5, 0" Text="Create New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
             <controls:GroupedCollectionView x:Name="AllPlaylistGroupedCollection" 
-                      Grid.Row="1" 
+                      Grid.Row="2" playlistcollectionchanged="AllPlaylistGroupedCollection_playlistcollectionchanged"
                       TemplateMode="Playlists"
                       ItemsSource="{x:Bind playlistsAll, Mode=OneWay}" SearchPlaceHolderText="Search for playlists..."
                       DisplayMemberPath="PlaylistName" />
@@ -205,9 +231,13 @@
 
             </Grid.RowDefinitions>
             <TextBlock Name="txtArtistsAll" Text="Artists" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <StackPanel Name="stkNoArtists" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
+                <Image Width="80" Source="/Assets/emptystuffgreen.png"/>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="Songs on this PC have no artist names!"/>
+            </StackPanel>
             <controls:GroupedCollectionView x:Name="ArtistsGroupedCollection" 
              Grid.Row="1" 
-             TemplateMode="Artist"
+             TemplateMode="Artist" artistcollectionchanged="ArtistsGroupedCollection_artistcollectionchanged"
              ItemsSource="{x:Bind artistsAll, Mode=OneWay}" SearchPlaceHolderText="Search for artists associated with songs on this PC..."
              DisplayMemberPath="ArtistName" />
         </Grid>
@@ -218,8 +248,12 @@
 
             </Grid.RowDefinitions>
             <TextBlock Name="txtAlbumsAll" Text="Albums" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <StackPanel Name="stkNoAlbums" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
+                <Image Width="80" Source="/Assets/emptystuffgreen.png"/>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="There are no albums!"/>
+            </StackPanel>
             <controls:GroupedCollectionView x:Name="AlbumsGroupedCollection" 
-    Grid.Row="1" 
+    Grid.Row="1"  albumcollectionchanged="AlbumsGroupedCollection_albumcollectionchanged"
     TemplateMode="Album"
     ItemsSource="{x:Bind albumsAll, Mode=OneWay}" SearchPlaceHolderText="Search for albums associated with songs on this PC..."
     DisplayMemberPath="AlbumName" />
@@ -233,7 +267,7 @@
             </Grid.RowDefinitions>
             <TextBlock Name="txtGenresAll" Text="Genres" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             <AutoSuggestBox TextChanged="asbSearchGenres_TextChanged" QuerySubmitted="asbSearchGenres_QuerySubmitted" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" QueryIcon="Find" Name="asbSearchGenres" PlaceholderText="Search genres..." Grid.Row="1"></AutoSuggestBox>
-            <GridView Name="grdViewGenres" Margin="0, 20" Grid.Row="2">
+            <GridView Name="grdViewGenres" Margin="0, 20" Grid.Row="2" ItemClick="grdViewGenres_ItemClick" IsItemClickEnabled="True">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsWrapGrid Orientation="Horizontal" VerticalAlignment="Stretch" ItemWidth="140"/>
@@ -244,7 +278,12 @@
                     <DataTemplate>
                         <Grid RowSpacing="10">
                             <Grid.ContextFlyout>
-                                <MenuFlyout>
+                                <MenuFlyout Opened="MenuFlyout_Opened">
+                                    <MenuFlyoutItem Text="Open Genre" Name="mnftOpenGenre" Click="mnftOpenGenre_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Play" Name="mnftPlayGenre" Click="mnftPlayGenre_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="d"/>

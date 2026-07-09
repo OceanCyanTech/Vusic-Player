@@ -57,7 +57,37 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
            
             InitializeComponent();
-     //       FileInfo.RefreshValues += FileInfo_RefreshValues;
+            //       FileInfo.RefreshValues += FileInfo_RefreshValues;
+            TimelineCollectionPlaylist.CollectionChanged -= TimelineCollectionPlaylist_CollectionChanged;
+            TimelineCollectionPlaylist.CollectionChanged += TimelineCollectionPlaylist_CollectionChanged;
+            TimelineCollectionArtist.CollectionChanged -= TimelineCollectionArtist_CollectionChanged;
+            TimelineCollectionArtist.CollectionChanged += TimelineCollectionArtist_CollectionChanged;
+            TimelineCollectionAlbum.CollectionChanged -= TimelineCollectionAlbum_CollectionChanged;
+            TimelineCollectionAlbum.CollectionChanged += TimelineCollectionAlbum_CollectionChanged;
+        }
+
+        private void TimelineCollectionAlbum_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (TimelineCollectionAlbum.Count == 0)
+            {
+                albumcollectionchanged?.Invoke();
+            }
+        }
+
+        private void TimelineCollectionArtist_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (TimelineCollectionArtist.Count == 0)
+            {
+                artistcollectionchanged?.Invoke();
+            }
+        }
+
+        private void TimelineCollectionPlaylist_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if(TimelineCollectionPlaylist.Count == 0)
+            {
+                playlistcollectionchanged?.Invoke();
+            }
         }
 
         private void FileInfo_RefreshValues()
@@ -1765,7 +1795,9 @@ namespace Vusic_Player.UI.UserViews.Controls
                 QueueService.PlayMedia(observabletemp, true, false);
             }
         }
-
+        public event Action? playlistcollectionchanged;
+        public event Action? artistcollectionchanged;
+        public event Action? albumcollectionchanged;
         private async void mnftDeletePlaylist_Click(object sender, RoutedEventArgs e)
         {
             if(sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)

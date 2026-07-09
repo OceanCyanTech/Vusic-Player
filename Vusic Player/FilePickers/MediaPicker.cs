@@ -74,6 +74,21 @@ namespace Vusic_Player.FilePickers
             var file = await openPicker.PickSingleFileAsync();
             return file;
         }
+        public static async Task<StorageFile?> PickSingleAudio(Window window, string commitbuttontext)
+        {
+            var openPicker = new FileOpenPicker();
+            var hWnd = WindowNative.GetWindowHandle(window);
+            InitializeWithWindow.Initialize(openPicker, hWnd);
+            foreach (var ext in AudioExtensions.List)
+            {
+                openPicker.FileTypeFilter.Add(ext);
+            }
+            openPicker.CommitButtonText = commitbuttontext;
+            openPicker.FileTypeFilter.Add("*");
+            var file = await openPicker.PickSingleFileAsync();
+            return file;
+        }
+
         public static async Task<StorageFile?> PickSingleImageFileAsync(Window wind, string commitbuttontext)
         {
             var picker = new Windows.Storage.Pickers.FileOpenPicker();

@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <GridView ItemClick="grdViewAllRecentMusic_ItemClick" SelectionMode="{x:Bind GridSelectionMode, Mode=OneWay}" Name="grdViewAllRecentMusic"  Visibility="Visible" ItemsSource="{Binding ItemsSource}" Grid.Row="2">
+        <GridView ItemClick="grdViewAllRecentMusic_ItemClick" SelectionMode="{x:Bind GridSelectionMode, Mode=OneWay}" Name="grdViewAllRecentMusic"  Visibility="Visible" ItemsSource="{Binding ItemsSource}" IsItemClickEnabled="True" Grid.Row="2">
             <GridView.ItemTemplate>
                 <DataTemplate >
                     <StackPanel Width="150">

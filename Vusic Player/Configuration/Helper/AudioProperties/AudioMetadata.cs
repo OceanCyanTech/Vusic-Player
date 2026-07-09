@@ -141,6 +141,79 @@ namespace Vusic_Player.Configuration.Helper.AudioProperties
             }
             return false;
         }
+        private static bool UpdateGenreName(string path, string name)
+        {
+            var filelocked = GetLockingProcess.GetLockingProcesses(path);
+            var file = TagLib.File.Create(path);
+
+            if (filelocked.Count == 0)
+            {
+                Debug.WriteLine("REMOV EGENRE ZERO PROCESS");
+
+                file.Tag.Genres =[name];
+                file.Save();
+                file.Dispose();
+                return true;
+            }
+            else
+            {
+                Debug.WriteLine("REMOV EGENRE MULTI PROCESS");
+
+                bool onlyVusicPlayer = filelocked.All(p => p.ProcessName == "Vusic Player");
+
+                if (onlyVusicPlayer)
+                {
+                    Debug.WriteLine("REMOV EGENRE ONLY VUSIC PROCESS");
+
+                    if (PlayerService.Masterplayer != null)
+                    {
+                        var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
+                        PlayerService.curtime = curTime;
+                        PlayerService.curtimetemp = PlayerService.Masterplayer.CurTime;
+
+                        if (PlayerService.Masterplayer.Status == FlyleafLib.MediaPlayer.Status.Playing)
+                        {
+                            Debug.WriteLine("TRUEEE");
+                            isPaused2 = false;
+                        }
+                        else
+                        {
+                            isPaused2 = true;
+                        }
+                        PlayerService.filestreamcurrent?.Dispose();
+                        PlayerService.JustDisposed = true;
+                        var filelocked2 = GetLockingProcess.GetLockingProcesses(path);
+                        if (filelocked2.Count == 0)
+                        {
+                            try
+                            {
+                                file.Tag.Genres = [name];
+                                file.Save();
+                                file.Dispose();
+                                if (isPaused2 == false)
+                                {
+                                    Debug.WriteLine("IsPuae");
+                                    PlayerService.Play();
+                                }
+
+                                return true;
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log(ex.Message, "Genre.Rename", Logger.LogLevelType.Error);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
         private static bool UpdateArtistName(string path, string name)
         {
             var filelocked = GetLockingProcess.GetLockingProcesses(path);
@@ -209,6 +282,33 @@ namespace Vusic_Player.Configuration.Helper.AudioProperties
         }
 
         private static bool isPaused2 = false;
+        public static bool ChangeGenre(List<string> paths, string newGenre)
+        {
+            Debug.WriteLine("REMOV EGENRE REQUESTED");
+
+            foreach (var path in paths)
+            {
+                if (File.Exists(path))
+                {
+                    Debug.WriteLine("REMOV EGENRE CONTINUE + " + path);
+
+                    if (UpdateGenreName(path, newGenre))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
         public static bool ChangeAlbumName(List<string> paths, string newName)
         {
             foreach (var path in paths)
