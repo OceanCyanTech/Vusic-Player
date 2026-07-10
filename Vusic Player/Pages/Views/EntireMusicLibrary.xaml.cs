@@ -58,7 +58,7 @@ namespace Vusic_Player.Pages.Views
             stkLoading.Visibility = Visibility.Visible;
             LoadFolders();
 
-            //        LoadDummy();
+           
         }
         private async void FirstTimeLaunch()
         {

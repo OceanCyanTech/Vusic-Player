@@ -29,6 +29,11 @@
             <PersonPicture Grid.Row="0" Name="imgArtist" Width="300" Tapped="imgArtist_Tapped" Height="300" >
                 <PersonPicture.ContextFlyout>
                     <MenuFlyout>
+                        <MenuFlyoutItem Text="View Image" Click="mnftViewImage_Click" Name="mnftViewImage">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="x"></FontIcon>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Change Image" Click="btnSetArtistProfilePicture_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="x"></FontIcon>
@@ -203,40 +208,40 @@ ToolTipService.ToolTip="Set Artist Cover">
                 <GridView SelectionMode="Single" SelectionChanged="grdViewAlbums_SelectionChanged" Name="grdViewAlbums" IsItemClickEnabled="True" Grid.Row="4" CanReorderItems="True"  AllowDrop="True" CanDragItems="True"  ItemClick="grdViewAlbums_ItemClick">
                     <GridView.ItemTemplate>
                         <DataTemplate >
-                            <StackPanel Width="150">
+                            <StackPanel ToolTipService.ToolTip="{Binding AlbumName}" Width="150">
                                 <StackPanel.ContextFlyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem Text="Open Album" Click="MenuFlyoutItem_Click">
+                                        <MenuFlyoutItem Text="Open Album" Name="mnftOpenAlbum" Click="mnftOpenAlbum_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8DA;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="Rename Album" Click="MenuFlyoutItem_Click_2" >
+                                        <MenuFlyoutItem Text="Rename Album" Name="mnftRenameAlbum" Click="mnftRenameAlbum_Click" >
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="D"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="View Album Info" Click="MenuFlyoutItem_Click_2" >
+                                        <MenuFlyoutItem Text="View Album Info" Name="mnftAlbumInfo" Click="mnftAlbumInfo_Click" >
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="D"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="Change Album Cover" Name="mnftChangeAlbumCover" Click="MenuFlyoutItem_Click_2" >
+                                        <MenuFlyoutItem Text="Change Album Cover" Name="mnftChangeAlbumCover" Click="mnftChangeAlbumCover_Click" >
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="D"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="Find Album Cover Online" Name="mnftFindAlbumCoverOnline" Click="MenuFlyoutItem_Click_2" >
+                                        <MenuFlyoutItem Text="Find Album Cover Online" Name="mnftFindAlbumCoverOnline" Click="mnftFindAlbumCoverOnline_Click" >
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="D"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="Remove Album" Name="mnftRemoveAlbum" Click="MenuFlyoutItem_Click_2" >
+                                        <MenuFlyoutItem Text="Remove Album" Name="mnftRemoveAlbum" Click="mnftRemoveAlbum_Click" >
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8DA;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Visibility="Collapsed" Text="Delete Album and its contents" Name="mnftDeleteAlbum" Click="mnftDeleteAlbum_Click" >
+                                        <MenuFlyoutItem Visibility="Visible" Text="Delete Album and its contents" Name="mnftDeleteAlbum" Click="mnftDeleteAlbum_Click" >
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8DA;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
@@ -253,11 +258,11 @@ ToolTipService.ToolTip="Set Artist Cover">
                                         <ColumnDefinition></ColumnDefinition>
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="Visible" TextWrapping="Wrap" >
+                                    <TextBlock ToolTipService.ToolTip="Album Count" Grid.Column="0" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="Visible" TextWrapping="Wrap" >
                                       <Run Text="• " />
   <Run Text="{Binding AlbumCount}" />
                                     </TextBlock>
-                                    <TextBlock Grid.Column="1" FontSize="12"
+                                    <TextBlock Grid.Column="1" FontSize="12" ToolTipService.ToolTip="Album Year"
            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
            TextWrapping="Wrap">
     <Run Text="• " />

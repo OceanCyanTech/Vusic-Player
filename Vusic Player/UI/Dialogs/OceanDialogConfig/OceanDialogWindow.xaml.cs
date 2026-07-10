@@ -282,11 +282,11 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
                 OnlineArtistPic.Visibility = Visibility.Visible;
                 OnlineArtistPic.UpdateArtistName(artist);
             }
-            // else if (contentType == ContentType.AlbumDetails)
-            // {
-            //     AlbumEditorBox.Visibility = Visibility.Visible;
-            //   //  AlbumEditorBox.LoadAlbum(AlbumDetails);
-            // }
+            else if (contentType == ContentType.AlbumDetails)
+            {
+                AlbumEditorBox.Visibility = Visibility.Visible;
+                  AlbumEditorBox.LoadAlbum(AlbumDetails);
+            }
             else if (contentType == ContentType.MassEditing)
             {
                 MassEdit.Visibility = Visibility.Visible;
