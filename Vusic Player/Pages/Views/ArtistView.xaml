@@ -281,7 +281,16 @@ ToolTipService.ToolTip="Set Artist Cover">
                     <TextBlock Margin="10,5" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Media will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                 </StackPanel>
                 <TextBlock Text="There are no songs for this artist." Name="txtEmptySongs" Visibility="Collapsed"></TextBlock>
-
+                <TeachingTip Name="ttRenameAlbum" Title="Rename Album">
+                    <Grid RowSpacing="15" Margin="0,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBox Name="txtRenameAlbum" PlaceholderText="Rename album..."/>
+                        <Button Name="btnRenameAlbum" Click="btnRenameAlbum_Click" Content="Rename Album" Style="{StaticResource AccentButtonStyle}" Grid.Row="1"/>
+                    </Grid>
+                </TeachingTip>
                 <vusic:ListViewMedia MediaSource="Artist"  x:Name="lstViewAllSongs"></vusic:ListViewMedia>
 
             </StackPanel>

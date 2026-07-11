@@ -410,7 +410,7 @@ public sealed partial class ArtistView : Page
             if (existingArtist != null && !string.IsNullOrEmpty(existingArtist.Thumbnail))
             {
                 try
-                { 
+                {
                     imgArtist.ProfilePicture = new BitmapImage(new Uri(existingArtist.Thumbnail));
                 }
                 catch (Exception ex)
@@ -924,7 +924,7 @@ public sealed partial class ArtistView : Page
 
         OceanContentDialog.HideDlg();
         MainWindow.ShowWindow();
-     //   await SearchFiles();
+        //   await SearchFiles();
 
 
     }
@@ -1076,10 +1076,58 @@ public sealed partial class ArtistView : Page
     {
         if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel albumModel && albumModel.AlbumName is string name)
         {
-            if (App.MainWindowInstance == null) return;
-            OceanContentDialog.Show("Album", "Close", "", "", OceanDialogWindow.ContentType.AlbumDetails, OceanContentDialogDefault.Primary, XamlRoot, 800, 980, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", "", "", "", name);
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1;
+            txtRenameAlbum.Text = name;
+            ttRenameAlbum.IsOpen = true;
+
+            // 1. Safe Event Handling: Remove any previous handler before adding a new one
+            // to prevent multiple executions and memory leaks.
+            RoutedEventHandler? clickHandler = null;
+            clickHandler = (object btnSender, RoutedEventArgs e) =>
+            {
+                btnRenameAlbum.Click -= clickHandler; // Unsubscribe immediately
+                ttRenameAlbum.IsOpen = false;
+
+                var newName = txtRenameAlbum.Text.Trim();
+                if (string.IsNullOrEmpty(newName) || newName == name)
+                {
+                    return;
+                }
+
+                // 2. Update the main model
+                albumModel.AlbumName = newName;
+                var songs = albumModel.Songs;
+
+                foreach (var song in songs)
+                {
+                    Debug.WriteLine($"RENAME ALBUM: {song.FilePath}");
+
+                    // Write to file metadata asynchronously if possible, or keep synchronous if required
+                    AudioMetadata.ChangeAlbumName(song.FilePath, newName);
+
+                    // 3. Optimized Lookup: Target specific lists directly if you know where the song lives,
+                    // or use a unified update approach.
+                    UpdateSongCollection(FoundSongs, song.FilePath, newName);
+                    UpdateSongCollection(Singles, song.FilePath, newName);
+                    UpdateSongCollection(mostplayedsongs, song.FilePath, newName);
+                }
+
+                // 4. Update the item count string efficiently
+                var count = FoundSongs.Count(p => p.AlbumName == newName);
+                albumModel.AlbumCount = $"• {count} {(count == 1 ? "item" : "items")}";
+            };
+
+            // Clear old handlers just in case, then bind the new one
+            btnRenameAlbum.Click += clickHandler;
+        }
+    }
+
+    // Helper method to keep your code DRY (Don't Repeat Yourself)
+    private void UpdateSongCollection(IEnumerable<SongModel> collection, string filePath, string newName)
+    {
+        var song = collection?.FirstOrDefault(p => p.FilePath == filePath);
+        if (song != null)
+        {
+            song.AlbumName = newName;
         }
     }
 
