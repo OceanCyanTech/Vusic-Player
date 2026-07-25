@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views;
 using Windows.ApplicationModel;
@@ -102,6 +103,7 @@ namespace Vusic_Player
                     }
                 }
             }
+            DatabaseService.InitializeDatabase();
             MainWindow.ShowWindow();
         }
     }

@@ -722,7 +722,7 @@ namespace Vusic_Player.Pages.Views
             for (int i = 0; i < discoveredTracks.Count; i += batchSize)
             {
                 var batch = discoveredTracks.Skip(i).Take(batchSize).ToList();
-
+             
                 dispatcher.TryEnqueue(() =>
                 {
                     foreach (var liteTrack in batch)
@@ -747,7 +747,7 @@ namespace Vusic_Player.Pages.Views
 
                 // Breath frame for the UI engine
                 await Task.Delay(16);
-            }            // This allows Windows to read all file metadata concurrently in the background safely
+            }          
             //var parsingTasks = allFoundFiles.Select(async file =>
             //{
             //    if (existingPaths.Contains(file.Path)) return null;

@@ -166,48 +166,79 @@ ToolTipService.ToolTip="Set Artist Cover">
             </Border>
 
         </Grid>
-        <ScrollView Margin="10, 0" Grid.Column="1">
-            <StackPanel Orientation="Vertical" Spacing="20">
+        <Grid Margin="10, 0" Grid.Column="1" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <!-- Row 0: Page header and top collections (Albums, Singles, Most Played) -->
+                <RowDefinition Height="Auto" />
+                <!-- Row 1: All Songs ListView gets all remaining screen space (Virtualization Enabled!) -->
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical" Spacing="20">
                 <InfoBar Name="ifbError" Visibility="Collapsed" CloseButtonClick="ifbError_CloseButtonClick"></InfoBar>
+
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" Text="Artist Discography" ></TextBlock>
-                    <Button Margin="20, 0" Background="Transparent" BorderBrush="Transparent"  Name="btnRefresh" Click="btnRefresh_Click" ToolTipService.ToolTip="Refresh Discography">
+                    <Button Margin="20, 0" Background="Transparent" BorderBrush="Transparent" Name="btnRefresh" Click="btnRefresh_Click" ToolTipService.ToolTip="Refresh Discography">
                         <FontIcon Glyph="&#xE72C;" FontSize="16"></FontIcon>
                     </Button>
                 </StackPanel>
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Your most played"></TextBlock>
-                <TextBlock Text="Play songs of this artist to show them here!" Name="txtEmptyMostPlayed" Visibility="Visible"></TextBlock>
-                <vusic:ListViewMedia MediaSource="ArtistNoRearrange" AllowRearranging="False" x:Name="lstViewMasterMostPlayed"></vusic:ListViewMedia>
-                <StackPanel Orientation="Horizontal" Spacing="20">
+            </StackPanel>
+            <SelectorBar Name="selBarMain" SelectionChanged="selBarMain_SelectionChanged" Grid.Row="1">
+                <SelectorBar.Items>
+                    <SelectorBarItem Name="selBarItemMostPlayed"  FontSize="18"  IsSelected="True" Text="Most Played"/>
+                    <SelectorBarItem Name="selBarItemAlbum" FontSize="18" Margin="10, 0"  Text="Albums"/>
+                    <SelectorBarItem Name="selBarItemSingles" FontSize="18" Margin="10, 0"  Text="Singles"/>
+                    <SelectorBarItem Name="selBarItemAllSongs" FontSize="18" Margin="10, 0" Text="All Songs"/>
+                </SelectorBar.Items>
+            </SelectorBar>
+            <Grid Name="grdMostPlayed" Grid.Row="2" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0" Text="Your most played"></TextBlock>
+                <TextBlock  Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtMostPlayedCount" Text="• 0 items"></TextBlock>
+                <TextBlock Text="Play songs of this artist to show them here!" Grid.Row="2" Name="txtEmptyMostPlayed" Visibility="Visible"></TextBlock>
+                <vusic:ListViewMedia MediaSource="ArtistNoRearrange" Grid.Row="3" Visibility="Collapsed" AllowRearranging="False" x:Name="lstViewMasterMostPlayed"></vusic:ListViewMedia>
+            </Grid>
+            <Grid Name="grdAlbums" Grid.Row="2" Visibility="Collapsed" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Spacing="20">
                     <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Albums"></TextBlock>
                     <CheckBox Content="Select" Margin="0, 5" Checked="chckSelectAlbums_Checked" Unchecked="chckSelectAlbums_Checked" Name="chckSelectAlbums"></CheckBox>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Visibility="Collapsed" Spacing="10" Name="stkMultiOptionsAlbums">
+
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Visibility="Collapsed" Spacing="10" Name="stkMultiOptionsAlbums">
                     <Button Name="btnRemoveSelections" Click="btnRemoveSelections_Click" ToolTipService.ToolTip="Remove albums" Margin="0, 10" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Assets/openfolder.png" Width="20"></Image>
                         </StackPanel>
-
                     </Button>
-
-
 
                     <Button Name="btnSelectAll" ToolTipService.ToolTip="Select All" Margin="0, 10" Click="btnSelectAll_Click">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Assets/openfolder.png" Width="20"></Image>
                         </StackPanel>
                     </Button>
+
                     <Button Name="btnClearSelection" ToolTipService.ToolTip="Clear Selection" Margin="0, 10" Click="btnClearSelection_Click">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Assets/openfolder.png" Width="20"></Image>
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <TextBlock Text="There are no albums for this artist." Name="txtEmptyAlbums" Visibility="Collapsed"></TextBlock>
 
-                <GridView SelectionMode="Single" SelectionChanged="grdViewAlbums_SelectionChanged" Name="grdViewAlbums" IsItemClickEnabled="True" Grid.Row="4" CanReorderItems="True"  AllowDrop="True" CanDragItems="True"  ItemClick="grdViewAlbums_ItemClick">
+                <TextBlock Style="{StaticResource BodyLargeTextBlockStyle}" Text="There are no albums for this artist." Name="txtEmptyAlbums" Visibility="Visible" Grid.Row="2"></TextBlock>
+                <GridView Visibility="Collapsed" SelectionMode="Single" Grid.Row="2" SelectionChanged="grdViewAlbums_SelectionChanged" Name="grdViewAlbums" IsItemClickEnabled="True" CanReorderItems="True" AllowDrop="True" CanDragItems="True" ItemClick="grdViewAlbums_ItemClick">
                     <GridView.ItemTemplate>
-                        <DataTemplate >
+                        <DataTemplate>
                             <StackPanel ToolTipService.ToolTip="{Binding AlbumName}" Width="150">
                                 <StackPanel.ContextFlyout>
                                     <MenuFlyout>
@@ -246,42 +277,54 @@ ToolTipService.ToolTip="Set Artist Cover">
                                                 <FontIcon Glyph="&#xE8DA;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-
-
                                     </MenuFlyout>
                                 </StackPanel.ContextFlyout>
-                                <Image Source="{Binding AlbumCoverThumbnail}" Width="150" Height="150" Stretch="UniformToFill"/>
 
+                                <Image Source="{Binding AlbumCoverThumbnail}" Width="150" Height="150" Stretch="UniformToFill"/>
                                 <TextBlock Margin="0, 5" Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding AlbumName}" Visibility="Visible" TextWrapping="Wrap" />
-                                <Grid >
+
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition></ColumnDefinition>
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock ToolTipService.ToolTip="Album Count" Grid.Column="0" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="Visible" TextWrapping="Wrap" >
-                                      <Run Text="• " />
-  <Run Text="{Binding AlbumCount}" />
+                                    <TextBlock ToolTipService.ToolTip="Album Count" Grid.Column="0" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="Visible" TextWrapping="Wrap">
+                                    <Run Text="• " />
+                                    <Run Text="{Binding AlbumCount}" />
                                     </TextBlock>
-                                    <TextBlock Grid.Column="1" FontSize="12" ToolTipService.ToolTip="Album Year"
-           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-           TextWrapping="Wrap">
-    <Run Text="• " />
-    <Run Text="{Binding AlbumYear}" />
+                                    <TextBlock Grid.Column="1" FontSize="12" ToolTipService.ToolTip="Album Year" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">
+                                    <Run Text="• " />
+                                    <Run Text="{Binding AlbumYear}" />
                                     </TextBlock>
                                 </Grid>
                             </StackPanel>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Singles"></TextBlock>
-                <TextBlock Text="There are no singles for this artist." Visibility="Collapsed" Name="txtEmptySingles"></TextBlock>
-                <vusic:ListViewMedia x:Name="lstViewSingles" MediaSource="Artist"></vusic:ListViewMedia>
+
+
+            </Grid>
+            <Grid Name="grdArtistSingles" Grid.Row="2" Visibility="Collapsed" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}" Text="Singles"></TextBlock>
+                <TextBlock Grid.Row="1" Text="There are no singles for this artist." Style="{StaticResource BodyLargeTextBlockStyle}" Visibility="Visible" Name="txtEmptySingles"></TextBlock>
+                <vusic:ListViewMedia x:Name="lstViewSingles" Visibility="Collapsed" MediaSource="Artist" Grid.Row="1"></vusic:ListViewMedia>
+            </Grid>
+            <Grid Name="grdAllSongs" Grid.Row="2" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Margin="0, 20">
                     <TextBlock Name="txtPlaylistContentHeader" Style="{StaticResource TitleTextBlockStyle}" Text="All Songs"></TextBlock>
                     <TextBlock Margin="10,5" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Media will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                 </StackPanel>
-                <TextBlock Text="There are no songs for this artist." Name="txtEmptySongs" Visibility="Collapsed"></TextBlock>
-                <TeachingTip Name="ttRenameAlbum" Title="Rename Album">
+                <TextBlock Grid.Row="1" Text="There are no songs for this artist." Style="{StaticResource BodyLargeTextBlockStyle}" Name="txtEmptySongs" Visibility="Collapsed"/>
+
+                <TeachingTip Name="ttRenameAlbum" Visibility="Collapsed" Title="Rename Album">
                     <Grid RowSpacing="15" Margin="0,10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -291,10 +334,15 @@ ToolTipService.ToolTip="Set Artist Cover">
                         <Button Name="btnRenameAlbum" Click="btnRenameAlbum_Click" Content="Rename Album" Style="{StaticResource AccentButtonStyle}" Grid.Row="1"/>
                     </Grid>
                 </TeachingTip>
-                <vusic:ListViewMedia MediaSource="Artist"  x:Name="lstViewAllSongs"></vusic:ListViewMedia>
-
-            </StackPanel>
-        </ScrollView>
+                <vusic:ListViewMedia 
+Grid.Row="1"
+                 
+x:Name="lstViewAllSongs" 
+MediaSource="Artist">
+                </vusic:ListViewMedia>
+            </Grid>
+     
+        </Grid>
     </Grid>
 
 </Page>

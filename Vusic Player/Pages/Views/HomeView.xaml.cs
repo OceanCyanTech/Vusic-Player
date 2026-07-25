@@ -117,5 +117,11 @@ namespace Vusic_Player.Pages.Views
         {
             expFav.IsExpanded = true;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(DummyPage));
+
+        }
     }
 }
