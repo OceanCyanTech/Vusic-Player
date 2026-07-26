@@ -197,12 +197,21 @@ ToolTipService.ToolTip="Set Artist Cover">
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0" Text="Your most played"></TextBlock>
                 <TextBlock  Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtMostPlayedCount" Text="• 0 items"></TextBlock>
-                <TextBlock Text="Play songs of this artist to show them here!" Grid.Row="2" Name="txtEmptyMostPlayed" Visibility="Visible"></TextBlock>
-                <vusic:ListViewMedia MediaSource="ArtistNoRearrange" Grid.Row="3" Visibility="Collapsed" AllowRearranging="False" x:Name="lstViewMasterMostPlayed"></vusic:ListViewMedia>
+                <TextBlock  Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtMostPlayedDuration" Text="• 00:00"></TextBlock>
+
+                <Button Click="btnPlayAllMostPlayed_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllMostPlayed" Grid.Row="3" Style="{StaticResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="d"/>
+                        <TextBlock Text="Play All"/>
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="Play songs of this artist to show them here!" Grid.Row="4" Name="txtEmptyMostPlayed" Visibility="Visible"></TextBlock>
+                <vusic:ListViewMedia MediaSource="ArtistNoRearrange" Grid.Row="4" Visibility="Collapsed" AllowRearranging="False" x:Name="lstViewMasterMostPlayed"></vusic:ListViewMedia>
             </Grid>
             <Grid Name="grdAlbums" Grid.Row="2" Visibility="Collapsed" RowSpacing="20">
                 <Grid.RowDefinitions>
@@ -308,10 +317,21 @@ ToolTipService.ToolTip="Set Artist Cover">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}" Text="Singles"></TextBlock>
-                <TextBlock Grid.Row="1" Text="There are no singles for this artist." Style="{StaticResource BodyLargeTextBlockStyle}" Visibility="Visible" Name="txtEmptySingles"></TextBlock>
-                <vusic:ListViewMedia x:Name="lstViewSingles" Visibility="Collapsed" MediaSource="Artist" Grid.Row="1"></vusic:ListViewMedia>
+                <TextBlock  Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtSinglesCount" Text="• 0 items"></TextBlock>
+                <TextBlock  Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtSinglesDuration" Text="• 00:00"></TextBlock>
+                <Button Click="btnPlayAllSingles_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllSingles" Grid.Row="3" Style="{StaticResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="d"/>
+                        <TextBlock Text="Play All"/>
+                    </StackPanel>
+                </Button>
+                <TextBlock Grid.Row="4" Text="There are no singles for this artist." Style="{StaticResource BodyLargeTextBlockStyle}" Visibility="Visible" Name="txtEmptySingles"></TextBlock>
+                <vusic:ListViewMedia x:Name="lstViewSingles" Visibility="Collapsed" MediaSource="Artist" Grid.Row="4"></vusic:ListViewMedia>
             </Grid>
             <Grid Name="grdAllSongs" Grid.Row="2" Visibility="Collapsed">
                 <Grid.RowDefinitions>

@@ -83,6 +83,28 @@ public sealed partial class ArtistView : Page
     public ObservableCollection<SongModel> Singles { get; set; } = new ObservableCollection<SongModel>();
     HashSet<string> uniqueArtists = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     ObservableCollection<string> AlbumsList { get; set; } = new();
+    private void LoadSingles()
+    {
+        Singles.Clear();
+        var singlesongs = FoundSongs.Where(p => p.AlbumName == "Unknown Album");
+        Singles = new ObservableCollection<SongModel>(singlesongs);
+
+        txtEmptySingles.Visibility = Singles.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        lstViewSingles.Visibility = Singles.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        lstViewSingles.ItemsSource = Singles;
+        txtSinglesCount.Text = $"• {Singles.Count} {(Singles.Count == 1 ? "item" : "items")}";
+        TimeSpan? timeSpan = TimeSpan.Zero;
+        foreach (var item in Singles.ToList())
+        {
+
+            timeSpan += item.SongDuration;
+        }
+        string formatted = timeSpan is TimeSpan ts
+          ? (ts.TotalHours >= 1 ? ts.ToString(@"h\:mm\:ss") : ts.ToString(@"m\:ss"))
+          : "0:00";
+        txtSinglesDuration.Text = "• " + formatted;
+    }
 
     private bool _isRenaming = false;
     private async Task SearchFiles()
@@ -658,7 +680,85 @@ public sealed partial class ArtistView : Page
 
         return new BitmapImage(fallbackUri);
     }
+    private async void LoadAlbums()
+    {
+        AlbumsList.Clear();
+        albumCollection.Clear();
+        var groupedAlbums = FoundSongs
+         .Where(song => song.AlbumName != null && !string.IsNullOrEmpty(song.AlbumName))
+         .GroupBy(song => song.AlbumName)
+         .Select(group =>
+         {
 
+             // 1. Extract years directly from the file tags
+             var years = group
+                 .Select(song =>
+                 {
+                     try
+                     {
+                         // Assuming your song model has a Path or FilePath property
+                         using (var file = TagLib.File.Create(song.FilePath))
+                         {
+                             return (int)file.Tag.Year; // Returns 0 if not set
+                         }
+                     }
+                     catch
+                     {
+                         return 0; // Fallback for unreadable files
+                     }
+                 })
+                 .Where(year => year > 0)
+                 .ToList();
+
+             int finalYear = 0;
+
+             if (years.Any())
+             {
+                 var yearGroups = years.GroupBy(y => y).OrderByDescending(g => g.Count()).ToList();
+                 bool isAllVaried = yearGroups.All(g => g.Count() == yearGroups.First().Count());
+                 finalYear = isAllVaried ? years.First() : yearGroups.First().Key;
+             }
+
+             return new
+             {
+                 AlbumName = group.Key,
+                 SongCount = group.Count(),
+                 CalculatedYear = finalYear,
+                 Artists = string.Join(", ", group
+                     .Select(song => song.Artist)
+                     .Where(name => !string.IsNullOrEmpty(name))
+                     .Distinct()
+                     .OrderBy(name => name)),
+                 Songs = group.ToList()
+             };
+         })
+         .OrderBy(result => result.AlbumName)
+         .ToList();
+        foreach (var albumGroup in groupedAlbums)
+        {
+            var songs = albumGroup.Songs;
+            int countsongs = songs.Count;
+            string countsong = $"{countsongs} {(countsongs == 1 ? "item" : "items")}";
+
+            BitmapImage img = await LoadExistingThumbnailAsync(albumGroup.AlbumName ?? "Unknown Album");
+
+            albumCollection.Add(new ArtistDiscAlbumModel
+            {
+                AlbumName = albumGroup.AlbumName ?? "Unknown Album",
+                AlbumCount = countsong,
+                AlbumCoverThumbnail = img,
+                AlbumYear = albumGroup.CalculatedYear.ToString(),
+                Songs = songs
+            });
+        }
+        grdViewAlbums.ItemsSource = albumCollection;
+
+        txtEmptyAlbums.Visibility = albumCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        grdViewAlbums.Visibility = albumCollection.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        txtAlbumCount.Text = "• " + $"{albumCollection.Count} {(albumCollection.Count == 1 ? "Album" : "Albums")}";
+
+
+    }
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         if (e.Parameter is string selectedSongArtist)
@@ -717,21 +817,39 @@ public sealed partial class ArtistView : Page
                     FilePath = s.FilePath,
                     SongDuration = s.SongDuration
                 }).ToList();
-
                 // 3. Assign directly to UI
                 FoundSongs = new ObservableCollection<SongModel>(songModels);
                 lstViewAllSongs.ItemsSource = FoundSongs;
                 _ = RunBackgroundScannerAsync();
-                txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "item" : "items")}";
-
+                txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
+                TotalDuration();
+                foreach (var item in FoundSongs)
+                {
+                    Debug.WriteLine("The Duration of " + item.Title + " is " + item.FormattedDuration);
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Failed to load songs: {ex.Message}");
             }
         }
+        LoadAlbums();
         base.OnNavigatedTo(e);
     }
+    private void TotalDuration()
+    {
+        TimeSpan? timeSpan = TimeSpan.Zero;
+        foreach (var item in FoundSongs.ToList())
+        {
+
+            timeSpan += item.SongDuration;
+        }
+        string formatted = timeSpan is TimeSpan ts
+          ? (ts.TotalHours >= 1 ? ts.ToString(@"h\:mm\:ss") : ts.ToString(@"m\:ss"))
+          : "0:00";
+        txtTotalDuration.Text = formatted;
+    }
+
     private async Task RunBackgroundScannerAsync()
     {
         var existingPaths = FoundSongs
@@ -757,7 +875,9 @@ newSong =>
             FilePath = newSong.FilePath
         });
     }
-}); txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "item" : "items")}";
+});
+        txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
+        TotalDuration();
 
     }
     private async Task LoadFilesProgressiveAsync()
@@ -943,9 +1063,6 @@ newSong =>
 
     {
 
-        txtEmptySingles.Visibility = Singles.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-
-        lstViewSingles.Visibility = Singles.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
 
         txtEmptySongs.Visibility = FoundSongs.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
@@ -954,6 +1071,7 @@ newSong =>
     }
     private async void LoadMostPlayed()
     {
+        mostplayedsongs.Clear();
         var currentSettings = await SettingsLoader.LoadSettingsAsync();
         var sortedSongs = currentSettings.RecentMusic.OrderByDescending(x => x.PlayCount).Take(5).ToList();
         foreach (var song in sortedSongs)
@@ -968,6 +1086,16 @@ newSong =>
         lstViewMasterMostPlayed.Visibility = mostplayedsongs.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
         txtEmptyMostPlayed.Visibility = mostplayedsongs.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         txtMostPlayedCount.Text = $"• {mostplayedsongs.Count} {(mostplayedsongs.Count == 1 ? "item" : "items")}";
+        TimeSpan? timeSpan = TimeSpan.Zero;
+        foreach (var item in mostplayedsongs.ToList())
+        {
+
+            timeSpan += item.SongDuration;
+        }
+        string formatted = +timeSpan is TimeSpan ts
+          ? (ts.TotalHours >= 1 ? ts.ToString(@"h\:mm\:ss") : ts.ToString(@"m\:ss"))
+          : "0:00";
+        txtMostPlayedDuration.Text = "• " + formatted;
     }
     ObservableCollection<SongModel> mostplayedsongs = new();
     private async Task LoadMostPlayedSongsBackground(SettingsValues currentSettings, string targetArtist, HashSet<string> favSet, string currentPlayingPath, bool isPlaying)
@@ -1152,7 +1280,6 @@ newSong =>
                 artists.Add(newArtist);
             }
 
-            // Don't forget to save the changes back to storage!
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
         catch (Exception ex)
@@ -1462,12 +1589,81 @@ newSong =>
         Debug.WriteLine("View Album Info clicked.");
     }
 
-    private void mnftChangeAlbumCover_Click(object sender, RoutedEventArgs e)
+    private async void mnftChangeAlbumCover_Click(object sender, RoutedEventArgs e)
     {
-        Debug.WriteLine("Change Album Cover clicked.");
+        if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel album)
+        {
+            if (App.MainWindowInstance != null)
+            {
+                var image = await FilePickers.MediaPicker.PickSingleImageFileAsync(App.MainWindowInstance, "Change Cover of Album");
+                if (image != null)
+                {
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    var albums = currentSettings.AlbumsList;
+                    var existingalbum = albums.FirstOrDefault(p => p.Name == album.AlbumName);
+                    if (existingalbum != null)
+                    {
+
+                        existingalbum.Thumbnail = image.Path;
+                    }
+                    else
+                    {
+                        albums.Add(new AlbumModel { Name = album.AlbumName, Thumbnail = image.Path });
+                    }
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    album.AlbumCoverThumbnail = new BitmapImage(new Uri(image.Path));
+                }
+            }
+        }
     }
 
-    private void mnftFindAlbumCoverOnline_Click(object sender, RoutedEventArgs e)
+    private async void mnftFindAlbumCoverOnline_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel album)
+        {
+            if (App.MainWindowInstance == null) return;
+            CheckInternet.SetImage -= CheckInternet_SetImage;
+            OceanContentDialog.Show("Find Album Cover Online", "Set", "", "Cancel", OceanDialogWindow.ContentType.OnlineArtistPicture, OceanContentDialogDefault.Primary, XamlRoot, 800, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", "", "", album.AlbumName);
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+
+            CheckInternet.SetImage += async() =>
+            {
+                var file = await StorageFile.GetFileFromPathAsync(CheckInternet.UrlToDownload);
+                using (var stream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    var bitmap = new BitmapImage();
+                    await bitmap.SetSourceAsync(stream);
+                    album.Thumbnail = file.Path;
+                    album.AlbumCoverThumbnail = bitmap;
+                }
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var artists = currentSettings.AlbumsList;
+                var existingArtist = artists.FirstOrDefault(a => a.Name == album.AlbumName);
+
+                if (existingArtist != null)
+                {
+                    existingArtist.Thumbnail = file.Path;
+                }
+                else
+                {
+                    var newArtist = new AlbumModel
+                    {
+                        Name = album.AlbumName,
+                        Thumbnail = file.Path
+                        // Add other default properties here
+                    };
+                    artists.Add(newArtist);
+                }
+
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            };
+
+
+        }
+    }
+
+    private void OceanContentDialog_PrimaryRequested2()
     {
     }
 
@@ -1602,6 +1798,7 @@ newSong =>
 
     private void mnftRenameAlbum_Click(object sender, RoutedEventArgs e)
     {
+
         if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel albumModel && albumModel.AlbumName is string name)
         {
             txtRenameAlbum.Text = name;
@@ -1641,7 +1838,7 @@ newSong =>
 
                 // 4. Update the item count string efficiently
                 var count = FoundSongs.Count(p => p.AlbumName == newName);
-                albumModel.AlbumCount = $"• {count} {(count == 1 ? "item" : "items")}";
+                albumModel.AlbumCount = $"{count} {(count == 1 ? "item" : "items")}";
             };
 
             // Clear old handlers just in case, then bind the new one
@@ -1694,14 +1891,34 @@ newSong =>
         else if (selBarMain.SelectedItem == selBarItemAlbum)
         {
             grdAlbums.Visibility = Visibility.Visible;
+            LoadAlbums();
         }
         else if (selBarMain.SelectedItem == selBarItemSingles)
         {
             grdArtistSingles.Visibility = Visibility.Visible;
+            LoadSingles();
         }
         else if (selBarMain.SelectedItem == selBarItemAllSongs)
         {
             grdAllSongs.Visibility = Visibility.Visible;
         }
+    }
+
+    private void btnPlayAllMostPlayed_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var item in mostplayedsongs)
+        {
+            item.IsCompleted = false;
+        }
+        QueueService.PlayMedia(mostplayedsongs, btnShuffle.IsChecked ?? false, false);
+    }
+
+    private void btnPlayAllSingles_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var item in Singles)
+        {
+            item.IsCompleted = false;
+        }
+        QueueService.PlayMedia(Singles, btnShuffle.IsChecked ?? false, false);
     }
 }
