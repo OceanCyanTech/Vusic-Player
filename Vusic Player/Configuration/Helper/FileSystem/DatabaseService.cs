@@ -22,6 +22,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         /// <summary>
         /// Loads all cached tracks from SQLite into memory as AudioTrackLite (~10-30ms)
         /// </summary>
+        /// 
         public static List<AudioTrackLite> GetAllSongs()
         {
             // REMOVED: Process.Start("explorer.exe", ...) - This was opening File Explorer!
@@ -69,6 +70,48 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         UserDataPaths.GetDefault().Videos,
         UserDataPaths.GetDefault().Pictures
     };
+        public static async Task<bool> UpdateSongMetadataAsync(string filePath, string newTitle, string newArtist, string newAlbum)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    using var connection = new SqliteConnection(ConnectionString);
+                    connection.Open();
+
+                    // 1. SQL Query targeting the exact file path
+                    // We also update LastModified so your startup check knows this file is up to date!
+                    string query = @"
+                    UPDATE Songs 
+                    SET Title = @Title, 
+                        Artist = @Artist, 
+                        AlbumName = @AlbumName,
+                        LastModified = @LastModified
+                    WHERE FilePath = @FilePath;";
+
+                    using var command = new SqliteCommand(query, connection);
+
+                    // 2. Safely add parameters with null-coalescing fallbacks
+                    command.Parameters.AddWithValue("@Title", string.IsNullOrWhiteSpace(newTitle) ? "Unknown Title" : newTitle);
+                    command.Parameters.AddWithValue("@Artist", string.IsNullOrWhiteSpace(newArtist) ? "Unknown Artist" : newArtist);
+                    command.Parameters.AddWithValue("@AlbumName", string.IsNullOrWhiteSpace(newAlbum) ? "Unknown Album" : newAlbum);
+
+                    // Store the current UTC ticks or timestamp
+                    command.Parameters.AddWithValue("@LastModified", DateTime.UtcNow.Ticks);
+                    command.Parameters.AddWithValue("@FilePath", filePath);
+
+                    // 3. Execute query
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[DatabaseService] Error updating song metadata for '{filePath}': {ex.Message}");
+                    return false;
+                }
+            });
+        }
         public static async Task ScanAndSyncDiskAsync(
         HashSet<string> existingPaths,
         DispatcherQueue? dispatcher= null,

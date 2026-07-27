@@ -43,6 +43,46 @@ public sealed partial class ArtistView : Page
         InitializeComponent();
         FoundSongs.CollectionChanged -= FoundSongs_CollectionChanged;
         FoundSongs.CollectionChanged += FoundSongs_CollectionChanged;
+        FileSystemWatch.FileModified -= FileSystemWatch_FileModified;
+        FileSystemWatch.FileModified += FileSystemWatch_FileModified; ;
+    }
+
+    private void FileSystemWatch_FileModified(string arg1, string arg2, string arg3, string arg4)
+    {
+        var collections = new IEnumerable<SongModel>[] { FoundSongs, mostplayedsongs, Singles };
+
+        foreach (var collection in collections)
+        {
+            var existingSong = collection.FirstOrDefault(p => p.FilePath == arg1);
+            if (existingSong != null)
+            {
+                Debug.WriteLine("UPDATION " + arg1);
+
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    existingSong.AlbumName = arg2;
+                    existingSong.Artist = arg3;
+                    existingSong.Title = arg4;
+                });
+            }
+            else
+            {
+                Debug.WriteLine("TRURUE " + arg1);
+                if(arg3.Contains(txtArtistName.Text))
+                {
+                    Debug.WriteLine("HAA ARTISTN AE");
+
+                    if (selBarMain.SelectedItem == selBarItemAllSongs)
+                    {
+                        Debug.WriteLine("HAA SELECTED");
+                        DispatcherQueue.TryEnqueue(() =>
+                        {
+                            FoundSongs.Add(new SongModel { AlbumName = arg2, Artist = arg3, FilePath = arg1, Title = arg4 });
+                        });
+                    }
+                }
+            }
+        }
     }
 
     private async void FoundSongs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -801,6 +841,7 @@ public sealed partial class ArtistView : Page
                 fpaths.Add(item);
 
             }
+            FileSystemWatch.WatchFolders(fpaths);
             try
             {
                 // 1. Heavy DB work on background thread (returns plain C# objects)
@@ -1627,7 +1668,7 @@ newSong =>
             OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
             OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
 
-            CheckInternet.SetImage += async() =>
+            CheckInternet.SetImage += async () =>
             {
                 var file = await StorageFile.GetFileFromPathAsync(CheckInternet.UrlToDownload);
                 using (var stream = await file.OpenAsync(FileAccessMode.Read))
@@ -1669,7 +1710,19 @@ newSong =>
 
     private void mnftRemoveAlbum_Click(object sender, RoutedEventArgs e)
     {
-        Debug.WriteLine("Remove Album clicked (from list).");
+        if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel albumModel && albumModel.AlbumName is string name)
+        {
+            var songs = albumModel.Songs;
+            foreach (var song in songs)
+            {
+                Debug.WriteLine($"RENAME ALBUM: {song.FilePath}");
+
+                // Write to file metadata asynchronously if possible, or keep synchronous if required
+                AudioMetadata.ChangeAlbumName(song.FilePath, "");
+            }
+            LoadAlbums();
+
+        }
     }
 
     private void mnftDeleteAlbum_Click(object sender, RoutedEventArgs e)
