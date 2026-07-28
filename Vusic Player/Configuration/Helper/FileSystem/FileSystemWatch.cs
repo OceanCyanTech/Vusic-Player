@@ -69,39 +69,40 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
         private static async Task ProcessFileMetadataChangeAsync(string filePath)
         {
-            // Simple retry loop in case File Explorer still holds a brief lock on the file
-            for (int i = 0; i < 3; i++)
+            // Retry up to 5 times if File Explorer holds a brief file lock
+            for (int attempt = 0; attempt < 5; attempt++)
             {
                 try
                 {
+                    // Open file stream with Read sharing mode to prevent COM/IO locking issues
                     using var file = TagLib.File.Create(filePath);
-                    string updatedAlbum = file.Tag.Album ?? "Unknown Album";
+                    var tag = file.Tag;
                     string updatedTitle = file.Tag.Title ?? Path.GetFileNameWithoutExtension(filePath);
-                    string updatedArtist =string.IsNullOrWhiteSpace(string.Join(", ", file.Tag.AlbumArtists))
-                                    ? (string.IsNullOrWhiteSpace(file.Tag.FirstPerformer) ? "Unknown Artist" : file.Tag.FirstPerformer)
-                                    : string.Join(", ", file.Tag.AlbumArtists);
-
-                    FileModified?.Invoke(filePath, updatedAlbum, updatedArtist, updatedTitle);
-
+                    string updatedArtist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
+                                    ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
+                                    : string.Join(", ", tag.AlbumArtists);
+                    string updatedAlbum = file.Tag.Album ?? "Unknown Album";
+                    TimeSpan duration = file.Properties.Duration;
                     // 1. Update SQLite DB
                     await DatabaseService.UpdateSongMetadataAsync(filePath, updatedTitle, updatedArtist, updatedAlbum);
 
+                    FileModified?.Invoke(filePath, updatedAlbum, updatedArtist, updatedTitle, duration);
 
-
-                    break; // Success! Exit retry loop.
+                    break; // Success! Exit the retry loop
                 }
-                catch (IOException)
+                catch (Exception ex) when (ex is System.IO.IOException || ex is System.Runtime.InteropServices.COMException)
                 {
-                    await Task.Delay(200); // File locked, wait 200ms and retry
+                    // File is locked by Explorer or WinRT handle; wait 200ms and try again
+                    await Task.Delay(200);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Failed to read updated tags: {ex.Message}");
+                    Debug.WriteLine($"[Watcher Error] Failed reading tags for '{filePath}': {ex.Message}");
                     break;
                 }
             }
         }
-        public static event Action<string, string, string,string>? FileModified;
+        public static event Action<string, string, string, string, TimeSpan>? FileModified;
         private static void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
             string extension = Path.GetExtension(e.FullPath).ToLower();

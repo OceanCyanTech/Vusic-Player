@@ -47,44 +47,64 @@ public sealed partial class ArtistView : Page
         FileSystemWatch.FileModified += FileSystemWatch_FileModified; ;
     }
 
-    private void FileSystemWatch_FileModified(string arg1, string arg2, string arg3, string arg4)
+    private void FileSystemWatch_FileModified(string arg1, string arg2, string arg3, string arg4, TimeSpan duration)
     {
-        var collections = new IEnumerable<SongModel>[] { FoundSongs, mostplayedsongs, Singles };
-
-        foreach (var collection in collections)
+        DispatcherQueue.TryEnqueue(() =>
         {
-            var existingSong = collection.FirstOrDefault(p => p.FilePath == arg1);
-            if (existingSong != null)
-            {
-                Debug.WriteLine("UPDATION " + arg1);
+            var collections = new IEnumerable<SongModel>[] { FoundSongs, mostplayedsongs, Singles };
+            bool foundInAnyList = false;
 
-                DispatcherQueue.TryEnqueue(() =>
+            // 1. Try updating in all collections
+            foreach (var collection in collections)
+            {
+                var existingSong = collection?.FirstOrDefault(p => p.FilePath == arg1);
+                if (existingSong != null)
                 {
+                    foundInAnyList = true;
                     existingSong.AlbumName = arg2;
                     existingSong.Artist = arg3;
                     existingSong.Title = arg4;
-                });
+                    existingSong.SongDuration = duration; // Updated duration if modified
+                    Debug.WriteLine("UPDATION " + arg1);
+                }
             }
-            else
+
+            // 2. ONLY run the add check ONCE if it wasn't found in any collection
+            if (!foundInAnyList)
             {
                 Debug.WriteLine("TRURUE " + arg1);
-                if(arg3.Contains(txtArtistName.Text))
+
+                string currentSearchArtist = txtArtistName.Text;
+                var currentSelection = selBarMain.SelectedItem;
+
+                if (!string.IsNullOrEmpty(currentSearchArtist) && arg3.Contains(currentSearchArtist, StringComparison.OrdinalIgnoreCase))
                 {
                     Debug.WriteLine("HAA ARTISTN AE");
 
-                    if (selBarMain.SelectedItem == selBarItemAllSongs)
+                    if (currentSelection == selBarItemAllSongs)
                     {
                         Debug.WriteLine("HAA SELECTED");
-                        DispatcherQueue.TryEnqueue(() =>
+
+                        // Added ONCE with Duration!
+                        FoundSongs.Add(new SongModel
                         {
-                            FoundSongs.Add(new SongModel { AlbumName = arg2, Artist = arg3, FilePath = arg1, Title = arg4 });
+                            AlbumName = arg2,
+                            Artist = arg3,
+                            FilePath = arg1,
+                            Title = arg4,
+                            SongDuration = duration
                         });
+
+
                     }
                 }
             }
-        }
-    }
 
+           
+        });
+        txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
+        TotalDuration();
+    }
     private async void FoundSongs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         //    if (FoundSongs.Count == 0)
