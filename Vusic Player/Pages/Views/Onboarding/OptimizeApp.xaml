@@ -8,13 +8,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="20">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock HorizontalAlignment="Center" Text="" Name="txtMain" Grid.Row="0" MinWidth="250" Style="{StaticResource TitleLargeTextBlockStyle}"/>
         <ProgressBar Name="prgMain"   HorizontalAlignment="Center" IsIndeterminate="True" Width="300" Grid.Row="1"/>
+        <Button Name="btnReady" Content="Use Vusic Player" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" HorizontalAlignment="Center" Visibility="Collapsed"/>
     </Grid>
 </Page>

@@ -75,6 +75,7 @@ namespace Vusic_Player.Pages.Views.Onboarding
                 _loadingCts?.Cancel();
                 txtMain.Text = "Ready!";
                 prgMain.Visibility = Visibility.Collapsed;
+                btnReady.Visibility = Visibility.Visible;
             }
             base.OnNavigatedTo(e);
         }
