@@ -100,7 +100,7 @@ public sealed partial class ArtistView : Page
                 }
             }
 
-           
+
         });
         txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
         TotalDuration();
@@ -866,6 +866,7 @@ public sealed partial class ArtistView : Page
             {
                 // 1. Heavy DB work on background thread (returns plain C# objects)
                 List<AudioTrackLite> rawSongs = await Task.Run(() => DatabaseService.GetAllSongs());
+                await DatabaseService.CheckForModifiedOrDeletedFilesAsync(rawSongs);
 
                 // 2. Map and bind back on the UI Thread
                 // (Task.Run returns execution to the UI thread automatically after 'await')
@@ -933,7 +934,8 @@ newSong =>
             Title = newSong.Title,
             Artist = newSong.Artist,
             AlbumName = newSong.AlbumName,
-            FilePath = newSong.FilePath
+            FilePath = newSong.FilePath,
+            SongDuration = newSong.SongDuration
         });
     }
 });

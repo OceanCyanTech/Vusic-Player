@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Extensions;
@@ -16,32 +15,62 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
     public static class DatabaseService
     {
         private static readonly string DbPath = Path.Combine(
-        ApplicationData.Current.LocalFolder.Path, "vusicplayer_library.db");
+            ApplicationData.Current.LocalFolder.Path, "vusicplayer_library.db");
 
         private static readonly string ConnectionString = $"Data Source={DbPath};";
-        /// <summary>
-        /// Loads all cached tracks from SQLite into memory as AudioTrackLite (~10-30ms)
-        /// </summary>
-        /// 
+
+        public static void InitializeDatabase()
+        {
+            using var connection = new SqliteConnection(ConnectionString);
+            connection.Open();
+
+            string createTableQuery = @"
+            CREATE TABLE IF NOT EXISTS Songs (
+                FilePath TEXT PRIMARY KEY,
+                Title TEXT,
+                Artist TEXT,
+                AlbumName TEXT,
+                DurationTicks INTEGER,
+                IsFavourite INTEGER,
+                LastModified INTEGER DEFAULT 0
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_artist ON Songs(Artist);
+            ";
+
+            using var command = new SqliteCommand(createTableQuery, connection);
+            command.ExecuteNonQuery();
+
+            // Migration check: Ensure LastModified column exists for older DB files
+            try
+            {
+                using var alterCmd = new SqliteCommand("ALTER TABLE Songs ADD COLUMN LastModified INTEGER DEFAULT 0;", connection);
+                alterCmd.ExecuteNonQuery();
+            }
+            catch (SqliteException)
+            {
+                // Ignored if column already exists
+            }
+        }
+
         public static List<AudioTrackLite> GetAllSongs()
         {
-            // REMOVED: Process.Start("explorer.exe", ...) - This was opening File Explorer!
-
             var songs = new List<AudioTrackLite>();
             using var connection = new SqliteConnection(ConnectionString);
             connection.Open();
 
-            string selectQuery = "SELECT FilePath, Title, Artist, AlbumName, DurationTicks, IsFavourite FROM Songs";
+            // ADD LastModified TO THE SELECT QUERY BELOW:
+            string selectQuery = "SELECT FilePath, Title, Artist, AlbumName, DurationTicks, IsFavourite, LastModified FROM Songs";
             using var command = new SqliteCommand(selectQuery, connection);
             using var reader = command.ExecuteReader();
 
-            // Cache column ordinals to speed up the loop
             int colFilePath = reader.GetOrdinal("FilePath");
             int colTitle = reader.GetOrdinal("Title");
             int colArtist = reader.GetOrdinal("Artist");
             int colAlbum = reader.GetOrdinal("AlbumName");
             int colDuration = reader.GetOrdinal("DurationTicks");
             int colFav = reader.GetOrdinal("IsFavourite");
+            int colModified = reader.GetOrdinal("LastModified"); // <-- Works now!
 
             while (reader.Read())
             {
@@ -56,20 +85,104 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                     SongDuration = durationTicks.HasValue && durationTicks.Value > 0
                         ? TimeSpan.FromTicks(durationTicks.Value)
                         : null,
-                    IsFavourite = !reader.IsDBNull(colFav) && reader.GetInt32(colFav) == 1
+                    IsFavourite = !reader.IsDBNull(colFav) && reader.GetInt32(colFav) == 1,
+                    LastModifiedTicks = reader.IsDBNull(colModified) ? 0L : reader.GetInt64(colModified)
                 });
             }
 
             return songs;
         }
+        public static async Task CheckForModifiedOrDeletedFilesAsync(List<AudioTrackLite> cachedSongs)
+        {
+            await Task.Run(() =>
+            {
+                var songsToUpdate = new List<AudioTrackLite>();
+                var missingPaths = new List<string>();
+
+                foreach (var song in cachedSongs)
+                {
+                    if (!File.Exists(song.FilePath))
+                    {
+                        // Track missing/deleted files
+                        missingPaths.Add(song.FilePath);
+                        continue;
+                    }
+
+                    // Quick OS timestamp check (nanosecond-level fast)
+                    long currentDiskTicks = File.GetLastWriteTimeUtc(song.FilePath).Ticks;
+
+                    if (currentDiskTicks > song.LastModifiedTicks)
+                    {
+                        // File was modified externally (e.g. metadata edited outside app)
+                        try
+                        {
+                            using var stream = new FileStream(song.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                            var abstraction = new SimpleStreamAbstraction(song.FilePath, stream);
+                            using var tagFile = TagLib.File.Create(abstraction);
+                            var tag = tagFile.Tag;
+
+                            song.Title = string.IsNullOrWhiteSpace(tag.Title)
+                                ? Path.GetFileNameWithoutExtension(song.FilePath)
+                                : tag.Title;
+                            song.Artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
+                                ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
+                                : string.Join(", ", tag.AlbumArtists);
+                            song.AlbumName = string.IsNullOrWhiteSpace(tag.Album)
+                                ? "Unknown Album"
+                                : tag.Album;
+                            song.LastModifiedTicks = currentDiskTicks;
+
+                            songsToUpdate.Add(song);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"Failed re-reading modified file {song.FilePath}: {ex.Message}");
+                        }
+                    }
+                }
+
+                // Clean up deleted files from SQLite
+                if (missingPaths.Count > 0)
+                {
+                    RemoveDeletedSongs(missingPaths);
+                }
+
+                // Batch update modified tags in SQLite
+                if (songsToUpdate.Count > 0)
+                {
+                    SaveSongs(songsToUpdate);
+                }
+            });
+        }
+
+        private static void RemoveDeletedSongs(IEnumerable<string> filePaths)
+        {
+            using var connection = new SqliteConnection(ConnectionString);
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = "DELETE FROM Songs WHERE FilePath = $path";
+            var pPath = command.Parameters.Add("$path", SqliteType.Text);
+
+            foreach (var path in filePaths)
+            {
+                pPath.Value = path;
+                command.ExecuteNonQuery();
+            }
+
+            transaction.Commit();
+        }
+
         private static readonly string[] SearchPaths =
-    {
-        UserDataPaths.GetDefault().Music,
-        UserDataPaths.GetDefault().Downloads,
-        UserDataPaths.GetDefault().Documents,
-        UserDataPaths.GetDefault().Videos,
-        UserDataPaths.GetDefault().Pictures
-    };
+        {
+            UserDataPaths.GetDefault().Music,
+            UserDataPaths.GetDefault().Downloads,
+            UserDataPaths.GetDefault().Documents,
+            UserDataPaths.GetDefault().Videos,
+            UserDataPaths.GetDefault().Pictures
+        };
+
         public static async Task<bool> UpdateSongMetadataAsync(string filePath, string newTitle, string newArtist, string newAlbum)
         {
             return await Task.Run(() =>
@@ -79,8 +192,6 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                     using var connection = new SqliteConnection(ConnectionString);
                     connection.Open();
 
-                    // 1. SQL Query targeting the exact file path
-                    // We also update LastModified so your startup check knows this file is up to date!
                     string query = @"
                     UPDATE Songs 
                     SET Title = @Title, 
@@ -91,18 +202,19 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
                     using var command = new SqliteCommand(query, connection);
 
-                    // 2. Safely add parameters with null-coalescing fallbacks
                     command.Parameters.AddWithValue("@Title", string.IsNullOrWhiteSpace(newTitle) ? "Unknown Title" : newTitle);
                     command.Parameters.AddWithValue("@Artist", string.IsNullOrWhiteSpace(newArtist) ? "Unknown Artist" : newArtist);
                     command.Parameters.AddWithValue("@AlbumName", string.IsNullOrWhiteSpace(newAlbum) ? "Unknown Album" : newAlbum);
 
-                    // Store the current UTC ticks or timestamp
-                    command.Parameters.AddWithValue("@LastModified", DateTime.UtcNow.Ticks);
+                    // Fetch real file write time or fallback to UtcNow ticks
+                    long diskTicks = File.Exists(filePath)
+                        ? File.GetLastWriteTimeUtc(filePath).Ticks
+                        : DateTime.UtcNow.Ticks;
+
+                    command.Parameters.AddWithValue("@LastModified", diskTicks);
                     command.Parameters.AddWithValue("@FilePath", filePath);
 
-                    // 3. Execute query
                     int rowsAffected = command.ExecuteNonQuery();
-
                     return rowsAffected > 0;
                 }
                 catch (Exception ex)
@@ -112,10 +224,11 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 }
             });
         }
+
         public static async Task ScanAndSyncDiskAsync(
-        HashSet<string> existingPaths,
-        DispatcherQueue? dispatcher= null,
-        Action<AudioTrackLite>? onSongDiscovered = null)
+            HashSet<string> existingPaths,
+            DispatcherQueue? dispatcher = null,
+            Action<AudioTrackLite>? onSongDiscovered = null)
         {
             await Task.Run(() =>
             {
@@ -135,23 +248,17 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         {
                             string normalizedPath = Path.GetFullPath(file.FullName);
 
-                            // Skip files that are already cached or loaded
                             if (existingPaths.Contains(normalizedPath)) continue;
 
                             try
                             {
-                                // Use standard FileStream to bypass WinRT COM restrictions and file locks
                                 using var stream = new FileStream(
                                     normalizedPath,
                                     FileMode.Open,
                                     FileAccess.Read,
                                     FileShare.ReadWrite);
 
-                                // Tell TagLib to parse using the read-only stream abstraction
-                                var abstraction = new SimpleStreamAbstraction(normalizedPath, stream)
-                                {
-                                    // Force WriteStream to null so TagLib knows this is strictly read-only
-                                };
+                                var abstraction = new SimpleStreamAbstraction(normalizedPath, stream);
                                 using var tagFile = TagLib.File.Create(abstraction);
                                 var tag = tagFile.Tag;
 
@@ -173,8 +280,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                                     Title = title,
                                     Artist = artist,
                                     AlbumName = album,
-                                    SongDuration = tagFile.Properties.Duration,
-                                    //      Glyph = "\uEC4F"
+                                    SongDuration = tagFile.Properties.Duration
                                 };
 
                                 newlyDiscoveredSongs.Add(newSong);
@@ -192,14 +298,8 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                                     });
                                 }
                             }
-                            catch (TagLib.UnsupportedFormatException)
-                            {
-                                // Expected for files without metadata containers (e.g. raw .pcm, unsupported codecs)
-                            }
-                            catch (TagLib.CorruptFileException)
-                            {
-                                // Expected for corrupted or incomplete audio downloads
-                            }
+                            catch (TagLib.UnsupportedFormatException) { }
+                            catch (TagLib.CorruptFileException) { }
                             catch (Exception ex)
                             {
                                 Debug.WriteLine($"TagLib error for {normalizedPath}: {ex.Message}");
@@ -211,6 +311,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         Debug.WriteLine($"Directory scan error for {path}: {ex.Message}");
                     }
                 }
+
                 int remainingCount = newlyDiscoveredSongs.Count % 15;
                 if (remainingCount > 0 && dispatcher != null && onSongDiscovered != null)
                 {
@@ -223,16 +324,14 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         }
                     });
                 }
-                // Save all newly scanned tracks to SQLite in one batch transaction
+
                 if (newlyDiscoveredSongs.Count > 0)
                 {
                     SaveSongs(newlyDiscoveredSongs);
                 }
             });
         }
-        /// <summary>
-        /// Saves newly scanned tracks to SQLite in a single ultra-fast transaction.
-        /// </summary>
+
         public static void SaveSongs(IEnumerable<AudioTrackLite> songs)
         {
             using var connection = new SqliteConnection(ConnectionString);
@@ -240,8 +339,8 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             using var transaction = connection.BeginTransaction();
 
             string insertQuery = @"
-            INSERT OR REPLACE INTO Songs (FilePath, Title, Artist, AlbumName, DurationTicks, IsFavourite)
-            VALUES ($filePath, $title, $artist, $album, $duration, $isFav);";
+            INSERT OR REPLACE INTO Songs (FilePath, Title, Artist, AlbumName, DurationTicks, IsFavourite, LastModified)
+            VALUES ($filePath, $title, $artist, $album, $duration, $isFav, $lastModified);";
 
             using var command = connection.CreateCommand();
             command.CommandText = insertQuery;
@@ -252,6 +351,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             var pAlbum = command.Parameters.Add("$album", SqliteType.Text);
             var pDuration = command.Parameters.Add("$duration", SqliteType.Integer);
             var pFav = command.Parameters.Add("$isFav", SqliteType.Integer);
+            var pLastModified = command.Parameters.Add("$lastModified", SqliteType.Integer);
 
             foreach (var song in songs)
             {
@@ -259,37 +359,18 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 pTitle.Value = song.Title ?? "";
                 pArtist.Value = song.Artist ?? "Unknown Artist";
                 pAlbum.Value = song.AlbumName ?? "Unknown Album";
-                // Change this line in SaveSongs:
-                pDuration.Value = song.SongDuration.HasValue
-                    ? song.SongDuration.Value.Ticks
-                    : 0L; // Or (object)DBNull.Value                pFav.Value = song.IsFavourite ? 1 : 0;
+                pDuration.Value = song.SongDuration.HasValue ? song.SongDuration.Value.Ticks : 0L;
+                pFav.Value = song.IsFavourite ? 1 : 0;
+
+                // Get physical file's write time in UTC ticks for startup sync
+                pLastModified.Value = File.Exists(song.FilePath)
+                    ? File.GetLastWriteTimeUtc(song.FilePath).Ticks
+                    : DateTime.UtcNow.Ticks;
 
                 command.ExecuteNonQuery();
             }
 
             transaction.Commit();
-        }
-        public static void InitializeDatabase()
-        {
-            using var connection = new SqliteConnection(ConnectionString);
-            connection.Open();
-
-            string createTableQuery = @"
-            CREATE TABLE IF NOT EXISTS Songs (
-                FilePath TEXT PRIMARY KEY,
-                Title TEXT,
-                Artist TEXT,
-                AlbumName TEXT,
-                DurationTicks INTEGER,
-                IsFavourite INTEGER
-            );
-
-            -- Index for lightning-fast artist searches
-            CREATE INDEX IF NOT EXISTS idx_artist ON Songs(Artist);
-        ";
-
-            using var command = new SqliteCommand(createTableQuery, connection);
-            command.ExecuteNonQuery();
         }
     }
 }

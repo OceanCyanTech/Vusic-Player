@@ -20,6 +20,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
+using Vusic_Player.Pages.Views.Onboarding;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -40,7 +41,7 @@ namespace Vusic_Player
         {
             InitializeComponent();
             EngineService.StartEngine();
-            frmMain.Navigate(typeof(MainPage));
+            frmMain.Navigate(typeof(OptimizeApp));
             // AppVersion.LoadBuildCounter();
             LoadVersion();
 

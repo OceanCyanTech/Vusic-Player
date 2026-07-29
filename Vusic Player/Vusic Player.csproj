@@ -39,6 +39,7 @@
     <None Remove="Pages\Views\MusicLibrary.xaml" />
     <None Remove="Pages\Views\MusicPlayerFull.xaml" />
     <None Remove="Pages\Views\NoSearchResultsPage.xaml" />
+    <None Remove="Pages\Views\Onboarding\OptimizeApp.xaml" />
     <None Remove="Pages\Views\PlaylistView.xaml" />
     <None Remove="Pages\Views\QueuePage.xaml" />
     <None Remove="Pages\Views\SearchResults.xaml" />
@@ -541,6 +542,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleCustomize\Customize.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Views\Onboarding\OptimizeApp.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
