@@ -42,6 +42,14 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         private void btnSpeedfly_Click(object sender, RoutedEventArgs e)
         {
+            ttSpeedCustom.IsOpen = false;
+            if (sender is RadioMenuFlyoutItem menuFlyoutItem && menuFlyoutItem.Text is string speed)
+            {
+                if(double.TryParse(speed, System.Globalization.CultureInfo.InvariantCulture, out double speeddouble))
+                {
+                    SpeedService.Set(speeddouble);
+                }
+            }
             //ttSpeedCustom.IsOpen = false;
             //var menuflyoutitem = (RadioMenuFlyoutItem)sender;
 
@@ -92,7 +100,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (App.NavigationFrame != null)
             {
                 App.NavigationFrame.Navigate(typeof(MusicPlayerFull));
-                
+
             }
         }
 

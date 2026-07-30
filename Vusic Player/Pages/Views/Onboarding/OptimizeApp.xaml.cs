@@ -79,5 +79,10 @@ namespace Vusic_Player.Pages.Views.Onboarding
             }
             base.OnNavigatedTo(e);
         }
+
+        private void btnReady_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MainPage));
+        }
     }
 }

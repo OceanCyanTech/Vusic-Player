@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral"
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical">
@@ -14,7 +14,7 @@
             <Button Name="btnSpeed" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Adjust Speed" >
                 <Button.Flyout>
                     <MenuFlyout>
-                        <RadioMenuFlyoutItem Text="0.25" Name="spquarter" Click="btnSpeedfly_Click"></RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem Tag="0.25" Text="0.25" Name="spquarter" Click="btnSpeedfly_Click"></RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem Text="0.50" Name="sphalf" Click="btnSpeedfly_Click"></RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem Text="0.75" Name="spthreefourth" Click="btnSpeedfly_Click"></RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem IsChecked="True" Name="spone" Text="1.00" Click="btnSpeedfly_Click"></RadioMenuFlyoutItem>
@@ -34,7 +34,7 @@
             </Button>
             <TeachingTip Name="ttSpeedCustom" Target="{x:Bind btnSpeed}" IsOpen="False" PreferredPlacement="Auto">
                 <ScrollViewer>
-                    <!--<videogeneral:PlaybackSpeed SliderWidth="100"></videogeneral:PlaybackSpeed>-->
+                    <videogeneral:PlaybackSpeed SliderWidth="100"></videogeneral:PlaybackSpeed>
                 </ScrollViewer>
             </TeachingTip>
             <TeachingTip Name="ttReverb" Target="{x:Bind btnEffects}" IsOpen="False" Title="Audio Reverb" PreferredPlacement="Auto">
