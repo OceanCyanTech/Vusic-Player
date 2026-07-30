@@ -35,7 +35,7 @@ namespace Vusic_Player.Configuration
         public static bool MediaCompleted { get; set; }
         public static event Action? PlayPauseChanged;
 
-
+        public static MemoryStream? msReverb { get; set; }
         public static MediaPlaybackController UIController => MediaPlaybackController.Instance;
         public static int? originalvolume;
         public static string currentvol = "0";

@@ -38,6 +38,26 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 _watchers.Add(watcher);
             }
         }
+        public static void Pause()
+        {
+            foreach (var watcher in _watchers)
+            {
+                watcher.EnableRaisingEvents = false;
+            }
+            Debug.WriteLine("[Watcher] All FileSystemWatchers PAUSED.");
+        }
+
+        /// <summary>
+        /// Resumes all FileSystemWatchers after batch edits complete.
+        /// </summary>
+        public static void Resume()
+        {
+            foreach (var watcher in _watchers)
+            {
+                watcher.EnableRaisingEvents = true;
+            }
+            Debug.WriteLine("[Watcher] All FileSystemWatchers RESUMED.");
+        }
         public static void StopWatching()
         {
             foreach (var watcher in _watchers)
@@ -67,7 +87,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             });
         }
 
-        private static async Task ProcessFileMetadataChangeAsync(string filePath)
+        public static async Task ProcessFileMetadataChangeAsync(string filePath)
         {
             // Retry up to 5 times if File Explorer holds a brief file lock
             for (int attempt = 0; attempt < 5; attempt++)

@@ -242,6 +242,19 @@ namespace Vusic_Player.Configuration.Playback
                 }
             }
         }
+        private Visibility _audiorelatedproperties = Visibility.Visible;
+
+        public Visibility AudioProperties
+        {
+            get => _audiorelatedproperties;
+            set
+            {
+                if (SetProperty(ref _audiorelatedproperties, value))
+                {
+                    OnPropertyChanged(nameof(AudioProperties));
+                }
+            }
+        }
         private string _codec = "";
         public string Codec
         {

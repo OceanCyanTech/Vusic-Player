@@ -45,39 +45,12 @@ namespace Vusic_Player.UI.UserViews.Controls
             ttSpeedCustom.IsOpen = false;
             if (sender is RadioMenuFlyoutItem menuFlyoutItem && menuFlyoutItem.Text is string speed)
             {
-                if(double.TryParse(speed, System.Globalization.CultureInfo.InvariantCulture, out double speeddouble))
+                if (double.TryParse(speed, System.Globalization.CultureInfo.InvariantCulture, out double speeddouble))
                 {
                     SpeedService.Set(speeddouble);
                 }
             }
-            //ttSpeedCustom.IsOpen = false;
-            //var menuflyoutitem = (RadioMenuFlyoutItem)sender;
 
-            //string speed = menuflyoutitem.Text;
-            //videospeed = speed;
-            //if (PlayerService.MasterPlayer != null)
-            //{
-            //    if (menuflyoutitem != null)
-            //    {
-
-            //        if (double.TryParse(speed, System.Globalization.CultureInfo.InvariantCulture, out double speedfloat))
-            //        {
-            //            PlayerService.MasterPlayer.Speed = speedfloat;
-            //        }
-            //    }
-            //}
-            ////ttSpeedCustom.IsOpen = false;
-            ////var menuflyoutitem = (RadioMenuFlyoutItem)sender;
-
-            ////string speed = menuflyoutitem.Text;
-            ////videospeed = speed;
-            ////if (player != null && maintimer != null)
-            ////{
-
-
-            ////    }
-
-            ////}
         }
 
         private void btnSetCustomSpeed_Click(object sender, RoutedEventArgs e)
@@ -116,12 +89,13 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void mnftPitch_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void customSpeed_Click(object sender, RoutedEventArgs e)
         {
             ttSpeedCustom.IsOpen = true;
+            media.AudioProperties = Visibility.Collapsed;
         }
         public MediaPlaybackController media => MediaPlaybackController.Instance;
         private async void btnInfo_Click(object sender, RoutedEventArgs e)
@@ -140,6 +114,13 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftReverb_Click(object sender, RoutedEventArgs e)
         {
             ttReverb.IsOpen = true;
+        }
+
+
+        private void ttSpeedCustom_Closed(TeachingTip sender, TeachingTipClosedEventArgs args)
+        {
+            media.AudioProperties = Visibility.Visible;
+
         }
     }
 }

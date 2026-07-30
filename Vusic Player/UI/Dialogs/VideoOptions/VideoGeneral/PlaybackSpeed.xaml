@@ -39,7 +39,7 @@ Text="{x:Bind FormatSpeed(sldSpeed.Value), Mode=OneWay}"
                 </StackPanel>
             </StackPanel>
             <Button Content="Default Speed" Name="btnDefaultSpeed" Click="btnDefaultSpeed_Click"></Button>
-            <ToggleSwitch Name="tsReverse" Header="Reverse Playback" IsOn="{x:Bind mediacontroller.IsReversePlayback, Mode=TwoWay}" Toggled="tsReverse_Toggled" />
+            <ToggleSwitch Visibility="{x:Bind mediacontroller.AudioProperties, Mode=OneWay}"  Name="tsReverse" Header="Reverse Playback" IsOn="{x:Bind mediacontroller.IsReversePlayback, Mode=TwoWay}" Toggled="tsReverse_Toggled" />
             <ToggleSwitch Toggled="tsLoop_Toggled" Name="tsLoop" Header="Loop Media" IsOn="False" />
         </StackPanel>
 

@@ -1,4 +1,5 @@
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -8,12 +9,15 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
@@ -44,69 +48,147 @@ public sealed partial class ArtistView : Page
         FoundSongs.CollectionChanged -= FoundSongs_CollectionChanged;
         FoundSongs.CollectionChanged += FoundSongs_CollectionChanged;
         FileSystemWatch.FileModified -= FileSystemWatch_FileModified;
-        FileSystemWatch.FileModified += FileSystemWatch_FileModified; ;
+        FileSystemWatch.FileModified += FileSystemWatch_FileModified; 
+        albumCollection.CollectionChanged -= AlbumCollection_CollectionChanged;
+        albumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
     }
 
-    private void FileSystemWatch_FileModified(string arg1, string arg2, string arg3, string arg4, TimeSpan duration)
+    private void AlbumCollection_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-        DispatcherQueue.TryEnqueue(() =>
+        txtEmptyAlbums.Visibility = albumCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        grdViewAlbums.Visibility = albumCollection.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        txtAlbumCount.Text = "• " + $"{albumCollection.Count} {(albumCollection.Count == 1 ? "Album" : "Albums")}";
+
+    }
+
+    private  readonly ConcurrentDictionary<string, CancellationTokenSource> _debouncers = new();
+
+    private  void FileSystemWatch_FileModified(string filePath, string arg2, string arg3, string arg4, TimeSpan duration)
+    {
+        // If an update is already pending for this file, cancel it and restart the timer
+        if (_debouncers.TryRemove(filePath, out var existingCts))
         {
-            var collections = new IEnumerable<SongModel>[] { FoundSongs, mostplayedsongs, Singles };
-            bool foundInAnyList = false;
+            existingCts.Cancel();
+            existingCts.Dispose();
+        }
 
-            // 1. Try updating in all collections
-            foreach (var collection in collections)
+        var cts = new CancellationTokenSource();
+        _debouncers[filePath] = cts;
+
+        Task.Run(async () =>
+        {
+            try
             {
-                var existingSong = collection?.FirstOrDefault(p => p.FilePath == arg1);
-                if (existingSong != null)
+                // Wait 300ms for Windows Explorer to finish writing and close the file
+                await Task.Delay(300, cts.Token);
+
+                if (cts.Token.IsCancellationRequested) return;
+
+                // Retry reading tags in case File Explorer still holds a brief lock
+                for (int attempt = 0; attempt < 5; attempt++)
                 {
-                    foundInAnyList = true;
-                    existingSong.AlbumName = arg2;
-                    existingSong.Artist = arg3;
-                    existingSong.Title = arg4;
-                    existingSong.SongDuration = duration; // Updated duration if modified
-                    Debug.WriteLine("UPDATION " + arg1);
-                }
-            }
-
-            // 2. ONLY run the add check ONCE if it wasn't found in any collection
-            if (!foundInAnyList)
-            {
-                Debug.WriteLine("TRURUE " + arg1);
-
-                string currentSearchArtist = txtArtistName.Text;
-                var currentSelection = selBarMain.SelectedItem;
-
-                if (!string.IsNullOrEmpty(currentSearchArtist) && arg3.Contains(currentSearchArtist, StringComparison.OrdinalIgnoreCase))
-                {
-                    Debug.WriteLine("HAA ARTISTN AE");
-
-                    if (currentSelection == selBarItemAllSongs)
+                    try
                     {
-                        Debug.WriteLine("HAA SELECTED");
+                        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        var abstraction = new SimpleStreamAbstraction(filePath, stream);
+                        using var tagFile = TagLib.File.Create(abstraction);
 
-                        // Added ONCE with Duration!
-                        FoundSongs.Add(new SongModel
+                        string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
+                            ? Path.GetFileNameWithoutExtension(filePath)
+                            : tagFile.Tag.Title;
+                        var tag = tagFile.Tag;
+                        string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
+                              ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
+                              : string.Join(", ", tag.AlbumArtists);
+
+                        string album = string.IsNullOrWhiteSpace(tagFile.Tag.Album)
+                            ? "Unknown Album"
+                            : tagFile.Tag.Album;
+
+                        TimeSpan duration = tagFile.Properties.Duration;
+
+                        // Update SQLite Database
+                        await DatabaseService.UpdateSongMetadataAsync(filePath, title, artist, album);
+
+                        // Safely dispatch to UI Thread once
+                        DispatcherQueue.TryEnqueue(() =>
                         {
-                            AlbumName = arg2,
-                            Artist = arg3,
-                            FilePath = arg1,
-                            Title = arg4,
-                            SongDuration = duration
+                            UpdateSongInCollections(filePath, album, artist, title, duration);
                         });
 
-
+                        break; // Success! Exit retry loop
+                    }
+                    catch (Exception ex) when (ex is IOException || ex is COMException)
+                    {
+                        // File is still locked by Explorer; wait 200ms and try again
+                        await Task.Delay(200, cts.Token);
                     }
                 }
             }
-
-
+            catch (TaskCanceledException)
+            {
+                // Normal - superseded by a newer event for the same file
+            }
+            finally
+            {
+                _debouncers.TryRemove(filePath, out _);
+                cts.Dispose();
+            }
         });
-        txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
-        TotalDuration();
     }
+    private void UpdateSongInCollections(string filePath, string newAlbum, string newArtist, string newTitle, TimeSpan duration)
+    {
+        string currentFilter = txtArtistName?.Text?.Trim() ?? "";
+        var collections = new ObservableCollection<SongModel>[] { FoundSongs, mostplayedsongs, Singles };
+        bool foundInAny = false;
+        bool matchesArtist = string.IsNullOrEmpty(currentFilter) ||
+                         newArtist.Contains(currentFilter, StringComparison.OrdinalIgnoreCase);
+        foreach (var collection in collections)
+        {
+            var song = collection?.FirstOrDefault(s => s.FilePath == filePath);
+            if (song != null)
+            {
+                foundInAny = true;
+                if (!matchesArtist)
+                {
+                    collection?.Remove(song);
+                    Debug.WriteLine($"[Watcher] Removed (Artist changed/unmatched): {filePath}");
+                    txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
+                    TotalDuration();
+                }
+                else
+                {
+                    // Otherwise, update properties in place
+                    song.AlbumName = newAlbum;
+                    song.Artist = newArtist;
+                    song.Title = newTitle;
+                    song.SongDuration = duration;
+                    Debug.WriteLine($"[Watcher] Updated: {filePath}");
+                }
+            }
+        }
+
+        // If it wasn't in any list, evaluate adding it ONCE
+        if (!foundInAny && matchesArtist && selBarMain?.SelectedItem == selBarItemAllSongs)
+        {
+            FoundSongs?.Add(new SongModel
+            {
+                FilePath = filePath,
+                AlbumName = newAlbum,
+                Artist = newArtist,
+                Title = newTitle,
+                SongDuration = duration
+            });
+            Debug.WriteLine($"[Watcher] Added new track: {filePath}");
+        }
+        UpdateUIView();
+    }
+    
     private async void FoundSongs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
+        txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
+        TotalDuration();
+
         //    if (FoundSongs.Count == 0)
         //    {
         //        txtEmptySongs.Visibility = Visibility.Visible;
@@ -888,6 +970,10 @@ public sealed partial class ArtistView : Page
                 foreach (var item in FoundSongs)
                 {
                     Debug.WriteLine("The Duration of " + item.Title + " is " + item.FormattedDuration);
+                }
+                if(selBarMain.SelectedItem == selBarItemMostPlayed)
+                {
+                    LoadMostPlayed();
                 }
             }
             catch (Exception ex)
@@ -1730,23 +1816,88 @@ newSong =>
     {
     }
 
-    private void mnftRemoveAlbum_Click(object sender, RoutedEventArgs e)
+    private async void mnftRemoveAlbum_Click(object sender, RoutedEventArgs e)
     {
         if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel albumModel && albumModel.AlbumName is string name)
         {
-            var songs = albumModel.Songs;
-            foreach (var song in songs)
+            FileSystemWatch.Pause();
+            try
             {
-                Debug.WriteLine($"RENAME ALBUM: {song.FilePath}");
+                var songs = albumModel.Songs;
+                foreach (var song in songs)
+                {
+                    Debug.WriteLine($"RENAME ALBUM: {song.FilePath}");
 
-                // Write to file metadata asynchronously if possible, or keep synchronous if required
-                AudioMetadata.ChangeAlbumName(song.FilePath, "");
+                    // Write to file metadata asynchronously if possible, or keep synchronous if required
+                    if(AudioMetadata.ChangeAlbumName(song.FilePath, ""))
+                    {
+                        Debug.WriteLine("TRUE, FILE NAME ALBUM CHANGED");
+
+                        await FileSystemWatch.ProcessFileMetadataChangeAsync(song.FilePath);
+                      
+                    }
+                    else
+                    {
+                        Debug.WriteLine("ERROR, FILE NAME ALBUM NOT CHANGED");
+
+                    }
+                }
             }
-            LoadAlbums();
+            finally
+            {
+                FileSystemWatch.Resume();
+           //     LoadAlbums();
+                albumCollection.Remove(albumModel);
+                var albumunknown = albumCollection.FirstOrDefault(p => p.AlbumName == "Unknown Album");
+                if(albumunknown != null)
+                {
+                    var count = albumunknown.Songs.Count;
+                    count += albumModel.Songs.Count;
+                    albumunknown.AlbumCount = $"{count} {(count == 1 ? "item" : "items")}";
 
+                }
+            }
         }
     }
+    private void UpdateUIView()
+    {
+        if (selBarMain.SelectedItem == selBarItemMostPlayed)
+        {
+            lstViewMasterMostPlayed.Visibility = mostplayedsongs.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            txtEmptyMostPlayed.Visibility = mostplayedsongs.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            txtMostPlayedCount.Text = $"• {mostplayedsongs.Count} {(mostplayedsongs.Count == 1 ? "item" : "items")}";
+            TimeSpan? timeSpan = TimeSpan.Zero;
+            foreach (var item in mostplayedsongs.ToList())
+            {
 
+                timeSpan += item.SongDuration;
+            }
+            string formatted = +timeSpan is TimeSpan ts
+              ? (ts.TotalHours >= 1 ? ts.ToString(@"h\:mm\:ss") : ts.ToString(@"m\:ss"))
+              : "0:00";
+            txtMostPlayedDuration.Text = "• " + formatted;
+        }
+       
+        else if (selBarMain.SelectedItem == selBarItemSingles)
+        {
+            txtEmptySingles.Visibility = Singles.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+            lstViewSingles.Visibility = Singles.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            lstViewSingles.ItemsSource = Singles;
+            txtSinglesCount.Text = $"• {Singles.Count} {(Singles.Count == 1 ? "item" : "items")}";
+            TimeSpan? timeSpan = TimeSpan.Zero;
+            foreach (var item in Singles.ToList())
+            {
+
+                timeSpan += item.SongDuration;
+            }
+            string formatted = timeSpan is TimeSpan ts
+              ? (ts.TotalHours >= 1 ? ts.ToString(@"h\:mm\:ss") : ts.ToString(@"m\:ss"))
+              : "0:00";
+            txtSinglesDuration.Text = "• " + formatted;
+        }
+
+    }
     private void mnftDeleteAlbum_Click(object sender, RoutedEventArgs e)
     {
         Debug.WriteLine("Delete Album from disk clicked.");
