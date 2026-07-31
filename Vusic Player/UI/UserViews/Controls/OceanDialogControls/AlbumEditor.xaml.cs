@@ -40,6 +40,16 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
         HashSet<string> uniqueArtists = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         TimeSpan ts;
         private ObservableCollection<ArtistShow> ArtistShows { get; set; } = new ObservableCollection<ArtistShow>();
+        private void TotalDuration()
+        {
+            TimeSpan total = TimeSpan.FromTicks(
+                FoundSongs.Sum(s => s.SongDuration?.Ticks ?? 0)
+            );
+
+            txtDuration.Text = total.TotalHours >= 1
+                ? $"{(int)total.TotalHours}:{total.Minutes:D2}:{total.Seconds:D2}"
+                : total.ToString(@"m\:ss");
+        }
 
 
         private async Task SearchFiles()
@@ -138,11 +148,27 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
         {
             txtAlbumName.Text = AlbumName;
             OriginalAlbumname = AlbumName;
-            await SearchFiles();
+
+            // 1. Fetch songs directly from SQLite database (fast indexed read)
+            var albumSongs = await DatabaseService.GetSongsByAlbumAsync(AlbumName);
+
+            // 2. Populate UI collection
+            FoundSongs.Clear();
+            foreach (var song in albumSongs)
+            {
+                FoundSongs.Add(song);
+            }
+
+            // Recalculate total duration for the album header
+            TotalDuration();
+
+            // 3. Load Album Cover / Settings
             Uri fallbackUri = new Uri("ms-appx:///Assets/defaultalbum.png");
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
             var existingAlbum = currentSettings.AlbumsList?
-                .FirstOrDefault(a => a.Name == txtAlbumName.Text);
+                .FirstOrDefault(a => a.Name.Equals(AlbumName, StringComparison.OrdinalIgnoreCase));
+
             if (existingAlbum != null && !string.IsNullOrEmpty(existingAlbum.Thumbnail))
             {
                 try
@@ -157,11 +183,9 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             }
             else
             {
-
                 imgAlbumCover.Source = new BitmapImage(fallbackUri);
             }
         }
-
         private async void btnChangeAlbumCover_Click(object sender, RoutedEventArgs e)
         {
             if (App.OceanDialogInstance == null) return;

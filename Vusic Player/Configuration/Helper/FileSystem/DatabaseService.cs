@@ -52,6 +52,50 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 // Ignored if column already exists
             }
         }
+        public static async Task<List<SongModel>> GetSongsByAlbumAsync(string albumName)
+        {
+            var songs = new List<SongModel>();
+
+            await Task.Run(() =>
+            {
+                using var connection = new SqliteConnection(ConnectionString);
+                connection.Open();
+
+                // Query SQLite directly filtered by AlbumName
+                string query = @"SELECT FilePath, Title, Artist, AlbumName, DurationTicks, IsFavourite, LastModified 
+                        FROM Songs 
+                        WHERE AlbumName = @AlbumName";
+
+                using var command = new SqliteCommand(query, connection);
+                command.Parameters.AddWithValue("@AlbumName", albumName);
+
+                using var reader = command.ExecuteReader();
+
+                int colFilePath = reader.GetOrdinal("FilePath");
+                int colTitle = reader.GetOrdinal("Title");
+                int colArtist = reader.GetOrdinal("Artist");
+                int colAlbum = reader.GetOrdinal("AlbumName");
+                int colDuration = reader.GetOrdinal("DurationTicks");
+
+                while (reader.Read())
+                {
+                    long? durationTicks = reader.IsDBNull(colDuration) ? null : reader.GetInt64(colDuration);
+
+                    songs.Add(new SongModel
+                    {
+                        FilePath = reader.GetString(colFilePath),
+                        Title = reader.IsDBNull(colTitle) ? "" : reader.GetString(colTitle),
+                        Artist = reader.IsDBNull(colArtist) ? "Unknown Artist" : reader.GetString(colArtist),
+                        AlbumName = reader.IsDBNull(colAlbum) ? "Unknown Album" : reader.GetString(colAlbum),
+                        SongDuration = durationTicks.HasValue && durationTicks.Value > 0
+                            ? TimeSpan.FromTicks(durationTicks.Value)
+                            : null
+                    });
+                }
+            });
+
+            return songs;
+        }
 
         public static List<AudioTrackLite> GetAllSongs()
         {
