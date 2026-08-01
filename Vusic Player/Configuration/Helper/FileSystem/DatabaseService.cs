@@ -140,24 +140,23 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         {
             await Task.Run(() =>
             {
-                var songsToUpdate = new List<AudioTrackLite>();
-                var missingPaths = new List<string>();
+                var songsToUpdate = new System.Collections.Concurrent.ConcurrentBag<AudioTrackLite>();
+                var missingPaths = new System.Collections.Concurrent.ConcurrentBag<string>();
 
-                foreach (var song in cachedSongs)
+                // Parallelize disk I/O checks across multi-core CPUs
+                Parallel.ForEach(cachedSongs, song =>
                 {
                     if (!File.Exists(song.FilePath))
                     {
-                        // Track missing/deleted files
                         missingPaths.Add(song.FilePath);
-                        continue;
+                        return;
                     }
 
-                    // Quick OS timestamp check (nanosecond-level fast)
+                    // OS timestamp check
                     long currentDiskTicks = File.GetLastWriteTimeUtc(song.FilePath).Ticks;
 
                     if (currentDiskTicks > song.LastModifiedTicks)
                     {
-                        // File was modified externally (e.g. metadata edited outside app)
                         try
                         {
                             using var stream = new FileStream(song.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -183,22 +182,21 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                             Debug.WriteLine($"Failed re-reading modified file {song.FilePath}: {ex.Message}");
                         }
                     }
-                }
+                });
 
                 // Clean up deleted files from SQLite
-                if (missingPaths.Count > 0)
+                if (!missingPaths.IsEmpty)
                 {
-                    RemoveDeletedSongs(missingPaths);
+                    RemoveDeletedSongs(missingPaths.ToList());
                 }
 
                 // Batch update modified tags in SQLite
-                if (songsToUpdate.Count > 0)
+                if (!songsToUpdate.IsEmpty)
                 {
-                    SaveSongs(songsToUpdate);
+                    SaveSongs(songsToUpdate.ToList());
                 }
             });
         }
-
         private static void RemoveDeletedSongs(IEnumerable<string> filePaths)
         {
             using var connection = new SqliteConnection(ConnectionString);

@@ -144,46 +144,63 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             ttProgress.IsOpen = false;
         }
         string OriginalAlbumname = "";
-        public async void LoadAlbum(string AlbumName)
+        public async Task LoadAlbum(string AlbumName)
         {
-            txtAlbumName.Text = AlbumName;
-            OriginalAlbumname = AlbumName;
-
-            // 1. Fetch songs directly from SQLite database (fast indexed read)
-            var albumSongs = await DatabaseService.GetSongsByAlbumAsync(AlbumName);
-
-            // 2. Populate UI collection
-            FoundSongs.Clear();
-            foreach (var song in albumSongs)
+            try
             {
-                FoundSongs.Add(song);
-            }
+                // 1. Update text UI safely
+                txtAlbumName.Text = AlbumName;
+                OriginalAlbumname = AlbumName;
 
-            // Recalculate total duration for the album header
-            TotalDuration();
+                // 2. Fetch songs directly from SQLite (background thread)
+                var albumSongs = await DatabaseService.GetSongsByAlbumAsync(AlbumName);
 
-            // 3. Load Album Cover / Settings
-            Uri fallbackUri = new Uri("ms-appx:///Assets/defaultalbum.png");
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-
-            var existingAlbum = currentSettings.AlbumsList?
-                .FirstOrDefault(a => a.Name.Equals(AlbumName, StringComparison.OrdinalIgnoreCase));
-
-            if (existingAlbum != null && !string.IsNullOrEmpty(existingAlbum.Thumbnail))
-            {
-                try
+                // 3. Update UI collection safely on the UI Thread
+                DispatcherQueue.TryEnqueue(() =>
                 {
-                    imgAlbumCover.Source = new BitmapImage(new Uri(existingAlbum.Thumbnail));
-                }
-                catch (Exception ex)
+                    FoundSongs.Clear();
+                    foreach (var song in albumSongs)
+                    {
+                        FoundSongs.Add(song);
+                    }
+
+                    // Recalculate total duration
+                    TotalDuration();
+                });
+
+                // 4. Load Album Cover / Settings (background read)
+                Uri fallbackUri = new Uri("ms-appx:///Assets/defaultalbum.png");
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+                var existingAlbum = currentSettings.AlbumsList?
+                    .FirstOrDefault(a => a.Name.Equals(AlbumName, StringComparison.OrdinalIgnoreCase));
+
+                string thumbnailPath = existingAlbum?.Thumbnail ?? "";
+
+                // 5. BitmapImage MUST be created/assigned on the UI thread
+                DispatcherQueue.TryEnqueue(() =>
                 {
-                    Logger.Log($"Failed to load thumbnail, reverting to default: {ex.Message}", "AlbumEditor", Logger.LogLevelType.Error);
-                    imgAlbumCover.Source = new BitmapImage(fallbackUri);
-                }
+                    if (!string.IsNullOrEmpty(thumbnailPath))
+                    {
+                        try
+                        {
+                            imgAlbumCover.Source = new BitmapImage(new Uri(thumbnailPath));
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log($"Failed to load thumbnail, reverting to default: {ex.Message}", "AlbumEditor", Logger.LogLevelType.Error);
+                            imgAlbumCover.Source = new BitmapImage(fallbackUri);
+                        }
+                    }
+                    else
+                    {
+                        imgAlbumCover.Source = new BitmapImage(fallbackUri);
+                    }
+                });
             }
-            else
+            catch (Exception ex)
             {
-                imgAlbumCover.Source = new BitmapImage(fallbackUri);
+                Logger.Log($"Error loading album '{AlbumName}': {ex.Message}", "AlbumEditor", Logger.LogLevelType.Error);
             }
         }
         private async void btnChangeAlbumCover_Click(object sender, RoutedEventArgs e)

@@ -359,6 +359,7 @@ namespace Vusic_Player.Configuration.Helper.AudioProperties
                 {
                     if (UpdateArtistName(path, newName))
                     {
+                        Debug.WriteLine("artist name updated to " + newName + " for " + path);
                         return true;
                     }
                     else

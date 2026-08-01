@@ -219,7 +219,7 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
                 img.Visibility = Visibility.Collapsed;
             }
         }
-        public void Setup(string Title, bool secondaryvisible, ContentType contentType, OceanContentDialogDefault dlg, string CloseButtonTex, string primarybtntex, string secondarybtntext, string pbi, string sbi, string cbi, ObservableCollection<SongModel> existingitems, string SuggestedPlaylistName, string mssgimageicon, string mssgtext, PlaylistItem playlist, bool isPlaylistEdit, string artist = "", string AlbumDetails = "", bool isAudioPlaylist = true)
+        public async void Setup(string Title, bool secondaryvisible, ContentType contentType, OceanContentDialogDefault dlg, string CloseButtonTex, string primarybtntex, string secondarybtntext, string pbi, string sbi, string cbi, ObservableCollection<SongModel> existingitems, string SuggestedPlaylistName, string mssgimageicon, string mssgtext, PlaylistItem playlist, bool isPlaylistEdit, string artist = "", string AlbumDetails = "", bool isAudioPlaylist = true)
         {
             txtTitle.Text = Title;
             PlaylistCreation.Visibility = Visibility.Collapsed;
@@ -285,7 +285,7 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             else if (contentType == ContentType.AlbumDetails)
             {
                 AlbumEditorBox.Visibility = Visibility.Visible;
-                  AlbumEditorBox.LoadAlbum(AlbumDetails);
+                await AlbumEditorBox.LoadAlbum(AlbumDetails);
             }
             else if (contentType == ContentType.MassEditing)
             {
