@@ -87,7 +87,58 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
             return songs;
         }
+        public static async Task<Dictionary<string, TimeSpan>> GetDurationsFromDatabase(List<string> filePaths)
+        {
+            if (filePaths == null || filePaths.Count == 0)
+                return new Dictionary<string, TimeSpan>(StringComparer.OrdinalIgnoreCase);
+            var durations = new Dictionary<string, TimeSpan>(StringComparer.OrdinalIgnoreCase);
 
+            if (filePaths == null || filePaths.Count == 0)
+                return durations;
+
+            await Task.Run(() =>
+            {
+                using var connection = new SqliteConnection(ConnectionString);
+                connection.Open();
+
+                // Batch in chunks of 500 to stay safely under SQLite query limits
+                foreach (var chunk in filePaths.Chunk(500))
+                {
+                    using var command = connection.CreateCommand();
+
+                    // Build dynamic SQL IN parameters ($p0, $p1, $p2...)
+                    var paramList = new List<string>();
+                    for (int i = 0; i < chunk.Length; i++)
+                    {
+                        string paramName = $"$p{i}";
+                        paramList.Add(paramName);
+                        command.Parameters.AddWithValue(paramName, chunk[i]);
+                    }
+
+                    command.CommandText = $"SELECT FilePath, DurationTicks FROM Songs WHERE FilePath IN ({string.Join(",", paramList)})";
+
+                    using var reader = command.ExecuteReader();
+                    int colPath = reader.GetOrdinal("FilePath");
+                    int colDuration = reader.GetOrdinal("DurationTicks");
+
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(colDuration))
+                        {
+                            string path = reader.GetString(colPath);
+                            long ticks = reader.GetInt64(colDuration);
+
+                            if (ticks > 0)
+                            {
+                                durations[path] = TimeSpan.FromTicks(ticks);
+                            }
+                        }
+                    }
+                }
+            });
+
+            return durations;
+        }
         public static List<AudioTrackLite> GetAllSongs()
         {
             var songs = new List<AudioTrackLite>();

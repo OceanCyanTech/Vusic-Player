@@ -70,30 +70,33 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Spacing="8" Margin="0,5" VerticalAlignment="Top" Orientation="Horizontal">
-                            <Button Name="btnChangeAlbumCover" Click="btnChangeAlbumCover_Click" HorizontalAlignment="Stretch" CornerRadius="12" >
+                        <StackPanel Grid.Row="0" Spacing="8" Margin="0,5" VerticalAlignment="Top" Orientation="Vertical">
+                            <Button Name="btnChangeAlbumCover" HorizontalAlignment="Stretch" CornerRadius="12" >
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="From PC" Click="btnChangeAlbumCover_Click"/>
+                                        <MenuFlyoutItem Text="Find Online" Click="btnFindOnline_Click"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <Image Source="ms-appx:///Assets/appicon.png" Width="16" Height="16"/>
                                     <TextBlock Text="Change Album Cover"/>
                                 </StackPanel>
                             </Button>
 
-                            <Button Name="btnFindOnline" Click="btnFindOnline_Click" HorizontalAlignment="Stretch" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" >
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <Image Source="ms-appx:///Assets/appicon.png" Width="16" Height="16"/>
-                                    <TextBlock Text="Find Album Cover Online" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
+                      
                         </StackPanel>
-                        <Grid Grid.Row="1">
+                        <Grid Grid.Row="1" Margin="0, 10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Image Name="imgAlbumCover"
 Source="/Assets/defaultalbum.png" 
-Width="80" Height="80" 
+Width="90" Height="90" 
 Stretch="UniformToFill"/>
                             <Border x:Name="HoverOverlay" CornerRadius="12" Margin="0, 10" PointerEntered="HoverOverlay_PointerEntered" PointerExited="HoverOverlay_PointerExited" Grid.Column="0"  Padding="0" Background="#99000000" Opacity="0">
 
@@ -131,6 +134,31 @@ Stretch="UniformToFill"/>
                             </StackPanel>
 
                         </Grid>
+                        <TextBlock Grid.Row="2" Text="Album Contents" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0, 10"/>
+                        <ListView Name="lstViewAlbumSongs" Grid.Row="3" Margin="0, 10">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ToolTipService.ToolTip="{Binding FilePath}" ColumnSpacing="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.ContextFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="Copy Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click"/>
+                                            </MenuFlyout>
+                                        </Grid.ContextFlyout>
+                                        <FontIcon FontSize="12" Glyph="{Binding Glyph}"/>
+                                        <TextBlock Margin="10, 0" Grid.Column="1" FontSize="16"  Text="{Binding Title}"/>
+                                        <TextBlock Grid.Column="2" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Artist}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <TextBlock Name="txtEmptySongsAlbum" Grid.Row="3" Visibility="Collapsed" Text="This album is empty!"/>
+
+
                     </Grid>
            
               

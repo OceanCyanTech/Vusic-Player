@@ -26,6 +26,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -1321,7 +1322,7 @@ public sealed partial class ArtistView : Page
         }
     }
 
-    private void mnftAlbumInfo_Click(object sender, RoutedEventArgs e)
+    private async void mnftAlbumInfo_Click(object sender, RoutedEventArgs e)
     {
         if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel albumModel && albumModel.AlbumName is string name)
         {
@@ -1335,7 +1336,28 @@ public sealed partial class ArtistView : Page
             ToolTipService.SetToolTip(txtAlbumName, name);
             txtCount.Text = "• " + $"{albumModel.Songs.Count} {(albumModel.Songs.Count == 1 ? "item" : "items")}";
             txtArtistsInvolved.Text = albumModel.AlbumArtists;
+            ToolTipService.SetToolTip(txtArtistsInvolved, txtArtistsInvolved.Text);
             imgAlbumCover.Source = albumModel.AlbumCoverThumbnail;
+            TimeSpan total = TimeSpan.FromTicks(albumModel.Songs.Sum(s => s.SongDuration?.Ticks ?? 0));
+
+            txtDuration.Text = total.TotalHours >= 1
+                ? $"{(int)total.TotalHours}:{total.Minutes:D2}:{total.Seconds:D2}"
+                : "• " + total.ToString(@"m\:ss");
+           // txtDuration.Text = "• " + txtDuration.Text;
+            var uniqueArtists = new HashSet<string>();
+            var observablesongs = new ObservableCollection<SongModel>();
+
+            foreach (var song in albumModel.Songs)
+            {
+                observablesongs.Add(new SongModel { Artist = song.Artist, Glyph = song.Glyph, Title = song.Title, FilePath = song.FilePath });
+                if (!string.IsNullOrEmpty(song.Artist))
+                    uniqueArtists.Add(song.Artist);
+            }
+            lstViewAlbumSongs.ItemsSource = observablesongs;
+            var sortedArtists = uniqueArtists.OrderBy(a => a);
+            txtArtistsInvolved.Text = "• " + string.Join(", ", sortedArtists);
+            txtEmptySongsAlbum.Visibility = observablesongs.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            lstViewAlbumSongs.Visibility = observablesongs.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 
@@ -1522,15 +1544,24 @@ public sealed partial class ArtistView : Page
     private async void btnRemoveImage_Click(object sender, RoutedEventArgs e)
     {
         var currentSettings = await SettingsLoader.LoadSettingsAsync();
-        var artists = currentSettings.AlbumsList;
-        var existingArtist = artists.FirstOrDefault(a => a.Name == txtAlbumName.Text);
+        var albums = currentSettings.AlbumsList;
+        var existingAlbum = albums.FirstOrDefault(a => a.Name == txtAlbumName.Text);
 
-        if (existingArtist != null)
+        if (existingAlbum != null)
         {
-            artists.Remove(existingArtist);
+            albums.Remove(existingAlbum);
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
         imgAlbumCover.Source = new BitmapImage(new Uri("ms-appx:///Assets/defaultalbum.png"));
+    }
+
+    private void mnftCopyFilePath_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuFlyoutItem mnft && mnft.DataContext is SongModel song)
+        {
+            CopyToClipboard.CopyStringToClipboard(song.FilePath);
+        }
+
     }
 }
