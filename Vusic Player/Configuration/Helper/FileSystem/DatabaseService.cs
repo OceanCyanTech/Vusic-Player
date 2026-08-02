@@ -24,33 +24,24 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             using var connection = new SqliteConnection(ConnectionString);
             connection.Open();
 
-            string createTableQuery = @"
-            CREATE TABLE IF NOT EXISTS Songs (
-                FilePath TEXT PRIMARY KEY,
-                Title TEXT,
-                Artist TEXT,
-                AlbumName TEXT,
-                DurationTicks INTEGER,
-                IsFavourite INTEGER,
-                LastModified INTEGER DEFAULT 0
-            );
+            // Enable WAL Mode for multi-threaded performance
+            using var walCmd = new SqliteCommand("PRAGMA journal_mode=WAL;", connection);
+            walCmd.ExecuteNonQuery();
 
-            CREATE INDEX IF NOT EXISTS idx_artist ON Songs(Artist);
-            ";
+            string createTableQuery = @"
+    CREATE TABLE IF NOT EXISTS Songs (
+        FilePath TEXT PRIMARY KEY,
+        Title TEXT,
+        Artist TEXT,
+        AlbumName TEXT,
+        DurationTicks INTEGER,
+        IsFavourite INTEGER,
+        LastModified INTEGER DEFAULT 0
+    );
+    CREATE INDEX IF NOT EXISTS idx_artist ON Songs(Artist);";
 
             using var command = new SqliteCommand(createTableQuery, connection);
             command.ExecuteNonQuery();
-
-            // Migration check: Ensure LastModified column exists for older DB files
-            try
-            {
-                using var alterCmd = new SqliteCommand("ALTER TABLE Songs ADD COLUMN LastModified INTEGER DEFAULT 0;", connection);
-                alterCmd.ExecuteNonQuery();
-            }
-            catch (SqliteException)
-            {
-                // Ignored if column already exists
-            }
         }
         public static async Task<List<SongModel>> GetSongsByAlbumAsync(string albumName)
         {
@@ -272,18 +263,37 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             DispatcherQueue? dispatcher = null,
             Action<AudioTrackLite>? onSongDiscovered = null)
         {
-            await Task.Run(() =>
+            // 1. Resolve search paths using pure .NET System APIs (100% thread-safe)
+            List<string> safePaths = new()
+    {
+        Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"),
+        Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+        Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
+        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+    };
+
+            await Task.Run(async () =>
             {
                 var newlyDiscoveredSongs = new List<AudioTrackLite>();
+                int filesProcessedThisRun = 0;
 
-                foreach (var path in SearchPaths)
+                foreach (var path in safePaths)
                 {
-                    if (!Directory.Exists(path)) continue;
+                    if (string.IsNullOrEmpty(path) || !Directory.Exists(path)) continue;
 
                     try
                     {
+                        // EnumerationOptions prevents crashing on locked/system/reparse directories
+                        var enumOptions = new EnumerationOptions
+                        {
+                            IgnoreInaccessible = true,
+                            RecurseSubdirectories = true,
+                            AttributesToSkip = System.IO.FileAttributes.Hidden | System.IO.FileAttributes.System
+                        };
+
                         var directoryInfo = new DirectoryInfo(path);
-                        var files = directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories)
+                        var files = directoryInfo.EnumerateFiles("*.*", enumOptions)
                             .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
 
                         foreach (var file in files)
@@ -294,14 +304,12 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
                             try
                             {
-                                using var stream = new FileStream(
-                                    normalizedPath,
-                                    FileMode.Open,
-                                    FileAccess.Read,
-                                    FileShare.ReadWrite);
+                                //using var stream = new FileStream(
+                                //    normalizedPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-                                var abstraction = new SimpleStreamAbstraction(normalizedPath, stream);
-                                using var tagFile = TagLib.File.Create(abstraction);
+                                //var abstraction = new SimpleStreamAbstraction(normalizedPath, stream);
+                                //using var tagFile = TagLib.File.Create(abstraction);
+                                using var tagFile = TagLib.File.Create(normalizedPath);
                                 var tag = tagFile.Tag;
 
                                 string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
@@ -328,16 +336,21 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                                 newlyDiscoveredSongs.Add(newSong);
                                 existingPaths.Add(normalizedPath);
 
-                                if (newlyDiscoveredSongs.Count % 15 == 0 && dispatcher != null && onSongDiscovered != null)
+                                if (newlyDiscoveredSongs.Count % 15 == 0 && onSongDiscovered != null)
                                 {
                                     var batch = newlyDiscoveredSongs.TakeLast(15).ToList();
-                                    dispatcher.TryEnqueue(() =>
+
+                                    if (dispatcher != null)
                                     {
-                                        foreach (var song in batch)
+                                        dispatcher.TryEnqueue(() =>
                                         {
-                                            onSongDiscovered(song);
-                                        }
-                                    });
+                                            foreach (var song in batch) onSongDiscovered(song);
+                                        });
+                                    }
+                                    else
+                                    {
+                                        foreach (var song in batch) onSongDiscovered(song);
+                                    }
                                 }
                             }
                             catch (TagLib.UnsupportedFormatException) { }
@@ -345,6 +358,12 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                             catch (Exception ex)
                             {
                                 Debug.WriteLine($"TagLib error for {normalizedPath}: {ex.Message}");
+                            }
+
+                            filesProcessedThisRun++;
+                            if (filesProcessedThisRun % 10 == 0)
+                            {
+                                await Task.Delay(5);
                             }
                         }
                     }
@@ -355,16 +374,20 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 }
 
                 int remainingCount = newlyDiscoveredSongs.Count % 15;
-                if (remainingCount > 0 && dispatcher != null && onSongDiscovered != null)
+                if (remainingCount > 0 && onSongDiscovered != null)
                 {
                     var finalBatch = newlyDiscoveredSongs.TakeLast(remainingCount).ToList();
-                    dispatcher.TryEnqueue(() =>
+                    if (dispatcher != null)
                     {
-                        foreach (var song in finalBatch)
+                        dispatcher.TryEnqueue(() =>
                         {
-                            onSongDiscovered(song);
-                        }
-                    });
+                            foreach (var song in finalBatch) onSongDiscovered(song);
+                        });
+                    }
+                    else
+                    {
+                        foreach (var song in finalBatch) onSongDiscovered(song);
+                    }
                 }
 
                 if (newlyDiscoveredSongs.Count > 0)
@@ -373,7 +396,6 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 }
             });
         }
-
         public static void SaveSongs(IEnumerable<AudioTrackLite> songs)
         {
             using var connection = new SqliteConnection(ConnectionString);

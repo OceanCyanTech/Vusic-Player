@@ -272,7 +272,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         private async void PlayerService_PlayCalled()
         {
-            UpdateGlyphs();
+           UpdateGlyphs();
             //{
             //    exist.Glyph = "\uE8B2";
             //}

@@ -62,7 +62,81 @@
                     </Canvas>
                 </Grid>
             </ContentDialog>
+            <TeachingTip MaxWidth="600" Title="Album Info - " Name="ttAlbumInfo" IsOpen="False">
+                <Grid Margin="0, 10">
+                  
+               
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Spacing="8" Margin="0,5" VerticalAlignment="Top" Orientation="Horizontal">
+                            <Button Name="btnChangeAlbumCover" Click="btnChangeAlbumCover_Click" HorizontalAlignment="Stretch" CornerRadius="12" >
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Image Source="ms-appx:///Assets/appicon.png" Width="16" Height="16"/>
+                                    <TextBlock Text="Change Album Cover"/>
+                                </StackPanel>
+                            </Button>
 
+                            <Button Name="btnFindOnline" Click="btnFindOnline_Click" HorizontalAlignment="Stretch" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" >
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Image Source="ms-appx:///Assets/appicon.png" Width="16" Height="16"/>
+                                    <TextBlock Text="Find Album Cover Online" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Name="imgAlbumCover"
+Source="/Assets/defaultalbum.png" 
+Width="80" Height="80" 
+Stretch="UniformToFill"/>
+                            <Border x:Name="HoverOverlay" CornerRadius="12" Margin="0, 10" PointerEntered="HoverOverlay_PointerEntered" PointerExited="HoverOverlay_PointerExited" Grid.Column="0"  Padding="0" Background="#99000000" Opacity="0">
+
+                            </Border>
+                            <Button  Click="btnRemoveImage_Click" Opacity="0" PointerEntered="btnRemoveImage_PointerEntered" PointerExited="btnRemoveImage_PointerExited" Name="btnRemoveImage" CornerRadius="12" HorizontalAlignment="Center"  Background="#99000000" >
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Image Source="ms-appx:///Assets/appicon.png" Width="16" Height="16"/>
+                                    <TextBlock Text="Remove" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <StackPanel Grid.Column="1" Margin="20,0" Spacing="8" VerticalAlignment="Top">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Name="txtAlbumName" 
+                     Text="Album Name"  TextTrimming="CharacterEllipsis"
+                     FontSize="20"
+                     FontWeight="SemiBold"
+                 
+                     HorizontalAlignment="Left"
+                     MinWidth="200"/>
+
+                                </StackPanel>
+
+                                <TextBlock Name="txtCount" Text="• 15 items" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Name="txtDuration" Text="• 55:07" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,5,0,0">
+                                    <Image Source="/Assets/defaultartist.png" Width="32" Height="32"/>
+                                    <TextBlock Name="txtArtistsInvolved" 
+                           Text="• Artists"  IsTextSelectionEnabled="True"
+                           VerticalAlignment="Center" 
+                           Style="{StaticResource BodyTextBlockStyle}" 
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                        </Grid>
+                    </Grid>
+           
+              
+            
+                </Grid>
+            </TeachingTip>
             <StackPanel Grid.Row="1" Margin="0, 20" Orientation="Vertical" HorizontalAlignment="Center">
                 <TextBlock Text="Artist name" Name="txtArtistName" 
                Style="{StaticResource TitleTextBlockStyle}" 

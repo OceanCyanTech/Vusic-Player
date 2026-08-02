@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -60,16 +61,15 @@ namespace Vusic_Player.Pages.Views.Onboarding
             {
                 txtMain.Text = "Optimizing Vusic Player...";
                 //UpdateStatus("Optimizing Vusic Player");
-                await Task.Delay(4000);
-
+                FilesInDatabase.InitializeDatabaseFunctions();
+               await FilesInDatabase.LoadAllFiles();
+                _ = FilesInDatabase.RunBackgroundServiceAsync();
                 //        UpdateStatus("Indexing your media files");
                 txtMain.Text = "Indexing your media files...";
 
-                await Task.Delay(4000);
+             
                 txtMain.Text = "Organizing your media library...";
 
-                //      UpdateStatus("Organizing your media library");
-                await Task.Delay(4000);
 
                 // Stop animation when done
                 _loadingCts?.Cancel();
