@@ -44,9 +44,25 @@ namespace Vusic_Player.UI.UserViews
         public PictureInPicture()
         {
             InitializeComponent();
-            if (PlayerService.Masterplayer != null)
+
+            int width = 550;
+            int height = 300;
+            string fileExtension = Path.GetExtension(PlayerService.CurrentPlayingPath ?? "").ToLower();
+            if (Extensions.AudioExtensions.List.Contains(fileExtension))
             {
-                hostMedia.Player = PlayerService.Masterplayer;
+                width = 300;
+                imgCover.Visibility = Visibility.Visible;
+                hostMedia.Visibility = Visibility.Collapsed;
+                txtTitle.Visibility = Visibility.Visible;
+            }
+            else if (Extensions.VideoExtensions.List.Contains(fileExtension))
+            {
+                txtTitle.Visibility = Visibility.Collapsed;
+
+                if (PlayerService.Masterplayer != null)
+                {
+                    hostMedia.Player = PlayerService.Masterplayer;
+                }
             }
             SetupSMTC();
             this.SetTitleBar(CustomTitleBar);
@@ -59,8 +75,6 @@ namespace Vusic_Player.UI.UserViews
             WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             AppWindow appWindow = AppWindow.GetFromWindowId(myWndId);
             appWindow.IsShownInSwitchers = false;
-            int width = 550;
-            int height = 300;
             appWindow.Resize(new Windows.Graphics.SizeInt32(width, height));
             var displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(myWndId, Microsoft.UI.Windowing.DisplayAreaFallback.Primary);
 
@@ -105,6 +119,9 @@ namespace Vusic_Player.UI.UserViews
                     }
                 }
             };
+
+
+
         }
         [System.Runtime.InteropServices.ComImport]
         [System.Runtime.InteropServices.Guid("12604699-522A-45AD-8C80-6078674914F5")]

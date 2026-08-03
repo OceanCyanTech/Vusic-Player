@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -53,11 +54,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         }
 
-        private void btnSetCustomSpeed_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
+     
         private void btnEffects_Click(object sender, RoutedEventArgs e)
         {
 
@@ -65,7 +62,9 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void btnMiniPlayer_Click(object sender, RoutedEventArgs e)
         {
-
+            PictureInPicture pictureinPicture = new PictureInPicture();
+            pictureinPicture.Activate();
+            MainWindow.HideWindow();
         }
 
         private void btnFullView_Click(object sender, RoutedEventArgs e)
@@ -82,20 +81,39 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         }
 
-        private void btnAddtoFavourites_Click(object sender, RoutedEventArgs e)
+        private async void btnAddtoFavourites_Click(object sender, RoutedEventArgs e)
         {
-
+            if (PlayerService.Masterplayer == null) return;
+            if (PlayerService.CurrentPlayingPath == null) return;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var favourites = currentSettings.Favourites;
+            var existingfav = favourites.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
+            if(existingfav != null)
+            {
+                favourites.Remove(existingfav);
+                media.IsFavourite = false;
+            }
+            else
+            {
+                media.IsFavourite = true;
+                favourites.Add(new Configuration.ClassModels.FavouriteItems { FilePath = PlayerService.CurrentPlayingPath });
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
         private void mnftPitch_Click(object sender, RoutedEventArgs e)
         {
-            
+            ttPitch.IsOpen = true;
         }
 
         private void customSpeed_Click(object sender, RoutedEventArgs e)
         {
             ttSpeedCustom.IsOpen = true;
             media.AudioProperties = Visibility.Collapsed;
+        }
+        public string GetFavToolTip(bool isFav)
+        {
+            return isFav ? "Remove from Favorites" : "Add to Favorites";
         }
         public MediaPlaybackController media => MediaPlaybackController.Instance;
         private async void btnInfo_Click(object sender, RoutedEventArgs e)

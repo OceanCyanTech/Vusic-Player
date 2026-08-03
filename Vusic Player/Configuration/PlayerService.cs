@@ -343,6 +343,16 @@ namespace Vusic_Player.Configuration
             var recents = currentSettings.RecentMusic;
             var musicProps = await file.Properties.GetMusicPropertiesAsync();
             var existing = recents.FirstOrDefault(p => p.SongPath == CurrentPlayingPath);
+            var favourites = currentSettings.Favourites;
+            var existingfav = favourites.FirstOrDefault(p => p.FilePath == CurrentPlayingPath);
+            if(existingfav != null)
+            {
+                UIController.IsFavourite = true;
+            }
+            else
+            {
+                UIController.IsFavourite = false;
+            }
             foreach (var item in recents)
             {
                 item.LastPlayed = "";

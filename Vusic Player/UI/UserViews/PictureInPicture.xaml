@@ -22,8 +22,8 @@
                 />
                 </winui:FlyleafHost.RenderTransform>
             </winui:FlyleafHost>
-
-
+            <Image Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}" Width="220" Name="imgCover" Grid.Row="0" Visibility="Collapsed"/>
+            <TextBlock VerticalAlignment="Bottom" Visibility="Collapsed" Name="txtTitle" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="20, 20"/>
             <oceancyan:OceanSlider x:Name="sldMain" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted" Grid.Row="1" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" IsThumbVisible="Collapsed" VerticalAlignment="Bottom"></oceancyan:OceanSlider>
             <Grid x:Name="CustomTitleBar" 
           Background="Transparent" 
@@ -64,6 +64,7 @@
         Click="CloseButton_Click" 
         FontFamily="Segoe MDL2 Assets" 
         FontSize="12"
+                                ToolTipService.ToolTip="Close"
         Width="45" Height="32"
         Background="Transparent"
         BorderBrush="Transparent">

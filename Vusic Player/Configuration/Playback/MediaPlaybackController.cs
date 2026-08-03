@@ -255,6 +255,19 @@ namespace Vusic_Player.Configuration.Playback
                 }
             }
         }
+        private bool _isfavourite = false;
+
+        public bool IsFavourite
+        {
+            get => _isfavourite;
+            set
+            {
+                if (SetProperty(ref _isfavourite, value))
+                {
+                    OnPropertyChanged(nameof(IsFavourite));
+                }
+            }
+        }
         private string _codec = "";
         public string Codec
         {

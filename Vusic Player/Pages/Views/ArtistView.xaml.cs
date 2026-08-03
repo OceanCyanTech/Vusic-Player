@@ -2,8 +2,6 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -358,6 +356,54 @@ public sealed partial class ArtistView : Page
 
 
     }
+    private async void LoadSelectorBarSelectionSettings()
+    {
+        var currentSettings = await SettingsLoader.LoadSettingsAsync();
+        var selectorBarindex = currentSettings.ArtistView_selectorbarindex;
+        if (selectorBarindex == 0)
+        {
+            selBarMain.SelectedItem = selBarItemMostPlayed;
+            LoadMostPlayed();
+        }
+        else if (selectorBarindex == 1)
+        {
+            selBarMain.SelectedItem = selBarItemAlbum;
+            LoadAlbums();
+        }
+        else if (selectorBarindex == 2)
+        {
+            selBarMain.SelectedItem = selBarItemSingles;
+            LoadSingles();
+        }
+        else if (selectorBarindex == 3)
+        {
+            selBarMain.SelectedItem = selBarItemAllSongs;
+        }
+    }
+    private async void SaveSelectorBarSelection()
+    {
+        var currentSettings = await SettingsLoader.LoadSettingsAsync();
+        int selectbarindex = 0;
+        if (selBarMain.SelectedItem == selBarItemMostPlayed)
+        {
+            selectbarindex = 0;
+        }
+        else if (selBarMain.SelectedItem == selBarItemAlbum)
+        {
+            selectbarindex = 1;
+        }
+        else if (selBarMain.SelectedItem == selBarItemSingles)
+        {
+            selectbarindex = 2;
+        }
+        else if (selBarMain.SelectedItem == selBarItemAllSongs)
+        {
+            selectbarindex = 3;
+        }
+        currentSettings.ArtistView_selectorbarindex = selectbarindex;
+        await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+    }
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         if (e.Parameter is string selectedSongArtist)
@@ -425,10 +471,7 @@ public sealed partial class ArtistView : Page
                 txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
 
                 TotalDuration();
-                if (selBarMain.SelectedItem == selBarItemMostPlayed)
-                {
-                    LoadMostPlayed();
-                }
+                LoadSelectorBarSelectionSettings();
             }
             catch (Exception ex)
             {
@@ -1326,10 +1369,6 @@ public sealed partial class ArtistView : Page
     {
         if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel albumModel && albumModel.AlbumName is string name)
         {
-            //if (App.MainWindowInstance == null) return;
-            //OceanContentDialog.Show("Album", "Close", "", "", OceanDialogWindow.ContentType.AlbumDetails, OceanContentDialogDefault.Primary, XamlRoot, 800, 980, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", "", "", "", name);
-            //OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
-            //OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1;
             ttAlbumInfo.IsOpen = true;
             ttAlbumInfo.Title = "Album Info - " + name;
             txtAlbumName.Text = name;
@@ -1343,7 +1382,7 @@ public sealed partial class ArtistView : Page
             txtDuration.Text = total.TotalHours >= 1
                 ? $"{(int)total.TotalHours}:{total.Minutes:D2}:{total.Seconds:D2}"
                 : "• " + total.ToString(@"m\:ss");
-           // txtDuration.Text = "• " + txtDuration.Text;
+            // txtDuration.Text = "• " + txtDuration.Text;
             var uniqueArtists = new HashSet<string>();
             var observablesongs = new ObservableCollection<SongModel>();
 
@@ -1363,13 +1402,9 @@ public sealed partial class ArtistView : Page
 
     private void mnftViewImage_Click(object sender, RoutedEventArgs e)
     {
-
+        //PENDING: ENLARGED IMAGE VIEWER
     }
 
-    private void btnRenameAlbum_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
 
     private void selBarMain_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
     {
@@ -1396,46 +1431,50 @@ public sealed partial class ArtistView : Page
         {
             grdAllSongs.Visibility = Visibility.Visible;
         }
+        SaveSelectorBarSelection();
     }
     private async void Refresh()
     {
-        try
-        {
-            // 1. Heavy DB work on background thread (returns plain C# objects)
-            List<AudioTrackLite> rawSongs = await Task.Run(() => DatabaseService.GetAllSongs());
-            await DatabaseService.CheckForModifiedOrDeletedFilesAsync(rawSongs);
+        FoundSongs.Clear();
 
-            // 2. Map and bind back on the UI Thread
-            // (Task.Run returns execution to the UI thread automatically after 'await')
+        try
+
+        {
             string targetArtist = txtArtistName.Text;
+            var rawSongs = FilesInDatabase.rawSongs;
             var songModels = rawSongs.Where(s => s.Artist.Contains(targetArtist)).Select(s => new SongModel
+
             {
+
                 Title = s.Title,
+
                 Artist = s.Artist,
+
                 AlbumName = s.AlbumName,
+
                 FilePath = s.FilePath,
+
                 SongDuration = s.SongDuration
+
             }).ToList();
+
             // 3. Assign directly to UI
+
             FoundSongs = new ObservableCollection<SongModel>(songModels);
+
             lstViewAllSongs.ItemsSource = FoundSongs;
-            //  _ = RunBackgroundScannerAsync();
+
+
+
             txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
+
             TotalDuration();
-            foreach (var item in FoundSongs)
-            {
-                Debug.WriteLine("The Duration of " + item.Title + " is " + item.FormattedDuration);
-            }
-            if (selBarMain.SelectedItem == selBarItemMostPlayed)
-            {
-                LoadMostPlayed();
-            }
+            LoadSelectorBarSelectionSettings();
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Failed to load songs: {ex.Message}");
         }
-
         if (selBarMain.SelectedItem == selBarItemMostPlayed)
         {
             LoadMostPlayed();
@@ -1510,7 +1549,47 @@ public sealed partial class ArtistView : Page
     }
     private void btnFindOnline_Click(object sender, RoutedEventArgs e)
     {
+        if (App.MainWindowInstance == null) return;
+        CheckInternet.SetImage -= CheckInternet_SetImage;
+        OceanContentDialog.Show("Find Album Cover Online", "Set", "", "Cancel", OceanDialogWindow.ContentType.OnlineArtistPicture, OceanContentDialogDefault.Primary, XamlRoot, 800, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", "", "", txtAlbumName.Text);
+        OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+        OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+        var existingalbum = albumCollection.FirstOrDefault(p => p.AlbumName == txtAlbumName.Text);
+        CheckInternet.SetImage += async () =>
+        {
+            var file = await StorageFile.GetFileFromPathAsync(CheckInternet.UrlToDownload);
+            using (var stream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                var bitmap = new BitmapImage();
+                await bitmap.SetSourceAsync(stream);
+                imgAlbumCover.Source = bitmap;
+                if (existingalbum != null)
+                {
+                    existingalbum.Thumbnail = file.Path;
+                    existingalbum.AlbumCoverThumbnail = bitmap;
+                }
 
+            }
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var albums = currentSettings.AlbumsList;
+            var existingAlbum = albums.FirstOrDefault(a => a.Name == txtAlbumName.Text);
+            if (existingAlbum != null)
+            {
+                existingAlbum.Thumbnail = file.Path;
+            }
+            else
+            {
+                var newAlbum = new AlbumModel
+                {
+                    Name = txtAlbumName.Text,
+                    Thumbnail = file.Path
+                    // Add other default properties here
+                };
+                albums.Add(newAlbum);
+            }
+
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        };
     }
     private void AnimateOpacity(UIElement target, double toOpacity)
     {

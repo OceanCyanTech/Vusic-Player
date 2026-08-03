@@ -454,7 +454,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBox Name="txtRenameAlbum" PlaceholderText="Rename album..."/>
-                        <Button Name="btnRenameAlbum" Click="btnRenameAlbum_Click" Content="Rename Album" Style="{StaticResource AccentButtonStyle}" Grid.Row="1"/>
+                        <Button Name="btnRenameAlbum" Content="Rename Album" Style="{StaticResource AccentButtonStyle}" Grid.Row="1"/>
                     </Grid>
                 </TeachingTip>
                 <vusic:ListViewMedia 

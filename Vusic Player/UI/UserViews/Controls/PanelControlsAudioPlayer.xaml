@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral"
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical">
@@ -37,6 +37,9 @@
                     <videogeneral:PlaybackSpeed SliderWidth="100"></videogeneral:PlaybackSpeed>
                 </ScrollViewer>
             </TeachingTip>
+            <TeachingTip Title="Pitch Control" Name="ttPitch" IsOpen="False">
+                <audiogeneral:Pitch Margin="20, 20"/>
+            </TeachingTip>
             <TeachingTip Name="ttReverb" Target="{x:Bind btnEffects}" IsOpen="False" Title="Audio Reverb" PreferredPlacement="Auto">
 
                 <TeachingTip.Content>
@@ -61,7 +64,7 @@
                             <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Audio Tools"  Name="btnTools" IsEnabled="True" Click="btnLyrics_Click">
                                 <Button.Flyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem Text="Pitch">
+                                        <MenuFlyoutItem Text="Pitch" Click="mnftPitch_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>
@@ -78,10 +81,10 @@
                             <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Find Lyrics Online"  Name="btnLyrics" IsEnabled="True" Click="btnLyrics_Click">
                                 <Image  Width="26" Source="/Assets/appicon.png"/>
                             </Button>
-                            <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Add to Favourites"  Name="btnAddtoFavourites" IsEnabled="True" Click="btnAddtoFavourites_Click">
+                            <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="{x:Bind GetFavToolTip(media.IsFavourite), Mode=OneWay}"  Name="btnAddtoFavourites" IsEnabled="True" Click="btnAddtoFavourites_Click">
                                 <Image  Width="26" Source="/Assets/favicon.png"/>
                             </Button>
-                            <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Add to Favourites"  Name="btnInfo" IsEnabled="True" Click="btnInfo_Click">
+                            <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="File Info"  Name="btnInfo" IsEnabled="True" Click="btnInfo_Click">
                                 <Image  Width="26" Source="/Assets/infoicon.png"/>
                             </Button>
                             <ToggleButton Name="btnFullScreen" ToolTipService.ToolTip="Fyll sren" CornerRadius="10"  HorizontalAlignment="Center" >
