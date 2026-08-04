@@ -27,5 +27,42 @@ namespace Vusic_Player.Pages.Views
         {
             InitializeComponent();
         }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if(e.Parameter is string genre)
+            {
+                txtGenreTitle.Text = genre;
+            }
+            base.OnNavigatedTo(e);
+        }
+        private void btnRenameGenre_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnPlayAll_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnShuffle_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnAddSongs_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnFindGenreProfileOnline_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnFindGenreProfileLocal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

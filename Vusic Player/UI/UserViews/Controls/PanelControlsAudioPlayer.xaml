@@ -87,7 +87,7 @@
                             <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="File Info"  Name="btnInfo" IsEnabled="True" Click="btnInfo_Click">
                                 <Image  Width="26" Source="/Assets/infoicon.png"/>
                             </Button>
-                            <ToggleButton Name="btnFullScreen" ToolTipService.ToolTip="Fyll sren" CornerRadius="10"  HorizontalAlignment="Center" >
+                            <ToggleButton Visibility="Collapsed" Name="btnFullScreen" ToolTipService.ToolTip="Fyll sren" CornerRadius="10"  HorizontalAlignment="Center" >
 
                                 <StackPanel Orientation="Horizontal" Spacing="10">
                                     <Image Source="/Assets/appicon.png" Width="26"></Image>

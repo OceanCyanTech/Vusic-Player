@@ -5,10 +5,118 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Margin="30, 0" ColumnSpacing="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid Margin="40, 0" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Image Source="/Assets/appicon.png" Name="imgGenreCover" Grid.Row="0" Width="150"/>
+            <TextBlock IsTextSelectionEnabled="True" HorizontalAlignment="Center" Grid.Row="1" Name="txtGenreTitle" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Genre"/>
+            <TextBlock HorizontalAlignment="Center" Grid.Row="2" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtSongCount"  Text="• 0 items"/>
+            <TextBlock HorizontalAlignment="Center" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtDuration"  Text="• 00:00"/>
+            <Border 
+Padding="10,0" 
+VerticalAlignment="Top" 
+HorizontalAlignment="Center"
+Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" 
+BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+BorderThickness="1" 
+CornerRadius="16"
+                Grid.Row="4">
+                <ItemsControl Grid.Row="4" Margin="0, 10" HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VariableSizedWrapGrid Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
+                    <Button Background="Transparent" BorderBrush="Transparent" Margin="5"  ToolTipService.ToolTip="Rename Genre" >
+                        <Button.Flyout>
+                            <Flyout x:Name="flyoutRename">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox GotFocus="txtRename_GotFocus" Width="150" Grid.Column="0" 
+                             Name="txtRename" PlaceholderText="Rename Genre" />
+                                    <Button Background="Transparent" BorderBrush="Transparent" Margin="5, 0" Grid.Column="1" Click="btnRenameGenre_Click" Name="btnRenameGenre" >
+                                        <Image Margin="5, 0" Width="20" Source="/Assets/tickicon.png" />
+                                    </Button>
+                                </Grid>
+                            </Flyout>
+                        </Button.Flyout>
+                        <Image Width="25" Source="/Assets/editicon.png" />
+                    </Button>
+
+                    <Button Background="Transparent" BorderBrush="Transparent" Name="btnPlayAll" Click="btnPlayAll_Click" Margin="5"
+            ToolTipService.ToolTip="Play all songs of genre">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="25" Source="/Assets/play.png" />
+                            <TextBlock Margin="5,2" Text="Play all" />
+                        </StackPanel>
+                    </Button>
+
+                    <ToggleButton Background="Transparent" BorderBrush="Transparent" Name="btnShuffle" Checked="btnShuffle_Checked" Unchecked="btnShuffle_Checked" Margin="5"
+                  ToolTipService.ToolTip="Shuffle Genre">
+                        <Image Width="25" Source="/Assets/shuffleicon.png" />
+                    </ToggleButton>
+
+                    <Button Name="btnAddSongs" Margin="5" Background="Transparent" BorderBrush="Transparent" 
+            ToolTipService.ToolTip="Add songs to this Genre" Click="btnAddSongs_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="25" Source="/Assets/addicon.png" />
+                            <TextBlock Margin="5,2" Text="Add Songs" />
+                        </StackPanel>
+
+                    </Button>
+                    <Button Name="btnSetArtistProfilePicture" Margin="5" Background="Transparent" BorderBrush="Transparent" 
+ToolTipService.ToolTip="Set Genre Cover">
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel Orientation="Vertical" Spacing="5">
+                                    <Button Name="btnFindGenreProfileOnline" Click="btnFindGenreProfileOnline_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Width="25" Source="/Assets/addimgicon.png" />
+                                            <TextBlock Margin="5,2" Text="Find genre picture online" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Name="btnFindGenreProfileLocal" Click="btnFindGenreProfileLocal_Click" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Width="25" Source="/Assets/addimgicon.png" />
+                                            <TextBlock Margin="5,2" Text="Find genre cover on disk" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="25" Source="/Assets/addimgicon.png" />
+                            
+                        </StackPanel>
+                    </Button>
+                </ItemsControl>
+            </Border>
+        </Grid>
+        <Grid Grid.Column="1" RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Content" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"/>
+            <controls:ListViewMedia Grid.Row="1" x:Name="lstViewMediaGenreSongs"/>
+        </Grid>
     </Grid>
 </Page>

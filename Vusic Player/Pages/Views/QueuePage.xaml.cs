@@ -38,7 +38,7 @@ namespace Vusic_Player.Pages.Views
         public QueuePage()
         {
             InitializeComponent();
-           frmNowPlaying.Navigate(typeof(MusicPlayerFull));
+ //          frmNowPlaying.Navigate(typeof(MusicPlayerFull));
 
 
         }

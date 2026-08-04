@@ -19,7 +19,7 @@
                 <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
             <TextBlock Text="Now Playing" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Grid.Row="0"></TextBlock>
-            <Frame Name="frmNowPlaying" Margin="0, 10" Grid.Row="1" Grid.Column="0"></Frame>
+            <vusic:PanelControlsAudioPlayer Grid.Row="1" ExpandedViewButtonToolTip="Expanded View"/>
         </Grid>
         <Grid Grid.Column="1" HorizontalAlignment="Stretch">
 

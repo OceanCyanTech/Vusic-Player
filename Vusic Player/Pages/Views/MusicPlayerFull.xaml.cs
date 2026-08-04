@@ -130,6 +130,7 @@ namespace Vusic_Player.Pages.Views
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            Debug.WriteLine("Navigated to Music Player Full");
             if (PlayerService.CurrentPlayingPath != "")
             {
                 btnCustomizeLyricText.Visibility = Visibility.Visible;

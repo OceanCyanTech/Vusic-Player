@@ -54,7 +54,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         }
 
-     
+
         private void btnEffects_Click(object sender, RoutedEventArgs e)
         {
 
@@ -62,6 +62,8 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void btnMiniPlayer_Click(object sender, RoutedEventArgs e)
         {
+            if (PlayerService.Masterplayer == null) return;
+            if (PlayerService.CurrentPlayingPath == "") return;
             PictureInPicture pictureinPicture = new PictureInPicture();
             pictureinPicture.Activate();
             MainWindow.HideWindow();
@@ -69,26 +71,45 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void btnFullView_Click(object sender, RoutedEventArgs e)
         {
-            if (App.NavigationFrame != null)
+            if (ExpandedViewButtonToolTip == "Normal View")
             {
-                App.NavigationFrame.Navigate(typeof(MusicPlayerFull));
-
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.GoBack();
+                }
+            }
+            else
+            {
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(MusicPlayerFull));
+                }
             }
         }
-
+        bool isFullView = false;
         private void btnLyrics_Click(object sender, RoutedEventArgs e)
         {
+            if (PlayerService.CurrentPlayingPath == "") return;
+            if (PlayerService.Masterplayer == null) return;
 
+            if (ExpandedViewButtonToolTip != "Normal View")
+            {
+
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(MusicPlayerFull));
+                }
+            }
         }
 
         private async void btnAddtoFavourites_Click(object sender, RoutedEventArgs e)
         {
             if (PlayerService.Masterplayer == null) return;
-            if (PlayerService.CurrentPlayingPath == null) return;
+            if (PlayerService.CurrentPlayingPath == "") return;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var favourites = currentSettings.Favourites;
             var existingfav = favourites.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
-            if(existingfav != null)
+            if (existingfav != null)
             {
                 favourites.Remove(existingfav);
                 media.IsFavourite = false;
@@ -120,7 +141,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
 
             if (App.MainWindowInstance == null) return;
-            if (PlayerService.CurrentPlayingPath == null) return;
+            if (PlayerService.CurrentPlayingPath == "") return;
             //Handle file not exist
             if (App.MainWindowInstance is MainWindow wind)
             {
