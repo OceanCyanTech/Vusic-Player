@@ -28,18 +28,18 @@
                             <MenuFlyoutSubItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </MenuFlyoutSubItem.Icon>
-                            <MenuFlyoutItem Name="mnftChangeLocal" Click="btnFindGenreProfileLocal_Click">
+                            <MenuFlyoutItem Name="mnftChangeLocal" Text="Find Cover on Disk" Click="btnFindGenreProfileLocal_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="d"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Name="mnftChangeOnline" Click="btnFindGenreProfileOnline_Click">
+                            <MenuFlyoutItem Name="mnftChangeOnline" Text="Find Cover Online" Click="btnFindGenreProfileOnline_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="d"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyoutSubItem>
-                        <MenuFlyoutItem Name="mnftRemoveIcon" Click="mnftRemoveIcon_Click">
+                        <MenuFlyoutItem Name="mnftRemoveIcon" Text="Remove Cover" Click="mnftRemoveIcon_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </MenuFlyoutItem.Icon>

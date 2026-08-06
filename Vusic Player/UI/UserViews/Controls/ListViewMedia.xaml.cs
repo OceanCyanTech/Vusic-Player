@@ -1062,6 +1062,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                 {
                     myApp.SelectedAlbum = new AlbumContext { Name = str };
                 }
+                else
+                {
+                    myApp.SelectedAlbum.Name = str;
+                }
                 App.NavigationFrame.Navigate(typeof(AlbumView), myApp.SelectedAlbum);
             }
         }
