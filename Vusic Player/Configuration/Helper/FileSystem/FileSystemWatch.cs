@@ -103,10 +103,11 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                                     : string.Join(", ", tag.AlbumArtists);
                     string updatedAlbum = file.Tag.Album ?? "Unknown Album";
                     TimeSpan duration = file.Properties.Duration;
+                    string genre = string.IsNullOrEmpty(string.Join(", ", file.Tag.Genres)) ? "Unknown Genre" : string.Join(", ", file.Tag.Genres);
                     // 1. Update SQLite DB
                     await DatabaseService.UpdateSongMetadataAsync(filePath, updatedTitle, updatedArtist, updatedAlbum);
 
-                    FileModified?.Invoke(filePath, updatedAlbum, updatedArtist, updatedTitle, duration);
+                    FileModified?.Invoke(filePath, updatedAlbum, updatedArtist, updatedTitle, duration, genre);
 
                     break; // Success! Exit the retry loop
                 }
@@ -122,7 +123,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 }
             }
         }
-        public static event Action<string, string, string, string, TimeSpan>? FileModified;
+        public static event Action<string, string, string, string, TimeSpan, string>? FileModified;
         private static void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
             string extension = Path.GetExtension(e.FullPath).ToLower();

@@ -282,6 +282,7 @@ namespace Vusic_Player.Configuration.Helper.AudioProperties
         }
 
         private static bool isPaused2 = false;
+
         public static bool ChangeGenre(List<string> paths, string newGenre)
         {
             Debug.WriteLine("REMOV EGENRE REQUESTED");
@@ -351,6 +352,27 @@ namespace Vusic_Player.Configuration.Helper.AudioProperties
 
             }
         }
+        public static bool ChangeGenre(string singlepath, string newName)
+        {
+
+            if (File.Exists(singlepath))
+            {
+                if (UpdateGenreName(singlepath, newName))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+
+            }
+        }
+
         public static bool ChangeArtistName(List<string> paths, string newName)
         {
             foreach (var path in paths)

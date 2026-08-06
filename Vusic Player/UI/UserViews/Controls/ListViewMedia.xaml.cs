@@ -382,16 +382,20 @@ namespace Vusic_Player.UI.UserViews.Controls
             var movetotop = flyout.Items.FirstOrDefault(x => (x as MenuFlyoutItem)?.Text == "Move to top");
             var movetobottom = flyout.Items.FirstOrDefault(x => (x as MenuFlyoutItem)?.Text == "Move to bottom");
             var removefromGenre = flyout.Items.FirstOrDefault(x => (x as MenuFlyoutItem)?.Text == "Remove from Genre");
+            var remove = flyout.Items.FirstOrDefault(x => (x as MenuFlyoutItem)?.Text == "Remove");
 
             var navVisibility = (MediaSource == ListViewMediaSource.AlbumEditor || MediaSource == ListViewMediaSource.ArtistNoRearrange)
                 ? Visibility.Collapsed
                 : Visibility.Visible;
             var removegenreVisibility = (MediaSource == ListViewMediaSource.Genre) ? Visibility.Visible : Visibility.Collapsed;
+            var StandaloneRemovegenreVisibility = (MediaSource == ListViewMediaSource.Genre) ? Visibility.Collapsed : Visibility.Visible;
             if (moveup != null) moveup.Visibility = navVisibility;
             if (movedown != null) movedown.Visibility = navVisibility;
             if (movetotop != null) movetotop.Visibility = navVisibility;
             if (movetobottom != null) movetobottom.Visibility = navVisibility;
             if (removefromGenre != null) removefromGenre.Visibility = removegenreVisibility;
+            if (remove != null) remove.Visibility = StandaloneRemovegenreVisibility;
+
             var addToPlaylist = flyout?.Items
         .OfType<MenuFlyoutSubItem>()
         .FirstOrDefault(x => x.Text == "Add to Playlist");

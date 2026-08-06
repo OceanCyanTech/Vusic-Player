@@ -90,7 +90,7 @@ Genre TEXT,
 
             return songs;
         }
-        public static async Task<List<SongModel>>GetSongsByGenreAsync(string genreName)
+        public static async Task<List<SongModel>> GetSongsByGenreAsync(string genreName)
         {
             var groupedSongs = new List<SongModel>();
             await Task.Run(() =>
@@ -110,10 +110,10 @@ Genre TEXT,
                 while (reader.Read())
                 {
                     string path = reader.GetString(colPath);
-                    string artist = reader.IsDBNull(colArtist) ? "Unknown Artist" : reader.GetString(colArtist) ;
-                    string album = reader.IsDBNull(colAlbum) ? "Unknown Album" : reader.GetString(colAlbum) ;
-                    string genrestring = reader.IsDBNull(colGenre) ? "Unknown Genre" : reader.GetString(colGenre) ;
-                    string title = reader.IsDBNull(colTitle) ? Path.GetFileNameWithoutExtension(path) : reader.GetString(colTitle) ;
+                    string artist = reader.IsDBNull(colArtist) ? "Unknown Artist" : reader.GetString(colArtist);
+                    string album = reader.IsDBNull(colAlbum) ? "Unknown Album" : reader.GetString(colAlbum);
+                    string genrestring = reader.IsDBNull(colGenre) ? "Unknown Genre" : reader.GetString(colGenre);
+                    string title = reader.IsDBNull(colTitle) ? Path.GetFileNameWithoutExtension(path) : reader.GetString(colTitle);
                     long duration = reader.IsDBNull(colDurationTicks) ? 0 : reader.GetInt64(colDurationTicks);
                     var song = new SongModel
                     {
@@ -126,7 +126,7 @@ Genre TEXT,
                     };
                     groupedSongs.Add(song);
                 }
-                
+
             });
             return groupedSongs;
         }
@@ -210,11 +210,11 @@ Genre TEXT,
                     Title = reader.IsDBNull(colTitle) ? "" : reader.GetString(colTitle),
                     Artist = reader.IsDBNull(colArtist) ? "Unknown Artist" : reader.GetString(colArtist),
                     AlbumName = reader.IsDBNull(colAlbum) ? "Unknown Album" : reader.GetString(colAlbum),
-                    Genre = reader.IsDBNull(colGenre) ? "" : reader.GetString(colGenre),
+                    Genre = reader.IsDBNull(colGenre) ? "Unknown Genre" : reader.GetString(colGenre),
                     SongDuration = durationTicks.HasValue && durationTicks.Value > 0
                         ? TimeSpan.FromTicks(durationTicks.Value)
                         : null,
-                    
+
                     IsFavourite = !reader.IsDBNull(colFav) && reader.GetInt32(colFav) == 1,
                     LastModifiedTicks = reader.IsDBNull(colModified) ? 0L : reader.GetInt64(colModified)
                 });
@@ -303,8 +303,8 @@ Genre TEXT,
             transaction.Commit();
         }
 
-        
-        public static async Task<bool> UpdateSongMetadataAsync(string filePath, string newTitle, string newArtist, string newAlbum)
+
+        public static async Task<bool> UpdateSongMetadataAsync(string filePath, string newTitle, string newArtist, string newAlbum, string genre = "Unknown Genre")
         {
             return await Task.Run(() =>
             {
@@ -318,7 +318,8 @@ Genre TEXT,
                     SET Title = @Title, 
                         Artist = @Artist, 
                         AlbumName = @AlbumName,
-                        LastModified = @LastModified
+                        LastModified = @LastModified,
+                       Genre = @Genre
                     WHERE FilePath = @FilePath;";
 
                     using var command = new SqliteCommand(query, connection);
@@ -326,6 +327,7 @@ Genre TEXT,
                     command.Parameters.AddWithValue("@Title", string.IsNullOrWhiteSpace(newTitle) ? "Unknown Title" : newTitle);
                     command.Parameters.AddWithValue("@Artist", string.IsNullOrWhiteSpace(newArtist) ? "Unknown Artist" : newArtist);
                     command.Parameters.AddWithValue("@AlbumName", string.IsNullOrWhiteSpace(newAlbum) ? "Unknown Album" : newAlbum);
+                    command.Parameters.AddWithValue("@Genre", string.IsNullOrWhiteSpace(genre) ? "Unknown Genre" : genre);
 
                     // Fetch real file write time or fallback to UtcNow ticks
                     long diskTicks = File.Exists(filePath)
@@ -408,7 +410,7 @@ Genre TEXT,
                                     ? "Unknown Album"
                                     : tag.Album;
 
-                                string genre = string.IsNullOrWhiteSpace(string.Join(", ", tag.Genres)) ? "" : string.Join(", ", tag.Genres);
+                                string genre = string.IsNullOrWhiteSpace(string.Join(", ", tag.Genres)) ? "Unknown Genre" : string.Join(", ", tag.Genres);
 
                                 var newSong = new AudioTrackLite
                                 {

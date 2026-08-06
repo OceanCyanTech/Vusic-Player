@@ -11,7 +11,7 @@
     <Grid Margin="30, 0" ColumnSpacing="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid Margin="40, 0" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" RowSpacing="20">
             <Grid.RowDefinitions>
@@ -21,7 +21,32 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Image Source="/Assets/appicon.png" Name="imgGenreCover" Grid.Row="0" Width="150"/>
+            <Image Source="/Assets/appicon.png" Name="imgGenreCover" Grid.Row="0" Width="150">
+                <Image.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutSubItem Name="mnftChangeCover" Text="Change Cover">
+                            <MenuFlyoutSubItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </MenuFlyoutSubItem.Icon>
+                            <MenuFlyoutItem Name="mnftChangeLocal" Click="btnFindGenreProfileLocal_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Name="mnftChangeOnline" Click="btnFindGenreProfileOnline_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyoutSubItem>
+                        <MenuFlyoutItem Name="mnftRemoveIcon" Click="mnftRemoveIcon_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Image.ContextFlyout>
+            </Image>
             <TextBlock IsTextSelectionEnabled="True" HorizontalAlignment="Center" Grid.Row="1" Name="txtGenreTitle" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Genre"/>
             <TextBlock HorizontalAlignment="Center" Grid.Row="2" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtSongCount"  Text="• 0 items"/>
             <TextBlock HorizontalAlignment="Center" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtDuration"  Text="• 00:00"/>
@@ -112,11 +137,11 @@ ToolTipService.ToolTip="Set Genre Cover">
         <Grid Grid.Column="1" RowSpacing="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition />
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Text="Content" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"/>
-            <controls:ListViewMedia Grid.Row="1" x:Name="lstViewMediaGenreSongs" Visibility="Collapsed"/>
+            <controls:ListViewMedia MediaSource="Genre" Grid.Row="1" x:Name="lstViewMediaGenreSongs" Visibility="Collapsed"/>
             <TextBlock Text="No Songs in this Genre!" Name="txtNoSongs" Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
         </Grid>
     </Grid>

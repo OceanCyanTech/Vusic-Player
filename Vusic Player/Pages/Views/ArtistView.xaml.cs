@@ -63,7 +63,7 @@ public sealed partial class ArtistView : Page
 
     private readonly ConcurrentDictionary<string, CancellationTokenSource> _debouncers = new();
 
-    private void FileSystemWatch_FileModified(string filePath, string arg2, string arg3, string arg4, TimeSpan duration)
+    private void FileSystemWatch_FileModified(string filePath, string arg2, string arg3, string arg4, TimeSpan duration, string genre)
     {
         // If an update is already pending for this file, cancel it and restart the timer
         if (_debouncers.TryRemove(filePath, out var existingCts))
@@ -756,53 +756,53 @@ public sealed partial class ArtistView : Page
         if (existartistinlist != null)
         {
 
-        }
-        if (string.IsNullOrEmpty(newArtistName))
-        {
-            _isRenaming = false;
-            btnRenameArtist.IsEnabled = true;
-            return;
-        }
 
-        var filePathsToProcess = FoundSongs
-        .Where(s => !string.IsNullOrEmpty(s.FilePath))
-        .Select(s => s.FilePath)
-        .ToList();
-        try
-        {
-            List<string> filepathstemp = new List<string>();
-            await Task.Run(() =>
+            if (string.IsNullOrEmpty(newArtistName))
             {
-                foreach (var filePath in filePathsToProcess)
-                {
-                    // This triggers FileSystemWatcher automatically when saved!
-                    AudioMetadata.ChangeArtistName(filePath, newArtistName);
-                }
-            });
-
-            if (existartist != null)
-            {
-                existartist.Name = newArtistName;
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                _isRenaming = false;
+                btnRenameArtist.IsEnabled = true;
+                return;
             }
 
+            var filePathsToProcess = FoundSongs
+            .Where(s => !string.IsNullOrEmpty(s.FilePath))
+            .Select(s => s.FilePath)
+            .ToList();
+            try
+            {
+                List<string> filepathstemp = new List<string>();
+                await Task.Run(() =>
+                {
+                    foreach (var filePath in filePathsToProcess)
+                    {
+                        // This triggers FileSystemWatcher automatically when saved!
+                        AudioMetadata.ChangeArtistName(filePath, newArtistName);
+                    }
+                });
+
+                if (existartist != null)
+                {
+                    existartist.Name = newArtistName;
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                }
 
 
-            txtArtistName.Text = newArtistName;
-            flyoutRename.Hide();
-        }
-        catch (Exception ex)
-        {
-            Logger.Log(ex.Message, "ArtistPage.RenameArtist", Logger.LogLevelType.Error);
-        }
-        finally
-        {
-            // 7. Always restore state and resume watchers
-            _isRenaming = false;
-            btnRenameArtist.IsEnabled = true;
+
+                txtArtistName.Text = newArtistName;
+                flyoutRename.Hide();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, "ArtistPage.RenameArtist", Logger.LogLevelType.Error);
+            }
+            finally
+            {
+                // 7. Always restore state and resume watchers
+                _isRenaming = false;
+                btnRenameArtist.IsEnabled = true;
+            }
         }
     }
-    bool isPaused2 = false;
     private void OceanContentDialog_PrimaryRequested()
     {
         OceanContentDialog.HideDlg();
