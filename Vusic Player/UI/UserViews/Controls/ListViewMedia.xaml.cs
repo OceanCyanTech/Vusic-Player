@@ -76,7 +76,8 @@ namespace Vusic_Player.UI.UserViews.Controls
             Album,
             AlbumEditor,
             MassEditor,
-            ArtistNoRearrange
+            ArtistNoRearrange,
+            Genre
         }
         public static readonly DependencyProperty SelectedItemsProperty =
            DependencyProperty.Register(
@@ -380,15 +381,17 @@ namespace Vusic_Player.UI.UserViews.Controls
             var movedown = flyout.Items.FirstOrDefault(x => (x as MenuFlyoutItem)?.Text == "Move down");
             var movetotop = flyout.Items.FirstOrDefault(x => (x as MenuFlyoutItem)?.Text == "Move to top");
             var movetobottom = flyout.Items.FirstOrDefault(x => (x as MenuFlyoutItem)?.Text == "Move to bottom");
+            var removefromGenre = flyout.Items.FirstOrDefault(x => (x as MenuFlyoutItem)?.Text == "Remove from Genre");
 
             var navVisibility = (MediaSource == ListViewMediaSource.AlbumEditor || MediaSource == ListViewMediaSource.ArtistNoRearrange)
                 ? Visibility.Collapsed
                 : Visibility.Visible;
-
+            var removegenreVisibility = (MediaSource == ListViewMediaSource.Genre) ? Visibility.Visible : Visibility.Collapsed;
             if (moveup != null) moveup.Visibility = navVisibility;
             if (movedown != null) movedown.Visibility = navVisibility;
             if (movetotop != null) movetotop.Visibility = navVisibility;
             if (movetobottom != null) movetobottom.Visibility = navVisibility;
+            if (removefromGenre != null) removefromGenre.Visibility = removegenreVisibility;
             var addToPlaylist = flyout?.Items
         .OfType<MenuFlyoutSubItem>()
         .FirstOrDefault(x => x.Text == "Add to Playlist");
@@ -1806,6 +1809,11 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
 
         private void mnftMoveFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnftRemoveSongGenre_Click(object sender, RoutedEventArgs e)
         {
 
         }

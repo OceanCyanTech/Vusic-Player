@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Vusic Player (Package)": {
-      "commandName": "MsixPackage"
+      "commandName": "MsixPackage",
+      "nativeDebugging": true
     },
     "Vusic Player (Unpackaged)": {
       "commandName": "Project"

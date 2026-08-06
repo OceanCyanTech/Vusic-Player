@@ -53,6 +53,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
         public static async Task RunBackgroundScannerAsync()
         {
+            
             try
             {
                 var FoundSongs = rawSongs;

@@ -1691,6 +1691,7 @@ namespace Vusic_Player.Pages.Views
             {
                 if (App.NavigationFrame != null)
                 {
+               
                     App.NavigationFrame.Navigate(typeof(GenreView), genre);
                 }
             }

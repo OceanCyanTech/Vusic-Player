@@ -116,7 +116,8 @@ ToolTipService.ToolTip="Set Genre Cover">
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Text="Content" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"/>
-            <controls:ListViewMedia Grid.Row="1" x:Name="lstViewMediaGenreSongs"/>
+            <controls:ListViewMedia Grid.Row="1" x:Name="lstViewMediaGenreSongs" Visibility="Collapsed"/>
+            <TextBlock Text="No Songs in this Genre!" Name="txtNoSongs" Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
         </Grid>
     </Grid>
 </Page>

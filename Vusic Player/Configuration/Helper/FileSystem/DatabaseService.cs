@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Vortice.Direct2D1.Effects;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Extensions;
 using Windows.Storage;
@@ -34,6 +35,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         Title TEXT,
         Artist TEXT,
         AlbumName TEXT,
+Genre TEXT,
         DurationTicks INTEGER,
         IsFavourite INTEGER,
         LastModified INTEGER DEFAULT 0
@@ -53,7 +55,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 connection.Open();
 
                 // Query SQLite directly filtered by AlbumName
-                string query = @"SELECT FilePath, Title, Artist, AlbumName, DurationTicks, IsFavourite, LastModified 
+                string query = @"SELECT FilePath, Title, Artist, AlbumName, Genre, DurationTicks, IsFavourite, LastModified 
                         FROM Songs 
                         WHERE AlbumName = @AlbumName";
 
@@ -66,6 +68,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 int colTitle = reader.GetOrdinal("Title");
                 int colArtist = reader.GetOrdinal("Artist");
                 int colAlbum = reader.GetOrdinal("AlbumName");
+                int colGenre = reader.GetOrdinal("Genre");
                 int colDuration = reader.GetOrdinal("DurationTicks");
 
                 while (reader.Read())
@@ -87,10 +90,48 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
             return songs;
         }
+        public static async Task<List<SongModel>>GetSongsByGenreAsync(string genreName)
+        {
+            var groupedSongs = new List<SongModel>();
+            await Task.Run(() =>
+            {
+                using var connection = new SqliteConnection(ConnectionString);
+                connection.Open();
+                using var command = connection.CreateCommand();
+                command.CommandText = @"SELECT FilePath, Title, Artist, AlbumName, COALESCE(NULLIF(Genre, ' '), 'Unknown') AS Genre, DurationTicks FROM Songs ORDER BY Genre, Title";
+                using var reader = command.ExecuteReader();
+                int colPath = reader.GetOrdinal("FilePath");
+                int colTitle = reader.GetOrdinal("Title");
+                int colArtist = reader.GetOrdinal("Artist");
+                int colAlbum = reader.GetOrdinal("AlbumName");
+                int colGenre = reader.GetOrdinal("Genre");
+                int colDurationTicks = reader.GetOrdinal("DurationTicks");
+
+                while (reader.Read())
+                {
+                    string path = reader.GetString(colPath);
+                    string artist = reader.IsDBNull(colArtist) ? "Unknown Artist" : reader.GetString(colArtist) ;
+                    string album = reader.IsDBNull(colAlbum) ? "Unknown Album" : reader.GetString(colAlbum) ;
+                    string genrestring = reader.IsDBNull(colGenre) ? "Unknown Genre" : reader.GetString(colGenre) ;
+                    string title = reader.IsDBNull(colTitle) ? Path.GetFileNameWithoutExtension(path) : reader.GetString(colTitle) ;
+                    long duration = reader.IsDBNull(colDurationTicks) ? 0 : reader.GetInt64(colDurationTicks);
+                    var song = new SongModel
+                    {
+                        FilePath = path,
+                        Artist = artist,
+                        AlbumName = album,
+                        Genre = genrestring,
+                        SongDuration = TimeSpan.FromTicks(duration),
+                        Title = title
+                    };
+                    groupedSongs.Add(song);
+                }
+                
+            });
+            return groupedSongs;
+        }
         public static async Task<Dictionary<string, TimeSpan>> GetDurationsFromDatabase(List<string> filePaths)
         {
-            if (filePaths == null || filePaths.Count == 0)
-                return new Dictionary<string, TimeSpan>(StringComparer.OrdinalIgnoreCase);
             var durations = new Dictionary<string, TimeSpan>(StringComparer.OrdinalIgnoreCase);
 
             if (filePaths == null || filePaths.Count == 0)
@@ -146,7 +187,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             connection.Open();
 
             // ADD LastModified TO THE SELECT QUERY BELOW:
-            string selectQuery = "SELECT FilePath, Title, Artist, AlbumName, DurationTicks, IsFavourite, LastModified FROM Songs";
+            string selectQuery = "SELECT FilePath, Title, Artist, AlbumName, Genre, DurationTicks, IsFavourite, LastModified FROM Songs";
             using var command = new SqliteCommand(selectQuery, connection);
             using var reader = command.ExecuteReader();
 
@@ -154,6 +195,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             int colTitle = reader.GetOrdinal("Title");
             int colArtist = reader.GetOrdinal("Artist");
             int colAlbum = reader.GetOrdinal("AlbumName");
+            int colGenre = reader.GetOrdinal("Genre");
             int colDuration = reader.GetOrdinal("DurationTicks");
             int colFav = reader.GetOrdinal("IsFavourite");
             int colModified = reader.GetOrdinal("LastModified"); // <-- Works now!
@@ -168,9 +210,11 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                     Title = reader.IsDBNull(colTitle) ? "" : reader.GetString(colTitle),
                     Artist = reader.IsDBNull(colArtist) ? "Unknown Artist" : reader.GetString(colArtist),
                     AlbumName = reader.IsDBNull(colAlbum) ? "Unknown Album" : reader.GetString(colAlbum),
+                    Genre = reader.IsDBNull(colGenre) ? "" : reader.GetString(colGenre),
                     SongDuration = durationTicks.HasValue && durationTicks.Value > 0
                         ? TimeSpan.FromTicks(durationTicks.Value)
                         : null,
+                    
                     IsFavourite = !reader.IsDBNull(colFav) && reader.GetInt32(colFav) == 1,
                     LastModifiedTicks = reader.IsDBNull(colModified) ? 0L : reader.GetInt64(colModified)
                 });
@@ -216,6 +260,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                                 ? "Unknown Album"
                                 : tag.Album;
                             song.LastModifiedTicks = currentDiskTicks;
+                            song.Genre = string.Join(", ", tag.Genres);
 
                             songsToUpdate.Add(song);
                         }
@@ -258,15 +303,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             transaction.Commit();
         }
 
-        private static readonly string[] SearchPaths =
-        {
-            UserDataPaths.GetDefault().Music,
-            UserDataPaths.GetDefault().Downloads,
-            UserDataPaths.GetDefault().Documents,
-            UserDataPaths.GetDefault().Videos,
-            UserDataPaths.GetDefault().Pictures
-        };
-
+        
         public static async Task<bool> UpdateSongMetadataAsync(string filePath, string newTitle, string newArtist, string newAlbum)
         {
             return await Task.Run(() =>
@@ -308,13 +345,11 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 }
             });
         }
-
         public static async Task ScanAndSyncDiskAsync(
-            HashSet<string> existingPaths,
-            DispatcherQueue? dispatcher = null,
-            Action<AudioTrackLite>? onSongDiscovered = null)
+    HashSet<string> existingPaths,
+    DispatcherQueue? dispatcher = null,
+    Action<AudioTrackLite>? onSongDiscovered = null)
         {
-            // 1. Resolve search paths using pure .NET System APIs (100% thread-safe)
             List<string> safePaths = new()
     {
         Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
@@ -335,7 +370,6 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
                     try
                     {
-                        // EnumerationOptions prevents crashing on locked/system/reparse directories
                         var enumOptions = new EnumerationOptions
                         {
                             IgnoreInaccessible = true,
@@ -355,12 +389,11 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
                             try
                             {
-                                //using var stream = new FileStream(
-                                //    normalizedPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                                // Use standard FileStream + SimpleStreamAbstraction to bypass WinRT COM marshaling
+                                using var stream = new FileStream(normalizedPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                                var abstraction = new SimpleStreamAbstraction(normalizedPath, stream);
+                                using var tagFile = TagLib.File.Create(abstraction);
 
-                                //var abstraction = new SimpleStreamAbstraction(normalizedPath, stream);
-                                //using var tagFile = TagLib.File.Create(abstraction);
-                                using var tagFile = TagLib.File.Create(normalizedPath);
                                 var tag = tagFile.Tag;
 
                                 string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
@@ -375,13 +408,16 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                                     ? "Unknown Album"
                                     : tag.Album;
 
+                                string genre = string.IsNullOrWhiteSpace(string.Join(", ", tag.Genres)) ? "" : string.Join(", ", tag.Genres);
+
                                 var newSong = new AudioTrackLite
                                 {
                                     FilePath = normalizedPath,
                                     Title = title,
                                     Artist = artist,
                                     AlbumName = album,
-                                    SongDuration = tagFile.Properties.Duration
+                                    SongDuration = tagFile.Properties.Duration,
+                                    Genre = genre
                                 };
 
                                 newlyDiscoveredSongs.Add(newSong);
@@ -447,6 +483,147 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 }
             });
         }
+        //    public static async Task ScanAndSyncDiskAsync(
+        //        HashSet<string> existingPaths,
+        //        DispatcherQueue? dispatcher = null,
+        //        Action<AudioTrackLite>? onSongDiscovered = null)
+        //    {
+        //        // 1. Resolve search paths using pure .NET System APIs (100% thread-safe)
+        //        List<string> safePaths = new()
+        //{
+        //    Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
+        //    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"),
+        //    Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+        //    Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
+        //    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        //};
+
+        //        await Task.Run(async () =>
+        //        {
+        //            var newlyDiscoveredSongs = new List<AudioTrackLite>();
+        //            int filesProcessedThisRun = 0;
+
+        //            foreach (var path in safePaths)
+        //            {
+        //                if (string.IsNullOrEmpty(path) || !Directory.Exists(path)) continue;
+
+        //                try
+        //                {
+        //                    // EnumerationOptions prevents crashing on locked/system/reparse directories
+        //                    var enumOptions = new EnumerationOptions
+        //                    {
+        //                        IgnoreInaccessible = true,
+        //                        RecurseSubdirectories = true,
+        //                        AttributesToSkip = System.IO.FileAttributes.Hidden | System.IO.FileAttributes.System
+        //                    };
+
+        //                    var directoryInfo = new DirectoryInfo(path);
+        //                    var files = directoryInfo.EnumerateFiles("*.*", enumOptions)
+        //                        .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
+
+        //                    foreach (var file in files)
+        //                    {
+        //                        string normalizedPath = Path.GetFullPath(file.FullName);
+
+        //                        if (existingPaths.Contains(normalizedPath)) continue;
+
+        //                        try
+        //                        {
+        //                            //using var stream = new FileStream(
+        //                            //    normalizedPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+        //                            //var abstraction = new SimpleStreamAbstraction(normalizedPath, stream);
+        //                            //using var tagFile = TagLib.File.Create(abstraction);
+        //                            using var tagFile = TagLib.File.Create(normalizedPath);
+        //                            var tag = tagFile.Tag;
+
+        //                            string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
+        //                                ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
+        //                                : string.Join(", ", tag.AlbumArtists);
+
+        //                            string title = string.IsNullOrWhiteSpace(tag.Title)
+        //                                ? Path.GetFileNameWithoutExtension(normalizedPath)
+        //                                : tag.Title;
+
+        //                            string album = string.IsNullOrWhiteSpace(tag.Album)
+        //                                ? "Unknown Album"
+        //                                : tag.Album;
+
+        //                            string genre = string.IsNullOrWhiteSpace(string.Join(", ", tag.Genres)) ? "" : string.Join(", ", tag.Genres);
+
+        //                            var newSong = new AudioTrackLite
+        //                            {
+        //                                FilePath = normalizedPath,
+        //                                Title = title,
+        //                                Artist = artist,
+        //                                AlbumName = album,
+        //                                SongDuration = tagFile.Properties.Duration,
+        //                                Genre = genre
+        //                            };
+
+        //                            newlyDiscoveredSongs.Add(newSong);
+        //                            existingPaths.Add(normalizedPath);
+
+        //                            if (newlyDiscoveredSongs.Count % 15 == 0 && onSongDiscovered != null)
+        //                            {
+        //                                var batch = newlyDiscoveredSongs.TakeLast(15).ToList();
+
+        //                                if (dispatcher != null)
+        //                                {
+        //                                    dispatcher.TryEnqueue(() =>
+        //                                    {
+        //                                        foreach (var song in batch) onSongDiscovered(song);
+        //                                    });
+        //                                }
+        //                                else
+        //                                {
+        //                                    foreach (var song in batch) onSongDiscovered(song);
+        //                                }
+        //                            }
+        //                        }
+        //                        catch (TagLib.UnsupportedFormatException) { }
+        //                        catch (TagLib.CorruptFileException) { }
+        //                        catch (Exception ex)
+        //                        {
+        //                            Debug.WriteLine($"TagLib error for {normalizedPath}: {ex.Message}");
+        //                        }
+
+        //                        filesProcessedThisRun++;
+        //                        if (filesProcessedThisRun % 10 == 0)
+        //                        {
+        //                            await Task.Delay(5);
+        //                        }
+        //                    }
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Debug.WriteLine($"Directory scan error for {path}: {ex.Message}");
+        //                }
+        //            }
+
+        //            int remainingCount = newlyDiscoveredSongs.Count % 15;
+        //            if (remainingCount > 0 && onSongDiscovered != null)
+        //            {
+        //                var finalBatch = newlyDiscoveredSongs.TakeLast(remainingCount).ToList();
+        //                if (dispatcher != null)
+        //                {
+        //                    dispatcher.TryEnqueue(() =>
+        //                    {
+        //                        foreach (var song in finalBatch) onSongDiscovered(song);
+        //                    });
+        //                }
+        //                else
+        //                {
+        //                    foreach (var song in finalBatch) onSongDiscovered(song);
+        //                }
+        //            }
+
+        //            if (newlyDiscoveredSongs.Count > 0)
+        //            {
+        //                SaveSongs(newlyDiscoveredSongs);
+        //            }
+        //        });
+        //    }
         public static void SaveSongs(IEnumerable<AudioTrackLite> songs)
         {
             using var connection = new SqliteConnection(ConnectionString);
@@ -454,8 +631,8 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             using var transaction = connection.BeginTransaction();
 
             string insertQuery = @"
-            INSERT OR REPLACE INTO Songs (FilePath, Title, Artist, AlbumName, DurationTicks, IsFavourite, LastModified)
-            VALUES ($filePath, $title, $artist, $album, $duration, $isFav, $lastModified);";
+            INSERT OR REPLACE INTO Songs (FilePath, Title, Artist, AlbumName, Genre, DurationTicks, IsFavourite, LastModified)
+            VALUES ($filePath, $title, $artist, $album, $genre, $duration, $isFav, $lastModified);";
 
             using var command = connection.CreateCommand();
             command.CommandText = insertQuery;
@@ -464,6 +641,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             var pTitle = command.Parameters.Add("$title", SqliteType.Text);
             var pArtist = command.Parameters.Add("$artist", SqliteType.Text);
             var pAlbum = command.Parameters.Add("$album", SqliteType.Text);
+            var pGenre = command.Parameters.Add("$genre", SqliteType.Text);
             var pDuration = command.Parameters.Add("$duration", SqliteType.Integer);
             var pFav = command.Parameters.Add("$isFav", SqliteType.Integer);
             var pLastModified = command.Parameters.Add("$lastModified", SqliteType.Integer);
@@ -476,7 +654,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 pAlbum.Value = song.AlbumName ?? "Unknown Album";
                 pDuration.Value = song.SongDuration.HasValue ? song.SongDuration.Value.Ticks : 0L;
                 pFav.Value = song.IsFavourite ? 1 : 0;
-
+                pGenre.Value = song.Genre ?? "";
                 // Get physical file's write time in UTC ticks for startup sync
                 pLastModified.Value = File.Exists(song.FilePath)
                     ? File.GetLastWriteTimeUtc(song.FilePath).Ticks

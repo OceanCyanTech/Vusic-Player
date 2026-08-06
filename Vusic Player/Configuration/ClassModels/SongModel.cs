@@ -14,14 +14,15 @@ namespace Vusic_Player.Configuration.ClassModels
     {
         private string? _title;
         public TimeSpan? SongDuration { get; set; }
-      
-        private Brush _titleColor = new SolidColorBrush(Microsoft.UI.Colors.White); // Safe for any thread!
+
+        private Brush? _titleColor;
         private int _year;
         private int seasonindexassociated;
         private Visibility visibilityofstrikethrough = Visibility.Collapsed;
         private Visibility visibilityofaudiometadata = Visibility.Visible;
         private Visibility visibilityofvidinfo = Visibility.Collapsed;
         private string _artist = "";
+        private string _genre = "";
         private string _albumName = "";
         private string? _fileTypeName = "Video File";
         private bool? _isEpisode;
@@ -46,6 +47,11 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _artist;
             set { _artist = value; OnPropertyChanged(); }
         }
+        public string Genre
+        {
+            get => _genre;
+            set { _genre = value; OnPropertyChanged(); }
+        }
         public bool? IsEpisode
         {
             get => _isEpisode;
@@ -63,11 +69,15 @@ namespace Vusic_Player.Configuration.ClassModels
         }
         public Brush TitleColor
         {
-            get => _titleColor;
+            get
+            {
+                // Instantiates the Brush only when XAML binds to it on the UI Thread
+                return _titleColor ??= new SolidColorBrush(Microsoft.UI.Colors.White);
+            }
             set
             {
                 _titleColor = value;
-                OnPropertyChanged(nameof(TitleColor));
+                OnPropertyChanged();
             }
         }
         private string _glyph = "\uEC4F";// Default color

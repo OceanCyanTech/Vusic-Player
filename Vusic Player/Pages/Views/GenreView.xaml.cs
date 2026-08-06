@@ -7,9 +7,12 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -27,14 +30,50 @@ namespace Vusic_Player.Pages.Views
         {
             InitializeComponent();
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter is string genre)
+            if (e.Parameter is GenreModel genreModel)
             {
+                string genre = genreModel.GenreName;
                 txtGenreTitle.Text = genre;
+                var songs = FilesInDatabase.rawSongs;
+                var genrebased = songs.Where(p => p.Genre == genre);
+                lstViewMediaGenreSongs.ItemsSource = FoundSongs;
+
+                var observablesongs = new ObservableCollection<SongModel>();
+                foreach (var song in genrebased)
+                {
+
+                    FoundSongs.Add(new SongModel
+                    {
+                        Title = song.Title,
+                        Artist = song.Artist,
+                        AlbumName = song.AlbumName,
+                        FilePath = song.FilePath,
+                        SongDuration = song.SongDuration,
+                        Genre = song.Genre,
+                    });
+                }
+        //        FoundSongs = new ObservableCollection<SongModel>(observablesongs);
+                txtNoSongs.Visibility = (FoundSongs.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
+                lstViewMediaGenreSongs.Visibility = (FoundSongs.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
+                TotalDuration();
+                txtSongCount.Text = $"• {FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
             }
             base.OnNavigatedTo(e);
         }
+        private void TotalDuration()
+        {
+            TimeSpan total = TimeSpan.FromTicks(
+          FoundSongs.Sum(s => s.SongDuration?.Ticks ?? 0)
+      );
+
+            txtDuration.Text = total.TotalHours >= 1
+                ? $"{(int)total.TotalHours}:{total.Minutes:D2}:{total.Seconds:D2}"
+                : total.ToString(@"m\:ss");
+            txtDuration.Text = "• " + txtDuration.Text;
+        }
+        ObservableCollection<SongModel> FoundSongs = new();
         private void btnRenameGenre_Click(object sender, RoutedEventArgs e)
         {
 
@@ -61,6 +100,11 @@ namespace Vusic_Player.Pages.Views
         }
 
         private void btnFindGenreProfileLocal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void txtRename_GotFocus(object sender, RoutedEventArgs e)
         {
 
         }

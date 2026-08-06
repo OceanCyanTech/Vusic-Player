@@ -88,6 +88,7 @@ Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}
             </MenuFlyoutItem>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="{Binding Remove}" Name="mnftRemoveSong" Click="mnftRemoveSong_Click" Icon="Delete"></MenuFlyoutItem>
+            <MenuFlyoutItem Text="Remove from Genre" Visibility="Collapsed" Name="mnftRemoveSongGenre" Click="mnftRemoveSongGenre_Click" Icon="Remove"></MenuFlyoutItem>
             <MenuFlyoutSeparator Visibility="Collapsed"></MenuFlyoutSeparator>
             <MenuFlyoutItem Visibility="Collapsed" Text="Tools"  Name="mnftTools" >
                 <MenuFlyoutItem.Icon>
