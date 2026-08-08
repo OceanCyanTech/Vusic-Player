@@ -370,18 +370,18 @@ Genre TEXT,
                 {
                     if (string.IsNullOrEmpty(path) || !Directory.Exists(path)) continue;
 
-                    try
+                try
+                {
+                    var enumOptions = new EnumerationOptions
                     {
-                        var enumOptions = new EnumerationOptions
-                        {
-                            IgnoreInaccessible = true,
-                            RecurseSubdirectories = true,
-                            AttributesToSkip = System.IO.FileAttributes.Hidden | System.IO.FileAttributes.System
-                        };
+                        IgnoreInaccessible = true,
+                        RecurseSubdirectories = true,
+                        AttributesToSkip = System.IO.FileAttributes.Hidden | System.IO.FileAttributes.System
+                    };
 
-                        var directoryInfo = new DirectoryInfo(path);
-                        var files = directoryInfo.EnumerateFiles("*.*", enumOptions)
-                            .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
+                    var directoryInfo = new DirectoryInfo(path);
+                    var files = directoryInfo.EnumerateFiles("*.*", enumOptions)
+                        .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase) || VideoExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
 
                         foreach (var file in files)
                         {
@@ -391,38 +391,55 @@ Genre TEXT,
 
                             try
                             {
-                                // Use standard FileStream + SimpleStreamAbstraction to bypass WinRT COM marshaling
+                                string fileExtension = Path.GetExtension(normalizedPath).ToLowerInvariant();
+
                                 using var stream = new FileStream(normalizedPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                                 var abstraction = new SimpleStreamAbstraction(normalizedPath, stream);
                                 using var tagFile = TagLib.File.Create(abstraction);
 
                                 var tag = tagFile.Tag;
-
-                                string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
-                                    ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
-                                    : string.Join(", ", tag.AlbumArtists);
-
                                 string title = string.IsNullOrWhiteSpace(tag.Title)
-                                    ? Path.GetFileNameWithoutExtension(normalizedPath)
-                                    : tag.Title;
-
-                                string album = string.IsNullOrWhiteSpace(tag.Album)
-                                    ? "Unknown Album"
-                                    : tag.Album;
-
+                                     ? Path.GetFileNameWithoutExtension(normalizedPath)
+                                     : tag.Title;
                                 string genre = string.IsNullOrWhiteSpace(string.Join(", ", tag.Genres)) ? "Unknown Genre" : string.Join(", ", tag.Genres);
 
-                                var newSong = new AudioTrackLite
+                                // Use standard FileStream + SimpleStreamAbstraction to bypass WinRT COM marshaling
+                                if (AudioExtensions.List.Contains(fileExtension, StringComparer.OrdinalIgnoreCase))
                                 {
-                                    FilePath = normalizedPath,
-                                    Title = title,
-                                    Artist = artist,
-                                    AlbumName = album,
-                                    SongDuration = tagFile.Properties.Duration,
-                                    Genre = genre
-                                };
 
-                                newlyDiscoveredSongs.Add(newSong);
+                                    string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
+                                        ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
+                                        : string.Join(", ", tag.AlbumArtists);
+
+                                 
+
+                                    string album = string.IsNullOrWhiteSpace(tag.Album)
+                                        ? "Unknown Album"
+                                        : tag.Album;
+
+                                    var newSong = new AudioTrackLite
+                                    {
+                                        FilePath = normalizedPath,
+                                        Title = title,
+                                        Artist = artist,
+                                        AlbumName = album,
+                                        SongDuration = tagFile.Properties.Duration,
+                                        Genre = genre
+                                    };
+
+                                    newlyDiscoveredSongs.Add(newSong);
+                                }
+                                else if(VideoExtensions.List.Contains(fileExtension, StringComparer.OrdinalIgnoreCase))
+                                {
+                                    var newSong = new AudioTrackLite
+                                    {
+                                        FilePath = normalizedPath,
+                                        Title = title,
+                                        Genre = genre
+                                    };
+
+                                    newlyDiscoveredSongs.Add(newSong);
+                                }
                                 existingPaths.Add(normalizedPath);
 
                                 if (newlyDiscoveredSongs.Count % 15 == 0 && onSongDiscovered != null)

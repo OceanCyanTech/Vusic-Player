@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Vusic_Player.Pages.Views.EntireVideoLibrary"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.Pages.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Margin="30, 0" Name="grdMaster">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition ></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Name="grdLegend" Margin="0, 30" HorizontalAlignment="Center"  Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+                <ColumnDefinition  Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ToggleButton  IsChecked="True" CornerRadius="16" Click="ToggleButton_Checked" Name="btnAllVideos" FontSize="26" Padding="15" Content="All Videos" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0"></ToggleButton>
+            <ToggleButton Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnPlaylists" FontSize="26" Padding="15" Content="Playlists" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="1"></ToggleButton>
+            <ToggleButton CornerRadius="16" Click="ToggleButton_Checked" Name="btnShows" FontSize="26" Padding="15" Content="Shows" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="2"></ToggleButton>
+            <ToggleButton  Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnHistory" FontSize="26" Padding="15" Content="Video History" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="5"></ToggleButton>
+        </Grid>
+
+        <Grid Name="grdAllVideos" Margin="20, 30" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" ></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition ></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid HorizontalAlignment="Left" Grid.Row="0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition ></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="All videos across your libraries" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <Button Name="btnPlayAllVideos" Click="btnPlayAllVideos_Click" Margin="40, 0" Grid.Column="1" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" HorizontalAlignment="Center">
+                    <Button.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Play Shuffled" Name="mnftPlayShuffled" Click="mnftPlayShuffled_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play on Loop" Name="mnftPlayOnLoop" Click="mnftPlayOnLoop_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftPlayOnLoopShuffled" Click="mnftPlayOnLoopShuffled_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </Button.ContextFlyout>
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                        <Image Width="25" Source="/Assets/play.png"></Image>
+                        <TextBlock Style="{StaticResource BodyLargeTextBlockStyle}" Text="Play all" Margin="0, 4"></TextBlock>
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <controls1:WrapPanel VerticalAlignment="Stretch" Orientation="Horizontal" Grid.Row="1" Margin="0, 20" >
+                <GridView SelectionMode="None" VerticalAlignment="Stretch" Name="grdViewFolders" Grid.Row="1">
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" ItemWidth="NaN" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Click="btnAll_Click" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+                                <ToggleButton.ContextFlyout>
+                                    <MenuFlyout >
+                                        <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+
+                                </ToggleButton.ContextFlyout>
+                            </ToggleButton>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <TextBlock Text="No folders added." Visibility="Collapsed"  Name="txtNofoldersadded" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
+                <Button CornerRadius="16" VerticalAlignment="Stretch" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <TextBlock Text="Add Folder"></TextBlock>
+                    </StackPanel>
+                </Button>
+            </controls1:WrapPanel>
+            <CheckBox Name="chkIncludeSubDirectories" IsChecked="True" Checked="chkIncludeSubDirectories_Checked" Unchecked="chkIncludeSubDirectories_Checked" Content="Include files from sub directories" Grid.Row="2"></CheckBox>
+            <Border  Grid.Row="3" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
+
+                <controls:GroupedCollectionView x:Name="AllMusicGroupedCollection" 
+                                Grid.Row="2" 
+                                TemplateMode="Media"
+                                ItemsSource="{x:Bind AllAvailableSongs, Mode=OneWay}" 
+                                DisplayMemberPath="Title" />
+
+            </Border>
+            <Grid RowSpacing="20" Name="grdEmptyLibrary" Grid.Row="3" Visibility="Collapsed"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Image Grid.Row="0" Width="70" Source="/Assets/appicon.png"/>
+                <TextBlock Text="There are no songs in the specified folders. Trying adding other folders." Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            </Grid>
+            <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoading" Orientation="Horizontal" Spacing="20" Grid.Row="3">
+                <ProgressRing IsIndeterminate="True"/>
+                <TextBlock Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
+            </StackPanel>
+
+        </Grid>
+        <Grid Name="grdAllMusicHistory" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtHistoryHeading" Text="History of music you've listened to on this app" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+            <StackPanel Orientation="Horizontal" Spacing="20" Grid.Row="1" Margin="0, 30">
+                <Button Content="Play All" Name="btnPlayAll"  Click="btnPlayAll_Click"></Button>
+                <Button Content="Clear History" Name="btnClearHistory" Click="btnClearHistory_Click"></Button>
+                <Button Content="Disable Saving to History" Name="btnDisableHistory" Click="btnDisableHistory_Click"></Button>
+                <AutoSuggestBox Width="250" CornerRadius="12" Name="asbRecents" HorizontalAlignment="Right" PlaceholderText="Search..." TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" QueryIcon="Find" Grid.Row="1"></AutoSuggestBox>
+            </StackPanel>
+            <StackPanel Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkEmptyHistory" Spacing="20">
+                <StackPanel Spacing="20" Orientation="Horizontal">
+                    <Image Width="50" Source="/Assets/emptystuffgreen.png"></Image>
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="You have no history!" Name="txtEmptyHistory"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Visibility="Collapsed"  Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkDisabledHistory" Spacing="20">
+                <StackPanel Spacing="20" Orientation="Horizontal">
+                    <Image Width="50" Source="/Assets/sourceerror.png"></Image>
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Saving to History is disabled." ></TextBlock>
+                </StackPanel>
+                <HyperlinkButton HorizontalAlignment="Center" Visibility="Visible" Content="Enable History" Name="btnEnableHistory" Click="btnEnableHistory_Click" FontSize="24" Margin="0, 0" Padding="0"></HyperlinkButton>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="20">
+
+                <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+
+                <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
+                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
+                    <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromHistory_Click"  Name="btnRemoveFromHistory" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+            <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="3" x:Name="grdViewAllRecentMusic"></controls:GridViewRecentMusic>
+            <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoadingAll" Orientation="Horizontal" Spacing="20" Grid.Row="3">
+                <ProgressRing IsIndeterminate="True"/>
+                <TextBlock Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
+            </StackPanel>
+            <Grid  Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Name="btnCloseSearch" CornerRadius="12" Background="Transparent" BorderBrush="Transparent" Click="btnCloseSearch_Click" ToolTipService.ToolTip="Close Search Results" HorizontalAlignment="Right" Margin="20, 0">
+                    <FontIcon Glyph="&#xE711;" FontSize="36"></FontIcon>
+                </Button>
+                <Frame VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Name="frmSearchResultsNOMATCH"></Frame>
+
+            </Grid>
+        </Grid>
+        <Grid Name="grdPlaylists" RowSpacing="20" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtAllPlaylists" Text="All Playlists " Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <Button Name="btnNewPlaylist" Click="btnNewPlaylist_Click" Grid.Row="1">
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="20" Source="/Assets/addicon.png"></Image>
+                    <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                </StackPanel>
+            </Button>
+            <StackPanel Name="stkNoPlaylists" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="2" Orientation="Vertical" Spacing="20">
+                <Image Width="80" Source="/Assets/emptystuffgreen.png"/>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="You have no playlists!"/>
+                <Button HorizontalAlignment="Center" Name="btnCreateNewPlaylist" Click="btnNewPlaylist_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <TextBlock Margin="5, 0" Text="Create New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <controls:GroupedCollectionView x:Name="AllPlaylistGroupedCollection" 
+                      Grid.Row="2" playlistcollectionchanged="AllPlaylistGroupedCollection_playlistcollectionchanged"
+                      TemplateMode="Playlists"
+                      ItemsSource="{x:Bind playlistsAll, Mode=OneWay}" SearchPlaceHolderText="Search for playlists..."
+                      DisplayMemberPath="PlaylistName" />
+        </Grid>
+        <Grid Name="grdArtists" Margin="20, 30" RowSpacing="15" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtArtistsAll" Text="Artists" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <StackPanel Name="stkNoArtists" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
+                <Image Width="80" Source="/Assets/emptystuffgreen.png"/>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="Songs on this PC have no artist names!"/>
+            </StackPanel>
+            <controls:GroupedCollectionView x:Name="ArtistsGroupedCollection" 
+             Grid.Row="1" 
+             TemplateMode="Artist" artistcollectionchanged="ArtistsGroupedCollection_artistcollectionchanged"
+             ItemsSource="{x:Bind artistsAll, Mode=OneWay}" SearchPlaceHolderText="Search for artists associated with songs on this PC..."
+             DisplayMemberPath="ArtistName" />
+        </Grid>
+        <Grid Name="grdAlbums" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtAlbumsAll" Text="Albums" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <StackPanel Name="stkNoAlbums" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
+                <Image Width="80" Source="/Assets/emptystuffgreen.png"/>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="There are no albums!"/>
+            </StackPanel>
+            <controls:GroupedCollectionView x:Name="AlbumsGroupedCollection" 
+    Grid.Row="1"  albumcollectionchanged="AlbumsGroupedCollection_albumcollectionchanged"
+    TemplateMode="Album"
+    ItemsSource="{x:Bind albumsAll, Mode=OneWay}" SearchPlaceHolderText="Search for albums associated with songs on this PC..."
+    DisplayMemberPath="AlbumName" />
+        </Grid>
+        <Grid Name="grdGenres" RowSpacing="10" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+
+            </Grid.RowDefinitions>
+            <TextBlock Name="txtGenresAll" Text="Genres" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <AutoSuggestBox TextChanged="asbSearchGenres_TextChanged" QuerySubmitted="asbSearchGenres_QuerySubmitted" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" QueryIcon="Find" Name="asbSearchGenres" PlaceholderText="Search genres..." Grid.Row="1"></AutoSuggestBox>
+            <GridView Name="grdViewGenres" Margin="0, 20" Grid.Row="2" ItemClick="grdViewGenres_ItemClick" IsItemClickEnabled="True">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal" VerticalAlignment="Stretch" ItemWidth="140"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid RowSpacing="10">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout Opened="MenuFlyout_Opened">
+                                    <MenuFlyoutItem Text="Open Genre" Name="mnftOpenGenre" Click="mnftOpenGenre_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Play" Name="mnftPlayGenre" Click="mnftPlayGenre_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Play Shuffled" Name="mnftPlayGenreShuffled" Click="mnftPlayGenreShuffled_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Play on Loop" Name="mnftPlayGenreLoop" Click="mnftPlayGenreLoop_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Play Shuffled and on Loop" Name="mnftPlayGenreLoopShuffle" Click="mnftPlayGenreLoopShuffle_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Remove Genre" Name="mnftRemoveGenre" Click="mnftRemoveGenre_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Image Width="50" Source="{Binding GenreCover}"/>
+                            <TextBlock Text="{Binding GenreName}" Grid.Row="1"/>
+                            <TextBlock Text="{Binding GenreCount}" Grid.Row="2"/>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+            <Grid  Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResultsGenre" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Name="btnCloseSearchGenre" CornerRadius="12" Background="Transparent" BorderBrush="Transparent" Click="btnCloseSearchGenre_Click" ToolTipService.ToolTip="Close Search Results" HorizontalAlignment="Right" Margin="20, 0">
+                    <FontIcon Glyph="&#xE711;" FontSize="36"></FontIcon>
+                </Button>
+                <Frame VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Name="frmSearchResultsNOMATCHGenre"></Frame>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</Page>
