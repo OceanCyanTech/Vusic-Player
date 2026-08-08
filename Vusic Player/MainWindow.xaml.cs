@@ -13,8 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using uint_ptr = System.UIntPtr;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.InteropServices;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Helper;
@@ -23,8 +25,10 @@ using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views.Onboarding;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
+using WinRT.Interop;
 using Windows.Foundation.Collections;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
+using Vusic_Player.Configuration.Playback;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -35,7 +39,55 @@ namespace Vusic_Player
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        private delegate IntPtr SUBCLASSPROC(
+    IntPtr hWnd,
+    uint uMsg,
+    IntPtr wParam,
+    IntPtr lParam,
+    UIntPtr uIdSubclass,
+    IntPtr dwRefData
+);
+
+        private IntPtr WindowSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, uint_ptr uIdSubclass, IntPtr dwRefData)
+        {
+            if (uMsg == MediaControlSystem.WM_HOTKEY)
+            {
+                int hotkeyId = wParam.ToInt32();
+
+                switch (hotkeyId)
+                {
+                    case MediaControlSystem.HOTKEY_PLAY_PAUSE:
+                        // Trigger Flyleaf Toggle Play/Pause
+                        PlayerService.PlayPause();
+                        break;
+
+                    case MediaControlSystem.HOTKEY_NEXT:
+                        // Trigger Flyleaf Next Track
+                        QueueService.PlayNext();
+                        break;
+
+                    case MediaControlSystem.HOTKEY_PREV:
+                        // Trigger Flyleaf Previous Track
+                        QueueService.PlayPrevious();
+                        break;
+                }
+            }
+
+            return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+        }
+
         private InputPreTranslateKeyboardSource? _keyboardSource;
+        private IntPtr _hwnd;
+        private SUBCLASSPROC _subclassProc;
+        [DllImport("comctl32.dll", SetLastError = true)]
+        private static extern bool SetWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, uint_ptr uIdSubclass, IntPtr dwRefData);
+
+        [DllImport("comctl32.dll", SetLastError = true)]
+        private static extern bool RemoveWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, uint_ptr uIdSubclass);
+
+        [DllImport("comctl32.dll", SetLastError = true)]
+        private static extern IntPtr DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+
 
         public MainWindow()
         {
@@ -51,7 +103,24 @@ namespace Vusic_Player
             this.ExtendsContentIntoTitleBar = true;
             rootGrid.Loaded += RootGrid_Loaded;
 
+            _hwnd = WindowNative.GetWindowHandle(this);
+
+            // 2. Register media keys
+            MediaControlSystem.Register(_hwnd);
+
+            // 3. Subclass the Window Procedure to catch WM_HOTKEY
+            _subclassProc = new SUBCLASSPROC(WindowSubclassProc);
+            SetWindowSubclass(_hwnd, _subclassProc, 0, IntPtr.Zero);
+
+            // Clean up on window closed
+            this.Closed += (s, e) =>
+            {
+                MediaControlSystem.Unregister(_hwnd);
+                RemoveWindowSubclass(_hwnd, _subclassProc, 0);
+            };
+
         }
+
         private static MainWindow? instance;
         public static MainWindow? HideWindow()
         {

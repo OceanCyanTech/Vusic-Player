@@ -81,7 +81,8 @@ namespace Vusic_Player.Configuration.Helper.UI
                 // Fast-seek target timestamp
                 var percent = percentage * durationtotal;
 
-                string output = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.jpg");
+                string cacheFolderPath = ApplicationData.Current.LocalCacheFolder.Path;
+                string output = Path.Combine(cacheFolderPath, $"{Guid.NewGuid()}.jpg");
                 string ffmpegexec = Path.Combine(AppContext.BaseDirectory, "FFmpeg", "ffmpeg.exe");
 
                 // Putting -ss BEFORE -i enables "Fast Seeking" so FFmpeg doesn't read the whole file up to that point

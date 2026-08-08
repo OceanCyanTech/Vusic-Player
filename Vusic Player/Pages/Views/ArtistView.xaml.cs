@@ -171,7 +171,7 @@ public sealed partial class ArtistView : Page
             }
         }
 
-        if (!foundInAny && matchesArtist && selBarMain?.SelectedItem == selBarItemAllSongs)
+        if (!foundInAny && matchesArtist )
         {
             FoundSongs?.Add(new SongModel
             {
@@ -752,11 +752,8 @@ public sealed partial class ArtistView : Page
         var artistss = currentSettings.ArtistsList;
         var existartist = artistss.FirstOrDefault(p => p.Name == txtArtistName.Text);
         string newArtistName = txtRename.Text?.Trim() ?? "";
-        var existartistinlist = artistss.FirstOrDefault(p => p.Name == newArtistName);
-        if (existartistinlist != null)
-        {
-
-
+     
+        
             if (string.IsNullOrEmpty(newArtistName))
             {
                 _isRenaming = false;
@@ -801,7 +798,8 @@ public sealed partial class ArtistView : Page
                 _isRenaming = false;
                 btnRenameArtist.IsEnabled = true;
             }
-        }
+        
+   
     }
     private void OceanContentDialog_PrimaryRequested()
     {
@@ -868,88 +866,107 @@ public sealed partial class ArtistView : Page
 
         string targetArtist = txtArtistName?.Text?.Trim() ?? "";
 
-        // 1. Pause watchers during batch file & DB operations
-        FileSystemWatch.Pause();
-
-        try
+        foreach (var song in files)
         {
-            await Task.Run(async () =>
+            var filepath = song.Path;
+            var exist = FoundSongs.FirstOrDefault(p => p.FilePath == filepath);
+            if (exist == null)
             {
-                foreach (var file in files)
+                if (AudioMetadata.ChangeArtistName(song.Path, targetArtist) == false)
                 {
-                    string path = file.Path;
-
-                    // Check if already in current memory collection
-                    bool existsInMemory = FoundSongs.Any(s => s.FilePath.Equals(path, StringComparison.OrdinalIgnoreCase));
-
-                    // 2. Modify metadata on disk if an artist name is set
-                    if (!string.IsNullOrEmpty(targetArtist))
-                    {
-                        AudioMetadata.ChangeArtistName(path, targetArtist);
-                    }
-
-                    // Read updated tags using TagLib for accurate database entry
-                    using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    var abstraction = new SimpleStreamAbstraction(path, stream);
-                    using var tagFile = TagLib.File.Create(abstraction);
-
-                    string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
-                        ? Path.GetFileNameWithoutExtension(path)
-                        : tagFile.Tag.Title;
-
-                    string artist = string.IsNullOrWhiteSpace(tagFile.Tag.FirstPerformer)
-                        ? (string.IsNullOrEmpty(targetArtist) ? "Unknown Artist" : targetArtist)
-                        : tagFile.Tag.FirstPerformer;
-
-                    string album = string.IsNullOrWhiteSpace(tagFile.Tag.Album)
-                        ? "Unknown Album"
-                        : tagFile.Tag.Album;
-
-                    TimeSpan duration = tagFile.Properties.Duration;
-
-                    // 3. Save / Update in SQLite Database
-                    await DatabaseService.UpdateSongMetadataAsync(path, title, artist, album);
-
-                    // 4. Update UI collection safely on UI thread
-                    DispatcherQueue.TryEnqueue(() =>
-                    {
-                        var existingSong = FoundSongs.FirstOrDefault(s => s.FilePath.Equals(path, StringComparison.OrdinalIgnoreCase));
-
-                        if (existingSong != null)
-                        {
-                            // Update existing entry
-                            existingSong.Title = title;
-                            existingSong.Artist = artist;
-                            existingSong.AlbumName = album;
-                            existingSong.SongDuration = duration;
-                        }
-                        else
-                        {
-                            // Add new entry
-                            FoundSongs.Add(new SongModel
-                            {
-                                FilePath = path,
-                                Title = title,
-                                Artist = artist,
-                                AlbumName = album,
-                                SongDuration = duration
-                            });
-                        }
-                    });
-
-                    // Small breather to let Windows Explorer release handles
-                    await Task.Delay(30);
+                    Debug.WriteLine($"ERROR OCCURED IN ADDING {filepath} TO ARTIST: " + targetArtist);
                 }
-            });
+            }
+        }
+        //if (App.MainWindowInstance == null) return;
 
-            // 5. Recalculate total duration once all files are processed
-            TotalDuration();
-        }
-        finally
-        {
-            // 6. Always resume watchers
-            FileSystemWatch.Resume();
-        }
+        //var files = await FilePickers.MediaPicker.PickMultipleAudioFilesAsync(App.MainWindowInstance, "Choose files");
+        //if (files == null || !files.Any()) return;
+
+        //string targetArtist = txtArtistName?.Text?.Trim() ?? "";
+
+        //// 1. Pause watchers during batch file & DB operations
+        //FileSystemWatch.Pause();
+
+        //try
+        //{
+        //    await Task.Run(async () =>
+        //    {
+        //        foreach (var file in files)
+        //        {
+        //            string path = file.Path;
+
+        //            // Check if already in current memory collection
+        //            bool existsInMemory = FoundSongs.Any(s => s.FilePath.Equals(path, StringComparison.OrdinalIgnoreCase));
+
+        //            // 2. Modify metadata on disk if an artist name is set
+        //            if (!string.IsNullOrEmpty(targetArtist))
+        //            {
+        //                AudioMetadata.ChangeArtistName(path, targetArtist);
+        //            }
+
+        //            // Read updated tags using TagLib for accurate database entry
+        //            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        //            var abstraction = new SimpleStreamAbstraction(path, stream);
+        //            using var tagFile = TagLib.File.Create(abstraction);
+
+        //            string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
+        //                ? Path.GetFileNameWithoutExtension(path)
+        //                : tagFile.Tag.Title;
+
+        //            string artist = string.IsNullOrWhiteSpace(tagFile.Tag.FirstPerformer)
+        //                ? (string.IsNullOrEmpty(targetArtist) ? "Unknown Artist" : targetArtist)
+        //                : tagFile.Tag.FirstPerformer;
+
+        //            string album = string.IsNullOrWhiteSpace(tagFile.Tag.Album)
+        //                ? "Unknown Album"
+        //                : tagFile.Tag.Album;
+
+        //            TimeSpan duration = tagFile.Properties.Duration;
+
+        //            // 3. Save / Update in SQLite Database
+        //            await DatabaseService.UpdateSongMetadataAsync(path, title, artist, album);
+
+        //            // 4. Update UI collection safely on UI thread
+        //            DispatcherQueue.TryEnqueue(() =>
+        //            {
+        //                var existingSong = FoundSongs.FirstOrDefault(s => s.FilePath.Equals(path, StringComparison.OrdinalIgnoreCase));
+
+        //                if (existingSong != null)
+        //                {
+        //                    // Update existing entry
+        //                    existingSong.Title = title;
+        //                    existingSong.Artist = artist;
+        //                    existingSong.AlbumName = album;
+        //                    existingSong.SongDuration = duration;
+        //                }
+        //                else
+        //                {
+        //                    // Add new entry
+        //                    FoundSongs.Add(new SongModel
+        //                    {
+        //                        FilePath = path,
+        //                        Title = title,
+        //                        Artist = artist,
+        //                        AlbumName = album,
+        //                        SongDuration = duration
+        //                    });
+        //                }
+        //            });
+
+        //            // Small breather to let Windows Explorer release handles
+        //            await Task.Delay(30);
+        //        }
+        //    });
+
+        //    // 5. Recalculate total duration once all files are processed
+        //    TotalDuration();
+        //}
+        //finally
+        //{
+        //    // 6. Always resume watchers
+        //    FileSystemWatch.Resume();
+        //}
     }
     // --- Discography & Album Events ---
     private void ifbError_CloseButtonClick(InfoBar sender, object args)

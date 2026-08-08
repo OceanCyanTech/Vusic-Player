@@ -19,6 +19,13 @@ namespace Vusic_Player.Configuration.ClassModels
             set { _fileName = value; OnPropertyChanged(); }
         }
 
+        private string? _thumbnailPath;
+        public string? ThumbnailPath
+        {
+            get => _thumbnailPath;
+            set { _thumbnailPath = value; OnPropertyChanged(); }
+        }
+
         private string _filePath = "";
         public string FilePath
         {

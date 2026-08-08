@@ -1,29 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Vusic_Player.Configuration.UserSettings;
-using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.AppConfig;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Vusic_Player.Configuration;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
+using System.Threading.Tasks;
+using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
+using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.AudioProperties;
+using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Internet;
+using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Extensions;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Search;
-using Vusic_Player.Extensions;
-using System.Collections.ObjectModel;
-using Vusic_Player.Configuration.Helper.FileSystem;
-using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Vusic_Player.Configuration.Playback;
-using Vusic_Player.Configuration.Internet;
 
 namespace Vusic_Player.Pages.Views;
 
@@ -39,42 +43,202 @@ public sealed partial class AlbumView : Page
     public AlbumView()
     {
         InitializeComponent();
+
+        FileSystemWatch.FileModified -= FileSystemWatch_FileModified;
+        FileSystemWatch.FileModified += FileSystemWatch_FileModified;
     }
+    private readonly ConcurrentDictionary<string, CancellationTokenSource> _debouncers = new();
+
+    private void FileSystemWatch_FileModified(string filePath, string arg2, string arg3, string arg4, TimeSpan duration, string genre)
+    {
+        // If an update is already pending for this file, cancel it and restart the timer
+        if (_debouncers.TryRemove(filePath, out var existingCts))
+        {
+            existingCts.Cancel();
+            existingCts.Dispose();
+        }
+
+        var cts = new CancellationTokenSource();
+        _debouncers[filePath] = cts;
+
+        Task.Run(async () =>
+        {
+            try
+            {
+                // Wait 300ms for Windows Explorer to finish writing and close the file
+                await Task.Delay(300, cts.Token);
+
+                if (cts.Token.IsCancellationRequested) return;
+
+                // Retry reading tags in case File Explorer still holds a brief lock
+                for (int attempt = 0; attempt < 5; attempt++)
+                {
+                    try
+                    {
+                        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        var abstraction = new SimpleStreamAbstraction(filePath, stream);
+                        using var tagFile = TagLib.File.Create(abstraction);
+
+                        string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
+                            ? Path.GetFileNameWithoutExtension(filePath)
+                            : tagFile.Tag.Title;
+                        var tag = tagFile.Tag;
+                        string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
+                              ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
+                              : string.Join(", ", tag.AlbumArtists);
+
+                        string album = string.IsNullOrWhiteSpace(tagFile.Tag.Album)
+                            ? "Unknown Album"
+                            : tagFile.Tag.Album;
+
+                        TimeSpan duration = tagFile.Properties.Duration;
+
+                        // Update SQLite Database
+                        await DatabaseService.UpdateSongMetadataAsync(filePath, title, artist, album);
+
+                        // Safely dispatch to UI Thread once
+                        DispatcherQueue.TryEnqueue(() =>
+                        {
+                            UpdateSongInCollections(filePath, album, artist, title, duration);
+                        });
+
+                        break; // Success! Exit retry loop
+                    }
+                    catch (Exception ex) when (ex is IOException || ex is COMException)
+                    {
+                        // File is still locked by Explorer; wait 200ms and try again
+                        await Task.Delay(200, cts.Token);
+                    }
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                // Normal - superseded by a newer event for the same file
+            }
+            finally
+            {
+                _debouncers.TryRemove(filePath, out _);
+                cts.Dispose();
+            }
+        });
+    }
+    private async void UpdateSongInCollections(string filePath, string newAlbum, string newArtist, string newTitle, TimeSpan duration)
+    {
+        string currentFilter = txtAlbumName?.Text?.Trim() ?? "";
+        var collections = new ObservableCollection<SongModel>[] { FoundSongs };
+        bool foundInAny = false;
+
+        bool matchesAlbum = string.IsNullOrEmpty(currentFilter) ||
+                             newAlbum.Contains(currentFilter, StringComparison.OrdinalIgnoreCase);
+
+        foreach (var collection in collections)
+        {
+            if (collection == null) continue;
+
+            var song = collection.FirstOrDefault(s => s.FilePath == filePath);
+            if (song != null)
+            {
+                foundInAny = true;
+                if (!matchesAlbum)
+                {
+                    collection.Remove(song);
+                    Debug.WriteLine($"[Watcher] Removed (Album changed/unmatched): {filePath}");
+                }
+                else
+                {
+                    song.AlbumName = newAlbum;
+                    song.Artist = newArtist;
+                    song.Title = newTitle;
+                    song.SongDuration = duration;
+                    Debug.WriteLine($"[Watcher] Updated: {filePath}");
+                }
+            }
+        }
+
+        if (!foundInAny && matchesAlbum)
+        {
+            FoundSongs?.Add(new SongModel
+            {
+                FilePath = filePath,
+                AlbumName = newAlbum,
+                Artist = newArtist,
+                Title = newTitle,
+                SongDuration = duration
+            });
+            Debug.WriteLine($"[Watcher] Added new track: {filePath}");
+        }
+        if (FoundSongs != null)
+        {
+            txtSongCount.Text = $"• {FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
+            TotalDuration();
+        }
+        // DEBOUNCE LoadArtists: Wait until ALL batch file watcher events finish before rebuilding artists view
+        _artistReloadCts?.Cancel();
+        _artistReloadCts = new CancellationTokenSource();
+        var token = _artistReloadCts.Token;
+
+        try
+        {
+            await Task.Delay(500, token); // Wait 500ms after last watcher event
+            if (!token.IsCancellationRequested)
+            {
+                LoadArtists();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // Normal: a new file watcher event reset the timer
+        }
+    }
+
+    private CancellationTokenSource? _artistReloadCts;
 
     private async void FoundSongs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-        if (FoundSongs.Count == 0)
+        //    if (FoundSongs.Count == 0)
+        //    {
+        //        txtNoSongs.Visibility = Visibility.Visible;
+        //        lstViewMain.Visibility = Visibility.Collapsed;
+        //        btnPlayAll.IsEnabled = false;
+        //        btnShuffle.IsEnabled = false;
+        //        btnRename.IsEnabled = false;
+        //        txtArtistsInvolved.Text = "• Empty Album";
+        //        ArtistShows.Clear();
+        //        txtNoArtists.Visibility = Visibility.Visible;
+        //        grdViewArtists.Visibility = Visibility.Collapsed;
+        //    }
+        //    else
+        //    {
+        //        txtNoSongs.Visibility = Visibility.Collapsed;
+        //        lstViewMain.Visibility = Visibility.Visible;
+        //        btnPlayAll.IsEnabled = true;
+        //        btnShuffle.IsEnabled = true;
+        //        btnRename.IsEnabled = true;
+        //    }
+        //    ts = TimeSpan.Zero;
+        //    foreach (var item in FoundSongs.ToList())
+        //    {
+        //        var Storagefile = await StorageFile.GetFileFromPathAsync(item.FilePath);
+        //        var props = await Storagefile.Properties.GetMusicPropertiesAsync();
+        //        ts += props.Duration;
+        //    }
+        //    string formatted = ts.TotalHours >= 1
+        //? ts.ToString(@"h\:mm\:ss")
+        //: ts.ToString(@"m\:ss");
+        //    txtTotalDuration.Text = "• " + formatted;
+        //    txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "item" : "items")}";
+
+        if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove ||
+          e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add ||
+          e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move
+          )
         {
-            txtNoSongs.Visibility = Visibility.Visible;
-            lstViewMain.Visibility = Visibility.Collapsed;
-            btnPlayAll.IsEnabled = false;
-            btnShuffle.IsEnabled = false;
-            btnRename.IsEnabled = false;
-            txtArtistsInvolved.Text = "• Empty Album";
-            ArtistShows.Clear();
-            txtNoArtists.Visibility = Visibility.Visible;
-            grdViewArtists.Visibility = Visibility.Collapsed;
+
+            txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
+            TotalDuration();
         }
-        else
-        {
-            txtNoSongs.Visibility = Visibility.Collapsed;
-            lstViewMain.Visibility = Visibility.Visible;
-            btnPlayAll.IsEnabled = true;
-            btnShuffle.IsEnabled = true;
-            btnRename.IsEnabled = true;
-        }
-        ts = TimeSpan.Zero;
-        foreach (var item in FoundSongs.ToList())
-        {
-            var Storagefile = await StorageFile.GetFileFromPathAsync(item.FilePath);
-            var props = await Storagefile.Properties.GetMusicPropertiesAsync();
-            ts += props.Duration;
-        }
-        string formatted = ts.TotalHours >= 1
-    ? ts.ToString(@"h\:mm\:ss")
-    : ts.ToString(@"m\:ss");
-        txtTotalDuration.Text = "• " + formatted;
-        txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "item" : "items")}";
+        txtNoSongs.Visibility = FoundSongs.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        lstViewMain.Visibility = FoundSongs.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private async Task SearchFiles()
@@ -296,6 +460,7 @@ public sealed partial class AlbumView : Page
     }
     private async void LoadArtists()
     {
+        ArtistShows.Clear();
         var currentSettings = await SettingsLoader.LoadSettingsAsync();
         if (FoundSongs.Count != 0)
         {
@@ -314,7 +479,7 @@ public sealed partial class AlbumView : Page
                 var artistShow = new ArtistShow { ArtistName = group.Key, Songs = group.ToList(), ArtistThumbnail = thumbnail, ArtistThumbnailImage = new BitmapImage(new Uri(thumbnail)) };
                 ArtistShows.Add(artistShow);
             }
-           
+
         }
     }
     private async void LoadAlbumCoverSaved()
@@ -361,128 +526,60 @@ public sealed partial class AlbumView : Page
 
     private async void btnRenameAlbum_Click(object sender, RoutedEventArgs e)
     {
-        if (_isRenaming) return; // Prevent double clicks
+        if (_isRenaming) return; // Prevent concurrent re-entry
         _isRenaming = true;
+        btnRenameAlbum.IsEnabled = false;
+        var currentSettings = await SettingsLoader.LoadSettingsAsync();
+        var albums = currentSettings.AlbumsList;
+        var existalbum = albums.FirstOrDefault(p => p.Name == txtAlbumName.Text);
+        if (existalbum == null) return;
+        string newAlbumName = txtRename.Text?.Trim() ?? "";
 
-        // Disable the button or show a loading state if needed
-        btnRename.IsEnabled = false;
+        if (string.IsNullOrEmpty(newAlbumName))
+        {
+            _isRenaming = false;
+            btnRenameAlbum.IsEnabled = true;
+            return;
+        }
 
+        var filePathsToProcess = FoundSongs
+        .Where(s => !string.IsNullOrEmpty(s.FilePath))
+        .Select(s => s.FilePath)
+        .ToList();
         try
         {
-            string newArtistName = txtRename.Text;
-            var songsToProcess = FoundSongs.ToList();
-            foreach (SongModel item in FoundSongs.ToList())
+            List<string> filepathstemp = new List<string>();
+            await Task.Run(() =>
             {
-                try
+                foreach (var filePath in filePathsToProcess)
                 {
-                    if (item.FilePath != null)
-                    {
-                        var filelocked = GetLockingProcess.GetLockingProcesses(item.FilePath);
-                        if (filelocked.Count == 0)
-                        {
-                            var file = TagLib.File.Create(item.FilePath);
-                            file.Tag.Album = newArtistName;
-                            file.Save();
-                            file.Dispose();
-                        }
-                        else
-                        {
-                            bool onlyVusicPlayer = filelocked.All(p => p.ProcessName == "Vusic Player");
-
-                            if (onlyVusicPlayer)
-                            {
-                                if (PlayerService.Masterplayer != null)
-                                {
-                                    var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
-                                    PlayerService.curtime = curTime;
-                                    PlayerService.curtimetemp = PlayerService.Masterplayer.CurTime;
-
-                                    if (PlayerService.Masterplayer.Status == FlyleafLib.MediaPlayer.Status.Playing)
-                                    {
-                                        Debug.WriteLine("TRUEEE");
-                                        isPaused2 = false;
-                                    }
-                                    else
-                                    {
-                                        isPaused2 = true;
-                                    }
-                                    PlayerService.filestreamcurrent?.Dispose();
-                                    PlayerService.JustDisposed = true;
-                                    var filelocked2 = GetLockingProcess.GetLockingProcesses(item.FilePath);
-                                    if (filelocked2.Count == 0)
-                                    {
-                                        try
-                                        {
-                                            var file = TagLib.File.Create(item.FilePath);
-                                            file.Tag.Album = newArtistName;
-                                            file.Save();
-                                            file.Dispose();
-
-                                            if (isPaused2 == false)
-                                            {
-                                                Debug.WriteLine("IsPuae");
-                                                PlayerService.Play();
-                                            }
-
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Logger.Log(ex.Message, "AlbumPage.Rename", Logger.LogLevelType.Error);
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var processNames = string.Join(", ", filelocked.Select(p => p.ProcessName));
-                                if (App.MainWindowInstance == null) return;
-                                OceanContentDialog.Show("Error", "Skip", "", "", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 550, 300, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", $"Unable to remove file because it is in use by {processNames}", "error");
-                                OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
-                                OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
-                            }
-                        }
-                    }
+                    // This triggers FileSystemWatcher automatically when saved!
+                    AudioMetadata.ChangeAlbumName(filePath, newAlbumName);
                 }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex.Message, "AlbumPage.RenameAlbum", Logger.LogLevelType.Error);
-                }
+            });
+
+            if (existalbum != null)
+            {
+                existalbum.Name = newAlbumName;
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
 
 
-            // Trigger ONE search/refresh after everything is done
+
+            txtAlbumName.Text = newAlbumName;
+            flyoutRename.Hide();
+        }
+        catch (Exception ex)
+        {
+            Logger.Log(ex.Message, "ArtistPage.RenameArtist", Logger.LogLevelType.Error);
         }
         finally
         {
+            // 7. Always restore state and resume watchers
             _isRenaming = false;
             btnRename.IsEnabled = true;
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var albumslist = currentSettings.AlbumsList;
-            var exist = albumslist.FirstOrDefault(p => p.Name == txtAlbumName.Text);
-
-            _activeAlbum!.Name = txtAlbumName.Text;
-
-            // 2. Update the "Parking Spot" in App.xaml.cs just to be safe
-
-
-            if (exist != null)
-            {
-                exist.Name = txtRename.Text;
-            }
-
-            else
-            {
-                albumslist.Add(new AlbumModel { Name = txtRename.Text });
-            }
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
-            await Task.Delay(1000);
-            txtAlbumName.Text = txtRename.Text;
-            ((App)Application.Current).SelectedAlbum!.Name = txtAlbumName.Text;
-            await SearchFiles();
-
-            flyoutRename.Hide();
         }
+
     }
     private void OceanContentDialog_PrimaryRequested()
     {
@@ -521,25 +618,46 @@ public sealed partial class AlbumView : Page
 
     private async void btnAddSongs_Click(object sender, RoutedEventArgs e)
     {
+        //if (App.MainWindowInstance == null) return;
+        //var files = await FilePickers.MediaPicker.PickMultipleAudioFilesAsync(App.MainWindowInstance, "Choose files");
+
+        //if (files == null) return;
+        //prgActiveProgress.Visibility = Visibility.Visible;
+
+        //ObservableCollection<string> existingPaths = new();
+        //foreach (var file in files)
+        //{
+        //    var alreadyexist = FoundSongs.FirstOrDefault(s => s.FilePath == file.Path);
+        //    if (alreadyexist == null)
+        //    {
+        //        var tagFile = TagLib.File.Create(file.Path);
+        //        tagFile.Tag.Album = txtAlbumName.Text;
+        //        tagFile.Save();
+        //    }
+        //}
+        //await Task.Delay(1500);
+        //await SearchFiles();
+
         if (App.MainWindowInstance == null) return;
+
         var files = await FilePickers.MediaPicker.PickMultipleAudioFilesAsync(App.MainWindowInstance, "Choose files");
+        if (files == null || !files.Any()) return;
 
-        if (files == null) return;
-        prgActiveProgress.Visibility = Visibility.Visible;
+        string targetAlbum = txtAlbumName?.Text?.Trim() ?? "";
 
-        ObservableCollection<string> existingPaths = new();
-        foreach (var file in files)
+        foreach (var song in files)
         {
-            var alreadyexist = FoundSongs.FirstOrDefault(s => s.FilePath == file.Path);
-            if (alreadyexist == null)
+            var filepath = song.Path;
+            var exist = FoundSongs.FirstOrDefault(p => p.FilePath == filepath);
+            if (exist == null)
             {
-                var tagFile = TagLib.File.Create(file.Path);
-                tagFile.Tag.Album = txtAlbumName.Text;
-                tagFile.Save();
+                if (AudioMetadata.ChangeAlbumName(song.Path, targetAlbum) == false)
+                {
+                    Debug.WriteLine($"ERROR OCCURED IN ADDING {filepath} TO ALBUM: " + targetAlbum);
+                }
             }
+
         }
-        await Task.Delay(1500);
-        await SearchFiles();
     }
 
     private async void btnSetAlbumCover_Click(object sender, RoutedEventArgs e)
@@ -574,7 +692,7 @@ public sealed partial class AlbumView : Page
 
     private async void btnRefresh_Click(object sender, RoutedEventArgs e)
     {
-        await SearchFiles();
+        LoadFiles();
     }
 
     private void btnFindAlbumCoverOnline_Click(object sender, RoutedEventArgs e)

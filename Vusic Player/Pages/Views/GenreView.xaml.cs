@@ -316,10 +316,13 @@ namespace Vusic_Player.Pages.Views
             foreach (var song in files)
             {
                 var filepath = song.Path;
-                if (AudioMetadata.ChangeGenre(song.Path, targetGenre) == false)
+                var exist = FoundSongs.FirstOrDefault(p => p.FilePath == filepath);
+                if (exist == null)
                 {
-                    Debug.WriteLine("ERROR OCCURED IN ADDING SONGS TO GENRE: " + targetGenre);
-
+                    if (AudioMetadata.ChangeGenre(song.Path, targetGenre) == false)
+                    {
+                        Debug.WriteLine($"ERROR OCCURED IN ADDING {filepath} TO ARTIST: " + targetGenre);
+                    }
                 }
 
             }

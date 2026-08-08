@@ -40,9 +40,12 @@ using Vusic_Player.Pages.Views;
 using Vusic_Player.UI;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Windows.Media;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using WinRT.Interop;
 using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 using Orientation = Vusic_Player.MediaProperties.VideoProperties.Orientation;
@@ -57,6 +60,7 @@ namespace Vusic_Player.Pages
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
         bool isPinned = false;
+        private SystemMediaTransportControls? _smtc;
 
         DateTime recordStartTime;
         DispatcherTimer? SubtitleTimer;
@@ -66,12 +70,67 @@ namespace Vusic_Player.Pages
         public GlowService Glow => GlowService.Instance;
         public Orientation AngleRotate => Orientation.Instance;
 
+
+        private void PlayerService_PlayCalled()
+        {
+            if (PlayerService.Masterplayer != null)
+            {
+                if (PlayerService.Masterplayer.IsPlaying)
+                {
+                    UpdatePlaybackStatus(MediaPlaybackStatus.Playing);
+                }
+                else
+                {
+                    UpdatePlaybackStatus(MediaPlaybackStatus.Paused);
+
+                }
+            }
+        }
+        public void UpdatePlaybackStatus(MediaPlaybackStatus status)
+        {
+            if (_smtc != null)
+            {
+                _smtc.PlaybackStatus = status;
+            }
+        }
+        private void PlayerService_PlayPauseChanged()
+        {
+            if (PlayerService.Masterplayer == null) return;
+            if (_smtc == null) return;
+            if (PlayerService.Masterplayer.IsPlaying)
+            {
+                _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
+            }
+            else
+            {
+                _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
+            }
+        }
+        private async void SystemControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        {
+            if (PlayerService.Masterplayer == null) return;
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                switch (args.Button)
+                {
+                    case SystemMediaTransportControlsButton.Play:
+                        PlayerService.Play();
+                        break;
+                    case SystemMediaTransportControlsButton.Pause:
+                        PlayerService.Pause();
+                        break;
+                }
+            });
+        }
+        private IntPtr _hwnd;
+
         public VideoPlayer()
         {
             InitializeComponent();
             InitiateInfoText();
             InitiateSeekText();
             UpdateSubtitleStyle();
+            this.Loaded += VideoPlayer_Loaded;
             RecordTimer = new();
             RecordTimer.Interval = TimeSpan.FromMilliseconds(300);
             RecordTimer.Tick += RecordTimer_Tick;
@@ -85,6 +144,68 @@ namespace Vusic_Player.Pages
             PlayerService.ErrorCalled += PlayerService_ErrorCalled; ;
 
         }
+        public interface ISystemMediaTransportControlsInterop
+
+        {
+
+            IntPtr GetForWindow(IntPtr appWindow, [System.Runtime.InteropServices.In] ref Guid riid);
+
+        }
+
+        public async void SetupSMTC()
+
+        {
+
+            // Get the controls for the current view
+
+            _smtc = BackgroundMediaPlayer.Current.SystemMediaTransportControls;
+
+            _smtc.IsPlayEnabled = true;
+
+            _smtc.IsPauseEnabled = true;
+
+            _smtc.IsNextEnabled = true;
+
+            _smtc.IsPreviousEnabled = true;
+
+         
+
+            var updater = _smtc.DisplayUpdater;
+
+            _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
+
+            updater.Type = MediaPlaybackType.Video;
+            updater.VideoProperties.Subtitle = "Current media (Vusic Player)";
+            updater.VideoProperties.Title = mediacontroller.MediaDisplayName;
+
+            //StorageFolder cacheFolder = ApplicationData.Current.LocalCacheFolder;
+            //string thumbPath = vditem.ThumbnailPath ?? "";
+            //if (PlayerService.Masterplayer == null) return;
+            //PlayerService.Masterplayer.TakeSnapshotToFile(thumbPath, 0, 0, false, false);
+
+            //await Task.Delay(200);
+            //Debug.WriteLine("THE THUMBNAIL APS IXS " + thumbPath);
+            //REMOVE:
+            //StorageFile file = await StorageFile.GetFileFromPathAsync(PlayerService.CurrentPlayingPath);
+            //// 2. Create the Stream Reference the SMTC expects
+            //updater.Thumbnail = RandomAccessStreamReference.CreateFromFile(file);
+
+        
+      
+            updater.Update();
+
+            // Hook up the event handler for button presses
+
+            _smtc.ButtonPressed += SystemControls_ButtonPressed;
+
+            PlayerService.PlayPauseChanged += PlayerService_PlayPauseChanged;
+
+        }
+        private void VideoPlayer_Loaded(object sender, RoutedEventArgs e)
+        {
+            //  SetupSMTC();
+        }
+
         private void InitiateSeekText()
         {
             Configuration.Helper.UI.SeekInfoService.OnSeekRequest += (text, isForward) =>
@@ -575,6 +696,8 @@ namespace Vusic_Player.Pages
             }
             //LoadSettings();
             //LoadOptions();
+
+             SetupSMTC();
             PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
 
         }
@@ -685,6 +808,7 @@ namespace Vusic_Player.Pages
                 VideoPath = path;
                 LoadingProgress = true;
                 ShowInformationOpened = vditem.ShowInformationOfOpen;
+
             }
             else if (e.Parameter is string Path)
             {

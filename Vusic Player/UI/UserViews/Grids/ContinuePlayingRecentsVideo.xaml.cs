@@ -101,6 +101,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                                 {
                                     var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, percentage);
                                     Debug.WriteLine("The thumbnail path is " + thumb);
+                                    
                                     DispatcherQueue.TryEnqueue(async () =>
                                     {
                                         try
@@ -111,8 +112,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                                                 await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
                                             }
                                             videoprogressitem.Thumbnail = bitmap;
-
-                                            File.Delete(thumb);
+                                            videoprogressitem.ThumbnailPath = thumb;
                                         }
                                         catch (Exception ex)
                                         {
@@ -182,7 +182,8 @@ namespace Vusic_Player.UI.UserViews.Grids
                                         {
                                             await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
                                         }
-
+                                        ContinuePlaying.videoProgressMain.Thumbnail = bitmap;
+                                         ContinuePlaying.videoProgressMain.ThumbnailPath = thumb;
                                         //       Delete the file immediately after the stream closes safely
                                         File.Delete(thumb);
                                     }
