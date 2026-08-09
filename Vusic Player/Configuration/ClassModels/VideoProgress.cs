@@ -12,11 +12,18 @@ namespace Vusic_Player.Configuration.ClassModels
 {
     public class VideoProgress : INotifyPropertyChanged
     {
-        private string? _fileName;
-        public string? FileName
+        private string _fileName = "";
+        public string FileName 
         {
             get => _fileName;
             set { _fileName = value; OnPropertyChanged(); }
+        }
+
+        private string _folderName = "";
+        public string FolderName
+        {
+            get => _folderName;
+            set { _folderName = value; OnPropertyChanged(); }
         }
 
         private string? _thumbnailPath;

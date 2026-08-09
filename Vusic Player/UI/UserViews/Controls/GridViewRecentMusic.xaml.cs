@@ -37,6 +37,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         public void SelectAll()
         {
             grdViewAllRecentMusic.SelectAll();
+            
         }
         public void ClearSelection()
         {

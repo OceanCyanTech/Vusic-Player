@@ -72,7 +72,9 @@
     <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\View.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml" />
+    <None Remove="UI\UserViews\Controls\GridViewAllRecentVideos.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
+    <None Remove="UI\UserViews\Controls\GridViewRecentVideos.xaml" />
     <None Remove="UI\UserViews\Controls\GroupedCollectionView.xaml" />
     <None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml" />
@@ -164,8 +166,8 @@
     <PackageReference Include="Flyleaf.FFmpeg.Bindings" Version="8.1.0" />
     <PackageReference Include="FlyleafLib.Controls.WinUI" Version="1.3.3" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.1.3" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2526" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.3.1" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +177,16 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\GridViewAllRecentVideos.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\GridViewRecentVideos.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Views\EntireVideoLibrary.xaml">

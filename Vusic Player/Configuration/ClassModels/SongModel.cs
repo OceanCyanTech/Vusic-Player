@@ -145,9 +145,20 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
-        public string FormattedDuration => SongDuration.HasValue
-    ? $"{(int)SongDuration.Value.TotalMinutes:D2}:{SongDuration.Value.Seconds:D2}"
-    : "00:00";
+        public string FormattedDuration
+        {
+            get
+            {
+                if (!SongDuration.HasValue)
+                    return "00:00";
+
+                TimeSpan ts = SongDuration.Value;
+
+                return ts.TotalHours >= 1
+                    ? $"{(int)ts.TotalHours:D2}:{ts.Minutes:D2}:{ts.Seconds:D2}"
+                    : $"{ts.Minutes:D2}:{ts.Seconds:D2}";
+            }
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         private string _filePath = "";

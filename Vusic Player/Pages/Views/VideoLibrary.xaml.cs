@@ -51,7 +51,7 @@ namespace Vusic_Player.Pages.Views
         private void hypViewEntireLib_Click(object sender, RoutedEventArgs e)
         {
         //    LibraryStore.IsMusicLibrary = false;
-            this.Frame.Navigate(typeof(EntireMusicLibrary), "Videos");
+            this.Frame.Navigate(typeof(EntireVideoLibrary), "Videos");
         }
 
         private void Expander_Expanding(Expander sender, ExpanderExpandingEventArgs args)

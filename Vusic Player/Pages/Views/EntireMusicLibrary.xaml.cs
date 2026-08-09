@@ -1043,6 +1043,7 @@ namespace Vusic_Player.Pages.Views
 
             }
             AllMusicGroupedCollection.ItemsSource = ObservableCollectioln;
+            
         }
         private async void btnAddFolders_Click(object sender, RoutedEventArgs e)
         {

@@ -435,6 +435,7 @@ Genre TEXT,
                                     {
                                         FilePath = normalizedPath,
                                         Title = title,
+                                        SongDuration = tagFile.Properties.Duration,
                                         Genre = genre
                                     };
 

@@ -34,6 +34,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public bool IsHorizontalFlip { get; set; } = false;
         public bool IsFirstTimeLaunchMusicLib { get; set; } = true;
         public bool IsMusicHistoryDisabled { get; set; } = false;
+        public bool IsVideoHistoryDisabled { get; set; } = false;
         public bool IsVerticalFlip { get; set; } = false;
         public double VideoRotation { get; set; } = 0;
         public double VideoBrightness { get; set; } = 0;

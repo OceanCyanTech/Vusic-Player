@@ -87,7 +87,7 @@ ItemClick="grdViewShows_ItemClick"  Margin="0, 20" SelectionChanged="grdViewShow
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="/Assets/appicon.png"></Image>
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="You have no playlists created!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="You have no shows created!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button Style="{StaticResource AccentButtonStyle}" Margin="0, 20" Name="btnNewShow" HorizontalAlignment="Center" Click="btnNewShow_Click" >
                     <StackPanel Orientation="Horizontal">
@@ -96,7 +96,7 @@ Glyph="&#xE710;"
 FontSize="16"
 VerticalAlignment="Center"/>
 
-                        <TextBlock Text="New Playlist" 
+                        <TextBlock Text="Create Show Model" 
  Margin="8,0,0,0" 
  VerticalAlignment="Center"/>
                     </StackPanel>
