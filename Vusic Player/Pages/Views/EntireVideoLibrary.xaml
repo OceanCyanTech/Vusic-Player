@@ -176,7 +176,7 @@
                 </StackPanel>
             </StackPanel>
 
-            <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="3" x:Name="grdViewAllRecentMusic"></controls:GridViewRecentMusic>
+            <controls:GridViewRecentVideos Margin="0, 20" Grid.Row="3" x:Name="grdViewAllRecentMusic"></controls:GridViewRecentVideos>
             <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoadingAll" Orientation="Horizontal" Spacing="20" Grid.Row="3">
                 <ProgressRing IsIndeterminate="True"/>
                 <TextBlock Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>

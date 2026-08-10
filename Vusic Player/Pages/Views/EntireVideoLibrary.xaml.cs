@@ -1,26 +1,17 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
 
 /*
              • ENTIRE VIDEO LIBRARY
@@ -46,7 +37,6 @@ namespace Vusic_Player.Pages.Views
         public EntireVideoLibrary()
         {
             InitializeComponent();
-            LoadAllFiles();
         }
 
         #region Initialization
@@ -104,6 +94,7 @@ namespace Vusic_Player.Pages.Views
 
             foreach (var videof in videofiles)
             {
+                Debug.WriteLine("ADDING FILE: " + videof.FilePath);
                 AllAvailableVideos.Add(new SongModel { Title = videof.Title, FilePath = videof.FilePath, SongDuration = videof.SongDuration, Genre = videof.Genre, IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, Glyph = "\uE8B2" });
             }
             grdEmptyLibrary.Visibility = (AllAvailableVideos.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
@@ -301,8 +292,10 @@ namespace Vusic_Player.Pages.Views
         private async void LoadHistory()
         {
             stkLoadingAll.Visibility = Visibility.Visible;
+            grdViewAllRecentMusic.ItemsSource = recentVideo;
 
-            recentVideo.CollectionChanged += RecentVideo_CollectionChanged; ;
+            recentVideo.CollectionChanged -= RecentVideo_CollectionChanged;
+            recentVideo.CollectionChanged += RecentVideo_CollectionChanged;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             if (currentSettings.IsVideoHistoryDisabled == true)
             {
@@ -330,15 +323,11 @@ namespace Vusic_Player.Pages.Views
                     FilePath = item.FilePath,
 
                 });
-
             }
             foreach (var item in recentvideos)
             {
                 item.Thumbnail = await FileThumbnailObtain.GetFileThumbnailAsync(item.FilePath);
-
-
             }
-            //          grdViewAllRecentMusic.ItemsSource = recentVideo;
             if (recentvideos.Count == 0)
             {
                 grdViewAllRecentMusic.Visibility = Visibility.Collapsed;
