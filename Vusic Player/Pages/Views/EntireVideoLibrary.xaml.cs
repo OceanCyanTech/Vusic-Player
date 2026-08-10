@@ -101,11 +101,13 @@ namespace Vusic_Player.Pages.Views
             AllAvailableVideos.Clear();
             var rawfiles = FilesInDatabase.rawSongs;
             var videofiles = rawfiles.Where(p => !string.IsNullOrEmpty(p.FilePath) && VideoExtensions.List.Contains(Path.GetExtension(p.FilePath).ToLowerInvariant()));
-           
-            foreach(var videof in videofiles)
+
+            foreach (var videof in videofiles)
             {
-                AllAvailableVideos.Add(new SongModel { Title = videof.Title, FilePath = videof.FilePath, SongDuration = videof.SongDuration, Genre = videof.Genre, IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, Glyph= "\uE8B2" });
+                AllAvailableVideos.Add(new SongModel { Title = videof.Title, FilePath = videof.FilePath, SongDuration = videof.SongDuration, Genre = videof.Genre, IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, Glyph = "\uE8B2" });
             }
+            grdEmptyLibrary.Visibility = (AllAvailableVideos.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
+            AllVideosGroupedCollection.Visibility = (AllAvailableVideos.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
         }
         #endregion
 
@@ -148,23 +150,23 @@ namespace Vusic_Player.Pages.Views
             {
                 if (tgl.IsChecked == true)
                 {
-                   
-                        var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                        var folderssaved = currentSettings.SavedFoldersOpened;
-                        var exist = folderssaved.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
-                        if (exist != null)
-                        {
-                            exist.isChecked = true;
-                        }
-                        var exist2 = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
 
-                        if (exist2 != null)
-                        {
-                            exist2.isChecked = true;
-                        }
-                        await SettingsLoader.SaveSettingsAsync(currentSettings);
-                        LoadAllFiles();
-                    
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    var folderssaved = currentSettings.SavedFoldersOpened;
+                    var exist = folderssaved.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+                    if (exist != null)
+                    {
+                        exist.isChecked = true;
+                    }
+                    var exist2 = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+
+                    if (exist2 != null)
+                    {
+                        exist2.isChecked = true;
+                    }
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    LoadAllFiles();
+
                 }
                 else if (tgl.IsChecked == false)
                 {
@@ -243,7 +245,7 @@ namespace Vusic_Player.Pages.Views
                     }
                     await SettingsLoader.SaveSettingsAsync(currentse);
                 }
-               
+
                 AllAvailableVideos.Clear();
                 LoadAllFiles();
             }
@@ -320,13 +322,13 @@ namespace Vusic_Player.Pages.Views
             {
                 Debug.WriteLine("LOADING HISTORY " + item.FilePath);
                 recentVideo.Add(new VideoProgress
-                   {
+                {
                     FolderName = new DirectoryInfo(
                             Path.GetDirectoryName(item.FilePath) ?? string.Empty
                         ).Name,
                     FileName = item.FileName,
                     FilePath = item.FilePath,
-                  
+
                 });
 
             }
@@ -336,7 +338,7 @@ namespace Vusic_Player.Pages.Views
 
 
             }
-  //          grdViewAllRecentMusic.ItemsSource = recentVideo;
+            //          grdViewAllRecentMusic.ItemsSource = recentVideo;
             if (recentvideos.Count == 0)
             {
                 grdViewAllRecentMusic.Visibility = Visibility.Collapsed;
@@ -361,7 +363,6 @@ namespace Vusic_Player.Pages.Views
 
         private void RecentVideo_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            throw new NotImplementedException();
         }
 
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
@@ -370,7 +371,7 @@ namespace Vusic_Player.Pages.Views
             var videohistory = recentVideo;
             if (videohistory.Count == 0) return;
             ObservableCollection<SongModel> tempTransfer = new();
-            
+
             foreach (var item in videohistory)
             {
                 var existingvideo = AllAvailableVideos.FirstOrDefault(p => p.FilePath == item.FilePath);
@@ -379,7 +380,7 @@ namespace Vusic_Player.Pages.Views
                     Debug.WriteLine("ITEM FILE APTHS " + item.FilePath);
                     if (File.Exists(item.FilePath))
                     {
-                        tempTransfer.Add(new SongModel { Title = existingvideo.Title, SongDuration = existingvideo.SongDuration, FilePath = existingvideo.FilePath,VisibilityofAudioMeta=Visibility.Collapsed, VisibilityofVideoInfo=Visibility.Visible });
+                        tempTransfer.Add(new SongModel { Title = existingvideo.Title, SongDuration = existingvideo.SongDuration, FilePath = existingvideo.FilePath, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible });
                     }
                 }
             }

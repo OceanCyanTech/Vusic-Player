@@ -115,7 +115,6 @@
             <Border  Grid.Row="3" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
 
                 <controls:GroupedCollectionView x:Name="AllVideosGroupedCollection" 
-                                Grid.Row="2" 
                                 TemplateMode="Media"
                                                 SearchPlaceHolderText="Search for videos..."
                                 ItemsSource="{x:Bind AllAvailableVideos, Mode=OneWay}" 
