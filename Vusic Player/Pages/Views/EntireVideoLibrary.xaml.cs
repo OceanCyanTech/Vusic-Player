@@ -1,12 +1,15 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
@@ -319,15 +322,86 @@ namespace Vusic_Player.Pages.Views
                     FolderName = new DirectoryInfo(
                             Path.GetDirectoryName(item.FilePath) ?? string.Empty
                         ).Name,
-                    FileName = item.FileName,
+                    FileName = Path.GetFileNameWithoutExtension(item.FilePath),
                     FilePath = item.FilePath,
+                    HoverText = $"{Path.GetFileNameWithoutExtension(item.FilePath)}" + Environment.NewLine + "Folder: " + new DirectoryInfo(
+                            Path.GetDirectoryName(item.FilePath) ?? string.Empty
+                        ).Name,
+                    LoadingVisibility = Visibility.Visible
 
                 });
             }
-            foreach (var item in recentvideos)
+            foreach (var item in recentVideo)
             {
-                item.Thumbnail = await FileThumbnailObtain.GetFileThumbnailAsync(item.FilePath);
+                var fallbackUri = "ms-appx:///Assets/default.png";
+                item.Thumbnail = new BitmapImage(new Uri(fallbackUri));
+                var task = Task.Run(async () =>
+                {
+                    var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(item.FilePath, 0.20);
+                    Debug.WriteLine("The thumbnail path is " + thumb);
+
+                    DispatcherQueue.TryEnqueue(async () =>
+                    {
+                        try
+                        {
+                            var bitmap = new BitmapImage();
+
+                            //    Check if the path is our app asset URI string
+                            if (thumb.StartsWith("ms-appx://"))
+                            {
+                                //    Assign the URI directly to the BitmapImage
+                                bitmap.UriSource = new Uri(thumb);
+                            }
+                            else if (File.Exists(thumb))
+                            {
+                                //     It's a real generated file path in the Temp folder! Read the stream.
+                                using (var stream = File.OpenRead(thumb))
+                                {
+                                    await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                                }
+                                item.Thumbnail = bitmap;
+                                item.ThumbnailPath = thumb;
+                                //       Delete the file immediately after the stream closes safely
+                                File.Delete(thumb);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine("An unexpected error occured: " + ex.Message);
+                        }
+                    });
+
+                });
+                item.LoadingVisibility = Visibility.Collapsed;
+
             }
+            //foreach (var item in recentvideos)
+            //{
+            //    var task = Task.Run(async () =>
+            //    {
+            //        var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(item.FilePath, 0.20);
+            //        Debug.WriteLine("The thumbnail path is " + thumb);
+
+            //        DispatcherQueue.TryEnqueue(async () =>
+            //        {
+            //            try
+            //            {
+            //                var bitmap = new BitmapImage();
+            //                using (var stream = File.OpenRead(thumb))
+            //                {
+            //                    await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+            //                }
+            //                item.Thumbnail = bitmap;
+            //                File.Delete(thumb);
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Debug.WriteLine("An unexpected error occured: " + ex.Message);
+            //            }
+            //        });
+
+            //    });
+            //}
             if (recentvideos.Count == 0)
             {
                 grdViewAllRecentMusic.Visibility = Visibility.Collapsed;

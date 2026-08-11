@@ -9,10 +9,12 @@
     mc:Ignorable="d">
 
     <Grid>
-        <GridView ItemClick="grdViewAllRecentVideo_ItemClick" SelectionMode="{x:Bind GridSelectionMode, Mode=OneWay}" x:Name="grdViewAllRecentVideo"  Visibility="Visible" ItemsSource="{Binding ItemsSource}" IsItemClickEnabled="True" Grid.Row="2">
+        <GridView ItemClick="grdViewAllRecentVideo_ItemClick" SelectionMode="{x:Bind GridSelectionMode, Mode=OneWay}" x:Name="grdViewAllRecentVideo"  Visibility="Visible" ItemsSource="{x:Bind ItemsSource, Mode=OneWay}" IsItemClickEnabled="True" Grid.Row="2">
+        
             <GridView.ItemTemplate>
                 <DataTemplate >
-                    <StackPanel Width="150">
+                    <Grid>
+                    <StackPanel ToolTipService.ToolTip="{Binding HoverText}" Width="200" Height="200" Spacing="10" Orientation="Vertical" Margin="10, 10">
                         <StackPanel.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Text="Play" Click="mnftPlayRecents_Click" Name="mnftPlayRecents">
@@ -38,12 +40,14 @@
                                 </MenuFlyoutItem>
                             </MenuFlyout>
                         </StackPanel.ContextFlyout>
-                        <Image Source="{Binding Thumbnail}" Width="70" Height="70" Stretch="UniformToFill"/>
+                     
+                        <Image Source="{Binding Thumbnail}" Width="200" Height="100" Stretch="UniformToFill"/>
 
-                        <TextBlock Text="{Binding SongName}" Visibility="Visible" TextWrapping="Wrap" />
+                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="1" Text="{Binding FileName}"   TextWrapping="Wrap" />
                         <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding FolderName}" Visibility="Visible" TextWrapping="Wrap" />
-                        <TextBlock FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding LastPlayed}" Visibility="Visible"  />
                     </StackPanel>
+                        <ProgressRing Visibility="{Binding LoadingVisibility}" IsIndeterminate="True"/>
+                    </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>
 

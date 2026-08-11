@@ -113,9 +113,12 @@ namespace Vusic_Player.UI.UserViews.Grids
                                             }
                                             videoprogressitem.Thumbnail = bitmap;
                                             videoprogressitem.ThumbnailPath = thumb;
+                                            File.Delete(thumb);
+
                                         }
                                         catch (Exception ex)
                                         {
+                                            videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
                                             Debug.WriteLine("An unexpected error occured: " + ex.Message);
                                         }
                                     });

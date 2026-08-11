@@ -64,7 +64,7 @@ namespace Vusic_Player.Configuration.Helper.UI
         }
         public static async Task<string> ExtractVidThumbnailBasic(string FILEpath, double percentage = 0.22)
         {
-            Debug.WriteLine("extract vid thumbnail basic async called");
+            Debug.WriteLine("extract vid thumbnail basic async called: " + FILEpath);
 
             var fallbackUri = "ms-appx:///Assets/default.png";
 

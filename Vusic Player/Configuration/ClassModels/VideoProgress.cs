@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Media.Imaging;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,6 +39,19 @@ namespace Vusic_Player.Configuration.ClassModels
         {
             get => _filePath;
             set { _filePath = value; OnPropertyChanged(); }
+        }
+        private string _toolTipHover = "";
+        public string HoverText
+        {
+            get => _toolTipHover;
+            set { _toolTipHover = value; OnPropertyChanged(); }
+        }
+
+        private Visibility _visibiltyOfLoading = Visibility.Collapsed;
+        public Visibility LoadingVisibility
+        {
+            get => _visibiltyOfLoading;
+            set { _visibiltyOfLoading = value; OnPropertyChanged(); }
         }
 
         private double _currentDuration;
