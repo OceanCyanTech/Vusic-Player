@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -15,6 +16,7 @@ using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
+using Windows.Storage;
 
 /*
              • ENTIRE VIDEO LIBRARY
@@ -34,12 +36,15 @@ namespace Vusic_Player.Pages.Views
         ObservableCollection<SongModel> AllAvailableVideos = new ObservableCollection<SongModel>();
         ObservableCollection<FoldersListOpened> foldersListOpened = new();
         ObservableCollection<PlaylistItem> playlistsAll = new();
+        ObservableCollection<Show> showsAll = new();
         ObservableCollection<VideoProgress> recentVideo = new();
         #endregion
 
         public EntireVideoLibrary()
         {
             InitializeComponent();
+          //  LoadFolders();
+            LoadSettings();
         }
 
         #region Initialization
@@ -77,11 +82,14 @@ namespace Vusic_Player.Pages.Views
             else if (category == "Playlists")
             {
                 grdPlaylists.Visibility = Visibility.Visible;
-                Debug.WriteLine("Playlst");
+
+                LoadAllPlaylists();
+                Debug.WriteLine("Playlist");
             }
             else if (category == "Shows")
             {
                 grdShows.Visibility = Visibility.Visible;
+                LoadAllShows();
                 Debug.WriteLine("Shows");
             }
         }
@@ -89,16 +97,98 @@ namespace Vusic_Player.Pages.Views
         #endregion
 
         #region File System Database
+
+        private async void LoadFolders()
+        {
+            UserDataPaths paths = UserDataPaths.GetDefault();
+            grdViewFolders.ItemsSource = foldersListOpened;
+            // Assigning the system paths to the Tag property
+
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+            var folders = currentSettings.SavedFoldersOpened;
+
+            foreach (var item in currentSettings.SavedFoldersOpened)
+            {
+                if (item.Show == true)
+                {
+                    var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == item.FolderPath);
+                    if (exist == null)
+                    {
+                        item.FolderName = Path.GetFileName(item.FolderPath);
+                        foldersListOpened.Add(item);
+                    }
+
+                }
+                else
+                {
+                    Debug.WriteLine("item show = false " + item.FolderPath);
+                    var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == item.FolderPath);
+                    if (exist != null)
+                    {
+                        if (exist.Show == false)
+                        {
+
+                            foldersListOpened.Remove(item);
+                        }
+                    }
+                }
+                //    ToggleButton toggleButton = new();
+                //    if (item.isChecked)
+                //    {
+                //        toggleButton.IsChecked = true;
+                //    }
+                //    toggleButton.ContextFlyout = (MenuFlyout)this.Resources["FolderContextMenu"];
+                //    var flyout = toggleButton.ContextFlyout as MenuFlyout;
+                //    var openItem = flyout.Items[0] as MenuFlyoutItem; // "Open Location"
+                //    var removeItem = flyout.Items[2] as MenuFlyoutItem; // "Remove" (skip separator)
+
+                //    // Detach old handlers if any, and attach a specific one for THIS button
+                //    openItem.Click += (s, e) =>
+                //    {
+                //        string path = item.FolderPath;
+                //        if (System.IO.Directory.Exists(path))
+                //        {
+                //            System.Diagnostics.
+                //            ("explorer.exe", $"/select,\"{path}\"");
+                //        }
+                //    };
+                //    toggleButton.Tag = item.FolderPath;
+                //    toggleButton.CornerRadius = new CornerRadius(16);
+                //    toggleButton.FontSize = 16;
+                //    ToolTipService.SetToolTip(toggleButton, item.FolderPath);
+
+                //    toggleButton.Padding = new Thickness(10);
+                //    toggleButton.Content = Path.GetFileName(item.FolderPath);
+                //    if (App.Current.Resources.TryGetValue("SurfaceStrokeColorDefaultBrush", out object resource))
+                //    {
+                //        toggleButton.BorderBrush = (Brush)resource;
+                //    }
+                //    toggleButton.Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                //    stkAddedFolders.Children.Add(toggleButton);
+                //}
+            }
+         
+            AllAvailableVideos.Clear();
+            LoadAllFiles();
+            stkLoading.Visibility = Visibility.Collapsed;
+        }
+
         private async void LoadAllFiles()
         {
+            bool includeSubDirs = chkIncludeSubDirectories.IsChecked == true;
+
             AllAvailableVideos.Clear();
             var rawfiles = FilesInDatabase.rawSongs;
-            var videofiles = rawfiles.Where(p => !string.IsNullOrEmpty(p.FilePath) && VideoExtensions.List.Contains(Path.GetExtension(p.FilePath).ToLowerInvariant()));
-
-            foreach (var videof in videofiles)
+            foreach (var folder in foldersListOpened)
             {
-                Debug.WriteLine("ADDING FILE: " + videof.FilePath);
-                AllAvailableVideos.Add(new SongModel { Title = videof.Title, FilePath = videof.FilePath, SongDuration = videof.SongDuration, Genre = videof.Genre, IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, Glyph = "\uE8B2" });
+                var videofiles = rawfiles.Where(p => !string.IsNullOrEmpty(p.FilePath) && VideoExtensions.List.Contains(Path.GetExtension(p.FilePath).ToLowerInvariant()) && Path.GetDirectoryName(p.FilePath) == folder.FolderPath);
+
+                foreach (var videof in videofiles)
+                {
+                    Debug.WriteLine("ADDING FILE: " + videof.FilePath);
+                    AllAvailableVideos.Add(new SongModel { Title = videof.Title, FilePath = videof.FilePath, SongDuration = videof.SongDuration, Genre = videof.Genre, IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, Glyph = "\uE8B2" });
+                }
             }
             grdEmptyLibrary.Visibility = (AllAvailableVideos.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
             AllVideosGroupedCollection.Visibility = (AllAvailableVideos.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
@@ -281,9 +371,7 @@ namespace Vusic_Player.Pages.Views
             currentSettings.IncludeSubDirMusLib = chkIncludeSubDirectories.IsChecked ?? true;
             await SettingsLoader.SaveSettingsAsync(currentSettings);
 
-            AllAvailableVideos.Clear();
-            LoadAllFiles();
-            stkLoading.Visibility = Visibility.Collapsed;
+            LoadFolders();
         }
 
 
@@ -501,6 +589,25 @@ namespace Vusic_Player.Pages.Views
         #endregion
 
         #region Playlists Grid
+        private async void LoadAllPlaylists()
+        {
+            //Load All Playlists
+          
+            var currentset = await SettingsLoader.LoadSettingsAsync();
+            var playlists = currentset.SavedPlaylists;
+            playlistsAll.Clear();
+
+            foreach (var playlist in playlists)
+            {
+                Debug.WriteLine("PLAYLIST BEING ADDED IS :" + playlist.PlaylistName);
+                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
+            }
+            Debug.WriteLine("Playlst3");
+            //UI 
+
+            stkNoPlaylists.Visibility = (playlistsAll.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
+            AllPlaylistGroupedCollection.Visibility = (playlistsAll.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
+        }
 
         private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
         {
@@ -511,6 +618,24 @@ namespace Vusic_Player.Pages.Views
 
         #region Shows Grid
 
+        private async void LoadAllShows()
+        {
+            //Load All Shows
+            var currentset = await SettingsLoader.LoadSettingsAsync();
+            var shows = currentset.Shows;
+            showsAll.Clear();
+
+            foreach (var show in shows)
+            {
+                Debug.WriteLine("SHOW BEING ADDED IS :" + show.Name);
+                showsAll.Add(new Show { Name = show.Name, AddedSeasons = show.AddedSeasons, Creators = show.Creators, ShowID = show.ShowID, Crew = show.Crew, Description = show.Description, Genre = show.Genre, Poster = show.Poster, ReleaseDate = show.ReleaseDate, SeasonCount = show.SeasonCount, Tags = show.Tags });
+            }
+            Debug.WriteLine("Show3");
+            //UI 
+            stkNoShow.Visibility = (showsAll.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
+            AllShowsGroupedCollection.Visibility = (showsAll.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
+        }
+
         private void btnNewShow_Click(object sender, RoutedEventArgs e)
         {
 
@@ -518,6 +643,15 @@ namespace Vusic_Player.Pages.Views
 
         #endregion
 
+        #region Settings
+        private async void LoadSettings()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            chkIncludeSubDirectories.IsChecked = currentSettings.IncludeSubDirMusLib;
+ 
+        }
+        #endregion
+        
         #endregion
 
         private void btnGenericFolder_Click(object sender, RoutedEventArgs e)

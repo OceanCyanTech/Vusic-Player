@@ -111,7 +111,7 @@
                     </StackPanel>
                 </Button>
             </controls1:WrapPanel>
-            <CheckBox Name="chkIncludeSubDirectories" IsChecked="True" Checked="chkIncludeSubDirectories_Checked" Unchecked="chkIncludeSubDirectories_Checked" Content="Include files from sub directories" Grid.Row="2"></CheckBox>
+            <CheckBox Name="chkIncludeSubDirectories"  Checked="chkIncludeSubDirectories_Checked" Unchecked="chkIncludeSubDirectories_Checked" Content="Include files from sub directories" Grid.Row="2"></CheckBox>
             <Border  Grid.Row="3" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
 
                 <controls:GroupedCollectionView x:Name="AllVideosGroupedCollection" 
