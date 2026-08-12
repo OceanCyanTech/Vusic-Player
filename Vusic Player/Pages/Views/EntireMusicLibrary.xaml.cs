@@ -747,7 +747,10 @@ namespace Vusic_Player.Pages.Views
 
                 // Breath frame for the UI engine
                 await Task.Delay(16);
-            }          
+
+            }
+            txtMusicCount.Text = $"• {AllAvailableSongs.Count} {(AllAvailableSongs.Count == 1 ? "item" : "items")}";
+
             //var parsingTasks = allFoundFiles.Select(async file =>
             //{
             //    if (existingPaths.Contains(file.Path)) return null;

@@ -28,9 +28,10 @@
             <ToggleButton  Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnHistory" FontSize="26" Padding="15" Content="Video History" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="5"></ToggleButton>
         </Grid>
 
-        <Grid Name="grdAllVideos" Margin="20, 30" Grid.Row="1">
+        <Grid Name="grdAllVideos" Margin="20, 30" RowSpacing="5" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" ></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition ></RowDefinition>
@@ -111,8 +112,11 @@
                     </StackPanel>
                 </Button>
             </controls1:WrapPanel>
+
             <CheckBox Name="chkIncludeSubDirectories"  Checked="chkIncludeSubDirectories_Checked" Unchecked="chkIncludeSubDirectories_Checked" Content="Include files from sub directories" Grid.Row="2"></CheckBox>
-            <Border  Grid.Row="3" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
+            <TextBlock Margin="0, 0" Name="txtVideoCount" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="• 0 items" Grid.Row="3"/>
+
+            <Border  Grid.Row="4" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
 
                 <controls:GroupedCollectionView x:Name="AllVideosGroupedCollection" 
                                 TemplateMode="Media"
@@ -121,7 +125,7 @@
                                 DisplayMemberPath="Title" />
 
             </Border>
-            <Grid RowSpacing="20" Name="grdEmptyLibrary" Grid.Row="3" Visibility="Collapsed"  VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid RowSpacing="20" Name="grdEmptyLibrary" Grid.Row="4" Visibility="Collapsed"  VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -129,11 +133,10 @@
                 <Image Grid.Row="0" Width="70" Source="/Assets/appicon.png"/>
                 <TextBlock Text="There are no songs in the specified folders. Trying adding other folders." Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Grid>
-            <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoading" Orientation="Horizontal" Spacing="20" Grid.Row="3">
+            <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoading" Orientation="Horizontal" Spacing="20" Grid.Row="4">
                 <ProgressRing IsIndeterminate="True"/>
                 <TextBlock Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
             </StackPanel>
-
         </Grid>
         <Grid Name="grdAllVideoHistory" Margin="20, 30" Grid.Row="1" Visibility="Collapsed">
             <Grid.RowDefinitions>

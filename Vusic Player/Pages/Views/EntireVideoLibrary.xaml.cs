@@ -43,7 +43,7 @@ namespace Vusic_Player.Pages.Views
         public EntireVideoLibrary()
         {
             InitializeComponent();
-          //  LoadFolders();
+           LoadFolders();
             LoadSettings();
         }
 
@@ -186,10 +186,15 @@ namespace Vusic_Player.Pages.Views
 
                 foreach (var videof in videofiles)
                 {
+                    if (AllAvailableVideos.Any(v => string.Equals(v.FilePath, videof.FilePath, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        continue;
+                    }
                     Debug.WriteLine("ADDING FILE: " + videof.FilePath);
                     AllAvailableVideos.Add(new SongModel { Title = videof.Title, FilePath = videof.FilePath, SongDuration = videof.SongDuration, Genre = videof.Genre, IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, Glyph = "\uE8B2" });
                 }
             }
+            txtVideoCount.Text = $"• {AllAvailableVideos.Count} {(AllAvailableVideos.Count == 1 ? "item":  "items") }";
             grdEmptyLibrary.Visibility = (AllAvailableVideos.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
             AllVideosGroupedCollection.Visibility = (AllAvailableVideos.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
         }
@@ -353,9 +358,12 @@ namespace Vusic_Player.Pages.Views
                 // Detach old handlers if any, and attach a specific one for THIS button
 
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                Debug.WriteLine("folder add");
                 var check = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == folder.Path);
                 if (check == null)
                 {
+                    Debug.WriteLine("folder add NULL CHECK");
+
                     currentSettings.SavedFoldersOpened.Add(new FoldersListOpened { FolderPath = folder.Path, isChecked = true });
                     await SettingsLoader.SaveSettingsAsync(currentSettings);
                 }
@@ -647,8 +655,15 @@ namespace Vusic_Player.Pages.Views
         private async void LoadSettings()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            chkIncludeSubDirectories.Checked -= chkIncludeSubDirectories_Checked;
+            chkIncludeSubDirectories.Unchecked -= chkIncludeSubDirectories_Checked;
+
             chkIncludeSubDirectories.IsChecked = currentSettings.IncludeSubDirMusLib;
- 
+
+            // Resubscribe after state is updated
+            chkIncludeSubDirectories.Checked += chkIncludeSubDirectories_Checked;
+            chkIncludeSubDirectories.Unchecked += chkIncludeSubDirectories_Checked;
+
         }
         #endregion
         
