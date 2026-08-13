@@ -51,7 +51,8 @@ namespace Vusic_Player.UI.UserViews.Controls
             Playlists,
             Artist,
             Album,
-            Genre
+            Genre,
+            Show
         }
         public GroupedCollectionView()
         {
@@ -90,11 +91,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             }
         }
 
-        private void FileInfo_RefreshValues()
-        {
-            throw new NotImplementedException();
-        }
-
+ 
         public static readonly DependencyProperty TemplateModeProperty =
                DependencyProperty.Register(
                    nameof(TemplateMode),

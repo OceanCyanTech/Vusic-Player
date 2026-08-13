@@ -11,6 +11,11 @@ namespace Vusic_Player.Configuration.UserSettings
         public ObservableCollection<VideoProgress> SavedVideoProgress { get; set; } = new();
         public ObservableCollection<VideoProgress> DoNotShowRecommendations { get; set; } = new();
         public ObservableCollection<FoldersListOpened> SavedFoldersOpened { get; set; } = new();
+        public bool IsDocumentEnabled { get; set; } = true;
+        public bool IsDownloadsEnabled { get; set; } = true;
+        public bool IsPicturesEnabled { get; set; } = true;
+        public bool IsVideosEnabled { get; set; } = true;
+        public bool IsMusicEnabled { get; set; } = true;
         public ObservableCollection<Show> Shows { get; set; } = new();
         public ObservableCollection<FoldersListOpened> SavedFoldersVideoLibraryRecommendations { get; set; } = new ObservableCollection<FoldersListOpened>();
 

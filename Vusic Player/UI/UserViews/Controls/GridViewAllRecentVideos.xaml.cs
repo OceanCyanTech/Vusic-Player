@@ -24,5 +24,6 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             InitializeComponent();
         }
+      
     }
 }

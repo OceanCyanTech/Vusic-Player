@@ -1,3 +1,4 @@
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -56,6 +57,32 @@ namespace Vusic_Player.UI.UserViews.Controls
         public GridViewRecentVideos()
         {
             InitializeComponent();
+        }
+        public void SelectAll()
+        {
+            grdViewAllRecentVideo.SelectAll();
+
+        }
+        public void ClearSelection()
+        {
+            grdViewAllRecentVideo.DeselectAll();
+        }
+        public async void RemoveSelection()
+        {
+            var selectedItems = grdViewAllRecentVideo.SelectedItems.Cast<VideoProgress>().ToList();
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var recents = currentSettings.SavedVideoProgress;
+            foreach (var item in selectedItems)
+            {
+                ItemsSource.Remove(item);
+                var exist = recents.FirstOrDefault(p => p.FilePath == item.FilePath);
+                if (exist != null)
+                {
+                    recents.Remove(exist);
+                }
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+
         }
 
         private void mnftPlayRecents_Click(object sender, RoutedEventArgs e)

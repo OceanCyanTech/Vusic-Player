@@ -79,7 +79,7 @@
                     </GridView.ItemsPanel>
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Click="btnGenericFolder_Click" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+                            <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
                                 <ToggleButton.ContextFlyout>
                                     <MenuFlyout >
                                         <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
