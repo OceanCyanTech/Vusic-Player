@@ -439,6 +439,80 @@ BorderThickness="0"
                 </HyperlinkButton>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="ShowTimelineTemplate" x:DataType="classmodel:GroupedCollectionModelShow">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Rectangle Fill="Cyan" Width="2"/>
+                    <Border Background="#1A1A1A" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="4"
+         Visibility="{x:Bind IsGroupStart, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Button x:Name="TimelineHeaderBtn" Content="{x:Bind Letter}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" FontSize="16" Click="Button_Click_2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                    </Border>
+                </Grid>
+                <HyperlinkButton Click="hyperlinkShow_Click" Name="hyperlinkShow" Grid.Column="1">
+                    <HyperlinkButton.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Name="mnftOpenShow" Click="mnftOpenShow_Click" Text="Open Show">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"></FontIcon>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem Name="mnftPlayShow" Click="mnftPlayShow_Click" Text="Play Show">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"></FontIcon>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem Name="mnftEditShow" Click="mnftEditShow_Click" Text="Edit Show">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"></FontIcon>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem Name="mnftDeleteShow" Click="mnftDeleteShow_Click" Text="Delete Show">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"></FontIcon>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </HyperlinkButton.ContextFlyout>
+                    <Grid Margin="0, 20" Grid.Column="1" ColumnSpacing="5">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+
+
+                        </Grid.ColumnDefinitions>
+                        <Image Width="90" HorizontalAlignment="Left" Source="{Binding Data.Poster}" Grid.Column="0"/>
+                        <Grid Grid.Column="1" RowSpacing="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock   Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.Name}" Grid.Row="0"/>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.ReleaseDateString}" Grid.Row="1"/>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.SeasonCountString}" Grid.Row="2"/>
+                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.Description}" Grid.Row="3"/>
+                            <Button Grid.Row="4" Style="{StaticResource AccentButtonStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <FontIcon Glyph="d"/>
+                                    <TextBlock Text="Play Album"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+        </DataTemplate>
 
     </UserControl.Resources>
 

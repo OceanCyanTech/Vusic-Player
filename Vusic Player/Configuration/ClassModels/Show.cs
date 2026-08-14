@@ -12,6 +12,8 @@ namespace Vusic_Player.Configuration.ClassModels
         public string? ShowID { get; set; }
         public string? Genre { get; set; }
         public DateTimeOffset ReleaseDate { get; set; }
+        public string ReleaseDateString { get; set; } = "01 January 2000";
+        public string SeasonCountString { get; set; } = "0 seasons";
         public string Creators { get; set; } = "";
         public ObservableCollection<string> AddedSeasons { get; set; } = new();
         public ObservableCollection<string> UnlinkedSeasons { get; set; } = new();

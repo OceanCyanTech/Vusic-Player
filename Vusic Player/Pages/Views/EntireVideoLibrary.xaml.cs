@@ -841,7 +841,7 @@ namespace Vusic_Player.Pages.Views
             foreach (var show in shows)
             {
                 Debug.WriteLine("SHOW BEING ADDED IS :" + show.Name);
-                showsAll.Add(new Show { Name = show.Name, AddedSeasons = show.AddedSeasons, Creators = show.Creators, ShowID = show.ShowID, Crew = show.Crew, Description = show.Description, Genre = show.Genre, Poster = show.Poster, ReleaseDate = show.ReleaseDate, SeasonCount = show.SeasonCount, Tags = show.Tags });
+                showsAll.Add(new Show { Name = show.Name, AddedSeasons = show.AddedSeasons, Creators = show.Creators, ShowID = show.ShowID, Crew = show.Crew, Description = show.Description, Genre = show.Genre, Poster = show.Poster, ReleaseDate = show.ReleaseDate, ReleaseDateString = show.ReleaseDate.ToString("dd MMMM yyyy"), SeasonCountString = $"• {show.SeasonCount} {(show.SeasonCount == 1 ? "season" : "seasons")}", SeasonCount = show.SeasonCount, Tags = show.Tags });
             }
             Debug.WriteLine("Show3");
             //UI 
@@ -852,8 +852,19 @@ namespace Vusic_Player.Pages.Views
         private void btnNewShow_Click(object sender, RoutedEventArgs e)
         {
             //PENDING
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Create New Show Model", "Create", "", "Cancel", OceanDialogWindow.ContentType.ShowModel, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "", "", "", "", "", new PlaylistItem(), false, false);
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1;
         }
-
+        private void OceanContentDialog_PrimaryRequested1()
+        {
+            Debug.WriteLine("Yes create");
+            PlaylistCreation.CallShowCreation();
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+        }
         #endregion
 
         #region Settings

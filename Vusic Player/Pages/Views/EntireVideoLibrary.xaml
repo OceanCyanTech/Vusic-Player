@@ -248,8 +248,8 @@
                     </StackPanel>
                 </Button>
             </StackPanel>
-            <videolibrarycontrols:UserShows x:Name="AllShowsGroupedCollection" 
-                      Grid.Row="2"  />
+            <controls:GroupedCollectionView x:Name="AllShowsGroupedCollection" TemplateMode="Show" Grid.Row="2"     ItemsSource="{x:Bind showsAll, Mode=OneWay}" SearchPlaceHolderText="Search for shows..."
+    DisplayMemberPath="Name"/>
         </Grid>
 
     </Grid>
