@@ -71,7 +71,7 @@
                 <grids:Favourites />
 
             </Expander>
-            <Button Content="NAVIGATE PRIVATE" Click="Button_Click"/>
+            <Button Visibility="Collapsed" Content="NAVIGATE PRIVATE" Click="Button_Click"/>
         </Grid>
     </ScrollViewer>
 

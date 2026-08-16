@@ -51,6 +51,7 @@
     <None Remove="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml" />
     <None Remove="UI\Dialogs\VideoOptionsWindow.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\AudioReverb.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\MultipleOutputMixer.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Audio\AudioEqualizer\Equalizer.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Delay.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Device.xaml" />
@@ -77,6 +78,7 @@
     <None Remove="UI\UserViews\Controls\GridViewRecentVideos.xaml" />
     <None Remove="UI\UserViews\Controls\GroupedCollectionView.xaml" />
     <None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
+    <None Remove="UI\UserViews\Controls\MasterSearchControl.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\MassEditor.xaml" />
@@ -168,6 +170,7 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.10" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2526" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.3.1" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +180,16 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\MultipleOutputMixer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\MasterSearchControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\UserViews\Controls\GridViewAllRecentVideos.xaml">

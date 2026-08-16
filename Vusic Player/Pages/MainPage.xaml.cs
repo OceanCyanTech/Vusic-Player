@@ -9,13 +9,21 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.DirectoryServices;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -24,7 +32,7 @@ using Page = Microsoft.UI.Xaml.Controls.Page;
 
 namespace Vusic_Player.Pages
 {
-   
+
     public sealed partial class MainPage : Page
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
@@ -68,7 +76,7 @@ namespace Vusic_Player.Pages
             _currentIndex = (_currentIndex + 1) % _suggestions.Count;
 
             // Update the UI
-            asbMaster.PlaceholderText = _suggestions[_currentIndex];
+            //asbMaster.PlaceholderText = _suggestions[_currentIndex];
         }
 
 
@@ -107,7 +115,7 @@ namespace Vusic_Player.Pages
             ColumnMaster.MinWidth = 280;
             ColumnMaster.Width = new GridLength(300);
             MusicPlayerMaster.Visibility = Visibility.Visible;
-        //    SetGridBackground();
+            //    SetGridBackground();
             if (e.SourcePageType == typeof(HomeView))
                 nvgMain.Header = "Home";
 
@@ -124,7 +132,7 @@ namespace Vusic_Player.Pages
             {
                 nvgMain.Header = "Video Library";
             }
-            else if(e.SourcePageType == typeof(FolderView))
+            else if (e.SourcePageType == typeof(FolderView))
             {
                 nvgMain.Header = "";
                 nvgMain.SelectedItem = null;
@@ -147,7 +155,7 @@ namespace Vusic_Player.Pages
                 nvgMain.Header = "";
 
             }
-            else if(e.SourcePageType == typeof(VideoPlayer))
+            else if (e.SourcePageType == typeof(VideoPlayer))
             {
                 nvgMain.AlwaysShowHeader = false;
                 nvgMain.Header = null;
@@ -156,7 +164,7 @@ namespace Vusic_Player.Pages
                 grdsplittr.Visibility = Visibility.Collapsed;
                 ColumnMaster.MinWidth = 0;
                 MusicPlayerMaster.Visibility = Visibility.Collapsed;
-            //    grdRoot.Background = null;
+                //    grdRoot.Background = null;
                 ColumnMaster.Width = GridLength.Auto;
             }
             else if (e.SourcePageType == typeof(SettingsPage))
@@ -206,11 +214,74 @@ namespace Vusic_Player.Pages
                 frmMain.Navigate(pageType, null, new DrillInNavigationTransitionInfo());
             }
         }
+        ObservableCollection<MasterSearchModel> searchResultsMaster = new ObservableCollection<MasterSearchModel>();
+        private CancellationTokenSource _cts;
 
-        private void asbMaster_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private async void asbMaster_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
+            // ONLY run when user types
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                _cts?.Cancel();
+                _cts = new CancellationTokenSource();
+                var token = _cts.Token;
 
+                var targetSearch = sender.Text.Trim();
+                if (string.IsNullOrEmpty(targetSearch))
+                {
+                    sender.ItemsSource = null;
+                    return;
+                }
+
+                try
+                {
+                    // Wait 150ms before executing search to smooth out rapid UI changes
+                    await Task.Delay(150, token);
+
+                    if (!token.IsCancellationRequested)
+                    {
+                        var filteredResults = GetFilteredResults(targetSearch);
+                        sender.ItemsSource = filteredResults;
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    // Ignored as rapid typing cancelled the previous search task
+                }
+            }
         }
+        private ObservableCollection<MasterSearchModel> GetFilteredResults(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return new ObservableCollection<MasterSearchModel>();
+
+            var rawQuery = query.Trim();
+
+            var returnableobservable = new ObservableCollection<MasterSearchModel>();
+
+            var rawMedia = FilesInDatabase.rawSongs;
+            var rawMediaTitleBoolCheck = rawMedia.All(p => p.Artist?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true);
+            Debug.WriteLine("raw media count: " + rawMedia.Count);
+            Debug.WriteLine("raw query: " + rawQuery);
+            var rawMediaArtist = rawMedia.Where(p => p.Title?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true);
+            foreach (var item in rawMediaArtist)
+            {
+                var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
+                returnableobservable.Add(new MasterSearchModel { ImageThumbnail = "ms-appx:///Assets/defaultartist.png", ResultMain = item.Title, SubInformation = subinfo });
+            }
+
+            //if (rawMediaTitleBoolCheck)
+            //{
+            //    Debug.WriteLine("TITLE CHECK");
+            //    var rawMediaTitle = rawMedia.Where(p => p.Title?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true);
+            //    foreach (var item in rawMediaTitle)
+            //    {
+            //        var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
+            //        returnableobservable.Add(new MasterSearchModel { ImageThumbnail = "ms-appx:///Assets/artistdefault.png", ResultMain = item.Title, SubInformation = subinfo });
+            //    }
+            //}
+            return returnableobservable;
+        }
+
 
         private void asbMaster_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
@@ -219,7 +290,10 @@ namespace Vusic_Player.Pages
 
         private void asbMaster_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-
+            //if (args.SelectedItem is MasterSearchModel search)
+            //{
+            //    sender.Text = search.ResultMain;
+            //}
         }
 
         private void sldVolume_ValueChanged(double obj)
@@ -235,7 +309,7 @@ namespace Vusic_Player.Pages
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
             if (mediacontroller.ArtistDisplayName == "Unknown Artist") return;
-            if(App.NavigationFrame != null)
+            if (App.NavigationFrame != null)
             {
                 App.NavigationFrame.Navigate(typeof(ArtistView), mediacontroller.ArtistDisplayName);
             }

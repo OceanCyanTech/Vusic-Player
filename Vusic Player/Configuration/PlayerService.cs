@@ -2,8 +2,10 @@
 using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -165,11 +167,20 @@ namespace Vusic_Player.Configuration
         {
             if (File.Exists(fiPath))
             {
+                Player SecondaryPlayer = new Player();
                 if (Masterplayer == null)
                 {
                     //conf.Video.VideoProcessor = VideoProcessors.Flyleaf;
                     //conf.Video.SuperResolution = true;
                     Masterplayer = new Player();
+               
+                    foreach(var audiodevice in Engine.Audio.Devices)
+                    {
+                        Debug.WriteLine("Available Device: " + audiodevice.Name);
+
+                    }
+
+                
                     QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
 
                     QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
@@ -243,7 +254,51 @@ namespace Vusic_Player.Configuration
                 }
 
                 filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                var headphonedevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Headphone"));
+                var speakerdevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Speaker"));
+                SetupMultiAudioOutput();
+                //var devices = FlyleafNAudioMultiOutput.GetAvailableDevices();
+                //foreach (var device in devices)
+                //{
+                //    Debug.WriteLine($"Name: {device.FriendlyName}");
+                //    Debug.WriteLine($"ID: {device.ID}");
+
+                //    // Inspect physical connection state (jack detection)
+                //    var property = device.Properties;
+                //    Debug.WriteLine($"State: {device.State}\n-------------------");
+                //}
+                // Select two audio endpoints (e.g., Headphones and Speakers)
+                //var allDevices = FlyleafNAudioMultiOutput.GetAvailableDevices();
+
+                //// Find Speaker and Headphone endpoints explicitly
+                //var targetDevices = new List<MMDevice>();
+
+                //var speakerDevice = allDevices.FirstOrDefault(d => d.FriendlyName.Contains("Speaker"));
+                //var headphoneDevice = allDevices.FirstOrDefault(d => d.FriendlyName.Contains("Headphone"));
+
+                //if (speakerDevice != null) targetDevices.Add(speakerDevice);
+                //if (headphoneDevice != null) targetDevices.Add(headphoneDevice);
+
+                // Initialize NAudio multi-device player
+                // 2. Pass your Flyleaf Player instance to the multi-output handler
+
+                //var multiAudioService = new FlyleafNAudioMultiOutput(Masterplayer);
+
+                //// 3. Initialize NAudio outputs and silence Flyleaf's native output
+                //multiAudioService.InitializeOutputs(targetDevices, muteFlyleafNativeAudio: true);
+                //SecondaryPlayer.Audio.Device = headphonedevice;
+                //Masterplayer.Audio.Device = speakerdevice;
+                //if (headphonedevice != null)
+                //{
+                //    Engine.Audio.ToggleDevice(headphonedevice.Id, true);
+                //}Masterplayer.Config.Audio.Cus
+                //if (speakerdevice != null)
+                //{
+                //    Engine.Audio.ToggleDevice(speakerdevice.Id, true);
+                //}
                 Masterplayer.Open(filestreamcurrent);
+                //  SecondaryPlayer.Open(filestreamcurrent);
+               
                 PlayCalled?.Invoke();
 
                 try
@@ -321,7 +376,71 @@ namespace Vusic_Player.Configuration
                 });
             }
         }
+        private static XAudio2MultiOutputEngine? _multiAudioEngine;
+        public static float GetVolumeOfDevice(string deviceID)
+        {
+            if(_multiAudioEngine != null)
+            {
+                var floatvolume = _multiAudioEngine.GetDeviceVolume(deviceID);
+                return floatvolume;
+            }
+            return 0;
+        }
+        public static void MuteDevice(string deviceId)
+        {
+            if (_multiAudioEngine != null)
+            {
+               _multiAudioEngine.SetDeviceVolume(deviceId, 0);
+            }
+        }
+        public static void MuteDev(string deviceID)
+        {
 
+            if(_multiAudioEngine != null)
+            {
+                _multiAudioEngine.MuteDevice();
+            }
+        }
+        public static void UnmuteDev(string deviceID)
+        {
+
+            if (_multiAudioEngine != null)
+            {
+                _multiAudioEngine.UnmuteDevice();
+            }
+        }
+        public static void SetVolumeOfDevice(string deviceId, float volume)
+        {
+            if (_multiAudioEngine != null)
+            {
+                _multiAudioEngine.SetDeviceVolume(deviceId, volume);
+            }
+        }
+        private static void SetupMultiAudioOutput()
+        {
+            if (Masterplayer == null) return;
+            // Create engine instance attached to Flyleaf player
+            _multiAudioEngine = new XAudio2MultiOutputEngine(Masterplayer);
+
+            var targetDeviceIds = new List<string>();
+
+            // Fetch active hardware endpoints enumerated by Flyleaf
+            foreach (var device in FlyleafLib.Engine.Audio.Devices)
+            {
+                System.Diagnostics.Debug.WriteLine($"Device Found: Name='{device.Name}', ID='{device.Id}'");
+                // Exclude default placeholder ("0") to target specific physical endpoints
+                if (device.Id != "0")
+                {
+                    targetDeviceIds.Add(device.Id);
+                }
+            }
+
+            // Initialize dual/multi mastering voice routing
+            if (targetDeviceIds.Count > 0)
+            {
+                _multiAudioEngine.InitializeOutputs(targetDeviceIds);
+            }
+        }
 
         public static void ProcessUsageInvoke()
         {

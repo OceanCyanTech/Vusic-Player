@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced.MultipleOutputMixer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+        <TextBlock Text="Multi-Device Output" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+        <Button Style="{StaticResource AccentButtonStyle}" Name="btnOutputModeUI" Click="btnOutputModeUI_Click" Content="List Mode"  Grid.Row="1"></Button>
+        <TextBlock Text="Devices" Style="{StaticResource BodyLargeTextBlockStyle}" Grid.Row="2"></TextBlock>
+        <ListView ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"  Grid.Row="3" Name="lstViewDevices">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ToolTipService.ToolTip="{Binding DeviceName}" ColumnSpacing="10">
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Rename Device" Name="mnftRenameDevice" Click="mnftRenameDevice_Click"/>
+                                <MenuFlyoutItem Text="Mute Device" Name="mnftMuteDevice" Click="mnftMuteDevice_Click"/>
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding DeviceThumbnail}" Width ="20"/>
+                        <TextBlock Text="{Binding DeviceName}" TextTrimming="CharacterEllipsis" Grid.Column ="1"/>
+                        <TextBlock Text="{Binding DeviceVolume}" Grid.Column ="2"/>
+                        <Button ToolTipService.ToolTip="Volume" Grid.Column="3" Background="Transparent" BorderBrush="Transparent">
+                            <Image Width="15" Source="/Assets/volume.png"/>
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel Orientation="Vertical" Spacing="10">
+                                        <TextBlock Text="Volume"/>
+                                        <Grid Margin="5,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <NumberBox Maximum="200" Minimum="0" Value="{Binding Volume}" ValueChanged="NumberBox_ValueChanged"/>
+                                            <TextBlock Text="{Binding DeviceVolume}" Grid.Column="1"/>
+                                        </Grid>
+                                        <Button Style="{StaticResource AccentButtonStyle}" Content="Set Volume" Name="btnSetVolume" Click="btnSetVolume_Click"></Button>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+
+</UserControl>

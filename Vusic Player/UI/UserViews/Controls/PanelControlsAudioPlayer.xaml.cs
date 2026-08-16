@@ -1,3 +1,4 @@
+using FlyleafLib;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -7,10 +8,13 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
@@ -161,5 +165,39 @@ namespace Vusic_Player.UI.UserViews.Controls
             media.AudioProperties = Visibility.Visible;
 
         }
+
+        bool isMixerMode = false;
+
+        private void btnOutputModeUI_Click(object sender, RoutedEventArgs e)
+        {
+            if(btnOutputModeUI.Content.ToString() == "Mixer Mode")
+            {
+                btnOutputModeUI.Content = "List Mode";
+            }
+            else
+            {
+                btnOutputModeUI.Content = "Mixer Mode";
+            }
+        }
+        ObservableCollection<DeviceOutputShow> AudioDevices = new ObservableCollection<DeviceOutputShow>();
+        private void mnftMultiDevice_Click(object sender, RoutedEventArgs e)
+        {
+            AudioDevices.Clear();
+            ttMultiDeviceOutput.IsOpen = true;
+            lstViewDevices.ItemsSource = AudioDevices;
+            foreach(var device in Engine.Audio.Devices)
+            {
+                bool isDefault = (device.Name?.Contains("Default", StringComparison.OrdinalIgnoreCase) ?? false);
+                if (!isDefault)
+                {
+                    var volume = PlayerService.GetVolumeOfDevice(device.Id);
+                    AudioDevices.Add(new DeviceOutputShow { DeviceID = device.Id, DeviceName = device.Name ?? "Unknown Device", DeviceVolume = $"{volume*100.0f}%", Volume = volume*100.0f });
+                }
+            }
+        }
+
+    
+
+       
     }
 }

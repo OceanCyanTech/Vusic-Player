@@ -32,6 +32,60 @@
 
                 <Image Name="imgSpeed" Width="24" Source="/Assets/speedicon.png"/>
             </Button>
+            <TeachingTip Name="ttMultiDeviceOutput" IsOpen="False" Target="{x:Bind btnEffects}">
+                <Grid RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                       
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Multi-Device Output" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <Button Style="{StaticResource AccentButtonStyle}" Name="btnOutputModeUI" Click="btnOutputModeUI_Click" Content="List Mode"  Grid.Row="1"></Button>
+                    <TextBlock Text="Devices" Style="{StaticResource BodyLargeTextBlockStyle}" Grid.Row="2"></TextBlock>
+                    <ListView Grid.Row="3" Name="lstViewDevices">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ToolTipService.ToolTip="{Binding DeviceName}" ColumnSpacing="10">
+                                    <Grid.ContextFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Mute Device" Name="mnftMuteDevice" Click="mnftMuteDevice_Click"/>
+                                        </MenuFlyout>
+                                    </Grid.ContextFlyout>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding DeviceThumbnail}" Width ="20"/>
+                                    <TextBlock Text="{Binding DeviceName}" TextTrimming="CharacterEllipsis" Grid.Column ="1"/>
+                                    <TextBlock Text="{Binding DeviceVolume}" Grid.Column ="2"/>
+                                    <Button ToolTipService.ToolTip="Volume" Grid.Column="3" Background="Transparent" BorderBrush="Transparent">
+                                        <Image Width="15" Source="/Assets/volume.png"/>
+                                        <Button.Flyout>
+                                            <Flyout>
+                                                <StackPanel Orientation="Vertical" Spacing="10">
+                                                    <TextBlock Text="Volume"/>
+                                                    <Grid Margin="5,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <NumberBox Maximum="200" Minimum="0" Value="{Binding Volume}" ValueChanged="NumberBox_ValueChanged"/>
+                                                        <TextBlock Text="{Binding DeviceVolume}" Grid.Column="1"/>
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Flyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TeachingTip>
             <TeachingTip   Closed="ttSpeedCustom_Closed" Name="ttSpeedCustom" Target="{x:Bind btnSpeed}" IsOpen="False" PreferredPlacement="Auto">
                 <ScrollViewer>
                     <videogeneral:PlaybackSpeed SliderWidth="100"></videogeneral:PlaybackSpeed>
@@ -61,7 +115,7 @@
                 <Button.Flyout>
                     <Flyout>
                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-                            <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Audio Tools"  Name="btnTools" IsEnabled="True" Click="btnLyrics_Click">
+                            <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Audio Tools"  Name="btnTools" IsEnabled="True" >
                                 <Button.Flyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem Text="Pitch" Click="mnftPitch_Click">
@@ -74,10 +128,16 @@
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Multi-Device Output Mixer" Name="mnftMultiDevice" Click="mnftMultiDevice_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                     </MenuFlyout>
                                 </Button.Flyout>
                                 <Image  Width="26" Source="/Assets/toolsicon.png"/>
                             </Button>
+                            
                             <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Find Lyrics Online"  Name="btnLyrics" IsEnabled="True" Click="btnLyrics_Click">
                                 <Image  Width="26" Source="/Assets/appicon.png"/>
                             </Button>

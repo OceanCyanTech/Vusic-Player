@@ -64,6 +64,19 @@ namespace Vusic_Player.Configuration.Helper.UI
         }
         public static async Task<string> ExtractVidThumbnailBasic(string FILEpath, double percentage = 0.22)
         {
+            //PENDING: ISSUE WITH CALLING THIS METHOD RAPIDLY CAUSING LAYOUT CYCLE EXCEPTION.: 
+            /*
+             * Microsoft.UI.Xaml.dll!00007FFEADB502A8: 88000FA8 - AG_E_LAYOUT_CYCLE
+Layout Iteration Countdown: 7. Launching Measure Pass.
+Layout Iteration Countdown: 6. Launching Arrange Pass.
+Layout Iteration Countdown: 5. Launching Measure Pass.
+Layout Iteration Countdown: 4. Launching Arrange Pass.
+Layout Iteration Countdown: 3. Launching Measure Pass.
+Layout Iteration Countdown: 2. Launching Arrange Pass.
+Layout Iteration Countdown: 1. Launching Measure Pass.
+Layout Iteration Countdown: 0. Launching Arrange Pass.
+Exception thrown at 0x00007FFF62D8187A (KernelBase.dll) in Vusic Player.exe: WinRT originate error - 0x802B0014 : 'Layout cycle detected.  Layout could not complete.'.
+             */
             Debug.WriteLine("extract vid thumbnail basic async called: " + FILEpath);
 
             var fallbackUri = "ms-appx:///Assets/default.png";
