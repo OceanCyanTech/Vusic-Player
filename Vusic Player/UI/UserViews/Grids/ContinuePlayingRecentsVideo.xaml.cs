@@ -47,95 +47,101 @@ namespace Vusic_Player.UI.UserViews.Grids
         private async Task LoadSettings()
         {
             var settings = await SettingsLoader.LoadSettingsAsync();
-
-            // Retrieve the item at the end of the list
-            var lastSavedItem = settings.SavedVideoProgress.LastOrDefault();
-            var remainingItems = settings.SavedVideoProgress.SkipLast(1).Reverse().ToList();
-
-            if (lastSavedItem != null)
-            {
-                ContinuePlaying.videoProgressMain = lastSavedItem;
-                ContinuePlaying.InvokeCall();
-
-            }
-            else
+            if (settings.SavedVideoProgress.Count == 0)
             {
                 grdHighlightVideo.Visibility = Visibility.Collapsed;
             }
-            if (remainingItems.Count > 0)
+            else
             {
+                // Retrieve the item at the end of the list
+                var lastSavedItem = settings.SavedVideoProgress.LastOrDefault();
+                var remainingItems = settings.SavedVideoProgress.SkipLast(1).Reverse().ToList();
 
-                grdRecents.Visibility = Visibility.Visible;
-                grdEmptyRecents.Visibility = Visibility.Collapsed;
-
-                VideoProgressList.Clear();
-                foreach (var item in remainingItems)
+                if (lastSavedItem != null)
                 {
-                    if (item.FilePath is string path)
+                    ContinuePlaying.videoProgressMain = lastSavedItem;
+                    ContinuePlaying.InvokeCall();
+
+                }
+                else
+                {
+                    grdHighlightVideo.Visibility = Visibility.Collapsed;
+                }
+                if (remainingItems.Count > 0)
+                {
+
+                    grdRecents.Visibility = Visibility.Visible;
+                    grdEmptyRecents.Visibility = Visibility.Collapsed;
+
+                    VideoProgressList.Clear();
+                    foreach (var item in remainingItems)
                     {
-                        if (File.Exists(path))
+                        if (item.FilePath is string path)
                         {
-                            var videoprogressitem = new VideoProgress { FilePath = path };
-                            var file = await StorageFile.GetFileFromPathAsync(path);
-                            string fileExtension = file.FileType.ToLowerInvariant();
-                            if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                            if (File.Exists(path))
                             {
-                                Debug.WriteLine("REQ PATH SI " + path);
-                                videoprogressitem.FileName = Path.GetFileNameWithoutExtension(path);
-                            }
-                            //    item.Thumbnail = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, 0.25);
-
-                            var totalduration = item.TotalDuration;
-                            var currentduration = item.CurrentDuration;
-                            var percent97 = 0.97 * totalduration;
-                            if (currentduration < totalduration && currentduration <= percent97)
-                            {
-                                videoprogressitem.CurrentDuration = currentduration;
-                                videoprogressitem.TotalDuration = totalduration;
-                                VideoProgressList.Add(videoprogressitem);
-                                var fallbackUri = "ms-appx:///Assets/default.png";
-                                videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
-                                var percentage = (videoprogressitem.CurrentDuration / videoprogressitem.TotalDuration);
-
-                                var task = Task.Run(async () =>
+                                var videoprogressitem = new VideoProgress { FilePath = path };
+                                var file = await StorageFile.GetFileFromPathAsync(path);
+                                string fileExtension = file.FileType.ToLowerInvariant();
+                                if (Extensions.VideoExtensions.List.Contains(fileExtension))
                                 {
-                                    var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, percentage);
-                                    Debug.WriteLine("The thumbnail path is " + thumb);
-                                    
-                                    DispatcherQueue.TryEnqueue(async () =>
+                                    Debug.WriteLine("REQ PATH SI " + path);
+                                    videoprogressitem.FileName = Path.GetFileNameWithoutExtension(path);
+                                }
+                                //    item.Thumbnail = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, 0.25);
+
+                                var totalduration = item.TotalDuration;
+                                var currentduration = item.CurrentDuration;
+                                var percent97 = 0.97 * totalduration;
+                                if (currentduration < totalduration && currentduration <= percent97)
+                                {
+                                    videoprogressitem.CurrentDuration = currentduration;
+                                    videoprogressitem.TotalDuration = totalduration;
+                                    VideoProgressList.Add(videoprogressitem);
+                                    var fallbackUri = "ms-appx:///Assets/default.png";
+                                    videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
+                                    var percentage = (videoprogressitem.CurrentDuration / videoprogressitem.TotalDuration);
+
+                                    var task = Task.Run(async () =>
                                     {
-                                        try
+                                        var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, percentage);
+                                        Debug.WriteLine("The thumbnail path is " + thumb);
+
+                                        DispatcherQueue.TryEnqueue(async () =>
                                         {
-                                            var bitmap = new BitmapImage();
-                                            using (var stream = File.OpenRead(thumb))
+                                            try
                                             {
-                                                await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                                                var bitmap = new BitmapImage();
+                                                using (var stream = File.OpenRead(thumb))
+                                                {
+                                                    await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                                                }
+                                                videoprogressitem.Thumbnail = bitmap;
+                                                videoprogressitem.ThumbnailPath = thumb;
+                                                File.Delete(thumb);
+
                                             }
-                                            videoprogressitem.Thumbnail = bitmap;
-                                            videoprogressitem.ThumbnailPath = thumb;
-                                            File.Delete(thumb);
+                                            catch (Exception ex)
+                                            {
+                                                videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
+                                                Debug.WriteLine("An unexpected error occured: " + ex.Message);
+                                            }
+                                        });
 
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
-                                            Debug.WriteLine("An unexpected error occured: " + ex.Message);
-                                        }
                                     });
-
-                                });
+                                }
                             }
                         }
                     }
+
+
+                    // You can now use lastSavedItem.CurrentDuration to resume playback
                 }
-
-
-                // You can now use lastSavedItem.CurrentDuration to resume playback
-            }
-            else
-            {
-                grdRecents.Visibility = Visibility.Collapsed;
-                grdEmptyRecents.Visibility = Visibility.Visible;
+                else
+                {
+                    grdRecents.Visibility = Visibility.Collapsed;
+                    grdEmptyRecents.Visibility = Visibility.Visible;
+                }
             }
         }
 

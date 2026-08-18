@@ -166,26 +166,26 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         }
 
-        bool isMixerMode = false;
-
-        private void btnOutputModeUI_Click(object sender, RoutedEventArgs e)
-        {
-            if(btnOutputModeUI.Content.ToString() == "Mixer Mode")
-            {
-                btnOutputModeUI.Content = "List Mode";
-            }
-            else
-            {
-                btnOutputModeUI.Content = "Mixer Mode";
-            }
-        }
+  
         ObservableCollection<DeviceOutputShow> AudioDevices = new ObservableCollection<DeviceOutputShow>();
         private void mnftMultiDevice_Click(object sender, RoutedEventArgs e)
         {
+
             AudioDevices.Clear();
             ttMultiDeviceOutput.IsOpen = true;
-            lstViewDevices.ItemsSource = AudioDevices;
-            foreach(var device in Engine.Audio.Devices)
+            multiOutputMixer.ItemsSource = AudioDevices;
+            if(PlayerService.Masterplayer == null)
+            {
+                grdNoMediaPlaying.Visibility = Visibility.Visible;
+                multiOutputMixer.Visibility = Visibility.Collapsed;
+                return;
+            }
+            else
+            {
+                grdNoMediaPlaying.Visibility = Visibility.Collapsed;
+                multiOutputMixer.Visibility = Visibility.Visible;
+            }
+            foreach (var device in Engine.Audio.Devices)
             {
                 bool isDefault = (device.Name?.Contains("Default", StringComparison.OrdinalIgnoreCase) ?? false);
                 if (!isDefault)
@@ -196,8 +196,30 @@ namespace Vusic_Player.UI.UserViews.Controls
             }
         }
 
-    
+        private void btnRefreshDevices_Click(object sender, RoutedEventArgs e)
+        {
+            if (PlayerService.Masterplayer == null)
+            {
+                grdNoMediaPlaying.Visibility = Visibility.Visible;
+                multiOutputMixer.Visibility = Visibility.Collapsed;
+                return;
+            }
+            else
+            {
+                grdNoMediaPlaying.Visibility = Visibility.Collapsed;
+                multiOutputMixer.Visibility = Visibility.Visible;
+            }
+            multiOutputMixer.ItemsSource = AudioDevices;
 
-       
+            foreach (var device in Engine.Audio.Devices)
+            {
+                bool isDefault = (device.Name?.Contains("Default", StringComparison.OrdinalIgnoreCase) ?? false);
+                if (!isDefault)
+                {
+                    var volume = PlayerService.GetVolumeOfDevice(device.Id);
+                    AudioDevices.Add(new DeviceOutputShow { DeviceID = device.Id, DeviceName = device.Name ?? "Unknown Device", DeviceVolume = $"{volume * 100.0f}%", Volume = volume * 100.0f });
+                }
+            }
+        }
     }
 }

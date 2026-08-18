@@ -1,5 +1,6 @@
 
 using FlyleafLib;
+using FlyleafLib.MediaFramework.MediaDevice;
 using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
 using Microsoft.UI.Input;
@@ -1680,6 +1681,22 @@ namespace Vusic_Player.Pages
         private void mnftFileInfo_Click(object sender, RoutedEventArgs e)
         {
             videoControls.ShowFileInfo();
+        }
+        ObservableCollection<DeviceOutputShow> AudioDevices = new ObservableCollection<DeviceOutputShow>();
+
+        private void videoControls_MultiDeviceOutput()
+        {
+            FadeInStoryboardMultipleOutput.Begin();
+            multiOutputMixer.ItemsSource = AudioDevices;
+            foreach (var device in Engine.Audio.Devices)
+            {
+                bool isDefault = (device.Name?.Contains("Default", StringComparison.OrdinalIgnoreCase) ?? false);
+                if (!isDefault)
+                {
+                    var volume = PlayerService.GetVolumeOfDevice(device.Id);
+                    AudioDevices.Add(new DeviceOutputShow { DeviceID = device.Id, DeviceName = device.Name ?? "Unknown Device", DeviceVolume = $"{volume * 100.0f}%", Volume = volume * 100.0f });
+                }
+            }
         }
     }
 }

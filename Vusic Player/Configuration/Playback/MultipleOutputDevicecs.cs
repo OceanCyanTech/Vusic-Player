@@ -1,6 +1,8 @@
 ﻿//NEW REVISED: 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using FlyleafLib.MediaFramework.MediaFrame;
 using FlyleafLib.MediaPlayer;
@@ -177,23 +179,30 @@ public class SingleDevicePipeline : IDisposable
             Marshal.FreeHGlobal(context);
         }
     }
-
+    public event EventHandler<string>? DeviceDisconnected;
     public void SubmitData(byte[] buffer)
     {
         if (_sourceVoice == null || buffer.Length == 0) return;
-
-        IntPtr nativeBuffer = Marshal.AllocHGlobal(buffer.Length);
-        Marshal.Copy(buffer, 0, nativeBuffer, buffer.Length);
-
-        var audioBuffer = new AudioBuffer
+        try
         {
-            AudioDataPointer = nativeBuffer,
-            AudioBytes = (uint)buffer.Length,
-            Flags = BufferFlags.None,
-            Context = nativeBuffer // Pass pointer as Context to free on BufferEnd
-        };
+            IntPtr nativeBuffer = Marshal.AllocHGlobal(buffer.Length);
+            Marshal.Copy(buffer, 0, nativeBuffer, buffer.Length);
 
-        _sourceVoice.SubmitSourceBuffer(audioBuffer);
+            var audioBuffer = new AudioBuffer
+            {
+                AudioDataPointer = nativeBuffer,
+                AudioBytes = (uint)buffer.Length,
+                Flags = BufferFlags.None,
+                Context = nativeBuffer // Pass pointer as Context to free on BufferEnd
+            };
+
+            _sourceVoice.SubmitSourceBuffer(audioBuffer);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Device Lost: " + DeviceId + ". Expected Error: " + ex.Message) ;
+            DeviceDisconnected?.Invoke(this, DeviceId);
+        }
     }
 
     public void Dispose()
@@ -295,6 +304,7 @@ public class XAudio2MultiOutputEngine : IDisposable
                 {
                     _pipelines.Add(pipeline);
                 }
+                pipeline.DeviceDisconnected += Pipeline_DeviceDisconnected;
             }
 
             if (_pipelines.Count > 0)
@@ -302,6 +312,25 @@ public class XAudio2MultiOutputEngine : IDisposable
                 _isInitialized = true;
             }
         }
+    }
+    public event EventHandler<string>? DeviceDisconnected;
+    private void Pipeline_DeviceDisconnected(object? sender, string deviceID)
+    {
+        lock (_lock)
+        {
+            var pipeline = _pipelines.FirstOrDefault(p => p.DeviceId == deviceID);
+            if (pipeline != null)
+            {
+                pipeline.DeviceDisconnected -= Pipeline_DeviceDisconnected;
+                pipeline.Dispose();
+                _pipelines.Remove(pipeline);
+
+                System.Diagnostics.Debug.WriteLine($"[XAudio2Engine] Removed device: {deviceID}");
+            }
+        }
+
+        // 5. This in turn calls PlayerService's event handler!
+        DeviceDisconnected?.Invoke(this, deviceID);
     }
 
     private void OnSamplesAdded(object? sender, AudioFrame aFrame)
@@ -335,6 +364,7 @@ public class XAudio2MultiOutputEngine : IDisposable
 
             foreach (var pipeline in _pipelines)
             {
+                pipeline.DeviceDisconnected -= Pipeline_DeviceDisconnected;
                 pipeline.Dispose();
             }
             _pipelines.Clear();

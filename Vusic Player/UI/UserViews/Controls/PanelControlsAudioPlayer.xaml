@@ -33,57 +33,16 @@
                 <Image Name="imgSpeed" Width="24" Source="/Assets/speedicon.png"/>
             </Button>
             <TeachingTip Name="ttMultiDeviceOutput" IsOpen="False" Target="{x:Bind btnEffects}">
-                <Grid RowSpacing="20">
+                <Grid>
+                <Grid Name="grdNoMediaPlaying" RowSpacing="10" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                       
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Multi-Device Output" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
-                    <Button Style="{StaticResource AccentButtonStyle}" Name="btnOutputModeUI" Click="btnOutputModeUI_Click" Content="List Mode"  Grid.Row="1"></Button>
-                    <TextBlock Text="Devices" Style="{StaticResource BodyLargeTextBlockStyle}" Grid.Row="2"></TextBlock>
-                    <ListView Grid.Row="3" Name="lstViewDevices">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ToolTipService.ToolTip="{Binding DeviceName}" ColumnSpacing="10">
-                                    <Grid.ContextFlyout>
-                                        <MenuFlyout>
-                                            <MenuFlyoutItem Text="Mute Device" Name="mnftMuteDevice" Click="mnftMuteDevice_Click"/>
-                                        </MenuFlyout>
-                                    </Grid.ContextFlyout>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Source="{Binding DeviceThumbnail}" Width ="20"/>
-                                    <TextBlock Text="{Binding DeviceName}" TextTrimming="CharacterEllipsis" Grid.Column ="1"/>
-                                    <TextBlock Text="{Binding DeviceVolume}" Grid.Column ="2"/>
-                                    <Button ToolTipService.ToolTip="Volume" Grid.Column="3" Background="Transparent" BorderBrush="Transparent">
-                                        <Image Width="15" Source="/Assets/volume.png"/>
-                                        <Button.Flyout>
-                                            <Flyout>
-                                                <StackPanel Orientation="Vertical" Spacing="10">
-                                                    <TextBlock Text="Volume"/>
-                                                    <Grid Margin="5,0">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <NumberBox Maximum="200" Minimum="0" Value="{Binding Volume}" ValueChanged="NumberBox_ValueChanged"/>
-                                                        <TextBlock Text="{Binding DeviceVolume}" Grid.Column="1"/>
-                                                    </Grid>
-                                                </StackPanel>
-                                            </Flyout>
-                                        </Button.Flyout>
-                                    </Button>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                    <TextBlock Text="No Media is Playing..."/>
+                    <Button Content="Refresh" Style="{StaticResource AccentButtonStyle}" Grid.Row="1" Name="btnRefreshDevices" Click="btnRefreshDevices_Click"/>
+                </Grid>
+                <audioadvanced:MultipleOutputMixer x:Name="multiOutputMixer"/>
                 </Grid>
             </TeachingTip>
             <TeachingTip   Closed="ttSpeedCustom_Closed" Name="ttSpeedCustom" Target="{x:Bind btnSpeed}" IsOpen="False" PreferredPlacement="Auto">

@@ -120,6 +120,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         public event Action? DragStarted;
         public event Action? DragCompleted;
         public event Action<double>? ValueChanged;
+        public event Action<object, double>? ValueChangedWithSender;
 
         private bool isDragging = false;
 
@@ -209,6 +210,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             }
 
             ValueChanged?.Invoke(Value);
+            ValueChangedWithSender?.Invoke(this, Value);
         }
 
         private void InputLayer_PointerEntered(object sender, PointerRoutedEventArgs e) => VisualStateManager.GoToState(this, "PointerOver", true);

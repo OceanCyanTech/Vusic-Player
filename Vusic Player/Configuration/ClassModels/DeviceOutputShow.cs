@@ -7,6 +7,7 @@ namespace Vusic_Player.Configuration.ClassModels
     public class DeviceOutputShow : INotifyPropertyChanged
     {
         private string _deviceName = "";
+        private string _deviceUserName = "";
         private string _deviceThumbnail = "ms-appx:///Assets/appicon.png";
         private string _deviceID = "";
         private string _deviceVolume = "";
@@ -18,6 +19,11 @@ namespace Vusic_Player.Configuration.ClassModels
         {
             get => _deviceName;
             set => SetProperty(ref _deviceName, value);
+        }
+        public string DeviceUserName
+        {
+            get => _deviceUserName;
+            set => SetProperty(ref _deviceUserName, value);
         }
 
         public string DeviceThumbnail

@@ -354,6 +354,7 @@
                             <FontIcon Glyph="&#xE713;" />
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
+                    <MenuFlyoutItem x:Name="mnftMultiDeviceOutput" Text="Multiple Audio Output Mixer" Click="mnftMultiDeviceOutput_Click"/>
                 </MenuFlyout>
             </Button.Flyout>
         </Button>

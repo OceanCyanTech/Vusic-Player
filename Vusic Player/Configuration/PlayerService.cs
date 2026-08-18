@@ -376,7 +376,7 @@ namespace Vusic_Player.Configuration
                 });
             }
         }
-        private static XAudio2MultiOutputEngine? _multiAudioEngine;
+        public static XAudio2MultiOutputEngine? _multiAudioEngine;
         public static float GetVolumeOfDevice(string deviceID)
         {
             if(_multiAudioEngine != null)
@@ -398,7 +398,7 @@ namespace Vusic_Player.Configuration
 
             if(_multiAudioEngine != null)
             {
-                _multiAudioEngine.MuteDevice();
+                _multiAudioEngine.MuteDevice(deviceID);
             }
         }
         public static void UnmuteDev(string deviceID)
@@ -406,7 +406,7 @@ namespace Vusic_Player.Configuration
 
             if (_multiAudioEngine != null)
             {
-                _multiAudioEngine.UnmuteDevice();
+                _multiAudioEngine.UnmuteDevice(deviceID);
             }
         }
         public static void SetVolumeOfDevice(string deviceId, float volume)

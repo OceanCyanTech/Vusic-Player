@@ -39,6 +39,7 @@ namespace Vusic_Player.UI.UserViews.Controls
     public sealed partial class VideoControls : UserControl
     {
         public event Action? ViewEpisodeClick;
+        public event Action? MultiDeviceOutput;
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
         public Visibility ViewEpisodeVisibility
         {
@@ -845,6 +846,11 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftOpenFileLocation_Click(object sender, RoutedEventArgs e)
         {
             OpenFileLocation();
+        }
+
+        private void mnftMultiDeviceOutput_Click(object sender, RoutedEventArgs e)
+        {
+            MultiDeviceOutput?.Invoke();
         }
     }
 }

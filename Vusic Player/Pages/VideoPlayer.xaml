@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:winui="using:FlyleafLib.Controls.WinUI" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:playbackviews="using:Vusic_Player.UI.UserViews.Controls" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:winui="using:FlyleafLib.Controls.WinUI" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:playbackviews="using:Vusic_Player.UI.UserViews.Controls" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced"
     mc:Ignorable="d">
     <Page.Resources>
         <!--<converter:DoubleToFormatConverter x:Key="FormatConverter"/>
@@ -32,6 +32,19 @@
                      Storyboard.TargetProperty="Opacity"
                      To="0.0" 
                      Duration="0:0:0.5" />
+        </Storyboard>
+        <Storyboard x:Name="FadeInStoryboardMultipleOutput">
+            <DoubleAnimation Storyboard.TargetName="grdMultipleOutput"
+             Storyboard.TargetProperty="Opacity"
+             To="1.0" 
+             Duration="0:0:1.5" />
+        </Storyboard>
+
+        <Storyboard x:Name="FadeOutStoryboardMultipleOutput">
+            <DoubleAnimation Storyboard.TargetName="grdMultipleOutput"
+             Storyboard.TargetProperty="Opacity"
+             To="0.0" 
+             Duration="0:0:0.5" />
         </Storyboard>
         <Storyboard x:Name="FadeInOutSeek">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="txtSeek"
@@ -349,6 +362,17 @@ CornerRadius="16" >
                     </Grid>
                 </Border>
             </Grid>
+            <Grid MaxHeight="500" Visibility="Visible" Opacity="0" Margin="20, 10" Name="grdMultipleOutput" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Border CornerRadius="20">
+                    <Border.Background>
+                        <media:AcrylicBrush BlurAmount="15"
+                     TintColor="Black"
+                     TintOpacity=".6" />
+                    </Border.Background>
+                    <audioadvanced:MultipleOutputMixer x:Name="multiOutputMixer"/>
+                </Border>
+            </Grid>
+
             <TeachingTip Name="ttVolume" PreferredPlacement="Center" Title="Volume">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Name="volStackPanel" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
@@ -455,7 +479,7 @@ BorderThickness="0"
                                         </StackPanel>
                                     </Grid>
                                     <playbackviews:PlaybackMainControls FileNameTextVisibility="Collapsed" x:Name="playbackMainControls"></playbackviews:PlaybackMainControls>
-                                    <playbackviews:VideoControls x:Name="videoControls" FullScreenToggled="videoControls_FullScreenToggled"  ViewEpisodeClick="videoControls_ViewEpisodeClick"/>
+                                    <playbackviews:VideoControls MultiDeviceOutput="videoControls_MultiDeviceOutput" x:Name="videoControls" FullScreenToggled="videoControls_FullScreenToggled"  ViewEpisodeClick="videoControls_ViewEpisodeClick"/>
 
                                 </StackPanel>
                             </Grid>
