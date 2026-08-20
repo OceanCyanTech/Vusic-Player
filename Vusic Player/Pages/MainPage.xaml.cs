@@ -173,7 +173,7 @@ namespace Vusic_Player.Pages
                 nvgMain.Header = "App Logs";
 
             else if (e.SourcePageType == typeof(SearchResults))
-                nvgMain.Header = "Search Results";
+                nvgMain.Header = "";
 
 
             else
@@ -324,5 +324,12 @@ namespace Vusic_Player.Pages
                 App.NavigationFrame.Navigate(typeof(AlbumView), mediacontroller.AlbumDisplayName);
             }
         }
+
+        private void chckMultioutput_Checked(object sender, RoutedEventArgs e)
+        {
+            PlayerService.MultiDeviceOutput = chckMultioutput.IsChecked ?? false;
+        }
+
+ 
     }
 }

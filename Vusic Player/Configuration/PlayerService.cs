@@ -256,7 +256,10 @@ namespace Vusic_Player.Configuration
                 filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
                 var headphonedevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Headphone"));
                 var speakerdevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Speaker"));
-                SetupMultiAudioOutput();
+                if (MultiDeviceOutput)
+                {
+                    SetupMultiAudioOutput();
+                }
                 //var devices = FlyleafNAudioMultiOutput.GetAvailableDevices();
                 //foreach (var device in devices)
                 //{
@@ -441,7 +444,7 @@ namespace Vusic_Player.Configuration
                 _multiAudioEngine.InitializeOutputs(targetDeviceIds);
             }
         }
-
+        public static bool MultiDeviceOutput = false;
         public static void ProcessUsageInvoke()
         {
             CheckProcesses?.Invoke();

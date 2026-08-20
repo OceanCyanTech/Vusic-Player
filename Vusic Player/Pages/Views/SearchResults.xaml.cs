@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -18,14 +20,21 @@ using Windows.Foundation.Collections;
 
 namespace Vusic_Player.Pages.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class SearchResults : Page
     {
         public SearchResults()
         {
             InitializeComponent();
+        }
+        Filters SearchFilterMain = Filters.All;
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if(e.Parameter is string text)
+            {
+                txtQuery.Text = "Query: " + text;
+                var searchresults = MasterSearchIndex.GetSearchResults(text, SearchFilterMain, 0, true);
+            }
+            base.OnNavigatedTo(e);
         }
     }
 }

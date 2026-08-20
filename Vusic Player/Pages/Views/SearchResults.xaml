@@ -8,7 +8,86 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-
+    <Grid Margin="30, 30" RowSpacing="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtHeader" Text="Search Results"/>
+            <Button ToolTipService.ToolTip="Search Filters" Grid.Column="1" >
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <ToggleMenuFlyoutItem Text="All">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Audio">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Video">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Artists">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Albums">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Playlists">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Genres">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Shows">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Pages">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Settings">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                    </MenuFlyout>
+                </Button.Flyout>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Source="/Assets/appicon.png" Width="20"/>
+                    <TextBlock Text="All"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+        <TextBlock Name="txtFiltersApplied" Style="{StaticResource SubtitleTextBlockStyle}" Text="Filter: All Results" Grid.Row="1"/>
+        <TextBlock Name="txtQuery" IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Query:" Grid.Row="2"/>
+        <TextBlock Name="txtSearchResultCount" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Text="0 search results" Grid.Row="3"/>
+        <SemanticZoom Grid.Row="4" IsZoomOutButtonEnabled="True">
+            
+        </SemanticZoom>
     </Grid>
 </Page>

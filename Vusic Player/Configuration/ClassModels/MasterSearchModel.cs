@@ -12,5 +12,23 @@ namespace Vusic_Player.Configuration.ClassModels
         public string ImageThumbnail { get; set; } = "";
         public string SubInformation { get; set; } = "";
         public string FilePath { get; set; } = "";
+        public string Artist { get; set; } = "";
+        public string Album { get; set; } = "";
+        public Filters SearchFilter { get; set; } = Filters.All;
+        
+    }
+    public enum Filters
+    {
+        All,
+        Music,
+        Videos,
+        Artist,
+        Playlist,
+        Album,
+        Settings,
+        Pages,
+        Playlists,
+        Shows,
+        Genres
     }
 }

@@ -97,7 +97,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void CommitSelection(MasterSearchModel selected)
         {
             popupSearch.IsOpen = false;
-            //        ListViewSelected(selected);
+          
         }
 
 
@@ -145,16 +145,22 @@ namespace Vusic_Player.UI.UserViews.Controls
 
             if (!string.IsNullOrWhiteSpace(query))
             {
-                var suggestions = GetFilteredResults(query);
+                var suggestions = MasterSearchIndex.GetSearchResults(query).Take(5);
 
 
                 foreach (var item in suggestions)
                 {
-                    searchResultsMaster.Add(item);
-
+                    var existingitem = searchResultsMaster.FirstOrDefault(p => p.FilePath == item.FilePath);
+                    if (existingitem == null)
+                    {
+                        searchResultsMaster.Add(item);
+                    }
                 }
             }
-
+            else
+            {
+                btnSearchQuery.Margin = new Thickness(0, 0, 0, 0);
+            }
             if (searchResultsMaster.Count == 0 || string.IsNullOrWhiteSpace(query))
             {
                 popupSearch.IsOpen = false;
@@ -184,7 +190,28 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void lstViewSearchOptions_ItemClick(object sender, ItemClickEventArgs e)
         {
+            popupSearch.IsOpen = false;
 
+            var selected = e.ClickedItem as MasterSearchModel;
+            if (selected != null)
+            {
+                Debug.WriteLine("yesssssdshs");
+                if(selected.SearchFilter == Filters.Artist)
+                {
+                    Debug.WriteLine("ARTISARTHUR " + selected.SubInformation);
+                    if(App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(ArtistView), selected.Artist);
+                    }
+                }
+                else if (selected.SearchFilter == Filters.Album)
+                {
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(AlbumView), selected.Album);
+                    }
+                }
+            }
         }
 
         private void asbSearchOptions_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
@@ -207,24 +234,11 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 e.Handled = true;
-
-                if (lstViewSearchOptions.Items.Count > 0)
+                if (App.NavigationFrame != null)
                 {
-                    // 1. Force the selection index so SelectedItem updates
-                    lstViewSearchOptions.SelectedIndex = 0;
+                    App.NavigationFrame.Navigate(typeof(SearchResults), asbSearchOptions.Text);
+                }
 
-                    // 2. Grab the item and immediately execute it!
-                    if (lstViewSearchOptions.Items[0] is MasterSearchModel selected)
-                    {
-                        CommitSelection(selected); // This closes the popup and navigates
-                    }
-                }
-                else
-                {
-                    popupSearch.IsOpen = false;
-                    //         spSearchResults.Visibility = Visibility.Visible;
-                    //   tbViewHolder.Visibility = Visibility.Collapsed;
-                }
             }
         }
         private DependencyObject? FindChildElementByName(DependencyObject parent, string name)

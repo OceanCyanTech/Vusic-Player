@@ -61,6 +61,8 @@ Stretch="UniformToFill"/>
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Image Name="imgThumbnailCover" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}" Width="150" Grid.Row="0"></Image>
 
@@ -93,6 +95,9 @@ Stretch="UniformToFill"/>
                             <playback_views:PlayPauseControls SpaceWidth="10" Margin="0, 5" Grid.Row="5" HorizontalAlignment="Center"></playback_views:PlayPauseControls>
                             <playback_views:VolumeSlider Margin="0, 0" Grid.Row="6"></playback_views:VolumeSlider>
                             <playback_views:PanelControlsAudioPlayer ExpandedViewButtonToolTip="Expanded View" Grid.Row="7"></playback_views:PanelControlsAudioPlayer>
+                            <CheckBox HorizontalAlignment="Center" Name="chckMultioutput" Grid.Row="8" Content="Multi-Device Audio Output" Checked="chckMultioutput_Checked" Unchecked="chckMultioutput_Checked"/>
+
+                            <Button Name="btnMultiDeviceOptions" Content="Multi-Device Audio Output Mixer" HorizontalAlignment="Center" Margin="0, 10" Grid.Row="9"/>
                         </Grid>
                     </Grid>
                 </Border>
