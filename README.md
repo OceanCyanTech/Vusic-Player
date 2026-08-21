@@ -1,8 +1,8 @@
-# Vusic Player
+# Vusic Player (Under Development)
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/5dadd3e4-f8f7-4793-93ca-ac985e2162b5" />
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2f88e30f-450a-4187-8c4c-9976bff7d343" />
 
-## Overview
+## Overview (Vusic Player will be released soon on Microsoft Store)
 * Vusic Player is an open-source and free media player app with an underlying framework of [Flyleaf Library](https://github.com/SuRGeoNix/Flyleaf). Vusic Player plays media via FFmpeg and DirectX.
 * Vusic Player features a Modern-UI where you can manage all your device Media in one place.
 * Play audio, video seamlessly.
@@ -20,3 +20,4 @@
 * Multiple filters for video, including brightness, contrast, hue, saturation, rotation, etc.
 * Manage media queue easily.
 * Vusic Player is open-source and shall remain free.
+
