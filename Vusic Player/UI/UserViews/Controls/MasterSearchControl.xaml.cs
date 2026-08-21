@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Navig;
 using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
 using Windows.Foundation;
@@ -236,7 +237,11 @@ namespace Vusic_Player.UI.UserViews.Controls
                 e.Handled = true;
                 if (App.NavigationFrame != null)
                 {
-                    App.NavigationFrame.Navigate(typeof(SearchResults), asbSearchOptions.Text);
+                    if (SearchResultsPageState.alreadyNavigatedtoSearchResultsPage == false)
+                    {
+                        App.NavigationFrame.Navigate(typeof(SearchResults), asbSearchOptions.Text);
+                        SearchResultsPageState.alreadyNavigatedtoSearchResultsPage = true;
+                    }
                 }
 
             }

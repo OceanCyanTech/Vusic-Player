@@ -12,7 +12,7 @@
   
     <Grid Name="rootGrid">
         <Frame Name="frmMain"></Frame>
-        <TextBlock  Text="Vusic Player Version 1.0.9.8 Preview" Margin="10, 10" Name="txtPreviewBuild" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource BaseTextBlockStyle}"></TextBlock>
+        <TextBlock Visibility="Visible"  Text="Vusic Player Version 1.0.9.8 Preview" Margin="10, 10" Name="txtPreviewBuild" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource BaseTextBlockStyle}"></TextBlock>
 
     </Grid>
 </Window>

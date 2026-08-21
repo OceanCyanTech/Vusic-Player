@@ -36,57 +36,62 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             var rawMedia = FilesInDatabase.rawSongs;
             if (filters == Filters.All)
             {
-                Debug.WriteLine("Processing Query: " + query);
-                Debug.WriteLine("Raw Media Count: " + rawMedia.Count);
-                //First check title:
-                bool founditemsExact = rawMedia.Any(p => string.Equals(query, p.Title, StringComparison.OrdinalIgnoreCase));
-                bool founditemsPartial = rawMedia.Any(p => query.Contains(p.Title, StringComparison.OrdinalIgnoreCase));
+                Debug.WriteLine($"Processing Query: {query}");
+                Debug.WriteLine($"Raw Media Count: {rawMedia.Count}");
+
                 string cleanQuery = query.Trim();
-                bool foundItems = rawMedia.Any(p => p.Title != null && p.Title.Contains(cleanQuery, StringComparison.OrdinalIgnoreCase));
-                if (founditemsExact)
+                if (string.IsNullOrWhiteSpace(cleanQuery)) return SearchResultsMain;
+
+                // 1. Exact Title Matches
+                var exactTitleMatches = rawMedia
+                    .Where(p => string.Equals(cleanQuery, p.Title, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                if (exactTitleMatches.Count > 0)
                 {
-                    Debug.WriteLine("Found items exact: " + query);
+                    Debug.WriteLine($"Found exact title matches: {cleanQuery}");
+                    var matchesToTake = AllResults ? exactTitleMatches : exactTitleMatches.Take(ResultCount);
 
-                    var allMatches = rawMedia.Where(p => string.Equals(query, p.Title, StringComparison.OrdinalIgnoreCase)).ToList().Take(ResultCount);
-                    foreach (var item in allMatches)
+                    foreach (var item in matchesToTake)
                     {
-                        var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
-                        var imgicon = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "musicnoteicon" : "default";
-                        SearchResultsMain.Add(new MasterSearchModel { FilePath = item.FilePath, ResultMain = item.Title, SubInformation = subinfo, ImageThumbnail = $"ms-appx:///Assets/{imgicon}.png"});
+                        bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant());
+                        SearchResultsMain.Add(new MasterSearchModel
+                        {
+                            FilePath = item.FilePath,
+                            ResultMain = item.Title,
+                            SubInformation = isVideo ? "Video" : "Song",
+                            ImageThumbnail = $"ms-appx:///Assets/{(isVideo ? "default" : "musicnoteicon")}.png"
+                        });
                     }
-
                 }
                 else
                 {
-                    Debug.WriteLine("Found items partially: " + query);
+                    // 2. Partial Title Match & Token Parsing
                     var matchedSongByTitle = rawMedia
-                            .Where(p => !string.IsNullOrWhiteSpace(p.Title) && p.Title.Length > 2)
-                            .FirstOrDefault(p => cleanQuery.Contains(p.Title, StringComparison.OrdinalIgnoreCase)
-                                              || p.Title.Contains(cleanQuery, StringComparison.OrdinalIgnoreCase));
+                        .Where(p => !string.IsNullOrWhiteSpace(p.Title) && p.Title.Length > 2)
+                        .FirstOrDefault(p => cleanQuery.Contains(p.Title, StringComparison.OrdinalIgnoreCase)
+                                          || p.Title.Contains(cleanQuery, StringComparison.OrdinalIgnoreCase));
 
                     if (matchedSongByTitle != null)
                     {
-                        // Add Matched Song First
-                        bool isAudio = !VideoExtensions.List.Contains(Path.GetExtension(matchedSongByTitle.FilePath).ToLowerInvariant());
+                        bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(matchedSongByTitle.FilePath).ToLowerInvariant());
                         SearchResultsMain.Add(new MasterSearchModel
                         {
                             FilePath = matchedSongByTitle.FilePath,
                             ResultMain = matchedSongByTitle.Title,
-                            SubInformation = isAudio ? "Song" : "Video",
-                            ImageThumbnail = $"ms-appx:///Assets/{(isAudio ? "musicnoteicon" : "default")}.png"
+                            SubInformation = isVideo ? "Video" : "Song",
+                            ImageThumbnail = $"ms-appx:///Assets/{(isVideo ? "default" : "musicnoteicon")}.png"
                         });
 
-                        // Strip matched title out of query
+                        // Strip matched title out of query for remaining tokens
                         string remainingQuery = cleanQuery
                             .Replace(matchedSongByTitle.Title, "", StringComparison.OrdinalIgnoreCase)
                             .Trim();
 
                         if (!string.IsNullOrWhiteSpace(remainingQuery))
                         {
-                            // Split remaining query into individual word tokens: ["conan", "gray"]
                             var tokens = remainingQuery.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-                            // Tokenized Matching: Ensure every token exists in p.Artist or p.AlbumName
                             var matchedArtistTrack = rawMedia.FirstOrDefault(p =>
                                 !string.IsNullOrWhiteSpace(p.Artist) &&
                                 tokens.All(token => p.Artist.Contains(token, StringComparison.OrdinalIgnoreCase)));
@@ -120,15 +125,31 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                             }
                         }
                     }
-
-                    else if (filters == Filters.Album)
-                    {
-
-                    }
-
                 }
 
-                //Second check artist:
+                // 3. Exact Artist Matches (Only execute if no exact title was found to prevent duplicate results)
+                if (exactTitleMatches.Count == 0)
+                {
+                    var exactArtistMatches = rawMedia
+                        .Where(p => string.Equals(cleanQuery, p.Artist, StringComparison.OrdinalIgnoreCase))
+                        .DistinctBy(p => p.Artist) // Avoid adding the same artist multiple times for different tracks
+                        .Take(ResultCount);
+
+                    foreach (var item in exactArtistMatches)
+                    {
+                        SearchResultsMain.Add(new MasterSearchModel
+                        {
+                            FilePath = item.FilePath,
+                            ResultMain = item.Artist,
+                            SearchFilter = ClassModels.Filters.Artist,
+                            SubInformation = "Artist",
+                            ImageThumbnail = "ms-appx:///Assets/defaultartist.png"
+                        });
+                    }
+                }
+            }
+            else if (filters == Filters.Album)
+            {
 
             }
             return SearchResultsMain;

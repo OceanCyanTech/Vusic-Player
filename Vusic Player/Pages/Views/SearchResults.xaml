@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:classmodels="using:Vusic_Player.Configuration.ClassModels"
     mc:Ignorable="d">
 
     <Grid Margin="30, 30" RowSpacing="40">
@@ -87,7 +87,49 @@
         <TextBlock Name="txtQuery" IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Query:" Grid.Row="2"/>
         <TextBlock Name="txtSearchResultCount" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Text="0 search results" Grid.Row="3"/>
         <SemanticZoom Grid.Row="4" IsZoomOutButtonEnabled="True">
-            
+            <SemanticZoom.ZoomedInView>
+                <GridView ItemsSource="{x:Bind SearchCVS.View, Mode=OneWay}" SelectionMode="Extended">
+                    <!-- Items Data Template -->
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="classmodels:MasterSearchModel">
+
+                            <Grid ColumnSpacing="20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="20" Source="{x:Bind ImageThumbnail}"/>
+                                <TextBlock Text="{x:Bind ResultMain}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Center"/>
+
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+
+                    <!-- Group Headers in Zoomed-In View -->
+                    <GridView.GroupStyle>
+                        <GroupStyle >
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate x:DataType="classmodels:SearchResultGroupHeader">
+                                    <TextBlock Text="{x:Bind GroupName}" Style="{StaticResource TitleTextBlockStyle}"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </GridView.GroupStyle>
+                </GridView>
+            </SemanticZoom.ZoomedInView>
+
+            <!-- Zoomed-Out View: ListView showing only Group Headers -->
+            <SemanticZoom.ZoomedOutView>
+                <ListView ItemsSource="{x:Bind SearchCVS.View.CollectionGroups, Mode=OneWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="ICollectionViewGroup">
+                            <TextBlock Text="{x:Bind ((classmodels:SearchResultGroupHeader)Group).GroupName}"
+           Style="{StaticResource SubtitleTextBlockStyle}" 
+           Margin="8"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
     </Grid>
 </Page>
