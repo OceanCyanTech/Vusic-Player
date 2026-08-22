@@ -258,7 +258,7 @@ namespace Vusic_Player.Configuration
                 var speakerdevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Speaker"));
                 if (MultiDeviceOutput)
                 {
-                    SetupMultiAudioOutput();
+                   // SetupMultiAudioOutput();
                 }
                 //var devices = FlyleafNAudioMultiOutput.GetAvailableDevices();
                 //foreach (var device in devices)
