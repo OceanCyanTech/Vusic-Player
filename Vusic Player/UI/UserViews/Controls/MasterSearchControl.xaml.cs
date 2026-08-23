@@ -98,7 +98,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void CommitSelection(MasterSearchModel selected)
         {
             popupSearch.IsOpen = false;
-          
+
         }
 
 
@@ -197,10 +197,10 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (selected != null)
             {
                 Debug.WriteLine("yesssssdshs");
-                if(selected.SearchFilter == Filters.Artist)
+                if (selected.SearchFilter == Filters.Artist)
                 {
                     Debug.WriteLine("ARTISARTHUR " + selected.SubInformation);
-                    if(App.NavigationFrame != null)
+                    if (App.NavigationFrame != null)
                     {
                         App.NavigationFrame.Navigate(typeof(ArtistView), selected.Artist);
                     }
@@ -242,6 +242,13 @@ namespace Vusic_Player.UI.UserViews.Controls
                         App.NavigationFrame.Navigate(typeof(SearchResults), asbSearchOptions.Text);
                         SearchResultsPageState.alreadyNavigatedtoSearchResultsPage = true;
                     }
+                    else
+                    {
+                        if (App.NavigationFrame.Content is SearchResults searchresult)
+                        {
+                            searchresult.ModifySearchQuery(asbSearchOptions.Text);
+                        }
+                    }
                 }
 
             }
@@ -258,7 +265,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                 }
 
                 var result = FindChildElementByName(child, name);
-                
+
                 if (result != null) return result;
             }
             return null;

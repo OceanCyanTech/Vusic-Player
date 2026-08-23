@@ -5,10 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:classmodels="using:Vusic_Player.Configuration.ClassModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:classmodels="using:Vusic_Player.Configuration.ClassModels" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
     <Page.Resources>
-        <CollectionViewSource x:Name="searchCVS"/>
+        <local:CountToTextConverter x:Key="CounttoText"/>
     </Page.Resources>
     <Grid Margin="30, 30" RowSpacing="40">
         <Grid.RowDefinitions>
@@ -16,7 +16,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -87,48 +87,15 @@
         </Grid>
         <TextBlock Name="txtFiltersApplied" Style="{StaticResource SubtitleTextBlockStyle}" Text="Filter: All Results" Grid.Row="1"/>
         <TextBlock Name="txtQuery" IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Query:" Grid.Row="2"/>
-        <TextBlock Name="txtSearchResultCount" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Text="0 search results" Grid.Row="3"/>
-        <SemanticZoom Grid.Row="4" IsZoomOutButtonEnabled="True">
-            <SemanticZoom.ZoomedInView>
-                <GridView ItemsSource="{x:Bind SearchCVS.View, Mode=OneWay}" SelectionMode="Extended">
-                    <!-- Items Data Template -->
-                    <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="classmodels:MasterSearchModel">
-                            <Grid ColumnSpacing="20">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Image Width="20" Source="{x:Bind ImageThumbnail}"/>
-                                <TextBlock Text="{x:Bind ResultMain}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Center"/>
-                            </Grid>
-                        </DataTemplate>
-                    </GridView.ItemTemplate>
-                    <!-- Group Headers in Zoomed-In View -->
-                    <GridView.GroupStyle>
-                        <GroupStyle >
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate x:DataType="classmodels:SearchResultGroupHeader">
-                                    <TextBlock Text="{x:Bind GroupName}" Style="{StaticResource TitleTextBlockStyle}"/>
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                        </GroupStyle>
-                    </GridView.GroupStyle>
-                </GridView>
-            </SemanticZoom.ZoomedInView>
+        <TextBlock Name="txtSearchResultCount" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Text="{x:Bind SearchResultsMain.Count, Converter={StaticResource CounttoText}, Mode=OneWay}" Grid.Row="3"/>
+        <Border  Grid.Row="4" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
 
-            <!-- Zoomed-Out View: ListView showing only Group Headers -->
-            <SemanticZoom.ZoomedOutView>
-                <GridView ItemsSource="{x:Bind SearchCVS.View.CollectionGroups, Mode=OneWay}">
-                    <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="ICollectionViewGroup">
-                            <TextBlock Text="{x:Bind ((classmodels:SearchResultGroupHeader)Group).GroupName}"
-           Style="{StaticResource SubtitleTextBlockStyle}" 
-           Margin="8"/>
-                        </DataTemplate>
-                    </GridView.ItemTemplate>
-                </GridView>
-            </SemanticZoom.ZoomedOutView>
-        </SemanticZoom>
+            <controls:GroupedCollectionView x:Name="AllSearchResults" 
+                         Grid.Row="2" 
+                         TemplateMode="Search"
+                         ItemsSource="{x:Bind SearchResultsMain, Mode=OneWay}" SearchboxVisibility="Collapsed"
+                         DisplayMemberPath="SubInformation" />
+
+        </Border>
     </Grid>
 </Page>

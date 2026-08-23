@@ -146,6 +146,25 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                             ImageThumbnail = "ms-appx:///Assets/defaultartist.png"
                         });
                     }
+
+                    var exactAlbumMatches = rawMedia
+        .Where(p => !string.IsNullOrWhiteSpace(p.AlbumName) &&
+                    string.Equals(cleanQuery, p.AlbumName, StringComparison.OrdinalIgnoreCase))
+        .DistinctBy(p => p.AlbumName)
+        .Take(ResultCount);
+
+                    foreach (var item in exactAlbumMatches)
+                    {
+                        SearchResultsMain.Add(new MasterSearchModel
+                        {
+                            FilePath = item.FilePath,
+                            ResultMain = item.AlbumName,
+                            Album = item.AlbumName,
+                            SearchFilter = ClassModels.Filters.Album,
+                            SubInformation = "Album",
+                            ImageThumbnail = "ms-appx:///Assets/defaultalbum.png"
+                        });
+                    }
                 }
             }
             else if (filters == Filters.Album)

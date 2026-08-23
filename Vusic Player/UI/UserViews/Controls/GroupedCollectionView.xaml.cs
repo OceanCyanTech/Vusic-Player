@@ -52,7 +52,8 @@ namespace Vusic_Player.UI.UserViews.Controls
             Artist,
             Album,
             Genre,
-            Show
+            Show,
+            Search
         }
         public GroupedCollectionView()
         {
@@ -64,7 +65,24 @@ namespace Vusic_Player.UI.UserViews.Controls
             TimelineCollectionArtist.CollectionChanged -= TimelineCollectionArtist_CollectionChanged;
             TimelineCollectionArtist.CollectionChanged += TimelineCollectionArtist_CollectionChanged;
             TimelineCollectionAlbum.CollectionChanged -= TimelineCollectionAlbum_CollectionChanged;
-            TimelineCollectionAlbum.CollectionChanged += TimelineCollectionAlbum_CollectionChanged;
+            TimelineCollectionShow.CollectionChanged += TimelineCollectionShow_CollectionChanged;
+            TimelineCollectionSearch.CollectionChanged += TimelineCollectionSearch_CollectionChanged; ; 
+        }
+
+        private void TimelineCollectionSearch_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (TimelineCollectionShow.Count == 0)
+            {
+                searchcollectionchanged?.Invoke();
+            }
+        }
+
+        private void TimelineCollectionShow_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (TimelineCollectionShow.Count == 0)
+            {
+                showcollectionchanged?.Invoke();
+            }
         }
 
         private void TimelineCollectionAlbum_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -128,6 +146,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                 TimelineTemplateMode.Playlists => "PlaylistTimelineTemplate",
                 TimelineTemplateMode.Genre => "GenreTimelineTemplate",
                 TimelineTemplateMode.Show => "ShowTimelineTemplate",
+                TimelineTemplateMode.Search => "SearchResultsTimelineTemplate",
                 _ => "TimelineSongTemplate" // Fallback default
             };
 
@@ -172,6 +191,16 @@ namespace Vusic_Player.UI.UserViews.Controls
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register("ItemsSource", typeof(object),
             typeof(GroupedCollectionView), new PropertyMetadata(null, OnItemsSourceChanged));
+
+        public Visibility SearchboxVisibility
+        {
+            get => (Visibility)GetValue(SearchboxVis);
+            set => SetValue(SearchboxVis, value);
+        }
+
+        public static readonly DependencyProperty SearchboxVis =
+            DependencyProperty.Register("SearchboxVisibility", typeof(Visibility),
+            typeof(GroupedCollectionView), new PropertyMetadata(Visibility.Visible));
 
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -253,7 +282,21 @@ namespace Vusic_Player.UI.UserViews.Controls
                         newList.CollectionChanged += control.OnCollectionChanged;
                     }
                 }
+                else if (e.NewValue is IEnumerable<MasterSearchModel> list6)
+                {
+                    Debug.WriteLine("MasterSearchModel");
 
+                    control.GenerateTimelineSearch(list6);
+                    Debug.WriteLine("Searchhh");
+
+                    // 2. Subscribe to the new collection's changes
+                    if (e.NewValue is System.Collections.Specialized.INotifyCollectionChanged newList)
+                    {
+                        Debug.WriteLine("Playlst9");
+
+                        newList.CollectionChanged += control.OnCollectionChanged;
+                    }
+                }
             }
         }
         private void OnCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -282,6 +325,11 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 MainTimelineList.ItemsSource = TimelineCollectionShow;
                 GenerateTimelineShow(list5);
+            }
+            else if (ItemsSource is IEnumerable<MasterSearchModel> list6)
+            {
+                MainTimelineList.ItemsSource = TimelineCollectionSearch;
+                GenerateTimelineSearch(list6);
             }
         }
         private void btnGlyph_Click(object sender, RoutedEventArgs e)
@@ -629,6 +677,48 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         }
 
+        private void GenerateTimelineSearch(IEnumerable<MasterSearchModel> items)
+        {
+            Debug.WriteLine("Playlst5");
+
+
+            TimelineCollectionSearch.Clear();
+
+            // 1. Helper to get the string value dynamically
+            Func<object, string> getStringValue = (obj) =>
+            {
+                if (string.IsNullOrEmpty(DisplayMemberPath)) return obj.ToString() ?? "";
+                var prop = obj.GetType().GetProperty(DisplayMemberPath);
+                return prop?.GetValue(obj)?.ToString() ?? obj.ToString() ?? "";
+            };
+
+            // 2. Sort by the dynamic value
+            var sorted = items.OrderBy(x => getStringValue(x)).ToList();
+            string lastLetter = "";
+
+            foreach (var item in sorted)
+            {
+                string currentTitle = getStringValue(item);
+                string firstLetter = currentTitle;
+
+                bool isStart = firstLetter != lastLetter;
+                if (isStart) lastLetter = firstLetter;
+
+                TimelineCollectionSearch.Add(new GroupedCollectionModelSearchResult
+                {
+
+                    Data = item,
+                    Letter = firstLetter,
+                    IsGroupStart = isStart
+                });
+            }
+
+            MapGridView.ItemsSource = TimelineCollectionSearch
+                .Where(x => x.IsGroupStart)
+                .Select(x => x.Letter)
+                .ToList();
+
+        }
 
         private void GenerateTimeline(IEnumerable<SongModel> items)
         {
@@ -690,6 +780,8 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         public ObservableCollection<GroupedCollectionModelShow> TimelineCollectionShow { get; set; }
 = new ObservableCollection<GroupedCollectionModelShow>();
+        public ObservableCollection<GroupedCollectionModelSearchResult> TimelineCollectionSearch { get; set; }
+= new ObservableCollection<GroupedCollectionModelSearchResult>();
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
@@ -1921,6 +2013,8 @@ namespace Vusic_Player.UI.UserViews.Controls
         public event Action? playlistcollectionchanged;
         public event Action? artistcollectionchanged;
         public event Action? albumcollectionchanged;
+        public event Action? showcollectionchanged;
+        public event Action? searchcollectionchanged;
         private async void mnftDeletePlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)
