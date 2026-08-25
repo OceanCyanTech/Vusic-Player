@@ -10,7 +10,7 @@
     <Page.Resources>
         <local:CountToTextConverter x:Key="CounttoText"/>
     </Page.Resources>
-    <Grid Margin="30, 30" RowSpacing="40">
+    <Grid Margin="40, 30" RowSpacing="40">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -24,55 +24,55 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtHeader" Text="Search Results"/>
-            <Button ToolTipService.ToolTip="Search Filters" Grid.Column="1" >
+            <Button ToolTipService.ToolTip="Search Filters" Grid.Column="1" HorizontalAlignment="Right">
                 <Button.Flyout>
-                    <MenuFlyout>
-                        <ToggleMenuFlyoutItem Text="All">
+                    <MenuFlyout x:Name="mnftFilters">
+                        <ToggleMenuFlyoutItem Text="All" IsChecked="True" Name="tglAll" Click="ToggleMenuFlyoutItem_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Audio">
+                        <ToggleMenuFlyoutItem Text="Audio" Name="tglGeneric" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Video">
+                        <ToggleMenuFlyoutItem Text="Video" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Artists">
+                        <ToggleMenuFlyoutItem Text="Artist" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Albums">
+                        <ToggleMenuFlyoutItem Text="Album" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Playlists">
+                        <ToggleMenuFlyoutItem Text="Playlist" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Genres">
+                        <ToggleMenuFlyoutItem Text="Genre" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Shows">
+                        <ToggleMenuFlyoutItem Text="Show" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Pages">
+                        <ToggleMenuFlyoutItem Text="Page" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Settings">
+                        <ToggleMenuFlyoutItem Text="Settings" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>

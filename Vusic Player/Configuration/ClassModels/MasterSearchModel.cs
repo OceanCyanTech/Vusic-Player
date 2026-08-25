@@ -14,6 +14,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public string FilePath { get; set; } = "";
         public string Artist { get; set; } = "";
         public string Album { get; set; } = "";
+        public string PlaylistID { get; set; } = "";
         public Filters SearchFilter { get; set; } = Filters.All;
         
     }

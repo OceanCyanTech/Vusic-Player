@@ -27,17 +27,25 @@ Stretch="UniformToFill"/>
                             <ColumnDefinition MaxWidth="700" MinWidth="280" x:Name="ColumnMaster" Width="300"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <NavigationView  IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="nvgMain_BackRequested" Grid.Column="0" Background="Transparent" Name="nvgMain" PaneDisplayMode="Top" IsSettingsVisible="True" SelectionChanged="nvgMain_SelectionChanged">
-                         
+
                             <NavigationView.MenuItems>
                                 <NavigationViewItem Name="nvgitHome" Content="Home" Tag="HomePage"></NavigationViewItem>
                                 <NavigationViewItem Name="nvgitMusic" Content="Music Library" Tag="MusicLibrary"></NavigationViewItem>
                                 <NavigationViewItem Name="nvgitVideo" Content="Video Library"></NavigationViewItem>
                                 <NavigationViewItem Name="nvgitQueue" Content="Play Queue" Visibility="Visible"></NavigationViewItem>
                             </NavigationView.MenuItems>
-                            <NavigationView.PaneCustomContent >
-                                <playback_views:MasterSearchControl MinWidth="300" Margin="0, 3" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                            </NavigationView.PaneCustomContent>
-                            
+
+                            <NavigationView.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <playback_views:MasterSearchControl Grid.Column="1" MinWidth="300" Margin="40, 0" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="0" Name="txtHeader" Text=""/>
+                                </Grid>
+                            </NavigationView.Header>
+
                             <Grid>
                                 <Grid Visibility="Collapsed" Name="blackBackground" Background="Black" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></Grid>
 
@@ -75,7 +83,7 @@ Stretch="UniformToFill"/>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <HyperlinkButton Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}">
-                                    
+
                                 </HyperlinkButton>
                                 <HyperlinkButton Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName,Mode=OneWay}">
 
@@ -103,6 +111,6 @@ Stretch="UniformToFill"/>
                 </Border>
             </Grid>
         </Frame>
-        
+
     </Grid>
 </Page>

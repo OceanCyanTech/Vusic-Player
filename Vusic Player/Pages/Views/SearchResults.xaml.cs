@@ -74,5 +74,81 @@ namespace Vusic_Player.Pages.Views
             }
             base.OnNavigatedTo(e);
         }
+
+        private void ToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not ToggleMenuFlyoutItem tglAllItem) return;
+
+            // Clear all individual filter selections
+            filterresults.Clear();
+
+            foreach (var item in mnftFilters.Items)
+            {
+                if (item is ToggleMenuFlyoutItem tgl && tgl != tglAllItem)
+                {
+                    tgl.IsChecked = false;
+                }
+            }
+
+            tglAllItem.IsChecked = true;
+            txtFiltersApplied.Text = "All Results";
+        }
+        List<string> filterresults = new List<string>();
+        private void UpdateSearchResults()
+        {
+            if (filterresults.Count == 0)
+            {
+                AllSearchResults.ItemsSource = new ObservableCollection<MasterSearchModel>(SearchResultsMain);
+                return;
+            }
+            var filtered = SearchResultsMain.Where(p => filterresults.Contains(p.SubInformation)).ToList();
+            AllSearchResults.ItemsSource = new ObservableCollection<MasterSearchModel>(filtered);
+        }
+        private void tglGeneric_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not ToggleMenuFlyoutItem tglmnft) return;
+
+            // Maintain filter list based on check state
+            if (tglmnft.IsChecked)
+            {
+                if (!filterresults.Contains(tglmnft.Text))
+                    filterresults.Add(tglmnft.Text);
+              
+            }
+            else
+            {
+                filterresults.Remove(tglmnft.Text);
+             
+            }
+            UpdateSearchResults();
+            //PENDING CHECK UPDATE SEARCH RESULTS METHOD
+            // Check if every individual filter item is checked
+            bool allItemsChecked = true;
+            foreach (var item in mnftFilters.Items)
+            {
+                if (item is ToggleMenuFlyoutItem tgl && tgl != tglAll)
+                {
+                    if (!tgl.IsChecked)
+                    {
+                        allItemsChecked = false;
+                        break;
+                    }
+                }
+            }
+
+            // Update "All" toggle and display label safely
+            if (allItemsChecked && mnftFilters.Items.Count > 1)
+            {
+                tglAll.IsChecked = true;
+                txtFiltersApplied.Text = "All Results";
+            }
+            else
+            {
+                tglAll.IsChecked = false;
+                txtFiltersApplied.Text = filterresults.Count > 0
+                    ? string.Join(", ", filterresults) + " Results"
+                    : "No Filters Applied";
+            }
+        }
     }
 }

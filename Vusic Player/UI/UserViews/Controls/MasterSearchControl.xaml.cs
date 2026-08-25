@@ -287,7 +287,10 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void asbSearchOptions_GotFocus(object sender, RoutedEventArgs e)
         {
-            btnSearchQuery.Margin = new Thickness(0, 0, 30, 0);
+            if (!string.IsNullOrWhiteSpace(asbSearchOptions.Text))
+            {
+                btnSearchQuery.Margin = new Thickness(0, 0, 30, 0);
+            }
         }
 
         private void asbSearchOptions_LostFocus(object sender, RoutedEventArgs e)

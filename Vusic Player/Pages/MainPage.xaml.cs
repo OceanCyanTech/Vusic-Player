@@ -23,6 +23,7 @@ using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
 using Windows.Foundation;
@@ -51,6 +52,7 @@ namespace Vusic_Player.Pages
 
             _originalHeader = nvgMain.Header;
         }
+       
         private void UpdatePlaceholderText()
         {
             _suggestions = new List<string>
@@ -105,36 +107,44 @@ namespace Vusic_Player.Pages
             // 3. Assign the brush to the Grid's Background
             grdRoot.Background = imageBrush;
         }
+        private async void InitializePlaylists()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var playlists = currentSettings.SavedPlaylists;
+            MasterSearchIndex.PlaylistsMaster = new ObservableCollection<PlaylistItem>(playlists);
+        }
         private async void FrmMain_Navigated(object sender, NavigationEventArgs e)
         {
             nvgMain.AlwaysShowHeader = true;
-            nvgMain.Header = _originalHeader;
+            txtHeader.Text = "";
             nvgMain.IsPaneVisible = true;
             grdsplittr.Visibility = Visibility.Visible;
             blackBackground.Visibility = Visibility.Collapsed;
             ColumnMaster.MinWidth = 280;
             ColumnMaster.Width = new GridLength(300);
             MusicPlayerMaster.Visibility = Visibility.Visible;
+            InitializePlaylists();
             //    SetGridBackground();
             if (e.SourcePageType == typeof(HomeView))
-                nvgMain.Header = "Home";
-
+            {
+                      txtHeader.Text = "Home";
+            }
             else if (e.SourcePageType == typeof(MusicLibrary))
-                nvgMain.Header = "Music Library";
+                txtHeader.Text = "Music Library";
 
             else if (e.SourcePageType == typeof(VideoLibrary))
-                nvgMain.Header = "Video Library";
+                txtHeader.Text = "Video Library";
             else if (e.SourcePageType == typeof(EntireMusicLibrary))
             {
-                nvgMain.Header = "Music Library";
+                txtHeader.Text = "Music Library";
             }
             else if (e.SourcePageType == typeof(EntireVideoLibrary))
             {
-                nvgMain.Header = "Video Library";
+                txtHeader.Text = "Video Library";
             }
             else if (e.SourcePageType == typeof(FolderView))
             {
-                nvgMain.Header = "";
+                txtHeader.Text = "";
                 nvgMain.SelectedItem = null;
             }
             else if (e.SourcePageType == typeof(QueuePage))
@@ -143,7 +153,7 @@ namespace Vusic_Player.Pages
                 ColumnMaster.MinWidth = 0;
                 ColumnMaster.Width = new GridLength(0);
                 grdsplittr.Visibility = Visibility.Collapsed;
-                nvgMain.Header = "";
+                txtHeader.Text = "";
 
             }
             else if (e.SourcePageType == typeof(MusicPlayerFull))
@@ -152,13 +162,13 @@ namespace Vusic_Player.Pages
                 ColumnMaster.MinWidth = 0;
                 ColumnMaster.Width = new GridLength(0);
                 grdsplittr.Visibility = Visibility.Collapsed;
-                nvgMain.Header = "";
+                txtHeader.Text = "";
 
             }
             else if (e.SourcePageType == typeof(VideoPlayer))
             {
                 nvgMain.AlwaysShowHeader = false;
-                nvgMain.Header = null;
+                txtHeader.Text = "";
                 blackBackground.Visibility = Visibility.Visible;
                 nvgMain.IsPaneVisible = false;
                 grdsplittr.Visibility = Visibility.Collapsed;
@@ -168,16 +178,16 @@ namespace Vusic_Player.Pages
                 ColumnMaster.Width = GridLength.Auto;
             }
             else if (e.SourcePageType == typeof(SettingsPage))
-                nvgMain.Header = "App Settings";
+                txtHeader.Text = "App Settings";
             else if (e.SourcePageType == typeof(LoggerPage))
-                nvgMain.Header = "App Logs";
+                txtHeader.Text = "App Logs";
 
             else if (e.SourcePageType == typeof(SearchResults))
-                nvgMain.Header = "";
+                txtHeader.Text = "";
 
 
             else
-                nvgMain.Header = "";
+                txtHeader.Text = "";
         }
 
         private void nvgMain_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -330,6 +340,6 @@ namespace Vusic_Player.Pages
             PlayerService.MultiDeviceOutput = chckMultioutput.IsChecked ?? false;
         }
 
- 
+
     }
 }
