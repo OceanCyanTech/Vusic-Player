@@ -15,6 +15,8 @@ namespace Vusic_Player.Configuration.ClassModels
         public string Artist { get; set; } = "";
         public string Album { get; set; } = "";
         public string PlaylistID { get; set; } = "";
+        public string ShowID { get; set; } = "";
+        public string FolderPath { get; set; } = "";
         public Filters SearchFilter { get; set; } = Filters.All;
         
     }
@@ -30,6 +32,7 @@ namespace Vusic_Player.Configuration.ClassModels
         Pages,
         Playlists,
         Shows,
-        Genres
+        Genres,
+        Folders
     }
 }

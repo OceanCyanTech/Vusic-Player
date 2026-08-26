@@ -107,11 +107,21 @@ namespace Vusic_Player.Pages
             // 3. Assign the brush to the Grid's Background
             grdRoot.Background = imageBrush;
         }
-        private async void InitializePlaylists()
+        private async void InitializeSettings()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var playlists = currentSettings.SavedPlaylists;
             MasterSearchIndex.PlaylistsMaster = new ObservableCollection<PlaylistItem>(playlists);
+            MasterSearchIndex.ShowsMaster = new ObservableCollection<Show>(currentSettings.Shows);
+            MasterSearchIndex.FoldersOpenedMaster = new ObservableCollection<FolderModel>(currentSettings.FoldersRecent);
+            MasterSearchIndex.Pages.Add("Home");
+            MasterSearchIndex.Pages.Add("Music Library");
+            MasterSearchIndex.Pages.Add("Video Library");
+            MasterSearchIndex.Pages.Add("Queue");
+            MasterSearchIndex.Pages.Add("Entire Music Library");
+            MasterSearchIndex.Pages.Add("Entire Video Library");
+            MasterSearchIndex.Pages.Add("Log");
+            MasterSearchIndex.Pages.Add("Settings");
         }
         private async void FrmMain_Navigated(object sender, NavigationEventArgs e)
         {
@@ -123,7 +133,7 @@ namespace Vusic_Player.Pages
             ColumnMaster.MinWidth = 280;
             ColumnMaster.Width = new GridLength(300);
             MusicPlayerMaster.Visibility = Visibility.Visible;
-            InitializePlaylists();
+            InitializeSettings();
             //    SetGridBackground();
             if (e.SourcePageType == typeof(HomeView))
             {

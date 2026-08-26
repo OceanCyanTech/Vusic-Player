@@ -32,7 +32,7 @@
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem Text="Audio" Name="tglGeneric" Click="tglGeneric_Click">
+                        <ToggleMenuFlyoutItem Text="Song" Name="tglGeneric" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>
@@ -63,6 +63,11 @@
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
                         <ToggleMenuFlyoutItem Text="Show" Click="tglGeneric_Click">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem Text="Folder" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="d"/>
                             </ToggleMenuFlyoutItem.Icon>

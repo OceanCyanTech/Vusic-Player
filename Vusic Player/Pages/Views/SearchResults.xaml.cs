@@ -89,7 +89,7 @@ namespace Vusic_Player.Pages.Views
                     tgl.IsChecked = false;
                 }
             }
-
+            UpdateSearchResults();
             tglAllItem.IsChecked = true;
             txtFiltersApplied.Text = "All Results";
         }
@@ -103,6 +103,7 @@ namespace Vusic_Player.Pages.Views
             }
             var filtered = SearchResultsMain.Where(p => filterresults.Contains(p.SubInformation)).ToList();
             AllSearchResults.ItemsSource = new ObservableCollection<MasterSearchModel>(filtered);
+            txtSearchResultCount.Text = $"{filtered.Count} {(filtered.Count == 1 ? "search result" : "search results")}";
         }
         private void tglGeneric_Click(object sender, RoutedEventArgs e)
         {
