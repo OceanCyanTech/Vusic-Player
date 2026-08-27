@@ -138,7 +138,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             return returnableobservable;
         }
 
-        private void asbSearchOptions_TextChanged(object sender, TextChangedEventArgs e)
+        private async void asbSearchOptions_TextChanged(object sender, TextChangedEventArgs e)
         {
             var query = asbSearchOptions.Text.ToLower();
 
@@ -146,17 +146,26 @@ namespace Vusic_Player.UI.UserViews.Controls
 
             if (!string.IsNullOrWhiteSpace(query))
             {
-                var suggestions = MasterSearchIndex.GetSearchResults(query).Take(5);
-
-
-                foreach (var item in suggestions)
+                var suggestions = await MasterSearchIndex.SearchMediaAsync(query);
+                foreach(var item in suggestions)
                 {
+                    bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant());
                     var existingitem = searchResultsMaster.FirstOrDefault(p => p.FilePath == item.FilePath);
-                    if (existingitem == null)
+                    if(existingitem == null)
                     {
-                        searchResultsMaster.Add(item);
+                        searchResultsMaster.Add(new MasterSearchModel { FilePath = item.FilePath, ResultMain = item.ResultMain, SubInformation = item.SubInformation, ImageThumbnail = item.ImageThumbnail });
                     }
                 }
+      //          MasterSearchIndex.TestMethod(query);
+
+                //foreach (var item in suggestions)
+                //{
+                //    var existingitem = searchResultsMaster.FirstOrDefault(p => p.FilePath == item.FilePath);
+                //    if (existingitem == null)
+                //    {
+                //        searchResultsMaster.Add(item);
+                //    }
+                //}
             }
             else
             {

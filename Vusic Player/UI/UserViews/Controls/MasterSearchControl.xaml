@@ -40,7 +40,7 @@ AlwaysUseFallback="False"/>
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid  ToolTipService.ToolTip="{Binding FilePath}" Padding="8,0" ColumnSpacing="5">
+                            <Grid  ToolTipService.ToolTip="{Binding ResultMain}" Padding="8,0" ColumnSpacing="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />

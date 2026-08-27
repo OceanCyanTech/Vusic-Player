@@ -53,17 +53,17 @@ namespace Vusic_Player.Pages.Views
         public ObservableCollection<MasterSearchModel> SearchResultsMain = new ObservableCollection<MasterSearchModel>();
         public void ModifySearchQuery(string text)
         {
-            SearchResultsMain.Clear();
-            txtQuery.Text = "Query: " + text;
-            var searchresults = MasterSearchIndex.GetSearchResults(text, SearchFilterMain, 0, true);
-            var filteredgroup = searchresults.GroupBy(p => p.SubInformation).Select(g => new SearchResultGroupHeader(g.Key, g)).ToList();
-            AllSearchResults.ItemsSource = SearchResultsMain;
-            foreach (var Searchresult in searchresults)
-            {
-                Debug.WriteLine(Searchresult.ResultMain);
-                SearchResultsMain.Add(new MasterSearchModel { Album = Searchresult.Album, Artist = Searchresult.Artist, ImageThumbnail = Searchresult.ImageThumbnail, ResultMain = Searchresult.ResultMain, SubInformation = Searchresult.SubInformation, SearchFilter = Searchresult.SearchFilter, FilePath = Searchresult.FilePath });
-            }
-            AllSearchResults.ItemsSource = SearchResultsMain;
+            //SearchResultsMain.Clear();
+            //txtQuery.Text = "Query: " + text;
+            //var searchresults = MasterSearchIndex.GetSearchResults(text, SearchFilterMain, 0, true);
+            //var filteredgroup = searchresults.GroupBy(p => p.SubInformation).Select(g => new SearchResultGroupHeader(g.Key, g)).ToList();
+            //AllSearchResults.ItemsSource = SearchResultsMain;
+            //foreach (var Searchresult in searchresults)
+            //{
+            //    Debug.WriteLine(Searchresult.ResultMain);
+            //    SearchResultsMain.Add(new MasterSearchModel { Album = Searchresult.Album, Artist = Searchresult.Artist, ImageThumbnail = Searchresult.ImageThumbnail, ResultMain = Searchresult.ResultMain, SubInformation = Searchresult.SubInformation, SearchFilter = Searchresult.SearchFilter, FilePath = Searchresult.FilePath });
+            //}
+            //AllSearchResults.ItemsSource = SearchResultsMain;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {

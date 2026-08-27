@@ -9,6 +9,7 @@ namespace Vusic_Player.Configuration.ClassModels
     public class MasterSearchModel
     {
         public string ResultMain { get; set; } = "";
+        public int Score { get; set; } = 0;
         public string ImageThumbnail { get; set; } = "";
         public string SubInformation { get; set; } = "";
         public string FilePath { get; set; } = "";
