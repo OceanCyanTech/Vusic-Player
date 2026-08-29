@@ -155,10 +155,38 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
             return 0;
         }
+        public static async Task<List<MasterSearchModel>>FindMediaAsync(string query)
+        {
+            string cleanQuery = query.Trim();
+            if (string.IsNullOrWhiteSpace(cleanQuery)) return new List<MasterSearchModel>();
+
+            return await Task.Run(() =>
+            {
+                var rawMedia = FilesInDatabase.rawSongs;
+
+                //First Result is Direct Match/Starts with and preferred with most played
+                var FirstResult = rawMedia.FirstOrDefault(p => p.Title.ToLower().Trim() == cleanQuery.ToLower() || cleanQuery.StartsWith(p.Title, StringComparison.OrdinalIgnoreCase));
+
+                var NextTwoTitles = rawMedia.Where(p => p.Title.Contains(cleanQuery, StringComparison.OrdinalIgnoreCase) || cleanQuery.Contains(p.Title, StringComparison.OrdinalIgnoreCase)).Take(2);
+
+                var Artist = rawMedia.Where(p => cleanQuery.Contains(p.Artist, StringComparison.OrdinalIgnoreCase)).Take(1);
+                var Album = rawMedia.Where(p => cleanQuery.Contains(p.AlbumName, StringComparison.OrdinalIgnoreCase)).Take(1);
+
+                var rankedResults = new List<MasterSearchModel>();
+                if (FirstResult != null)
+                {
+                    //Adding of first result
+                    bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(FirstResult.FilePath).ToLowerInvariant());
+
+                    rankedResults.Add(new MasterSearchModel { ResultMain = FirstResult.Title, FilePath = FirstResult.FilePath, SubInformation = isVideo ? "Video" : "Song",  ImageThumbnail = $"ms-appx:///Assets/{(isVideo ? "default" : "musicnoteicon")}.png" });
+                }
+                return new List<MasterSearchModel>();
+            });
+            }
         public record SearchResult<T>(T Item, int Score);
         public static async  Task<List<MasterSearchModel>> SearchMediaAsync(string query)
         {
-            string cleanQuery = query?.Trim();
+            string cleanQuery = query.Trim();
             if (string.IsNullOrWhiteSpace(cleanQuery)) return new List<MasterSearchModel>();
 
             return await Task.Run(() =>
