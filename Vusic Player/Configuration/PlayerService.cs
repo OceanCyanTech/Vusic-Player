@@ -146,7 +146,7 @@ namespace Vusic_Player.Configuration
 
             // 2. Seek using the clean millisecond conversion
             Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
-   //         UIController.CurrentPosition = targetTime.TotalSeconds;
+            //         UIController.CurrentPosition = targetTime.TotalSeconds;
             Configuration.Helper.UI.SeekInfoService.ShowSeek(-10);
         }
         public static void SeekAhead()
@@ -160,7 +160,7 @@ namespace Vusic_Player.Configuration
             Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
 
             // 3. Update UI based on the intended target time
-          //  UIController.CurrentPosition = targetTime.TotalSeconds;
+            //  UIController.CurrentPosition = targetTime.TotalSeconds;
             Configuration.Helper.UI.SeekInfoService.ShowSeek(10);
         }
         public static async void OpenPath(string fiPath)
@@ -173,14 +173,14 @@ namespace Vusic_Player.Configuration
                     //conf.Video.VideoProcessor = VideoProcessors.Flyleaf;
                     //conf.Video.SuperResolution = true;
                     Masterplayer = new Player();
-               
-                    foreach(var audiodevice in Engine.Audio.Devices)
+
+                    foreach (var audiodevice in Engine.Audio.Devices)
                     {
                         Debug.WriteLine("Available Device: " + audiodevice.Name);
 
                     }
 
-                
+
                     QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
 
                     QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
@@ -215,6 +215,7 @@ namespace Vusic_Player.Configuration
                 }
 
                 TimeSpan duration = musicProps.Duration;
+                Debug.WriteLine("DURATION: " + duration);
                 UIController.TotalDuration = duration.TotalSeconds;
                 string title = !string.IsNullOrWhiteSpace(musicProps.Title) ? musicProps.Title : Path.GetFileNameWithoutExtension(file.Path);
 
@@ -258,7 +259,7 @@ namespace Vusic_Player.Configuration
                 var speakerdevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Speaker"));
                 if (MultiDeviceOutput)
                 {
-                   // SetupMultiAudioOutput();
+                    // SetupMultiAudioOutput();
                 }
                 //var devices = FlyleafNAudioMultiOutput.GetAvailableDevices();
                 //foreach (var device in devices)
@@ -301,7 +302,7 @@ namespace Vusic_Player.Configuration
                 //}
                 Masterplayer.Open(filestreamcurrent);
                 //  SecondaryPlayer.Open(filestreamcurrent);
-               
+
                 PlayCalled?.Invoke();
 
                 try
@@ -358,8 +359,9 @@ namespace Vusic_Player.Configuration
                 {
                     Debug.WriteLine("FSEC092" + Masterplayer.MainDemuxer.Status.ToString());
                 }
-                if (Masterplayer != null)
-                {
+
+              
+
                     var keyConfig = Masterplayer.Config.Player.KeyBindings;
 
                     keyConfig.Remove(Key.Left);
@@ -378,11 +380,11 @@ namespace Vusic_Player.Configuration
                     maintimer?.Start();
                 });
             }
-        }
+        
         public static XAudio2MultiOutputEngine? _multiAudioEngine;
         public static float GetVolumeOfDevice(string deviceID)
         {
-            if(_multiAudioEngine != null)
+            if (_multiAudioEngine != null)
             {
                 var floatvolume = _multiAudioEngine.GetDeviceVolume(deviceID);
                 return floatvolume;
@@ -393,13 +395,13 @@ namespace Vusic_Player.Configuration
         {
             if (_multiAudioEngine != null)
             {
-               _multiAudioEngine.SetDeviceVolume(deviceId, 0);
+                _multiAudioEngine.SetDeviceVolume(deviceId, 0);
             }
         }
         public static void MuteDev(string deviceID)
         {
 
-            if(_multiAudioEngine != null)
+            if (_multiAudioEngine != null)
             {
                 _multiAudioEngine.MuteDevice(deviceID);
             }
@@ -467,7 +469,7 @@ namespace Vusic_Player.Configuration
             var existing = recents.FirstOrDefault(p => p.SongPath == CurrentPlayingPath);
             var favourites = currentSettings.Favourites;
             var existingfav = favourites.FirstOrDefault(p => p.FilePath == CurrentPlayingPath);
-            if(existingfav != null)
+            if (existingfav != null)
             {
                 UIController.IsFavourite = true;
             }

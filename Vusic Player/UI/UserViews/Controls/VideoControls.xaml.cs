@@ -40,6 +40,7 @@ namespace Vusic_Player.UI.UserViews.Controls
     {
         public event Action? ViewEpisodeClick;
         public event Action? MultiDeviceOutput;
+        public event Action? VideoChapters;
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
         public Visibility ViewEpisodeVisibility
         {
@@ -851,6 +852,11 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftMultiDeviceOutput_Click(object sender, RoutedEventArgs e)
         {
             MultiDeviceOutput?.Invoke();
+        }
+
+        private void mnftChapters_Click(object sender, RoutedEventArgs e)
+        {
+            VideoChapters?.Invoke();
         }
     }
 }

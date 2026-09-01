@@ -146,10 +146,10 @@ namespace Vusic_Player.UI.UserViews.Controls
 
             if (!string.IsNullOrWhiteSpace(query))
             {
-                var suggestions = await MasterSearchIndex.SearchMediaAsync(query);
+                var suggestions = await MasterSearchIndex.ProcessFindQueryAsync(query);
                 foreach(var item in suggestions)
                 {
-                    bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant());
+               //     bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant());
                     var existingitem = searchResultsMaster.FirstOrDefault(p => p.FilePath == item.FilePath);
                     if(existingitem == null)
                     {

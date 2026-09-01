@@ -180,7 +180,7 @@
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyoutSubItem>
-
+                    <MenuFlyoutItem x:Name="mnftChapters" Text="Chapters" Click="mnftChapters_Click"></MenuFlyoutItem>
                     <ToggleMenuFlyoutItem x:Name="mnftReversePlayback" Text="Reverse Playback" IsChecked="{x:Bind mediacontroller.IsReversePlayback, Mode=TwoWay}" Click="mnftReversePlayback_Click">
                         <ToggleMenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xEB3F;" />

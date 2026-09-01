@@ -180,6 +180,24 @@ Genre TEXT,
 
             return durations;
         }
+        private static string NormalizeForSearch(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            // Fast span/array strip of spaces and punctuation
+            return string.Create(input.Length, input, (span, src) =>
+            {
+                int index = 0;
+                foreach (char c in src)
+                {
+                    if (!char.IsWhiteSpace(c) && !char.IsPunctuation(c))
+                    {
+                        span[index++] = c;
+                    }
+                }
+            }).TrimEnd('\0');
+        }
         public static List<AudioTrackLite> GetAllSongs()
         {
             var songs = new List<AudioTrackLite>();
@@ -203,11 +221,13 @@ Genre TEXT,
             while (reader.Read())
             {
                 long? durationTicks = reader.IsDBNull(colDuration) ? null : reader.GetInt64(colDuration);
-
+                var rawTitle = reader.IsDBNull(colTitle) ? "" : reader.GetString(colTitle);
                 songs.Add(new AudioTrackLite
                 {
                     FilePath = reader.GetString(colFilePath),
-                    Title = reader.IsDBNull(colTitle) ? "" : reader.GetString(colTitle),
+
+                    Title = rawTitle,
+                    NormalizedTitle = NormalizeForSearch(rawTitle),
                     Artist = reader.IsDBNull(colArtist) ? "Unknown Artist" : reader.GetString(colArtist),
                     AlbumName = reader.IsDBNull(colAlbum) ? "Unknown Album" : reader.GetString(colAlbum),
                     Genre = reader.IsDBNull(colGenre) ? "Unknown Genre" : reader.GetString(colGenre),
@@ -253,6 +273,9 @@ Genre TEXT,
                             song.Title = string.IsNullOrWhiteSpace(tag.Title)
                                 ? Path.GetFileNameWithoutExtension(song.FilePath)
                                 : tag.Title;
+                            song.NormalizedTitle = NormalizeForSearch(string.IsNullOrWhiteSpace(tag.Title)
+                                ? Path.GetFileNameWithoutExtension(song.FilePath)
+                                : tag.Title);
                             song.Artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
                                 ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
                                 : string.Join(", ", tag.AlbumArtists);
@@ -417,9 +440,11 @@ Genre TEXT,
                                         ? "Unknown Album"
                                         : tag.Album;
 
+                                   
                                     var newSong = new AudioTrackLite
                                     {
                                         FilePath = normalizedPath,
+                                        NormalizedTitle = NormalizeForSearch(title),
                                         Title = title,
                                         Artist = artist,
                                         AlbumName = album,

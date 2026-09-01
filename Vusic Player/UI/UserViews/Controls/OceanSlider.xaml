@@ -42,6 +42,19 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <ItemsControl x:Name="ChapterBar" IsHitTestVisible="True" Visibility="Visible">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Background="Transparent" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Rectangle ToolTipService.ToolTip="Title" Fill="#808080" Width="2" Height="8" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <Border x:Name="Track"
                 Height="6"
                 Background="#404040"

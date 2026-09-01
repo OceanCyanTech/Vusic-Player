@@ -7,11 +7,16 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.ClassModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 
 
@@ -22,6 +27,9 @@ namespace Vusic_Player.UI.UserViews.Controls
         public OceanSlider()
         {
             this.InitializeComponent();
+            //chapt.Add(new ChapterModel { ChapterTitle = "Intro", Starttime = 0 });
+            //chapt.Add(new ChapterModel { ChapterTitle = "Exposition", Starttime = 100000000 });
+            //chapt.Add(new ChapterModel { ChapterTitle = "Rising Action", Starttime = 800000000 });
         }
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(OceanSlider),
@@ -275,8 +283,52 @@ namespace Vusic_Player.UI.UserViews.Controls
                     Canvas.SetLeft(Thumb, (ControlRoot.ActualWidth - Thumb.ActualWidth) / 2);
                 }
             }
+            DrawChapters();
             if (TicksEnabled) DrawTicks();
         }
+        ObservableCollection<ChapterModel> chapt = new ObservableCollection<ChapterModel>();
+        private void DrawChapters()
+        {
+            Debug.WriteLine("Draw Chapters Called");
+            ChapterBar.Items.Clear();
+
+            // Guard against running before the layout pass finishes
+            if (ControlRoot.ActualWidth <= 0 || Maximum <= 0)
+                return;
+
+            const double markerWidth = 3.0;
+            const double markerHeight = 16.0;
+
+            if (PlayerService.Masterplayer == null) return;
+            foreach (var chapter in PlayerService.Masterplayer.Chapters)
+            {
+                var title = chapter.Title;
+                var starttime = chapter.StartTime;
+
+                double totalSeconds = TimeSpan.FromTicks(starttime).TotalSeconds;
+
+                // Ratio between 0.0 and 1.0
+                double ratio = Math.Clamp(totalSeconds / Maximum, 0.0, 1.0);
+                double xPos = ratio * ControlRoot.ActualWidth;
+
+                var chapteritem = new Microsoft.UI.Xaml.Shapes.Rectangle()
+                {
+                    Width = markerWidth,
+                    Height = markerHeight,
+                    Fill = new SolidColorBrush(Microsoft.UI.Colors.Cyan)
+                };
+
+                ToolTipService.SetToolTip(chapteritem, title);
+
+                // Center the marker on the chapter position
+                Canvas.SetLeft(chapteritem, xPos - (markerWidth / 2));
+                Canvas.SetTop(chapteritem, (ControlRoot.ActualHeight - markerHeight) / 2);
+
+                ChapterBar.Items.Add(chapteritem);
+            }
+        }
+        
+        ObservableCollection<ChapterModel> Chapters = new ObservableCollection<ChapterModel>();
         private void DrawTicks()
         {
             TickBar.Items.Clear();

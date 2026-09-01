@@ -169,7 +169,7 @@ namespace Vusic_Player.Pages
 
             _smtc.IsPreviousEnabled = true;
 
-         
+
 
             var updater = _smtc.DisplayUpdater;
 
@@ -191,8 +191,8 @@ namespace Vusic_Player.Pages
             //// 2. Create the Stream Reference the SMTC expects
             //updater.Thumbnail = RandomAccessStreamReference.CreateFromFile(file);
 
-        
-      
+
+
             updater.Update();
 
             // Hook up the event handler for button presses
@@ -698,7 +698,7 @@ namespace Vusic_Player.Pages
             //LoadSettings();
             //LoadOptions();
 
-             SetupSMTC();
+            SetupSMTC();
             PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
 
         }
@@ -1698,5 +1698,22 @@ namespace Vusic_Player.Pages
                 }
             }
         }
-    }
+
+        private void videoControls_VideoChapters()
+        {
+            FadeInStoryboardChapters.Begin();
+            if (PlayerService.Masterplayer == null) return;
+            foreach (var chapter in PlayerService.Masterplayer.Chapters)
+            {
+                var title = chapter.Title;
+                var starttime = chapter.StartTime;
+                var endtime = chapter.EndTime;
+
+                double totalSecondsStart = TimeSpan.FromTicks(starttime).TotalSeconds;
+                double totalSecondsEnd = TimeSpan.FromTicks(endtime).TotalSeconds;
+
+                string start = totalSecondsStart.TryFormat
+            }
+            }
+        }
 }
