@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical">
-        <local:OceanSlider x:Name="sldMain"  DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted"  Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}"
+        <local:OceanSlider x:Name="sldMain" ChaptersEnabled="{x:Bind mediacontroller.ChaptersEnabled, Mode=OneWay}" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted"  Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}"
 HorizontalAlignment="Stretch" 
 Margin="0,7,0,10"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Spacing="200">

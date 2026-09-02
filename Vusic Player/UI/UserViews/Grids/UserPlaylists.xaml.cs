@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -97,6 +98,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                 Debug.WriteLine("Moved");
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 currentSettings.SavedPlaylists = Playlists;
+                MasterSearchIndex.PlaylistsMaster = Playlists;
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
                 UpdateUI();
 
@@ -132,6 +134,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     Playlists.Add(PlaylistCreation.playlistItem);
 
                     currentSettings.SavedPlaylists.Add(PlaylistCreation.playlistItem);
+                    MasterSearchIndex.PlaylistsMaster.Add(PlaylistCreation.playlistItem);
                     await SettingsLoader.SaveSettingsAsync(currentSettings);
                 }
                 UpdateUI();

@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using NAudio.CoreAudioApi;
+using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -146,6 +147,7 @@ namespace Vusic_Player.Configuration
 
             // 2. Seek using the clean millisecond conversion
             Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
+            UIController.CurrentPosition = targetTime.TotalSeconds;
             //         UIController.CurrentPosition = targetTime.TotalSeconds;
             Configuration.Helper.UI.SeekInfoService.ShowSeek(-10);
         }
@@ -158,7 +160,7 @@ namespace Vusic_Player.Configuration
             var targetTime = TimeSpan.FromTicks(currentTicks).Add(TimeSpan.FromSeconds(10));
             // 2. Seek to the target (TotalMilliseconds handles the math safely)
             Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
-
+            UIController.CurrentPosition = targetTime.TotalSeconds;
             // 3. Update UI based on the intended target time
             //  UIController.CurrentPosition = targetTime.TotalSeconds;
             Configuration.Helper.UI.SeekInfoService.ShowSeek(10);

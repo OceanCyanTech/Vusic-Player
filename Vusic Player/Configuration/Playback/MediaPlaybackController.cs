@@ -74,6 +74,7 @@ namespace Vusic_Player.Configuration.Playback
         private double _zoomValue = 100;
         private double _speedValue = 1;
         private double _pitchValue = 1;
+        private bool _chaptersEnabled = false;
         private string _volumeGlyph = "\uE767";
         private string _fullScreenToolTip = "Set Full Screen";
         private string _playPauseToolTip = "Play";
@@ -128,6 +129,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _volumeValue, value))
                 {
                     OnPropertyChanged(nameof(VolumeValue));
+                }
+            }
+        }
+        public bool ChaptersEnabled
+        {
+            get => _chaptersEnabled;
+            set
+            {
+                if (SetProperty(ref _chaptersEnabled, value))
+                {
+                    OnPropertyChanged(nameof(ChaptersEnabled));
                 }
             }
         }

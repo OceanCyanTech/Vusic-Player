@@ -560,7 +560,6 @@ namespace Vusic_Player.Pages.Views
                 var playlists = currentSettings.SavedPlaylists;
                 foreach (var playlist in playlists)
                 {
-
                     playlistsaddto.Add(new PlaylistItem { PlaylistName = playlist.PlaylistName, PlaylistId = playlist.PlaylistId });
                 }
                 lstAddToPlaylists.ItemsSource = playlistsaddto;

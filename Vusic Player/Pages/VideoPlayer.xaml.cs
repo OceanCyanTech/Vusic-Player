@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
@@ -16,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.DirectoryServices;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -41,6 +43,7 @@ using Vusic_Player.Pages.Views;
 using Vusic_Player.UI;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Windows.Devices.Spi;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -1698,22 +1701,117 @@ namespace Vusic_Player.Pages
                 }
             }
         }
-
+        ObservableCollection<ChapterModel> vidchapters = new ObservableCollection<ChapterModel>();
         private void videoControls_VideoChapters()
         {
             FadeInStoryboardChapters.Begin();
             if (PlayerService.Masterplayer == null) return;
+            lstViewVideoChapters.ItemsSource = vidchapters;
+            int chapternumber = 1;
             foreach (var chapter in PlayerService.Masterplayer.Chapters)
             {
-                var title = chapter.Title;
+                string title = string.IsNullOrEmpty(chapter.Title) ? $"Chapter {chapternumber}" : chapter.Title;
+                chapternumber++;
                 var starttime = chapter.StartTime;
                 var endtime = chapter.EndTime;
 
                 double totalSecondsStart = TimeSpan.FromTicks(starttime).TotalSeconds;
                 double totalSecondsEnd = TimeSpan.FromTicks(endtime).TotalSeconds;
-
-                string start = totalSecondsStart.TryFormat
-            }
+                var timespanstart = TimeSpan.FromTicks(starttime);
+                var timespanend = TimeSpan.FromTicks(endtime);
+                string start = timespanstart.TotalHours >= 1
+                    ? $"{(int)timespanstart.TotalHours:D2}:{timespanstart.Minutes:D2}:{timespanstart.Seconds:D2}"
+                    : $"{timespanstart.Minutes:D2}:{timespanstart.Seconds:D2}";
+                string end = timespanend.TotalHours >= 1
+                   ? $"{(int)timespanend.TotalHours:D2}:{timespanend.Minutes:D2}:{timespanend.Seconds:D2}"
+                   : $"{timespanend.Minutes:D2}:{timespanend.Seconds:D2}";
+                vidchapters.Add(new ChapterModel { ChapterTitle = title, StartTimeStr = start, EndTimeStr = end, StartTime = starttime, EndTime = endtime });
             }
         }
+
+        private void btnCloseChapters_Click(object sender, RoutedEventArgs e)
+        {
+            FadeOutStoryboardChapters.Begin();
+        }
+
+        private void lstViewVideoChapters_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem is ChapterModel chapter)
+            {
+                var starttime = chapter.StartTime;
+                var targetTime = TimeSpan.FromTicks(starttime);
+                if (targetTime < TimeSpan.Zero) targetTime = TimeSpan.Zero;
+                if (PlayerService.Masterplayer != null)
+                {
+                    PlayerService.Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
+                    var curTime = TimeSpan.FromTicks(starttime);
+                    ShowInformation($"Jumped to {chapter.ChapterTitle} at {chapter.StartTimeStr}");
+                    mediacontroller.CurrentPosition = curTime.TotalSeconds;
+                }
+            }
+        }
+        private IEnumerable<ChapterModel> GetFilteredResults(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return Enumerable.Empty<ChapterModel>();
+
+            var rawQuery = query.Trim();
+            var textQuery = rawQuery;
+
+            textQuery = textQuery.Trim();
+
+            return vidchapters.Where(s =>
+            {
+                bool textMatch = !string.IsNullOrEmpty(textQuery) && (
+                    (s.ChapterTitle?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true));
+                return textMatch;
+            }).OrderByDescending(s => s.ChapterTitle?.StartsWith(textQuery, StringComparison.OrdinalIgnoreCase) == true).ThenBy(s => s.ChapterTitle);
+        }
+
+        ObservableCollection<ChapterModel> searchresults = new ObservableCollection<ChapterModel>();
+        private void asbSearchChapters_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (string.IsNullOrEmpty(sender.Text))
+            {
+                searchresults.Clear();
+                grdNoSearchResultsChapter.Visibility = Visibility.Collapsed;
+                lstViewVideoChapters.Visibility = Visibility.Visible;
+                lstViewVideoChapters.ItemsSource = vidchapters;
+                grdChapterHeaders.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var results = GetFilteredResults(sender.Text);
+
+                searchresults.Clear();
+                foreach (var item in results) searchresults.Add(item);
+
+                sender.ItemsSource = results.Any() ? null : new List<string> { "No matches found!" };
+                lstViewVideoChapters.ItemsSource = searchresults;
+            }
+        }
+
+
+        private void asbSearchChapters_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var results = GetFilteredResults(sender.Text);
+
+            if (results.Any())
+            {
+                grdNoSearchResultsChapter.Visibility = Visibility.Collapsed;
+                lstViewVideoChapters.Visibility = Visibility.Visible;
+                grdChapterHeaders.Visibility = Visibility.Visible;
+
+                searchresults.Clear();
+                foreach (var item in results) searchresults.Add(item);
+            }
+            else if (vidchapters.Count > 0)
+            {
+                lstViewVideoChapters.Visibility = Visibility.Collapsed;
+                grdChapterHeaders.Visibility = Visibility.Collapsed;
+                grdNoSearchResultsChapter.Visibility = Visibility.Visible;
+            }
+        }
+    }
 }

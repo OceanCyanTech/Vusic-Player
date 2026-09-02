@@ -1831,7 +1831,8 @@ namespace Vusic_Player.Pages.Views
                         }
                         PlaylistCreation.playlistItem.PlaylistName = finalName;
                     }
-              
+
+                    MasterSearchIndex.PlaylistsMaster.Add(PlaylistCreation.playlistItem);
 
                     currentSettings.SavedPlaylists.Add(PlaylistCreation.playlistItem);
                     await SettingsLoader.SaveSettingsAsync(currentSettings);

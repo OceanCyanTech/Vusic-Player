@@ -858,5 +858,10 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             VideoChapters?.Invoke();
         }
+
+        private void mnftShowChapterMarks_Click(object sender, RoutedEventArgs e)
+        {
+            mediacontroller.ChaptersEnabled = mnftShowChapterMarks.IsChecked;
+        }
     }
 }

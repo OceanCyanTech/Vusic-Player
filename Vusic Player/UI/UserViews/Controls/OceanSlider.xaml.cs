@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,8 +13,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using TagLib.Matroska;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Playback;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
@@ -51,19 +55,33 @@ namespace Vusic_Player.UI.UserViews.Controls
         public static readonly DependencyProperty ThumbVisibility =
           DependencyProperty.Register(nameof(IsThumbVisible), typeof(Visibility), typeof(OceanSlider),
               new PropertyMetadata(Visibility.Visible, (d, e) => ((OceanSlider)d).UpdateVisuals()));
+
         public static readonly DependencyProperty TicksEnabledProperty =
     DependencyProperty.Register(nameof(TicksEnabled), typeof(bool), typeof(OceanSlider),
         new PropertyMetadata(false, (d, e) => ((OceanSlider)d).UpdateTickVisibility()));
+
+        public static readonly DependencyProperty ChaptersEnabledProperty =
+  DependencyProperty.Register(nameof(ChaptersEnabledProperty), typeof(bool), typeof(OceanSlider),
+      new PropertyMetadata(false, (d, e) => ((OceanSlider)d).UpdateChapterVisibility()));
         private void UpdateTickVisibility()
         {
             TickBar.Visibility = TicksEnabled ? Visibility.Visible : Visibility.Collapsed;
             if (TicksEnabled) UpdateVisuals();
         }
-
+        private void UpdateChapterVisibility()
+        {
+            ChapterBar.Visibility = ChaptersEnabled ? Visibility.Visible : Visibility.Collapsed;
+            if (ChaptersEnabled) UpdateVisuals();
+        }
         public bool TicksEnabled
         {
             get => (bool)GetValue(TicksEnabledProperty);
             set => SetValue(TicksEnabledProperty, value);
+        }
+        public bool ChaptersEnabled
+        {
+            get => (bool)GetValue(ChaptersEnabledProperty);
+            set => SetValue(ChaptersEnabledProperty, value);
         }
 
         public int TickFrequency { get; set; } = 10; // Number of ticks to show
@@ -164,38 +182,60 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             var point = e.GetCurrentPoint(InputLayer);
             double percent;
+            double tracklength;
 
             if (Orientation == Orientation.Horizontal)
             {
                 if (ControlRoot.ActualWidth <= 0) return;
+                tracklength = ControlRoot.ActualWidth;
                 percent = Math.Clamp(point.Position.X / ControlRoot.ActualWidth, 0, 1);
             }
             else
             {
                 if (ControlRoot.ActualHeight <= 0) return;
+                tracklength = ControlRoot.ActualHeight;
                 percent = Math.Clamp(1 - (point.Position.Y / ControlRoot.ActualHeight), 0, 1);
             }
-
+            double totalRange = Maximum - Minimum;
+            if (totalRange <= 0) return;
             double calculatedValue = Minimum + (percent * (Maximum - Minimum));
+            // Magnetic snap radius in value units (corresponds to ~8 pixels on screen)
+            const double snapRadiusPixels = 8.0;
+            double snapThresholdValue = (snapRadiusPixels / tracklength) * totalRange;
 
+            double closestSnapTarget = calculatedValue;
+            double minDistance = double.MaxValue;
+        
+            if(chapt != null)
+            {
+                foreach(var chapter in chapt)
+                {
+                    double chapterSeconds = TimeSpan.FromTicks(chapter.StartTime).TotalSeconds;
+                    double distance = Math.Abs(calculatedValue - chapterSeconds);
+
+                    if (distance < snapThresholdValue && distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closestSnapTarget = chapterSeconds;
+                    }
+                }
+            }
             // MAGNETIC SNAPPING LOGIC
             if (IsSnapToTickEnabled && TickFrequency > 0)
             {
-                double interval = (Maximum - Minimum) / TickFrequency;
-                double nearestTick = Math.Round(calculatedValue / interval) * interval;
+                // In WinUI, TickFrequency is the step interval (e.g., 5s, 10s)
+                double nearestTick = Minimum + Math.Round((calculatedValue - Minimum) / TickFrequency) * TickFrequency;
+                double distance = Math.Abs(calculatedValue - nearestTick);
 
-                // Threshold: 3% of the total range often feels "magnetic" 
-                // without being too sticky.
-                double threshold = (Maximum - Minimum) * 0.02;
-
-                if (Math.Abs(calculatedValue - nearestTick) < threshold)
+                if (distance < snapThresholdValue && distance < minDistance)
                 {
-                    calculatedValue = nearestTick;
+                    minDistance = distance;
+                    closestSnapTarget = nearestTick;
                 }
             }
 
             // Apply the value once
-            Value = calculatedValue;
+            Value = Math.Clamp(closestSnapTarget, Minimum, Maximum);
 
             if (IsTooltipEnabled)
             {
@@ -283,7 +323,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                     Canvas.SetLeft(Thumb, (ControlRoot.ActualWidth - Thumb.ActualWidth) / 2);
                 }
             }
-            DrawChapters();
+            if (ChaptersEnabled)
+            {
+                DrawChapters();
+            }
             if (TicksEnabled) DrawTicks();
         }
         ObservableCollection<ChapterModel> chapt = new ObservableCollection<ChapterModel>();
@@ -296,8 +339,8 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (ControlRoot.ActualWidth <= 0 || Maximum <= 0)
                 return;
 
-            const double markerWidth = 3.0;
-            const double markerHeight = 16.0;
+            const double markerWidth = 3.5;
+            const double markerHeight = 17.0;
 
             if (PlayerService.Masterplayer == null) return;
             foreach (var chapter in PlayerService.Masterplayer.Chapters)
@@ -315,9 +358,25 @@ namespace Vusic_Player.UI.UserViews.Controls
                 {
                     Width = markerWidth,
                     Height = markerHeight,
-                    Fill = new SolidColorBrush(Microsoft.UI.Colors.Cyan)
+                    Fill = new SolidColorBrush(Microsoft.UI.Colors.Cyan),
+                  
+                   
                 };
-
+                chapteritem.Tapped += ((object sender, TappedRoutedEventArgs e) =>
+                {
+                    if (PlayerService.Masterplayer != null)
+                    {
+                        var timespanstart = TimeSpan.FromTicks(starttime);
+                        var targetTime = TimeSpan.FromTicks(starttime);
+                        string start = timespanstart.TotalHours >= 1
+                    ? $"{(int)timespanstart.TotalHours:D2}:{timespanstart.Minutes:D2}:{timespanstart.Seconds:D2}"
+                    : $"{timespanstart.Minutes:D2}:{timespanstart.Seconds:D2}";
+                        PlayerService.Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
+                        var curTime = TimeSpan.FromTicks(starttime);
+                        GeneralInfoService.ShowInfo($"Jumped to {chapter.Title} at {start}");
+                        mediacontroller.CurrentPosition = curTime.TotalSeconds;
+                    }
+                });
                 ToolTipService.SetToolTip(chapteritem, title);
 
                 // Center the marker on the chapter position
@@ -327,7 +386,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                 ChapterBar.Items.Add(chapteritem);
             }
         }
-        
+        public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
+
         ObservableCollection<ChapterModel> Chapters = new ObservableCollection<ChapterModel>();
         private void DrawTicks()
         {

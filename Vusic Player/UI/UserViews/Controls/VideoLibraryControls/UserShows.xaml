@@ -64,7 +64,7 @@ ItemClick="grdViewShows_ItemClick"  Margin="0, 20" SelectionChanged="grdViewShow
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Name="mnftDeleteShow" Click="mnftDeleteShow_Click" Text="Delete Playlist">
+                                        <MenuFlyoutItem Name="mnftDeleteShow" Click="mnftDeleteShow_Click" Text="Delete Show">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>

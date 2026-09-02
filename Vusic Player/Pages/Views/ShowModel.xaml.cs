@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -980,6 +981,7 @@ namespace Vusic_Player.Pages.Views
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var shows = currentSettings.Shows;
             var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+            var existinmaster = MasterSearchIndex.ShowsMaster.FirstOrDefault(p => p.Name == currentshow.Name);
             if (exist != null)
             {
                 string baseName = txtRenameShow.Text.Trim();
@@ -994,6 +996,21 @@ namespace Vusic_Player.Pages.Views
                     finalName = $"{baseName} ({counter++})";
                 }
                 exist.Name = finalName;
+            }
+            if(existinmaster != null)
+            {
+                string baseName = txtRenameShow.Text.Trim();
+
+                if (string.IsNullOrEmpty(baseName)) baseName = "Show";
+
+                string finalName = baseName;
+                int counter = 1;
+                while (currentSettings.Shows.Any(p =>
+                    string.Equals(p.Name, finalName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    finalName = $"{baseName} ({counter++})";
+                }
+                existinmaster.Name = finalName;
             }
             await SettingsLoader.SaveSettingsAsync(currentSettings);
             txtShowName.Text = txtRenameShow.Text;

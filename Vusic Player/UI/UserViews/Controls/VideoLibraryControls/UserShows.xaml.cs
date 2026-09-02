@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
@@ -71,6 +72,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                 Debug.WriteLine("Moved");
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 currentSettings.Shows = ShowsList;
+                MasterSearchIndex.ShowsMaster = ShowsList;
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
                 UpdateUI();
 
@@ -123,6 +125,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                     ShowsList.Add(PlaylistCreation.showitem);
 
                     currentSettings.Shows.Add(PlaylistCreation.showitem);
+                    MasterSearchIndex.ShowsMaster.Add(PlaylistCreation.showitem);
                     await SettingsLoader.SaveSettingsAsync(currentSettings);
                 }
                 UpdateUI();

@@ -19,6 +19,7 @@ using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -168,10 +169,16 @@ namespace Vusic_Player.Pages.Views
                 MainWindow.ShowWindow();
 
                 playlists.Remove(exist);
+
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
                 grdRoot.Visibility = Visibility.Collapsed;
                 grdDeletedPlaylist.Visibility = Visibility.Visible;
                 txtPlaylistDeleted.Text = $"The playlist '{currentPlaylist.PlaylistName}' has been deleted.";
+            }
+            var existingplaylistinmasterlist = MasterSearchIndex.PlaylistsMaster.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+            if(existingplaylistinmasterlist != null)
+            {
+                MasterSearchIndex.PlaylistsMaster.Remove(existingplaylistinmasterlist);
             }
         }
 
@@ -188,6 +195,7 @@ namespace Vusic_Player.Pages.Views
 
         private void OceanContentDialog_PrimaryRequested1()
         {
+            //EDIT PLAYLIST CALLED
             Debug.WriteLine("tEST2");
             currentPlaylist = PlaylistCreation.playlistItem;
             if (currentPlaylist == null) return;
@@ -223,6 +231,13 @@ namespace Vusic_Player.Pages.Views
 
             txtItemCount.Text = currentPlaylist.PlaylistCount;
             imgPlaylistCover.Source = new BitmapImage(currentPlaylist.Thumbnail);
+
+            var existplaylist = MasterSearchIndex.PlaylistsMaster.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+            if(existplaylist != null)
+            {
+                existplaylist.PlaylistName = currentPlaylist.PlaylistName;
+             
+            }
             LoadItemsOnly(currentPlaylist);
             UpdateUI();
             OceanContentDialog.HideDlg();
