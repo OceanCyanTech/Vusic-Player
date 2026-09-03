@@ -589,7 +589,7 @@ BorderThickness="0"
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Border Background="#1A1A1A" Width="44" Height="44" CornerRadius="4">
-                                <TextBlock Text="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Letter}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
                             </Border>
                         </DataTemplate>
                     </GridView.ItemTemplate>

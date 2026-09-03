@@ -9,6 +9,125 @@
     mc:Ignorable="d">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
+        <!-- Top bar -->
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="10">
+            <Button Content="Export Log" Style="{StaticResource AccentButtonStyle}"
+                    Click="Button_Click_1"/>
+            <Button Content="Refresh Log" Margin="10, 0" Style="{StaticResource AccentButtonStyle}"
+            Click="Button_Click_2"/>
+        </StackPanel>
+
+        <!-- Tabs -->
+        <TabView IsAddTabButtonVisible="False" Name="logTabView" Grid.Row="1">
+
+            <TabViewItem IsClosable="False" Header="Player Logs" Tag="Player">
+                <Grid RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="No log information available!" Name="txtNoLogs" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 20" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Content="Errors" Name="chckShowErrors" IsChecked="True" Checked="chckShowErrors_Checked" Unchecked="chckShowErrors_Checked"/>
+                        <CheckBox Content="Successful" Name="chckShowSuccess" IsChecked="True" Checked="chckShowSuccess_Checked" Unchecked="chckShowSuccess_Checked"/>
+                        <CheckBox Content="Information" Name="chckShowInformation" IsChecked="True" Checked="chckShowInformation_Checked" Unchecked="chckShowInformation_Checked"/>
+                        <CheckBox Content="Warning" Name="chckShowWarning" IsChecked="True" Checked="chckShowWarning_Checked" Unchecked="chckShowWarning_Checked"/>
+                    </Grid>
+                    <Grid Background="{ThemeResource SystemControlBackgroundAltHighBrush}" Padding="5" Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <!-- Icon -->
+                            <ColumnDefinition Width="80"/>
+                            <!-- Level -->
+                            <ColumnDefinition Width="150"/>
+                            <!-- Timestamp -->
+                            <ColumnDefinition Width="100"/>
+                            <!-- Message -->
+                            <ColumnDefinition Width="*"/>
+                            <!-- Source -->
+                            <ColumnDefinition Width="40"/>
+                            <!-- Button -->
+                        </Grid.ColumnDefinitions>
+
+                        <Button Click="Button_Click_3" Grid.Column="1" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Name="fntIconDirectionLevel" />
+                                <TextBlock Text="Level" />
+                            </StackPanel>
+                        </Button>
+                        <Button Click="Button_Click_4" Grid.Column="2" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Name="fntIconDirectionTimeStamp" Glyph="&#xE70E;"/>
+                                <TextBlock Text="Timestamp" />
+                            </StackPanel>
+                        </Button>
+                        <Button Click="Button_Click_5" Grid.Column="3" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Name="fntIconDirectionSource" />
+                                <TextBlock Text="Source" />
+                            </StackPanel>
+                        </Button>
+                        <Button Click="Button_Click_6" Grid.Column="4" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Name="fntIconDirectionMessage" />
+                                <TextBlock Text="Message" />
+                            </StackPanel>
+                        </Button>
+                       
+                    </Grid>
+
+                    <ListView Name="lstViewPlayerLogs" Grid.Row="3">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding Icon}"
+                                       Width="16"
+                                       Height="16"
+                                       Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding Level}"
+                                           FontWeight="Bold"
+                                           Margin="0,0,10,0"/>
+                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Text="{Binding Timestamp}"
+                                           Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding Source}"
+     />
+                                    <TextBlock  IsTextSelectionEnabled="True" Margin="10,0,0,0" Text="{Binding Message}"/>
+
+                                    <Button Background="Transparent" BorderBrush="Transparent" Margin="10,0,0,0"
+                                        Click="Button_Click">
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                        <Button.Flyout>
+                                            <Flyout >
+                                                <TextBlock Text="Copied ✔️"></TextBlock>
+                                            </Flyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </Grid>
+            </TabViewItem>
+
+            <!-- Updater Logs -->
+
+        </TabView>
     </Grid>
+
 </Page>

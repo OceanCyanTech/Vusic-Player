@@ -662,7 +662,7 @@ namespace Vusic_Player.Pages.Views
         {
 
             var observablesongcollection = new ObservableCollection<SongModel>();
-
+            if (currentshow == null) return;
             foreach (var item in EpisodesList)
             {
                 observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
@@ -675,19 +675,23 @@ namespace Vusic_Player.Pages.Views
             {
                 QueueService.VusicQueueNext.Add(item);
             }
-            QueueService.VusicQueueNext.RemoveAt(0);
-            if (App.NavigationFrame != null)
+            var seasonstosend = grdViewSeasons.ItemsSource as ObservableCollection<PlaylistItem>;
+            if (seasonstosend != null)
             {
-                App.NavigationFrame.Navigate(typeof(VideoPlayer), EpisodesList[0]);
+                QueueService.VusicQueueNext.RemoveAt(0);
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(VideoPlayer), new ShowData { ShowName = txtShowName.Text, episodes = EpisodesList.ToList(), ShowID = currentshow.ShowID, seasons = seasonstosend.ToList() });
+                }
             }
-            var first = EpisodesList[0];
-            if (first.FilePath != null)
-            {
-                Debug.WriteLine("Yesa");
-                Debug.WriteLine(first.FilePath);
-                ShowManager.LoadAvailableShow(first.FilePath);
-                ShowManager.totalepisodecount = EpisodesList.Count;
-            }
+            //var first = EpisodesList[0];
+            //if (first.FilePath != null)
+            //{
+            //    Debug.WriteLine("Yesa");
+            //    Debug.WriteLine(first.FilePath);
+            //    ShowManager.LoadAvailableShow(first.FilePath);
+            //    ShowManager.totalepisodecount = EpisodesList.Count;
+            //}
         }
         private void PlaySingleItem(FrameworkElement sender)
         {

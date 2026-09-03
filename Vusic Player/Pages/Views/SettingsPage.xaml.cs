@@ -27,5 +27,13 @@ namespace Vusic_Player.Pages.Views
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if(App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(LoggerPage));
+            }
+        }
     }
 }

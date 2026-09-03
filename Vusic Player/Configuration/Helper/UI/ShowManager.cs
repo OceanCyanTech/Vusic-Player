@@ -15,7 +15,7 @@ namespace Vusic_Player.Configuration.Helper.UI
     public class ShowManager
     {
         public static bool isLastEpisode = false;
-        public static int currentseason = 0;
+        public static int currentseason = 1;
         public static int currentepisode = 1;
         public static int totalepisodecount = 1;
         public static bool isNextSeasonAvailable = false;
@@ -50,7 +50,7 @@ namespace Vusic_Player.Configuration.Helper.UI
             Debug.WriteLine("Yes there are shows");
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var shows = currentSettings.Shows;
-            foreach(var show in shows)
+            foreach (var show in shows)
             {
                 Debug.WriteLine(show.Name + " Show Name");
                 var directorypath = show.Directory;
@@ -64,11 +64,36 @@ namespace Vusic_Player.Configuration.Helper.UI
                         Debug.WriteLine("not null and exists");
                         CurrentShow = show;
                         Debug.WriteLine("Season count: " + CurrentShow.SeasonCount);
-                        return;
+                        string rootPath = directorypath;
+                        if (Directory.Exists(rootPath))
+                        {
+                            var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
+                            primaryFolders.Insert(0, rootPath);
+
+                            string pattern = @"\b(season\s*|s)(\d+)\b";
+
+                            foreach (string path in primaryFolders)
+                            {
+                                string folderName = Path.GetFileName(path);
+                                Match match = Regex.Match(folderName, pattern, RegexOptions.IgnoreCase);
+
+                                if (path == rootPath) match = Regex.Match(new DirectoryInfo(rootPath).Name, pattern, RegexOptions.IgnoreCase);
+
+                                if (match.Success)
+                                {
+                                    int seasonNum = Convert.ToInt32(match.Groups[2].Value);
+                                    string seasonName = $"Season {seasonNum}";
+
+                                }
+                            }
+                        }
+
                     }
+                    return;
                 }
             }
         }
+        
         public static bool IsFileInDirectory(string directoryPath, string filePath)
         {
             string fullDirPath = Path.GetFullPath(directoryPath);
@@ -83,14 +108,14 @@ namespace Vusic_Player.Configuration.Helper.UI
         }
         public static async void PlayNextEpisode()
         {
-            for (currentepisode = 0;  currentepisode < totalepisodecount; currentepisode++)
+            for (currentepisode = 0; currentepisode < totalepisodecount; currentepisode++)
             {
                 if (currentepisode == totalepisodecount - 2)
                 {
                     var currentSettings = await SettingsLoader.LoadSettingsAsync();
                     var showsavail = currentSettings.Shows;
-               //     var existshow = 
-                   // foreach(var show in showsavail)
+                    //     var existshow = 
+                    // foreach(var show in showsavail)
                 }
             }
         }

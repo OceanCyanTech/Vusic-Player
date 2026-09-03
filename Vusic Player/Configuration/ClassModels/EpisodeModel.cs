@@ -27,7 +27,7 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _duration;
             set { _duration = value; OnPropertyChanged(); }
         }
-        public string? FilePath { get; set; }
+        public string FilePath { get; set; }   = "";
         public string? CurrentShowDirectory { get; set; }
         [JsonIgnore]
         private BitmapImage? _thumbnail;

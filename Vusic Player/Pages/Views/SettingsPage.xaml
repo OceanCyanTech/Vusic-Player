@@ -66,5 +66,6 @@
                 </Grid>
             </ScrollViewer>
         </NavigationView>
+        <Button Content="Log Page" Click="Button_Click"></Button>
     </Grid>
 </Page>

@@ -554,14 +554,6 @@ namespace Vusic_Player.Pages
                 await SettingsLoader.SaveSettingsAsync(settings);
             };
             SaveTimer?.Start();
-
-            //if (isEpisodeVideo == true)
-            //{
-            //    Debug.WriteLine("Yes it is a show");
-            //    Debug.WriteLine(PlayerService.CurrentPlayingPath);
-            //    ShowManager.LoadAvailableShow(PlayerService.CurrentPlayingPath);
-            //    return;
-            //}
             if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
             {
                 isEpisodeVideo = vdprg.IsEpisode ?? false;
@@ -658,6 +650,8 @@ namespace Vusic_Player.Pages
                         if (indexbefore == QueueService.VusicQueueNext.Count - 1)
                         {
                             btnNextEpisode.Content = "Next Season";
+                            Debug.WriteLine("HERE IT IS BEING UPDATED  3");
+
                         }
                         // Ensure the item was actually found (-1 means not found)
                         if (indexbefore != -1)
@@ -833,6 +827,10 @@ namespace Vusic_Player.Pages
                 VideoPath = episode.FilePath;
                 isEpisodeVideo = true;
             }
+            else if(e.Parameter is ShowData show)
+            {
+                mainShowPlayable = show;
+            }
             else if (e.Parameter is bool breakofnavigation)
             {
                 if (breakofnavigation == true)
@@ -866,6 +864,7 @@ namespace Vusic_Player.Pages
 
             if (ShowManager.isLastEpisode == true)
             {
+                Debug.WriteLine("HERE IT IS BEING UPDATED");
                 btnNextEpisode.Content = "Next Season";
                 ShowManager.isLastEpisode = false;
             }
@@ -1039,6 +1038,7 @@ namespace Vusic_Player.Pages
                 App.NavigationFrame.Navigate(typeof(SettingsPage));
             }
         }
+        ShowData mainShowPlayable = new ShowData();
         private async void btnNextEpisode_Click(object sender, RoutedEventArgs e)
         {
             if (btnNextEpisode.Content.ToString() == "Next Episode")
@@ -1288,11 +1288,19 @@ namespace Vusic_Player.Pages
                     if (ShowManager.currentseason < ShowManager.CurrentShow.SeasonCount)
                     {
                         Debug.WriteLine("Nanan7");
+                        Debug.WriteLine("CURRENT SEASON: " + ShowManager.currentseason);
+                        Debug.WriteLine("CURRENT SEASON COUNT: " + ShowManager.CurrentShow.SeasonCount);
+                        
+                            btnNextEpisode.Visibility = Visibility.Visible;
+                            Debug.WriteLine("HERE IT IS BEING UPDATED 2");
 
-                        btnNextEpisode.Visibility = Visibility.Visible;
-                        btnNextEpisode.Content = "Next Season";
+                            btnNextEpisode.Content = "Next Season";
+
                     }
-
+                    else
+                    {
+                        btnNextEpisode.Visibility = Visibility.Collapsed;
+                    }
                 }
                 else
                 {
