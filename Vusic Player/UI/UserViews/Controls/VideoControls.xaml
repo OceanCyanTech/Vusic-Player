@@ -385,6 +385,12 @@
                         </ToggleMenuFlyoutItem.Icon>
                     </ToggleMenuFlyoutItem>
                     <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Name="mnftMediaStats" Text="Media Stats" Click="mnftMediaStats_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="d"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutSeparator/>
                     <MenuFlyoutItem x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="d"/>

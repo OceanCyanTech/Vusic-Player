@@ -246,7 +246,7 @@
                         </Button>
                         <HyperlinkButton Content="View Unlinked Seasons" Name="hypViewUnlinkedSeasons" Click="hypViewUnlinkedSeasons_Click"/>
                     </StackPanel>
-                    <TextBlock Name="txtSeasonCount" Text="• 5 Seasons" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                    <TextBlock Name="txtSeasonCount" Text="• 0 Seasons (Loading)" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                     <GridView  Grid.Row="2" Visibility="Visible"  VerticalAlignment="Stretch"
  x:Name="grdViewSeasons" SelectionMode="Single" IsItemClickEnabled="True" CanDragItems="True" AllowDrop="True" CanReorderItems="True"
 ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" SelectionChanged="grdViewSeasons_SelectionChanged">

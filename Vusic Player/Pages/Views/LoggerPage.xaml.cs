@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -34,6 +35,8 @@ namespace Vusic_Player.Pages.Views
         public LoggerPage()
         {
             InitializeComponent();
+            Logger.Log("Log Entries requested by user", "LoggerPage.LoadPlayerLogs", Logger.LogLevelType.Information);
+
         }
         private void LoadPlayerLogs()
         {
@@ -98,7 +101,7 @@ namespace Vusic_Player.Pages.Views
         {
             DispatcherQueue.TryEnqueue(() =>
             {
-                LoadPlayerLogs();
+                // LoadPlayerLogs();
             });
         }
 
@@ -128,10 +131,7 @@ namespace Vusic_Player.Pages.Views
         {
             try
             {
-                if (logTabView.SelectedItem is not TabViewItem selectedTab)
-                    return;
-
-                string? selectedType = selectedTab.Tag?.ToString();
+             
 
                 var picker = new FileSavePicker();
                 var hwnd = WindowNative.GetWindowHandle(App.MainWindowInstance);
@@ -210,14 +210,16 @@ namespace Vusic_Player.Pages.Views
             fntIconDirectionMessage.Glyph = "";
             fntIconDirectionLevel.Glyph = "";
             fntIconDirectionSource.Glyph = "";
-            fntIconDirectionTimeStamp.Glyph = "";
             var sorted = logEntries.OrderByDescending(p => p.Timestamp).ToList();
             if (fntIconDirectionTimeStamp.Glyph == "\uE70E")
             {
+                Debug.WriteLine("IT IS CHEVRON UP");
                 fntIconDirectionTimeStamp.Glyph = "\uE70D";
             }
             else
             {
+                Debug.WriteLine("IT IS CHEVRON DOWN");
+
                 fntIconDirectionTimeStamp.Glyph = "\uE70E";
                 sorted = logEntries.OrderBy(p => p.Timestamp).ToList();
             }
@@ -238,7 +240,6 @@ namespace Vusic_Player.Pages.Views
             // Source
             fntIconDirectionMessage.Glyph = "";
             fntIconDirectionLevel.Glyph = "";
-            fntIconDirectionSource.Glyph = "";
             fntIconDirectionTimeStamp.Glyph = "";
             var sorted = logEntries.OrderByDescending(p => p.Source).ToList();
             if (fntIconDirectionSource.Glyph == "\uE70E")
@@ -265,7 +266,6 @@ namespace Vusic_Player.Pages.Views
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
             // Message
-            fntIconDirectionMessage.Glyph = "";
             fntIconDirectionLevel.Glyph = "";
             fntIconDirectionSource.Glyph = "";
             fntIconDirectionTimeStamp.Glyph = "";
@@ -293,132 +293,53 @@ namespace Vusic_Player.Pages.Views
 
         private void chckShowErrors_Checked(object sender, RoutedEventArgs e)
         {
-            if(chckShowErrors.IsChecked == true)
+            FilterLogs();
+        }
+
+        private void FilterLogs()
+        {
+            if (!this.IsLoaded) return;
+            bool showErrors = chckShowErrors.IsChecked == true;
+            bool showInfos = chckShowInformation.IsChecked == true;
+            bool showWarnings = chckShowWarning.IsChecked == true;
+            bool showSuccess = chckShowSuccess.IsChecked == true;
+            // 1. Filter and sort directly from the original list in one efficient LINQ query
+            var targetItems = logEntriesOriginal
+                .Where(p => (p.Level == Logger.LogLevelType.Error && showErrors) ||
+             (p.Level == Logger.LogLevelType.Information && showInfos) ||
+             (p.Level == Logger.LogLevelType.Warning && showWarnings) ||
+             (p.Level == Logger.LogLevelType.Success && showSuccess))
+                .OrderByDescending(p => p.Timestamp)
+                .ToList();
+
+            // 2. Clear and repopulate the ObservableCollection
+            // This is vastly faster than doing IndexOf and Move operations
+            logEntries.Clear();
+            foreach (var item in targetItems)
             {
-                var items = logEntries.Where(p => p.Level == Logger.LogLevelType.Error);
-                foreach(var item in items)
-                {
-                    logEntries.Remove(item);
-                }
+                logEntries.Add(item);
             }
-            else
-            {
-                var items = logEntriesOriginal.Where(p => p.Level == Logger.LogLevelType.Error);
-                foreach (var item in items)
-                {
-                    logEntries.Add(item);
-                }
-            }
-            var sorted = logEntries.OrderByDescending(p => p.Timestamp).ToList();
+
+            // 3. Reset UI icons
             fntIconDirectionMessage.Glyph = "";
             fntIconDirectionLevel.Glyph = "";
             fntIconDirectionSource.Glyph = "";
             fntIconDirectionTimeStamp.Glyph = "";
-            for (int i = 0; i < sorted.Count; i++)
-            {
-                var oldIndex = logEntries.IndexOf(sorted[i]);
-                var newIndex = i;
-
-                if (oldIndex != newIndex)
-                {
-                    logEntries.Move(oldIndex, newIndex);
-                }
-            }
         }
-
-
         private void chckShowSuccess_Checked(object sender, RoutedEventArgs e)
         {
-            if (chckShowSuccess.IsChecked == true)
-            {
-                var items = logEntries.Where(p => p.Level == Logger.LogLevelType.Success);
-                foreach (var item in items)
-                {
-                    logEntries.Remove(item);
-                }
-            }
-            else
-            {
-                var items = logEntriesOriginal.Where(p => p.Level == Logger.LogLevelType.Success);
-                foreach (var item in items)
-                {
-                    logEntries.Add(item);
-                }
-            }
-            var sorted = logEntries.OrderByDescending(p => p.Timestamp).ToList();
-            fntIconDirectionMessage.Glyph = "";
-            fntIconDirectionLevel.Glyph = "";
-            fntIconDirectionSource.Glyph = "";
-            fntIconDirectionTimeStamp.Glyph = "";
-            for (int i = 0; i < sorted.Count; i++)
-            {
-                var oldIndex = logEntries.IndexOf(sorted[i]);
-                var newIndex = i;
+            FilterLogs();
 
-                if (oldIndex != newIndex)
-                {
-                    logEntries.Move(oldIndex, newIndex);
-                }
-            }
-        }
-        private void SortbyTimeStamp()
-        {
-            var sorted = logEntries.OrderByDescending(p => p.Timestamp).ToList();
-            fntIconDirectionMessage.Glyph = "";
-            fntIconDirectionLevel.Glyph = "";
-            fntIconDirectionSource.Glyph = "";
-            fntIconDirectionTimeStamp.Glyph = "";
-            for (int i = 0; i < sorted.Count; i++)
-            {
-                var oldIndex = logEntries.IndexOf(sorted[i]);
-                var newIndex = i;
-
-                if (oldIndex != newIndex)
-                {
-                    logEntries.Move(oldIndex, newIndex);
-                }
-            }
         }
         private void chckShowInformation_Checked(object sender, RoutedEventArgs e)
         {
-            if (chckShowInformation.IsChecked == true)
-            {
-                var items = logEntries.Where(p => p.Level == Logger.LogLevelType.Information);
-                foreach (var item in items)
-                {
-                    logEntries.Remove(item);
-                }
-            }
-            else
-            {
-                var items = logEntriesOriginal.Where(p => p.Level == Logger.LogLevelType.InformationS);
-                foreach (var item in items)
-                {
-                    logEntries.Add(item);
-                }
-            }
-            SortbyTimeStamp();
+            FilterLogs();
         }
 
         private void chckShowWarning_Checked(object sender, RoutedEventArgs e)
         {
-            if (chckShowWarning.IsChecked == true)
-            {
-                var items = logEntries.Where(p => p.Level == Logger.LogLevelType.Warning);
-                foreach (var item in items)
-                {
-                    logEntries.Remove(item);
-                }
-            }
-            else
-            {
-                var items = logEntriesOriginal.Where(p => p.Level == Logger.LogLevelType.Warning);
-                foreach (var item in items)
-                {
-                    logEntries.Add(item);
-                }
-            }
-            SortbyTimeStamp();
+            FilterLogs();
+
         }
     }
 }

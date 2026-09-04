@@ -16,6 +16,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public string SeasonCountString { get; set; } = "0 seasons";
         public string Creators { get; set; } = "";
         public ObservableCollection<string> AddedSeasons { get; set; } = new();
+        public ObservableCollection<PlaylistItem> SeasonsToSend { get; set; } = new();
         public ObservableCollection<string> UnlinkedSeasons { get; set; } = new();
         public int SeasonCount { get; set; } = 0;
         public string Crew { get; set; } = "";

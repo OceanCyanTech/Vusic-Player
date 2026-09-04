@@ -14,6 +14,8 @@ namespace Vusic_Player.Configuration.Helper.UI
 {
     public class ShowManager
     {
+     public static   ShowData mainShowPlayable = new ShowData();
+
         public static bool isLastEpisode = false;
         public static int currentseason = 1;
         public static int currentepisode = 1;
@@ -57,8 +59,8 @@ namespace Vusic_Player.Configuration.Helper.UI
                 if (directorypath != null)
                 {
                     Debug.WriteLine("not null " + directorypath);
-                    bool isInsideAndExists = IsFileInDirectory(directorypath, EpisodePath)
-                                && File.Exists(EpisodePath);
+                        bool isInsideAndExists = IsFileInDirectory(directorypath, EpisodePath)
+                                    && File.Exists(EpisodePath);
                     if (isInsideAndExists)
                     {
                         Debug.WriteLine("not null and exists");

@@ -19,6 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
@@ -105,6 +106,7 @@ namespace Vusic_Player.Pages.Views
             }
 
         }
+        PlaylistItem currentSeason = new PlaylistItem();
         string CurrentSeasonDirectory = "";
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -120,7 +122,7 @@ namespace Vusic_Player.Pages.Views
                 {
                     ShowMainPanel.Visibility = Visibility.Collapsed;
                     SeasonPanel.Visibility = Visibility.Visible;
-
+                    SeasonsToSend = new ObservableCollection<PlaylistItem>(show.SeasonsToSend.ToList());
                     Debug.WriteLine("Yes Season Page");
                     if (show.Season is PlaylistItem pl && pl.PlaylistId is string folderpath)
                     {
@@ -372,7 +374,7 @@ namespace Vusic_Player.Pages.Views
                             var existingSeason = seasons.FirstOrDefault(p => p.PlaylistName == seasonName);
                             if (existingSeason == null)
                             {
-                                seasons.Add(new PlaylistItem
+                                var newSeason = new PlaylistItem
                                 {
                                     PlaylistName = seasonName,
                                     PlaylistCount = episodeCountString,
@@ -381,7 +383,9 @@ namespace Vusic_Player.Pages.Views
                                     PlaylistId = actualContentPath,
 
                                     SeasonNumber = seasonNum
-                                });
+                                };
+                                seasons.Add(newSeason);
+                                currentSeason = newSeason;
                             }
                             else
                             {
@@ -424,6 +428,8 @@ namespace Vusic_Player.Pages.Views
                         }
                         grdViewSeasons.ItemsSource = null;
                         grdViewSeasons.ItemsSource = seasonsRearranged;
+                        SeasonsToSend = new ObservableCollection<PlaylistItem>(seasonsRearranged);
+                        Logger.Log("Season's Count: " + SeasonsToSend.Count, "ShowModel.OnNavigatedTo", Logger.LogLevelType.Information);
                         grdViewSeasons.Visibility = Visibility.Visible;
                     }
                 }
@@ -597,6 +603,8 @@ namespace Vusic_Player.Pages.Views
                 }
 
                 grdViewSeasons.ItemsSource = seasonsRearranged;
+                SeasonsToSend = new ObservableCollection<PlaylistItem>(seasonsRearranged);
+
                 CheckForUnlinkedSeasons();
             }
         }
@@ -615,7 +623,7 @@ namespace Vusic_Player.Pages.Views
             if (e.ClickedItem is PlaylistItem season)
             {
                 if (currentshow == null) return;
-                var showitemtotransfer = new Show { Name = currentshow.Name, Poster = currentshow.Poster, Season = season, isSeasonPage = true };
+                var showitemtotransfer = new Show { Name = currentshow.Name, Poster = currentshow.Poster, Season = season, isSeasonPage = true, SeasonsToSend = SeasonsToSend };
                 this.Frame.Navigate(typeof(ShowModel), showitemtotransfer);
             }
         }
@@ -656,11 +664,11 @@ namespace Vusic_Player.Pages.Views
                 PlaySingleItem(mnft);
             }
         }
-
+        ObservableCollection<PlaylistItem> SeasonsToSend = new ObservableCollection<PlaylistItem>();
 
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
-
+        
             var observablesongcollection = new ObservableCollection<SongModel>();
             if (currentshow == null) return;
             foreach (var item in EpisodesList)
@@ -675,14 +683,20 @@ namespace Vusic_Player.Pages.Views
             {
                 QueueService.VusicQueueNext.Add(item);
             }
-            var seasonstosend = grdViewSeasons.ItemsSource as ObservableCollection<PlaylistItem>;
-            if (seasonstosend != null)
+         
+            if (SeasonsToSend != null)
             {
                 QueueService.VusicQueueNext.RemoveAt(0);
                 if (App.NavigationFrame != null)
+
                 {
-                    App.NavigationFrame.Navigate(typeof(VideoPlayer), new ShowData { ShowName = txtShowName.Text, episodes = EpisodesList.ToList(), ShowID = currentshow.ShowID, seasons = seasonstosend.ToList() });
+                    Logger.Log(SeasonsToSend.Count + "  SEASONSS COUTNTT","ShowModel.PlayAll", Logger.LogLevelType.Information);
+                    App.NavigationFrame.Navigate(typeof(VideoPlayer), new ShowData { ShowName = txtShowName.Text, episodes = EpisodesList.ToList(), ShowID = currentshow.ShowID, seasons = SeasonsToSend.ToList(), CurrentSeasonNumber =currentSeason.SeasonNumber, CurrentSeasonDirectory = CurrentSeasonDirectory });
                 }
+            }
+            else
+            {
+                Debug.WriteLine("SEASONS TO SEND IS NULL");
             }
             //var first = EpisodesList[0];
             //if (first.FilePath != null)
@@ -1055,6 +1069,7 @@ namespace Vusic_Player.Pages.Views
                             }
                             grdViewSeasons.ItemsSource = null;
                             grdViewSeasons.ItemsSource = seasonsRearranged;
+                            SeasonsToSend = new ObservableCollection<PlaylistItem>(seasonsRearranged);
                             grdViewSeasons.Visibility = Visibility.Visible;
                             txtSeasonCount.Text = $"• {seasons.Count} {(seasons.Count == 1 ? "season" : "seasons")}";
                         }
@@ -1083,6 +1098,8 @@ namespace Vusic_Player.Pages.Views
                         }
                         grdViewSeasons.ItemsSource = null;
                         grdViewSeasons.ItemsSource = seasonsRearranged;
+                        SeasonsToSend = new ObservableCollection<PlaylistItem>(seasonsRearranged);
+
                         grdViewSeasons.Visibility = Visibility.Visible;
                         txtSeasonCount.Text = $"• {seasons.Count} {(seasons.Count == 1 ? "season" : "seasons")}";
                         await SettingsLoader.SaveSettingsAsync(currentSettings);

@@ -59,6 +59,20 @@
        To="0.0" 
        Duration="0:0:0.5" />
         </Storyboard>
+        <Storyboard x:Name="FadeInStoryboardStats">
+            <DoubleAnimation Storyboard.TargetName="grdMediaStats"
+       Storyboard.TargetProperty="Opacity"
+       To="1.0" 
+       Duration="0:0:1.5" />
+        </Storyboard>
+
+        <Storyboard x:Name="FadeOutStoryboardStats">
+            <DoubleAnimation Storyboard.TargetName="grdMediaStats"
+       Storyboard.TargetProperty="Opacity"
+       To="0.0" 
+       Duration="0:0:0.5" />
+        </Storyboard>
+
         <Storyboard x:Name="FadeInOutSeek">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="txtSeek"
                             Storyboard.TargetProperty="Opacity">
@@ -419,15 +433,15 @@ CornerRadius="16" >
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Grid.Row="1" ColumnSpacing="20">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding ChapterTitle}"/>
-                                            <TextBlock Grid.Column="1" Text="{Binding StartTimeStr}"/>
-                                            <TextBlock Grid.Column="2" Text="{Binding EndTimeStr}"/>
-                                        </Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding ChapterTitle}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding StartTimeStr}"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding EndTimeStr}"/>
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
@@ -442,7 +456,53 @@ CornerRadius="16" >
                     </Grid>
                 </Border>
             </Grid>
-
+            <Grid MaxHeight="500" Visibility="Visible" Opacity="0" Margin="20, 10" Name="grdMediaStats" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Border CornerRadius="20" >
+                    <Border.Background>
+                        <media:AcrylicBrush BlurAmount="15"
+                     TintColor="Black"
+                     TintOpacity=".6" />
+                    </Border.Background>
+                    <Grid Margin="22, 22" RowSpacing="15">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button Click="btnCloseStats_Click" Name="btnCloseStats" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
+                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                        </Button>
+                        <TextBlock Grid.Row="1" Text="Media Stats" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TabView IsAddTabButtonVisible="False"  Name="tbViewStats">
+                            <TabView.TabItems>
+                                <TabViewItem Header="Video" IsClosable="False">
+                                    <Grid>
+                                        <TextBlock Name="txtDroppedFramesVideo"/>
+                                    </Grid>
+                                </TabViewItem>
+                            </TabView.TabItems>
+                        </TabView>
+                        <ListView IsItemClickEnabled="True" Name="lstViewVideoLogs" Grid.Row="4" ItemClick="lstViewVideoChapters_ItemClick">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Grid.Row="1" ColumnSpacing="20">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding ChapterTitle}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding StartTimeStr}"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding EndTimeStr}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+            </Grid>
             <TeachingTip Name="ttVolume" PreferredPlacement="Center" Title="Volume">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Name="volStackPanel" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
@@ -549,7 +609,7 @@ BorderThickness="0"
                                         </StackPanel>
                                     </Grid>
                                     <playbackviews:PlaybackMainControls FileNameTextVisibility="Collapsed" x:Name="playbackMainControls"></playbackviews:PlaybackMainControls>
-                                    <playbackviews:VideoControls VideoChapters="videoControls_VideoChapters"  MultiDeviceOutput="videoControls_MultiDeviceOutput" x:Name="videoControls" FullScreenToggled="videoControls_FullScreenToggled"  ViewEpisodeClick="videoControls_ViewEpisodeClick"/>
+                                    <playbackviews:VideoControls MediaStats="videoControls_MediaStats" VideoChapters="videoControls_VideoChapters"  MultiDeviceOutput="videoControls_MultiDeviceOutput" x:Name="videoControls" FullScreenToggled="videoControls_FullScreenToggled"  ViewEpisodeClick="videoControls_ViewEpisodeClick"/>
 
                                 </StackPanel>
                             </Grid>

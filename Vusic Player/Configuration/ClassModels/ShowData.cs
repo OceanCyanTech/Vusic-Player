@@ -10,7 +10,10 @@ namespace Vusic_Player.Configuration.ClassModels
     {
         public string ShowName { get; set; } = "";
         public string ShowID { get; set; } = "";
+        public string CurrentSeasonDirectory { get; set; } = "";
         public List<EpisodeModel> episodes { get; set; } = new List<EpisodeModel>();
         public List<PlaylistItem> seasons { get; set; } = new List<PlaylistItem>();
+        public bool isFromFirst { get; set; } = true;
+        public int CurrentSeasonNumber { get; set; } = 1;
     }
 }

@@ -41,6 +41,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         public event Action? ViewEpisodeClick;
         public event Action? MultiDeviceOutput;
         public event Action? VideoChapters;
+        public event Action? MediaStats;
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
         public Visibility ViewEpisodeVisibility
         {
@@ -862,6 +863,11 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftShowChapterMarks_Click(object sender, RoutedEventArgs e)
         {
             mediacontroller.ChaptersEnabled = mnftShowChapterMarks.IsChecked;
+        }
+
+        private void mnftMediaStats_Click(object sender, RoutedEventArgs e)
+        {
+            MediaStats?.Invoke();
         }
     }
 }

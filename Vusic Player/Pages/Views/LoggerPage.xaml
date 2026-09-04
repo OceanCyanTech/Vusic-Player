@@ -8,10 +8,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid RowSpacing="10" Margin="0, 30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
@@ -25,42 +25,42 @@
         </StackPanel>
 
         <!-- Tabs -->
-        <TabView IsAddTabButtonVisible="False" Name="logTabView" Grid.Row="1">
-
-            <TabViewItem IsClosable="False" Header="Player Logs" Tag="Player">
-                <Grid RowSpacing="20">
+      
+                <Grid RowSpacing="20" Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <TextBlock Text="No log information available!" Name="txtNoLogs" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 20" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="1" Margin="10, 0" ColumnSpacing="20">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox Content="Errors" Name="chckShowErrors" IsChecked="True" Checked="chckShowErrors_Checked" Unchecked="chckShowErrors_Checked"/>
-                        <CheckBox Content="Successful" Name="chckShowSuccess" IsChecked="True" Checked="chckShowSuccess_Checked" Unchecked="chckShowSuccess_Checked"/>
-                        <CheckBox Content="Information" Name="chckShowInformation" IsChecked="True" Checked="chckShowInformation_Checked" Unchecked="chckShowInformation_Checked"/>
-                        <CheckBox Content="Warning" Name="chckShowWarning" IsChecked="True" Checked="chckShowWarning_Checked" Unchecked="chckShowWarning_Checked"/>
+                        <TextBlock Text="Filter Logs: " VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Content="Error" Name="chckShowErrors" IsChecked="True" Checked="chckShowErrors_Checked" Unchecked="chckShowErrors_Checked"/>
+                        <CheckBox Grid.Column="2" Content="Successful" Name="chckShowSuccess" IsChecked="True" Checked="chckShowSuccess_Checked" Unchecked="chckShowSuccess_Checked"/>
+                        <CheckBox Grid.Column="3" Content="Information" Name="chckShowInformation" IsChecked="True" Checked="chckShowInformation_Checked" Unchecked="chckShowInformation_Checked"/>
+                        <CheckBox Grid.Column="4" Content="Warning" Name="chckShowWarning" IsChecked="True" Checked="chckShowWarning_Checked" Unchecked="chckShowWarning_Checked"/>
                     </Grid>
-                    <Grid Background="{ThemeResource SystemControlBackgroundAltHighBrush}" Padding="5" Grid.Row="2">
+                    <Grid Margin="0, 0" Background="{ThemeResource SystemControlBackgroundAltHighBrush}" Padding="30, 0" Grid.Row="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="Auto" />
                             <!-- Icon -->
-                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition/>
                             <!-- Level -->
-                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition />
                             <!-- Timestamp -->
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition />
                             <!-- Message -->
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition />
                             <!-- Source -->
-                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition />
                             <!-- Button -->
                         </Grid.ColumnDefinitions>
 
@@ -88,28 +88,35 @@
                                 <TextBlock Text="Message" />
                             </StackPanel>
                         </Button>
-                       
+
                     </Grid>
 
                     <ListView Name="lstViewPlayerLogs" Grid.Row="3">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
                                     <Image Source="{Binding Icon}"
                                        Width="16"
                                        Height="16"
                                        Margin="0,0,10,0"/>
                                     <TextBlock Text="{Binding Level}"
                                            FontWeight="Bold"
-                                           Margin="0,0,10,0"/>
+                                           Margin="0,0,10,0" Grid.Column="1"/>
                                     <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Text="{Binding Timestamp}"
-                                           Margin="0,0,10,0"/>
-                                    <TextBlock Text="{Binding Source}"
-     />
-                                    <TextBlock  IsTextSelectionEnabled="True" Margin="10,0,0,0" Text="{Binding Message}"/>
+                                           Margin="0,0,10,0" Grid.Column="2"/>
+                                    <TextBlock ToolTipService.ToolTip="{Binding Source}" IsTextSelectionEnabled="True" Text="{Binding Source}" Grid.Column="3"/>
+                                    <TextBlock Grid.Column="4"  IsTextSelectionEnabled="True" Margin="10,0,0,0" Text="{Binding Message}" ToolTipService.ToolTip="{Binding Message}"/>
 
-                                    <Button Background="Transparent" BorderBrush="Transparent" Margin="10,0,0,0"
-                                        Click="Button_Click">
+                                    <Button Grid.Column="5" Background="Transparent" BorderBrush="Transparent" Margin="10,0,0,0"
+                                        Click="Button_Click" ToolTipService.ToolTip="Copy Log">
                                         <FontIcon Glyph="&#xE8C8;" />
                                         <Button.Flyout>
                                             <Flyout >
@@ -117,17 +124,13 @@
                                             </Flyout>
                                         </Button.Flyout>
                                     </Button>
-                                </StackPanel>
+                                </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
 
                 </Grid>
-            </TabViewItem>
-
-            <!-- Updater Logs -->
-
-        </TabView>
+    
     </Grid>
 
 </Page>
