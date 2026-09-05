@@ -28,6 +28,7 @@ using Vusic_Player.UI.UserViews.Controls;
 using Windows.Devices.Spi;
 using Windows.Storage;
 using Windows.UI;
+using static Vusic_Player.Configuration.AppConfig.Logger;
 using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 
 namespace Vusic_Player.Configuration
@@ -37,7 +38,7 @@ namespace Vusic_Player.Configuration
         public static Player? Masterplayer { get; set; }
         public static bool MediaCompleted { get; set; }
         public static event Action? PlayPauseChanged;
-
+        public static event Action<string, LogLevelType>? LoggedMessage;
         public static MemoryStream? msReverb { get; set; }
         public static MediaPlaybackController UIController => MediaPlaybackController.Instance;
         public static int? originalvolume;
@@ -503,11 +504,16 @@ namespace Vusic_Player.Configuration
 
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
+      public static  DispatcherTimer statsTimerRealTime = new DispatcherTimer();
+
         public static void Pause()
         {
 
             if (Masterplayer == null) return;
             Masterplayer.Pause();
+            statsTimerRealTime.Stop();
+            LoggedMessage?.Invoke("Pause", LogLevelType.Information);
+
             //CurrentPlayState?.Invoke("Paused");
             PlayPauseChanged?.Invoke();
             PlayCalled?.Invoke();
@@ -574,7 +580,7 @@ namespace Vusic_Player.Configuration
             {
                 Debug.WriteLine("DFIH FAILURE");
                 UIController.ErrorMessage = "The file path is unavailable or access to it is denied. Please reopen the file to continue playing it.";
-
+                LoggedMessage?.Invoke("Unexpected error: Failed/Stopped Demuxer", LogLevelType.Error);
                 ErrorCalled?.Invoke();
 
                 Logger.Log("Unexpected error: Failed/Stopped Demuxer", "PlayerService.Play", Logger.LogLevelType.Error);
@@ -585,7 +591,10 @@ namespace Vusic_Player.Configuration
                 return;
             }
             PlayPauseChanged?.Invoke();
+            statsTimerRealTime.Start();
             Masterplayer.Play();
+            LoggedMessage?.Invoke("Player Status: Playing", LogLevelType.Information);
+
             PlayCalled?.Invoke();
             App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
             {
@@ -631,6 +640,7 @@ namespace Vusic_Player.Configuration
                 }
             }
         }
+        public static bool isEpisodeVid = false;
         private static void Masterplayer_OpenCompleted1(object? sender, OpenCompletedArgs e)
         {
             Debug.WriteLine("SKHDHD");

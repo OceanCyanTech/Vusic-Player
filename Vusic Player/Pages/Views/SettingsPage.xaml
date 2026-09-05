@@ -9,17 +9,17 @@
     mc:Ignorable="d">
 
     <Grid  Margin="30, 30">
-        <NavigationView IsBackButtonVisible="Collapsed" PaneDisplayMode="Top" IsSettingsVisible="False"  Name="nvgNavigationMain">
+        <NavigationView IsBackButtonVisible="Collapsed" PaneDisplayMode="Top" SelectionChanged="nvgNavigationMain_SelectionChanged" IsSettingsVisible="False"  Name="nvgNavigationMain">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Home Page Options"/>
-                <NavigationViewItem Content="Music Options"/>
-                <NavigationViewItem Content="Video Options"/>
-                <NavigationViewItem Content="About &amp; Help"/>
+                <NavigationViewItem Name="nvgitHomePage" Content="Home Page Options"/>
+                <NavigationViewItem Name="nvgitMusicOptions" Content="Music Options"/>
+                <NavigationViewItem Name="nvgitVideoOptions" Content="Video Options"/>
+                <NavigationViewItem Name="nvgitAppSettings" Content="App Config"/>
+                <NavigationViewItem Name="nvgitAboutHelp" Content="About &amp; Help"/>
             </NavigationView.MenuItems>
             <ScrollViewer>
                 <Grid Background="Transparent" Margin="30, 30">
-
-                    <Grid Name="frmAboutOptions" RowSpacing="30">
+                    <Grid Name="grdAppSettings" RowSpacing="30">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -34,7 +34,28 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock Text="App Configuration" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <MenuFlyoutSeparator Grid.Row="1"/>
+                        <TextBlock Text="App Log" Grid.Row="2" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="View events that are recorded when Vusic Player performs informative/successful actions or unexpectedly crashes due to bugs" Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
+                        <Button Name="btnViewLog" Grid.Row="4" Content="View App Log" Style="{StaticResource AccentButtonStyle}" Click="btnViewLog_Click"></Button>
+                    </Grid>
+                    <Grid Name="frmAboutOptions" Visibility="Collapsed" RowSpacing="30">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>  
                         <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Spacing="15">
                             <StackPanel Orientation="Horizontal" Spacing="20">
                                 <Image VerticalAlignment="Center" Width="50" Source="/Assets/appicon.png"></Image>
@@ -43,7 +64,15 @@
                             <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.1.0.0"></TextBlock>
                             <TextBlock IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="Preview (Beta 2)"></TextBlock>
                             <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech"></TextBlock>
-                            <Image Margin="0, 30" Width="300" Source="/Assets/OceanCyan Logo High.png"></Image>
+                            <Image Margin="0, 30" HorizontalAlignment="Left" Width="300" Source="/Assets/OceanCyan Logo High.png"></Image>
+                            <TextBlock Text="Open Source Licenses" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Text="FlyleafLib" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                            <TextBlock Text="Copyright © SuRGeoNix"/>
+                            <TextBlock Text="Licensed under LGPLv3"/>
+                            <StackPanel Orientation="Horizontal"  Spacing="10">
+                                <TextBlock Text="Source: " VerticalAlignment="Top"/>
+                                <HyperlinkButton NavigateUri="https://github.com/SuRGeoNix/Flyleaf" VerticalAlignment="Top" Padding="0" Content="Github Code"/>
+                            </StackPanel>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="2"/>
                         <TextBlock Text="Updates" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}"/>
@@ -66,6 +95,5 @@
                 </Grid>
             </ScrollViewer>
         </NavigationView>
-        <Button Content="Log Page" Click="Button_Click"></Button>
     </Grid>
 </Page>

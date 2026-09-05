@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.VisualBasic.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,9 +23,11 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using Vortice.XAudio2;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
@@ -38,11 +41,14 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
+using Vusic_Player.MediaProperties.AudioProperties;
 using Vusic_Player.MediaProperties.VideoProperties;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Spi;
 using Windows.Media;
 using Windows.Media.Playback;
@@ -100,6 +106,14 @@ namespace Vusic_Player.Pages
         private void PlayerService_PlayPauseChanged()
         {
             if (PlayerService.Masterplayer == null) return;
+            if (PlayerService.Masterplayer.IsPlaying)
+            {
+                //    statsTimerRealTime.Start();
+            }
+            else
+            {
+                //    statsTimerRealTime.Stop();
+            }
             if (_smtc == null) return;
             if (PlayerService.Masterplayer.IsPlaying)
             {
@@ -139,6 +153,9 @@ namespace Vusic_Player.Pages
             RecordTimer.Interval = TimeSpan.FromMilliseconds(300);
             RecordTimer.Tick += RecordTimer_Tick;
             InitiateRecord();
+            PlayerService.LoggedMessage -= PlayerService_LoggedMessage;
+            PlayerService.LoggedMessage += PlayerService_LoggedMessage;
+
             PlayerService.PIPRestore -= PlayerService_PIPRestore;
             PlayerService.PIPRestore += PlayerService_PIPRestore;
             SubtitleTimer = new();
@@ -207,9 +224,10 @@ namespace Vusic_Player.Pages
         }
         private void VideoPlayer_Loaded(object sender, RoutedEventArgs e)
         {
+            //lstViewVideoLogs.ItemsSource = LogEntries;
             //  SetupSMTC();
         }
-
+        ObservableCollection<LogEntry> LogEntries = new ObservableCollection<LogEntry>();
         private void InitiateSeekText()
         {
             Configuration.Helper.UI.SeekInfoService.OnSeekRequest += (text, isForward) =>
@@ -641,18 +659,295 @@ namespace Vusic_Player.Pages
 
         public Configuration.Helper.SubtitlesProperties.Stream ViewModelSubtitles { get; } = new();
         bool ShowInformationOpened = true;
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private async void VideoIsEpisode(VideoProgress vdprg)
+        {
+            isEpisodeVideo = true;
+            if (vdprg.FilePath == null) return;
+
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var shows = currentSettings.Shows;
+            var listofotherepisodes = EpisodeDirectory.GetEpisodeShowInfo(vdprg.FilePath);
+            var observablesongcollection = new ObservableCollection<SongModel>();
+            foreach (var item in listofotherepisodes)
+            {
+
+                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
+            }
+            foreach (var item in observablesongcollection)
+            {
+                QueueService.VusicQueue.Add(item);
+            }
+            foreach (var item in observablesongcollection)
+            {
+                QueueService.VusicQueueNext.Add(item);
+            }
+            var existingitem = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
+            if (existingitem != null)
+            {
+                int index = QueueService.VusicQueueNext.IndexOf(existingitem);
+                if (index > 0)
+                {
+                    for (int i = 0; i < index; i++)
+                    {
+                        QueueService.VusicQueueNext.RemoveAt(0);
+                    }
+                }
+
+                QueueService.VusicQueueNext.Remove(existingitem);
+            }
+            var seasonstosend = new ObservableCollection<PlaylistItem>();
+            foreach (var show in shows)
+            {
+                Debug.WriteLine(show.Name + " Show Name");
+                var directorypath = show.Directory;
+                var rootPath = directorypath;
+
+                if (directorypath != null)
+                {
+                    Debug.WriteLine("not null " + directorypath);
+
+                    bool isInsideAndExists = ShowManager.IsFileInDirectory(directorypath, vdprg.FilePath)
+                                && File.Exists(vdprg.FilePath);
+                    if (isInsideAndExists)
+                    {
+
+                        if (Directory.Exists(directorypath))
+                        {
+                            // 1. Only get the top-level folders (e.g., "Season 1", "Season 2", "Season 3")
+                            var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
+                            primaryFolders.Insert(0, rootPath);
+
+                            string pattern = @"\b(season\s*|s)(\d+)\b";
+
+                            foreach (string path2 in primaryFolders)
+                            {
+                                string folderName = Path.GetFileName(path2);
+                                Match match = Regex.Match(folderName, pattern, RegexOptions.IgnoreCase);
+
+                                if (path2 == rootPath) match = Regex.Match(new DirectoryInfo(rootPath).Name, pattern, RegexOptions.IgnoreCase);
+
+                                if (match.Success)
+                                {
+
+                                    int seasonNum = Convert.ToInt32(match.Groups[2].Value);
+                                    string seasonName = $"Season {seasonNum}";
+                                    int episodeCount = 0;
+
+                                    // This variable will track the actual deep folder where files are found!
+                                    string actualContentPath = path2;
+
+                                    foreach (var ext in Extensions.VideoExtensions.List)
+                                    {
+                                        string searchPattern = $"*{ext.ToLower()}";
+
+                                        // Get the full path details of any matching video files inside
+                                        var foundFiles = Directory.EnumerateFiles(path2, searchPattern, SearchOption.AllDirectories).ToList();
+
+                                        if (foundFiles.Any())
+                                        {
+                                            episodeCount += foundFiles.Count;
+
+                                            // Grab the directory name of the first video file found. 
+                                            // This is guaranteed to be the real folder containing the episodes!
+                                            actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
+                                        }
+                                    }
+
+                                    string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
+
+                                    var existingSeason = seasonstosend.FirstOrDefault(p => p.PlaylistName == seasonName);
+                                    if (existingSeason == null)
+                                    {
+                                        var newSeason = new PlaylistItem
+                                        {
+                                            PlaylistName = seasonName,
+                                            PlaylistCount = episodeCountString,
+
+                                            // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
+                                            PlaylistId = actualContentPath,
+
+                                            SeasonNumber = seasonNum
+                                        };
+                                        seasonstosend.Add(newSeason);
+
+                                    }
+                                    else
+                                    {
+                                        existingSeason.PlaylistCount = episodeCountString;
+                                        existingSeason.PlaylistId = actualContentPath; // Update path if found
+                                    }
+                                }
+                            }
+                            int activeSeasonNumber = 1;
+                            string activeSeasonDir = rootPath;
+
+                            // Walk up from the file's containing folder
+                            DirectoryInfo dirWalker = new System.IO.FileInfo(vdprg.FilePath).Directory;
+
+                            while (dirWalker != null)
+                            {
+                                Match dirMatch = Regex.Match(dirWalker.Name, pattern, RegexOptions.IgnoreCase);
+                                if (dirMatch.Success)
+                                {
+                                    activeSeasonNumber = Convert.ToInt32(dirMatch.Groups[2].Value);
+                                    activeSeasonDir = dirWalker.FullName;
+                                    break;
+                                }
+
+                                // Stop if we hit or pass above the show's root directory
+                                if (string.Equals(dirWalker.FullName.TrimEnd('\\', '/'),
+                                                  rootPath.TrimEnd('\\', '/'),
+                                                  StringComparison.OrdinalIgnoreCase))
+                                {
+                                    break;
+                                }
+
+                                dirWalker = dirWalker.Parent;
+                            }
+
+                            // If the folder names didn't contain "Season X" / "S01", try matching against the file name itself
+                            if (activeSeasonNumber == 1 && dirWalker == null)
+                            {
+                                Match fileMatch = Regex.Match(Path.GetFileName(vdprg.FilePath), pattern, RegexOptions.IgnoreCase);
+                                if (fileMatch.Success)
+                                {
+                                    activeSeasonNumber = Convert.ToInt32(fileMatch.Groups[2].Value);
+                                }
+                            }
+
+                            // Assign once outside the loop
+                            ShowManager.mainShowPlayable = new ShowData
+                            {
+                                ShowName = show.Name,
+                                episodes = listofotherepisodes.ToList(),
+                                ShowID = show.ShowID,
+                                seasons = seasonstosend.OrderBy(s => s.SeasonNumber).ToList(),
+                                CurrentSeasonNumber = activeSeasonNumber,
+                                CurrentSeasonDirectory = activeSeasonDir,
+
+                            };
+                            foreach (var season in seasonstosend)
+                            {
+                                Logger.Log(season.PlaylistName, "VIDEOPLAU", Logger.LogLevelType.Warning);
+                            }
+                            Logger.Log(activeSeasonDir, "VIDEOPLAU", Logger.LogLevelType.Warning);
+
+                        }
+
+                    }
+                }
+
+                //               Debug.WriteLine("Yes Episode");
+                //               //     ShowManager.UpdateCurrentSeason(vdprg.FilePath);
+                //               var listofotherepisodes = EpisodeDirectory.GetEpisodeShowInfo(vdprg.FilePath);
+                //               var sorted = listofotherepisodes
+                //.OrderBy(p => int.Parse(p.EpisodeName?.Replace("Episode ", "") ?? "0"));
+                //               ShowManager.totalepisodecount = listofotherepisodes.Count;
+                //               var filePathsToRemove = sorted.Select(item => item.FilePath).ToHashSet();
+
+                //               // Optimize VusicQueue removal
+                //               for (int i = QueueService.VusicQueue.Count - 1; i >= 0; i--)
+                //               {
+                //                   if (filePathsToRemove.Contains(QueueService.VusicQueue[i].FilePath))
+                //                   {
+                //                       QueueService.VusicQueue.RemoveAt(i);
+                //                   }
+                //               }
+
+                //               // Optimize VusicQueueNext removal
+                //               for (int i = QueueService.VusicQueueNext.Count - 1; i >= 0; i--)
+                //               {
+                //                   if (filePathsToRemove.Contains(QueueService.VusicQueueNext[i].FilePath))
+                //                   {
+                //                       QueueService.VusicQueueNext.RemoveAt(i);
+                //                   }
+                //               }
+                //               QueueService.VusicQueue.Clear();
+                //               QueueService.VusicQueueNext.Clear();
+                //               foreach (var item in sorted)
+                //               {
+                //                   var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
+                //                   var vidprops = await file.Properties.GetVideoPropertiesAsync();
+                //                   var title = vidprops.Title;
+                //                   if (title == "")
+                //                   {
+                //                       title = Path.GetFileName(item.FilePath);
+                //                   }
+                //                   if (item.FilePath != null)
+                //                   {
+                //                       QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
+                //                   }
+                //               }
+                //               foreach (var item in QueueService.VusicQueue)
+                //               {
+                //                   QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
+                //               }
+                //               var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
+
+                //               if (exist != null)
+                //               {
+
+
+                //                   int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
+                //                   if (indexbefore == QueueService.VusicQueueNext.Count - 1)
+                //                   {
+                //                       btnNextEpisode.Content = "Next Season";
+                //                       Debug.WriteLine("HERE IT IS BEING UPDATED  3");
+
+                //                   }
+                //                   // Ensure the item was actually found (-1 means not found)
+                //                   if (indexbefore != -1)
+                //                   {
+                //                       // Loop indexbefore + 1 times to include the 'exist' item itself
+                //                       int itemsToRemove = indexbefore + 1;
+
+                //                       for (int i = 0; i < itemsToRemove; i++)
+                //                       {
+                //                           if (QueueService.VusicQueueNext.Count > 0)
+                //                           {
+                //                               QueueService.VusicQueueNext.RemoveAt(0);
+                //                           }
+                //                       }
+                //                   }
+                //                   //        QueueService.VusicQueueNext.Remove(exist);
+                //               }
+                //               foreach (var item in QueueService.VusicQueueNext)
+                //               {
+                //                   Debug.WriteLine(item.FilePath + " Next");
+
+                //               }
+                //               ShowManager.LoadAvailableShow(vdprg.FilePath);
+                UpdateNextEpisodeButtonContent(vdprg.FilePath);
+            }
+            btnNextEpisode.Visibility = Visibility.Visible;
+            videoControls.ViewEpisodeVisibility = Visibility.Visible;
+
+            UpdateNextEpisodeButtonContent(vdprg.FilePath);
+        }
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             PlayerService.InVideoPage = true;
             btnNextEpisode.Visibility = Visibility.Collapsed;
             Debug.WriteLine("SJDHDHDHDHAUHIU4GU");
             string VideoPath = "";
             isEpisodeVideo = false;
-            if (e.Parameter is VideoProgress vditem && vditem.FilePath is string path)
+            if (e.Parameter is VideoProgress vdprg && vdprg.FilePath is string path)
             {
                 VideoPath = path;
                 LoadingProgress = true;
-                ShowInformationOpened = vditem.ShowInformationOfOpen;
+                ShowInformationOpened = vdprg.ShowInformationOfOpen;
+
+                if (vdprg.IsEpisode == true)
+                {
+                    VideoIsEpisode(vdprg);
+                }
+                else
+                {
+                    Debug.WriteLine("Not Episode");
+
+                    btnNextEpisode.Visibility = Visibility.Collapsed;
+                    videoControls.ViewEpisodeVisibility = Visibility.Collapsed;
+                }
 
             }
             else if (e.Parameter is string Path)
@@ -694,6 +989,11 @@ namespace Vusic_Player.Pages
                         SplashGrid.Visibility = Visibility.Collapsed;
                         MainGrid.Visibility = Visibility.Visible;
                         hostMedia.Player = PlayerService.Masterplayer;
+                        if (PlayerService.isEpisodeVid)
+                        {
+                            VideoIsEpisode(new VideoProgress { FilePath = PlayerService.CurrentPlayingPath });
+                            PlayerService.isEpisodeVid = false;
+                        }
 
                     }
                     else
@@ -715,7 +1015,7 @@ namespace Vusic_Player.Pages
 
 
 
-           
+
             if (PlayerService.Masterplayer != null)
             {
                 // Convert ticks to milliseconds and force an accurate seek
@@ -804,7 +1104,7 @@ namespace Vusic_Player.Pages
             SaveTimer?.Start();
             if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
             {
-                isEpisodeVideo = vdprg.IsEpisode ?? false;
+                //z   isEpisodeVideo = vdprg.IsEpisode ?? false;
                 PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));
                 if (vdprg.IsSubtitlesDisabled == true)
                 {
@@ -823,116 +1123,7 @@ namespace Vusic_Player.Pages
                 {
                     ShowInformation($"Opened playback of '{PlayerService.CurrentPlayingPath}' at {mediacontroller.RunningDurationString}");
                 }
-                if (vdprg.IsEpisode == true)
-                {
-                    if (vdprg.FilePath == null) return;
-                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                    var shows = currentSettings.Shows;
-                    foreach (var show in shows)
-                    {
-                        Debug.WriteLine(show.Name + " Show Name");
-                        var directorypath = show.Directory;
-                        if (directorypath != null)
-                        {
-                            Debug.WriteLine("not null " + directorypath);
-                            bool isInsideAndExists = ShowManager.IsFileInDirectory(directorypath, vdprg.FilePath)
-                                        && File.Exists(vdprg.FilePath);
-                            if (isInsideAndExists)
-                            { 
-                            }
-                        }
-                    }
-                                //               Debug.WriteLine("Yes Episode");
-                                //               btnNextEpisode.Visibility = Visibility.Visible;
-                                //               videoControls.ViewEpisodeVisibility = Visibility.Visible;
-                                //               //     ShowManager.UpdateCurrentSeason(vdprg.FilePath);
-                                //               var listofotherepisodes = EpisodeDirectory.GetEpisodeShowInfo(vdprg.FilePath);
-                                //               var sorted = listofotherepisodes
-                                //.OrderBy(p => int.Parse(p.EpisodeName?.Replace("Episode ", "") ?? "0"));
-                                //               ShowManager.totalepisodecount = listofotherepisodes.Count;
-                                //               var filePathsToRemove = sorted.Select(item => item.FilePath).ToHashSet();
 
-                                //               // Optimize VusicQueue removal
-                                //               for (int i = QueueService.VusicQueue.Count - 1; i >= 0; i--)
-                                //               {
-                                //                   if (filePathsToRemove.Contains(QueueService.VusicQueue[i].FilePath))
-                                //                   {
-                                //                       QueueService.VusicQueue.RemoveAt(i);
-                                //                   }
-                                //               }
-
-                                //               // Optimize VusicQueueNext removal
-                                //               for (int i = QueueService.VusicQueueNext.Count - 1; i >= 0; i--)
-                                //               {
-                                //                   if (filePathsToRemove.Contains(QueueService.VusicQueueNext[i].FilePath))
-                                //                   {
-                                //                       QueueService.VusicQueueNext.RemoveAt(i);
-                                //                   }
-                                //               }
-                                //               QueueService.VusicQueue.Clear();
-                                //               QueueService.VusicQueueNext.Clear();
-                                //               foreach (var item in sorted)
-                                //               {
-                                //                   var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-                                //                   var vidprops = await file.Properties.GetVideoPropertiesAsync();
-                                //                   var title = vidprops.Title;
-                                //                   if (title == "")
-                                //                   {
-                                //                       title = Path.GetFileName(item.FilePath);
-                                //                   }
-                                //                   if (item.FilePath != null)
-                                //                   {
-                                //                       QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
-                                //                   }
-                                //               }
-                                //               foreach (var item in QueueService.VusicQueue)
-                                //               {
-                                //                   QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
-                                //               }
-                                //               var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
-
-                                //               if (exist != null)
-                                //               {
-
-
-                                //                   int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
-                                //                   if (indexbefore == QueueService.VusicQueueNext.Count - 1)
-                                //                   {
-                                //                       btnNextEpisode.Content = "Next Season";
-                                //                       Debug.WriteLine("HERE IT IS BEING UPDATED  3");
-
-                                //                   }
-                                //                   // Ensure the item was actually found (-1 means not found)
-                                //                   if (indexbefore != -1)
-                                //                   {
-                                //                       // Loop indexbefore + 1 times to include the 'exist' item itself
-                                //                       int itemsToRemove = indexbefore + 1;
-
-                                //                       for (int i = 0; i < itemsToRemove; i++)
-                                //                       {
-                                //                           if (QueueService.VusicQueueNext.Count > 0)
-                                //                           {
-                                //                               QueueService.VusicQueueNext.RemoveAt(0);
-                                //                           }
-                                //                       }
-                                //                   }
-                                //                   //        QueueService.VusicQueueNext.Remove(exist);
-                                //               }
-                                //               foreach (var item in QueueService.VusicQueueNext)
-                                //               {
-                                //                   Debug.WriteLine(item.FilePath + " Next");
-
-                                //               }
-                                //               ShowManager.LoadAvailableShow(vdprg.FilePath);
-                                UpdateNextEpisodeButtonContent(vdprg.FilePath);
-                }
-                else
-                {
-                    Debug.WriteLine("Not Episode");
-
-                    btnNextEpisode.Visibility = Visibility.Collapsed;
-                    videoControls.ViewEpisodeVisibility = Visibility.Collapsed;
-                }
 
             }
             else if (LoadingProgress == false)
@@ -1071,7 +1262,7 @@ namespace Vusic_Player.Pages
                 LoadNextSeason();
 
                 Debug.WriteLine("TEST1");
-              
+
             }
         }
         private async void LoadNextSeason()
@@ -1079,10 +1270,13 @@ namespace Vusic_Player.Pages
             var existingseason = ShowManager.mainShowPlayable.seasons.FirstOrDefault(p => p.PlaylistId == ShowManager.mainShowPlayable.CurrentSeasonDirectory);
             if (existingseason == null) return;
             int index1 = ShowManager.mainShowPlayable.seasons.IndexOf(existingseason);
+            Logger.Log("CURRENT SEASON INDEX " + index1, "LOADNEXTSEASON", Logger.LogLevelType.Success);
             int nextindex = index1 + 1;
-            if(nextindex <= ShowManager.mainShowPlayable.seasons.Count)
+            if (nextindex <= ShowManager.mainShowPlayable.seasons.Count)
             {
                 var nextseason = ShowManager.mainShowPlayable.seasons[nextindex];
+                Logger.Log("NEXT SEASON NAME " + nextseason.PlaylistName, "LOADNEXTSEASON", Logger.LogLevelType.Success);
+
                 var enumeratedepisodes = EpisodeDirectory.EnumerateEpisodes(nextseason.PlaylistId);
                 ShowManager.mainShowPlayable.CurrentSeasonNumber++;
                 if (enumeratedepisodes.Count == 0) return;
@@ -1105,155 +1299,155 @@ namespace Vusic_Player.Pages
                 UpdateNextEpisodeButtonContent(firstitem.FilePath);
 
                 var existingitem = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == firstitem.FilePath);
-                if(existingitem != null)
+                if (existingitem != null)
                 {
                     QueueService.VusicQueueNext.Remove(existingitem);
                 }
                 QueueService.PlayNext();
             }
-         //   if (Directory.Exists(rootPath))
-         //   {
-         //       Debug.WriteLine("TEST3");
+            //   if (Directory.Exists(rootPath))
+            //   {
+            //       Debug.WriteLine("TEST3");
 
-         //       // 1. Only get the top-level folders (e.g., "Season 1", "Season 2", "Season 3")
-         //       var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
-         //       primaryFolders.Insert(0, rootPath);
+            //       // 1. Only get the top-level folders (e.g., "Season 1", "Season 2", "Season 3")
+            //       var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
+            //       primaryFolders.Insert(0, rootPath);
 
-         //       string pattern = @"\b(season\s*|s)(\d+)\b";
+            //       string pattern = @"\b(season\s*|s)(\d+)\b";
 
-         //       foreach (string path in primaryFolders)
-         //       {
-         //           string folderName = Path.GetFileName(path);
-         //           Match match = Regex.Match(folderName, pattern, RegexOptions.IgnoreCase);
+            //       foreach (string path in primaryFolders)
+            //       {
+            //           string folderName = Path.GetFileName(path);
+            //           Match match = Regex.Match(folderName, pattern, RegexOptions.IgnoreCase);
 
-         //           if (path == rootPath) match = Regex.Match(new DirectoryInfo(rootPath).Name, pattern, RegexOptions.IgnoreCase);
+            //           if (path == rootPath) match = Regex.Match(new DirectoryInfo(rootPath).Name, pattern, RegexOptions.IgnoreCase);
 
-         //           if (match.Success)
-         //           {
-         //               int seasonNum = Convert.ToInt32(match.Groups[2].Value);
-         //               string seasonName = $"Season {seasonNum}";
+            //           if (match.Success)
+            //           {
+            //               int seasonNum = Convert.ToInt32(match.Groups[2].Value);
+            //               string seasonName = $"Season {seasonNum}";
 
-         //               int episodeCount = 0;
+            //               int episodeCount = 0;
 
-         //               // This variable will track the actual deep folder where files are found!
-         //               string actualContentPath = path;
+            //               // This variable will track the actual deep folder where files are found!
+            //               string actualContentPath = path;
 
-         //               foreach (var ext in Extensions.VideoExtensions.List)
-         //               {
-         //                   string searchPattern = $"*{ext.ToLower()}";
+            //               foreach (var ext in Extensions.VideoExtensions.List)
+            //               {
+            //                   string searchPattern = $"*{ext.ToLower()}";
 
-         //                   // Get the full path details of any matching video files inside
-         //                   var foundFiles = Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
+            //                   // Get the full path details of any matching video files inside
+            //                   var foundFiles = Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
 
-         //                   if (foundFiles.Any())
-         //                   {
-         //                       episodeCount += foundFiles.Count;
+            //                   if (foundFiles.Any())
+            //                   {
+            //                       episodeCount += foundFiles.Count;
 
-         //                       // Grab the directory name of the first video file found. 
-         //                       // This is guaranteed to be the real folder containing the episodes!
-         //                       actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
-         //                   }
-         //               }
+            //                       // Grab the directory name of the first video file found. 
+            //                       // This is guaranteed to be the real folder containing the episodes!
+            //                       actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
+            //                   }
+            //               }
 
-         //               string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
+            //               string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
 
-         //               var existingSeason = seasons.FirstOrDefault(p => p.PlaylistName == seasonName);
-         //               if (existingSeason == null)
-         //               {
-         //                   Debug.WriteLine("TEST5");
+            //               var existingSeason = seasons.FirstOrDefault(p => p.PlaylistName == seasonName);
+            //               if (existingSeason == null)
+            //               {
+            //                   Debug.WriteLine("TEST5");
 
-         //                   seasons.Add(new PlaylistItem
-         //                   {
-         //                       PlaylistName = seasonName,
-         //                       PlaylistCount = episodeCountString,
+            //                   seasons.Add(new PlaylistItem
+            //                   {
+            //                       PlaylistName = seasonName,
+            //                       PlaylistCount = episodeCountString,
 
-         //                       // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
-         //                       PlaylistId = actualContentPath,
+            //                       // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
+            //                       PlaylistId = actualContentPath,
 
-         //                       SeasonNumber = seasonNum
-         //                   });
-         //               }
-         //               else
-         //               {
-         //                   existingSeason.PlaylistCount = episodeCountString;
-         //                   existingSeason.PlaylistId = actualContentPath; // Update path if found
-         //               }
-         //           }
-         //       }
+            //                       SeasonNumber = seasonNum
+            //                   });
+            //               }
+            //               else
+            //               {
+            //                   existingSeason.PlaylistCount = episodeCountString;
+            //                   existingSeason.PlaylistId = actualContentPath; // Update path if found
+            //               }
+            //           }
+            //       }
 
-         //       if (seasons.Count != 0)
-         //       {
-         //           if (PlayerService.CurrentPlayingPath == null) return;
-         //           Debug.WriteLine("TEST6");
-         //           var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
+            //       if (seasons.Count != 0)
+            //       {
+            //           if (PlayerService.CurrentPlayingPath == null) return;
+            //           Debug.WriteLine("TEST6");
+            //           var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
 
-         //           foreach (var seas in seasonsRearranged)
-         //           {
-         //               var path = seas.PlaylistId;
-         //               if (path != null)
-         //               {
-         //                   // Check if the current file path starts with the season's directory path
-         //                   if (PlayerService.CurrentPlayingPath.StartsWith(path, StringComparison.OrdinalIgnoreCase))
-         //                   {
-         //                       var curindex = seasonsRearranged.IndexOf(seas);
-         //                       ShowManager.currentseason = curindex;
-         //                       break; // Found it, no need to keep looping
-         //                   }
-         //               }
-         //           }
-         //           ShowManager.currentseason++;
-         //           Debug.WriteLine(ShowManager.currentseason + " is the current season now");
-         //           foreach (var item in seasonsRearranged)
-         //           {
-         //               Debug.WriteLine(item.PlaylistName);
-         //           }
-         //           var nextseason = seasonsRearranged[ShowManager.currentseason];
-         //           Debug.WriteLine(nextseason.PlaylistName + " is the next season");
-         //           if (nextseason != null)
-         //           {
-         //               if (nextseason.PlaylistId == null) return;
-         //               var listofotherepisodes = EpisodeDirectory.EnumerateEpisodes(nextseason.PlaylistId);
-         //               var sorted = listofotherepisodes
-         //.OrderBy(p => int.Parse(p.EpisodeName?.Replace("Episode ", "") ?? "0"));
-         //               ShowManager.totalepisodecount = listofotherepisodes.Count;
-         //               // Optimize VusicQueue removal
+            //           foreach (var seas in seasonsRearranged)
+            //           {
+            //               var path = seas.PlaylistId;
+            //               if (path != null)
+            //               {
+            //                   // Check if the current file path starts with the season's directory path
+            //                   if (PlayerService.CurrentPlayingPath.StartsWith(path, StringComparison.OrdinalIgnoreCase))
+            //                   {
+            //                       var curindex = seasonsRearranged.IndexOf(seas);
+            //                       ShowManager.currentseason = curindex;
+            //                       break; // Found it, no need to keep looping
+            //                   }
+            //               }
+            //           }
+            //           ShowManager.currentseason++;
+            //           Debug.WriteLine(ShowManager.currentseason + " is the current season now");
+            //           foreach (var item in seasonsRearranged)
+            //           {
+            //               Debug.WriteLine(item.PlaylistName);
+            //           }
+            //           var nextseason = seasonsRearranged[ShowManager.currentseason];
+            //           Debug.WriteLine(nextseason.PlaylistName + " is the next season");
+            //           if (nextseason != null)
+            //           {
+            //               if (nextseason.PlaylistId == null) return;
+            //               var listofotherepisodes = EpisodeDirectory.EnumerateEpisodes(nextseason.PlaylistId);
+            //               var sorted = listofotherepisodes
+            //.OrderBy(p => int.Parse(p.EpisodeName?.Replace("Episode ", "") ?? "0"));
+            //               ShowManager.totalepisodecount = listofotherepisodes.Count;
+            //               // Optimize VusicQueue removal
 
 
-         //               // Optimize VusicQueueNext removal
+            //               // Optimize VusicQueueNext removal
 
-         //               QueueService.VusicQueue.Clear();
-         //               QueueService.VusicQueueNext.Clear();
-         //               foreach (var item in sorted)
-         //               {
-         //                   var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-         //                   var vidprops = await file.Properties.GetVideoPropertiesAsync();
-         //                   var title = vidprops.Title;
-         //                   if (title == "")
-         //                   {
-         //                       title = Path.GetFileName(item.FilePath);
-         //                   }
-         //                   if (item.FilePath != null)
-         //                   {
-         //                       QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
-         //                   }
-         //               }
-         //               foreach (var item in QueueService.VusicQueue)
-         //               {
-         //                   QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
-         //               }
-         //               foreach (var item in QueueService.VusicQueueNext)
-         //               {
-         //                   Debug.WriteLine(item.FilePath + " Next");
+            //               QueueService.VusicQueue.Clear();
+            //               QueueService.VusicQueueNext.Clear();
+            //               foreach (var item in sorted)
+            //               {
+            //                   var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
+            //                   var vidprops = await file.Properties.GetVideoPropertiesAsync();
+            //                   var title = vidprops.Title;
+            //                   if (title == "")
+            //                   {
+            //                       title = Path.GetFileName(item.FilePath);
+            //                   }
+            //                   if (item.FilePath != null)
+            //                   {
+            //                       QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
+            //                   }
+            //               }
+            //               foreach (var item in QueueService.VusicQueue)
+            //               {
+            //                   QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
+            //               }
+            //               foreach (var item in QueueService.VusicQueueNext)
+            //               {
+            //                   Debug.WriteLine(item.FilePath + " Next");
 
-         //               }
-         //               var firstitem = QueueService.VusicQueueNext[0];
+            //               }
+            //               var firstitem = QueueService.VusicQueueNext[0];
 
-         //               QueueService.PlayNext();
-         //               if (firstitem.FilePath != null)
-         //                   UpdateNextEpisodeButtonContent(firstitem.FilePath);
-         //           }
-         //       }
-         //   }
+            //               QueueService.PlayNext();
+            //               if (firstitem.FilePath != null)
+            //                   UpdateNextEpisodeButtonContent(firstitem.FilePath);
+            //           }
+            //       }
+            //   }
 
         }
         ObservableCollection<PlaylistItem> seasons = new();
@@ -1696,6 +1890,7 @@ namespace Vusic_Player.Pages
             {
                 if (PlayerService.InVideoPage == true)
                 {
+                    PlayerService.isEpisodeVid = isEpisodeVideo;
                     App.NavigationFrame.GoBack();
                     if (PlayerService.Masterplayer != null)
                     {
@@ -1869,21 +2064,101 @@ namespace Vusic_Player.Pages
         {
             FadeOutStoryboardStats.Stop();
         }
-        DispatcherTimer statsTimerRealTime = new DispatcherTimer();
         private void videoControls_MediaStats()
         {
+            var statsTimerRealTime = PlayerService.statsTimerRealTime;
             FadeInStoryboardStats.Begin();
+            txtFramesDropped.Text = "";
             statsTimerRealTime = new DispatcherTimer();
-            statsTimerRealTime.Interval = TimeSpan.FromMilliseconds(400);
+            statsTimerRealTime.Interval = TimeSpan.FromMilliseconds(50);
             statsTimerRealTime.Tick += StatsTimerRealTime_Tick;
             statsTimerRealTime.Start();
         }
+
+        private void PlayerService_LoggedMessage(string message, Logger.LogLevelType logLevel)
+        {
+            var Icon = logLevel switch
+            {
+                Logger.LogLevelType.Information => "ms-appx:///Assets/infoicon.png",
+                Logger.LogLevelType.Warning => "ms-appx:///Assets/warning.png",
+                Logger.LogLevelType.Error => "ms-appx:///Assets/error.png",
+                Logger.LogLevelType.Success => "ms-appx:///Assets/success.png",
+                _ => null
+            };
+            if (PlayerService.Masterplayer == null) return;
+
+
+
+            LogEntries.Add(new LogEntry { Level = logLevel, Icon = Icon, Message = message + $" at {DateTime.Now.ToString("HH:mm:ss")}" });
+        }
+
         int count = 0;
+        public MediaProperties.AudioProperties.Device ViewModel { get; } = new();
+
+        int decodedaudio = 0;
         private void StatsTimerRealTime_Tick(object? sender, object e)
         {
             if (PlayerService.Masterplayer == null) return;
             count++;
-            txtDroppedFramesVideo.Text = $"{count}" + "  "+ PlayerService.Masterplayer.Video.FramesDisplayed.ToString();
+            PlayerService.Masterplayer.Config.Player.Stats = true;
+            var config = PlayerService.Masterplayer.Config;
+
+            var (displayedframes, droppedframes) = PlayerService.Masterplayer.GetRealTimeStats();
+            var (delayedframes, failedframes) = PlayerService.Masterplayer.GetDelayedFailedFrames();
+            txtFramesDisplayed.Text = displayedframes.ToString();
+            txtFramesDropped.Text = droppedframes.ToString();
+            txtFramesDelayed.Text = delayedframes.ToString();
+            txtEncodedFPS.Text = PlayerService.Masterplayer.Video.FPS.ToString("###") + " fps";
+            txtDecodedFrames.Text = PlayerService.Masterplayer.VideoDecoder.DecodedVideoFrames.ToString();
+
+            int avDistanceMS = PlayerService.Masterplayer.GetVDist();
+            txtAVOffset.Text = $"{avDistanceMS:+0.0;-0.0;0.0} ms";
+            txtDecodedAudio.Text = PlayerService.Masterplayer.AudioDecoder.DecodedFrames.ToString();
+            if (ViewModel.CurrentDevice != null)
+            {
+                txtDeviceOutput.Text = ViewModel.CurrentDevice.Name;
+            }
+      
+            txtFramesDroppedAudio.Text = PlayerService.Masterplayer.Audio.FramesDropped.ToString();
+            txtAudioPlayed.Text = PlayerService.Masterplayer.Audio.FramesDisplayed.ToString();
+            var (bufferMs, delayMs) = PlayerService.Masterplayer.GetAudioDiagnostics();
+            txtBufferDuration.Text = $"{bufferMs:0.0} ms";
+            txtDeviceDelay.Text = $"{delayMs:0.0} ms";
+
+
+        }
+
+        private void btnCopyStatsVideo_Click(object sender, RoutedEventArgs e)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("=== Video Performance Telemetry (Real Time)===");
+            sb.AppendLine($"Frames Decoded:   {txtDecodedFrames.Text}");
+            sb.AppendLine($"Frames Displayed: {txtFramesDisplayed.Text}");
+            sb.AppendLine($"Frames Dropped:   {txtFramesDropped.Text}");
+            sb.AppendLine($"Frames Delayed:   {txtFramesDelayed.Text}");
+            sb.AppendLine($"Encoded FPS:      {txtEncodedFPS.Text}");
+            sb.AppendLine($"A/V Offset:       {txtAVOffset.Text}");
+
+            var package = new DataPackage();
+            package.SetText(sb.ToString());
+            Clipboard.SetContent(package);
+        }
+
+        private void btnCopyStatsAudio_Click(object sender, RoutedEventArgs e)
+        {
+
+            var sb = new StringBuilder();
+            sb.AppendLine("=== Audio Performance Telemetry (Real Time)===");
+            sb.AppendLine($"Frames Decoded:   {txtDecodedAudio.Text}");
+            sb.AppendLine($"Frames Played: {txtAudioPlayed.Text}");
+            sb.AppendLine($"Frames Dropped:   {txtFramesDroppedAudio.Text}");
+            sb.AppendLine($"Device Delay:      {txtDeviceDelay.Text}");
+            sb.AppendLine($"Output Device:       {txtDeviceOutput.Text}");
+            sb.AppendLine($"Buffered Duration:       {txtBufferDuration.Text}");
+
+            var package = new DataPackage();
+            package.SetText(sb.ToString());
+            Clipboard.SetContent(package);
         }
     }
 }

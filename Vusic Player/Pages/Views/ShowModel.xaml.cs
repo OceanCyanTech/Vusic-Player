@@ -253,7 +253,7 @@ namespace Vusic_Player.Pages.Views
 
                                             try { durationString = await tcsDuration.Task; } catch { /* Fallback to default */ }
                                             // C. HEAVY IO: Run FFmpeg to extract the image (Safe for background thread)
-                                            string tempFile = await FileThumbnailObtain.ExtractVideoFrameToFileAsync(filePath);
+                                            string tempFile =   await FileThumbnailObtain.ExtractVidThumbnailBasic(filePath);
 
                                             // D. WINRT CALL: Convert the temp image file into a BitmapImage
                                             // BitmapImage MUST be created and assigned on the UI thread
@@ -713,59 +713,59 @@ namespace Vusic_Player.Pages.Views
             {
                 if (App.NavigationFrame != null)
                 {
-                    if (episode.FilePath == null) return;
-                    ShowManager.LoadAvailableShow(episode.FilePath);
+                    //if (episode.FilePath == null) return;
+                    //ShowManager.LoadAvailableShow(episode.FilePath);
 
-                    QueueService.VusicQueue.Clear();
-                    QueueService.VusicQueueNext.Clear();
-                    var observablesongcollection = new ObservableCollection<SongModel>();
+                    //QueueService.VusicQueue.Clear();
+                    //QueueService.VusicQueueNext.Clear();
+                    //var observablesongcollection = new ObservableCollection<SongModel>();
 
-                    foreach (var item in EpisodesList)
-                    {
-                        observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
-                    }
-                    foreach (var item in observablesongcollection)
-                    {
-                        QueueService.VusicQueue.Add(item);
-                    }
-                    foreach (var item in observablesongcollection)
-                    {
-                        QueueService.VusicQueueNext.Add(item);
-                    }
+                    //foreach (var item in EpisodesList)
+                    //{
+                    //    observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
+                    //}
+                    //foreach (var item in observablesongcollection)
+                    //{
+                    //    QueueService.VusicQueue.Add(item);
+                    //}
+                    //foreach (var item in observablesongcollection)
+                    //{
+                    //    QueueService.VusicQueueNext.Add(item);
+                    //}
 
-                    var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == episode.FilePath);
-                    if (exist != null)
-                    {
-                        int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
+                    //var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == episode.FilePath);
+                    //if (exist != null)
+                    //{
+                    //    int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
                       
                        
-                        if (indexbefore == QueueService.VusicQueueNext.Count - 1)
-                        {
-                            ShowManager.isLastEpisode = true;
-                        }
+                    //    if (indexbefore == QueueService.VusicQueueNext.Count - 1)
+                    //    {
+                    //        ShowManager.isLastEpisode = true;
+                    //    }
 
-                        // Ensure the item was actually found (-1 means not found)
-                        if (indexbefore != -1)
-                        {
-                            // Loop indexbefore + 1 times to include the 'exist' item itself
-                            int itemsToRemove = indexbefore + 1;
+                    //    // Ensure the item was actually found (-1 means not found)
+                    //    if (indexbefore != -1)
+                    //    {
+                    //        // Loop indexbefore + 1 times to include the 'exist' item itself
+                    //        int itemsToRemove = indexbefore + 1;
 
-                            for (int i = 0; i < itemsToRemove; i++)
-                            {
-                                if (QueueService.VusicQueueNext.Count > 0)
-                                {
-                                    QueueService.VusicQueueNext.RemoveAt(0);
-                                }
-                            }
-                        }
-                        //   QueueService.VusicQueueNext.Remove(exist);
-                    }
+                    //        for (int i = 0; i < itemsToRemove; i++)
+                    //        {
+                    //            if (QueueService.VusicQueueNext.Count > 0)
+                    //            {
+                    //                QueueService.VusicQueueNext.RemoveAt(0);
+                    //            }
+                    //        }
+                    //    }
+                    //    //   QueueService.VusicQueueNext.Remove(exist);
+                    //}
 
-                    ShowManager.totalepisodecount = EpisodesList.Count;
+                    //ShowManager.totalepisodecount = EpisodesList.Count;
                     //   ShowManager.currentseason = currentseasonindex;
 
-                    App.NavigationFrame.Navigate(typeof(VideoPlayer), episode);
-                    Debug.WriteLine("Current Season index are " + ShowManager.currentseason);
+                    App.NavigationFrame.Navigate(typeof(VideoPlayer), new VideoProgress { FilePath = episode.FilePath, IsEpisode = true});
+                  //  Debug.WriteLine("Current Season index are " + ShowManager.currentseason);
                 }
             }
         }

@@ -467,39 +467,244 @@ CornerRadius="16" >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Button Click="btnCloseStats_Click" Name="btnCloseStats" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
                             <Image Width="20" Source="/Assets/removeicon.png"></Image>
                         </Button>
-                        <TextBlock Grid.Row="1" Text="Media Stats" Style="{StaticResource TitleTextBlockStyle}"/>
-                        <TabView IsAddTabButtonVisible="False"  Name="tbViewStats">
+                        <TextBlock Grid.Row="0" Text="Media Stats" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TabView IsAddTabButtonVisible="False" Grid.Row="1"  Name="tbViewStats">
                             <TabView.TabItems>
-                                <TabViewItem Header="Video" IsClosable="False">
-                                    <Grid>
-                                        <TextBlock Name="txtDroppedFramesVideo"/>
+                                <TabViewItem Background="Transparent" Header="Video" IsClosable="False">
+                                    <Grid ColumnSpacing="24" RowSpacing="8" Margin="0, 20">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 0: Headers -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 1: Separator -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 2: Frames Decoded -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 3: Frames Displayed -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 4: Frames Dropped -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 5: Frames Delayed -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 6: Separator -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 7: Encoded FPS -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 8: A/V Offset -->
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Headers -->
+                                        <TextBlock Text="Parameters" 
+               Grid.Row="0" Grid.Column="0" 
+               Style="{StaticResource SubtitleTextBlockStyle}"/>
+                                        <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Text="Corresponding Value" 
+                   Grid.Column="0" 
+                   VerticalAlignment="Center"
+                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                                            <!-- Copy Stats Button -->
+                                            <Button x:Name="btnCopyStatsVideo"
+                Grid.Column="1"
+                Click="btnCopyStatsVideo_Click"
+                ToolTipService.ToolTip="Copy Stats to Clipboard"
+                Padding="6,4"
+                Background="Transparent"
+                BorderThickness="0">
+                                                <FontIcon Glyph="&#xE8C8;" FontSize="14"/>
+                                            </Button>
+                                        </Grid>
+
+                                        <!-- Separator 1 -->
+                                        <MenuFlyoutSeparator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,4,0,8"/>
+
+                                        <!-- Pipeline Metrics -->
+                                        <TextBlock Text="Frames Decoded" 
+               Grid.Row="2" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0" 
+               Grid.Row="2" Grid.Column="1" 
+               Name="txtDecodedFrames" IsTextSelectionEnabled="True"/>
+
+                                        <TextBlock Text="Frames Displayed" 
+               Grid.Row="3" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0" 
+               Grid.Row="3" Grid.Column="1" 
+               Name="txtFramesDisplayed" IsTextSelectionEnabled="True"/>
+
+                                        <TextBlock Text="Frames Dropped" 
+               Grid.Row="4" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0" 
+               Grid.Row="4" Grid.Column="1" 
+               Name="txtFramesDropped" IsTextSelectionEnabled="True"/>
+
+                                        <TextBlock Text="Frames Delayed" 
+               Grid.Row="5" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0" 
+               Grid.Row="5" Grid.Column="1" 
+               Name="txtFramesDelayed" IsTextSelectionEnabled="True"/>
+
+                                        <!-- Separator 2 -->
+                                        <MenuFlyoutSeparator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,8"/>
+
+                                        <!-- Timing & Stream Info -->
+                                        <TextBlock Text="Encoded FPS" 
+               Grid.Row="7" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0.000 fps" 
+               Grid.Row="7" Grid.Column="1" 
+               Name="txtEncodedFPS" IsTextSelectionEnabled="True"/>
+
+                                        <TextBlock Text="A/V Offset" 
+               Grid.Row="8" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0.0 ms" 
+               Grid.Row="8" Grid.Column="1" 
+               Name="txtAVOffset" IsTextSelectionEnabled="True"/>
                                     </Grid>
                                 </TabViewItem>
+                                <TabViewItem Background="Transparent" Header="Audio" IsClosable="False">
+                                    <Grid ColumnSpacing="24" RowSpacing="8" Margin="0, 20">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 0: Headers -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 1: Separator -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 2: Frames Decoded -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 3: Frames Displayed -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 4: Frames Dropped -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- 5: Frames Delayed -->
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Headers -->
+                                        <TextBlock Text="Parameters" 
+               Grid.Row="0" Grid.Column="0" 
+               Style="{StaticResource SubtitleTextBlockStyle}"/>
+                                        <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Text="Corresponding Value" 
+                   Grid.Column="0" 
+                   VerticalAlignment="Center"
+                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                                            <!-- Copy Stats Button -->
+                                            <Button x:Name="btnCopyStatsAudio"
+                Grid.Column="1"
+                Click="btnCopyStatsAudio_Click"
+                ToolTipService.ToolTip="Copy Stats to Clipboard"
+                Padding="6,4"
+                Background="Transparent"
+                BorderThickness="0">
+                                                <FontIcon Glyph="&#xE8C8;" FontSize="14"/>
+                                            </Button>
+                                        </Grid>
+
+
+                                        <!-- Separator 1 -->
+                                        <MenuFlyoutSeparator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,4,0,8"/>
+
+                                        <!-- Pipeline Metrics -->
+                                        <TextBlock Text="Decoded" 
+               Grid.Row="2" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0" 
+               Grid.Row="2" Grid.Column="1" 
+               Name="txtDecodedAudio" IsTextSelectionEnabled="True"/>
+
+                                        <TextBlock Text="Played" 
+               Grid.Row="3" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0" 
+               Grid.Row="3" Grid.Column="1" 
+               Name="txtAudioPlayed" IsTextSelectionEnabled="True"/>
+
+                                        <TextBlock Text="Dropped" 
+               Grid.Row="4" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0" 
+               Grid.Row="4" Grid.Column="1" 
+               Name="txtFramesDroppedAudio" IsTextSelectionEnabled="True"/>
+
+                                        
+
+                                        <!-- Separator 2 -->
+                                        <MenuFlyoutSeparator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,8"/>
+
+                                        <!-- Timing & Stream Info -->
+                                        <TextBlock Text="Device Delay" 
+               Grid.Row="7" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0" 
+               Grid.Row="7" Grid.Column="1" 
+               Name="txtDeviceDelay" IsTextSelectionEnabled="True"/>
+
+                                        <TextBlock Text="Output Device" 
+               Grid.Row="8" Grid.Column="0" 
+               Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="null" 
+               Grid.Row="8" Grid.Column="1" 
+               Name="txtDeviceOutput" IsTextSelectionEnabled="True"/>
+
+                                        <TextBlock Text="Buffer Duration" 
+Grid.Row="9" Grid.Column="0" 
+Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
+                                        <TextBlock Text="0" 
+Grid.Row="9" Grid.Column="1" 
+Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
+                                    </Grid>
+                                </TabViewItem>
+
                             </TabView.TabItems>
                         </TabView>
-                        <ListView IsItemClickEnabled="True" Name="lstViewVideoLogs" Grid.Row="4" ItemClick="lstViewVideoChapters_ItemClick">
+                        <!--<ListView IsItemClickEnabled="True" Name="lstViewVideoLogs" Grid.Row="2" >
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Grid.Row="1" ColumnSpacing="20">
+                                    <Grid Grid.Row="1" ColumnSpacing="10">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
-                                            <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding ChapterTitle}"/>
-                                        <TextBlock Grid.Column="1" Text="{Binding StartTimeStr}"/>
-                                        <TextBlock Grid.Column="2" Text="{Binding EndTimeStr}"/>
+                                        <Image Source="{Binding Icon}" Width="20"/>
+                                        <TextBlock Grid.Column="1" IsTextSelectionEnabled="True" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding Message}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-                        </ListView>
+                        </ListView>-->
                     </Grid>
                 </Border>
             </Grid>

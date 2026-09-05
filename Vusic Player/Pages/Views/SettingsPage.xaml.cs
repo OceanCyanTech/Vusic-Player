@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -28,12 +29,44 @@ namespace Vusic_Player.Pages.Views
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void btnViewLog_Click(object sender, RoutedEventArgs e)
         {
-            if(App.NavigationFrame != null)
+
+            if (App.NavigationFrame != null)
             {
                 App.NavigationFrame.Navigate(typeof(LoggerPage));
             }
+        }
+
+        private void nvgNavigationMain_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItemContainer == null)
+                return;
+            grdAppSettings.Visibility = Visibility.Collapsed;
+            frmAboutOptions.Visibility = Visibility.Collapsed;
+
+            if (args.SelectedItemContainer == nvgitHomePage)
+            {
+
+            }
+
+            else if (args.SelectedItemContainer == nvgitMusicOptions)
+            {
+            }
+
+            else if (args.SelectedItemContainer == nvgitVideoOptions)
+            {
+            }
+
+            else if (args.SelectedItemContainer == nvgitAppSettings)
+            {
+                grdAppSettings.Visibility = Visibility.Visible;
+            }
+            else if(args.SelectedItemContainer == nvgitAboutHelp)
+            {
+                frmAboutOptions.Visibility = Visibility.Visible;
+            }
+
         }
     }
 }

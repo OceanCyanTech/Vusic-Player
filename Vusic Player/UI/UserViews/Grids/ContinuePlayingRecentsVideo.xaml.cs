@@ -17,6 +17,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vortice.Direct2D1.Effects;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
@@ -80,7 +81,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                         {
                             if (File.Exists(path))
                             {
-                                var videoprogressitem = new VideoProgress { FilePath = path };
+                                var videoprogressitem = new VideoProgress { FilePath = path, IsEpisode = item.IsEpisode };
                                 var file = await StorageFile.GetFileFromPathAsync(path);
                                 string fileExtension = file.FileType.ToLowerInvariant();
                                 if (Extensions.VideoExtensions.List.Contains(fileExtension))
@@ -254,6 +255,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             if (e.ClickedItem is VideoProgress videoprogress)
             {
                 ContinuePlaying.videoProgressMain = videoprogress;
+                Logger.Log("IS IT EPISODE: " + videoprogress.IsEpisode, "continueplA", Logger.LogLevelType.Information);
                 if (App.NavigationFrame != null)
                 {
                     App.NavigationFrame.Navigate(typeof(VideoPlayer), videoprogress);

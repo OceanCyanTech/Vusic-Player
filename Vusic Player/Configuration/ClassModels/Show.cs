@@ -22,7 +22,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public string Crew { get; set; } = "";
         public PlaylistItem? Season { get; set; }
         public bool isSeasonPage { get; set; } = false;
-        public string? Directory { get; set; }
+        public string Directory { get; set; } = "";
         public string? Tags { get; set; }
     }
 }
