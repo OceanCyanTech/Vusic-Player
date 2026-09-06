@@ -58,7 +58,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 ToolTipService.SetToolTip(txtFolderPath, folder.Name);
             }
         }
-        string? posterpath;
+        string posterpath = "ms-appx:///Assets/appicon.png";
         private async void btnUploadShowPoster_Click(object sender, RoutedEventArgs e)
         {
             if (App.OceanDialogInstance == null) return;
@@ -68,8 +68,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 imgShowPoster.Source = new BitmapImage(new Uri(image.Path));
                 posterpath = image.Path;
             }
-            ObservableCollection<string> name = new();
-            var item = name.FirstOrDefault(p => p == "desiredvalue");
+         
         
         }
     }

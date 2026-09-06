@@ -9,14 +9,25 @@
     mc:Ignorable="d">
 
     <Grid ColumnSpacing="30" Margin="0, 30" HorizontalAlignment="Center">
+   
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        <TeachingTip Name="ttLoadingShow" Target="{x:Bind grdViewShows}">
+            <Grid Name="grdLoadingShow" HorizontalAlignment="Center" ColumnSpacing="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ProgressRing Grid.Column="0" IsIndeterminate="True" Width="30" Height="30"/>
+                <TextBlock Grid.Column="1" Text="Loading Episodes..." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+            </Grid>
+        </TeachingTip>
         <Grid Grid.Column="1" Visibility="Collapsed" Name="grdRecents" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="20">
                 <TextBlock Text="Shows" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
@@ -32,58 +43,153 @@
             </StackPanel>
             <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"
  x:Name="grdViewShows" SelectionMode="Single" IsItemClickEnabled="True" CanDragItems="True" AllowDrop="True" CanReorderItems="True"
-ItemClick="grdViewShows_ItemClick"  Margin="0, 20" SelectionChanged="grdViewShows_SelectionChanged">
+ItemClick="grdViewShows_ItemClick"  Margin="0, 20" >
                 <GridView.ItemTemplate>
                     <DataTemplate >
-                        <StackPanel ToolTipService.ToolTip="{Binding Name}" Orientation="Vertical" 
-                        
-      >
+                        <Grid RowSpacing="10" ToolTipService.ToolTip="{Binding Name}">
+
+                            <Grid.ContextFlyout>
+                                <MenuFlyout Opened="MenuFlyout_Opened">
+                                    <MenuFlyoutItem Name="mnftOpenShow" Click="mnftOpenShow_Click" Text="Open Show">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem Name="mnftPlayShow" Click="mnftPlayShow_Click" Text="Play Show">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutItem Name="mnftEditShow" Click="mnftEditShow_Click" Text="Edit Show">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem Name="mnftDeleteShow" Click="mnftDeleteShow_Click" Text="Delete Show">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="d"></FontIcon>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
                             <ani:Implicit.Animations>
                                 <ani:ImplicitAnimationSet>
                                     <ani:ScaleAnimation Duration="0:0:0.2" />
                                 </ani:ImplicitAnimationSet>
                             </ani:Implicit.Animations>
-                            <StackPanel  VerticalAlignment="Stretch">
-                                <StackPanel.ContextFlyout>
-                                    <MenuFlyout Opened="MenuFlyout_Opened">
-                                        <MenuFlyoutItem Name="mnftOpenShow" Click="mnftOpenShow_Click" Text="Open Playlist">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Name="mnftPlayShow" Click="mnftPlayShow_Click" Text="Play all">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-
-                                        <MenuFlyoutItem Name="mnftEditShow" Click="mnftEditShow_Click" Text="Edit Playlist">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Name="mnftDeleteShow" Click="mnftDeleteShow_Click" Text="Delete Show">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                    </MenuFlyout>
-                                </StackPanel.ContextFlyout>
+                        
 
                                 <Image Source="{Binding Poster}" Width="180" Stretch="UniformToFill"/>
 
-                                <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Visibility="Visible" TextWrapping="Wrap" />
-                                <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding SeasonCount}" Visibility="Visible" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </StackPanel>
+                                <TextBlock Grid.Row="1" Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Visibility="Visible" TextWrapping="Wrap" />
+                                <TextBlock Grid.Row="2" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding SeasonCountString}" Visibility="Visible" TextWrapping="Wrap" />
+                          
+                        </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
 
         </Grid>
-        <Grid HorizontalAlignment="Center" Name="grdEmptySuggestions" Visibility="Visible" Grid.Column="1">
+        <TeachingTip Title="Edit Show" Name="ttEditShow" Target="{x:Bind grdViewShows}">
+            <Grid RowSpacing="10" Margin="0, 10">
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="200"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <ScrollViewer>
+                <Grid RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Image Width="200" Name="imgShowPoster" Grid.Row="0" Source="/Assets/defaultalbum.png"></Image>
+                    <Button Name="btnUploadShowPoster" Content="Edit Poster for Show" Click="btnUploadShowPoster_Click" Grid.Row="1" HorizontalAlignment="Center"></Button>
+                    <StackPanel Orientation="Vertical" Grid.Row="2" Spacing="10">
+                        <TextBlock  Text="Name of Show or Collection of Videos" ></TextBlock>
+                        <TextBox Name="txtShowName"  FontSize="16" PlaceholderText="Enter name..." Grid.Row="2"></TextBox>
+
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Row="3" Spacing="10">
+                        <TextBlock Text="Description of Show" ></TextBlock>
+                        <TextBox Name="txtDescription"  FontSize="16" PlaceholderText="Description is optional..." Grid.Row="2"></TextBox>
+
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Row="4" Spacing="10">
+                        <TextBlock Text="Release Date (optional)" ></TextBlock>
+                        <DatePicker Name="dtRelease" FontSize="16" Grid.Row="2"></DatePicker>
+
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Row="5" Spacing="10">
+                        <TextBlock Text="Creators (optional)" ></TextBlock>
+                        <TextBox Name="txtCreators" FontSize="16" PlaceholderText="Enter names of creators..." Grid.Row="2"></TextBox>
+
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Row="6" Spacing="10">
+                        <TextBlock Text="Cast and Crew (optional)" ></TextBlock>
+                        <TextBox Name="txtCast"  FontSize="16" PlaceholderText="Enter names of cast or crew separated by commas..." Grid.Row="2"></TextBox>
+
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Row="7" Spacing="10">
+                        <TextBlock Text="Add Folder" ></TextBlock>
+                        <TextBlock Text="Seasons and Episodes might be automatically detected" ></TextBlock>
+                        <TextBlock Text="if in the correct format" ></TextBlock>
+                        <StackPanel Spacing="12">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Folder Location" 
+Style="{StaticResource CaptionTextBlockStyle}" 
+Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                                <Grid Width="280" HorizontalAlignment="Left">
+                                    <TextBox Name="txtFolderPath" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Browse..."/>
+                                    <Button ToolTipService.ToolTip="Browse" Style="{StaticResource AccentButtonStyle}" BorderBrush="Transparent" 
+ VerticalAlignment="Stretch" HorizontalAlignment="Right" Name="btnBrowseDirectory" 
+ Content="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" 
+ Click="btnBrowseDirectory_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Row="8" Spacing="10">
+                        <TextBlock Text="Tags (optional)" ></TextBlock>
+                        <TextBox Name="txtTags" FontSize="16" PlaceholderText="Search tags..." Grid.Row="2"></TextBox>
+
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Row="9" Spacing="10">
+                        <TextBlock Text="Genre (optional)" ></TextBlock>
+                        <TextBox Name="txtGenre"  FontSize="16" PlaceholderText="Drama, comedy, horror..." Grid.Row="2"></TextBox>
+
+                    </StackPanel>
+
+                    </Grid>
+                </ScrollViewer>
+                <Grid ColumnSpacing="10" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="btnSaveShowEdited" Content="Save" Style="{StaticResource AccentButtonStyle}"/>
+                    <Button Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
+                </Grid>
+            </Grid>
+
+        </TeachingTip>
+        <Grid HorizontalAlignment="Center" Name="grdEmptySuggestions" Visibility="Collapsed" Grid.Column="1">
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="/Assets/appicon.png"></Image>
@@ -102,6 +208,14 @@ VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
+        </Grid>
+        <Grid Name="grdLoading" HorizontalAlignment="Center" ColumnSpacing="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ProgressRing Grid.Column="0" IsIndeterminate="True" Width="30" Height="30"/>
+            <TextBlock Grid.Column="1" Text="Loading Shows..." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
         </Grid>
     </Grid>
 

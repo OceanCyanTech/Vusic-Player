@@ -16,6 +16,7 @@ namespace Vusic_Player.Configuration.Playback
     {
         public MediaPlaybackController()
         {
+            QueueService.VusicQueueNext.CollectionChanged -= VusicQueueNext_CollectionChanged;
             QueueService.VusicQueueNext.CollectionChanged += VusicQueueNext_CollectionChanged;
         }
 
