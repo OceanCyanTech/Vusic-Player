@@ -7,7 +7,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     mc:Ignorable="d">
-
+    <UserControl.Resources>
+        <local:CountToVisibility x:Key="CountToEmpty"/>
+        <local:CountToVisibilityReverse x:Key="CountToGridView"/>
+    </UserControl.Resources>
     <Grid ColumnSpacing="30" Margin="0, 30" HorizontalAlignment="Center">
    
         <Grid.ColumnDefinitions>
@@ -24,14 +27,14 @@
                 <TextBlock Grid.Column="1" Text="Loading Episodes..." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
             </Grid>
         </TeachingTip>
-        <Grid Grid.Column="1" Visibility="Collapsed" Name="grdRecents" HorizontalAlignment="Left">
+        <Grid Visibility="{x:Bind Instance.ShowsMaster.Count, Converter={StaticResource CountToGridView}, Mode=OneWay}"  Grid.Column="1" Name="grdRecents" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="20">
                 <TextBlock Text="Shows" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
-                <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+                <CheckBox Content="Select"  Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
                     <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAll" Visibility="Visible" Checked="chckSelectAll_Checked" Unchecked="chckSelectAll_Checked"></CheckBox>
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveShows_Click"  Name="btnRemoveShows" >
@@ -41,7 +44,7 @@
                     </Button>
                 </StackPanel>
             </StackPanel>
-            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"
+            <GridView Grid.Row="1"  VerticalAlignment="Stretch" ItemsSource="{x:Bind Instance.ShowsMaster, Mode=OneWay}"
  x:Name="grdViewShows" SelectionMode="Single" IsItemClickEnabled="True" CanDragItems="True" AllowDrop="True" CanReorderItems="True"
 ItemClick="grdViewShows_ItemClick"  Margin="0, 20" >
                 <GridView.ItemTemplate>
@@ -189,7 +192,7 @@ Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
             </Grid>
 
         </TeachingTip>
-        <Grid HorizontalAlignment="Center" Name="grdEmptySuggestions" Visibility="Collapsed" Grid.Column="1">
+        <Grid HorizontalAlignment="Center" Name="grdEmptySuggestions" Visibility="{x:Bind Instance.ShowsMaster.Count, Converter={StaticResource CountToEmpty}, Mode=OneWay}" Grid.Column="1">
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="/Assets/appicon.png"></Image>
@@ -209,7 +212,7 @@ VerticalAlignment="Center"/>
                 </Button>
             </StackPanel>
         </Grid>
-        <Grid Name="grdLoading" HorizontalAlignment="Center" ColumnSpacing="20">
+        <Grid Name="grdLoading" Visibility="Collapsed" HorizontalAlignment="Center" ColumnSpacing="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>

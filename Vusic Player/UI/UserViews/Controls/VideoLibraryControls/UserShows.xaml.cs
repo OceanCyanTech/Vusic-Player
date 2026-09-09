@@ -22,6 +22,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
@@ -36,17 +37,55 @@ using Windows.Storage;
 
 namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 {
+    public class CountToVisibility : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class CountToVisibilityReverse : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public sealed partial class UserShows : UserControl
     {
         private bool _isLoadingData = false;
-
         public UserShows()
         {
             InitializeComponent();
-            LoadShows();
-            PlaylistCreation.ShowCreationCallAdd -= PlaylistCreation_ShowCreationCallAdd;
-            PlaylistCreation.ShowCreationCallAdd += PlaylistCreation_ShowCreationCallAdd;
+            //  MasterSearchIndex.ShowsMaster = new ObservableCollection<Show>(MasterSearchIndex.ShowsMaster);
+            //   grdViewShows.ItemsSource = MasterSearchIndex.ShowsMaster;
+            //           UpdateUI();
+            //  LoadShows();
+            //  PlaylistCreation.ShowCreationCallAdd -= PlaylistCreation_ShowCreationCallAdd;
+            //   PlaylistCreation.ShowCreationCallAdd += PlaylistCreation_ShowCreationCallAdd;
         }
+
         private async void LoadShows()
         {
             if (_isLoadingData) return;
@@ -54,15 +93,15 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             try
             {
                 Debug.WriteLine("Load Shows");
-                ShowsList.Clear();
+                MasterSearchIndex.ShowsMaster.Clear();
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 foreach (var show in currentSettings.Shows)
                 {
                     var seasoncountstring = $"{show.SeasonCount} {(show.SeasonCount == 1 ? "season" : "seasons")}";
-                    ShowsList.Add(new Show { Poster = show.Poster ?? "ms-appx:///Assets/appicon.png", ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory });
+                    MasterSearchIndex.ShowsMaster.Add(new Show { Poster = show.Poster ?? "ms-appx:///Assets/appicon.png", ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory });
                 }
-                grdViewShows.ItemsSource = ShowsList;
-                ShowsList.CollectionChanged += ShowsList_CollectionChanged; ;
+                grdViewShows.ItemsSource = MasterSearchIndex.ShowsMaster;
+                //     MasterSearchIndex.ShowsMaster.CollectionChanged += MasterSearchIndex.ShowsMaster_CollectionChanged; ;
                 UpdateUI();
             }
             finally
@@ -71,29 +110,29 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             }
         }
 
-        private async void ShowsList_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (_isLoadingData || _isSavingShow) return;
-            if (e.Action == NotifyCollectionChangedAction.Remove ||
-            e.Action == NotifyCollectionChangedAction.Add ||
-            e.Action == NotifyCollectionChangedAction.Move)
-            {
-                Debug.WriteLine("Moved");
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                currentSettings.Shows = ShowsList;
-                MasterSearchIndex.ShowsMaster = ShowsList;
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
-                UpdateUI();
+        //private async void ShowsMaster_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        //{
+        //    if (_isLoadingData || _isSavingShow) return;
+        //    if (e.Action == NotifyCollectionChangedAction.Remove ||
+        //    e.Action == NotifyCollectionChangedAction.Add ||
+        //    e.Action == NotifyCollectionChangedAction.Move)
+        //    {
+        //        Debug.WriteLine("Moved");
+        //        var currentSettings = await SettingsLoader.LoadSettingsAsync();
+        //        currentSettings.Shows = MasterSearchIndex.ShowsMaster;
+        //       // MasterSearchIndex.ShowsMaster = MasterSearchIndex.ShowsMaster;
+        //        await SettingsLoader.SaveSettingsAsync(currentSettings);
+        //        UpdateUI();
 
-            }
-        }
+        //    }
+        //}
 
-        public ObservableCollection<Show> ShowsList { get; set; } = new();
+        //     ObservableCollection<Show> ShowsMaster = MasterSearchIndex.ShowsMaster;
 
         private void UpdateUI()
         {
             grdLoading.Visibility = Visibility.Collapsed;
-            if (ShowsList.Count == 0)
+            if (MasterSearchIndex.ShowsMaster.Count == 0)
             {
                 grdRecents.Visibility = Visibility.Collapsed;
                 grdEmptySuggestions.Visibility = Visibility.Visible;
@@ -132,10 +171,10 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                         }
                         PlaylistCreation.showitem.Name = finalName;
                     }
-                    var exist = ShowsList.FirstOrDefault(p => p.ShowID == PlaylistCreation.showitem.ShowID);
+                    var exist = MasterSearchIndex.ShowsMaster.FirstOrDefault(p => p.ShowID == PlaylistCreation.showitem.ShowID);
                     if (exist == null)
                     {
-                        ShowsList.Add(PlaylistCreation.showitem);
+                        MasterSearchIndex.ShowsMaster.Add(PlaylistCreation.showitem);
 
                         currentSettings.Shows.Add(PlaylistCreation.showitem);
                         MasterSearchIndex.ShowsMaster.Add(PlaylistCreation.showitem);
@@ -173,16 +212,17 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             var selected = grdViewShows.SelectedItems.Cast<Show>().ToList();
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Confirm Delete", "Delete", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "deleteicon", "", "", new ObservableCollection<SongModel>(), "", $"Are you sure you want to delete the selected shows? This cannot be undone.", "warning");
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
+      //      OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
             OceanContentDialog.PrimaryRequested += (() =>
             {
                 OceanContentDialog.HideDlg();
                 MainWindow.ShowWindow();
                 foreach (var item in selected)
                 {
-                    ShowsList.Remove(item);
+                    MasterSearchIndex.ShowsMaster.Remove(item);
                 }
                 ttEditShow.IsOpen = false;
+                //    UpdateUI();
             });
         }
 
@@ -303,7 +343,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                                               .ToList();
 
                     var episodes = new List<EpisodeModel>();
-                
+
                     for (int i = 0; i < videoFiles.Count; i++)
                     {
                         string filePath = videoFiles[i];
@@ -326,19 +366,19 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                         episodes.Add(new EpisodeModel
                         {
                             EpisodeName = $"Episode {episodeNumber}",
-                        
+
                             FilePath = filePath,
                             CurrentShowDirectory = Path.GetDirectoryName(filePath)
                         });
                     }
 
-                    
+
                     return (Seasons: seasonsRearranged, Episodes: episodes);
                 });
 
                 if (data.Episodes == null || data.Episodes.Count == 0) return;
 
-           
+
                 // 3. Batch queue additions to avoid redundant O(N) loops
                 var songModels = data.Episodes.Select(item => new SongModel
                 {
@@ -394,10 +434,11 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                 txtGenre.Text = show.Genre;
                 txtCreators.Text = show.Creators;
                 txtCast.Text = show.Crew;
-
+                posterpath = show.Poster;
                 btnSaveShowEdited.Click += (async (object sender, RoutedEventArgs e) =>
                 {
-                    if(txtShowName.Text == "")
+                    Debug.WriteLine("SAVE SHOW CALLED");
+                    if (txtShowName.Text == "")
                     {
                         txtShowName.Text = show.Name;
                     }
@@ -410,51 +451,78 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                     show.Genre = txtGenre.Text;
                     show.Directory = txtFolderPath.Text;
                     show.Poster = posterpath;
-                    
+
                     var currentSettings = await SettingsLoader.LoadSettingsAsync();
                     var existingshow = currentSettings.Shows.FirstOrDefault(p => p.ShowID == show.ShowID);
-                    if(existingshow != null)
+                    if (existingshow != null)
                     {
-                        existingshow = show;
-                        await SettingsLoader.SaveSettingsAsync(currentSettings);                    
+                        existingshow.Name = txtShowName.Text;
+                        existingshow.Description = txtDescription.Text;
+                        existingshow.Tags = txtTags.Text;
+                        existingshow.ReleaseDate = dtRelease.Date;
+                        existingshow.Crew = txtCast.Text;
+                        existingshow.Creators = txtCreators.Text;
+                        existingshow.Genre = txtGenre.Text;
+                        existingshow.Directory = txtFolderPath.Text;
+                        existingshow.Poster = posterpath;
+                        await SettingsLoader.SaveSettingsAsync(currentSettings);
+                        ttEditShow.IsOpen = false;
                     }
                 });
             }
         }
 
-        private void mnftDeleteShow_Click(object sender, RoutedEventArgs e)
+        private async void mnftDeleteShow_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is Show show)
             {
                 if (App.MainWindowInstance == null) return;
                 OceanContentDialog.Show("Confirm Delete", "Delete", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "deleteicon", "", "", new ObservableCollection<SongModel>(), "", $"Are you sure you want to delete the show '{show.Name}'? This cannot be undone.", "warning");
-                OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
-                OceanContentDialog.PrimaryRequested += (() =>
+                //OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
+                OceanContentDialog.PrimaryRequested += (async () =>
                 {
                     OceanContentDialog.HideDlg();
                     MainWindow.ShowWindow();
-                    ShowsList.Remove(show);
+                    Instance.ShowsMaster.Remove(show);
                     ttEditShow.IsOpen = false;
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    var settingToRemove = currentSettings.Shows.FirstOrDefault(p => p.ShowID == show.ShowID);
+                    if (settingToRemove != null)
+                    {
+                        currentSettings.Shows.Remove(settingToRemove);
+                        await SettingsLoader.SaveSettingsAsync(currentSettings); // Save to disk immediately
+                    }
+                    //       UpdateUI();
+
                 });
             }
         }
-
+        ShowCreationValues Instance => ShowCreationValues.Instance;
         private void btnNewShow_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Create New Show Model", "Create", "", "Cancel", OceanDialogWindow.ContentType.ShowModel, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "", "", "", "", "", new PlaylistItem(), false, false);
-
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1;
+            Debug.WriteLine("BTNNEWSHOW");
+            OceanContentDialog.PrimaryRequested += (async () =>
+            {
+                var newshow = new Show { Name = Instance.ShowName, Description = Instance.Description, Genre = Instance.Genre, Creators = Instance.Creators, Crew = Instance.Cast, Directory = Instance.Directory, ShowID = Instance.ShowID, Tags = Instance.Tags, Poster = Instance.PosterPath };
+                Debug.WriteLine(newshow.Name);
+                Instance.ShowsMaster.Add(newshow);
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.Shows.Add(newshow);
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                OceanContentDialog.HideDlg();
+                MainWindow.ShowWindow();
+            });
         }
 
-        private void OceanContentDialog_PrimaryRequested1()
-        {
-            Debug.WriteLine("Yes create");
-            PlaylistCreation.CallShowCreation();
-            OceanContentDialog.HideDlg();
-            MainWindow.ShowWindow();
-        }
+        //private void OceanContentDialog_PrimaryRequested1()
+        //{
+        //    Debug.WriteLine("Yes create");
+        //    PlaylistCreation.CallShowCreation();
+        //    OceanContentDialog.HideDlg();
+        //    MainWindow.ShowWindow();
+        //}
         string posterpath = "";
         private async void btnUploadShowPoster_Click(object sender, RoutedEventArgs e)
         {
@@ -465,7 +533,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                 imgShowPoster.Source = new BitmapImage(new Uri(image.Path));
                 posterpath = image.Path;
             }
-         
+
         }
 
         private async void btnBrowseDirectory_Click(object sender, RoutedEventArgs e)

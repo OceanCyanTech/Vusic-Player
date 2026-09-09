@@ -129,6 +129,8 @@ namespace Vusic_Player.Pages.Views
                         Debug.WriteLine("Yes DD");
                         txtSeasonHeader.Text = pl.PlaylistName;
                         CurrentSeasonDirectory = folderpath;
+                        currentSeason = pl;
+
                         if (Directory.Exists(folderpath))
                         {
                             var videoExtensions = Extensions.VideoExtensions.List
@@ -370,7 +372,7 @@ namespace Vusic_Player.Pages.Views
                             }
 
                             string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
-
+                            Logger.Log("CURRNTSES: " + seasonNum, "ONNAVIGATEDTO.SHOWMODELPAGE", Logger.LogLevelType.Success);
                             var existingSeason = seasons.FirstOrDefault(p => p.PlaylistName == seasonName);
                             if (existingSeason == null)
                             {
@@ -385,7 +387,6 @@ namespace Vusic_Player.Pages.Views
                                     SeasonNumber = seasonNum
                                 };
                                 seasons.Add(newSeason);
-                                currentSeason = newSeason;
                             }
                             else
                             {
@@ -690,8 +691,10 @@ namespace Vusic_Player.Pages.Views
                 if (App.NavigationFrame != null)
 
                 {
+                    
                     Logger.Log(SeasonsToSend.Count + "  SEASONSS COUTNTT","ShowModel.PlayAll", Logger.LogLevelType.Information);
-                    App.NavigationFrame.Navigate(typeof(VideoPlayer), new ShowData { ShowName = txtShowName.Text, episodes = EpisodesList.ToList(), ShowID = currentshow.ShowID, seasons = SeasonsToSend.ToList(), CurrentSeasonNumber =currentSeason.SeasonNumber, CurrentSeasonDirectory = CurrentSeasonDirectory });
+                    Logger.Log("CURRENTTTTTT SEASHSHD: " + currentSeason.SeasonNumber, "SHOWMODEL.BTNPLAYALL", Logger.LogLevelType.Success);
+                    App.NavigationFrame.Navigate(typeof(VideoPlayer), new ShowData { ShowName = txtShowName.Text, episodes = EpisodesList.ToList(), ShowID = currentshow.ShowID, seasons = SeasonsToSend.ToList(), CurrentSeasonNumber =currentSeason.SeasonNumber, CurrentSeasonDirectory = CurrentSeasonDirectory, ReleaseDate =currentshow.ReleaseDate, MainShowDirectory = currentshow.Directory });
                 }
             }
             else

@@ -22,6 +22,7 @@ using System.Windows.Controls;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -107,12 +108,20 @@ namespace Vusic_Player.Pages
             // 3. Assign the brush to the Grid's Background
             grdRoot.Background = imageBrush;
         }
+        ShowCreationValues showInstance => ShowCreationValues.Instance;
+
         private async void InitializeSettings()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var playlists = currentSettings.SavedPlaylists;
             MasterSearchIndex.PlaylistsMaster = new ObservableCollection<PlaylistItem>(playlists);
-            MasterSearchIndex.ShowsMaster = new ObservableCollection<Show>(currentSettings.Shows);
+            var newObservableShows = new ObservableCollection<Show>();
+            foreach (var show in currentSettings.Shows)
+            {
+                var seasoncountstring = $"• {show.SeasonCount} {(show.SeasonCount == 1 ? "season" : "seasons")}";
+                newObservableShows.Add(new Show { Poster = show.Poster ?? "ms-appx:///Assets/appicon.png", ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory });
+            }
+            showInstance.ShowsMaster = new ObservableCollection<Show>(newObservableShows);
             MasterSearchIndex.FoldersOpenedMaster = new ObservableCollection<FolderModel>(currentSettings.FoldersRecent);
             MasterSearchIndex.Pages.Add("Home");
             MasterSearchIndex.Pages.Add("Music Library");

@@ -663,7 +663,7 @@ namespace Vusic_Player.Pages
         {
             isEpisodeVideo = true;
             if (vdprg.FilePath == null) return;
-
+            
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var shows = currentSettings.Shows;
             var listofotherepisodes = EpisodeDirectory.GetEpisodeShowInfo(vdprg.FilePath);
@@ -783,13 +783,15 @@ namespace Vusic_Player.Pages
 
                             // Walk up from the file's containing folder
                             DirectoryInfo dirWalker = new System.IO.FileInfo(vdprg.FilePath).Directory;
-
+                            Logger.Log(dirWalker.FullName, "IsEpisodeVideo.VideoPlayerPage", Logger.LogLevelType.Success);
                             while (dirWalker != null)
                             {
                                 Match dirMatch = Regex.Match(dirWalker.Name, pattern, RegexOptions.IgnoreCase);
                                 if (dirMatch.Success)
                                 {
                                     activeSeasonNumber = Convert.ToInt32(dirMatch.Groups[2].Value);
+                                    Logger.Log("Active Season: "+ activeSeasonNumber, "IsEpisodeVideo.VideoPlayerPage", Logger.LogLevelType.Success);
+
                                     activeSeasonDir = dirWalker.FullName;
                                     break;
                                 }
@@ -814,7 +816,7 @@ namespace Vusic_Player.Pages
                                     activeSeasonNumber = Convert.ToInt32(fileMatch.Groups[2].Value);
                                 }
                             }
-
+                            Logger.Log("Active Season 2: " + activeSeasonNumber, "IsEpisodeVideo.VideoPlayerPage", Logger.LogLevelType.Success);
                             // Assign once outside the loop
                             ShowManager.mainShowPlayable = new ShowData
                             {
@@ -826,6 +828,7 @@ namespace Vusic_Player.Pages
                                 CurrentSeasonDirectory = activeSeasonDir,
 
                             };
+                            Logger.Log("SHOW DETAILS: " + show.Name + " " + activeSeasonNumber, "IsEpisodeVideo.VideoPlayerPage", Logger.LogLevelType.Success);
                             foreach (var season in seasonstosend)
                             {
                                 Logger.Log(season.PlaylistName, "VIDEOPLAU", Logger.LogLevelType.Warning);
@@ -931,6 +934,7 @@ namespace Vusic_Player.Pages
             Debug.WriteLine("SJDHDHDHDHAUHIU4GU");
             string VideoPath = "";
             isEpisodeVideo = false;
+            ShowManager.mainShowPlayable = new ShowData();
             if (e.Parameter is VideoProgress vdprg && vdprg.FilePath is string path)
             {
                 VideoPath = path;
@@ -1516,7 +1520,11 @@ namespace Vusic_Player.Pages
                 Debug.WriteLine(ShowManager.mainShowPlayable.episodes.Count);
                 Logger.Log("CURRENT EPISODE COUNT: " + ShowManager.mainShowPlayable.episodes.Count, "VideoPlayer.UpdateNextEpisodeButton", Logger.LogLevelType.Information);
                 Logger.Log("CURRENT EPISODE NUMBER:  " + episode, "VideoPlayer.UpdateNextEpisodeButton", Logger.LogLevelType.Information);
-
+                if(ShowManager.mainShowPlayable.episodes.Count == 0)
+                {
+                    btnNextEpisode.Visibility = Visibility.Collapsed;
+                    return;
+                }
                 if (episode == ShowManager.mainShowPlayable.episodes.Count)
                 {
                     Debug.WriteLine("Nanan6");
@@ -1562,94 +1570,96 @@ namespace Vusic_Player.Pages
 
         private void videoControls_ViewEpisodeClick()
         {
-            Debug.WriteLine("Show Episodes Clicked");
-            if (ShowManager.CurrentShow == null) return;
-            Debug.WriteLine("Show Episodes Clicked2");
+            //PENDING
+            //Debug.WriteLine("Show Episodes Clicked");
+            //if (ShowManager.CurrentShow == null) return;
+            //Debug.WriteLine("Show Episodes Clicked2");
 
-            FadeInStoryboardShowInfo.Begin();
-            txtShowTitle.Text = ShowManager.CurrentShow.Name;
-            txtShowSeasonCount.Text = $"• {ShowManager.CurrentShow.SeasonCount} {(ShowManager.CurrentShow.SeasonCount == 1 ? "season" : "seasons")}";
-            txtShowReleaseDate.Text = $"• Released on {ShowManager.CurrentShow.ReleaseDate.ToString("dd MMMM yyyy")}";
-            string rootPath = ShowManager.CurrentShow.Directory ?? "";
+            //FadeInStoryboardShowInfo.Begin();
+            txtShowTitle.Text = ShowManager.mainShowPlayable.ShowName;
+            txtShowSeasonCount.Text = $"• {ShowManager.mainShowPlayable.seasons.Count} {(ShowManager.mainShowPlayable.seasons.Count == 1 ? "season" : "seasons")}";
+            txtShowReleaseDate.Text = $"• Released on {ShowManager.mainShowPlayable.ReleaseDate.ToString("dd MMMM yyyy")}";
+           string rootPath = ShowManager.mainShowPlayable.MainShowDirectory ?? "";
 
             if (rootPath == "") return;
-            Debug.WriteLine("Yes1");
+
+            //Debug.WriteLine("Yes1");
 
             if (Directory.Exists(rootPath))
             {
                 selbarSeasons.Items.Clear();
                 var seasons = new ObservableCollection<PlaylistItem>();
                 Debug.WriteLine("Yes3");
-
-                // 1. Only get the top-level folders (e.g., "Season 1", "Season 2", "Season 3")
-                var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
-                primaryFolders.Insert(0, rootPath);
-
-                string pattern = @"\b(season\s*|s)(\d+)\b";
-
-                foreach (string path in primaryFolders)
-                {
-                    string folderName = Path.GetFileName(path);
-                    Match match = Regex.Match(folderName, pattern, RegexOptions.IgnoreCase);
-
-                    if (path == rootPath) match = Regex.Match(new DirectoryInfo(rootPath).Name, pattern, RegexOptions.IgnoreCase);
-
-                    if (match.Success)
-                    {
-                        Debug.WriteLine("Yes4");
-                        int seasonNum = Convert.ToInt32(match.Groups[2].Value);
-                        string seasonName = $"Season {seasonNum}";
-
-                        int episodeCount = 0;
-
-                        // This variable will track the actual deep folder where files are found!
-                        string actualContentPath = path;
-
-                        foreach (var ext in Extensions.VideoExtensions.List)
-                        {
-                            string searchPattern = $"*{ext.ToLower()}";
-
-                            // Get the full path details of any matching video files inside
-                            var foundFiles = Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
-
-                            if (foundFiles.Any())
-                            {
-                                episodeCount += foundFiles.Count;
-
-                                // Grab the directory name of the first video file found. 
-                                // This is guaranteed to be the real folder containing the episodes!
-                                actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
-                            }
-                        }
-
-                        string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
-
-                        seasons.Add(new PlaylistItem { PlaylistName = seasonName, PlaylistId = actualContentPath, PlaylistCount = episodeCountString, SeasonNumber = seasonNum });
-
-
-                    }
-                }
-                var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
-                foreach (var item in seasonsRearranged)
-                {
-                    selbarSeasons.Items.Add(new SelectorBarItem
-                    {
-                        Text = item.PlaylistName,
-                        Tag = item.PlaylistId   // Use the property from 'item'
-                    });
-                }
-                if (selbarSeasons.Items.Count != 0)
-                {
-                    selbarSeasons.SelectedItem = selbarSeasons.Items[ShowManager.currentseason];
-
-                }
-                else
-                {
-                    grdNoEpisodes.Visibility = Visibility.Visible;
-                    txtNoEpisodes.Text = "No seasons available!";
-                }
             }
-        }
+                //    // 1. Only get the top-level folders (e.g., "Season 1", "Season 2", "Season 3")
+                //    var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
+                //    primaryFolders.Insert(0, rootPath);
+
+                //    string pattern = @"\b(season\s*|s)(\d+)\b";
+
+                //    foreach (string path in primaryFolders)
+                //    {
+                //        string folderName = Path.GetFileName(path);
+                //        Match match = Regex.Match(folderName, pattern, RegexOptions.IgnoreCase);
+
+                //        if (path == rootPath) match = Regex.Match(new DirectoryInfo(rootPath).Name, pattern, RegexOptions.IgnoreCase);
+
+                //        if (match.Success)
+                //        {
+                //            Debug.WriteLine("Yes4");
+                //            int seasonNum = Convert.ToInt32(match.Groups[2].Value);
+                //            string seasonName = $"Season {seasonNum}";
+
+                //            int episodeCount = 0;
+
+                //            // This variable will track the actual deep folder where files are found!
+                //            string actualContentPath = path;
+
+                //            foreach (var ext in Extensions.VideoExtensions.List)
+                //            {
+                //                string searchPattern = $"*{ext.ToLower()}";
+
+                //                // Get the full path details of any matching video files inside
+                //                var foundFiles = Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
+
+                //                if (foundFiles.Any())
+                //                {
+                //                    episodeCount += foundFiles.Count;
+
+                //                    // Grab the directory name of the first video file found. 
+                //                    // This is guaranteed to be the real folder containing the episodes!
+                //                    actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
+                //                }
+                //            }
+
+                //            string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
+
+                //            seasons.Add(new PlaylistItem { PlaylistName = seasonName, PlaylistId = actualContentPath, PlaylistCount = episodeCountString, SeasonNumber = seasonNum });
+
+
+                //        }
+                //    }
+                //    var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
+                //    foreach (var item in seasonsRearranged)
+                //    {
+                //        selbarSeasons.Items.Add(new SelectorBarItem
+                //        {
+                //            Text = item.PlaylistName,
+                //            Tag = item.PlaylistId   // Use the property from 'item'
+                //        });
+                //    }
+                //    if (selbarSeasons.Items.Count != 0)
+                //    {
+                //        selbarSeasons.SelectedItem = selbarSeasons.Items[ShowManager.currentseason];
+
+                //    }
+                //    else
+                //    {
+                //        grdNoEpisodes.Visibility = Visibility.Visible;
+                //        txtNoEpisodes.Text = "No seasons available!";
+                //    }
+                //}
+            }
 
         private void MainGrid_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {

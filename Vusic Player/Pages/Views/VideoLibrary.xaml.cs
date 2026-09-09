@@ -13,6 +13,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Foundation;
@@ -65,14 +67,24 @@ namespace Vusic_Player.Pages.Views
             if (sender != expVideoPlaylists) expVideoPlaylists.IsExpanded = false;
 
         }
+        ShowCreationValues Instance => ShowCreationValues.Instance;
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Create New Show Model", "Create", "", "Cancel", OceanDialogWindow.ContentType.ShowModel, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "", "", "", "", "", new PlaylistItem(), false, false);
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1;
+            Debug.WriteLine("BTNNEWSHOW");
+            OceanContentDialog.PrimaryRequested += (async() =>
+            {
+                var newshow = new Show { Name = Instance.ShowName, Description = Instance.Description, Genre = Instance.Genre, Creators = Instance.Creators, Crew = Instance.Cast, Directory = Instance.Directory, ShowID = Instance.ShowID, Tags = Instance.Tags, Poster = Instance.PosterPath };
+                Debug.WriteLine(newshow.Name);
+                Instance.ShowsMaster.Add(newshow);
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.Shows.Add(newshow);
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                OceanContentDialog.HideDlg();
+                MainWindow.ShowWindow();
+            });
         }
 
         private void OceanContentDialog_PrimaryRequested1()

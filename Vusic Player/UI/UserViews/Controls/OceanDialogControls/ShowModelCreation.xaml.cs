@@ -16,6 +16,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -47,6 +48,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             PlaylistCreation.CallShowCreationAdd();
 
         }
+          ShowCreationValues Instance =>  ShowCreationValues.Instance;
 
         private async void btnBrowseDirectory_Click(object sender, RoutedEventArgs e)
         {
@@ -56,6 +58,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             {
                 txtFolderPath.Text = folder.Path;
                 ToolTipService.SetToolTip(txtFolderPath, folder.Name);
+                Instance.Directory = folder.Path;
             }
         }
         string posterpath = "ms-appx:///Assets/appicon.png";
@@ -67,9 +70,13 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             {
                 imgShowPoster.Source = new BitmapImage(new Uri(image.Path));
                 posterpath = image.Path;
+                Instance.PosterPath = posterpath;
             }
-         
-        
+        }
+
+        private void txtShowName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 

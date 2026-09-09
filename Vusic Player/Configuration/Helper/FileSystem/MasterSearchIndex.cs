@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
 
@@ -34,6 +36,28 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         public static ObservableCollection<Show> ShowsMaster = new ObservableCollection<Show>();
         public static ObservableCollection<FolderModel> FoldersOpenedMaster = new ObservableCollection<FolderModel>();
         public static ObservableCollection<string> Pages = new ObservableCollection<string>();
+        static MasterSearchIndex()
+        {
+            ShowsMaster.CollectionChanged -= ShowsMaster_CollectionChanged;
+            ShowsMaster.CollectionChanged += ShowsMaster_CollectionChanged;
+        }
+
+        private static async void ShowsMaster_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+         
+            if (e.Action == NotifyCollectionChangedAction.Remove ||
+            e.Action == NotifyCollectionChangedAction.Add ||
+            e.Action == NotifyCollectionChangedAction.Move)
+            {
+                Debug.WriteLine("Moved");
+                Debug.WriteLine("Removed");
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.Shows =ShowsMaster;
+                // MasterSearchIndex.ShowsMaster = ShowsList;
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            //    UpdateUI();
+            }
+        }
 
         //public class EntityComparer : IEqualityComparer<(ClassModels.Filters Filter, string Name)>
         //{
