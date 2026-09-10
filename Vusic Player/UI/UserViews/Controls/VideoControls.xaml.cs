@@ -16,6 +16,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.SubtitlesProperties.ExternalSubtitles;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Extensions;
@@ -43,6 +44,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         public event Action? VideoChapters;
         public event Action? MediaStats;
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
+        public ShowCreationValues showcreation => ShowCreationValues.Instance;
         public Visibility ViewEpisodeVisibility
         {
             get => (Visibility)GetValue(viewepisodevis);

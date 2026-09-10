@@ -30,6 +30,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -750,6 +751,7 @@ namespace Vusic_Player.Pages.Views
                 $"The selected item '{nextFile}' cannot be deleted because it is locked by one or more processes. Close those processes and then try again."
             );
         }
+        ShowCreationValues Instance => ShowCreationValues.Instance;
 
         private void btnCreateShow_Click(object sender, RoutedEventArgs e)
         {
@@ -758,8 +760,21 @@ namespace Vusic_Player.Pages.Views
             OceanContentDialog.Show("Create New Show Model", "Create", "", "Cancel", OceanDialogWindow.ContentType.ShowModel, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "", "", "", "", "", new PlaylistItem(), false, false);
             UnsubscribeAllEventsOceanDialog();
 
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested4;
-            PlaylistCreation.CallExistingShowDirectory(currentFolder.FolderPath);
+
+            Instance.Directory = currentFolder.FolderPath;
+
+            Debug.WriteLine("BTNNEWSHOW");
+            OceanContentDialog.PrimaryRequested += (async () =>
+            {
+                var newshow = new Show { Name = Instance.ShowName, Description = Instance.Description, Genre = Instance.Genre, Creators = Instance.Creators, Crew = Instance.Cast, Directory = Instance.Directory, ShowID = Instance.ShowID, Tags = Instance.Tags, Poster = Instance.PosterPath };
+                Debug.WriteLine(newshow.Name);
+                Instance.ShowsMaster.Add(newshow);
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.Shows.Add(newshow);
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                OceanContentDialog.HideDlg();
+                MainWindow.ShowWindow();
+            });
         }
         public async Task<bool> RenameStorageFileAsync(StorageFile file, string newName)
         {

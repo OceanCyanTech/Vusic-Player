@@ -17,6 +17,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.UserViews.Controls;
@@ -29,9 +30,46 @@ using Windows.Storage;
 
 namespace Vusic_Player.UI.UserViews.Grids
 {
+    public class CountToVisibility : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class CountToVisibilityReverse : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public sealed partial class UserPlaylists : UserControl
     {
         public ObservableCollection<PlaylistItem> Playlists { get; set; } = new();
+        PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
+
         public bool IsItemClickDisabled
         {
             get => (bool)GetValue(itemclickdisable);
@@ -58,9 +96,10 @@ namespace Vusic_Player.UI.UserViews.Grids
         public UserPlaylists()
         {
             InitializeComponent();
-            LoadPlaylists();
-            PlaylistCreation.CreationCallAdd -= PlaylistCreation_CreationCallAdd;
-            PlaylistCreation.CreationCallAdd += PlaylistCreation_CreationCallAdd;
+
+            //LoadPlaylists();
+            //PlaylistCreation.CreationCallAdd -= PlaylistCreation_CreationCallAdd;
+            //PlaylistCreation.CreationCallAdd += PlaylistCreation_CreationCallAdd;
         }
         private bool _isLoadingData = false;
 
@@ -101,7 +140,6 @@ namespace Vusic_Player.UI.UserViews.Grids
                 MasterSearchIndex.PlaylistsMaster = Playlists;
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
                 UpdateUI();
-
             }
         }
 
@@ -193,9 +231,6 @@ namespace Vusic_Player.UI.UserViews.Grids
             }
         }
 
-
-
-
         private void mnftAddToQueueCW_Click(object sender, RoutedEventArgs e)
         {
 
@@ -228,7 +263,6 @@ namespace Vusic_Player.UI.UserViews.Grids
                 }
                 QueueService.PlayMedia(observabletemp, false, false);
             }
-
         }
 
         private async void mnftShufflePlay_Click(object sender, RoutedEventArgs e)

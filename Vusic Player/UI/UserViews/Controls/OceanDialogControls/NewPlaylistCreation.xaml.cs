@@ -17,6 +17,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.Converters;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.FilePickers;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -34,6 +35,8 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             get => (string)GetValue(PlaylistNameSuggestedProperty);
             set => SetValue(PlaylistNameSuggestedProperty, value);
         }
+        PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
+
 
         public static readonly DependencyProperty PlaylistNameSuggestedProperty =
             DependencyProperty.Register(nameof(PlaylistNameSuggested), typeof(string), typeof(NewPlaylistCreation), new PropertyMetadata(string.Empty));

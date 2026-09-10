@@ -161,6 +161,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
+            if (ItemsSource == null) return;
             ItemsSource.Clear();
             foreach (var device in Engine.Audio.Devices)
             {

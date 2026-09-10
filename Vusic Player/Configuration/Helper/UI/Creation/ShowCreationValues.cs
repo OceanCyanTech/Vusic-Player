@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -47,6 +48,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         private string _directory = "";
         private string _posterpath = "ms-appx:///Assets/appicon.png";
         private string _showID = "";
+        private Visibility _visibilityViewEpisodes = Visibility.Collapsed;
         private DateTimeOffset _releasedate;
 
         public string ShowName
@@ -66,6 +68,11 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         {
             get => _description;
             set => SetProperty(ref _description, value);
+        }
+        public Visibility VisibilityOfViewEpisodes
+        {
+            get => _visibilityViewEpisodes;
+            set => SetProperty(ref _visibilityViewEpisodes, value);
         }
 
         public string Creators

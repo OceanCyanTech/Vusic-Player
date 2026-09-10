@@ -78,7 +78,20 @@ AlwaysUseFallback="False"/>
                     <SolidColorBrush x:Key="ExpanderHeaderPointerOverBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="ExpanderHeaderPressedBackground" Color="Transparent" />
                 </Expander.Resources>
-                <grids:UserPlaylists x:Name="userplaylists" HorizontalAlignment="Left"/>
+                <Grid RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0"  Click="btnCreateNewPlaylist_Click" Name="btnCreateNewPlaylist">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Image Source="/Assets/addicon.png" Width="15"/>
+                            <TextBlock Text="Create New Playlist"/>
+                        </StackPanel>
+                    </Button>
+                    <grids:UserPlaylists x:Name="userplaylists" HorizontalAlignment="Left" Grid.Row="1"/>
+                    
+                </Grid>
             </Expander>
             <TextBlock Tapped="TextBlock_Tapped_1" Text="Instant Playlists for you" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
 

@@ -70,6 +70,7 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
                         <TextBlock  Text="About" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
@@ -86,6 +87,11 @@
                         <TextBlock Text="• Genre:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                         <TextBox AcceptsReturn="True" TextWrapping="Wrap" Name="txtGenreEdit" Visibility="Collapsed"></TextBox>
                         <TextBlock IsTextSelectionEnabled="True" Name="txtGenre"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Name="stkTags" Orientation="Horizontal" Spacing="5" Grid.Row="3">
+                        <TextBlock Text="• Tags:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        <TextBox AcceptsReturn="True" TextWrapping="Wrap" Name="txtTagsEdit" Visibility="Collapsed"></TextBox>
+                        <TextBlock IsTextSelectionEnabled="True" Name="txtTags"></TextBlock>
                     </StackPanel>
                 </Grid>
                 <MenuFlyoutSeparator Grid.Row="1"/>
@@ -134,7 +140,7 @@
                                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <PersonPicture Width="30" Grid.Column="0" Name="ppArtist" Tapped="ppArtist_Tapped"  ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
+                                    <PersonPicture Width="30" Grid.Column="0" Name="ppArtist" ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
                                     <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                                         <HyperlinkButton Padding="0" ToolTipService.ToolTip="{Binding ArtistName}"  Margin="0, 0, 0, 5" Foreground="{StaticResource TextFillColorSecondaryBrush}">
                                             <TextBlock Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
@@ -185,7 +191,11 @@
                         </ListView>
                         <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10">
                             <Button Content="Save" Style="{StaticResource AccentButtonStyle}" Click="Button_Click_4"/>
-                            <Button Content="Cancel" Click="Button_Click_3"/>
+                            <Button Content="Cancel" Click="Button_Click_3">
+                                <Button.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="Escape"/>
+                                </Button.KeyboardAccelerators>
+                            </Button>
                         </StackPanel>
                     </Grid>
                 </TeachingTip>
@@ -218,7 +228,7 @@
                                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <PersonPicture Width="30" Grid.Column="0" Name="ppArtist" Tapped="ppArtist_Tapped"  ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
+                                    <PersonPicture Width="30" Grid.Column="0" Name="ppArtist"  ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
                                     <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                                         <HyperlinkButton Padding="0" ToolTipService.ToolTip="{Binding ArtistName}"  Margin="0, 0, 0, 5" Foreground="{StaticResource TextFillColorSecondaryBrush}">
                                             <TextBlock Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
@@ -249,7 +259,7 @@
                     <TextBlock Name="txtSeasonCount" Text="• 0 Seasons (Loading)" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                     <GridView  Grid.Row="2" Visibility="Visible"  VerticalAlignment="Stretch"
  x:Name="grdViewSeasons" SelectionMode="Single" IsItemClickEnabled="True" CanDragItems="True" AllowDrop="True" CanReorderItems="True"
-ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" SelectionChanged="grdViewSeasons_SelectionChanged">
+ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                         <GridView.ItemContainerStyle>
                             <Style TargetType="GridViewItem">
                                 <Setter Property="Width" Value="140" />
@@ -321,7 +331,7 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" SelectionChanged="grdViewSe
                         <Image Source="/Assets/appicon.png" Width="20"/>
                     </Button>
                 </StackPanel>
-                <ListView Name="lstViewEpisodes" Grid.Row="2">
+                <ListView Name="lstViewEpisodes" IsItemClickEnabled="True" ItemClick="lstViewEpisodes_ItemClick" Grid.Row="2">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="0, 10" ColumnSpacing="10">

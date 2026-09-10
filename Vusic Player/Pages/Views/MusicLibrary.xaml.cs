@@ -7,12 +7,15 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.UI.Navig;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -84,10 +87,21 @@ namespace Vusic_Player.Pages.Views
         }
         private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
         {
+
             if (App.MainWindowInstance == null) return;
-            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist");
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);
+            Debug.WriteLine("BTNNEWPLAYLIST");
+            OceanContentDialog.PrimaryRequested += (async () =>
+            {
+                var newplaylist = new PlaylistItem { PlaylistName = Instance.PlaylistName, PlaylistGenre = Instance.Genre, Thumbnail = Instance.Thumbnail, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount };
+                Debug.WriteLine(newplaylist.PlaylistName);
+                Instance.PlaylistsMaster.Add(newplaylist);
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.SavedPlaylists.Add(newplaylist);
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                OceanContentDialog.HideDlg();
+                MainWindow.ShowWindow();
+            });
         }
 
         private void OceanContentDialog_PrimaryRequested()
@@ -137,6 +151,25 @@ namespace Vusic_Player.Pages.Views
         {
             expGenres.IsExpanded = true;
         }
-    }
+        PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
 
+        private void btnCreateNewPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);
+            Debug.WriteLine("BTNNEWPLAYLIST");
+            OceanContentDialog.PrimaryRequested += (async () =>
+            {
+                var newplaylist = new PlaylistItem { PlaylistName = Instance.PlaylistName, PlaylistGenre = Instance.Genre, Thumbnail = Instance.Thumbnail, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount };
+                Debug.WriteLine(newplaylist.PlaylistName);
+                Instance.PlaylistsMaster.Add(newplaylist);
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.SavedPlaylists.Add(newplaylist);
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                OceanContentDialog.HideDlg();
+                MainWindow.ShowWindow();
+            });
+        }
+
+    }
 }

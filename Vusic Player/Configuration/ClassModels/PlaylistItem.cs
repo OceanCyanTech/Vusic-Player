@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
@@ -21,6 +22,7 @@ namespace Vusic_Player.Configuration.ClassModels
         private string? _playlistGenre = "";
         private DateTime _dateCreation;
         private HashSet<string> _songsPaths = new();
+        private ObservableCollection<SongModel> _songs = new();
         private string _playlistName = "Playlist";
         private BitmapImage? _plThumb;
         public string PlaylistId
@@ -81,6 +83,11 @@ namespace Vusic_Player.Configuration.ClassModels
         {
             get => _songsPaths;
             set => SetProperty(ref _songsPaths, value);
+        }
+        public ObservableCollection<PlaylistItem> SongsCollection
+        {
+            get => _songs;
+            set => SetProperty(ref _songs, value);
         }
 
         public string PlaylistName

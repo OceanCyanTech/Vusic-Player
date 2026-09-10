@@ -109,6 +109,7 @@ namespace Vusic_Player.Pages
             grdRoot.Background = imageBrush;
         }
         ShowCreationValues showInstance => ShowCreationValues.Instance;
+        PlaylistCreationValues playlistInstance => PlaylistCreationValues.Instance;
 
         private async void InitializeSettings()
         {
@@ -116,12 +117,19 @@ namespace Vusic_Player.Pages
             var playlists = currentSettings.SavedPlaylists;
             MasterSearchIndex.PlaylistsMaster = new ObservableCollection<PlaylistItem>(playlists);
             var newObservableShows = new ObservableCollection<Show>();
+            var newObservablePlaylists = new ObservableCollection<PlaylistItem>();
             foreach (var show in currentSettings.Shows)
             {
                 var seasoncountstring = $"• {show.SeasonCount} {(show.SeasonCount == 1 ? "season" : "seasons")}";
-                newObservableShows.Add(new Show { Poster = show.Poster ?? "ms-appx:///Assets/appicon.png", ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory });
+                newObservableShows.Add(new Show { Poster = show.Poster ?? "ms-appx:///Assets/appicon.png", ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory, ReleaseDate = show.ReleaseDate });
+            }
+            foreach(var playlist in currentSettings.SavedPlaylists)
+            {
+                newObservablePlaylists.Add(new PlaylistItem { PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, PlaylistId = playlist.PlaylistId, PlaylistNowPlaying = playlist.PlaylistNowPlaying, Thumbnail = playlist.Thumbnail, plthumb = playlist.plthumb, DateCreation = playlist.DateCreation, PlaylistGenre = playlist.PlaylistGenre, SongsPaths = playlist.SongsPaths });
+
             }
             showInstance.ShowsMaster = new ObservableCollection<Show>(newObservableShows);
+            playlistInstance.PlaylistsMaster = new ObservableCollection<PlaylistItem>(newObservablePlaylists);
             MasterSearchIndex.FoldersOpenedMaster = new ObservableCollection<FolderModel>(currentSettings.FoldersRecent);
             MasterSearchIndex.Pages.Add("Home");
             MasterSearchIndex.Pages.Add("Music Library");

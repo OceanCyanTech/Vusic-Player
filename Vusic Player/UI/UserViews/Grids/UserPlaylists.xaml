@@ -7,13 +7,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     mc:Ignorable="d">
-
+    <UserControl.Resources>
+        <local:CountToVisibility x:Key="CountToEmpty"/>
+        <local:CountToVisibilityReverse x:Key="CountToGridView"/>
+    </UserControl.Resources>
     <Grid ColumnSpacing="30" Margin="0, 30" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="1" Visibility="Collapsed" Name="grdRecents" HorizontalAlignment="Left">
+        <Grid Grid.Column="1"  Visibility="{x:Bind Instance.PlaylistsMaster.Count, Converter={StaticResource CountToGridView}, Mode=OneWay}"  Name="grdRecents" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
@@ -25,19 +28,17 @@
                     <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAll" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromContinueWatchingSelected_Click"  Name="btnRemoveFromContinueWatchingSelected" >
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="/Assets/removeicon.png"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
             </StackPanel>
-            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"
+            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"  ItemsSource="{x:Bind Instance.PlaylistsMaster, Mode=OneWay}"
  x:Name="grdViewPlaylists" SelectionMode="Single" IsItemClickEnabled="True" CanDragItems="True" AllowDrop="True" CanReorderItems="True"
 ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" SelectionChanged="grdViewPlaylists_SelectionChanged">
                 <GridView.ItemTemplate>
                     <DataTemplate >
-                        <StackPanel ToolTipService.ToolTip="{Binding PlaylistName}" Orientation="Vertical" 
-                        
-      >
+                        <StackPanel ToolTipService.ToolTip="{Binding PlaylistName}" Orientation="Vertical">
                             <ani:Implicit.Animations>
                                 <ani:ImplicitAnimationSet>
                                     <ani:ScaleAnimation Duration="0:0:0.2" />
@@ -86,9 +87,8 @@ ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" SelectionChanged="grdView
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-
         </Grid>
-        <Grid HorizontalAlignment="Center" Name="grdEmptySuggestions" Visibility="Visible" Grid.Column="1">
+        <Grid HorizontalAlignment="Center" Name="grdEmptySuggestions"  Visibility="{x:Bind Instance.PlaylistsMaster.Count, Converter={StaticResource CountToEmpty}, Mode=OneWay}" Grid.Column="1">
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="/Assets/appicon.png"></Image>
