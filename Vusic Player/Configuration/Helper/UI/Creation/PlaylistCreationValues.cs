@@ -20,6 +20,10 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         public PlaylistCreationValues()
         {
             PlaylistsMaster.CollectionChanged += PlaylistsMaster_CollectionChanged;
+            _mediaSongModels.CollectionChanged += (s, e) =>
+            {
+                OnPropertyChanged(nameof(PlaylistCount));
+            };
         }
 
         private async void PlaylistsMaster_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -42,14 +46,17 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
 
    
         private string _genre = "";
+        private bool _isAppInstanceOcean = true;
         private List<string> _directory =  new List<string>();
         private string _playlistName = "Playlist";
-        private BitmapImage? _plThumb;
+        private BitmapImage _plThumb = new BitmapImage(new Uri("ms-appx:///Assets/playlistdefaultdark.png"));
         private string _playlistID = "";
         private Uri _thumbnail = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
-        private DateTime _creationdate;
+        private string _thumbnailString = "ms-appx:///Assets/playlistdefaultdark.png";
+        private DateTime _creationdate = DateTime.Now;
         private string _playlistCount = "0 items";
         private HashSet<string> _songsPaths = new();
+        private ObservableCollection<SongModel> _mediaSongModels = new();
 
 
         public string PlaylistName
@@ -57,12 +64,31 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
             get => _playlistName;
             set => SetProperty(ref _playlistName, value);
         }
+        public bool IsAppInstanceOceanDialog
+        {
+            get => _isAppInstanceOcean;
+            set => SetProperty(ref _isAppInstanceOcean, value);
+        }
+        public ObservableCollection<SongModel> MediaSongModels
+        {
+            get => _mediaSongModels;
+            set => SetProperty(ref _mediaSongModels, value);
+        }
+        public BitmapImage PlCover
+        {
+            get => _plThumb;
+            set => SetProperty(ref _plThumb, value);
+        }
         public Uri Thumbnail
         {
             get => _thumbnail;
             set => SetProperty(ref _thumbnail, value);
         }
-
+        public string ThumbnailString
+        {
+            get => _thumbnailString;
+            set => SetProperty(ref _thumbnailString, value);
+        }
         public ObservableCollection<PlaylistItem> PlaylistsMaster
         {
             get => _playlistsMaster;
@@ -77,11 +103,9 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
             get => _genre;
             set => SetProperty(ref _genre, value);
         }
-        public string PlaylistCount
-        {
-            get => _playlistCount;
-            set => SetProperty(ref _playlistCount, value);
-        }
+
+        public string PlaylistCount => $"{_mediaSongModels.Count} {(_mediaSongModels.Count == 1 ? "item" : "items")}";
+       
         public HashSet<string> MediaPaths
         {
            

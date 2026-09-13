@@ -21,6 +21,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
@@ -293,6 +294,7 @@ namespace Vusic_Player.Pages.Views
         TimeSpan ts = new TimeSpan();
         private async void btnAdd_Click(object sender, RoutedEventArgs e)
         {
+            //Pending
             if (App.MainWindowInstance == null) return;
             if (currentPlaylist == null) return;
 
@@ -581,6 +583,76 @@ namespace Vusic_Player.Pages.Views
             {
                 App.NavigationFrame.Navigate(typeof(HomeView));
             }
+        }
+
+        private async void mnftChangeCover_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.MainWindowInstance == null) return;
+            if (currentPlaylist == null) return;
+            var image = await FilePickers.MediaPicker.PickSingleImageFileAsync(App.MainWindowInstance, "Choose Cover");
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var playlists = currentSettings.SavedPlaylists;
+            var exist = playlists.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+            if (image != null)
+            {
+                imgPlaylistCover.Source = new BitmapImage(new Uri(image.Path));
+                if (exist != null)
+                {
+                    exist.ThumbnailString = image.Path;
+                    exist.Thumbnail = new Uri(image.Path);
+                    exist.plthumb = new BitmapImage(new Uri(image.Path));
+                }
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+        private void btnRenamePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            ttRename.IsOpen = true;
+            txtRenamePlaylist.Text = txtPlaylistName.Text;
+        }
+        PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
+
+        private async void btnOfficialRename_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentPlaylist == null) return;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var shows = currentSettings.SavedPlaylists;
+            var exist = shows.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+            var existinmaster = Instance.PlaylistsMaster.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+            if (exist != null)
+            {
+                string baseName = txtRenamePlaylist.Text.Trim();
+
+                if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                string finalName = baseName;
+                int counter = 1;
+                while (currentSettings.Shows.Any(p =>
+                    string.Equals(p.Name, finalName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    finalName = $"{baseName} ({counter++})";
+                }
+                exist.PlaylistName = finalName;
+            }
+            if (existinmaster != null)
+            {
+                string baseName = txtRenamePlaylist.Text.Trim();
+
+                if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                string finalName = baseName;
+                int counter = 1;
+                while (currentSettings.Shows.Any(p =>
+                    string.Equals(p.Name, finalName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    finalName = $"{baseName} ({counter++})";
+                }
+                existinmaster.Name = finalName;
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            txtPlaylistName.Text = txtRenamePlaylist.Text;
+            ttRename.IsOpen = false;
         }
     }
 

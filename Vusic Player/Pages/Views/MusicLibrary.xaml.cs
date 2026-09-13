@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
@@ -87,20 +88,44 @@ namespace Vusic_Player.Pages.Views
         }
         private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
         {
-
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);
             Debug.WriteLine("BTNNEWPLAYLIST");
             OceanContentDialog.PrimaryRequested += (async () =>
             {
-                var newplaylist = new PlaylistItem { PlaylistName = Instance.PlaylistName, PlaylistGenre = Instance.Genre, Thumbnail = Instance.Thumbnail, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount };
-                Debug.WriteLine(newplaylist.PlaylistName);
-                Instance.PlaylistsMaster.Add(newplaylist);
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                currentSettings.SavedPlaylists.Add(newplaylist);
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
-                OceanContentDialog.HideDlg();
-                MainWindow.ShowWindow();
+                if (iscreating) return;
+                try
+                {
+                    iscreating = true;
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    string baseName = Instance.PlaylistName.Trim();
+
+                    if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                    string finalName = baseName;
+                    int counter = 1;
+                    while (currentSettings.SavedPlaylists.Any(p =>
+                        string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        finalName = $"{baseName} ({counter++})";
+                    }
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
+                    Debug.WriteLine(newplaylist.PlaylistName);
+                    Instance.PlaylistsMaster.Add(newplaylist);
+
+                    currentSettings.SavedPlaylists.Add(newplaylist);
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    OceanContentDialog.HideDlg();
+                    MainWindow.ShowWindow();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("An unexpected error occured: " + ex.Message, "PlaylistCreate.MusicLibPage", Logger.LogLevelType.Error);
+                }
+                finally
+                {
+                    iscreating = false;
+                }
             });
         }
 
@@ -152,7 +177,7 @@ namespace Vusic_Player.Pages.Views
             expGenres.IsExpanded = true;
         }
         PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
-
+        bool iscreating = false;
         private void btnCreateNewPlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
@@ -160,15 +185,41 @@ namespace Vusic_Player.Pages.Views
             Debug.WriteLine("BTNNEWPLAYLIST");
             OceanContentDialog.PrimaryRequested += (async () =>
             {
-                var newplaylist = new PlaylistItem { PlaylistName = Instance.PlaylistName, PlaylistGenre = Instance.Genre, Thumbnail = Instance.Thumbnail, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount };
-                Debug.WriteLine(newplaylist.PlaylistName);
-                Instance.PlaylistsMaster.Add(newplaylist);
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                currentSettings.SavedPlaylists.Add(newplaylist);
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
-                OceanContentDialog.HideDlg();
-                MainWindow.ShowWindow();
+                if (iscreating) return;
+                try
+                {
+                    iscreating = true;
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    string baseName = Instance.PlaylistName.Trim();
+
+                    if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                    string finalName = baseName;
+                    int counter = 1;
+                    while (currentSettings.SavedPlaylists.Any(p =>
+                        string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        finalName = $"{baseName} ({counter++})";
+                    }
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
+                    Debug.WriteLine(newplaylist.PlaylistName);
+                    Instance.PlaylistsMaster.Add(newplaylist);
+
+                    currentSettings.SavedPlaylists.Add(newplaylist);
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    OceanContentDialog.HideDlg();
+                    MainWindow.ShowWindow();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("An unexpected error occured: " + ex.Message, "PlaylistCreate.MusicLibPage", Logger.LogLevelType.Error);
+                }
+                finally
+                {
+                    iscreating = false;
+                }
             });
+
         }
 
     }

@@ -16,6 +16,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
@@ -807,7 +808,7 @@ namespace Vusic_Player.Pages.Views
             var image = await FilePickers.MediaPicker.PickSingleImageFileAsync(App.MainWindowInstance, "Choose poster");
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var shows = currentSettings.Shows;
-            var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
+            var exist = shows.FirstOrDefault(p => p.ShowID == currentshow.ShowID);
             if (image != null)
             {
                 imgPoster.Source = new BitmapImage(new Uri(image.Path));
@@ -967,14 +968,15 @@ namespace Vusic_Player.Pages.Views
                 this.Frame.Navigate(typeof(ShowModel), showitemtotransfer);
             }
         }
+        ShowCreationValues Instance => ShowCreationValues.Instance;
 
         private async void btnOfficialRename_Click(object sender, RoutedEventArgs e)
         {
             if (currentshow == null) return;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var shows = currentSettings.Shows;
-            var exist = shows.FirstOrDefault(p => p.Name == currentshow.Name);
-            var existinmaster = MasterSearchIndex.ShowsMaster.FirstOrDefault(p => p.Name == currentshow.Name);
+            var exist = shows.FirstOrDefault(p => p.ShowID == currentshow.ShowID);
+            var existinmaster = Instance.ShowsMaster.FirstOrDefault(p => p.ShowID == currentshow.ShowID);
             if (exist != null)
             {
                 string baseName = txtRenameShow.Text.Trim();

@@ -7,7 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    <UserControl.Resources>
+        <local:CountToVisibility x:Key="CountToEmpty"/>
+    </UserControl.Resources>
     <Grid Name="contentsNewPlaylist">
         <InfoBar Name="mssgBar" IsOpen="False"></InfoBar>
         <ScrollViewer Name="scrollView">
@@ -29,16 +31,16 @@
                     </Button>
                 </Grid>
 
-                <Grid ColumnSpacing="24">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <Grid RowSpacing="24">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <StackPanel Grid.Column="0" Spacing="12">
                         <Border CornerRadius="8" Width="200" Height="200" 
                             Background="{ThemeResource LayerFillColorDefaultBrush}"
                             BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-                            <Image Name="imgPlaylistCov" Source="{x:Bind Instance.Thumbnail, Mode=TwoWay}" PointerPressed="imgPlaylistCov_PointerPressed" Stretch="UniformToFill" />
+                            <Image Name="imgPlaylistCov" Source="{x:Bind Instance.PlCover, Mode=OneWay}" PointerPressed="imgPlaylistCov_PointerPressed" Stretch="UniformToFill" />
                         </Border>
                         <Button CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnAddPlaylistCover" Click="btnAddPlaylistCover_Click" HorizontalAlignment="Stretch">
                             <StackPanel Orientation="Horizontal" Spacing="8">
@@ -63,7 +65,7 @@
 
                         </Grid>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Spacing="20" VerticalAlignment="Top">
+                    <StackPanel Grid.Row="1" Spacing="20" VerticalAlignment="Top">
                         <TextBox CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="txtEditPlaylistName" 
                              Header="Playlist Name" 
                              PlaceholderText="Give your playlist a title" 
@@ -134,7 +136,7 @@ HorizontalAlignment="Right" ToolTipService.ToolTip="Add Videos or Audio"  Corner
                         </Button.Flyout>
                     </Button>
                 </StackPanel>
-                <TextBlock Visibility="{x:Bind CheckIfListIsEmpty(AllSongs), Mode=OneWay}" Name="txtNullAddedSongs" Text="No media has been added yet!" 
+                <TextBlock Visibility="{x:Bind Instance.MediaSongModels.Count, Converter={StaticResource CountToEmpty}, Mode=OneWay}" Name="txtNullAddedSongs" Text="No media has been added yet!" 
                     FontStyle="Italic" 
                        HorizontalAlignment="Center" Margin="0,40"
                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
@@ -143,7 +145,7 @@ HorizontalAlignment="Right" ToolTipService.ToolTip="Add Videos or Audio"  Corner
                 <ListView Name="lstViewPlaylistAddedSongs" 
                       CanDragItems="True" 
                       CanReorderItems="True" 
-                          ItemsSource="{x:Bind AllSongs, Mode=OneWay}"
+                          ItemsSource="{x:Bind Instance.MediaSongModels, Mode=TwoWay}"
                       AllowDrop="True"
                       SelectionMode="Single"
                       Background="{ThemeResource LayerFillColorDefaultBrush}"

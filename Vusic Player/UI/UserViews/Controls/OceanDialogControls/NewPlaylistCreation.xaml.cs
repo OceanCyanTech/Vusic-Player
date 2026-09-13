@@ -28,6 +28,24 @@ using Windows.Storage;
 
 namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
 {
+    public class CountToVisibility : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public sealed partial class NewPlaylistCreation : UserControl
     {
         public string PlaylistNameSuggested
@@ -125,7 +143,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             {
                 AllSongs.Add(item);
             }
-            
+
             lstViewPlaylistAddedSongs.StartBringIntoView();
             lstViewPlaylistAddedSongs.ItemsSource = AllSongs;
             UpdateUI();
@@ -308,20 +326,26 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
 
         private async void btnAddPlaylistCover_Click(object sender, RoutedEventArgs e)
         {
-
-            if (App.OceanDialogInstance == null)
+            Window wind = App.OceanDialogInstance ?? new Window();
+            if (Instance.IsAppInstanceOceanDialog == false)
+            {
+                wind = App.MainWindowInstance ?? new Window();
+            }
+            if (wind == null)
             {
 
                 return;
             }
-            var file = await MediaPicker.PickSingleImageFileAsync(App.OceanDialogInstance, "Choose Image");
+            var file = await MediaPicker.PickSingleImageFileAsync(wind, "Choose Image");
 
             if (file != null)
             {
                 CoverOptions.Visibility = Visibility.Visible;
                 ToolTipService.SetToolTip(imgPlaylistCov, Path.GetFileName(file.Path));
-                imgPlaylistCov.Source = new BitmapImage(new Uri(file.Path));
+                Instance.PlCover = new BitmapImage(new Uri(file.Path));
+                Instance.ThumbnailString = file.Path;
                 playlistcoverpath = file.Path;
+                Instance.Thumbnail = new Uri(file.Path);
             }
         }
 
@@ -349,50 +373,94 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
 
         private async void btnAddSongs_Click(object sender, RoutedEventArgs e)
         {
-            if (App.OceanDialogInstance == null)
+            if (Instance.IsAppInstanceOceanDialog)
             {
-                mssgBar.IsOpen = true;
-                mssgBar.Title = "Error";
-                mssgBar.Message = "An unexpected error occured. Check log details in Settings Page.";
-                mssgBar.Severity = InfoBarSeverity.Error;
-                Logger.Log("Error code 0x0012oc. Refer the github page for more details.", "PlaylistCreation", Logger.LogLevelType.Error);
-                return;
-            }
-
-            var files =
-                 await MediaPicker.PickMultipleMediaFilesAsync(App.OceanDialogInstance, "Select Media");
-
-
-            if (files == null) return;
-
-            foreach (var file in files)
-            {
-                if (AllSongs.Any(s => s.FilePath == file.Path)) continue;
-                TimeSpan duration = (await file.Properties.GetMusicPropertiesAsync()).Duration;
-                string fileExtension = file.FileType.ToLowerInvariant();
-                var glyph = "\uEC4F";
-                if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                if (App.OceanDialogInstance == null)
                 {
-
-                    glyph = "\uE8B2";
-                    duration = (await file.Properties.GetVideoPropertiesAsync()).Duration;
-
-
+                    mssgBar.IsOpen = true;
+                    mssgBar.Title = "Error";
+                    mssgBar.Message = "An unexpected error occured. Check log details in Settings Page.";
+                    mssgBar.Severity = InfoBarSeverity.Error;
+                    Logger.Log("Error code 0x0012oc. Refer the github page for more details.", "PlaylistCreation", Logger.LogLevelType.Error);
+                    return;
                 }
 
+                var files = await MediaPicker.PickMultipleMediaFilesAsync(App.OceanDialogInstance, "Select Media");
+                if (files == null) return;
 
-                AllSongs.Add(new SongModel
+                foreach (var file in files)
                 {
-                    Title = Path.GetFileNameWithoutExtension(file.Path),
-                    SongDuration = duration,
-                    FilePath = file.Path,
-                    IsAudioItem = !IsVideoPlaylist,
-                    Glyph = glyph
-                });
+                    if (Instance.MediaSongModels.Any(s => s.FilePath == file.Path)) continue;
+                    TimeSpan duration = (await file.Properties.GetMusicPropertiesAsync()).Duration;
+                    string fileExtension = file.FileType.ToLowerInvariant();
+                    var glyph = "\uEC4F";
+                    if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                    {
+
+                        glyph = "\uE8B2";
+                        duration = (await file.Properties.GetVideoPropertiesAsync()).Duration;
+
+
+                    }
+                    Instance.MediaPaths.Add(file.Path);
+
+                    Instance.MediaSongModels.Add(new SongModel
+                    {
+                        Title = Path.GetFileNameWithoutExtension(file.Path),
+                        SongDuration = duration,
+                        FilePath = file.Path,
+                        IsAudioItem = !IsVideoPlaylist,
+                        Glyph = glyph
+                    });
+                }
+                lstViewPlaylistAddedSongs.StartBringIntoView();
+                UpdateUI();
             }
-            lstViewPlaylistAddedSongs.StartBringIntoView();
-            lstViewPlaylistAddedSongs.ItemsSource = AllSongs;
-            UpdateUI();
+            else
+            {
+                if (App.MainWindowInstance == null)
+                {
+                    mssgBar.IsOpen = true;
+                    mssgBar.Title = "Error";
+                    mssgBar.Message = "An unexpected error occured. Check log details in Settings Page.";
+                    mssgBar.Severity = InfoBarSeverity.Error;
+                    Logger.Log("Error code 0x0012oc. Refer the github page for more details.", "PlaylistCreation", Logger.LogLevelType.Error);
+                    return;
+                }
+
+                var files = await MediaPicker.PickMultipleMediaFilesAsync(App.MainWindowInstance, "Select Media");
+                if (files == null) return;
+
+                foreach (var file in files)
+                {
+                    if (Instance.MediaSongModels.Any(s => s.FilePath == file.Path)) continue;
+                    TimeSpan duration = (await file.Properties.GetMusicPropertiesAsync()).Duration;
+                    string fileExtension = file.FileType.ToLowerInvariant();
+                    var glyph = "\uEC4F";
+                    if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                    {
+
+                        glyph = "\uE8B2";
+                        duration = (await file.Properties.GetVideoPropertiesAsync()).Duration;
+
+
+                    }
+                    Instance.MediaPaths.Add(file.Path);
+
+                    Instance.MediaSongModels.Add(new SongModel
+                    {
+                        Title = Path.GetFileNameWithoutExtension(file.Path),
+                        SongDuration = duration,
+                        FilePath = file.Path,
+                        IsAudioItem = !IsVideoPlaylist,
+                        Glyph = glyph
+                    });
+                }
+                lstViewPlaylistAddedSongs.StartBringIntoView();
+                UpdateUI();
+
+            }
+
         }
 
         private void asbSearchSongs_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

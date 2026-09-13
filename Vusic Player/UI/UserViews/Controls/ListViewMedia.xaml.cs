@@ -195,6 +195,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                 grdViewMain.Visibility = Visibility.Collapsed;
                 lstViewPlaylist.Visibility = Visibility.Visible;
                 chckSelectGridView.Visibility = Visibility.Collapsed;
+                chckSelectAllGridView.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -1241,6 +1242,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 grdViewMain.DeselectAll();
                 chckSelectGridView.IsChecked = false;
+                chckSelectAllGridView.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -1588,6 +1590,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             grdViewMain.Visibility = Visibility.Collapsed;
             lstViewPlaylist.Visibility = Visibility.Visible;
             chckSelectGridView.Visibility = Visibility.Collapsed;
+            chckSelectAllGridView.Visibility = Visibility.Collapsed;
             btnEditAlbumMass.Visibility = Visibility.Visible;
             btnEditArtistMass.Visibility = Visibility.Visible;
             lstViewPlaylist.DeselectAll();
@@ -1660,6 +1663,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             bool isChecked = chckSelectGridView.IsChecked ?? false;
 
             grdViewMain.SelectionMode = isChecked ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Single;
+            chckSelectAllGridView.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void grdViewMain_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1824,6 +1828,18 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void mnftRemoveSongGenre_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void chckSelectAllGridView_Checked(object sender, RoutedEventArgs e)
+        {
+            if(chckSelectAllGridView.IsChecked == true)
+            {
+                grdViewMain.SelectAll();
+            }
+            else
+            {
+                grdViewMain.DeselectAll();
+            }
         }
     }
 }

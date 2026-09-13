@@ -16,7 +16,8 @@ namespace Vusic_Player.Configuration.ClassModels
         private int _seasonNumber = 1;
         private int _seasonIndex = 0;
         private string _playlistCount = "0 items";
-        private string? _playlistNowPlaying = "";
+        private string _playlistNowPlaying = "";
+        private string _thumbnailString = "ms-appx:///Assets/playlistdefaultdark.png";
         private Uri? _thumbnail;
         private bool _isPlaylistVideo = false;
         private string? _playlistGenre = "";
@@ -49,12 +50,17 @@ namespace Vusic_Player.Configuration.ClassModels
             set => SetProperty(ref _playlistCount, value);
         }
 
-        public string? PlaylistNowPlaying
+        public string PlaylistNowPlaying
         {
             get => _playlistNowPlaying;
             set => SetProperty(ref _playlistNowPlaying, value);
         }
 
+        public string ThumbnailString
+        {
+            get => _thumbnailString;
+            set => SetProperty(ref _thumbnailString, value);
+        }
         public Uri? Thumbnail
         {
             get => _thumbnail;
@@ -84,7 +90,7 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _songsPaths;
             set => SetProperty(ref _songsPaths, value);
         }
-        public ObservableCollection<PlaylistItem> SongsCollection
+        public ObservableCollection<SongModel> SongsCollection
         {
             get => _songs;
             set => SetProperty(ref _songs, value);

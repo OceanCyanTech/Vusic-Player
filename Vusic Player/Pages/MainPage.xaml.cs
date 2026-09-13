@@ -125,7 +125,7 @@ namespace Vusic_Player.Pages
             }
             foreach(var playlist in currentSettings.SavedPlaylists)
             {
-                newObservablePlaylists.Add(new PlaylistItem { PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, PlaylistId = playlist.PlaylistId, PlaylistNowPlaying = playlist.PlaylistNowPlaying, Thumbnail = playlist.Thumbnail, plthumb = playlist.plthumb, DateCreation = playlist.DateCreation, PlaylistGenre = playlist.PlaylistGenre, SongsPaths = playlist.SongsPaths });
+                newObservablePlaylists.Add(new PlaylistItem { PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, PlaylistId = playlist.PlaylistId, PlaylistNowPlaying = playlist.PlaylistNowPlaying, Thumbnail = playlist.Thumbnail, plthumb = new BitmapImage(new Uri(playlist.ThumbnailString)), DateCreation = playlist.DateCreation, PlaylistGenre = playlist.PlaylistGenre, SongsPaths = playlist.SongsPaths });
 
             }
             showInstance.ShowsMaster = new ObservableCollection<Show>(newObservableShows);

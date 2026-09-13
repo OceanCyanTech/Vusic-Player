@@ -348,6 +348,7 @@ namespace Vusic_Player.Pages
                 DispatcherQueue.TryEnqueue(() =>
                 {
                     txtInformation.Text = text;
+                    grdInfo.Visibility = Visibility.Visible;
                     FadeInOutStoryboard.Begin();
                 });
             };
@@ -492,6 +493,7 @@ namespace Vusic_Player.Pages
             txtInformation.HorizontalAlignment = HorizontalAlignment.Center;
             txtInformation.Margin = new Thickness(20, 30, 0, 0);
             txtInformation.Text = information;
+            grdInfo.Visibility = Visibility.Visible;
             FadeInOutStoryboard.Begin();
 
         }
@@ -1056,7 +1058,7 @@ namespace Vusic_Player.Pages
             }
 
             // Assign it to the UI grid
-            PlayerService.Masterplayer.Config.Video.SDRDisplayNits = 55;
+      //      PlayerService.Masterplayer.Config.Video.SDRDisplayNits = 55;
             SubtitleTimer?.Start();
             SaveTimer = new DispatcherTimer();
             SaveTimer.Interval = TimeSpan.FromSeconds(4);

@@ -212,17 +212,23 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             var selected = grdViewShows.SelectedItems.Cast<Show>().ToList();
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Confirm Delete", "Delete", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "deleteicon", "", "", new ObservableCollection<SongModel>(), "", $"Are you sure you want to delete the selected shows? This cannot be undone.", "warning");
-      //      OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
-            OceanContentDialog.PrimaryRequested += (() =>
+            OceanContentDialog.PrimaryRequested += (async() =>
             {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 OceanContentDialog.HideDlg();
                 MainWindow.ShowWindow();
+                
                 foreach (var item in selected)
                 {
-                    MasterSearchIndex.ShowsMaster.Remove(item);
+                    var existingshow = currentSettings.Shows.FirstOrDefault(p => p.ShowID == item.ShowID);
+                    if(existingshow != null)
+                    {
+                        currentSettings.Shows.Remove(existingshow);
+                    }
+                    Instance.ShowsMaster.Remove(item);
                 }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
                 ttEditShow.IsOpen = false;
-                //    UpdateUI();
             });
         }
 

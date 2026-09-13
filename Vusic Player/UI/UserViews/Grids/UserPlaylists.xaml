@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Grids"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ani="using:CommunityToolkit.WinUI.Animations"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ani="using:CommunityToolkit.WinUI.Animations" xmlns:oceandialogcontrols="using:Vusic_Player.UI.UserViews.Controls.OceanDialogControls"
     mc:Ignorable="d">
     <UserControl.Resources>
         <local:CountToVisibility x:Key="CountToEmpty"/>
@@ -26,7 +26,7 @@
                 <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Toggled" Unchecked="chkSelect_Toggled"></CheckBox>
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
                     <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAll" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
-                    <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromContinueWatchingSelected_Click"  Name="btnRemoveFromContinueWatchingSelected" >
+                    <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveMultiplePlaylists_Click"  Name="btnRemoveMultiplePlaylists" >
                         <StackPanel Orientation="Horizontal">
                             <Image Width="20" Source="/Assets/removeicon.png"/>
                         </StackPanel>
@@ -35,7 +35,7 @@
             </StackPanel>
             <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"  ItemsSource="{x:Bind Instance.PlaylistsMaster, Mode=OneWay}"
  x:Name="grdViewPlaylists" SelectionMode="Single" IsItemClickEnabled="True" CanDragItems="True" AllowDrop="True" CanReorderItems="True"
-ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" SelectionChanged="grdViewPlaylists_SelectionChanged">
+ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" >
                 <GridView.ItemTemplate>
                     <DataTemplate >
                         <StackPanel ToolTipService.ToolTip="{Binding PlaylistName}" Orientation="Vertical">
@@ -88,13 +88,35 @@ ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" SelectionChanged="grdView
                 </GridView.ItemTemplate>
             </GridView>
         </Grid>
+        <TeachingTip  Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" Target="{x:Bind grdViewPlaylists}">
+            <TeachingTip.Resources>
+                <x:Double x:Key="TeachingTipMinWidth">800</x:Double>
+                <x:Double x:Key="TeachingTipMaxWidth">600</x:Double>
+            </TeachingTip.Resources>
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <oceandialogcontrols:NewPlaylistCreation x:Name="newPlaylistCreationEdit"/>
+                <Grid ColumnSpacing="10" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="btnSavePlaylistEdited" Content="Save" Style="{StaticResource AccentButtonStyle}"/>
+                    <Button Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
+                </Grid>
+            </Grid>
+        </TeachingTip>
+
         <Grid HorizontalAlignment="Center" Name="grdEmptySuggestions"  Visibility="{x:Bind Instance.PlaylistsMaster.Count, Converter={StaticResource CountToEmpty}, Mode=OneWay}" Grid.Column="1">
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="/Assets/appicon.png"></Image>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="You have no playlists created!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
-                <Button Style="{StaticResource AccentButtonStyle}" Margin="0, 20" Name="btnAdd" HorizontalAlignment="Center" Click="btnAdd_Click" >
+                <Button Style="{StaticResource AccentButtonStyle}" Margin="0, 20" Name="btnNewPlaylist" HorizontalAlignment="Center" Click="btnNewPlaylist_Click" >
                     <StackPanel Orientation="Horizontal">
                         <FontIcon FontFamily="Segoe Fluent Icons" 
 Glyph="&#xE710;" 
