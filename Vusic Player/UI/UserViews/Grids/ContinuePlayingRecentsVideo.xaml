@@ -7,6 +7,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vusic_player="using:Vusic_Player.UI.UserViews.Controls" xmlns:ani="using:CommunityToolkit.WinUI.Animations" xmlns:media="using:CommunityToolkit.WinUI.Media"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <local:CountToVisibilityReverse x:Key="VisibilityofGridViewandRecents"/>
+        <local:CountToVisibility x:Key="VisibilityofEmpty"/>
+    </UserControl.Resources>
     <Grid ColumnSpacing="30">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -108,7 +112,7 @@
                         <Button ToolTipService.ToolTip="Options" Name="btnOptions" Background="#44FFFFFF" Foreground="White" CornerRadius="8" Width="44" Height="44">
                             <FontIcon Glyph="&#xE712;" />
                             <Button.Flyout>
-                                <MenuFlyout>
+                                <MenuFlyout Opened="MenuFlyout_Opened">
                                     <MenuFlyoutItem Name="mnftStartPreviousCW" Click="btnResume_Click" Text="Resume from Previous Playback">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE823;"></FontIcon>
@@ -159,7 +163,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Column="1" Name="grdRecents">
+        <Grid Grid.Column="1" Name="grdRecents" Visibility="{x:Bind VideoProgressList.Count, Converter={StaticResource VisibilityofGridViewandRecents}, Mode=OneWay}" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
@@ -198,41 +202,40 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
                             </ani:Implicit.Animations>
                             <Grid Width="200" Height="100" VerticalAlignment="Top">
                                 <Grid.ContextFlyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Resume from previous playback">
+                                    <MenuFlyout Opened="MenuFlyout_Opened_1">
+                                        <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Resume from previous playback" Click="mnftStartPreviousRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftStartFirstRec" Text="Play from start">
+                                        <MenuFlyoutItem Name="mnftStartFirstRec" Text="Play from start" Click="mnftStartFirstRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        
+                                        <MenuFlyoutItem Name="mnftRemoveRec" Text="Remove from Continue Playing" Click="mnftRemoveRec_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Name="mnftRemoveRec" Text="Remove from Continue Playing">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftAddToFavRec" Text="Add to Favourites">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
                                         <MenuFlyoutItem Name="mnftFileInfoRec" Text= "File Info" Click="mnftFileInfoRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftOpenFileLocRec" Text= "Open file location">
+                                        <MenuFlyoutItem Name="mnftOpenFileLocRec" Text= "Open file location" Click="mnftOpenFileLocRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE838;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftCopyFilePathRec" Text="Copy File Path">
+                                        <MenuFlyoutItem Name="mnftCopyFilePathRec" Text="Copy File Path" Click="mnftCopyFilePathRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
@@ -252,13 +255,20 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
             </GridView>
 
         </Grid>
-        <Grid Name="grdEmptyRecents" Visibility="Collapsed" Grid.Column="1">
-            <StackPanel Orientation="Vertical" Spacing="15">
+        <Grid Name="grdEmptyRecents" Visibility="{x:Bind VideoProgressList.Count, Converter={StaticResource VisibilityofEmpty}, Mode=OneWay}" Grid.Column="1">
+            <StackPanel Name="stkEnabledEmptyRecents"  Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="/Assets/default.png"></Image>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Start watching videos to see them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
-                <Button HorizontalAlignment="Center"  Content="Disable Recents"></Button>
+                <Button HorizontalAlignment="Center"  Content="Disable Recents" Name="btnDisableRecents" Click="btnDisableRecents_Click"></Button>
+            </StackPanel>
+            <StackPanel Name="stkDisabledEmptyRecents" Visibility="Collapsed"  Orientation="Vertical" Spacing="15">
+                <StackPanel Orientation="Vertical" Spacing="20">
+                    <Image Width="90" Source="/Assets/default.png"></Image>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Saving to Recents has been disabled." Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                </StackPanel>
+                <Button HorizontalAlignment="Center"  Content="Enable Recents" Name="btnEnableRecents" Click="btnEnableRecents_Click"></Button>
             </StackPanel>
         </Grid>
     </Grid>

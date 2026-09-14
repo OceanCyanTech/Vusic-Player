@@ -976,7 +976,7 @@ namespace Vusic_Player.Pages
                 Debug.WriteLine("Yesss222");
 
 
-
+                LoadingProgress = true;
                 VideoPath = episode.FilePath;
                 isEpisodeVideo = true;
             }
@@ -1022,9 +1022,14 @@ namespace Vusic_Player.Pages
             PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
 
             PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted;
-            PlayerService.LookForProgressForNextVideo(VideoPath);
-
-
+            if (LoadingProgress)
+            {
+                PlayerService.LookForProgressForNextVideo(VideoPath);
+            }
+            else
+            {
+                PlayerService.OpenPath(VideoPath);
+            }
 
 
             if (PlayerService.Masterplayer != null)

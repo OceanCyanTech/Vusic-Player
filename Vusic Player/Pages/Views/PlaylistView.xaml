@@ -5,9 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vusic="using:Vusic_Player.UI.UserViews.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vusic="using:Vusic_Player.UI.UserViews.Controls" xmlns:oceandialogcontrols="using:Vusic_Player.UI.UserViews.Controls.OceanDialogControls"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <local:CountToItemConverter x:Key="CountToItem"/>
+    </Page.Resources>
     <Grid Margin="50, 20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid HorizontalAlignment="Center"  VerticalAlignment="Center" RowSpacing="20" Name="grdDeletedPlaylist" Visibility="Collapsed">
             <Grid.RowDefinitions>
@@ -37,6 +39,27 @@
                     </Button>
                 </StackPanel>
             </TeachingTip>
+            <TeachingTip  Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" Target="{x:Bind btnEditPlaylistInfo}">
+                <TeachingTip.Resources>
+                    <x:Double x:Key="TeachingTipMinWidth">800</x:Double>
+                    <x:Double x:Key="TeachingTipMaxWidth">600</x:Double>
+                </TeachingTip.Resources>
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <oceandialogcontrols:NewPlaylistCreation x:Name="newPlaylistCreationEdit"/>
+                    <Grid ColumnSpacing="10" Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Name="btnSavePlaylistEdited" Content="Save" Style="{StaticResource AccentButtonStyle}"/>
+                        <Button Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
+                    </Grid>
+                </Grid>
+            </TeachingTip>
 
             <Grid HorizontalAlignment="Stretch" Grid.Column="0" VerticalAlignment="Stretch" Margin="20">
                 <Grid.RowDefinitions>
@@ -61,7 +84,7 @@
                 </Viewbox>
 
                 <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center">
-                    <TextBlock Text="Playlist name" Name="txtPlaylistName" 
+                    <TextBlock Text="{x:Bind currentPlaylist.PlaylistName, Mode=OneWay}" Name="txtPlaylistName" 
                    Style="{StaticResource TitleTextBlockStyle}" 
                    HorizontalAlignment="Center" 
                    TextWrapping="Wrap" />
@@ -102,7 +125,7 @@
 
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="n items" Margin="0, 2" Name="txtItemCount" 
+                        <TextBlock Text="{x:Bind SongCollection.Count, Converter={StaticResource CountToItem}, Mode=OneWay}" Margin="0, 2" Name="txtItemCount" 
                    Style="{StaticResource CaptionTextBlockStyle}" 
                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
                    HorizontalAlignment="Center" />
@@ -170,7 +193,11 @@ CornerRadius="16"
                 <Button Name="btnEditPlaylistInfo" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="3" Margin="0, 20" HorizontalAlignment="Center" Content="Edit Playlist Info" Click="btnEditPlaylistInfo_Click"></Button>
             </Grid>
 
-            <StackPanel Visibility="Visible" VerticalAlignment="Center" Orientation="Vertical" Grid.Column="1" Name="panelEmptyplaylists">
+            <StackPanel Orientation="Horizontal" Name="stkLoading" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20" Grid.Column="1">
+                <ProgressRing Width="40" Height="40"/>
+                <TextBlock Text="Loading..." Style="{StaticResource TitleTextBlockStyle}"/>
+            </StackPanel>
+            <StackPanel Visibility="Collapsed" VerticalAlignment="Center" Orientation="Vertical" Grid.Column="1" Name="panelEmptyplaylists">
                 <Image Source="/Assets/openfolder.png" Width="100"></Image>
                 <TextBlock Margin="0, 40" HorizontalAlignment="Center" Name="txtEmptyPlaylist" Text="You have no songs in this playlist" VerticalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                 <Button Name="btnAdd" HorizontalAlignment="Center" Click="btnAdd_Click" Style="{StaticResource AccentButtonStyle}">
@@ -186,26 +213,28 @@ CornerRadius="16"
                     </StackPanel>
                 </Button>
             </StackPanel>
-            <ScrollView VerticalAlignment="Stretch" Margin="10, 0" Name="ListPanel" Grid.Column="1">
-                <StackPanel  Orientation="Vertical">
-
-                    <InfoBar IsOpen="False" Severity="Warning" Name="iBMissingFiles" Title="Missing files">
+            <Grid VerticalAlignment="Stretch" Margin="10, 0" Name="ListPanel" Grid.Column="1">
+                <Grid  >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <InfoBar Grid.Row="0" IsOpen="False" Severity="Warning" Name="iBMissingFiles" Title="Missing files">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock x:Name="infoBarMessage" Text="Some files could not be located." Margin="0,0,8,0"/>
                             <Button Content="Relocate" Click="Button_Click"/>
                         </StackPanel>
                     </InfoBar>
-                    <StackPanel Orientation="Horizontal" Margin="0, 20">
-                        <TextBlock Name="txtPlaylistContentHeader" Style="{StaticResource SubtitleTextBlockStyle}" Text="Playlist content"></TextBlock>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 20">
+                        <TextBlock Name="txtPlaylistContentHeader" Style="{StaticResource SubtitleTextBlockStyle}" Text="Playlist Content"></TextBlock>
                         <TextBlock Margin="10,5" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Playlist will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                     </StackPanel>
-                    <StackPanel Orientation="Vertical" Spacing="10">
 
-                        <vusic:ListViewMedia VisiblityofViewButton="Visible" x:Name="lstViewUnified"></vusic:ListViewMedia>
-                    </StackPanel>
+                    <vusic:ListViewMedia Grid.Row="2" VisiblityofViewButton="Visible" x:Name="lstViewUnified"></vusic:ListViewMedia>
 
-                </StackPanel>
-            </ScrollView>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 

@@ -7,14 +7,21 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Extensions;
+using Vusic_Player.FilePickers;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Foundation;
@@ -31,17 +38,69 @@ namespace Vusic_Player.Pages.Views
         {
             InitializeComponent();
         }
-        private void btnOpenVideo_Click(object sender, RoutedEventArgs e)
+        private async void btnOpenVideo_Click(object sender, RoutedEventArgs e)
         {
+            if (App.MainWindowInstance == null) return;
+            var media = await MediaPicker.PickSingleVideo(App.MainWindowInstance, "Open Video");
+            if (media != null)
+            {
+             
+                    if (PlayerService.InVideoPage == false)
+                    {
+                        if (File.Exists(media.Path))
+                            Frame.Navigate(typeof(VideoPlayer), media.Path);
+                    }
+                    else
+                    {
+                        PlayerService.OpenPath(media.Path);
+                    }
 
+            }
         }
+        PlaylistCreationValues PlaylistInstance => PlaylistCreationValues.Instance;
+        bool iscreating = false;
 
         private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
-            //OceanContentDialog.Show("Create New Video Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);
+            Debug.WriteLine("BTNNEWPLAYLIST");
+            OceanContentDialog.PrimaryRequested += (async () =>
+            {
+                if (iscreating) return;
+                try
+                {
+                    iscreating = true;
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    string baseName = PlaylistInstance.PlaylistName.Trim();
+
+                    if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                    string finalName = baseName;
+                    int counter = 1;
+                    while (currentSettings.SavedPlaylists.Any(p =>
+                        string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        finalName = $"{baseName} ({counter++})";
+                    }
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = PlaylistInstance.Genre, plthumb = PlaylistInstance.PlCover, PlaylistId = PlaylistInstance.PlaylistID, DateCreation = PlaylistInstance.CreationDate, PlaylistCount = PlaylistInstance.PlaylistCount, SongsPaths = new HashSet<string>(PlaylistInstance.MediaPaths), Thumbnail = PlaylistInstance.Thumbnail };
+                    Debug.WriteLine(newplaylist.PlaylistName);
+                    PlaylistInstance.PlaylistsMaster.Add(newplaylist);
+
+                    currentSettings.SavedPlaylists.Add(newplaylist);
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    OceanContentDialog.HideDlg();
+                    MainWindow.ShowWindow();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("An unexpected error occured: " + ex.Message, "PlaylistCreate.MusicLibPage", Logger.LogLevelType.Error);
+                }
+                finally
+                {
+                    iscreating = false;
+                }
+            });
         }
         private void OceanContentDialog_PrimaryRequested()
         {

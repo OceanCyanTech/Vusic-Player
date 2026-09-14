@@ -1,3 +1,4 @@
+using Flyleaf.FFmpeg;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -32,6 +33,23 @@ using Windows.Storage.FileProperties;
 
 namespace Vusic_Player.Pages.Views
 {
+    public class CountToItemConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 1 ? $"{count} item" : $"{count} items";
+            }
+
+            return "0 items";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public sealed partial class PlaylistView : Page
     {
         ObservableCollection<SongModel> SongCollection = new();
@@ -66,6 +84,22 @@ namespace Vusic_Player.Pages.Views
                 {
                     Debug.WriteLine("Check1");
                     var defaulexi = playl.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+                    var existingmasterplaylist = Instance.PlaylistsMaster.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+                    if (existingmasterplaylist != null)
+                    {
+                        foreach (var item in SongCollection.ToList())
+                        {
+                            Debug.WriteLine("Item: " + item.FilePath);
+                            if (item.FilePath != null)
+                            {
+                                Debug.WriteLine("Check3");
+
+                                existingmasterplaylist.SongsPaths.Add(item.FilePath);
+                            }
+                        }
+                        int count = SongCollection.Count;
+                        existingmasterplaylist.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
+                    }
                     if (defaulexi != null)
                     {
                         Debug.WriteLine("Check2");
@@ -177,21 +211,109 @@ namespace Vusic_Player.Pages.Views
                 txtPlaylistDeleted.Text = $"The playlist '{currentPlaylist.PlaylistName}' has been deleted.";
             }
             var existingplaylistinmasterlist = MasterSearchIndex.PlaylistsMaster.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
-            if(existingplaylistinmasterlist != null)
+            if (existingplaylistinmasterlist != null)
             {
                 MasterSearchIndex.PlaylistsMaster.Remove(existingplaylistinmasterlist);
             }
         }
 
-        private void btnEditPlaylistInfo_Click(object sender, RoutedEventArgs e)
+        private async void btnEditPlaylistInfo_Click(object sender, RoutedEventArgs e)
         {
-            if (App.MainWindowInstance == null) return;
-            PlaylistCreation.playlistItem = currentPlaylist;
-            OceanContentDialog.Show("Edit Playlist", "Save", "", "Cancel", OceanDialogWindow.ContentType.PlaylistEdit, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "saveicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "", "", "", "", "", currentPlaylist, true);
+            if (currentPlaylist == null) return;
+            Instance.MediaPaths.Clear();
+            Instance.MediaSongModels.Clear();
+            ObservableCollection<SongModel> songmodels = new ObservableCollection<SongModel>();
+            foreach (var song in currentPlaylist.SongsPaths)
+            {
+                var file = await StorageFile.GetFileFromPathAsync(song);
+                var musicprops = await file.Properties.GetMusicPropertiesAsync();
+                songmodels.Add(new SongModel { Title = string.IsNullOrEmpty(musicprops.Title) ? Path.GetFileNameWithoutExtension(song) : musicprops.Title, SongDuration = musicprops.Duration, FilePath = song });
+                Instance.MediaPaths.Add(song);
+            }
+            ttEditPlaylist.IsOpen = true;
+            Instance.PlCover = new BitmapImage(currentPlaylist.Thumbnail);
+            Instance.Thumbnail = currentPlaylist.Thumbnail ?? new Uri("ms - appx:///Assets/playlistdefaultdark.png");
+
+            Instance.PlaylistName = currentPlaylist.PlaylistName;
+            Instance.Genre = currentPlaylist.PlaylistGenre ?? "";
+            Instance.MediaSongModels = new ObservableCollection<SongModel>(SongCollection);
+            Instance.IsAppInstanceOceanDialog = false;
+
+            btnSavePlaylistEdited.Click += (async (object sender, RoutedEventArgs e) =>
+            {
+                Debug.WriteLine("SAVE SHOW CALLED");
+                if (Instance.PlaylistName == "")
+                {
+                    Instance.PlaylistName = currentPlaylist.PlaylistName;
+                }
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                string baseName = Instance.PlaylistName.Trim();
+
+                string finalName = baseName;
+
+                if (Instance.PlaylistName.Trim() != currentPlaylist.PlaylistName.Trim())
+                {
+
+                    if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                    int counter = 1;
+                    while (currentSettings.SavedPlaylists.Any(p =>
+                        string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        finalName = $"{baseName} ({counter++})";
+                    }
+                }
+                currentPlaylist.PlaylistName = finalName;
+                currentPlaylist.PlaylistGenre = Instance.Genre;
+                currentPlaylist.PlaylistCount = Instance.PlaylistCount;
+                currentPlaylist.plthumb = Instance.PlCover;
+                currentPlaylist.Thumbnail = Instance.Thumbnail;
+                currentPlaylist.ThumbnailString = Instance.ThumbnailString;
+                currentPlaylist.SongsPaths = Instance.MediaPaths;
+                var existingplaylist = currentSettings.SavedPlaylists.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+                if (existingplaylist != null)
+                {
+                    existingplaylist.PlaylistName = finalName;
+                    genreList.Clear();
+                    if (Instance.Genre != null)
+                    {
+                        txtGenreCov.Text = "Genre";
+                        var parts = Instance.Genre.Split(',');
+                        foreach (var part in parts)
+                        {
+                            var cleanedGenre = part.Trim();
+                            if (!string.IsNullOrWhiteSpace(cleanedGenre))
+                            {
+                                var exist = genreList.FirstOrDefault(p => p.GenreTag == cleanedGenre);
+                                if (exist == null)
+                                {
+                                    genreList.Add(new GenreModel { GenreTag = cleanedGenre });
+                                }
+                            }
+                        }
+                        if(genreList.Count == 0)
+                        {
+                            txtGenreCov.Text = "";
+                        }
+                    }
+                    existingplaylist.PlaylistGenre = Instance.Genre;
+                    existingplaylist.PlaylistCount = Instance.PlaylistCount;
+                    existingplaylist.plthumb = Instance.PlCover;
+                    existingplaylist.Thumbnail = Instance.Thumbnail;
+                    existingplaylist.ThumbnailString = Instance.ThumbnailString;
+                    existingplaylist.SongsPaths = Instance.MediaPaths;
+                    stkLoading.Visibility = Visibility.Visible;
+                    LoadItemsOnly(existingplaylist);
+                    UpdateUI();
+
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    ttEditPlaylist.IsOpen = false;
+                    Instance.IsAppInstanceOceanDialog = true;
+
+                }
+            });
 
 
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1; ;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1; ;
         }
 
         private void OceanContentDialog_PrimaryRequested1()
@@ -202,7 +324,7 @@ namespace Vusic_Player.Pages.Views
             if (currentPlaylist == null) return;
             //Vusic_Player.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
             //Vusic_Player.Helper.FileInfo.RefreshValues += FileInfo_RefreshValues;
-            txtPlaylistName.Text = currentPlaylist.PlaylistName;
+            //  txtPlaylistName.Text = currentPlaylist.PlaylistName;
             genreList.Clear();
             //playlistID = playlist.PlaylistId;
             if (currentPlaylist.PlaylistGenre != null)
@@ -234,10 +356,10 @@ namespace Vusic_Player.Pages.Views
             imgPlaylistCover.Source = new BitmapImage(currentPlaylist.Thumbnail);
 
             var existplaylist = MasterSearchIndex.PlaylistsMaster.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
-            if(existplaylist != null)
+            if (existplaylist != null)
             {
                 existplaylist.PlaylistName = currentPlaylist.PlaylistName;
-             
+
             }
             LoadItemsOnly(currentPlaylist);
             UpdateUI();
@@ -282,6 +404,7 @@ namespace Vusic_Player.Pages.Views
                     timespan += properties.Duration;
                     Debug.WriteLine(properties.Duration + "  " + item.Title);
                 }
+                stkLoading.Visibility = Visibility.Collapsed;
                 string formatted = timespan.TotalHours >= 1 ? timespan.ToString(@"h\:mm\:ss") : timespan.ToString(@"m\:ss");
                 txtTotalDuration.Text = formatted;
             }
@@ -294,7 +417,7 @@ namespace Vusic_Player.Pages.Views
         TimeSpan ts = new TimeSpan();
         private async void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            //Pending
+
             if (App.MainWindowInstance == null) return;
             if (currentPlaylist == null) return;
 
@@ -337,7 +460,7 @@ namespace Vusic_Player.Pages.Views
                                     glyph = "\uE768";
                                 }
                             }
-                          
+
                             Visibility visibility = Visibility.Visible;
                             Visibility visibilityofvidtext = Visibility.Collapsed;
                             string fileExtension = file.FileType.ToLowerInvariant();
@@ -483,7 +606,8 @@ namespace Vusic_Player.Pages.Views
                 panelEmptyplaylists.Visibility = emptyVisibility;
                 txtPlaylistContentHeader.Visibility = hasSongsVisibility;
                 ListPanel.Visibility = hasSongsVisibility;
-                //       UpdateUI();
+
+               //       UpdateUI();
             }
             catch (Exception ex)
             {
@@ -491,7 +615,7 @@ namespace Vusic_Player.Pages.Views
             }
             finally
             {
-
+                stkLoading.Visibility = Visibility.Collapsed;
 
                 _isLoadingData = false;
             }
@@ -515,7 +639,7 @@ namespace Vusic_Player.Pages.Views
                 currentPlaylist = playlist;
                 Configuration.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
                 Configuration.Helper.FileInfo.RefreshValues += FileInfo_RefreshValues;
-                txtPlaylistName.Text = playlist.PlaylistName;
+                //     txtPlaylistName.Text = playlist.PlaylistName;
                 playlistID = playlist.PlaylistId;
                 genreList.Clear();
                 if (playlist.PlaylistGenre != null)
@@ -648,11 +772,16 @@ namespace Vusic_Player.Pages.Views
                 {
                     finalName = $"{baseName} ({counter++})";
                 }
-                existinmaster.Name = finalName;
+                existinmaster.PlaylistName = finalName;
             }
             await SettingsLoader.SaveSettingsAsync(currentSettings);
-            txtPlaylistName.Text = txtRenamePlaylist.Text;
+            //   txtPlaylistName.Text = txtRenamePlaylist.Text;
             ttRename.IsOpen = false;
+        }
+
+        private void btnCancelEdit_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 

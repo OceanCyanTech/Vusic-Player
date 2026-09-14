@@ -117,7 +117,7 @@ Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <TeachingTip IsOpen="False" Name="ttAddToPlaylist"  Title="Add Selected Items to Playlist">
@@ -372,7 +372,7 @@ BorderThickness="0"
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <ListView   Margin="0, 0" Grid.Row="2" CanDragItems="True" Visibility="Visible" CanReorderItems="True" AllowDrop="True"
+        <ListView   Margin="0, 0" Grid.Row="3" CanDragItems="True" Visibility="Visible" CanReorderItems="True" AllowDrop="True"
 SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   Name="lstViewPlaylist" ItemsSource="{Binding ItemsSource}" MaxHeight="500">
 
             <ListView.ItemTemplate>

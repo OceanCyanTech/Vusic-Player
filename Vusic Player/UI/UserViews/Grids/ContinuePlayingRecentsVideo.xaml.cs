@@ -21,6 +21,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Windows.Storage;
@@ -28,6 +29,42 @@ using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 
 namespace Vusic_Player.UI.UserViews.Grids
 {
+    public class CountToVisibility : IValueConverter
+    {
+        public class CountToVisibilityReverse : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, string language)
+            {
+                if (value is int count)
+                {
+                    return count == 0 ? Visibility.Collapsed : Visibility.Visible;
+                }
+
+                return Visibility.Visible;
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, string language)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public sealed partial class ContinuePlayingRecentsVideo : UserControl
     {
         string HighlightVideoPath = "";
@@ -48,6 +85,22 @@ namespace Vusic_Player.UI.UserViews.Grids
         private async Task LoadSettings()
         {
             var settings = await SettingsLoader.LoadSettingsAsync();
+            if (settings.IsVideoHistoryDisabled == true)
+            {
+                settings.SavedVideoProgress.Clear();
+                grdHighlightVideo.Visibility = Visibility.Collapsed;
+                stkEnabledEmptyRecents.Visibility = Visibility.Collapsed;
+                stkDisabledEmptyRecents.Visibility = Visibility.Visible;
+                await SettingsLoader.SaveSettingsAsync(settings);
+                return;
+            }
+            else
+            {
+               
+                stkEnabledEmptyRecents.Visibility = Visibility.Visible;
+                stkDisabledEmptyRecents.Visibility = Visibility.Collapsed;
+            }
+  
             if (settings.SavedVideoProgress.Count == 0)
             {
                 grdHighlightVideo.Visibility = Visibility.Collapsed;
@@ -165,7 +218,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                             txtFileName.Text = Path.GetFileNameWithoutExtension(path);
                         }
                         ToolTipService.SetToolTip(grdHighlightVideo, Path.GetFileNameWithoutExtension(path));
-                        var percentage = (vd.CurrentDuration / vd.TotalDuration) ;
+                        var percentage = (vd.CurrentDuration / vd.TotalDuration);
                         Debug.WriteLine(percentage + " is the current percentage");
 
                         var task = Task.Run(async () =>
@@ -193,7 +246,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                                             await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
                                         }
                                         ContinuePlaying.videoProgressMain.Thumbnail = bitmap;
-                                         ContinuePlaying.videoProgressMain.ThumbnailPath = thumb;
+                                        ContinuePlaying.videoProgressMain.ThumbnailPath = thumb;
                                         //       Delete the file immediately after the stream closes safely
                                         File.Delete(thumb);
                                     }
@@ -254,13 +307,15 @@ namespace Vusic_Player.UI.UserViews.Grids
         {
             if (e.ClickedItem is VideoProgress videoprogress)
             {
-                ContinuePlaying.videoProgressMain = videoprogress;
-                Logger.Log("IS IT EPISODE: " + videoprogress.IsEpisode, "continueplA", Logger.LogLevelType.Information);
-                if (App.NavigationFrame != null)
+                if (chkSelect.IsChecked == false)
                 {
-                    App.NavigationFrame.Navigate(typeof(VideoPlayer), videoprogress);
+                    ContinuePlaying.videoProgressMain = videoprogress;
+                    Logger.Log("IS IT EPISODE: " + videoprogress.IsEpisode, "continueplA", Logger.LogLevelType.Information);
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(VideoPlayer), videoprogress);
+                    }
                 }
-
             }
         }
 
@@ -295,19 +350,19 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private async void btnRemoveFromContinueWatchingSelected_Click(object sender, RoutedEventArgs e)
         {
-
-            var selecteditems = grdvRecents.SelectedItems.Cast<VideoProgress>();
+            var selecteditems = grdvRecents.SelectedItems.Cast<VideoProgress>().ToList();
             var settings = await SettingsLoader.LoadSettingsAsync();
             var videoprogress = settings.SavedVideoProgress;
             foreach (var item in selecteditems)
             {
+                Debug.WriteLine(item.FilePath + " is going to be removed");
+                VideoProgressList.Remove(item);
+               
+            }
+            foreach (var item in selecteditems)
+            {
+               
                 var exist = videoprogress.FirstOrDefault(p => p.FilePath == item.FilePath);
-                var exist2 = VideoProgressList.FirstOrDefault(p => p.FilePath == item.FilePath);
-                if (exist2 != null)
-                {
-
-                    VideoProgressList.Remove(exist2);
-                }
                 if (exist != null)
                 {
                     videoprogress.Remove(exist);
@@ -364,9 +419,30 @@ namespace Vusic_Player.UI.UserViews.Grids
             await LoadSettings();
         }
 
-        private void mnftAddToFavCW_Click(object sender, RoutedEventArgs e)
+        private async void mnftAddToFavCW_Click(object sender, RoutedEventArgs e)
         {
+            if (ContinuePlaying.videoProgressMain == null) return;
 
+            var settings = await SettingsLoader.LoadSettingsAsync();
+            var favourites = settings.Favourites;
+
+            if (mnftAddToFavCW.Text == "Add to Favourites")
+            {
+                var exist = favourites.FirstOrDefault(p => p.FilePath == ContinuePlaying.videoProgressMain.FilePath);
+                if (exist == null)
+                {
+                    favourites.Add(new FavouriteItems { FilePath = ContinuePlaying.videoProgressMain.FilePath });
+                }
+            }
+            else
+            {
+                var exist = favourites.FirstOrDefault(p => p.FilePath == ContinuePlaying.videoProgressMain.FilePath);
+                if (exist != null)
+                {
+                    favourites.Remove(exist);
+                }
+            }
+            await SettingsLoader.SaveSettingsAsync(settings);
         }
 
         private void mnftFileInfoCW_Click(object sender, RoutedEventArgs e)
@@ -426,9 +502,21 @@ namespace Vusic_Player.UI.UserViews.Grids
             }
         }
 
-        private void mnftAddToQueueCW_Click(object sender, RoutedEventArgs e)
+        private async void mnftAddToQueueCW_Click(object sender, RoutedEventArgs e)
         {
+            if (ContinuePlaying.videoProgressMain == null) return;
 
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var favourites = currentSettings.Favourites;
+            var exist = favourites.FirstOrDefault(o => o.FilePath == ContinuePlaying.videoProgressMain.FilePath);
+            bool isFav = false;
+            if (exist != null)
+            {
+                isFav = true;
+            }
+            var newsong = new SongModel { IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, Title = ContinuePlaying.videoProgressMain.FileName, FilePath = ContinuePlaying.videoProgressMain.FilePath, IsEpisode = ContinuePlaying.videoProgressMain.IsEpisode, Glyph = "\uE8B2", VisibilityofVideoInfo = Visibility.Visible, IsFavourite = isFav, MediaType = "Video" };
+            QueueService.VusicQueue.Add(newsong);
+            QueueService.VusicQueueNext.Add(newsong);
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -450,19 +538,188 @@ namespace Vusic_Player.UI.UserViews.Grids
                     FileInfo.RefreshValues -= FileInfo_RefreshValues1;
                     FileInfo.RefreshValues += FileInfo_RefreshValues1;
                     wind.ShowFileInfo(vd.FilePath);
-
                 }
-
             }
         }
 
         private async void FileInfo_RefreshValues1()
         {
             VideoProgressList.Clear();
-           //  await Task.Delay(1500);
+            //  await Task.Delay(1500);
             Debug.WriteLine("CKAUH");
-           await LoadSettings();
+            await LoadSettings();
 
+        }
+
+        private async void mnftRemoveRec_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vdprg)
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var existingpath = currentSettings.SavedVideoProgress.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
+                if (existingpath != null)
+                {
+                    currentSettings.SavedVideoProgress.Remove(existingpath);
+                }
+                VideoProgressList.Remove(vdprg);
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+        }
+
+        private void mnftStartPreviousRec_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vdprg)
+            {
+                if (File.Exists(vdprg.FilePath))
+                {
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(VideoPlayer), vdprg);
+                    }
+                }
+            }
+        }
+
+        private void mnftStartFirstRec_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vdprg)
+            {
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(VideoPlayer), vdprg.FilePath);
+                }
+            }
+        }
+
+        private async void mnftAddToFavRec_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vdprg)
+            {
+                var settings = await SettingsLoader.LoadSettingsAsync();
+                var favourites = settings.Favourites;
+
+                if (mnft.Text == "Add to Favourites")
+                {
+                    var exist = favourites.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
+                    if (exist == null)
+                    {
+                        favourites.Add(new FavouriteItems { FilePath = vdprg.FilePath });
+                    }
+                }
+                else
+                {
+                    var exist = favourites.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
+                    if (exist != null)
+                    {
+                        favourites.Remove(exist);
+                    }
+                }
+                await SettingsLoader.SaveSettingsAsync(settings);
+            }
+        }
+
+        private void mnftOpenFileLocRec_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vdprg)
+            {
+                if (File.Exists(vdprg.FilePath))
+                {
+                    Process.Start("explorer.exe", $"/select,\"{vdprg.FilePath}\"");
+                }
+            }
+        }
+
+        private void mnftCopyFilePathRec_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vdprg)
+            {
+                CopyToClipboard.CopyStringToClipboard(vdprg.FilePath);
+            }
+        }
+
+        private async void MenuFlyout_Opened(object sender, object e)
+        {
+            var flyout = sender as MenuFlyout;
+            if (flyout == null) return;
+            var mnftAddtoFav = flyout?.Items
+    .OfType<MenuFlyoutItem>()
+    .FirstOrDefault(x => x.Name == "mnftAddToFavCW");
+
+            if (mnftAddtoFav == null) return;
+            if (ContinuePlaying.videoProgressMain == null) return;
+
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var favourites = currentSettings.Favourites;
+            var exist = favourites.FirstOrDefault(o => o.FilePath == ContinuePlaying.videoProgressMain.FilePath);
+            bool isFav = false;
+            if (exist != null)
+            {
+                isFav = true;
+            }
+            if (isFav == true)
+            {
+                mnftAddtoFav.Text = "Remove from Favourites";
+            }
+            else
+            {
+
+                mnftAddtoFav.Text = "Add to Favourites";
+            }
+        }
+
+        private async void MenuFlyout_Opened_1(object sender, object e)
+        {
+            var flyout = sender as MenuFlyout;
+            if (flyout == null) return;
+            var mnftAddtoFav = flyout?.Items
+    .OfType<MenuFlyoutItem>()
+    .FirstOrDefault(x => x.Name == "mnftAddToFavRec");
+
+
+            var selectedsong = mnftAddtoFav?.DataContext as VideoProgress;
+            if (selectedsong == null) return;
+
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var favourites = currentSettings.Favourites;
+            var exist = favourites.FirstOrDefault(o => o.FilePath == selectedsong.FilePath);
+            bool isFav = false;
+
+            if (exist != null)
+            {
+                isFav = true;
+            }
+            if (mnftAddtoFav == null) return;
+            if (isFav == true)
+            {
+                mnftAddtoFav.Text = "Remove from Favourites";
+            }
+            else
+            {
+
+                mnftAddtoFav.Text = "Add to Favourites";
+            }
+        }
+
+        private async void btnDisableRecents_Click(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.IsVideoHistoryDisabled = true;
+            currentSettings.SavedVideoProgress.Clear();
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            grdHighlightVideo.Visibility = Visibility.Collapsed;
+            stkEnabledEmptyRecents.Visibility = Visibility.Collapsed;
+            stkDisabledEmptyRecents.Visibility = Visibility.Visible;
+        }
+
+        private async void btnEnableRecents_Click(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.IsVideoHistoryDisabled = false;
+            currentSettings.SavedVideoProgress.Clear();
+                
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            stkEnabledEmptyRecents.Visibility = Visibility.Visible;
+            stkDisabledEmptyRecents.Visibility = Visibility.Collapsed;
         }
     }
 }

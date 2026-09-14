@@ -5,10 +5,140 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Controls.VideoLibraryControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <local:CountToVisibility x:Key="ZeroCountVisibility"/>
+        <local:CountToVisibilityReverse x:Key="VisibilityofGridViewandRecents"/>
+    </UserControl.Resources>
+    <Grid Margin="20, 20">
+        <Grid   RowSpacing="30" HorizontalAlignment="Center" Visibility="{x:Bind RecommendedVideoList.Count, Converter={StaticResource ZeroCountVisibility}, Mode=OneWay}" Name="grdNoVideosRecommended" ColumnSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid ColumnSpacing="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Image Width="50" Source="/Assets/default.png"/>
+                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="There are no videos to index!" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            </Grid>
+            <Button Grid.Row="1" HorizontalAlignment="Center" Content="Disable Recommendations" Name="btnDisableRecommendations" Click="btnDisableRecommendations_Click"/>
+        </Grid>
+        <Grid HorizontalAlignment="Center" Name="grdDisabledVideosRecommended" RowSpacing="30" ColumnSpacing="10" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid ColumnSpacing="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Image Width="50" Source="/Assets/default.png"/>
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Recommendations are disabled!" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            </Grid>
+            <Button Grid.Row="1" HorizontalAlignment="Center" Content="Enable Recommendations" Name="btnEnableRecommendations" Click="btnEnableRecommendations_Click"/>
+        </Grid>
+        <Grid Grid.Column="1" RowSpacing="40" Name="grdRecents" Visibility="{x:Bind RecommendedVideoList.Count, Converter={StaticResource VisibilityofGridViewandRecents}, Mode=OneWay}" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Spacing="20">
 
-    <Grid>
+                <TextBlock Text="Recommendations" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <Button Background="Transparent" BorderBrush="Transparent" Click="btnRefreshRecommendations_Click" Name="btnRefreshRecommendations" ToolTipService.ToolTip="Refresh Recommendations">
+                    <Image Source="/Assets/Genres/appicon.png" Width="20"/>
+                </Button>
+                <Button Background="Transparent" BorderBrush="Transparent" Click="btnPlayAll_Click" Name="btnPlayAll" ToolTipService.ToolTip="Play All">
+                    <Image Source="/Assets/play.png" Width="20"/>
+                </Button>
+                <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+                <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
+                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
+                    <Button ToolTipService.ToolTip="Do not recommended selected videos" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnDoNotRecommend_Click"  Name="btnDoNotRecommend" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Top"
+ x:Name="grdvRecents" SelectionMode="Single" IsItemClickEnabled="True" 
+ItemClick="grdvRecents_ItemClick"  Margin="0, 0" ScrollViewer.HorizontalScrollMode="Enabled"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto" ItemsSource="{x:Bind RecommendedVideoList, Mode=OneWay}">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate >
+                        <StackPanel ToolTipService.ToolTip="{Binding FilePath}" Orientation="Vertical" VerticalAlignment="Top"
+                       
+      >
+                            <ani:Implicit.Animations>
+                                <ani:ImplicitAnimationSet>
+                                    <ani:ScaleAnimation Duration="0:0:0.2" />
+                                </ani:ImplicitAnimationSet>
+                            </ani:Implicit.Animations>
+                            <Grid Width="200" Height="100" VerticalAlignment="Top">
+                                <Grid.ContextFlyout>
+                                    <MenuFlyout Opened="MenuFlyout_Opened">
+                                        <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Play from previous playback if any" Click="mnftStartPreviousRec_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftStartFirstRec" Text="Play from start" Click="mnftStartFirstRec_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Name="mnftRemoveRec" Text="Never show in Recommendations" Click="mnftRemoveRec_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Name="mnftFileInfoRec" Text= "File Info" Click="mnftFileInfoRec_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftOpenFileLocRec" Text= "Open file location" Click="mnftOpenFileLocRec_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE838;"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftCopyFilePathRec" Text="Copy File Path" Click="mnftCopyFilePathRec_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </Grid.ContextFlyout>
+
+                                <Image Source="{Binding Thumbnail}" Width="200" Height="100" Stretch="UniformToFill"/>
+
+
+                            </Grid>
+                            <TextBlock Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Height="60" Width="200" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+
+        </Grid>
 
     </Grid>
 </UserControl>

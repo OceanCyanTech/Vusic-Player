@@ -525,7 +525,8 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
         {
             if (sender is FrameworkElement element && element.DataContext is SongModel song)
             {
-                AllSongs.Remove(song);
+                Instance.MediaSongModels.Remove(song);
+                Instance.MediaPaths.Remove(song.FilePath);
             }
 
         }

@@ -170,43 +170,46 @@ namespace Vusic_Player.Configuration
         {
             if (File.Exists(fiPath))
             {
-                Player SecondaryPlayer = new Player();
+
+
                 if (Masterplayer == null)
                 {
                     //conf.Video.VideoProcessor = VideoProcessors.Flyleaf;
                     //conf.Video.SuperResolution = true;
                     Masterplayer = new Player();
-
-                    foreach (var audiodevice in Engine.Audio.Devices)
-                    {
-                        Debug.WriteLine("Available Device: " + audiodevice.Name);
-
-                    }
-
-
-                    QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
-
-                    QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
-
-                    QueueService.VusicQueue.CollectionChanged -= QueueService.VusicQueue_CollectionChanged;
-                    QueueService.VusicQueue.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
-                    Masterplayer.SeekCompleted += (sender, completedMs) =>
-                    {
-                        if (completedMs != -1)
-                        {
-                            if (App.MainWindowInstance != null)
-                            {
-                                // Safely jump back onto the WinUI 3 UI Thread
-                                App.MainWindowInstance.DispatcherQueue.TryEnqueue(() =>
-                                {
-                                    UIController.CurrentPosition = TimeSpan.FromMilliseconds(completedMs).TotalSeconds;
-                                });
-                            }
-                        }
-                    };
-
                 }
                 CurrentPlayingPath = fiPath;
+
+                filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+
+                Masterplayer.Open(filestreamcurrent);
+
+
+
+                QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
+
+                QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
+
+                QueueService.VusicQueue.CollectionChanged -= QueueService.VusicQueue_CollectionChanged;
+                QueueService.VusicQueue.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
+                Masterplayer.SeekCompleted += (sender, completedMs) =>
+                {
+                    if (completedMs != -1)
+                    {
+                        if (App.MainWindowInstance != null)
+                        {
+                            // Safely jump back onto the WinUI 3 UI Thread
+                            App.MainWindowInstance.DispatcherQueue.TryEnqueue(() =>
+                            {
+                                UIController.CurrentPosition = TimeSpan.FromMilliseconds(completedMs).TotalSeconds;
+                            });
+                        }
+                    }
+                };
+
+
+
+
                 PlayCalled?.Invoke();
                 StorageFile file = await StorageFile.GetFileFromPathAsync(fiPath);
                 var musicProps = await file.Properties.GetMusicPropertiesAsync();
@@ -257,7 +260,6 @@ namespace Vusic_Player.Configuration
 
                 }
 
-                filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
                 var headphonedevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Headphone"));
                 var speakerdevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Speaker"));
                 if (MultiDeviceOutput)
@@ -303,7 +305,6 @@ namespace Vusic_Player.Configuration
                 //{
                 //    Engine.Audio.ToggleDevice(speakerdevice.Id, true);
                 //}
-                Masterplayer.Open(filestreamcurrent);
                 //  SecondaryPlayer.Open(filestreamcurrent);
 
                 PlayCalled?.Invoke();
@@ -363,27 +364,27 @@ namespace Vusic_Player.Configuration
                     Debug.WriteLine("FSEC092" + Masterplayer.MainDemuxer.Status.ToString());
                 }
 
-              
 
-                    var keyConfig = Masterplayer.Config.Player.KeyBindings;
 
-                    keyConfig.Remove(Key.Left);
-                    keyConfig.Remove(Key.Right);
+                var keyConfig = Masterplayer.Config.Player.KeyBindings;
 
-                    keyConfig.Remove(Key.Left, ctrl: true);
-                    keyConfig.Remove(Key.Right, ctrl: true);
-                    keyConfig.Remove(Key.Left, shift: true);
-                    keyConfig.Remove(Key.Right, shift: true);
-                }
-                App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
-                {
-                    var bitm = new BitmapImage(new Uri("ms-appx:///Assets/pause.png"));
-                    UIController.PlayPauseToolTip = "Pause";
-                    UIController.Thumbnail = bitm;
-                    maintimer?.Start();
-                });
+                keyConfig.Remove(Key.Left);
+                keyConfig.Remove(Key.Right);
+
+                keyConfig.Remove(Key.Left, ctrl: true);
+                keyConfig.Remove(Key.Right, ctrl: true);
+                keyConfig.Remove(Key.Left, shift: true);
+                keyConfig.Remove(Key.Right, shift: true);
             }
-        
+            App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
+            {
+                var bitm = new BitmapImage(new Uri("ms-appx:///Assets/pause.png"));
+                UIController.PlayPauseToolTip = "Pause";
+                UIController.Thumbnail = bitm;
+                maintimer?.Start();
+            });
+        }
+
         public static XAudio2MultiOutputEngine? _multiAudioEngine;
         public static float GetVolumeOfDevice(string deviceID)
         {
@@ -504,7 +505,7 @@ namespace Vusic_Player.Configuration
 
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
-      public static  DispatcherTimer statsTimerRealTime = new DispatcherTimer();
+        public static DispatcherTimer statsTimerRealTime = new DispatcherTimer();
 
         public static void Pause()
         {

@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -339,6 +340,78 @@ namespace Vusic_Player.Pages.Views
         private void chckShowWarning_Checked(object sender, RoutedEventArgs e)
         {
             FilterLogs();
+
+        }
+        private IEnumerable<LogEntry> GetFilteredResults(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return Enumerable.Empty<LogEntry>();
+
+            var rawQuery = query.Trim();
+
+
+            return logEntriesOriginal.Where(s =>
+            {
+                bool textMatch = !string.IsNullOrEmpty(rawQuery) && (
+                    (s.Message?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Source?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.Level.ToString()?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true) 
+                );
+
+             
+
+                return textMatch ;
+            })
+            .OrderByDescending(s => s.Message?.StartsWith(rawQuery, StringComparison.OrdinalIgnoreCase) == true)
+            .ThenBy(s => s.Message);
+        }
+
+        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (string.IsNullOrEmpty(sender.Text))
+            {
+                searchresults.Clear();
+                grdNoSearchResults.Visibility = Visibility.Collapsed;
+                lstViewPlayerLogs.ItemsSource = logEntries;
+                lstViewPlayerLogs.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var results = GetFilteredResults(sender.Text);
+
+                searchresults.Clear();
+                foreach (var item in results) searchresults.Add(item);
+
+                sender.ItemsSource = results.Any() ? null : new List<string> { "No matches found!" };
+                lstViewPlayerLogs.ItemsSource = searchresults;
+            }
+        }
+
+        private async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var results = GetFilteredResults(sender.Text);
+
+            if (results.Any())
+            {
+                grdNoSearchResults.Visibility = Visibility.Collapsed;
+                lstViewPlayerLogs.Visibility = Visibility.Visible;
+
+                searchresults.Clear();
+                foreach (var item in results) searchresults.Add(item);
+            }
+            else if (logEntriesOriginal.Count > 0)
+            {
+                lstViewPlayerLogs.Visibility = Visibility.Collapsed;
+                grdNoSearchResults.Visibility = Visibility.Visible;
+                frmSearchResultsNOMATCH.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
+            }
+        }
+
+        ObservableCollection<LogEntry> searchresults = new();
+
+        private void btnCloseSearch_Click(object sender, RoutedEventArgs e)
+        {
 
         }
     }
