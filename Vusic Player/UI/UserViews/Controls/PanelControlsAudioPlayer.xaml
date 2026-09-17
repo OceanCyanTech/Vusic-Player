@@ -58,7 +58,11 @@
                 <TeachingTip.Content>
                     <ScrollViewer Width="280" >
 
-
+                        <ScrollViewer.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Close" Click="MenuFlyoutItem_Click"/>
+                            </MenuFlyout>
+                        </ScrollViewer.ContextFlyout>
                         <audioadvanced:AudioReverb Margin="2, 0"/>
                     </ScrollViewer>
                 </TeachingTip.Content>

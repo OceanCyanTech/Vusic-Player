@@ -43,10 +43,26 @@
     <None Remove="Pages\Views\Onboarding\OptimizeApp.xaml" />
     <None Remove="Pages\Views\PlaylistView.xaml" />
     <None Remove="Pages\Views\QueuePage.xaml" />
+    <None Remove="Pages\Views\ReverbExpanded.xaml" />
     <None Remove="Pages\Views\SearchResults.xaml" />
     <None Remove="Pages\Views\SettingsPage.xaml" />
     <None Remove="Pages\Views\ShowModel.xaml" />
     <None Remove="Pages\Views\VideoLibrary.xaml" />
+    <None Remove="soxReverb\libflac-8.dll" />
+    <None Remove="soxReverb\libgcc_s_sjlj-1.dll" />
+    <None Remove="soxReverb\libgomp-1.dll" />
+    <None Remove="soxReverb\libid3tag-0.dll" />
+    <None Remove="soxReverb\libogg-0.dll" />
+    <None Remove="soxReverb\libpng16-16.dll" />
+    <None Remove="soxReverb\libsox-3.dll" />
+    <None Remove="soxReverb\libssp-0.dll" />
+    <None Remove="soxReverb\libvorbis-0.dll" />
+    <None Remove="soxReverb\libvorbisenc-2.dll" />
+    <None Remove="soxReverb\libvorbisfile-3.dll" />
+    <None Remove="soxReverb\libwavpack-1.dll" />
+    <None Remove="soxReverb\libwinpthread-1.dll" />
+    <None Remove="soxReverb\sox.exe" />
+    <None Remove="soxReverb\zlib1.dll" />
     <None Remove="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml" />
     <None Remove="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml" />
     <None Remove="UI\Dialogs\VideoOptionsWindow.xaml" />
@@ -145,6 +161,51 @@
     <Content Include="FFmpeg\swscale-9.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="soxReverb\libflac-8.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libgcc_s_sjlj-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libgomp-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libid3tag-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libogg-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libpng16-16.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libsox-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libssp-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libvorbis-0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libvorbisenc-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libvorbisfile-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libwavpack-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\libwinpthread-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\sox.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="soxReverb\zlib1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -180,6 +241,11 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Views\ReverbExpanded.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\MultipleOutputMixer.xaml">

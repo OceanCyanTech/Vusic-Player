@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Pages.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -910,6 +911,14 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
             else
             {
                 txtEnterFileNameWarning.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void btnApplyMultiple_Click(object sender, RoutedEventArgs e)
+        {
+            if(App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(ReverbExpanded));
             }
         }
     }

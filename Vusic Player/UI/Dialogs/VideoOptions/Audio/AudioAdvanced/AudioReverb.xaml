@@ -39,17 +39,19 @@
             <Button HorizontalAlignment="Right" Content="Apply Reverb" Name="btnApply" Click="btnApply_Click" Style="{StaticResource AccentButtonStyle}" Grid.Column="1"></Button>
         </Grid>
         <MenuFlyoutSeparator Grid.Row="3" Name="mnfs1" Visibility="Collapsed"/>
-        <TextBlock Visibility="Collapsed" Text="More Options" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Name="txtMore" Grid.Row="4"></TextBlock>
+        <TextBlock Visibility="Collapsed" Text="More Options" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Name="txtMore" Grid.Row="4"/>
         <Grid Visibility="Collapsed" Name="grdMoreOptions"  Grid.Row="5" RowSpacing="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBox Header="File Name" Name="txtFileName" TextChanged="txtFileName_TextChanged" Visibility="Collapsed" PlaceholderText="Enter file name...."></TextBox>
-            <TextBlock Text="Enter File Name!" Grid.Row="1" Visibility="Collapsed" Foreground="Red" Name="txtEnterFileNameWarning"></TextBlock>
-            <Grid Grid.Row="2" ColumnSpacing="10">
+            <Button Name="btnApplyMultiple" Click="btnApplyMultiple_Click" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb to Multiple Files"/>
+            <TextBox Header="File Name" Name="txtFileName" Grid.Row="1" TextChanged="txtFileName_TextChanged" Visibility="Collapsed" PlaceholderText="Enter file name...."></TextBox>
+            <TextBlock Text="Enter File Name!" Grid.Row="2" Visibility="Collapsed" Foreground="Red" Name="txtEnterFileNameWarning"></TextBlock>
+            <Grid Grid.Row="3" ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition/>
@@ -62,7 +64,7 @@
                 </ComboBox>
                 <CheckBox Name="chckExporttoFile" Content="Export to File" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Checked_1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" ToolTipService.ToolTip="When Apply Reverb is clicked, you can choose to export the output to your PC and play"></CheckBox>
             </Grid>
-            <Grid Grid.Row="3" RowSpacing="10" ColumnSpacing="20">
+            <Grid Grid.Row="4" RowSpacing="10" ColumnSpacing="20">
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>

@@ -48,7 +48,7 @@ namespace Vusic_Player.Pages
             App.NavigationFrame = frmMain;
             App.VideoPlayerFrame = frmVid;
             App.MasterFrame = frmRoot;
-            frmMain.Navigate(typeof(HomeView));
+            frmMain.Navigate(typeof(ReverbExpanded));
             PlayerService.mainXamlRoot = XamlRoot;
 
             _originalHeader = nvgMain.Header;

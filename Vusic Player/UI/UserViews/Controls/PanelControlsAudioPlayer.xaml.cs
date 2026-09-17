@@ -221,5 +221,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                 }
             }
         }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            ttReverb.IsOpen = false;
+        }
     }
 }
