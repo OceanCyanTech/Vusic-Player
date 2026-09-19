@@ -15,7 +15,9 @@ namespace Vusic_Player.Configuration.ClassModels
         private string _glyph { get; set; } = "\uEC4F";
         private string _title { get; set; } = "Unknown Title";
         private string _filepath { get; set; } = "";
-        private string _outputpath { get; set; } = "Click to select individual export directory";
+        private string _outputpath { get; set; } = "";
+        private string _errortooltip { get; set; } = "";
+        private string _directorypath { get; set; } = "Click to select individual export directory";
         private double _progress = 0;
         private string _imageState = "";
         private Visibility _visibilityofindividualdirectoryselection = Visibility.Collapsed;
@@ -64,6 +66,16 @@ namespace Vusic_Player.Configuration.ClassModels
         {
             get => _outputpath;
             set { _outputpath = value; OnPropertyChanged(); }
+        }
+        public string DirectoryPath
+        {
+            get => _directorypath;
+            set { _directorypath = value; OnPropertyChanged(); }
+        }
+        public string ErrorToolTip
+        {
+            get => _errortooltip;
+            set { _errortooltip = value; OnPropertyChanged(); }
         }
         public string ImageState
         {

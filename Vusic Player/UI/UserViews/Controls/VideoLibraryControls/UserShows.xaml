@@ -64,7 +64,6 @@ ItemClick="grdViewShows_ItemClick"  Margin="0, 20" >
                                             <FontIcon Glyph="d"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-
                                     <MenuFlyoutItem Name="mnftEditShow" Click="mnftEditShow_Click" Text="Edit Show">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="d"></FontIcon>

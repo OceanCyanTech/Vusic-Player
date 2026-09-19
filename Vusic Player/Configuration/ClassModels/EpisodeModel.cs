@@ -21,6 +21,12 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _description;
             set { _description = value; OnPropertyChanged(); }
         }
+        private TimeSpan? _durationtimespan;
+        public TimeSpan? DurationTimeSpan
+        {
+            get => _durationtimespan;
+            set { if (_durationtimespan != value) { _durationtimespan = value; OnPropertyChanged(); } }
+        }
 
         public string Duration
         {

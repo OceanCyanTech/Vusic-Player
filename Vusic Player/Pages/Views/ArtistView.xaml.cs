@@ -1660,4 +1660,28 @@ public sealed partial class ArtistView : Page
         }
 
     }
+
+    private async void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var item in FoundSongs)
+        {
+            QueueService.VusicQueue.Add(item);
+            QueueService.VusicQueueNext.Add(item);
+        }
+        ttAddedtoQueue.IsOpen = true;
+        await Task.Delay(2000);
+        ttAddedtoQueue.IsOpen = false;
+    }
+
+    private async void btnAddtoQueueMostPlayed_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var item in mostplayedsongs)
+        {
+            QueueService.VusicQueue.Add(item);
+            QueueService.VusicQueueNext.Add(item);
+        }
+        ttAddedtoQueue.IsOpen = true;
+        await Task.Delay(2000);
+        ttAddedtoQueue.IsOpen = false;
+    }
 }

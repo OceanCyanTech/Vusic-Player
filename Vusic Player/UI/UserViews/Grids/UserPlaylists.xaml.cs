@@ -450,5 +450,30 @@ namespace Vusic_Player.UI.UserViews.Grids
                 ttEditPlaylist.IsOpen = false;
             });
         }
+
+        private void mnftAddtoQueue_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is MenuFlyoutItem mnft && mnft.DataContext is PlaylistItem playlist)
+            {
+                foreach (var item in playlist.SongsPaths)
+                {
+                    var exist = FilesInDatabase.rawSongs.FirstOrDefault(p => p.FilePath == item);
+                    string Title = Path.GetFileNameWithoutExtension(item);
+                    string Artist = "Unknown Artist";
+                    string Album = "Unknown Album";
+                    TimeSpan? Duration = TimeSpan.Zero;
+                    if(exist != null)
+                    {
+                        Title = exist.Title;
+                        Artist = exist.Artist;
+                        Album = exist.AlbumName;
+                        Duration = exist.SongDuration;
+                    }
+                    QueueService.VusicQueue.Add(new SongModel { Title = Title, FilePath = item, Artist = Artist, AlbumName = Album, SongDuration = Duration });
+                    QueueService.VusicQueueNext.Add(new SongModel { Title = Title, FilePath = item, Artist = Artist, AlbumName = Album, SongDuration = Duration });
+                }
+            }
+          
+        }
     }
 }

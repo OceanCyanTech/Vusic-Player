@@ -138,6 +138,12 @@ Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}
         <TeachingTip IsOpen="False" Name="ttError">
             <TextBlock Name="txtError"></TextBlock>
         </TeachingTip>
+        <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Image Width="25" Source="/Assets/success.png"/>
+                <TextBlock Text="Added selected item(s) to Queue"/>
+            </StackPanel>
+        </TeachingTip>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button Background="Transparent" BorderBrush="Transparent" Name="btnSortItems" Click="btnSortItems_Click" 
 ToolTipService.ToolTip="Sort items">
@@ -210,6 +216,11 @@ ToolTipService.ToolTip="Sort items">
                     </StackPanel>
                 </Button>
                 <Button Name="btnAddtoPlaylistMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Add selected items to a playlist" Margin="0, 10" Click="btnAddtoPlaylistMass_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                    </StackPanel>
+                </Button>
+                <Button Name="btnAddtoQueueMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Add selected items to Queue" Margin="0, 10" Click="btnAddtoQueueMass_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/openfolder.png" Width="20"></Image>
                     </StackPanel>

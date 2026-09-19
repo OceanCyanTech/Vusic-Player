@@ -73,6 +73,7 @@ namespace Vusic_Player.Configuration.ClassModels
             set { if (_creators != value) { _creators = value; OnPropertyChanged(); } }
         }
 
+       
         private ObservableCollection<string> _addedSeasons = new();
         public ObservableCollection<string> AddedSeasons
         {

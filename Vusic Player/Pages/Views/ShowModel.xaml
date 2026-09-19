@@ -321,11 +321,17 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                     <TextBlock Name="txtEpisodeCount" Text="Loading episodes..." Style="{StaticResource BodyLargeTextBlockStyle}" ></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="10">
-                <Button CornerRadius="12" Style="{StaticResource AccentButtonStyle}" Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click">
-                    <StackPanel Orientation="Horizontal" Spacing="5">
-                        <FontIcon Margin="0, -4" Glyph="d"></FontIcon>
-                        <TextBlock Margin="0, 3" Text="Play All"></TextBlock>
-                    </StackPanel>
+                    <Button CornerRadius="12" Style="{StaticResource AccentButtonStyle}" Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <FontIcon Margin="0, -4" Glyph="d"></FontIcon>
+                            <TextBlock Margin="0, 3" Text="Play All"></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button CornerRadius="12" Grid.Row="1" Name="btnAddtoQueue" Click="btnAddtoQueue_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <FontIcon Margin="0, -4" Glyph="d"></FontIcon>
+                            <TextBlock Margin="0, 3" Text="Add to Queue"></TextBlock>
+                        </StackPanel>
                     </Button>
                     <Button ToolTipService.ToolTip="File Location" Name="btnOpenFileLocation" Click="btnOpenFileLocation_Click">
                         <Image Source="/Assets/appicon.png" Width="20"/>

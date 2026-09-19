@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -1840,6 +1841,18 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 grdViewMain.DeselectAll();
             }
+        }
+
+        private async void btnAddtoQueueMass_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in ItemsSource)
+            {
+                QueueService.VusicQueue.Add(item);
+                QueueService.VusicQueueNext.Add(item);
+            }
+            ttAddedtoQueue.IsOpen = true;
+            await Task.Delay(2000);
+            ttAddedtoQueue.IsOpen = false;
         }
     }
 }

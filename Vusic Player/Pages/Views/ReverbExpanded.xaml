@@ -109,8 +109,29 @@ CornerRadius="16"
                     </Grid.RowDefinitions>
                     <TextBlock Text="Audio Files" Style="{StaticResource SubtitleTextBlockStyle}"/>
                     <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="1">
-                        <TextBlock VerticalAlignment="Center" Text="{x:Bind ProcessedFiles.Count, Mode=OneWay, Converter={StaticResource CountToAudioFilesProcessedConv}}" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <Button VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb" Name="btnApplyReverb" Click="btnApplyReverb_Click"/>
+                        <Grid RowSpacing="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="{x:Bind ProcessedFiles.Count, Mode=OneWay, Converter={StaticResource CountToAudioFilesProcessedConv}}" Grid.Row="0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <Button HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb" Name="btnApplyReverb" Click="btnApplyReverb_Click"/>
+                            <StackPanel Visibility="Collapsed" Orientation="Horizontal" Name="stkOutputActions" Grid.Row="2" Spacing="10">
+                                <Button Name="btnPlayAllOutput" Click="btnPlayAllOutput_Click">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Image Width="20" Source="/Assets/play.png"/>
+                                        <TextBlock Text="Play All Reverb Output"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Name="btnAddtoQueueAllOutput" Click="btnAddtoQueueAllOutput_Click">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Image Width="20" Source="/Assets/appicon.png"/>
+                                        <TextBlock Text="Add to Queue all Reverb Output"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                         <Grid ToolTipService.ToolTip="Reverb will be added and files will be processed into this directory" Width="260" HorizontalAlignment="Left" VerticalAlignment="Center" RowSpacing="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -133,7 +154,23 @@ Click="btnExportDirectory_Click"/>
                                 <Grid ToolTipService.ToolTip="{Binding FilePath}" ColumnSpacing="20">
                                     <Grid.ContextFlyout>
                                         <MenuFlyout>
-                                            
+                                            <MenuFlyoutItem  Text="Play Original" Name="mnftPlayOriginal" Click="mnftPlayOriginal_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Play Reverb Output" Name="mnftPlayOutput" Click="mnftPlayOutput_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator Visibility="{Binding VisibilityOfCompletedFileLocation}"/>
+                                            <MenuFlyoutItem Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Add Reverb Output to Queue" Name="mnftAddToQueueOutput" Click="mnftAddToQueueOutput_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
                                             <MenuFlyoutItem  Text="Remove" Name="mnftRemoveAudioFile" Click="mnftRemoveAudioFile_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="d"/>
@@ -191,11 +228,11 @@ Click="btnExportDirectory_Click"/>
 
                                     <FontIcon Glyph="{Binding Glyph}" FontSize="14"/>
                                     <TextBlock Text="{Binding Title}" Grid.Column="1"/>
-                                    <Button IsEnabled="{Binding DirectorySelectionEnabled}"  ToolTipService.ToolTip="{Binding OutputPath}" FontFamily="{StaticResource SymbolThemeFontFamily}"  Visibility="{Binding IndividualDirectorySel}" Grid.Column="2" Content="&#xE8B7;" Name="btnSelectIndividualDir" Click="btnSelectIndividualDir_Click">
+                                    <Button IsEnabled="{Binding DirectorySelectionEnabled}"  ToolTipService.ToolTip="{Binding DirectoryPath}" FontFamily="{StaticResource SymbolThemeFontFamily}"  Visibility="{Binding IndividualDirectorySel}" Grid.Column="2" Content="&#xE8B7;" Name="btnSelectIndividualDir" Click="btnSelectIndividualDir_Click">
                                         
                                     </Button>
                                     <ProgressBar ToolTipService.ToolTip="Progress" Maximum="100" Value="{Binding Progress}" Grid.Column="3" Width="100"/>
-                                    <Image Source="{Binding ImageState}" Grid.Column="4" Width="20"/>
+                                    <Image ToolTipService.ToolTip="{Binding ErrorToolTip}" Source="{Binding ImageState}" Grid.Column="4" Width="20"/>
                                     <Button ToolTipService.ToolTip="Open File Location of Reverb Output" FontFamily="{StaticResource SymbolThemeFontFamily}"  Visibility="{Binding VisibilityOfCompletedFileLocation}" Grid.Column="5" Content="&#xE838;" Name="btnOpenFileLocationProcessed" Click="btnOpenFileLocationProcessed_Click">
 
                                     </Button>

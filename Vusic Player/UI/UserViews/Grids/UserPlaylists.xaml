@@ -58,6 +58,11 @@ ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" >
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftAddtoQueue" Click="mnftAddtoQueue_Click" Text="Add to Queue">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                         <MenuFlyoutItem Name="mnftShufflePlay" Click="mnftShufflePlay_Click" Text="Shuffle and Play">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"></FontIcon>

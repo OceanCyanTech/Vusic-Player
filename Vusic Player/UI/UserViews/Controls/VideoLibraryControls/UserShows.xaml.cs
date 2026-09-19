@@ -557,5 +557,149 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
         {
             ttEditShow.IsOpen = false;
         }
+     //   Commented Out
+        private async void mnftAddToQueue_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is MenuFlyoutItem mnft && mnft.DataContext is Show show)) return;
+
+            string rootPath = show.Directory;
+            if (!Directory.Exists(rootPath)) return;
+
+            ttLoadingShow.IsOpen = true;
+
+            try
+            {
+                // 1. Move disk I/O, Regex, and metadata extraction to a background thread
+                var data = await Task.Run(() =>
+                {
+                    var localSeasons = new List<PlaylistItem>();
+                    var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
+                    primaryFolders.Insert(0, rootPath);
+
+                    string pattern = @"\b(season\s*|s)(\d+)\b";
+                    var videoExtensions = Extensions.VideoExtensions.List.Select(ext => ext.ToLower()).ToHashSet();
+
+                    // --- SCAN DIRECTORIES ---
+                    foreach (string path in primaryFolders)
+                    {
+                        string folderName = Path.GetFileName(path);
+                        Match match = Regex.Match(path == rootPath ? new DirectoryInfo(rootPath).Name : folderName, pattern, RegexOptions.IgnoreCase);
+
+                        if (match.Success)
+                        {
+                            int seasonNum = Convert.ToInt32(match.Groups[2].Value);
+                            string actualContentPath = path;
+
+                            var foundFiles = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories)
+                                                      .Where(f => videoExtensions.Contains(Path.GetExtension(f).ToLower()))
+                                                      .ToList();
+
+                            if (foundFiles.Any())
+                            {
+                                int episodeCount = foundFiles.Count;
+                                actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
+
+                                var existingSeason = localSeasons.FirstOrDefault(p => p.PlaylistName == $"Season {seasonNum}");
+                                if (existingSeason == null)
+                                {
+                                    localSeasons.Add(new PlaylistItem
+                                    {
+                                        PlaylistName = $"Season {seasonNum}",
+                                        PlaylistCount = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}",
+                                        PlaylistId = actualContentPath,
+                                        SeasonNumber = seasonNum
+                                    });
+                                }
+                                else
+                                {
+                                    existingSeason.PlaylistCount = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
+                                    existingSeason.PlaylistId = actualContentPath;
+                                }
+                            }
+                        }
+                    }
+
+                    if (localSeasons.Count == 0) return (Seasons: localSeasons, Episodes: new List<EpisodeModel>());
+
+                    var seasonsRearranged = localSeasons.OrderBy(p => p.SeasonNumber).ToList();
+                    for (int i = 0; i < seasonsRearranged.Count; i++) seasonsRearranged[i].SeasonIndex = i;
+
+                    var firstSeason = seasonsRearranged[0];
+                    if (!(firstSeason.PlaylistId is string folderpath) || !Directory.Exists(folderpath))
+                        return (Seasons: seasonsRearranged, Episodes: new List<EpisodeModel>());
+
+                    // --- PARSE EPISODES ---
+                    var episodePatterns = new List<string> {
+                @"(?i)(?:s\d+)?e(\d+)\b", @"(?i)e(\d+)(?:[-_]?e?(\d+))?\b",
+                @"(?i)\b(?:ep|episode)(?:\s*|\s*\.\s*)(\d+)\b", @"(?i)\b\d+x(\d+)\b",
+                @"\[(\d+)\]", @"\((\d+)\)", @"(?<=\s+|-|_|#)(\d+)(?=\.\w+$|\s+|-|_)"
+            };
+
+                    var videoFiles = Directory.EnumerateFiles(folderpath)
+                                              .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
+                                              .OrderBy(file => file)
+                                              .ToList();
+
+                    var episodes = new List<EpisodeModel>();
+
+                    for (int i = 0; i < videoFiles.Count; i++)
+                    {
+                        string filePath = videoFiles[i];
+                        string episodeNumber = "Unknown";
+
+                        foreach (var pat in episodePatterns)
+                        {
+                            Match match = Regex.Match(Path.GetFileName(filePath), pat, RegexOptions.IgnoreCase);
+                            if (match.Success)
+                            {
+                                var validGroup = match.Groups.Cast<Group>().Skip(1).FirstOrDefault(g => g.Success && !string.IsNullOrEmpty(g.Value));
+                                if (validGroup != null)
+                                {
+                                    episodeNumber = validGroup.Value;
+                                    break;
+                                }
+                            }
+                        }
+
+                        episodes.Add(new EpisodeModel
+                        {
+                            EpisodeName = $"Episode {episodeNumber}",
+                            FilePath = filePath,
+                            CurrentShowDirectory = Path.GetDirectoryName(filePath)
+                        });
+                    }
+
+                    return (Seasons: seasonsRearranged, Episodes: episodes);
+                });
+
+                if (data.Episodes == null || data.Episodes.Count == 0) return;
+
+                // 2. Map and append all items directly to the queues
+                var songModels = data.Episodes.Select(item => new SongModel
+                {
+                    Title = Path.GetFileName(item.FilePath),
+                    VisibilityofVideoInfo = Visibility.Visible,
+                    VisibilityofAudioMeta = Visibility.Collapsed,
+                    Glyph = "\uE8B2",
+                    IsAudioItem = false,
+                    FilePath = item.FilePath
+                }).ToList();
+
+                foreach (var song in songModels)
+                {
+                    QueueService.VusicQueue.Add(song);
+                    QueueService.VusicQueueNext.Add(song);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error enqueueing show: {ex.Message}");
+            }
+            finally
+            {
+                ttLoadingShow.IsOpen = false;
+            }
+        }
+
     }
 }

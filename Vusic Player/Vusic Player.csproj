@@ -65,6 +65,7 @@
     <None Remove="soxReverb\zlib1.dll" />
     <None Remove="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml" />
     <None Remove="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml" />
+    <None Remove="UI\Dialogs\SubtitleEditorWindow.xaml" />
     <None Remove="UI\Dialogs\VideoOptionsWindow.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\AudioReverb.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\MultipleOutputMixer.xaml" />
@@ -76,6 +77,7 @@
     <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Volume.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\PlayerSettingsHost.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleCustomize\Customize.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleEditorUI.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\Delay.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\General.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\SubtitleOnlineSearch.xaml" />
@@ -241,6 +243,16 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleEditorUI.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\SubtitleEditorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Views\ReverbExpanded.xaml">

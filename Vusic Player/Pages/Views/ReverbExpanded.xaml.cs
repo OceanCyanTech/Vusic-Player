@@ -9,17 +9,21 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
+using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.FilePickers;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -111,10 +115,14 @@ namespace Vusic_Player.Pages.Views
             mnftAddFiles.IsEnabled = false;
             btnApplyReverb.IsEnabled = false;
             btnExportDirectory.IsEnabled = false;
+            stkOutputActions.Visibility = Visibility.Collapsed;
             foreach (var item in AddedFiles.ToList())
             {
                 item.DirectorySelectionEnabled = false;
                 item.VisibilityOfCompletedFileLocation = Visibility.Collapsed;
+                item.ErrorToolTip = "";
+                item.ImageState = "";
+                item.Progress = 0;
             }
             ProcessedFiles.Clear();
             string baseDirOutput = txtOutputDirectory.Text;
@@ -163,11 +171,13 @@ namespace Vusic_Player.Pages.Views
 
                     if (item.IndividualDirectorySelBool)
                     {
-                        outputMp3 = Path.Combine(item.OutputPath, $"{sanitizedTitle}_{Guid.NewGuid()}.mp3");
-                        if (!Directory.Exists(item.OutputPath))
+                        outputMp3 = Path.Combine(item.DirectoryPath, $"{sanitizedTitle}_{Guid.NewGuid()}.mp3");
+                        if (!Directory.Exists(item.DirectoryPath))
                         {
-                            Debug.WriteLine("Item output doesnt exist" + item.OutputPath);
-
+                            Debug.WriteLine("Item output doesnt exist " + item.OutputPath);
+                            item.ImageState = "ms-appx:///Assets/error.png";
+                            item.DirectorySelectionEnabled = true;
+                            item.ErrorToolTip = "Output Directory not selected";
                             return;
                         }
                     }
@@ -252,12 +262,14 @@ namespace Vusic_Player.Pages.Views
                                 item.Progress = 100;
                                 item.ImageState = "ms-appx:///Assets/success.png";
                                 item.OutputPath = outputMp3;
+                                Debug.WriteLine(outputMp3 + "  Post Processing");
                                 ProcessedFiles.Add(item);
                                 btnAddAudioFiles.IsEnabled = true;
                                 mnftAddFiles.IsEnabled = true;
                                 btnApplyReverb.IsEnabled = true;
                                 btnExportDirectory.IsEnabled = !chkCustomDirectories.IsChecked ?? false;
                                 item.DirectorySelectionEnabled = true;
+                                stkOutputActions.Visibility = Visibility.Visible;
                                 item.VisibilityOfCompletedFileLocation = Visibility.Visible;
                             }
                             else
@@ -301,7 +313,10 @@ namespace Vusic_Player.Pages.Views
                     string folderPath = folder.Path;
 
                     ToolTipService.SetToolTip(btnExportDirectory, folderPath);
-                    file.OutputPath = folderPath;
+                    file.DirectoryPath = folderPath;
+                    file.ImageState = "";
+                    file.Progress = 0;
+                    file.VisibilityOfCompletedFileLocation = Visibility.Collapsed;
                     ToolTipService.SetToolTip(btn, folderPath);
                 }
             }
@@ -332,6 +347,11 @@ namespace Vusic_Player.Pages.Views
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
             {
                 AddedFiles.Remove(file);
+                var exist = ProcessedFiles.FirstOrDefault(p => p.FilePath == file.FilePath);
+                if(exist != null)
+                {
+                    ProcessedFiles.Remove(exist);
+                }
             }
         }
 
@@ -347,7 +367,7 @@ namespace Vusic_Player.Pages.Views
                     string folderPath = folder.Path;
 
                     ToolTipService.SetToolTip(btnExportDirectory, folderPath);
-                    file.OutputPath = folderPath;
+                    file.DirectoryPath = folderPath;
                 }
                 file.ImageState = "";
                 var exist = ProcessedFiles.FirstOrDefault(p => p.FilePath == file.FilePath);
@@ -376,7 +396,7 @@ namespace Vusic_Player.Pages.Views
 
         private void mnftCopyFilePath_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button mnft && mnft.DataContext is FilesToModifyAdded file)
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
             {
                 CopyToClipboard.CopyStringToClipboard(file.FilePath);
             }
@@ -395,7 +415,7 @@ namespace Vusic_Player.Pages.Views
       
         private void mnftCopyReverbOutputFilePath_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button mnft && mnft.DataContext is FilesToModifyAdded file)
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
             {
                 CopyToClipboard.CopyStringToClipboard(file.OutputPath);
             }
@@ -409,6 +429,54 @@ namespace Vusic_Player.Pages.Views
                 {
                     wind.ShowFileInfo(file.OutputPath);
                 }
+            }
+        }
+
+        private void mnftPlayOriginal_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
+            {
+                PlayerService.OpenPath(file.FilePath);
+            }
+        }
+
+        private void mnftPlayOutput_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
+            {
+                PlayerService.OpenPath(file.OutputPath);
+            }
+        }
+
+        private async void mnftAddToQueueOutput_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
+            {
+                var stfile = await StorageFile.GetFileFromPathAsync(file.OutputPath);
+                var musicprops = await stfile.Properties.GetMusicPropertiesAsync();
+                QueueService.VusicQueue.Add(new SongModel { FilePath = file.OutputPath, Title = Path.GetFileNameWithoutExtension(file.OutputPath), SongDuration = musicprops.Duration });
+                QueueService.VusicQueueNext.Add(new SongModel { FilePath = file.OutputPath, SongDuration = musicprops.Duration , Title = Path.GetFileNameWithoutExtension(file.OutputPath) });
+            }
+        }
+
+        private async void btnPlayAllOutput_Click(object sender, RoutedEventArgs e)
+        {
+            var tempobservable = new ObservableCollection<SongModel>();
+            foreach(var item in ProcessedFiles)
+            {
+                tempobservable.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath });
+            }
+            QueueService.PlayMedia(tempobservable, false, false);
+        }
+
+        private async void btnAddtoQueueAllOutput_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in ProcessedFiles)
+            {
+                var file = await StorageFile.GetFileFromPathAsync(item.OutputPath);
+                var musicprops = await file.Properties.GetMusicPropertiesAsync();
+                QueueService.VusicQueue.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath, SongDuration = musicprops.Duration });
+                QueueService.VusicQueueNext.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath, SongDuration = musicprops.Duration });
             }
         }
     }

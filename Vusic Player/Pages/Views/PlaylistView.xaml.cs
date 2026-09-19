@@ -291,7 +291,7 @@ namespace Vusic_Player.Pages.Views
                                 }
                             }
                         }
-                        if(genreList.Count == 0)
+                        if (genreList.Count == 0)
                         {
                             txtGenreCov.Text = "";
                         }
@@ -607,7 +607,7 @@ namespace Vusic_Player.Pages.Views
                 txtPlaylistContentHeader.Visibility = hasSongsVisibility;
                 ListPanel.Visibility = hasSongsVisibility;
 
-               //       UpdateUI();
+                //       UpdateUI();
             }
             catch (Exception ex)
             {
@@ -782,6 +782,18 @@ namespace Vusic_Player.Pages.Views
         private void btnCancelEdit_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private async void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in SongCollection)
+            {
+                QueueService.VusicQueue.Add(item);
+                QueueService.VusicQueueNext.Add(item);
+            }
+            ttAddedtoQueue.IsOpen = true;
+            await Task.Delay(2000);
+            ttAddedtoQueue.IsOpen = false;
         }
     }
 

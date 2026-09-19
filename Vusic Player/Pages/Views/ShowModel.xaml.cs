@@ -249,6 +249,7 @@ namespace Vusic_Player.Pages.Views
                                                     try
                                                     {
                                                         targetEpisodeModel.Description = description;
+                                                        targetEpisodeModel.DurationTimeSpan = videoproperties.Duration;
                                                         targetEpisodeModel.Duration = durationString;
                                                         var bitmap = new BitmapImage();
                                                         using (var stream = File.OpenRead(tempFile))
@@ -591,7 +592,7 @@ namespace Vusic_Player.Pages.Views
                 CheckForUnlinkedSeasons();
             }
         }
-        
+
         private void grdViewSeasons_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (e.ClickedItem is PlaylistItem season)
@@ -796,7 +797,7 @@ namespace Vusic_Player.Pages.Views
                     dtPickerReleaseDate.Visibility = Visibility.Collapsed;
                     txtGenreEdit.Visibility = Visibility.Collapsed;
                     txtTagsEdit.Visibility = Visibility.Collapsed;
-                    
+
                 }
             }
         }
@@ -1161,7 +1162,7 @@ namespace Vusic_Player.Pages.Views
         {
             if (Directory.Exists(CurrentSeasonDirectory))
             {
-                
+
                 Process.Start("explorer.exe", $"\"{CurrentSeasonDirectory}\"");
             }
             else
@@ -1189,6 +1190,24 @@ namespace Vusic_Player.Pages.Views
                 {
                     App.NavigationFrame.Navigate(typeof(VideoPlayer), new VideoProgress { FilePath = episode.FilePath, IsEpisode = true });
                 }
+            }
+        }
+
+        private void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
+        {
+            var observablesongcollection = new ObservableCollection<SongModel>();
+            if (currentshow == null) return;
+            foreach (var item in EpisodesList)
+            {
+                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath, SongDuration = item.DurationTimeSpan });
+            }
+            foreach (var item in observablesongcollection)
+            {
+                QueueService.VusicQueue.Add(item);
+            }
+            foreach (var item in observablesongcollection)
+            {
+                QueueService.VusicQueueNext.Add(item);
             }
         }
     }

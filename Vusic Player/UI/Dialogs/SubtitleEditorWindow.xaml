@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Vusic_Player.UI.Dialogs.SubtitleEditorWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:subtitle="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle"
+    mc:Ignorable="d"
+    Title="SubtitleEditorWindow">
+
+   
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Name="DragRegion" IsHitTestVisible="True" Background="Transparent" Height="34" VerticalAlignment="Top">
+            <Button BorderBrush="Transparent" HorizontalAlignment="Right" ToolTipService.ToolTip="Maximize" x:Name="MaximizeButton" 
+            Grid.Column="1"
+            Width="46" Height="32"
+            Style="{StaticResource DefaultButtonStyle}"
+            Background="Transparent"
+            Click="MaximizeButton_Click">
+                <FontIcon x:Name="MaximizeIcon" Glyph="&#xE922;" FontSize="10" />
+            </Button>
+        </Grid>
+
+        <subtitle:SubtitleEditorUI Grid.Row="1"/>
+    </Grid>
+</Window>

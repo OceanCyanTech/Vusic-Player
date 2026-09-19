@@ -104,6 +104,11 @@ ItemClick="grdvRecents_ItemClick"  Margin="0, 0" ScrollViewer.HorizontalScrollMo
                                                 <FontIcon Glyph="d"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutItem Name="mnftAddtoQueue" Text="Add to Queue" Click="mnftAddtoQueue_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                         <MenuFlyoutItem Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"></FontIcon>

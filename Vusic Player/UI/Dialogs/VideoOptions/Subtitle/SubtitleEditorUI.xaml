@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.Dialogs.VideoOptions.Subtitle.SubtitleEditorUI"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <local:CountToCueConverter x:Key="CountToCueConv"/>
+    </UserControl.Resources>
+    <Grid Margin="30, 10" RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Subtitle Editor" Grid.Row="0" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+
+        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="1">
+            <Button Name="tglView" ToolTipService.ToolTip="Toggle View" Content="Text Editor" Click="tglView_Click_1" Style="{StaticResource AccentButtonStyle}"/>
+            <Button Name="btnNewSubtitleFile" Click="btnNewSubtitleFile_Click">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="20" Source="/Assets/addicon.png"/>
+                    <TextBlock Text="New Subtitle File"/>
+                </StackPanel>
+            </Button>
+            <Button Name="btnLoadSubtitleFile" Click="btnLoadSubtitleFile_Click">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <TextBlock Text="Load Subtitle File"/>
+                </StackPanel>
+            </Button>
+
+            <Button Name="btnSaveFile" IsEnabled="False"  Click="btnSaveFile_Click">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="S"/>
+                </Button.KeyboardAccelerators>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <TextBlock Text="Save File"/>
+                </StackPanel>
+            </Button>
+            <Button Name="btnSaveAsFile"  IsEnabled="False"   Click="btnSaveAsFile_Click">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <TextBlock Text="Save As"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <MenuFlyoutSeparator Grid.Row="2"/>
+        <TextBlock Text="File Name" Name="txtFileName" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}">
+            <TextBlock.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="d"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Rename File" Name="mnftRenameSubtitle" Click="mnftRenameSubtitle_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="d"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Open File Location" Name="mnftOpenFileLoc" Click="mnftOpenFileLoc_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="d"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                </MenuFlyout>
+            </TextBlock.ContextFlyout>
+        </TextBlock> 
+        <Grid Grid.Row="4" Name="grdVisualEditor" ColumnSpacing="40">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Subtitle Cue" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBox TextChanged="txtTranscript_TextChanged" Name="txtTranscript" Grid.Row="1" PlaceholderText="Select a subtitle in the list to load it here..."/>
+                <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="10" Grid.Row="2">
+                    <Button Visibility="Collapsed" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Name="btnAddSubtitle" Click="btnAddSubtitle_Click" Content="Add Subtitle" Grid.Row="2"/>
+                    <Button HorizontalAlignment="Stretch" Name="btnRemoveSubtitle" Click="btnRemoveSubtitle_Click" Content="Remove Subtitle" Grid.Row="2"/>
+
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="3">
+                    <Button Name="btnInsertBelow" Click="btnInsertBelow_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Image Width="20" Source="/Assets/appicon.png"/>
+                            <TextBlock Text="Insert New Subtitle Below"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Name="btnInsertAbove" Click="btnInsertAbove_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Image Width="20" Source="/Assets/appicon.png"/>
+                            <TextBlock Text="Insert New Subtitle Above"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
+                    <StackPanel Orientation="Vertical" Spacing="10">
+                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}"  Text="Subtitle Duration"/>
+                        <NumberBox Name="subDifference" Minimum="0"/>
+                    </StackPanel>
+                    <TextBlock VerticalAlignment="Bottom" Margin="0, 10" Text="seconds"/>
+                </StackPanel>
+                <Grid Grid.Row="5"  ColumnSpacing="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Spacing="15">
+                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Start Time"/>
+                        <TextBox  Text="00:00:00.000" Name="txtStartTime"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="15">
+                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="End Time"/>
+                        <TextBox Text="00:00:00.000" Name="txtEndTime"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Subtitles" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="{x:Bind Subtitles.Count, Mode=OneWay, Converter={StaticResource CountToCueConv}}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="1"/>
+                <Grid Name="grdColumnHeaders" Visibility="Collapsed" Grid.Row="2" ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="&#xED1E;"  FontSize="12" />
+                    <TextBlock HorizontalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" Text="Subtitle" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}"  Text="Start Time" Grid.Column="2"/>
+                    <TextBlock HorizontalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}"  Text="End Time" Grid.Column="3"/>
+                </Grid>
+                <ListView ItemClick="lstViewSubtitles_ItemClick" IsItemClickEnabled="True"   Name="lstViewSubtitles" ItemsSource="{x:Bind Subtitles, Mode=OneWay}" Grid.Row="3">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnSpacing="30" Margin="0, 12">
+                                <Grid.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Edit Subtitle" Name="mnftEditSubtitle" Click="mnftEditSubtitle_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Copy Subtitle" Name="mnftCopySubtitle" Click="mnftCopySubtitle_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Copy Subtitle with Timestamps" Name="mnftCopySubtitlewithTimestamps" Click="mnftCopySubtitlewithTimestamps_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Remove Subtitle" Name="mnftRemoveSubtitle" Click="mnftRemoveSubtitle_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Text="Insert Subtitle Above">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Insert Subtitle Below">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="d"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                    </MenuFlyout>
+                                </Grid.ContextFlyout>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <FontIcon FontSize="14" Glyph="&#xED1E;"/>
+                                <TextBlock Text="{Binding Text}" Grid.Column="1"/>
+                                <TextBlock   Text="{Binding StartString}" Grid.Column="2"/>
+                                <TextBlock  Text="{Binding EndString}" Grid.Column="3"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <StackPanel HorizontalAlignment="Center" Name="stkNoSubtitles" VerticalAlignment="Center" Orientation="Vertical" Spacing="30" Grid.Row="3">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Source="/Assets/appicon.png" Width="30"/>
+                        <TextBlock Text="There are no subtitles to display!" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    </StackPanel>
+                    <TextBlock HorizontalAlignment="Center" Text="Import an existing subtitle file or create a new one."/>
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10">
+                        <Button Name="btnNewSubtitleFile2" Click="btnNewSubtitleFile_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Image Width="20" Source="/Assets/addicon.png"/>
+                                <TextBlock Text="New Subtitle File"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Name="btnLoadSubtitleFile2" Click="btnLoadSubtitleFile_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Image Width="20" Source="/Assets/appicon.png"/>
+                                <TextBlock Text="Load Subtitle File"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</UserControl>

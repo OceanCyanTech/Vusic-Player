@@ -67,6 +67,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20">
@@ -191,6 +192,7 @@ CornerRadius="16"
                 <ContentDialog Title="Are you sure you want to delete this playlist?" Content="This cannot be undone!" Name="dlgDeleteConfirmPlaylist" PrimaryButtonText="Delete" DefaultButton="Primary" CloseButtonText="Cancel" PrimaryButtonClick="dlgDeleteConfirmPlaylist_PrimaryButtonClick"></ContentDialog>
 
                 <Button Name="btnEditPlaylistInfo" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="3" Margin="0, 20" HorizontalAlignment="Center" Content="Edit Playlist Info" Click="btnEditPlaylistInfo_Click"></Button>
+                <Button Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="4" Margin="0, 20" HorizontalAlignment="Center" Content="Add Playlist to Queue" Click="btnAddtoQueue_Click"></Button>
             </Grid>
 
             <StackPanel Orientation="Horizontal" Name="stkLoading" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20" Grid.Column="1">
@@ -213,6 +215,12 @@ CornerRadius="16"
                     </StackPanel>
                 </Button>
             </StackPanel>
+            <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="25" Source="/Assets/success.png"/>
+                    <TextBlock Text="Added selected item(s) to Queue"/>
+                </StackPanel>
+            </TeachingTip>
             <Grid VerticalAlignment="Stretch" Margin="10, 0" Name="ListPanel" Grid.Column="1">
                 <Grid  >
                     <Grid.RowDefinitions>

@@ -330,5 +330,14 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 
             QueueService.PlayMedia(temp, false, false);
         }
+
+        private void mnftAddtoQueue_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vd)
+            {
+                QueueService.VusicQueue.Add(new SongModel { IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, FilePath = vd.FilePath, Title = vd.FileName, Glyph = "\uE8B2" });
+                QueueService.VusicQueueNext.Add(new SongModel { IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, FilePath = vd.FilePath, Title = vd.FileName, Glyph = "\uE8B2" });
+            }
+        }
     }
 }

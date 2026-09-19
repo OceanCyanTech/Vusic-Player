@@ -27,6 +27,7 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
+using Vusic_Player.UI.Dialogs;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Page = Microsoft.UI.Xaml.Controls.Page;
@@ -48,10 +49,13 @@ namespace Vusic_Player.Pages
             App.NavigationFrame = frmMain;
             App.VideoPlayerFrame = frmVid;
             App.MasterFrame = frmRoot;
-            frmMain.Navigate(typeof(ReverbExpanded));
+            frmMain.Navigate(typeof(HomeView));
             PlayerService.mainXamlRoot = XamlRoot;
-
+            SubtitleEditorWindow subtitleEditorWindow = new SubtitleEditorWindow();
+            subtitleEditorWindow.Activate();
+            App.SubtitleEditorDialogInstance = subtitleEditorWindow;
             _originalHeader = nvgMain.Header;
+
         }
        
         private void UpdatePlaceholderText()

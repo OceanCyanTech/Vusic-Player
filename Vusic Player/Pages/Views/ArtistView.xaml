@@ -266,8 +266,15 @@ ToolTipService.ToolTip="Set Artist Cover">
                     </Button>
                 </ItemsControl>
             </Border>
+            <Button Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="3" Margin="0, 20" HorizontalAlignment="Center" Content="Add all Artist Songs to Queue" Click="btnAddtoQueue_Click"></Button>
 
         </Grid>
+        <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Image Width="25" Source="/Assets/success.png"/>
+                <TextBlock Text="Added item(s) to Queue"/>
+            </StackPanel>
+        </TeachingTip>
         <Grid Margin="10, 0" Grid.Column="1" RowSpacing="30">
             <Grid.RowDefinitions>
                 <!-- Row 0: Page header and top collections (Albums, Singles, Most Played) -->
@@ -305,13 +312,20 @@ ToolTipService.ToolTip="Set Artist Cover">
                 <TextBlock Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0" Text="Your most played"></TextBlock>
                 <TextBlock  Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtMostPlayedCount" Text="• 0 items"></TextBlock>
                 <TextBlock  Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtMostPlayedDuration" Text="• 00:00"></TextBlock>
-
+                <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="10">
                 <Button Click="btnPlayAllMostPlayed_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllMostPlayed" Grid.Row="3" Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <FontIcon Glyph="d"/>
                         <TextBlock Text="Play All"/>
                     </StackPanel>
-                </Button>
+                    </Button>
+                    <Button Click="btnAddtoQueueMostPlayed_Click" ToolTipService.ToolTip="Add all songs in list to Queue" Name="btnAddtoQueueMostPlayed" Grid.Row="3" >
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <FontIcon Glyph="d"/>
+                            <TextBlock Text="Add to Queue"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
                 <TextBlock Text="Play songs of this artist to show them here!" Grid.Row="4" Name="txtEmptyMostPlayed" Visibility="Visible"></TextBlock>
                 <vusic:ListViewMedia MediaSource="ArtistNoRearrange" Grid.Row="4" Visibility="Collapsed" AllowRearranging="False" x:Name="lstViewMasterMostPlayed"></vusic:ListViewMedia>
             </Grid>

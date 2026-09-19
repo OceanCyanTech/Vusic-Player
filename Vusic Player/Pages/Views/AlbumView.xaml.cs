@@ -789,4 +789,16 @@ public sealed partial class AlbumView : Page
         // Don't forget to save the changes back to storage!
         await SettingsLoader.SaveSettingsAsync(currentSettings);
     }
+
+    private async void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var item in FoundSongs)
+        {
+            QueueService.VusicQueue.Add(item);
+            QueueService.VusicQueueNext.Add(item);
+        }
+        ttAddedtoQueue.IsOpen = true;
+        await Task.Delay(2000);
+        ttAddedtoQueue.IsOpen = false;
+    }
 }
