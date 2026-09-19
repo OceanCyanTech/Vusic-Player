@@ -88,7 +88,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             btnSaveFile.IsEnabled = true;
             btnSaveAsFile.IsEnabled = true;
             txtFileName.Text = Path.GetFileNameWithoutExtension(subtitlefile.Path);
-            ToolTipService.SetToolTip(txtFileName, storagefile.Path);
+            ToolTipService.SetToolTip(txtFileName, subtitlefile.Path);
 
             var regex = new Regex(
         @"(?<start>\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(?<end>\d{2}:\d{2}:\d{2}[,\.]\d{3})[^\r\n]*\r?\n(?<text>(?:(?!\r?\n\r?\n|\r?\n\d+\r?\n|\r?\n\d{2}:\d{2}).)+)",
@@ -222,7 +222,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
                 await FileIO.WriteTextAsync(file, newContent, Windows.Storage.Streams.UnicodeEncoding.Utf8);
                 FilePathOpened = file.Path;
                 txtFileName.Text = Path.GetFileNameWithoutExtension(file.Path);
-                ToolTipService.SetToolTip(txtFileName, storagefile.Path);
+                ToolTipService.SetToolTip(txtFileName, file.Path);
 
             }
         }
@@ -231,7 +231,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
         {
             Subtitles.Clear();
             txtFileName.Text = "Untitled";
-            ToolTipService.SetToolTip(txtFileName, storagefile.Path);
+            ToolTipService.SetToolTip(txtFileName, "");
 
             txtTranscript.Text = "";
             txtStartTime.Text = "00:00:00.000";
@@ -262,7 +262,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             {
                 txtTranscript.Text = subtitle.Text;
                 txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened);
-                ToolTipService.SetToolTip(txtFileName, storagefile.Path);
+                ToolTipService.SetToolTip(txtFileName, FilePathOpened);
 
                 var difference = subtitle.EndTime - subtitle.StartTime;
                 subDifference.Value = difference.TotalSeconds;
@@ -277,7 +277,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             {
                 txtTranscript.Text = subtitle.Text;
                 txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened);
-                ToolTipService.SetToolTip(txtFileName, storagefile.Path);
+                ToolTipService.SetToolTip(txtFileName, FilePathOpened);
 
                 var difference = subtitle.EndTime - subtitle.StartTime;
                 subDifference.Value = difference.TotalSeconds;
