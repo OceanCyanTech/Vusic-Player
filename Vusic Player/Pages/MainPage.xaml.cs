@@ -51,9 +51,7 @@ namespace Vusic_Player.Pages
             App.MasterFrame = frmRoot;
             frmMain.Navigate(typeof(HomeView));
             PlayerService.mainXamlRoot = XamlRoot;
-            SubtitleEditorWindow subtitleEditorWindow = new SubtitleEditorWindow();
-            subtitleEditorWindow.Activate();
-            App.SubtitleEditorDialogInstance = subtitleEditorWindow;
+            
             _originalHeader = nvgMain.Header;
 
         }

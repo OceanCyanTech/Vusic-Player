@@ -1,3 +1,5 @@
+using Flyleaf.FFmpeg;
+using FlyleafLib.MediaFramework.MediaStream;
 using FlyleafLib.MediaPlayer;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -10,14 +12,19 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.SubtitlesProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Extensions;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
@@ -26,6 +33,7 @@ using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
+using Stream = Vusic_Player.Configuration.Helper.SubtitlesProperties.Stream;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -55,22 +63,139 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
         public SubtitleEditorUI()
         {
             InitializeComponent();
+            this.Loaded += SubtitleEditorUI_Loaded;
+        }
+
+        private void SubtitleEditorUI_Loaded(object sender, RoutedEventArgs e)
+        {
+            chkFromVideo.IsChecked = true;
+            if(cmbEmbeddedSubTracks.Items.Count != 0)
+            {
+                ComboBoxSelection(0);
+            }
+            PlayerService.SeekCompleted += PlayerService_SeekCompleted;
+        }
+
+        private void PlayerService_SeekCompleted(int obj)
+        {
+            if (chkFromVideo.IsChecked == false) return;
+            TimeSpan timespan = TimeSpan.FromMilliseconds(obj);
+            Debug.WriteLine("RECEIVED SEEK: " + timespan.ToString());
+            var currentCue = Subtitles.FirstOrDefault(cue =>
+    timespan >= cue.StartTime && timespan <= cue.EndTime);
+            if (currentCue != null)
+            {
+                // Avoid re-triggering selection changes if it's already selected
+                if (lstViewSubtitles.SelectedItem != currentCue)
+                {
+                    lstViewSubtitles.SelectedItem = currentCue;
+                    txtTranscript.Text = currentCue.Text;
+                    txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened);
+                    ToolTipService.SetToolTip(txtFileName, FilePathOpened);
+
+                    var difference = currentCue.EndTime - currentCue.StartTime;
+                    subDifference.Value = difference.TotalSeconds;
+                    txtStartTime.Text = currentCue.StartString;
+                    txtEndTime.Text = currentCue.EndString;
+                    // Automatically scroll to keep the active subtitle in view
+                    lstViewSubtitles.ScrollIntoView(currentCue);
+                }
+            }
+            else
+            {
+                // Optional: Deselect if position is currently between cues
+                lstViewSubtitles.SelectedItem = null;
+            }
         }
 
         private void btnInsertAbove_Click(object sender, RoutedEventArgs e)
         {
+            if (Subtitles.Count == 0)
+            {
+                var startTime = TimeSpan.Zero;
+
+                var endTime = startTime.Add(TimeSpan.FromSeconds(3));
+                string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                Subtitles.Add(new SubtitleCueModel { StartTime = TimeSpan.Zero, EndTime = endTime, StartString = startTime.ToString(format), EndString = endTime.ToString(endFormat) });
+                return;
+            }
+            if (lstViewSubtitles.SelectedItem is SubtitleCueModel subtitle)
+            {
+                int index = Subtitles.IndexOf(subtitle);
+                Debug.WriteLine(index);
+                var endTime = subtitle.EndTime;
+                var startTime = subtitle.StartTime;
+                string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                var newSubtitle = new SubtitleCueModel { StartTime = startTime, EndTime = endTime, StartString = startTime.ToString(format), EndString = endTime.ToString(endFormat) };
+                for (int i = index; i < Subtitles.Count; i++)
+                {
+                    Debug.WriteLine(i);
+
+                    var nextitem = Subtitles[i];
+                    nextitem.StartTime = nextitem.StartTime.Add(TimeSpan.FromSeconds(3.5));
+                    nextitem.EndTime = nextitem.EndTime.Add(TimeSpan.FromSeconds(3.5));
+
+                    string format2 = nextitem.StartTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    string endFormat2 = nextitem.EndTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    nextitem.StartString = nextitem.StartTime.ToString(format2);
+                    nextitem.EndString = nextitem.EndTime.ToString(endFormat2);
+
+                }
+
+                Subtitles.Insert(index, newSubtitle);
+                lstViewSubtitles.SelectedIndex = index;
+                txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened) + "*";
+                ToolTipService.SetToolTip(txtFileName, "Pending Changes to be saved");
+            }
 
         }
 
         private void btnInsertBelow_Click(object sender, RoutedEventArgs e)
         {
+            if (Subtitles.Count == 0)
+            {
+                var startTime = TimeSpan.Zero;
 
+                var endTime = startTime.Add(TimeSpan.FromSeconds(3));
+                string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                Subtitles.Add(new SubtitleCueModel { StartTime = TimeSpan.Zero, EndTime = endTime, StartString = startTime.ToString(format), EndString = endTime.ToString(endFormat) });
+                return;
+            }
+            if (lstViewSubtitles.SelectedItem is SubtitleCueModel subtitle)
+            {
+                int index = Subtitles.IndexOf(subtitle);
+                Debug.WriteLine(index);
+                var startTime = subtitle.EndTime.Add(TimeSpan.FromMilliseconds(500));
+                var endTime = startTime.Add(TimeSpan.FromSeconds(3));
+                string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                var newSubtitle = new SubtitleCueModel { StartTime = startTime, EndTime = endTime, StartString = startTime.ToString(format), EndString = endTime.ToString(endFormat) };
+                Subtitles.Insert(index + 1, newSubtitle);
+                lstViewSubtitles.SelectedIndex = index + 1;
+
+                for (int i = index + 2; i < Subtitles.Count; i++)
+                {
+                    Debug.WriteLine(i);
+
+                    var nextitem = Subtitles[i];
+                    nextitem.StartTime = nextitem.StartTime.Add(TimeSpan.FromSeconds(3.5));
+                    nextitem.EndTime = nextitem.EndTime.Add(TimeSpan.FromSeconds(3.5));
+
+                    string format2 = nextitem.StartTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    string endFormat2 = nextitem.EndTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    nextitem.StartString = nextitem.StartTime.ToString(format2);
+                    nextitem.EndString = nextitem.EndTime.ToString(endFormat2);
+
+                }
+                txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened) + "*";
+                ToolTipService.SetToolTip(txtFileName, "Pending Changes to be saved");
+            }
         }
 
-        private void tglView_Checked(object sender, RoutedEventArgs e)
-        {
 
-        }
         ObservableCollection<SubtitleCueModel> Subtitles = new ObservableCollection<SubtitleCueModel>();
         private async void btnLoadSubtitleFile_Click(object sender, RoutedEventArgs e)
         {
@@ -91,9 +216,15 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             ToolTipService.SetToolTip(txtFileName, subtitlefile.Path);
 
             var regex = new Regex(
-        @"(?<start>\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(?<end>\d{2}:\d{2}:\d{2}[,\.]\d{3})[^\r\n]*\r?\n(?<text>(?:(?!\r?\n\r?\n|\r?\n\d+\r?\n|\r?\n\d{2}:\d{2}).)+)",
-        RegexOptions.Singleline);
+         @"(?<start>\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(?<end>\d{2}:\d{2}:\d{2}[,\.]\d{3})[^\r\n]*(?:\r?\n(?<text>(?:(?!\r?\n\r?\n|\r?\n\d+\r?\n|\r?\n\d{2}:\d{2}).)*))?",
+         RegexOptions.Singleline);
             string rawContent = await FileIO.ReadTextAsync(subtitlefile);
+            rawcontent = rawContent;
+            if (tglView.Content.ToString() == "Visual Editor")
+            {
+                txtTextEditor.Text = rawContent;
+                return;
+            }
             MatchCollection matches = regex.Matches(rawContent);
 
             foreach (Match match in matches)
@@ -122,8 +253,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
                 }
             }
         }
-
-        private async void btnSaveFile_Click(object sender, RoutedEventArgs e)
+        private async void SaveFile()
         {
             var sb = new StringBuilder();
             int index = 1;
@@ -149,6 +279,8 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             if (File.Exists(FilePathOpened))
             {
                 var storagefile = await StorageFile.GetFileFromPathAsync(FilePathOpened);
+                rawcontent = sb.ToString();
+
                 await FileIO.WriteTextAsync(storagefile, sb.ToString(), Windows.Storage.Streams.UnicodeEncoding.Utf8);
                 txtFileName.Text = Path.GetFileNameWithoutExtension(storagefile.Path);
                 ToolTipService.SetToolTip(txtFileName, storagefile.Path);
@@ -171,17 +303,23 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
                 if (file != null)
                 {
                     string newContent = sb.ToString();
+                    rawcontent = newContent;
+
                     await FileIO.WriteTextAsync(file, newContent, Windows.Storage.Streams.UnicodeEncoding.Utf8);
                     FilePathOpened = file.Path;
 
                     txtFileName.Text = Path.GetFileNameWithoutExtension(file.Path);
-                    ToolTipService.SetToolTip(txtFileName, storagefile.Path);
+                    ToolTipService.SetToolTip(txtFileName, file.Path);
 
                 }
             }
-        }
 
-        private async void btnSaveAsFile_Click(object sender, RoutedEventArgs e)
+        }
+        private async void btnSaveFile_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFile();
+        }
+        private async void SaveAsFile()
         {
             var sb = new StringBuilder();
             int index = 1;
@@ -214,17 +352,23 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             picker.SuggestedStartLocation = PickerLocationId.VideosLibrary;
             picker.FileTypeChoices.Add("SubRip Subtitle", new List<string> { ".srt" });
             picker.SuggestedFileName = txtFileName.Text;
-
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {
                 string newContent = sb.ToString();
+                rawcontent = newContent;
+
                 await FileIO.WriteTextAsync(file, newContent, Windows.Storage.Streams.UnicodeEncoding.Utf8);
                 FilePathOpened = file.Path;
                 txtFileName.Text = Path.GetFileNameWithoutExtension(file.Path);
                 ToolTipService.SetToolTip(txtFileName, file.Path);
 
             }
+
+        }
+        private async void btnSaveAsFile_Click(object sender, RoutedEventArgs e)
+        {
+            SaveAsFile();
         }
 
         private async void btnNewSubtitleFile_Click(object sender, RoutedEventArgs e)
@@ -238,6 +382,9 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             txtEndTime.Text = "00:00:00.000";
             subDifference.Value = 0;
             FilePathOpened = "";
+            txtTextEditor.Text = "";
+            chkFromVideo.IsChecked = false;
+        
         }
 
 
@@ -248,10 +395,72 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
                 if (str == "Text Editor")
                 {
                     btn.Content = "Visual Editor";
+                    grdTextEditor.Visibility = Visibility.Visible;
+                    grdVisualEditor.Visibility = Visibility.Collapsed;
+                    var sb = new StringBuilder();
+                    int index = 1;
+
+                    foreach (var cue in Subtitles)
+                    {
+                        // 1. Cue index (must be sequential starting from 1)
+                        sb.AppendLine(index.ToString());
+
+                        // 2. Timestamps formatted with comma for milliseconds
+                        string start = cue.StartTime.ToString(@"hh\:mm\:ss\,fff");
+                        string end = cue.EndTime.ToString(@"hh\:mm\:ss\,fff");
+                        sb.AppendLine($"{start} --> {end}");
+
+                        // 3. Subtitle text
+                        sb.AppendLine(cue.Text);
+
+                        // 4. Blank separator line
+                        sb.AppendLine();
+
+                        index++;
+                    }
+                    txtTextEditor.Text = sb.ToString();
+                    rawcontent = sb.ToString();
                 }
                 else
                 {
                     btn.Content = "Text Editor";
+                    grdTextEditor.Visibility = Visibility.Collapsed;
+                    grdVisualEditor.Visibility = Visibility.Visible;
+                    Subtitles.Clear();
+
+                    // 1. Force all newlines (lone \r, \n, or \r\n) to standard \r\n
+                    string rawContent = txtTextEditor.Text;
+                    rawContent = rawContent.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
+
+                    // 2. This regex will now match consistently every time
+                    var regex = new Regex(
+    @"(?<start>\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(?<end>\d{2}:\d{2}:\d{2}[,\.]\d{3})[^\r\n]*\r\n(?<text>.*?(?=(\r\n\s*\r\n|\r\n(?:\d+\r\n)?\d{2}:\d{2}:\d{2}|\z)))",
+    RegexOptions.Singleline);
+
+                    MatchCollection matches = regex.Matches(rawContent);
+
+                    foreach (Match match in matches)
+                    {
+                        string text = match.Groups["text"].Value.Trim();
+                        string startRaw = match.Groups["start"].Value.Replace(',', '.');
+                        string endRaw = match.Groups["end"].Value.Replace(',', '.');
+
+                        if (TimeSpan.TryParse(startRaw, out TimeSpan startTime) &&
+                            TimeSpan.TryParse(endRaw, out TimeSpan endTime))
+                        {
+                            string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                            string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+
+                            Subtitles.Add(new SubtitleCueModel
+                            {
+                                Text = text,
+                                StartTime = startTime,
+                                EndTime = endTime,
+                                StartString = startTime.ToString(format),
+                                EndString = endTime.ToString(endFormat)
+                            });
+                        }
+                    }
                 }
             }
         }
@@ -330,7 +539,15 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
 
         private void mnftRenameSubtitle_Click(object sender, RoutedEventArgs e)
         {
-
+            if (FilePathOpened == "")
+            {
+                SaveAsFile();
+            }
+            else
+            {
+                ttRenameFile.IsOpen = true;
+                txtRename.Text = txtFileName.Text;
+            }
         }
 
         private void mnftOpenFileLoc_Click(object sender, RoutedEventArgs e)
@@ -359,13 +576,452 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
                 subtitle.Text = txtTranscript.Text;
                 txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened) + "*";
                 ToolTipService.SetToolTip(txtFileName, "Pending Changes to be saved");
-             
+
             }
         }
 
-        private void btnAddSubtitle_Click(object sender, RoutedEventArgs e)
-        {
 
+        string rawcontent = "";
+        private void txtStartTime_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string[] allowedFormats = new[]
+{
+    @"hh\:mm\:ss\.fff", // 00:01:23.456 (WebVTT style)
+    @"mm\:ss\.fff", // 00:01:23.456 (WebVTT style)
+    @"mm\:ss\,fff",  // 00:01:23,456 (SRT style)
+    @"hh\:mm\:ss\,fff"  // 00:01:23,456 (SRT style)
+};
+            bool isValid = TimeSpan.TryParseExact(
+    txtStartTime.Text,
+allowedFormats,
+    CultureInfo.InvariantCulture,
+    out TimeSpan parsedTime);
+
+            if (!isValid)
+            {
+                ifbErrorStartTime.Title = "Error";
+                ifbErrorStartTime.Message = "Invalid format for start time.";
+                ifbErrorStartTime.Severity = InfoBarSeverity.Error;
+                ifbErrorStartTime.IsOpen = true;
+            }
+            else
+            {
+                ifbErrorStartTime.IsOpen = false;
+                if (lstViewSubtitles.SelectedItem is SubtitleCueModel subtitle)
+                {
+                    subtitle.StartTime = parsedTime;
+                    string format = parsedTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    subtitle.StartString = parsedTime.ToString(format);
+                }
+            }
+
+        }
+
+        private void txtEndTime_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string[] allowedFormats = new[]
+{
+    @"hh\:mm\:ss\.fff", // 00:01:23.456 (WebVTT style)
+    @"mm\:ss\.fff", // 00:01:23.456 (WebVTT style)
+    @"mm\:ss\,fff",  // 00:01:23,456 (SRT style)
+    @"hh\:mm\:ss\,fff"  // 00:01:23,456 (SRT style)
+};
+            bool isValid = TimeSpan.TryParseExact(
+    txtEndTime.Text,
+allowedFormats,
+    CultureInfo.InvariantCulture,
+    out TimeSpan parsedTime);
+
+            if (!isValid)
+            {
+                ifbErrorEndTime.Title = "Error";
+                ifbErrorEndTime.Message = "Invalid format for end time.";
+                ifbErrorEndTime.Severity = InfoBarSeverity.Error;
+                ifbErrorEndTime.IsOpen = true;
+            }
+            else
+            {
+                ifbErrorEndTime.IsOpen = false;
+                if (lstViewSubtitles.SelectedItem is SubtitleCueModel subtitle)
+                {
+                    subtitle.EndTime = parsedTime;
+                    string format = parsedTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    subtitle.EndString = parsedTime.ToString(format);
+                }
+            }
+        }
+
+        private void subDifference_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            if (lstViewSubtitles.SelectedItem is SubtitleCueModel subtitle)
+            {
+                var endtime = subtitle.StartTime.Add(TimeSpan.FromSeconds(subDifference.Value));
+
+                string format = endtime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+
+                txtEndTime.Text = endtime.ToString(format);
+
+                subtitle.EndTime = endtime;
+                subtitle.EndString = txtEndTime.Text;
+
+            }
+        }
+
+        private async void btnOfficialRename_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtRename.Text == "") return;
+            if (File.Exists(FilePathOpened))
+            {
+                var listoflocking = GetLockingProcess.GetLockingProcesses(FilePathOpened);
+                if (listoflocking.Count == 0)
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(FilePathOpened);
+
+                    try
+                    {
+                        await file.RenameAsync(txtRename.Text + ".srt", NameCollisionOption.FailIfExists);
+                    }
+                    catch (Exception ex)
+                    {
+                        ifbErrorRename.IsOpen = true;
+                        ifbErrorRename.Severity = InfoBarSeverity.Error;
+                        ifbErrorRename.Message = "Cannot rename file. Unexpected Error: " + ex.Message;
+                        ifbErrorRename.Title = "Rename Error";
+                    }
+                    finally
+                    {
+                        txtFileName.Text = txtRename.Text;
+                        FilePathOpened = file.Path;
+                        ttRenameFile.IsOpen = false;
+                    }
+                }
+                else
+                {
+                    ifbErrorRename.IsOpen = true;
+                    ifbErrorRename.Severity = InfoBarSeverity.Error;
+                    ifbErrorRename.Message = "Cannot Rename File as it is in use by one or more processes.";
+                    ifbErrorRename.Title = "Rename Error";
+                }
+            }
+        }
+
+        private void btnUndo_Click(object sender, RoutedEventArgs e)
+        {
+            txtTextEditor.Undo();
+        }
+
+        private void btnRedo_Click(object sender, RoutedEventArgs e)
+        {
+            txtTextEditor.Redo();
+        }
+
+        private void btnCut_Click(object sender, RoutedEventArgs e)
+        {
+            txtTextEditor.CutSelectionToClipboard();
+        }
+
+        private void txtTextEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (txtTextEditor.Text == rawcontent)
+            {
+                txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened);
+            }
+            else
+            {
+                txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened) + "*";
+
+            }
+        }
+
+        private void btnCopy_Click(object sender, RoutedEventArgs e)
+        {
+            txtTextEditor.CopySelectionToClipboard();
+        }
+
+        private void btnPaste_Click(object sender, RoutedEventArgs e)
+        {
+            txtTextEditor.PasteFromClipboard();
+        }
+
+        private void btnSelectAll_Click(object sender, RoutedEventArgs e)
+        {
+            txtTextEditor.SelectAll();
+            txtTextEditor.Focus(FocusState.Programmatic);
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            txtTextEditor.Text = txtTextEditor.Text.Replace(txtTextEditor.SelectedText, "");
+        }
+
+        private void btnFind_Click(object sender, RoutedEventArgs e)
+        {
+            ttFind.IsOpen = true;
+            asbFind.Text = txtTextEditor.SelectedText;
+        }
+
+
+
+
+
+        private void btnReplace_Click(object sender, RoutedEventArgs e)
+        {
+            txtTextEditor.Text = txtTextEditor.Text.Replace(txtTextEditor.SelectedText, asbReplace.Text);
+
+        }
+        public void Save()
+        {
+            SaveFile();
+        }
+        private void btnFindActual_Click(object sender, RoutedEventArgs e)
+        {
+            string query = asbFind.Text;
+            if (string.IsNullOrEmpty(query))
+                return;
+
+            bool matchCase = btnCaseSensitive.IsChecked ?? false;
+            //     bool wrapAround = btnWrapAround.IsChecked ?? false;
+
+            var comparison = matchCase
+                ? StringComparison.CurrentCulture
+                : StringComparison.CurrentCultureIgnoreCase;
+
+            int startIndex = txtTextEditor.SelectionStart + txtTextEditor.SelectionLength;
+
+            // 1. Search forward from the current cursor/selection end
+            int index = txtTextEditor.Text.IndexOf(query, startIndex, comparison);
+
+            // 2. Wrap around to the start (0) if enabled and not found ahead
+            if (index == -1 && startIndex > 0)
+            {
+                index = txtTextEditor.Text.IndexOf(query, 0, comparison);
+            }
+
+            // 3. Handle match vs. no match
+            if (index != -1)
+            {
+                // Dismiss InfoBar on success
+                ifbFindError.IsOpen = false;
+
+                txtTextEditor.Focus(FocusState.Programmatic);
+                txtTextEditor.Select(index, query.Length);
+            }
+            else
+            {
+                // Display InfoBar with failure notice
+                ifbFindError.Title = "No results found";
+                ifbFindError.Message = $"Could not find \"{query}\".";
+                ifbFindError.Severity = InfoBarSeverity.Warning;
+                ifbFindError.IsOpen = true;
+            }
+        }
+
+        private void mnftInsertSubtitleAbove_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is SubtitleCueModel subtitle)
+            {
+                int index = Subtitles.IndexOf(subtitle);
+                Debug.WriteLine(index);
+                var endTime = subtitle.EndTime;
+                var startTime = subtitle.StartTime;
+                string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                var newSubtitle = new SubtitleCueModel { StartTime = startTime, EndTime = endTime, StartString = startTime.ToString(format), EndString = endTime.ToString(endFormat) };
+                for (int i = index; i < Subtitles.Count; i++)
+                {
+                    Debug.WriteLine(i);
+
+                    var nextitem = Subtitles[i];
+                    nextitem.StartTime = nextitem.StartTime.Add(TimeSpan.FromSeconds(3.5));
+                    nextitem.EndTime = nextitem.EndTime.Add(TimeSpan.FromSeconds(3.5));
+
+                    string format2 = nextitem.StartTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    string endFormat2 = nextitem.EndTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    nextitem.StartString = nextitem.StartTime.ToString(format2);
+                    nextitem.EndString = nextitem.EndTime.ToString(endFormat2);
+
+                }
+
+                Subtitles.Insert(index, newSubtitle);
+                lstViewSubtitles.SelectedIndex = index;
+                txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened) + "*";
+                ToolTipService.SetToolTip(txtFileName, "Pending Changes to be saved");
+            }
+
+        }
+        public Stream ViewModel { get; } = new();
+
+        private void mnftInsertSubtitleBelow_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is SubtitleCueModel subtitle)
+            {
+                int index = Subtitles.IndexOf(subtitle);
+                Debug.WriteLine(index);
+                var startTime = subtitle.EndTime.Add(TimeSpan.FromMilliseconds(500));
+                var endTime = startTime.Add(TimeSpan.FromSeconds(3));
+                string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                var newSubtitle = new SubtitleCueModel { StartTime = startTime, EndTime = endTime, StartString = startTime.ToString(format), EndString = endTime.ToString(endFormat) };
+                Subtitles.Insert(index + 1, newSubtitle);
+                lstViewSubtitles.SelectedIndex = index + 1;
+
+                for (int i = index + 2; i < Subtitles.Count; i++)
+                {
+                    Debug.WriteLine(i);
+
+                    var nextitem = Subtitles[i];
+                    nextitem.StartTime = nextitem.StartTime.Add(TimeSpan.FromSeconds(3.5));
+                    nextitem.EndTime = nextitem.EndTime.Add(TimeSpan.FromSeconds(3.5));
+
+                    string format2 = nextitem.StartTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    string endFormat2 = nextitem.EndTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    nextitem.StartString = nextitem.StartTime.ToString(format2);
+                    nextitem.EndString = nextitem.EndTime.ToString(endFormat2);
+
+                }
+                txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened) + "*";
+                ToolTipService.SetToolTip(txtFileName, "Pending Changes to be saved");
+            }
+
+        }
+        private async void ComboBoxSelection(int index)
+        {
+            if (PlayerService.Masterplayer == null) return;
+
+            var stringsubtitles = await ExtractSubtitlesAsync(PlayerService.CurrentPlayingPath, index);
+            var selectedStream = PlayerService.Masterplayer.Subtitles.Streams[0];
+            if (selectedStream.Codec.ToLower().Contains("pgs") ||
+                selectedStream.Codec.ToLower().Contains("dvd") ||
+                selectedStream.Codec.ToLower().Contains("bitmap"))
+            {
+                txtTextEditor.Text = "Selected subtitle track contains image/bitmap data and cannot be displayed as plain text.";
+                return;
+            }
+            if (ViewModel.CurrentStream != null)
+            {
+                txtFileName.Text = ViewModel.CurrentStream.Language.ToString();
+            }
+            if (tglView.Content.ToString() == "Visual Editor")
+            {
+                txtTextEditor.Text = stringsubtitles;
+                return;
+            }
+            var regex = new Regex(
+     @"(?<start>\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(?<end>\d{2}:\d{2}:\d{2}[,\.]\d{3})[^\r\n]*(?:\r?\n(?<text>(?:(?!\r?\n\r?\n|\r?\n\d+\r?\n|\r?\n\d{2}:\d{2}).)*))?",
+     RegexOptions.Singleline);
+            MatchCollection matches = regex.Matches(stringsubtitles);
+
+            foreach (Match match in matches)
+            {
+                string text = match.Groups["text"].Value.Trim();
+                string startRaw = match.Groups["start"].Value.Replace(',', '.');
+                string endRaw = match.Groups["end"].Value.Replace(',', '.');
+
+                if (TimeSpan.TryParse(startRaw, out TimeSpan startTime) &&
+                    TimeSpan.TryParse(endRaw, out TimeSpan endTime))
+                {
+                    // Format options:
+                    // @"hh\:mm\:ss"  -> "00:01:23"
+                    // @"m\:ss"       -> "1:23" (if under an hour)
+                    string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+                    string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
+
+                    Subtitles.Add(new SubtitleCueModel
+                    {
+                        Text = text,
+                        StartTime = startTime,
+                        EndTime = endTime,
+                        StartString = startTime.ToString(format),
+                        EndString = endTime.ToString(endFormat)
+                    });
+                }
+            }
+            stkNoSubtitles.Visibility = Visibility.Collapsed;
+            grdColumnHeaders.Visibility = Visibility.Visible;
+            mnftCopyFilePath.Visibility = Visibility.Visible;
+            mnftRenameSubtitle.Visibility = Visibility.Visible;
+            mnftOpenFileLoc.Visibility = Visibility.Visible;
+            btnSaveFile.IsEnabled = true;
+            btnSaveAsFile.IsEnabled = true;
+        }
+
+        private async void cmbEmbeddedSubTracks_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (chkFromVideo.IsChecked == false) return;
+            ComboBoxSelection(cmbEmbeddedSubTracks.SelectedIndex);
+        }
+        
+        public static async Task<string> ExtractSubtitlesAsync(string videoPath, int subStreamIndex = 0)
+        {
+            if (subStreamIndex < 0 || string.IsNullOrEmpty(videoPath))
+                return string.Empty;
+
+            string ffmpegPath = GetFFmpegPath();
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = ffmpegPath,
+                Arguments = $"-loglevel error -i \"{videoPath}\" -map 0:s:{subStreamIndex} -f srt -",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                StandardOutputEncoding = System.Text.Encoding.UTF8
+            };
+
+            using var process = new Process { StartInfo = psi };
+            process.Start();
+
+            // Read both streams asynchronously to avoid buffer blockages
+            var outputTask = process.StandardOutput.ReadToEndAsync();
+            var errorTask = process.StandardError.ReadToEndAsync();
+
+            await Task.WhenAll(outputTask, errorTask);
+            await process.WaitForExitAsync();
+
+            string error = await errorTask;
+            if (process.ExitCode != 0 && !string.IsNullOrWhiteSpace(error))
+            {
+                System.Diagnostics.Debug.WriteLine($"FFmpeg error: {error}");
+                return string.Empty;
+            }
+
+            return await outputTask;
+        }
+        private void btnGetCurrentTimeStart_Click(object sender, RoutedEventArgs e)
+        {
+            if (PlayerService.Masterplayer != null)
+            {
+                txtStartTime.Text = (TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime)).ToString(@"hh\:mm\:ss\.fff");
+            }
+        }
+        private static string GetFFmpegPath()
+        {
+            // Resolves bin/Debug/.../FFmpeg/ffmpeg.exe
+            string baseDir = AppContext.BaseDirectory;
+            string ffmpegPath = Path.Combine(baseDir, "FFmpeg", "ffmpeg.exe");
+
+            if (!File.Exists(ffmpegPath))
+            {
+                throw new FileNotFoundException(
+                    $"Bundled ffmpeg.exe was not found at: {ffmpegPath}. " +
+                    $"Ensure 'Copy to Output Directory' is set in your project file.");
+            }
+
+            return ffmpegPath;
+        }
+        private void btnGetCurrentTimeEnd_Click(object sender, RoutedEventArgs e)
+        {
+            if (PlayerService.Masterplayer != null)
+            {
+                txtEndTime.Text = (TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime)).ToString(@"hh\:mm\:ss\.fff");
+            }
+        }
+
+        private void chkFromVideo_Checked(object sender, RoutedEventArgs e)
+        {
+            cmbEmbeddedSubTracks.Visibility = chkFromVideo.IsChecked ?? false ? Visibility.Visible : Visibility.Collapsed;
+           
         }
     }
 }

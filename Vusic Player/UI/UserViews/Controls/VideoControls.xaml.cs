@@ -284,6 +284,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void mnftSubtitleEditor_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            SubtitleEditorWindow.ShowDialog();
         }
 
         private void mnftCustomizeSub_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

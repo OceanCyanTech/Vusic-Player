@@ -5,22 +5,56 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:flyleaf="using:FlyleafLib.MediaFramework.MediaStream"
     mc:Ignorable="d">
     <UserControl.Resources>
         <local:CountToCueConverter x:Key="CountToCueConv"/>
     </UserControl.Resources>
     <Grid Margin="30, 10" RowSpacing="20">
+       
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Subtitle Editor" Grid.Row="0" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="10">
+        <ComboBox x:Name="cmbEmbeddedSubTracks" Grid.Row="1"
+                              PlaceholderText="Select Subtitle Track" ItemsSource="{x:Bind ViewModel.SubStreams, Mode=OneWay}"   SelectedItem="{x:Bind ViewModel.CurrentStream, Mode=OneWay}"
+                              HorizontalAlignment="Stretch" 
+                              SelectionChanged="cmbEmbeddedSubTracks_SelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="flyleaf:SubtitlesStream">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xED1E;" FontSize="16" Foreground="Cyan"/>
 
-        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="1">
+                        <TextBlock VerticalAlignment="Center">
+<Run Text="Stream"/>
+<Run Text="{x:Bind StreamIndex}"/>
+<Run Text="["/>
+<Run Text="{x:Bind Language}"/>
+<Run Text="]"/>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+            <CheckBox Name="chkFromVideo" Content="Subtitle(s) from video" Checked="chkFromVideo_Checked" Unchecked="chkFromVideo_Checked"/>
+        </StackPanel>
+        <TeachingTip Name="ttRenameFile">
+            <StackPanel Orientation="Vertical" Spacing="10">
+                <InfoBar Name="ifbErrorRename"></InfoBar>
+                <TextBox Name="txtRename" PlaceholderText="Rename file..."></TextBox>
+                <Button Name="btnOfficialRename" Click="btnOfficialRename_Click" ToolTipService.ToolTip="Rename">
+                    <Image Source="/Assets/tickicon.png" Width="20"/>
+                </Button>
+            </StackPanel>
+        </TeachingTip>
+        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="2">
             <Button Name="tglView" ToolTipService.ToolTip="Toggle View" Content="Text Editor" Click="tglView_Click_1" Style="{StaticResource AccentButtonStyle}"/>
             <Button Name="btnNewSubtitleFile" Click="btnNewSubtitleFile_Click">
                 <StackPanel Orientation="Horizontal" Spacing="10">
@@ -51,8 +85,8 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        <MenuFlyoutSeparator Grid.Row="2"/>
-        <TextBlock Text="File Name" Name="txtFileName" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}">
+        <MenuFlyoutSeparator Grid.Row="3"/>
+        <TextBlock Text="Untitled" Name="txtFileName" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}">
             <TextBlock.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
@@ -72,8 +106,8 @@
                     </MenuFlyoutItem>
                 </MenuFlyout>
             </TextBlock.ContextFlyout>
-        </TextBlock> 
-        <Grid Grid.Row="4" Name="grdVisualEditor" ColumnSpacing="40">
+        </TextBlock>
+        <Grid Grid.Row="5" Name="grdVisualEditor" ColumnSpacing="40">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -90,7 +124,6 @@
                 <TextBlock Text="Subtitle Cue" Style="{StaticResource SubtitleTextBlockStyle}"/>
                 <TextBox TextChanged="txtTranscript_TextChanged" Name="txtTranscript" Grid.Row="1" PlaceholderText="Select a subtitle in the list to load it here..."/>
                 <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="10" Grid.Row="2">
-                    <Button Visibility="Collapsed" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Name="btnAddSubtitle" Click="btnAddSubtitle_Click" Content="Add Subtitle" Grid.Row="2"/>
                     <Button HorizontalAlignment="Stretch" Name="btnRemoveSubtitle" Click="btnRemoveSubtitle_Click" Content="Remove Subtitle" Grid.Row="2"/>
 
                 </StackPanel>
@@ -111,7 +144,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
                     <StackPanel Orientation="Vertical" Spacing="10">
                         <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}"  Text="Subtitle Duration"/>
-                        <NumberBox Name="subDifference" Minimum="0"/>
+                        <NumberBox ValueChanged="subDifference_ValueChanged" Name="subDifference" Minimum="0"/>
                     </StackPanel>
                     <TextBlock VerticalAlignment="Bottom" Margin="0, 10" Text="seconds"/>
                 </StackPanel>
@@ -122,11 +155,15 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Vertical" Spacing="15">
                         <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Start Time"/>
-                        <TextBox  Text="00:00:00.000" Name="txtStartTime"/>
+                        <InfoBar Name="ifbErrorStartTime"/>
+                        <TextBox TextChanged="txtStartTime_TextChanged"  Text="00:00:00.000" Name="txtStartTime"/>
+                        <Button Content="Get Current Time" Name="btnGetCurrentTimeStart" Click="btnGetCurrentTimeStart_Click"></Button>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="15">
                         <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="End Time"/>
-                        <TextBox Text="00:00:00.000" Name="txtEndTime"/>
+                        <InfoBar Name="ifbErrorEndTime"/>
+                        <TextBox TextChanged="txtEndTime_TextChanged" Text="00:00:00.000" Name="txtEndTime"/>
+                        <Button Content="Get Current Time" Name="btnGetCurrentTimeEnd" Click="btnGetCurrentTimeEnd_Click"></Button>
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -178,12 +215,12 @@
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Text="Insert Subtitle Above">
+                                        <MenuFlyoutItem Text="Insert Subtitle Above" Name="mnftInsertSubtitleAbove" Click="mnftInsertSubtitleAbove_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="Insert Subtitle Below">
+                                        <MenuFlyoutItem Text="Insert Subtitle Below" Name="mnftInsertSubtitleBelow" Click="mnftInsertSubtitleBelow_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="d"/>
                                             </MenuFlyoutItem.Icon>
@@ -228,6 +265,125 @@
                 </StackPanel>
             </Grid>
         </Grid>
+        <Grid Grid.Row="6" Name="grdTextEditor" Visibility="Collapsed" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="280"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer Grid.Row="1">
+                <TextBox AcceptsReturn="True"  Grid.Row="1" Name="txtTextEditor" TextChanged="txtTextEditor_TextChanged" VerticalAlignment="Stretch" >
+                    <TextBox.Resources>
+                        <!-- Keeps the selection visible even when focus is lost -->
+                        <StaticResource x:Key="TextControlSelectionHighlightColorWhenNotFocused" 
+                        ResourceKey="SystemAccentColor" />
+                    </TextBox.Resources>
+                </TextBox>
+            </ScrollViewer>
+            <Border  Grid.Column="0"
+Padding="10"  Margin="0, 10"
+VerticalAlignment="Top" 
+HorizontalAlignment="Center"
+Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" 
+BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+BorderThickness="1" 
+CornerRadius="16"
+                >
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button Name="btnUndo" Click="btnUndo_Click"  ToolTipService.ToolTip="Undo" BorderBrush="Transparent" Background="Transparent">
+                        <FontIcon Glyph="d"/>
+                    </Button>
+                    <Button Name="btnRedo" Click="btnRedo_Click" ToolTipService.ToolTip="Redo" BorderBrush="Transparent" Background="Transparent">
+                        <FontIcon Glyph="d"/>
+                    </Button>
+                    <Button Name="btnCut" Click="btnCut_Click"  ToolTipService.ToolTip="Cut" BorderBrush="Transparent" Background="Transparent">
+                        <FontIcon Glyph="d"/>
+                    </Button>
+                    <Button Name="btnCopy" Click="btnCopy_Click" ToolTipService.ToolTip="Copy" BorderBrush="Transparent" Background="Transparent">
+                        <FontIcon Glyph="d"/>
+                    </Button>
+                    <Button Name="btnPaste" Click="btnPaste_Click" ToolTipService.ToolTip="Paste" BorderBrush="Transparent" Background="Transparent">
+                        <FontIcon Glyph="d"/>
+                    </Button>
+                    <Button Name="btnSelectAll" Click="btnSelectAll_Click" ToolTipService.ToolTip="Select All" BorderBrush="Transparent" Background="Transparent">
+                        <FontIcon Glyph="d"/>
+                    </Button>
+                    <Button Name="btnDelete" Click="btnDelete_Click" ToolTipService.ToolTip="Delete" BorderBrush="Transparent" Background="Transparent">
+                        <FontIcon Glyph="d"/>
+                    </Button>
+                    <Button Name="btnFind" Click="btnFind_Click" ToolTipService.ToolTip="Find" BorderBrush="Transparent" Background="Transparent">
+                        <FontIcon Glyph="d"/>
+                    </Button>
+                </StackPanel>
+            </Border>
+            <TeachingTip Title="Find" Name="ttFind">
+                <Grid Margin="0,20" RowSpacing="10" ColumnSpacing="10">
+                    <Grid.RowDefinitions>
+                        <!-- Row 0: InfoBar -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Row 1: Find Field & Button -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Row 2: Replace Field & Button -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Row 3: Search Options (ToggleButtons) -->
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- InfoBar across both columns -->
+                    <InfoBar Grid.Row="0" 
+             Grid.ColumnSpan="2" 
+             Name="ifbFindError" 
+             Severity="Informational" 
+             IsClosable="True" />
+
+                    <!-- Find Row -->
+                    <AutoSuggestBox Grid.Row="1" 
+                    Grid.Column="0" 
+                    Name="asbFind" 
+                    Header="Find" 
+                    QueryIcon="Find" 
+                    VerticalAlignment="Bottom"/>
+                    <Button Grid.Row="1" 
+            Grid.Column="1" 
+            Name="btnFindActual" 
+            Content="Find" 
+            VerticalAlignment="Bottom" 
+            Click="btnFindActual_Click"/>
+
+                    <!-- Replace Row -->
+                    <AutoSuggestBox Grid.Row="2" 
+                    Grid.Column="0" 
+                    Name="asbReplace" 
+                    Header="Replace" 
+                    VerticalAlignment="Bottom"/>
+                    <Button Grid.Row="2" 
+            Grid.Column="1" 
+            Name="btnReplace" 
+            Content="Replace" 
+            VerticalAlignment="Bottom" 
+            Click="btnReplace_Click"/>
+
+                    <!-- Toggle Options -->
+                    <StackPanel Grid.Row="3" 
+                Grid.ColumnSpan="2" 
+                Orientation="Horizontal" 
+                Spacing="8">
+                        <ToggleButton Name="btnCaseSensitive" 
+                      ToolTipService.ToolTip="Match Case" 
+                      BorderBrush="Transparent" 
+                      Background="Transparent">
+                            <FontIcon Glyph="d"/>
+                        </ToggleButton>
+                      
+                    </StackPanel>
+                </Grid>
+            </TeachingTip>
+        </Grid>
+
     </Grid>
 
 </UserControl>

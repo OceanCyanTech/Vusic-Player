@@ -11,14 +11,15 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using WinRT.Interop;
 using WinRT;
+using WinRT.Interop;
 using static Vusic_Player.Configuration.AppConfig.WinUser;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -266,6 +267,37 @@ namespace Vusic_Player.UI.Dialogs
                     MaximizeIcon.Glyph = "\uE923"; // Two-squares (restore) icon
                 }
             }
+        }
+
+        private void btnSaveandClose_Click(object sender, RoutedEventArgs e)
+        {
+            subeditor.Save();
+            if (_appWindow == null) return;
+            MainWindow.ShowWindow();
+            _appWindow.Hide();
+        }
+
+        public static SubtitleEditorWindow ShowDialog()
+        {
+            if (_instance == null)
+            {
+                _instance = new SubtitleEditorWindow();
+            }
+            Debug.WriteLine("eesd");
+            App.SubtitleEditorDialogInstance = _instance;
+
+           
+        //    _instance.ResizeWind(Width, Height);
+
+            _instance.Activate();
+            return _instance;
+        }
+
+        private void btnCancelandClose_Click(object sender, RoutedEventArgs e)
+        {
+            if (_appWindow == null) return;
+            MainWindow.ShowWindow();
+            _appWindow.Hide();
         }
     }
 }

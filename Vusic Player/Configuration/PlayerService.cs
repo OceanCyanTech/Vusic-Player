@@ -724,6 +724,7 @@ namespace Vusic_Player.Configuration
             _isDragging = true;
             maintimer?.Stop();
         }
+        public static event Action<int>? SeekCompleted;
         public static void SldMain_DragCompleted(OceanSlider slider)
         {
             if (Masterplayer == null) return;
@@ -747,7 +748,7 @@ namespace Vusic_Player.Configuration
             }
 
             int targetMs = (int)TimeSpan.FromSeconds(slider.Value).TotalMilliseconds;
-
+            SeekCompleted?.Invoke(targetMs);
             // FIX 2: Use SeekAccurate so it doesn't roll back to the nearest keyframe
             Masterplayer.SeekAccurate(targetMs);
 
