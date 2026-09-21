@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration.Helper.UI;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT;
@@ -276,8 +277,9 @@ namespace Vusic_Player.UI.Dialogs
             MainWindow.ShowWindow();
             _appWindow.Hide();
         }
+        EditorView editorview => EditorView.Instance;
 
-        public static SubtitleEditorWindow ShowDialog()
+        public static SubtitleEditorWindow ShowDialog(bool isLyricEditor = false)
         {
             if (_instance == null)
             {
@@ -285,9 +287,17 @@ namespace Vusic_Player.UI.Dialogs
             }
             Debug.WriteLine("eesd");
             App.SubtitleEditorDialogInstance = _instance;
-
-           
-        //    _instance.ResizeWind(Width, Height);
+            if (isLyricEditor)
+            {
+                _instance.subeditor.Visibility = Visibility.Collapsed;
+                _instance.lyreditor.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _instance.subeditor.Visibility = Visibility.Visible;
+                _instance.lyreditor.Visibility = Visibility.Collapsed;
+            }
+            //    _instance.ResizeWind(Width, Height);
 
             _instance.Activate();
             return _instance;

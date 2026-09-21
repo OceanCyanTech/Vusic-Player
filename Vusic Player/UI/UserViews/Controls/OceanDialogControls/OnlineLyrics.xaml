@@ -7,60 +7,145 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <Grid RowSpacing="10" Margin="0, 30" HorizontalAlignment="Stretch">
+    <UserControl.Resources>
+        <local:VisibilityToGridLengthConverter x:Key="VisToGridLength"/>
+    </UserControl.Resources>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
         </Grid.RowDefinitions>
 
-        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Grid.Row="0" Spacing="10">
-            <TextBox HorizontalAlignment="Stretch" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" PlaceholderText="Enter song name to find lyrics..." Name="txtQuery"></TextBox>
-            <Button Style="{StaticResource AccentButtonStyle}" Name="btnSearch"  Click="btnSearch_Click">
-                <TextBlock Name="txtBtnFind" Text="Find"/>
-            </Button>
-            <Button Visibility="Collapsed" Content="Save Selected Lyrics to File" Click="btnSaveSelectedLyricsToFile_Click" Name="btnSaveSelectedLyricsToFile" >
-            </Button>
-            <Button Visibility="Collapsed" Name="btnCopyLyrics" Click="btnCopyLyrics_Click" Content="Copy Selected Lyrics"/>
-        </StackPanel>
-        <InfoBar Name="ifbError" Grid.Row="1" IsOpen="False"/>
-        <TextBlock Name="txtLoading" Grid.Row="2"/>
-        <TextBlock Name="txtSearchResHeader" Visibility="Collapsed" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="Search Results:" Grid.Row="3"/>
-        <ListView SelectionMode="Single" IsItemClickEnabled="True"  ItemClick="lstViewQueryResults_ItemClick" Grid.Row="4 " Name="lstViewQueryResults">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid ColumnSpacing="30">
+        <Grid MaxHeight="330" Margin="0, 20" ColumnSpacing="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border  Grid.Column="0"
+Padding="20"  Margin="0, 0"
+VerticalAlignment="Top" 
+HorizontalAlignment="Stretch"
+Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" 
+BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+BorderThickness="1" 
+CornerRadius="16"
+                >
+                <Grid RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Current Track Details" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <Grid Name="grdCurrentTrackDetails" Grid.Row="1" ColumnSpacing="30">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding TrackName}"/>
-                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="1" Text="{Binding ArtistName}"/>
-                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Grid.Column="2" Text="{Binding AlbumName}"/>
-                        <TextBlock ToolTipService.ToolTip="{Binding StringDuration}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Grid.Column="3" Text="{Binding StringDuration}"/>
+                        <Image Width="40" Source="{x:Bind mediacontroller.CoverThumbnail}" Grid.Column="0"/>
+                        <Grid Grid.Column="1" RowSpacing="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}"/>
+                            <TextBlock Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind mediacontroller.ArtistDisplayName , Mode=OneWay}"/>
+                            <TextBlock Grid.Row="2" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind mediacontroller.AlbumDisplayName , Mode=OneWay}"/>
+                            <TextBlock Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}"/>
+                            <Button Content="Copy File Path" Grid.Row="4" Name="btnCopyFilePath" Click="btnCopyFilePath_Click"/>
+                            <Button Content="Open File Location" Grid.Row="5" Name="btnOpenFileLoc" Click="btnOpenFileLoc_Click"/>
+                        </Grid>
                     </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <MenuFlyoutSeparator Grid.Row="5"/>
-        <TextBlock Visibility="Collapsed" HorizontalAlignment="Center" Text="Lyrics" Name="txtLyricHeader" Style="{StaticResource SubheaderTextBlockStyle}" Grid.Row="6"></TextBlock>
-        <ScrollViewer Grid.Row="7">
+
+                </Grid>
+            </Border>
+            <Grid Grid.Column="1" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Find Online" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                <Grid RowSpacing="15" Grid.Row="1" HorizontalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Grid.Row="0" Spacing="10">
+                        <TextBox PreviewKeyDown="txtQuery_PreviewKeyDown" HorizontalAlignment="Stretch" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" PlaceholderText="Enter song name to find lyrics..." Name="txtQuery"></TextBox>
+                        <Button MinWidth="100" Style="{StaticResource AccentButtonStyle}" Name="btnSearch"  Click="btnSearch_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Margin="0, 3" VerticalAlignment="Center" Glyph="&#xE721;" FontSize="14"/>
+                                <TextBlock Name="txtBtnFind" Text="Find"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Visibility="Collapsed" Content="Save Selected Lyrics to File" Click="btnSaveSelectedLyricsToFile_Click" Name="btnSaveSelectedLyricsToFile" >
+                        </Button>
+                        <Button Visibility="Collapsed" Name="btnCopyLyrics" Click="btnCopyLyrics_Click" Content="Copy Selected Lyrics"/>
+                    </StackPanel>
+                    <InfoBar Name="ifbError" Grid.Row="1" IsOpen="False"/>
+                    <TextBlock Name="txtLoading" Grid.Row="2"/>
+                    <TextBlock Name="txtSearchResHeader" Visibility="Collapsed" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="Search Results" Grid.Row="3"/>
+                    <Grid Grid.Row="4" ColumnSpacing="20" Margin="40, 0" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Text="Track" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock Grid.Column="2" Text="Artist" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock Grid.Column="3" Text="Album" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock  Grid.Column="4" Text="Duration" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                    </Grid>
+                    <ListView SelectionMode="Single" IsItemClickEnabled="True"  ItemClick="lstViewQueryResults_ItemClick" Grid.Row="5 " Name="lstViewQueryResults">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Glyph="&#xEC4F;" FontSize="14"/>
+                                    <TextBlock Grid.Column="1" ToolTipService.ToolTip="{Binding TrackName}" Text="{Binding TrackName}"/>
+                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" ToolTipService.ToolTip="{Binding ArtistName}" Grid.Column="2" Text="{Binding ArtistName}"/>
+                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" ToolTipService.ToolTip="{Binding AlbumName}" Grid.Column="3" Text="{Binding AlbumName}"/>
+                                    <TextBlock ToolTipService.ToolTip="{Binding StringDuration}"  Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Grid.Column="4" Text="{Binding StringDuration}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <MenuFlyoutSeparator Grid.Row="6"/>
+                    <TeachingTip Name="ttJustSaved">
+                        <HyperlinkButton Name="hypPathSaved" Click="hypPathSaved_Click"/>
+                    </TeachingTip>
+                </Grid>
+            </Grid>
+        </Grid>
+        <TextBlock Visibility="Collapsed" HorizontalAlignment="Center" Text="Lyrics" Name="txtLyricHeader" Style="{StaticResource SubheaderTextBlockStyle}" Grid.Row="1"></TextBlock>
+        <ScrollViewer MaxHeight="160"  VerticalAlignment="Stretch" Grid.Row="2" Name="scrollViewer">
             <RichTextBlock Name="txtLyricsFull" 
       FontSize="24"
+                           VerticalAlignment="Stretch"
        HorizontalAlignment="Center" 
        TextAlignment="Center"
        TextWrapping="Wrap"/>
         </ScrollViewer>
-        <TeachingTip Name="ttJustSaved">
-            <HyperlinkButton Name="hypPathSaved" Click="hypPathSaved_Click"/>
-        </TeachingTip>
+
     </Grid>
 </UserControl>

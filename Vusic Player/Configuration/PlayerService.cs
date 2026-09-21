@@ -61,7 +61,9 @@ namespace Vusic_Player.Configuration
         public static long curtimetemp;
         public static TimeSpan curtime;
         public static bool InVideoPage = false;
+        public static XAudio2MultiOutputEngine? _multiAudioEngine;
 
+        public static bool MultiDeviceOutput = false;
 
         public static bool JustDisposed = false;
         public static void PIPRestoreAction()
@@ -385,7 +387,6 @@ namespace Vusic_Player.Configuration
             });
         }
 
-        public static XAudio2MultiOutputEngine? _multiAudioEngine;
         public static float GetVolumeOfDevice(string deviceID)
         {
             if (_multiAudioEngine != null)
@@ -450,7 +451,6 @@ namespace Vusic_Player.Configuration
                 _multiAudioEngine.InitializeOutputs(targetDeviceIds);
             }
         }
-        public static bool MultiDeviceOutput = false;
         public static void ProcessUsageInvoke()
         {
             CheckProcesses?.Invoke();

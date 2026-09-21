@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.Dialogs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:subtitle="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:subtitle="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d"
     Title="SubtitleEditorWindow">
 
@@ -28,6 +28,7 @@
         </Grid>
 
         <subtitle:SubtitleEditorUI x:Name="subeditor" Grid.Row="1"/>
+        <controls:LyricEditorUI x:Name="lyreditor" Grid.Row ="1"/>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="10,10" Spacing="10" HorizontalAlignment="Right">
         <Button Style="{StaticResource AccentButtonStyle}" Content="Save and Close" Click="btnSaveandClose_Click" Name="btnSaveandClose" Grid.Row="2" HorizontalAlignment="Right"/>
         <Button Content="Cancel Changes and Close" Click="btnCancelandClose_Click" Name="btnCancelandClose" Grid.Row="2"  HorizontalAlignment="Right"/>

@@ -18,20 +18,39 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Configuration.Playback;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage.Pickers;
+using UserControl = Microsoft.UI.Xaml.Controls.UserControl;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
 {
+    public class VisibilityToGridLengthConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is Visibility visibility && visibility == Visibility.Visible)
+            {
+                return new GridLength(1, GridUnitType.Star);
+            }
+            return new GridLength(0);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public sealed partial class OnlineLyrics : UserControl
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
@@ -94,16 +113,14 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 UseShellExecute = true
             });
         }
-
-
-        private async void btnSearch_Click(object sender, RoutedEventArgs e)
+        private async void Search()
         {
             txtSearchResHeader.Visibility = Visibility.Collapsed;
             txtLyricHeader.Visibility = Visibility.Collapsed;
             txtLyricsFull.Blocks.Clear();
             btnSaveSelectedLyricsToFile.Visibility = Visibility.Collapsed;
             btnCopyLyrics.Visibility = Visibility.Collapsed;
-            txtLyricHeader.Visibility = Visibility.Collapsed;
+            scrollViewer.Visibility = Visibility.Collapsed;
             btnSearch.IsEnabled = false;
             if (txtQuery.Text == "") return;
             if (CheckInternet.IsInternetAvailable())
@@ -141,7 +158,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
 
                         // Format it as "MM:SS" (e.g., "03:35")
                         string displayDuration = time.ToString(@"mm\:ss");
-                        lyricTracksQueryResults.Add(new LrcTrack { TrackName = item.TrackName, AlbumName = item.AlbumName, ArtistName = item.ArtistName, StringDuration = displayDuration, PlainLyrics = item.PlainLyrics, SyncedLyrics = item.SyncedLyrics, Id= item.Id });
+                        lyricTracksQueryResults.Add(new LrcTrack { TrackName = item.TrackName, AlbumName = item.AlbumName, ArtistName = item.ArtistName, StringDuration = displayDuration, PlainLyrics = item.PlainLyrics, SyncedLyrics = item.SyncedLyrics, Id = item.Id });
                     }
                     txtLoading.Visibility = Visibility.Collapsed;
 
@@ -158,6 +175,12 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 ifbError.ActionButton.Click += ActionButton_Click;
 
             }
+
+        }
+
+        private async void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            Search();
         }
 
         private void lstViewQueryResults_ItemClick(object sender, ItemClickEventArgs e)
@@ -169,6 +192,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 btnCopyLyrics.Visibility = Visibility.Visible;
                 btnSaveSelectedLyricsToFile.Visibility = Visibility.Visible;
                 txtLyricHeader.Visibility = Visibility.Visible;
+                scrollViewer.Visibility = Visibility.Visible;
                 Debug.WriteLine("HMMS");
                 txtLyricsFull.Blocks.Clear();
 
@@ -300,6 +324,24 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             {
                 Process.Start("explorer.exe", $"/select,\"{hypPathSaved.Content.ToString()}\"");
             }
+        }
+
+        private void txtQuery_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == Windows.System.VirtualKey.Enter)
+            {
+                Search();
+            }
+        }
+
+        private void btnCopyFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            CopyToClipboard.CopyStringToClipboard(PlayerService.CurrentPlayingPath);
+        }
+
+        private void btnOpenFileLoc_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileLocation.PathSelect(PlayerService.CurrentPlayingPath);
         }
     }
 }

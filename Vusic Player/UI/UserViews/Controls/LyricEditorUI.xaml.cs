@@ -1,6 +1,3 @@
-using Flyleaf.FFmpeg;
-using FlyleafLib.MediaFramework.MediaStream;
-using FlyleafLib.MediaPlayer;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -8,12 +5,10 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -26,8 +21,6 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.SubtitlesProperties;
 using Vusic_Player.Configuration.Helper.UI;
-using Vusic_Player.Extensions;
-using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -38,7 +31,7 @@ using Stream = Vusic_Player.Configuration.Helper.SubtitlesProperties.Stream;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
+namespace Vusic_Player.UI.UserViews.Controls
 {
     public class CountToCueConverter : IValueConverter
     {
@@ -58,36 +51,20 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
         }
     }
 
-    public sealed partial class SubtitleEditorUI : UserControl
+    public sealed partial class LyricEditorUI : UserControl
     {
-        public SubtitleEditorUI()
-        {
-            InitializeComponent();
-            this.Loaded += SubtitleEditorUI_Loaded;
-        }
+
 
         private void SubtitleEditorUI_Loaded(object sender, RoutedEventArgs e)
         {
-            chkFromVideo.IsChecked = true;
-            if(cmbEmbeddedSubTracks.Items.Count != 0)
-            {
-                ComboBoxSelection(0);
-            }
+           
             PlayerService.SeekCompleted += PlayerService_SeekCompleted;
         }
-        public void ChangetoLyricEditor()
-        {
-            txtSubtitleEditorHeader.Text = "Lyrics Editor";
-        }
-        EditorView editorview => EditorView.Instance;
-        public void ChangetoSubtitleEditor()
-        {
-            txtSubtitleEditorHeader.Text = "Subtitle Editor";
-        }
+        
 
         private void PlayerService_SeekCompleted(int obj)
         {
-            if (chkFromVideo.IsChecked == false) return;
+  
             TimeSpan timespan = TimeSpan.FromMilliseconds(obj);
             Debug.WriteLine("RECEIVED SEEK: " + timespan.ToString());
             var currentCue = Subtitles.FirstOrDefault(cue =>
@@ -211,7 +188,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             if (App.SubtitleEditorDialogInstance == null) return;
 
             Subtitles.Clear();
-            var subtitlefile = await FilePickers.SubtitlePicker.PickSingle(App.SubtitleEditorDialogInstance, "Load Subtitle");
+            var subtitlefile = await FilePickers.LyricPicker.PickSingle(App.SubtitleEditorDialogInstance, "Load Lyric");
             if (subtitlefile == null) return;
             FilePathOpened = subtitlefile.Path;
             stkNoSubtitles.Visibility = Visibility.Collapsed;
@@ -305,7 +282,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
                 InitializeWithWindow.Initialize(picker, hwnd);
 
                 picker.SuggestedStartLocation = PickerLocationId.VideosLibrary;
-                picker.FileTypeChoices.Add("SubRip Subtitle", new List<string> { ".srt" });
+                picker.FileTypeChoices.Add("Lyric File LRC", new List<string> { ".lrc" });
                 picker.SuggestedFileName = txtFileName.Text;
 
                 StorageFile file = await picker.PickSaveFileAsync();
@@ -359,7 +336,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             InitializeWithWindow.Initialize(picker, hwnd);
 
             picker.SuggestedStartLocation = PickerLocationId.VideosLibrary;
-            picker.FileTypeChoices.Add("SubRip Subtitle", new List<string> { ".srt" });
+            picker.FileTypeChoices.Add("Lyric File LRC", new List<string> { ".lrc" });
             picker.SuggestedFileName = txtFileName.Text;
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
@@ -392,8 +369,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             subDifference.Value = 0;
             FilePathOpened = "";
             txtTextEditor.Text = "";
-            chkFromVideo.IsChecked = false;
-        
+
         }
 
 
@@ -688,7 +664,7 @@ allowedFormats,
 
                     try
                     {
-                        await file.RenameAsync(txtRename.Text + ".srt", NameCollisionOption.FailIfExists);
+                        await file.RenameAsync(txtRename.Text + ".lrc", NameCollisionOption.FailIfExists);
                     }
                     catch (Exception ex)
                     {
@@ -893,110 +869,9 @@ allowedFormats,
             }
 
         }
-        private async void ComboBoxSelection(int index)
-        {
-            if (PlayerService.Masterplayer == null) return;
 
-            var stringsubtitles = await ExtractSubtitlesAsync(PlayerService.CurrentPlayingPath, index);
-            var selectedStream = PlayerService.Masterplayer.Subtitles.Streams[0];
-            if (selectedStream.Codec.ToLower().Contains("pgs") ||
-                selectedStream.Codec.ToLower().Contains("dvd") ||
-                selectedStream.Codec.ToLower().Contains("bitmap"))
-            {
-                txtTextEditor.Text = "Selected subtitle track contains image/bitmap data and cannot be displayed as plain text.";
-                return;
-            }
-            if (ViewModel.CurrentStream != null)
-            {
-                txtFileName.Text = ViewModel.CurrentStream.Language.ToString();
-            }
-            if (tglView.Content.ToString() == "Visual Editor")
-            {
-                txtTextEditor.Text = stringsubtitles;
-                return;
-            }
-            var regex = new Regex(
-     @"(?<start>\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(?<end>\d{2}:\d{2}:\d{2}[,\.]\d{3})[^\r\n]*(?:\r?\n(?<text>(?:(?!\r?\n\r?\n|\r?\n\d+\r?\n|\r?\n\d{2}:\d{2}).)*))?",
-     RegexOptions.Singleline);
-            MatchCollection matches = regex.Matches(stringsubtitles);
+   
 
-            foreach (Match match in matches)
-            {
-                string text = match.Groups["text"].Value.Trim();
-                string startRaw = match.Groups["start"].Value.Replace(',', '.');
-                string endRaw = match.Groups["end"].Value.Replace(',', '.');
-
-                if (TimeSpan.TryParse(startRaw, out TimeSpan startTime) &&
-                    TimeSpan.TryParse(endRaw, out TimeSpan endTime))
-                {
-                    // Format options:
-                    // @"hh\:mm\:ss"  -> "00:01:23"
-                    // @"m\:ss"       -> "1:23" (if under an hour)
-                    string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
-                    string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
-
-                    Subtitles.Add(new SubtitleCueModel
-                    {
-                        Text = text,
-                        StartTime = startTime,
-                        EndTime = endTime,
-                        StartString = startTime.ToString(format),
-                        EndString = endTime.ToString(endFormat)
-                    });
-                }
-            }
-            stkNoSubtitles.Visibility = Visibility.Collapsed;
-            grdColumnHeaders.Visibility = Visibility.Visible;
-            mnftCopyFilePath.Visibility = Visibility.Visible;
-            mnftRenameSubtitle.Visibility = Visibility.Visible;
-            mnftOpenFileLoc.Visibility = Visibility.Visible;
-            btnSaveFile.IsEnabled = true;
-            btnSaveAsFile.IsEnabled = true;
-        }
-
-        private async void cmbEmbeddedSubTracks_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (chkFromVideo.IsChecked == false) return;
-            ComboBoxSelection(cmbEmbeddedSubTracks.SelectedIndex);
-        }
-        
-        public static async Task<string> ExtractSubtitlesAsync(string videoPath, int subStreamIndex = 0)
-        {
-            if (subStreamIndex < 0 || string.IsNullOrEmpty(videoPath))
-                return string.Empty;
-
-            string ffmpegPath = GetFFmpegPath();
-
-            var psi = new ProcessStartInfo
-            {
-                FileName = ffmpegPath,
-                Arguments = $"-loglevel error -i \"{videoPath}\" -map 0:s:{subStreamIndex} -f srt -",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                StandardOutputEncoding = System.Text.Encoding.UTF8
-            };
-
-            using var process = new Process { StartInfo = psi };
-            process.Start();
-
-            // Read both streams asynchronously to avoid buffer blockages
-            var outputTask = process.StandardOutput.ReadToEndAsync();
-            var errorTask = process.StandardError.ReadToEndAsync();
-
-            await Task.WhenAll(outputTask, errorTask);
-            await process.WaitForExitAsync();
-
-            string error = await errorTask;
-            if (process.ExitCode != 0 && !string.IsNullOrWhiteSpace(error))
-            {
-                System.Diagnostics.Debug.WriteLine($"FFmpeg error: {error}");
-                return string.Empty;
-            }
-
-            return await outputTask;
-        }
         private void btnGetCurrentTimeStart_Click(object sender, RoutedEventArgs e)
         {
             if (PlayerService.Masterplayer != null)
@@ -1027,10 +902,13 @@ allowedFormats,
             }
         }
 
-        private void chkFromVideo_Checked(object sender, RoutedEventArgs e)
+
+
+
+        public LyricEditorUI()
         {
-            cmbEmbeddedSubTracks.Visibility = chkFromVideo.IsChecked ?? false ? Visibility.Visible : Visibility.Collapsed;
-           
+            InitializeComponent();
         }
+
     }
 }

@@ -26,6 +26,7 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
+using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Devices.Spi;
 using Windows.Foundation;
@@ -133,7 +134,7 @@ namespace Vusic_Player.Pages.Views
             Debug.WriteLine("Navigated to Music Player Full");
             if (PlayerService.CurrentPlayingPath != "")
             {
-                btnCustomizeLyricText.Visibility = Visibility.Visible;
+                stkLyricFunctions2.Visibility = Visibility.Visible;
                 stkLyricFunctions.Visibility = Visibility.Visible;
             }
             if (e.Parameter is string information)
@@ -398,7 +399,7 @@ namespace Vusic_Player.Pages.Views
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
-            OceanContentDialog.Show("Find Lyrics Online", "Load Lyrics", "", "Cancel", OceanDialogWindow.ContentType.LyricSearchOnline, OceanContentDialogDefault.Primary, XamlRoot, 900, 960, OceanContentDialogType.Elevated, App.MainWindowInstance, "appicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "");
+            OceanContentDialog.Show("Find Lyrics Online", "Load Lyrics", "", "Cancel", OceanDialogWindow.ContentType.LyricSearchOnline, OceanContentDialogDefault.Primary, XamlRoot, 1100, 960, OceanContentDialogType.Elevated, App.MainWindowInstance, "appicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "");
             OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
             OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
         }
@@ -432,10 +433,7 @@ namespace Vusic_Player.Pages.Views
             var lyrictrack = mediacontroller.LyricModel;
             Debug.WriteLine(lyrictrack.SyncedLyrics);
             var filepath = await WriteToTemporaryFileAsync(lyrictrack.SyncedLyrics, lyrictrack.TrackName);
-            if (File.Exists(filepath))
-            {
-                Process.Start("explorer.exe", $"/select,\"{filepath}\"");
-            }
+  
             PlaybackStart(filepath);
             OceanContentDialog.HideDlg();
             MainWindow.ShowWindow();
@@ -498,6 +496,7 @@ namespace Vusic_Player.Pages.Views
             _isSyncingSizes = true;
             FontSizeNumber.Value = (double)FontSizeCombo.SelectedItem;
             _isSyncingSizes = false;
+            UpdateLyricStyle();
         }
         private void UpdateLyricStyle()
         {
@@ -618,6 +617,11 @@ namespace Vusic_Player.Pages.Views
                     mnftOpenPrevLyrics.IsEnabled = false;
                 }
             }
+        }
+
+        private void btnLyricEditor_Click(object sender, RoutedEventArgs e)
+        {
+            SubtitleEditorWindow.ShowDialog(true);
         }
     }
 }

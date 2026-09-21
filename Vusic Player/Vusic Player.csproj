@@ -96,6 +96,7 @@
     <None Remove="UI\UserViews\Controls\GridViewRecentVideos.xaml" />
     <None Remove="UI\UserViews\Controls\GroupedCollectionView.xaml" />
     <None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
+    <None Remove="UI\UserViews\Controls\LyricEditorUI.xaml" />
     <None Remove="UI\UserViews\Controls\MasterSearchControl.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml" />
@@ -243,6 +244,11 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\LyricEditorUI.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleEditorUI.xaml">

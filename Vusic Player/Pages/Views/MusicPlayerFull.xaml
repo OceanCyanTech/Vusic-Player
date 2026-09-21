@@ -25,7 +25,7 @@
 
         <Grid x:Name="LyricContainer" 
           Grid.Column="0" 
-          Margin="40,0" 
+          Margin="40,0"  RowSpacing="20"
           HorizontalAlignment="Center" 
           VerticalAlignment="Center">
             <Grid.RowDefinitions>
@@ -50,28 +50,68 @@
                            IsTextSelectionEnabled="True"
                        Text=""/>
             </ScrollViewer>
-            <Button Visibility="Collapsed" Name="btnCopyLyric" Content="Copy Lyric" Click="Button_Click_3" HorizontalAlignment="Center" Grid.Row="1"></Button>
-            <StackPanel  Visibility="Collapsed" Name="stkLyricFunctions" Grid.Row="2" Margin="0, 20" Orientation="Horizontal" Spacing="10">
-                <Button Grid.Row="1" Content="Open Lyric File"  HorizontalAlignment="Center">
+            <Button Visibility="Collapsed" Name="btnCopyLyric"  Click="Button_Click_3" HorizontalAlignment="Center" Grid.Row="1">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <TextBlock Text="Copy Lyric"/>
+                </StackPanel>
+            </Button>
+            <StackPanel HorizontalAlignment="Center" Visibility="Collapsed" Name="stkLyricFunctions" Grid.Row="2" Orientation="Horizontal" Spacing="10">
+                <Button Grid.Row="1"  HorizontalAlignment="Center">
                     <Button.Flyout>
                         <MenuFlyout Opened="MenuFlyout_Opened">
-                            <MenuFlyoutItem Text="Open From PC" Name="mnftOpenFromPC" Click="mnftOpenFromPC_Click"/>
-                            <MenuFlyoutItem Text="Open Previously Loaded" Name="mnftOpenPrevLyrics" Click="mnftOpenPrevLyrics_Click"/>
+                            <MenuFlyoutItem Text="Open From PC" Name="mnftOpenFromPC" Click="mnftOpenFromPC_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Open Previously Loaded" Name="mnftOpenPrevLyrics" Click="mnftOpenPrevLyrics_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </Button.Flyout>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <TextBlock Text="Open Lyric File"/>
+                    </StackPanel>
                 </Button>
-                <Button Margin="0, 0" Grid.Row="2" IsEnabled="False" Name="btnFullLyrics" Content="View Full Lyrics" Click="Button_Click_1" HorizontalAlignment="Center"/>
-                <Button Name="btnFindLyricsOnline"  Margin="0, 0" Grid.Row="2" Content="Find Lyrics Online" Click="Button_Click_2" HorizontalAlignment="Center"/>
+                <Button Margin="0, 0" Grid.Row="2" IsEnabled="False" Name="btnFullLyrics" Click="Button_Click_1" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <TextBlock Text="View Full Lyrics"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="btnFindLyricsOnline"  Margin="0, 0" Grid.Row="2"   Click="Button_Click_2" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <TextBlock Text="Find Lyrics Online"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
-            <Button Visibility="Collapsed" Grid.Row="3" HorizontalAlignment="Center" Name="btnCustomizeLyricText" Click="btnCustomizeLyricText_Click" Content="Customize Lyric Text"/>
+            <StackPanel HorizontalAlignment="Center"  Visibility="Collapsed" Name="stkLyricFunctions2" Grid.Row="3"  Orientation="Horizontal" Spacing="10">
+                <Button  HorizontalAlignment="Center" Name="btnCustomizeLyricText" Click="btnCustomizeLyricText_Click" >
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <TextBlock Text="Customize Lyric Text"/>
+                    </StackPanel>
+                </Button>
+                <Button   HorizontalAlignment="Center" Name="btnLyricEditor" Click="btnLyricEditor_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <TextBlock Text="Lyric Editor"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
             <TeachingTip x:Name="FontSettingsTip"
                  Target="{x:Bind btnCustomizeLyricText}"
                  Title="Text Formatting Options"
                 PreferredPlacement="Auto"
                          >
                 <TeachingTip.Content>
-                    <StackPanel Margin="0, 10" Spacing="12" Width="280">
-                        <Button Content="Reset to default" HorizontalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Name="btnResetToDefault" Click="btnResetToDefault_Click"/>
+                    <StackPanel Margin="0, 30" Spacing="12" Width="280">
+                        <Button Content="Reset to default" HorizontalAlignment="Left" Style="{StaticResource AccentButtonStyle}" Name="btnResetToDefault" Click="btnResetToDefault_Click"/>
                         <StackPanel Spacing="4">
                             <TextBlock Text="Font Family" Style="{ThemeResource CaptionTextBlockStyle}"/>
                             <ComboBox SelectionChanged="FontFamilyCombo_SelectionChanged" x:Name="FontFamilyCombo" HorizontalAlignment="Stretch" MaxDropDownHeight="200">
