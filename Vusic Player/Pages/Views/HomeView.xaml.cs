@@ -123,5 +123,10 @@ namespace Vusic_Player.Pages.Views
             Frame.Navigate(typeof(DummyPage));
 
         }
+
+        private void hypViewAllFav_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(FavouritesView));
+        }
     }
 }

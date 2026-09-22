@@ -171,6 +171,10 @@ namespace Vusic_Player.Pages
             {
                 txtHeader.Text = "Video Library";
             }
+            else if (e.SourcePageType == typeof(FavouritesView))
+            {
+                txtHeader.Text = "Favourites";
+            }
             else if (e.SourcePageType == typeof(FolderView))
             {
                 txtHeader.Text = "";

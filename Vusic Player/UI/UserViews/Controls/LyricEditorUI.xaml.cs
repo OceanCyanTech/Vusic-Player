@@ -21,6 +21,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.SubtitlesProperties;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Playback;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -39,7 +40,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             if (value is int count)
             {
-                return count == 1 ? $"• {count} subtitle cue" : $"• {count} subtitle cues";
+                return count == 1 ? $"• {count} lyric cue" : $"• {count} lyric cues";
             }
 
             return "0 items";
@@ -132,6 +133,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
                 Subtitles.Insert(index, newSubtitle);
                 lstViewSubtitles.SelectedIndex = index;
+                subDifference.Value = 3;
                 txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened) + "*";
                 ToolTipService.SetToolTip(txtFileName, "Pending Changes to be saved");
             }
@@ -161,6 +163,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                 var newSubtitle = new SubtitleCueModel { StartTime = startTime, EndTime = endTime, StartString = startTime.ToString(format), EndString = endTime.ToString(endFormat) };
                 Subtitles.Insert(index + 1, newSubtitle);
                 lstViewSubtitles.SelectedIndex = index + 1;
+                
+                subDifference.Value = 3;
 
                 for (int i = index + 2; i < Subtitles.Count; i++)
                 {
@@ -201,42 +205,65 @@ namespace Vusic_Player.UI.UserViews.Controls
             txtFileName.Text = Path.GetFileNameWithoutExtension(subtitlefile.Path);
             ToolTipService.SetToolTip(txtFileName, subtitlefile.Path);
 
-            var regex = new Regex(
-         @"(?<start>\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(?<end>\d{2}:\d{2}:\d{2}[,\.]\d{3})[^\r\n]*(?:\r?\n(?<text>(?:(?!\r?\n\r?\n|\r?\n\d+\r?\n|\r?\n\d{2}:\d{2}).)*))?",
-         RegexOptions.Singleline);
+            var lrcRegex = new Regex(@"^\[(?<min>\d{2}):(?<sec>\d{2})(?:[\.:](?<ms>\d{2,3}))?\](?<text>.*)$", RegexOptions.Multiline);
+
             string rawContent = await FileIO.ReadTextAsync(subtitlefile);
+            MatchCollection matches = lrcRegex.Matches(rawContent);
+
+            var parsedList = new List<SubtitleCueModel>();
+
+            foreach (Match match in matches)
+            {
+                int minutes = int.Parse(match.Groups["min"].Value);
+                int seconds = int.Parse(match.Groups["sec"].Value);
+
+                int millis = 0;
+                if (match.Groups["ms"].Success)
+                {
+                    string msRaw = match.Groups["ms"].Value;
+                    // If 2 digits (centiseconds, e.g., .45), multiply by 10 to get milliseconds (450ms)
+                    millis = msRaw.Length == 2 ? int.Parse(msRaw) * 10 : int.Parse(msRaw);
+                }
+
+                TimeSpan start = new TimeSpan(0, 0, minutes, seconds, millis);
+                string text = match.Groups["text"].Value.Trim();
+
+                parsedList.Add(new SubtitleCueModel
+                {
+                    StartTime = start,
+                    Text = text,
+                    StartString = start.ToString(start.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff")
+                });
+            }
+
+            // Compute EndTimes: each cue ends where the next cue begins
+            for (int i = 0; i < parsedList.Count; i++)
+            {
+                if (i < parsedList.Count - 1)
+                {
+                    parsedList[i].EndTime = parsedList[i + 1].StartTime;
+                }
+                else
+                {
+                    // Default the final line duration (e.g. 5 seconds after start)
+                    parsedList[i].EndTime = parsedList[i].StartTime + TimeSpan.FromSeconds(5);
+                }
+
+                TimeSpan end = parsedList[i].EndTime;
+                parsedList[i].EndString = end.ToString(end.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff");
+            }
+
+            Subtitles.Clear();
+            foreach (var cue in parsedList)
+            {
+                Subtitles.Add(cue);
+            }
+           
             rawcontent = rawContent;
             if (tglView.Content.ToString() == "Visual Editor")
             {
                 txtTextEditor.Text = rawContent;
                 return;
-            }
-            MatchCollection matches = regex.Matches(rawContent);
-
-            foreach (Match match in matches)
-            {
-                string text = match.Groups["text"].Value.Trim();
-                string startRaw = match.Groups["start"].Value.Replace(',', '.');
-                string endRaw = match.Groups["end"].Value.Replace(',', '.');
-
-                if (TimeSpan.TryParse(startRaw, out TimeSpan startTime) &&
-                    TimeSpan.TryParse(endRaw, out TimeSpan endTime))
-                {
-                    // Format options:
-                    // @"hh\:mm\:ss"  -> "00:01:23"
-                    // @"m\:ss"       -> "1:23" (if under an hour)
-                    string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
-                    string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
-
-                    Subtitles.Add(new SubtitleCueModel
-                    {
-                        Text = text,
-                        StartTime = startTime,
-                        EndTime = endTime,
-                        StartString = startTime.ToString(format),
-                        EndString = endTime.ToString(endFormat)
-                    });
-                }
             }
         }
         private async void SaveFile()
@@ -418,37 +445,62 @@ namespace Vusic_Player.UI.UserViews.Controls
                     rawContent = rawContent.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
 
                     // 2. This regex will now match consistently every time
-                    var regex = new Regex(
-    @"(?<start>\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(?<end>\d{2}:\d{2}:\d{2}[,\.]\d{3})[^\r\n]*\r\n(?<text>.*?(?=(\r\n\s*\r\n|\r\n(?:\d+\r\n)?\d{2}:\d{2}:\d{2}|\z)))",
-    RegexOptions.Singleline);
+                    var lrcRegex = new Regex(@"^\[(?<min>\d{2}):(?<sec>\d{2})(?:[\.:](?<ms>\d{2,3}))?\](?<text>.*)$", RegexOptions.Multiline);
 
-                    MatchCollection matches = regex.Matches(rawContent);
+                    MatchCollection matches = lrcRegex.Matches(rawContent);
+
+                    var parsedList = new List<SubtitleCueModel>();
 
                     foreach (Match match in matches)
                     {
-                        string text = match.Groups["text"].Value.Trim();
-                        string startRaw = match.Groups["start"].Value.Replace(',', '.');
-                        string endRaw = match.Groups["end"].Value.Replace(',', '.');
+                        int minutes = int.Parse(match.Groups["min"].Value);
+                        int seconds = int.Parse(match.Groups["sec"].Value);
 
-                        if (TimeSpan.TryParse(startRaw, out TimeSpan startTime) &&
-                            TimeSpan.TryParse(endRaw, out TimeSpan endTime))
+                        int millis = 0;
+                        if (match.Groups["ms"].Success)
                         {
-                            string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
-                            string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
-
-                            Subtitles.Add(new SubtitleCueModel
-                            {
-                                Text = text,
-                                StartTime = startTime,
-                                EndTime = endTime,
-                                StartString = startTime.ToString(format),
-                                EndString = endTime.ToString(endFormat)
-                            });
+                            string msRaw = match.Groups["ms"].Value;
+                            // If 2 digits (centiseconds, e.g., .45), multiply by 10 to get milliseconds (450ms)
+                            millis = msRaw.Length == 2 ? int.Parse(msRaw) * 10 : int.Parse(msRaw);
                         }
+
+                        TimeSpan start = new TimeSpan(0, 0, minutes, seconds, millis);
+                        string text = match.Groups["text"].Value.Trim();
+
+                        parsedList.Add(new SubtitleCueModel
+                        {
+                            StartTime = start,
+                            Text = text,
+                            StartString = start.ToString(start.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff")
+                        });
+                    }
+
+                    // Compute EndTimes: each cue ends where the next cue begins
+                    for (int i = 0; i < parsedList.Count; i++)
+                    {
+                        if (i < parsedList.Count - 1)
+                        {
+                            parsedList[i].EndTime = parsedList[i + 1].StartTime;
+                        }
+                        else
+                        {
+                            // Default the final line duration (e.g. 5 seconds after start)
+                            parsedList[i].EndTime = parsedList[i].StartTime + TimeSpan.FromSeconds(5);
+                        }
+
+                        TimeSpan end = parsedList[i].EndTime;
+                        parsedList[i].EndString = end.ToString(end.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff");
+                    }
+
+                    Subtitles.Clear();
+                    foreach (var cue in parsedList)
+                    {
+                        Subtitles.Add(cue);
                     }
                 }
+                }
             }
-        }
+        
 
         private void lstViewSubtitles_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -903,12 +955,92 @@ allowedFormats,
         }
 
 
+        public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
 
 
         public LyricEditorUI()
         {
             InitializeComponent();
+            this.Loaded += SubtitleEditorUI_Loaded;
         }
 
+        private async void btnCurrentLyrics_Click(object sender, RoutedEventArgs e)
+        {
+            if (File.Exists(mediacontroller.LRCTrackPath))
+            {
+                var storagefile = await StorageFile.GetFileFromPathAsync(mediacontroller.LRCTrackPath);
+                FilePathOpened = mediacontroller.LRCTrackPath;
+                stkNoSubtitles.Visibility = Visibility.Collapsed;
+                grdColumnHeaders.Visibility = Visibility.Visible;
+                mnftCopyFilePath.Visibility = Visibility.Visible;
+                mnftRenameSubtitle.Visibility = Visibility.Visible;
+                mnftOpenFileLoc.Visibility = Visibility.Visible;
+                btnSaveFile.IsEnabled = true;
+                btnSaveAsFile.IsEnabled = true;
+                txtFileName.Text = Path.GetFileNameWithoutExtension(mediacontroller.LRCTrackPath);
+                ToolTipService.SetToolTip(txtFileName, mediacontroller.LRCTrackPath);
+
+                var lrcRegex = new Regex(@"^\[(?<min>\d{2}):(?<sec>\d{2})(?:[\.:](?<ms>\d{2,3}))?\](?<text>.*)$", RegexOptions.Multiline);
+
+                string rawContent = await FileIO.ReadTextAsync(storagefile);
+                MatchCollection matches = lrcRegex.Matches(rawContent);
+
+                var parsedList = new List<SubtitleCueModel>();
+
+                foreach (Match match in matches)
+                {
+                    int minutes = int.Parse(match.Groups["min"].Value);
+                    int seconds = int.Parse(match.Groups["sec"].Value);
+
+                    int millis = 0;
+                    if (match.Groups["ms"].Success)
+                    {
+                        string msRaw = match.Groups["ms"].Value;
+                        // If 2 digits (centiseconds, e.g., .45), multiply by 10 to get milliseconds (450ms)
+                        millis = msRaw.Length == 2 ? int.Parse(msRaw) * 10 : int.Parse(msRaw);
+                    }
+
+                    TimeSpan start = new TimeSpan(0, 0, minutes, seconds, millis);
+                    string text = match.Groups["text"].Value.Trim();
+
+                    parsedList.Add(new SubtitleCueModel
+                    {
+                        StartTime = start,
+                        Text = text,
+                        StartString = start.ToString(start.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff")
+                    });
+                }
+
+                // Compute EndTimes: each cue ends where the next cue begins
+                for (int i = 0; i < parsedList.Count; i++)
+                {
+                    if (i < parsedList.Count - 1)
+                    {
+                        parsedList[i].EndTime = parsedList[i + 1].StartTime;
+                    }
+                    else
+                    {
+                        // Default the final line duration (e.g. 5 seconds after start)
+                        parsedList[i].EndTime = parsedList[i].StartTime + TimeSpan.FromSeconds(5);
+                    }
+
+                    TimeSpan end = parsedList[i].EndTime;
+                    parsedList[i].EndString = end.ToString(end.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff");
+                }
+
+                Subtitles.Clear();
+                foreach (var cue in parsedList)
+                {
+                    Subtitles.Add(cue);
+                }
+
+                rawcontent = rawContent;
+                if (tglView.Content.ToString() == "Visual Editor")
+                {
+                    txtTextEditor.Text = rawContent;
+                    return;
+                }
+            }
+        }
     }
 }

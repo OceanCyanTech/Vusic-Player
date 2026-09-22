@@ -61,6 +61,7 @@ namespace Vusic_Player.Configuration.Playback
         private bool isFullQueue = false;
         private double _totalDuration;
         private string _songName = "Nothing playing";
+        private string _lrcTrackPath = "";
         private string itemscount = "• 0 items";
         private string TotalQueueDuration = "• 00:00:00";
         private string _albumName = "Unknown Album";
@@ -241,6 +242,11 @@ namespace Vusic_Player.Configuration.Playback
         {
             get => _songName;
             set => SetProperty(ref _songName, value);
+        }
+        public string LRCTrackPath
+        {
+            get => _lrcTrackPath;
+            set => SetProperty(ref _lrcTrackPath, value);
         }
         private string _fileName = "";
 

@@ -64,7 +64,7 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="7" Spacing="10" Margin="0, 10">
                 <TextBlock Tapped="TextBlock_Tapped_2" Text="Jump back to your favourites" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
-                <HyperlinkButton Content="View all favourites" FontSize="16" Margin="0, 10"></HyperlinkButton>
+                <HyperlinkButton Name="hypViewAllFav" Click="hypViewAllFav_Click" Content="View all favourites" FontSize="16" Margin="0, 10"></HyperlinkButton>
             </StackPanel>
 
             <Expander Grid.Row="8" HorizontalContentAlignment="Stretch" Header="Recommended Favourites" HorizontalAlignment="Stretch" IsExpanded="False" Expanding="expRecentsVideo_Expanding" Name="expFav">

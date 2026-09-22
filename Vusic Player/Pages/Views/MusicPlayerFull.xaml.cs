@@ -428,12 +428,13 @@ namespace Vusic_Player.Pages.Views
                 return "";
             }
         }
+        string filepathlrctrack = "";
         private async void OceanContentDialog_PrimaryRequested()
         {
             var lyrictrack = mediacontroller.LyricModel;
             Debug.WriteLine(lyrictrack.SyncedLyrics);
             var filepath = await WriteToTemporaryFileAsync(lyrictrack.SyncedLyrics, lyrictrack.TrackName);
-  
+            filepathlrctrack = filepath;
             PlaybackStart(filepath);
             OceanContentDialog.HideDlg();
             MainWindow.ShowWindow();
@@ -621,7 +622,16 @@ namespace Vusic_Player.Pages.Views
 
         private void btnLyricEditor_Click(object sender, RoutedEventArgs e)
         {
-            SubtitleEditorWindow.ShowDialog(true);
+            if (File.Exists(filepathlrctrack))
+            {
+                SubtitleEditorWindow.ShowDialog(true, filepathlrctrack);
+                mediacontroller.LRCTrackPath = filepathlrctrack;
+            }
+            else
+            {
+                SubtitleEditorWindow.ShowDialog(true);
+
+            }
         }
     }
 }

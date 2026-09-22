@@ -32,6 +32,7 @@
                 </Button>
             </StackPanel>
         </TeachingTip>
+        <Button Grid.Row="1" Content="Load Current Lyrics" Name="btnCurrentLyrics" Click="btnCurrentLyrics_Click"/>
         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="2">
             <Button Name="tglView" ToolTipService.ToolTip="Toggle View" Content="Text Editor" Click="tglView_Click_1" Style="{StaticResource AccentButtonStyle}"/>
             <Button Name="btnNewSubtitleFile" Click="btnNewSubtitleFile_Click">

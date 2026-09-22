@@ -272,14 +272,21 @@ namespace Vusic_Player.UI.Dialogs
 
         private void btnSaveandClose_Click(object sender, RoutedEventArgs e)
         {
-            subeditor.Save();
+            if (subeditor.Visibility == Visibility.Visible)
+            {
+                subeditor.Save();
+            }
+            else
+            {
+                lyreditor.Save();
+            }
             if (_appWindow == null) return;
             MainWindow.ShowWindow();
             _appWindow.Hide();
         }
         EditorView editorview => EditorView.Instance;
 
-        public static SubtitleEditorWindow ShowDialog(bool isLyricEditor = false)
+        public static SubtitleEditorWindow ShowDialog(bool isLyricEditor = false, string lrctrack = "")
         {
             if (_instance == null)
             {

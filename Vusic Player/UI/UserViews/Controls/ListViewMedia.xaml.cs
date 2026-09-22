@@ -859,7 +859,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
                     song.IsFavourite = true;
                     song.FavString = "Remove from Favourites";
-
+                    FavouritesRemoved?.Invoke(song);
                 }
 
 
@@ -1758,6 +1758,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         }
         bool isVideoFirst = false;
+        public event Action<SongModel>? FavouritesRemoved;
         private async void mnftSortbyMediaType_Click(object sender, RoutedEventArgs e)
         {
             var observablevideos = new ObservableCollection<SongModel>();
