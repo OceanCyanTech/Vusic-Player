@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Vusic_Player.Pages.Views.PitchExport"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.Pages.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <local:CountToAudioFilesConverter x:Key="CountToAudioFilesConv"/>
+        <local:CountToAudioFilesProcessedConverter x:Key="CountToAudioFilesProcessedConv"/>
+    </Page.Resources>
+    <Grid Margin="40, 40" RowSpacing="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Audio Pitch" Style="{StaticResource TitleTextBlockStyle}"/>
+        <TextBlock Text="Apply pitch change to one or more audio files" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        <Button Name="btnAddAudioFiles" Click="btnAddAudioFiles_Click" Grid.Row="2">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Image Source="/Assets/addicon.png" Width="20"/>
+                <TextBlock Text="Add Audio Files"/>
+            </StackPanel>
+        </Button>
+        <TextBlock Text="{x:Bind AddedFiles.Count, Converter={StaticResource CountToAudioFilesConv}, Mode=OneWay}" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        <Grid Grid.Row="4" ColumnSpacing="100">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Border  Grid.Column="0"
+Padding="20"  Margin="0, 10"
+VerticalAlignment="Top" 
+HorizontalAlignment="Center"
+Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" 
+BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+BorderThickness="1" 
+CornerRadius="16"
+                >
+                <Grid RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Pitch Options" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <NumberBox Name="numPitchValue" Grid.Row="1" Header="Pitch Value"/>
+                </Grid>
+            </Border>
+            <Border  Grid.Column="1"
+Padding="20"  Margin="0, 10"
+VerticalAlignment="Top" 
+HorizontalAlignment="Center"
+Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" 
+BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+BorderThickness="1" 
+CornerRadius="16"
+                >
+                <Border.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem  Text="Add Files" Name="mnftAddFiles" Click="btnAddAudioFiles_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Border.ContextFlyout>
+                <Grid Grid.Column="1" RowSpacing="30">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Audio Files" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="1">
+                        <Grid RowSpacing="20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock VerticalAlignment="Center" Text="{x:Bind ProcessedFiles.Count, Mode=OneWay, Converter={StaticResource CountToAudioFilesProcessedConv}}" Grid.Row="0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <Button HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Content="Apply Pitch Change" Name="btnApplyReverb" Click="btnApplyReverb_Click"/>
+                            <StackPanel Visibility="Collapsed" Orientation="Horizontal" Name="stkOutputActions" Grid.Row="2" Spacing="10">
+                                <Button Name="btnPlayAllOutput" Click="btnPlayAllOutput_Click">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Image Width="20" Source="/Assets/play.png"/>
+                                        <TextBlock Text="Play All Pitch Change Output"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Name="btnAddtoQueueAllOutput" Click="btnAddtoQueueAllOutput_Click">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Image Width="20" Source="/Assets/appicon.png"/>
+                                        <TextBlock Text="Add to Queue all Pitch Change Output"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                        <Grid ToolTipService.ToolTip="Pitch will be changed and files will be processed into this directory" Width="260" HorizontalAlignment="Left" VerticalAlignment="Center" RowSpacing="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Export Directory"/>
+                            <TextBox Grid.Row="1"  Name="txtOutputDirectory" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Default Music Folder"/>
+                            <Button Grid.Row="1" Background="Transparent" BorderBrush="Transparent" 
+VerticalAlignment="Stretch" HorizontalAlignment="Right" Name="btnExportDirectory" 
+Content="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" 
+Click="btnExportDirectory_Click"/>
+                            <CheckBox Checked="chkCustomDirectories_Checked" Unchecked="chkCustomDirectories_Checked" Grid.Row="2" Name="chkCustomDirectories" Content="Custom Directories for individual audio files"/>
+
+                        </Grid>
+                    </StackPanel>
+                    <ListView ItemsSource="{x:Bind AddedFiles, Mode=OneWay}"  Name="lstViewAddedFiles" Grid.Row="2">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ToolTipService.ToolTip="{Binding FilePath}" ColumnSpacing="20">
+                                    <Grid.ContextFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem  Text="Play Original" Name="mnftPlayOriginal" Click="mnftPlayOriginal_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Play Pitch Change Output" Name="mnftPlayOutput" Click="mnftPlayOutput_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator Visibility="{Binding VisibilityOfCompletedFileLocation}"/>
+                                            <MenuFlyoutItem Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Add Pitch Change Output to Queue" Name="mnftAddToQueueOutput" Click="mnftAddToQueueOutput_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem  Text="Remove" Name="mnftRemoveAudioFile" Click="mnftRemoveAudioFile_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem  Text="Change Export Directory" Name="mnftChangeExportDir" Click="mnftChangeExportDir_Click"  IsEnabled="{Binding DirectorySelectionEnabled}" Visibility="{Binding IndividualDirectorySel}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+
+                                            <MenuFlyoutItem  Text="Open File Location" Name="mnftOpenFileLocation" Click="mnftOpenFileLocation_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem  Text="Open File Location of Pitch Change Output" Name="mnftOpenFileLocOutput" Click="mnftOpenFileLocOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem  Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem  Text="Copy File Path of Pitch Change Output" Name="mnftCopyReverbOutputFilePath" Click="mnftCopyReverbOutputFilePath_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem  Text="File Info" Name="mnftFileInfo" Click="mnftFileInfo_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem  Text="File Info of Pitch Change Output" Name="mnftFileInfoReverbOutput" Click="mnftFileInfoReverbOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="d"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </Grid.ContextFlyout>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <FontIcon Glyph="{Binding Glyph}" FontSize="14"/>
+                                    <TextBlock Text="{Binding Title}" Grid.Column="1"/>
+                                    <Button IsEnabled="{Binding DirectorySelectionEnabled}"  ToolTipService.ToolTip="{Binding DirectoryPath}" FontFamily="{StaticResource SymbolThemeFontFamily}"  Visibility="{Binding IndividualDirectorySel}" Grid.Column="2" Content="&#xE8B7;" Name="btnSelectIndividualDir" Click="btnSelectIndividualDir_Click">
+
+                                    </Button>
+                                    <ProgressBar ToolTipService.ToolTip="Progress" Maximum="100" Value="{Binding Progress}" Grid.Column="3" Width="100"/>
+                                    <Image ToolTipService.ToolTip="{Binding ErrorToolTip}" Source="{Binding ImageState}" Grid.Column="4" Width="20"/>
+                                    <Button ToolTipService.ToolTip="Open File Location of Pitch Change Output" FontFamily="{StaticResource SymbolThemeFontFamily}"  Visibility="{Binding VisibilityOfCompletedFileLocation}" Grid.Column="5" Content="&#xE838;" Name="btnOpenFileLocationProcessed" Click="btnOpenFileLocationProcessed_Click">
+
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+
+</Page>

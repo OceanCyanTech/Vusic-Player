@@ -14,6 +14,7 @@
             <TextBlock Text="{Binding ElementName=PitchSlider, Path=Value}" 
                                        HorizontalAlignment="Right" Foreground="{ThemeResource SystemAccentColor}"/>
         </Grid>
+        <Button Content="Apply Pitch To Multiple Audio Files" Name="btnApplyPitchToMultiple" Click="btnApplyPitchToMultiple_Click"/>
         <Grid ColumnSpacing="12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

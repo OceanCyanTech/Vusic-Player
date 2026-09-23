@@ -852,6 +852,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                     song.IsFavourite = false;
                     Favourites.Remove(existing);
                     song.FavString = "Add to Favourites";
+                    FavouritesRemoved?.Invoke(song);
+
 
                 }
                 else
@@ -859,7 +861,6 @@ namespace Vusic_Player.UI.UserViews.Controls
                     Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
                     song.IsFavourite = true;
                     song.FavString = "Remove from Favourites";
-                    FavouritesRemoved?.Invoke(song);
                 }
 
 
@@ -1099,7 +1100,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     AnimateHeartFull(fillHeartIcon, false);
                     Favourites.Remove(existing);
                     song.FavString = "Add to Favourites";
-
+                    FavouritesRemoved?.Invoke(song);
 
                 }
                 await SettingsLoader.SaveSettingsAsync(currentSettings);

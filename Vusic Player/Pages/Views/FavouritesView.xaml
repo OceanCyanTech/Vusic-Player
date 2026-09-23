@@ -7,20 +7,44 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
+    <Page.Resources>
 
+        <local:FavToItems x:Key="CountToFavConv"/>
+ 
+    </Page.Resources>
     <Grid Margin="30, 30" RowSpacing="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="" Name="txtFavouritesCount"></TextBlock>
-        <Button Background="Transparent" Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click">
+        <TextBlock Text="{x:Bind FavouritesItemsCol.Count, Mode=OneWay, Converter={StaticResource CountToFavConv}}" Name="txtFavouritesCount"></TextBlock>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="10">
+        <Button Background="Transparent" Name="btnPlayAll" Click="btnPlayAll_Click">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Width="20" Source="/Assets/play.png"/>
                 <TextBlock Text="Play All"/>
             </StackPanel>
-        </Button>
+            </Button>
+            <Button Background="Transparent" Name="btnAddtoQueue" Click="btnAddtoQueue_Click">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="20" Source="/Assets/play.png"/>
+                    <TextBlock Text="Add to Queue"/>
+                </StackPanel>
+            </Button>
+            <Button Background="Transparent" Name="btnAddItemsToFav" Click="btnAddItemsToFav_Click">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="20" Source="/Assets/play.png"/>
+                    <TextBlock Text="Add new items to Favourites"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
         <controls:ListViewMedia x:Name="lstViewFav" VisiblityofViewButton="Visible" Grid.Row="2" ItemsSource="{x:Bind FavouritesItemsCol, Mode=OneWay}"></controls:ListViewMedia>
+        <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Image Width="25" Source="/Assets/success.png"/>
+                <TextBlock Text="Added selected item(s) to Queue"/>
+            </StackPanel>
+        </TeachingTip>
     </Grid>
 </Page>

@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Pages.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -37,6 +38,14 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral
         {
             PitchSlider.Value = 1;
             MediaProperties.AudioProperties.Pitch.Apply(1);
+        }
+
+        private void btnApplyPitchToMultiple_Click(object sender, RoutedEventArgs e)
+        {
+            if(App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(PitchExport));
+            }
         }
     }
 }

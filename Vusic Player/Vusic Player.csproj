@@ -42,6 +42,7 @@
     <None Remove="Pages\Views\MusicPlayerFull.xaml" />
     <None Remove="Pages\Views\NoSearchResultsPage.xaml" />
     <None Remove="Pages\Views\Onboarding\OptimizeApp.xaml" />
+    <None Remove="Pages\Views\PitchExport.xaml" />
     <None Remove="Pages\Views\PlaylistView.xaml" />
     <None Remove="Pages\Views\QueuePage.xaml" />
     <None Remove="Pages\Views\ReverbExpanded.xaml" />
@@ -245,6 +246,11 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Views\PitchExport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Views\FavouritesView.xaml">
