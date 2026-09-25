@@ -46,9 +46,13 @@ CornerRadius="16"
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Pitch Options" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                    <NumberBox Name="numPitchValue" Grid.Row="1" Header="Pitch Value"/>
+                    <NumberBox Minimum="0.001" Value="2" Name="numPitchValue" Grid.Row="1" Header="Pitch Shift" ValueChanged="numPitchValue_ValueChanged" SpinButtonPlacementMode="Inline"/>
+                    <NumberBox Name="numSemiTones" Grid.Row="2" Header="Semitones Shift" SpinButtonPlacementMode="Inline" ValueChanged="numSemiTones_ValueChanged"/>
+                    <NumberBox Name="numOctaves" Grid.Row="3" Header="Octaves Shift" SpinButtonPlacementMode="Inline" ValueChanged="numOctaves_ValueChanged"/>
                 </Grid>
             </Border>
             <Border  Grid.Column="1"

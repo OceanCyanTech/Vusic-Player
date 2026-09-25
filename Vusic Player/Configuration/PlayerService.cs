@@ -569,6 +569,7 @@ namespace Vusic_Player.Configuration
                         Debug.WriteLine("FSEC" + Masterplayer.MainDemuxer.Status.ToString());
                     }
                 }
+                
                 return;
             }
             if (Masterplayer == null) return;
@@ -577,6 +578,19 @@ namespace Vusic_Player.Configuration
                 Masterplayer.CurTime = 0;
             }
             if (CurrentPlayingPath == "") return;
+            if (!File.Exists(CurrentPlayingPath))
+            {
+                UIController.ErrorMessage = "The file path is unavailable or access to it is denied. Please reopen the file to continue playing it.";
+                LoggedMessage?.Invoke("Unexpected error: Failed/Stopped Demuxer", LogLevelType.Error);
+                ErrorCalled?.Invoke();
+
+                Logger.Log("Unexpected error: Failed/Stopped Demuxer", "PlayerService.Play", Logger.LogLevelType.Error);
+                //Masterplayer.Stop();
+                // filestreamcurrent?.Dispose();
+                JustDisposed = true;
+
+                return;
+            }
             if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
             {
                 Debug.WriteLine("DFIH FAILURE");

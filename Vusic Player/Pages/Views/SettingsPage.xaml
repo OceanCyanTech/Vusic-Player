@@ -92,8 +92,84 @@
                         <HyperlinkButton Content="Documentation and Support" Grid.Row="10"/>
                         <HyperlinkButton Content="Share your feedback to help us improve the app" Grid.Row="11"/>
                     </Grid>
+                    <Grid Name="grdMusicOptions" RowSpacing="30">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Music Options" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <MenuFlyoutSeparator Grid.Row="1"/>
+                        <TextBlock Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                        <TextBlock Text="Permanently delete all playlists you've created." Grid.Row="3"/>
+                        <Button Grid.Row="4"  Content="Delete all Playlists">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel Orientation="Vertical" Spacing="10">
+                                        <TextBlock Text="Are you sure you want to delete all playlists created?"/>
+                                        <TextBlock Text="This cannot be undone"/>
+                                        <Button Content="Confirm Delete" Name="btnDeleteAllPlaylists" Click="btnDeleteAllPlaylists_Click" Style="{StaticResource AccentButtonStyle}" />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+                    <Grid Name="grdVideoOptions" RowSpacing="30">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Video Options" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <MenuFlyoutSeparator Grid.Row="1"/>
+                        <TextBlock Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                        <TextBlock Text="Permanently delete all playlists you've created." Grid.Row="3"/>
+                        <Button Grid.Row="4"  Content="Delete all Playlists">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel Orientation="Vertical" Spacing="10">
+                                        <TextBlock Text="Are you sure you want to delete all playlists created?"/>
+                                        <TextBlock Text="This cannot be undone"/>
+                                        <Button Content="Confirm Delete" Click="btnDeleteAllPlaylists_Click" Style="{StaticResource AccentButtonStyle}" />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+
+                        <MenuFlyoutSeparator Grid.Row="5"/>
+                        <TextBlock Text="Shows" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="6"/>
+                        <TextBlock Text="Permanently delete all shows you've created." Grid.Row="7"/>
+                        <Button Grid.Row="8"  Content="Delete all Shows">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel Orientation="Vertical" Spacing="10">
+                                        <TextBlock Text="Are you sure you want to delete all shows created?"/>
+                                        <TextBlock Text="This cannot be undone"/>
+                                        <Button Content="Confirm Delete" Name="btnDeleteAllShows" Click="btnDeleteAllShows_Click" Style="{StaticResource AccentButtonStyle}" />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+
+                    </Grid>
+
                 </Grid>
             </ScrollViewer>
         </NavigationView>
+        <TeachingTip Name="ttInfo">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Image Source="/Assets/success.png" Name="imgInfo" Width="40"/>
+                <TextBlock Name="txtInfo"/>
+            </StackPanel>
+        </TeachingTip>
     </Grid>
 </Page>

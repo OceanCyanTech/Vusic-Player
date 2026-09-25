@@ -51,7 +51,7 @@
                 </ScrollViewer>
             </TeachingTip>
             <TeachingTip Title="Pitch Control" Name="ttPitch" IsOpen="False">
-                <audiogeneral:Pitch Margin="20, 20"/>
+                <audiogeneral:Pitch x:Name="pitchControl" Margin="20, 20"/>
             </TeachingTip>
             <TeachingTip Name="ttReverb" Target="{x:Bind btnEffects}" IsOpen="False" Title="Audio Reverb" PreferredPlacement="Auto">
 
@@ -63,7 +63,7 @@
                                 <MenuFlyoutItem Text="Close" Click="MenuFlyoutItem_Click"/>
                             </MenuFlyout>
                         </ScrollViewer.ContextFlyout>
-                        <audioadvanced:AudioReverb Margin="2, 0"/>
+                        <audioadvanced:AudioReverb x:Name="audioReverbControl" Margin="2, 0"/>
                     </ScrollViewer>
                 </TeachingTip.Content>
             </TeachingTip>

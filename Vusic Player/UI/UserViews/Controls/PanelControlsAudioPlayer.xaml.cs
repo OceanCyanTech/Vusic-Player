@@ -44,7 +44,22 @@ namespace Vusic_Player.UI.UserViews.Controls
         public PanelControlsAudioPlayer()
         {
             InitializeComponent();
+            pitchControl.PitchExpanded -= PitchControl_PitchExpanded;
+            pitchControl.PitchExpanded += PitchControl_PitchExpanded;
+            audioReverbControl.ReverbExpand -= AudioReverbControl_ReverbExpand;
+            audioReverbControl.ReverbExpand += AudioReverbControl_ReverbExpand;
         }
+
+        private void AudioReverbControl_ReverbExpand()
+        {
+            ttReverb.IsOpen = false;
+        }
+
+        private void PitchControl_PitchExpanded()
+        {
+            ttPitch.IsOpen = false;
+        }
+
         private void btnSpeedfly_Click(object sender, RoutedEventArgs e)
         {
             ttSpeedCustom.IsOpen = false;

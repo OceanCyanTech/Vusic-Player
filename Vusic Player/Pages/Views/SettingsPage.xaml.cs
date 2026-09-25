@@ -5,12 +5,16 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Vusic_Player.Configuration.AppConfig;
+using Vusic_Player.Configuration.UserSettings;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -44,6 +48,8 @@ namespace Vusic_Player.Pages.Views
                 return;
             grdAppSettings.Visibility = Visibility.Collapsed;
             frmAboutOptions.Visibility = Visibility.Collapsed;
+            grdMusicOptions.Visibility = Visibility.Collapsed;
+            grdVideoOptions.Visibility = Visibility.Collapsed;
 
             if (args.SelectedItemContainer == nvgitHomePage)
             {
@@ -52,10 +58,12 @@ namespace Vusic_Player.Pages.Views
 
             else if (args.SelectedItemContainer == nvgitMusicOptions)
             {
+                grdMusicOptions.Visibility = Visibility.Visible;
             }
 
             else if (args.SelectedItemContainer == nvgitVideoOptions)
             {
+                grdVideoOptions.Visibility = Visibility.Visible;
             }
 
             else if (args.SelectedItemContainer == nvgitAppSettings)
@@ -65,6 +73,67 @@ namespace Vusic_Player.Pages.Views
             else if(args.SelectedItemContainer == nvgitAboutHelp)
             {
                 frmAboutOptions.Visibility = Visibility.Visible;
+            }
+
+        }
+
+        
+        
+
+        private async void btnDeleteAllPlaylists_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var playlists = currentSettings.SavedPlaylists;
+                playlists.Clear();
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, "SettingsPage.DeleteAllPlaylists", Logger.LogLevelType.Error);
+                txtInfo.Text = "An unexpected error occured. See log page for more info.";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
+            }
+            finally
+            {
+                txtInfo.Text = "Successfully deleted all playlists!";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
+            }
+        }
+
+
+        private async void btnDeleteAllShows_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var shows = currentSettings.Shows;
+                shows.Clear();
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, "SettingsPage.DeleteAllShows", Logger.LogLevelType.Error);
+                txtInfo.Text = "An unexpected error occured. See log page for more info.";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
+            }
+            finally
+            {
+                txtInfo.Text = "Successfully deleted all shows!";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
             }
 
         }

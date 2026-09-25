@@ -913,12 +913,17 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                 txtEnterFileNameWarning.Visibility = Visibility.Collapsed;
             }
         }
+        public event Action? ReverbExpand;
 
         private void btnApplyMultiple_Click(object sender, RoutedEventArgs e)
         {
             if(App.NavigationFrame != null)
             {
-                App.NavigationFrame.Navigate(typeof(ReverbExpanded));
+                if (App.NavigationFrame.CurrentSourcePageType != typeof(ReverbExpanded))
+                {
+                    App.NavigationFrame.Navigate(typeof(ReverbExpanded));
+                    ReverbExpand?.Invoke();
+                }
             }
         }
     }

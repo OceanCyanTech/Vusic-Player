@@ -33,7 +33,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral
         {
             MediaProperties.AudioProperties.Pitch.Apply(obj);
         }
-
+        public event Action? PitchExpanded;
         private void btnPitchReset_Click(object sender, RoutedEventArgs e)
         {
             PitchSlider.Value = 1;
@@ -44,7 +44,11 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral
         {
             if(App.NavigationFrame != null)
             {
-                App.NavigationFrame.Navigate(typeof(PitchExport));
+                if (App.NavigationFrame.CurrentSourcePageType != typeof(PitchExport))
+                {
+                    PitchExpanded?.Invoke();
+                    App.NavigationFrame.Navigate(typeof(PitchExport));
+                }
             }
         }
     }

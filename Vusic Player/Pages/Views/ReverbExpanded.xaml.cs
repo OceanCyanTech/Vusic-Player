@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing.Text;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -108,9 +109,14 @@ namespace Vusic_Player.Pages.Views
             numPreDelay.Value = delay;
             numWetGain.Value = gain;
         }
+        double GetValidValue(double val, double defaultValue)
+        {
+            return (double.IsNaN(val) || double.IsInfinity(val)) ? defaultValue : val;
+        }
         ObservableCollection<FilesToModifyAdded> ProcessedFiles = new ObservableCollection<FilesToModifyAdded>();
         private async void btnApplyReverb_Click(object sender, RoutedEventArgs e)
         {
+            if (AddedFiles.Count == 0) return;
             btnAddAudioFiles.IsEnabled = false;
             mnftAddFiles.IsEnabled = false;
             btnApplyReverb.IsEnabled = false;
@@ -185,8 +191,15 @@ namespace Vusic_Player.Pages.Views
 
                     Debug.WriteLine("Path to be processed: " + item.FilePath);
                     // Escape the pipeline properly for cmd.exe
-                    string commandPipeline = $"\"{ffmpegPath}\" -i \"{item.FilePath}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -i - -b:a 192k -f mp3 \"{outputMp3}\"";
+                    string reverberance = GetValidValue(numReverberance.Value, 50).ToString(CultureInfo.InvariantCulture);
+                    string hfDamping = GetValidValue(numHfDamping.Value, 50).ToString(CultureInfo.InvariantCulture);
+                    string roomScale = GetValidValue(numRoomScale.Value, 100).ToString(CultureInfo.InvariantCulture);
+                    string stereoDepth = GetValidValue(numStereoDepth.Value, 100).ToString(CultureInfo.InvariantCulture);
+                    string preDelay = GetValidValue(numPreDelay.Value, 0).ToString(CultureInfo.InvariantCulture);
+                    string wetGain = GetValidValue(numWetGain.Value, 0).ToString(CultureInfo.InvariantCulture);
 
+                    // -vn on the first ffmpeg prevents corrupt cover art from crashing the pipe
+                    string commandPipeline = $"\"{ffmpegPath}\" -i \"{item.FilePath}\" -vn -f sox - | \"{soxExecutablePath}\" -p -p reverb {reverberance} {hfDamping} {roomScale} {stereoDepth} {preDelay} {wetGain} | \"{ffmpegPath}\" -i - -b:a 192k -f mp3 \"{outputMp3}\"";
                     ProcessStartInfo startInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
