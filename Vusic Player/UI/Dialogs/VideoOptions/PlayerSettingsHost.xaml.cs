@@ -35,7 +35,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions
             ctlRecordSettings, ctlVideoFilters, ctlVideoRotation, ctlFlip,
             ctlCustomAspectRatio, ctlAudioPitch, ctlAudioGeneral, ctlAudioDevice,
             ctlAudioDelay, ctlEqualizer, ctlSubtitleGeneral, ctlSubtitleCustomize,
-            ctlAudioVolume, ctlDelay
+            ctlAudioVolume, ctlDelay, ctlWatermarkOverlay
         };
             lstViewSearchOptions.ItemsSource = searchres;
 
@@ -46,7 +46,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions
      
     );
             //  this.PreviewKeyDown += PlayerSettingsHost_PreviewKeyDown; ;
-            SearchVideoOptions.IndexResults(ctlViewSettings, ctlPlaybackSpeed, ctlVideoStream, ctlSnapshotSettings, ctlRecordSettings, ctlVideoFilters, ctlVideoRotation, ctlFlip, ctlCustomAspectRatio, ctlAudioPitch, ctlAudioGeneral, ctlAudioDevice, ctlAudioDelay, ctlEqualizer, ctlSubtitleGeneral, ctlSubtitleGeneral, ctlSubtitleCustomize, ctlDelay);
+            SearchVideoOptions.IndexResults(ctlViewSettings, ctlPlaybackSpeed, ctlVideoStream, ctlSnapshotSettings, ctlRecordSettings, ctlVideoFilters, ctlVideoRotation, ctlFlip, ctlCustomAspectRatio, ctlAudioPitch, ctlAudioGeneral, ctlAudioDevice, ctlAudioDelay, ctlEqualizer, ctlSubtitleGeneral, ctlSubtitleGeneral, ctlSubtitleCustomize, ctlDelay, ctlWatermarkOverlay);
             ManualNavigationVideoSettings.NavigCalled += ManualNavigationVideoSettings_NavigCalled;
         }
         private void lstViewSearchOptions_AlwaysPreviewKeyDown(object sender, KeyRoutedEventArgs e)
@@ -182,6 +182,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions
                     sbiFilters.IsSelected = (subTabIdx == 1);
                     sbiOrientation.IsSelected = (subTabIdx == 2);
                     sbiAspectRatio.IsSelected = (subTabIdx == 3);
+                    sbiWaterMark.IsSelected = (subTabIdx == 4);
                     break;
                 case 1:
                     GeneralTab.IsSelected = (subTabIdx == 0);
@@ -215,6 +216,10 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions
                 else if (ManualNavigationVideoSettings.SubtabIndex == 3)
                 {
                     sbiAspectRatio.IsSelected = true;
+                }
+                else if (ManualNavigationVideoSettings.SubtabIndex == 4)
+                {
+                    sbiWaterMark.IsSelected = true;
                 }
             }
             else if (tbViewOptions.SelectedIndex == 1)
@@ -264,7 +269,8 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions
     ctlSubtitleGeneral,    // 14
     ctlSubtitleCustomize,   // 15
     ctlAudioVolume, //16
-    ctlDelay //17
+    ctlDelay, //17
+    ctlWatermarkOverlay//18
 };
 
                     // Simplified Assignment
@@ -331,6 +337,10 @@ DependencyProperty.Register(
                 {
                     sbiAspectRatio.IsSelected = true;
                 }
+                else if (SubTabViewSelectedIndex == 4)
+                {
+                    sbiWaterMark.IsSelected = true;
+                }
             }
             else if (tbViewOptions.SelectedIndex == 1)
             {
@@ -377,7 +387,8 @@ DependencyProperty.Register(
     ctlSubtitleGeneral,    // 14
     ctlSubtitleCustomize,   // 15
     ctlAudioVolume, //16
-    ctlDelay //17
+    ctlWatermarkOverlay, //17
+    ctlDelay //18
 };
 
                 // Simplified Assignment
@@ -534,6 +545,7 @@ DependencyProperty.Register(
             voOrientation.Visibility = Visibility.Collapsed;
 
             voAspectRatio.Visibility = Visibility.Collapsed;
+            voWatermark.Visibility = Visibility.Collapsed;
             switch (currentSelectedIndex)
             {
                 case 0:
@@ -550,6 +562,10 @@ DependencyProperty.Register(
 
                 case 3:
                     voAspectRatio.Visibility = Visibility.Visible;
+                    break;
+
+                case 4:
+                    voWatermark.Visibility = Visibility.Visible;
                     break;
 
             }
@@ -630,6 +646,10 @@ DependencyProperty.Register(
                     else if (selected.SegmentIndex == 3)
                     {
                         sbiAspectRatio.IsSelected = true;
+                    }
+                    else if (selected.SegmentIndex == 4)
+                    {
+                        sbiWaterMark.IsSelected = true;
                     }
                 }
 

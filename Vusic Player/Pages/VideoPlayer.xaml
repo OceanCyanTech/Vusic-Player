@@ -239,6 +239,15 @@
              />
                 </winui:FlyleafHost.RenderTransform>
             </winui:FlyleafHost>
+            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel1" Text="Timestamp" Visibility="Collapsed"/>
+            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel2" Text="Timestamp" Visibility="Collapsed"/>
+            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel3" Text="Timestamp" Visibility="Collapsed"/>
+            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel4" Text="Timestamp" Visibility="Collapsed"/>
+            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel5" Text="Timestamp" Visibility="Collapsed"/>
+            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel6" Text="Timestamp" Visibility="Collapsed"/>
+            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel7" Text="Timestamp" Visibility="Collapsed"/>
+            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel8" Text="Timestamp" Visibility="Collapsed"/>
+            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel9" Text="Timestamp" Visibility="Collapsed"/>
             <StackPanel Name="stkRecording" Visibility="Collapsed" Orientation="Horizontal" Spacing="5" VerticalAlignment="Top" Margin="10, 10">
                 <Image Width="15" Source="/Assets/recordicon.png"></Image>
 

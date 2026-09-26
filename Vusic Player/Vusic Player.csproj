@@ -93,6 +93,7 @@
     <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\View.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml" />
+    <None Remove="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewAllRecentVideos.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewRecentVideos.xaml" />
@@ -674,6 +675,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Views\Onboarding\OptimizeApp.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

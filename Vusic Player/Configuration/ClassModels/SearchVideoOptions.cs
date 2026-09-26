@@ -17,7 +17,7 @@ namespace Vusic_Player.Configuration.ClassModels
             FrameworkElement stkPitch, FrameworkElement stkAudioStream, FrameworkElement stkAudioDevice,
             FrameworkElement stkAudioDelay, FrameworkElement stkEqualizer,
             // Subtitle Targets
-            FrameworkElement stkSubtitleStream, FrameworkElement stkSubtitleExternal, FrameworkElement grdSubtitlesCustomize, FrameworkElement stkSubDelay)
+            FrameworkElement stkSubtitleStream, FrameworkElement stkSubtitleExternal, FrameworkElement grdSubtitlesCustomize, FrameworkElement stkSubDelay, FrameworkElement stkWatermarkOverlay)
         {
             // --- VIDEO SECTION (TabIndex 0) ---
 
@@ -49,6 +49,9 @@ namespace Vusic_Player.Configuration.ClassModels
 
             string[] aspectratiokeywords = { "width", "height", "16:9", "resolution", "aspect ratio" };
             searchIndex.Add(new SettingSearchResult { Name = "Aspect Ratio", Keywords = aspectratiokeywords, TabIndex = 0, SegmentIndex = 3, TargetGrid = grdcustomAspectRatio });
+
+            string[] watermarkoverlaykeywords = { "watermark", "overlay", "timestamp", "timecode", "clock" };
+            searchIndex.Add(new SettingSearchResult { Name = "Watermark", Keywords = watermarkoverlaykeywords, TabIndex = 0, SegmentIndex = 4, TargetGrid = stkWatermarkOverlay });
 
 
             // --- AUDIO SECTION (TabIndex 1) ---

@@ -10,6 +10,7 @@
      xmlns:subtitlegeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle.SubtitleGeneral" 
     xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral"
     xmlns:videofilters="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoFilters" xmlns:videoorientation="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoOrientation" xmlns:subtitlecustomize="using:Vusic_Player.UI.Dialogs.VideoOptions.Subtitle.SubtitleCustomize" xmlns:videoaspectratio="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoAspectRatio" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral" xmlns:audioequalizer="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer"
+  xmlns:watermarkoverlay ="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -59,6 +60,7 @@ TextChanged="asbSearchOptions_TextChanged_1"/>
                                 <SelectorBarItem Text="Filters" Name="sbiFilters"></SelectorBarItem>
                                 <SelectorBarItem Text="Orientation" Name="sbiOrientation"></SelectorBarItem>
                                 <SelectorBarItem Text="Aspect Ratio" Name="sbiAspectRatio"></SelectorBarItem>
+                                <SelectorBarItem Text="Watermark" Name="sbiWaterMark"></SelectorBarItem>
                             </SelectorBar>
                             <ScrollViewer Grid.Row="2" Margin="0, 30">
                                 <Grid>
@@ -162,6 +164,17 @@ TextChanged="asbSearchOptions_TextChanged_1"/>
                                             <videoaspectratio:AspectRatioCustom x:Name="ctlCustomAspectRatio" />
                                         </StackPanel>
                                     </Grid>
+                                    <Grid Name="voWatermark" Grid.Row="1" Margin="0, 0" Visibility="Collapsed">
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <EntranceThemeTransition FromVerticalOffset="20" />
+
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
+                                        <watermarkoverlay:WatermarkOverlay x:Name="ctlWatermarkOverlay"/>
+                                        
+                                    </Grid>
+
                                 </Grid>
 
 

@@ -162,10 +162,47 @@ namespace Vusic_Player.Pages
             SubtitleTimer = new();
             SubtitleTimer.Interval = TimeSpan.FromMilliseconds(250);
             SubtitleTimer.Tick += SubtitleTimer_Tick;
-            PlayerService.ErrorCalled -= PlayerService_ErrorCalled; ;
-            PlayerService.ErrorCalled += PlayerService_ErrorCalled; ;
+            PlayerService.ErrorCalled -= PlayerService_ErrorCalled; 
+            PlayerService.ErrorCalled += PlayerService_ErrorCalled;
+
+            Screen.WatermarkCalled -= Screen_WatermarkCalled;
+            Screen.WatermarkCalled += Screen_WatermarkCalled;
 
         }
+
+        private void Screen_WatermarkCalled(int arg1, string arg2, string format)
+        {
+            switch (arg1)
+            {
+                case 1:
+                    txtLabel1.Visibility = Visibility.Visible;
+                    timerlabel1.Interval = TimeSpan.FromMilliseconds(5);
+                    timerlabel1.Tick += ((object? sender, object e) =>
+                    {
+                        if (PlayerService.Masterplayer == null) return;
+
+                        txtLabel1.Text = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime).ToString(@"hh\:mm\:ss\:ff");
+                    });
+                    timerlabel1.Start();
+                    if(arg2 == "Top Left")
+                    {
+                        txtLabel1.HorizontalAlignment = HorizontalAlignment.Left;
+                        txtLabel1.VerticalAlignment = VerticalAlignment.Top;
+                    }
+                    else if (arg2 == "Top Right")
+                    {
+                        txtLabel1.HorizontalAlignment = HorizontalAlignment.Right;
+                        txtLabel1.VerticalAlignment = VerticalAlignment.Top;
+                    }
+                    else if (arg2 == "Top Center")
+                    {
+                        txtLabel1.HorizontalAlignment = HorizontalAlignment.Center;
+                        txtLabel1.VerticalAlignment = VerticalAlignment.Top;
+                    }
+                    break;
+            }
+        }
+        DispatcherTimer timerlabel1 = new DispatcherTimer();
         public interface ISystemMediaTransportControlsInterop
 
         {

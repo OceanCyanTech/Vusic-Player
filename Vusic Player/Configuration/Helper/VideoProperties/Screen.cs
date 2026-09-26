@@ -23,6 +23,11 @@ namespace Vusic_Player.Configuration.Helper.VideoProperties
 
         public object ConvertBack(object value, Type targetType, object parameter, string language) => null;
         public static event Action? OnRecordRequest;
+        public static event Action<int, string, string>? WatermarkCalled;
+        public static void CallWatermark(int index, string position, string format)
+        {
+            WatermarkCalled?.Invoke(index, position, format);
+        }
         public static event Action? OnRecordStopRequest;
         public static string currentRecordPath = string.Empty;
         public static void TakeSnapshot(string SnapshotPath, bool timeStampIncluded, bool positionIncluded)
