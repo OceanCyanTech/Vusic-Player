@@ -22,6 +22,7 @@ using System.DirectoryServices;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -102,6 +103,7 @@ namespace Vusic_Player.Pages
             if (_smtc != null)
             {
                 _smtc.PlaybackStatus = status;
+              
             }
         }
         private void PlayerService_PlayPauseChanged()
@@ -167,42 +169,113 @@ namespace Vusic_Player.Pages
 
             Screen.WatermarkCalled -= Screen_WatermarkCalled;
             Screen.WatermarkCalled += Screen_WatermarkCalled;
+            InitializeLabels();
+        }
+        private void ApplyAlignment(FrameworkElement element, string alignment)
+        {
+            var (h, v) = alignment switch
+            {
+                "Top Left" => (HorizontalAlignment.Left, VerticalAlignment.Top),
+                "Top Center" => (HorizontalAlignment.Center, VerticalAlignment.Top),
+                "Top Right" => (HorizontalAlignment.Right, VerticalAlignment.Top),
+
+                "Center Left" or "Left" => (HorizontalAlignment.Left, VerticalAlignment.Center),
+                "Center" => (HorizontalAlignment.Center, VerticalAlignment.Center),
+                "Center Right" or "Right" => (HorizontalAlignment.Right, VerticalAlignment.Center),
+
+                "Bottom Left" => (HorizontalAlignment.Left, VerticalAlignment.Bottom),
+                "Bottom Center" => (HorizontalAlignment.Center, VerticalAlignment.Bottom),
+                "Bottom Right" => (HorizontalAlignment.Right, VerticalAlignment.Bottom),
+
+                _ => (HorizontalAlignment.Left, VerticalAlignment.Top)
+            };
+
+            element.HorizontalAlignment = h;
+            element.VerticalAlignment = v;
+        }
+        private TextBlock[] _labels;
+        private DispatcherTimer _playbackTimer;
+
+        private void InitializeLabels()
+        {
+            _labels = new[]
+            {
+        txtLabel1, txtLabel2, txtLabel3,
+        txtLabel4, txtLabel5, txtLabel6,
+        txtLabel7, txtLabel8, txtLabel9
+    };
+
+            _playbackTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(16)
+            };
+
+            _playbackTimer.Tick += (s, e) =>
+            {
+                   if (PlayerService.Masterplayer == null) return;
+
+                long curTicks = PlayerService.Masterplayer.CurTime;
+                TimeSpan currentSpan = TimeSpan.FromTicks(curTicks);
+
+                foreach (var lbl in _labels)
+                {
+                    if (lbl.Visibility == Visibility.Visible)
+                    {
+                        string fmt = lbl.Tag as string ?? @"hh\:mm\:ss\:ff";
+                        lbl.Text = FormatTimestamp(currentSpan, curTicks, fmt);
+                    }
+                }
+            };
 
         }
+        private string FormatTimestamp(TimeSpan timeSpan, long curTicks, string format)
+        {
+            if (string.IsNullOrWhiteSpace(format) || format == "Custom Format")
+            {
+                return timeSpan.ToString(@"hh\:mm\:ss\:ff");
+            }
 
+            try
+            {
+                // If the format contains calendar tokens (Day/Month/Year), format using DateTime
+                if (format.Contains("dd") || format.Contains("MM") || format.Contains("yyyy"))
+                {
+                    // Base date (e.g. today or media start date) offset by the current playback ticks
+                    DateTime baseDate = DateTime.Today.AddTicks(curTicks);
+
+                    // Standardize format: strip backslashes meant for TimeSpan escaping if needed
+                    string cleanDateFormat = format.Replace(@"\", "");
+                    return baseDate.ToString(cleanDateFormat);
+                }
+
+                // Standard TimeSpan formatting
+                return timeSpan.ToString(format);
+            }
+            catch (FormatException)
+            {
+                // Fallback in case of an invalid format pattern
+                return timeSpan.ToString(@"hh\:mm\:ss\:ff");
+            }
+        }
         private void Screen_WatermarkCalled(int arg1, string arg2, string format)
         {
-            switch (arg1)
+            // If arg1 is the label number (1-9) and arg2 is the alignment string:
+            int labelIndex = arg1;
+            switch (labelIndex)
             {
-                case 1:
-                    txtLabel1.Visibility = Visibility.Visible;
-                    timerlabel1.Interval = TimeSpan.FromMilliseconds(5);
-                    timerlabel1.Tick += ((object? sender, object e) =>
+                case >= 1 and <= 9:
+                    var targetLabel = _labels[labelIndex - 1];
+                    targetLabel.Visibility = Visibility.Visible;
+                    targetLabel.Tag = format;
+                    ApplyAlignment(targetLabel, arg2);
+                    // Start only if it isn't running yet
+                    if (!_playbackTimer.IsEnabled)
                     {
-                        if (PlayerService.Masterplayer == null) return;
-
-                        txtLabel1.Text = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime).ToString(@"hh\:mm\:ss\:ff");
-                    });
-                    timerlabel1.Start();
-                    if(arg2 == "Top Left")
-                    {
-                        txtLabel1.HorizontalAlignment = HorizontalAlignment.Left;
-                        txtLabel1.VerticalAlignment = VerticalAlignment.Top;
-                    }
-                    else if (arg2 == "Top Right")
-                    {
-                        txtLabel1.HorizontalAlignment = HorizontalAlignment.Right;
-                        txtLabel1.VerticalAlignment = VerticalAlignment.Top;
-                    }
-                    else if (arg2 == "Top Center")
-                    {
-                        txtLabel1.HorizontalAlignment = HorizontalAlignment.Center;
-                        txtLabel1.VerticalAlignment = VerticalAlignment.Top;
+                        _playbackTimer.Start();
                     }
                     break;
             }
         }
-        DispatcherTimer timerlabel1 = new DispatcherTimer();
         public interface ISystemMediaTransportControlsInterop
 
         {
@@ -333,6 +406,8 @@ namespace Vusic_Player.Pages
                 });
             };
         }
+        WatermarkFontValues watermarkFontValues => WatermarkFontValues.Instance;
+
         private void SyncToActualSubtitle()
         {
             if (txtSubtitle == null) return;

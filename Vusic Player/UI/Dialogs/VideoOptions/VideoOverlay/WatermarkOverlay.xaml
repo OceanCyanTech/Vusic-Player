@@ -78,24 +78,47 @@
                         <ComboBoxItem Content="Musical Timecode (Bars and Beats)"/>
                     </ComboBox.Items>
                 </ComboBox>
-                <ComboBox Name="cmbFormat" SelectedIndex="0"  Visibility="Visible" Grid.Row="5" VerticalAlignment="Center" Header="Format">
+                <ComboBox Name="cmbFormat" SelectionChanged="cmbFormat_SelectionChanged" SelectedIndex="0"  Visibility="Visible" Grid.Row="5" VerticalAlignment="Center" Header="Format">
                     <ComboBox.Items>
-                        <ComboBoxItem Content="HH:MM:SS.FF"/>
-                        <ComboBoxItem Content="HH:MM:SS:FF"/>
+                        <ComboBoxItem Content="hh:mm:ss:ff"/>
+                        <ComboBoxItem Content="hh:mm:ss.ff"/>
 
-                        <ComboBoxItem Content="Drop Frame (HH:MM:SS;FF)"/>
-                        <ComboBoxItem Content="Current Time vs Total Duration"/>
-                        <ComboBoxItem Content="Current System Time"/>
-                        <ComboBoxItem Content="Custom Initial Offset"/>
+                        <ComboBoxItem Content="Drop Frame (hh:mm:ss;ff)"/>
+                        <ComboBoxItem Content="hh:mm:ss:fff"/>
+                        <ComboBoxItem Content="hh:mm:ss.fff"/>
+                        <ComboBoxItem Content="hh:mm:ss;fff"/>
+                        <ComboBoxItem Content="DD:MM:YY hh:mm:ss:ff"/>
+                        <ComboBoxItem Content="MM:DD:YY hh:mm:ss:ff"/>
+                        <ComboBoxItem Content="mm:ss"/>
+                        <ComboBoxItem Content="mm:ss:ff"/>
+                        <ComboBoxItem Content="mm:ss:fff"/>
+                        <ComboBoxItem Content="Custom Format"/>
                     </ComboBox.Items>
                 </ComboBox>
+                <TextBox TextChanged="txtCustomFormat_TextChanged" Name="txtCustomFormat" Visibility="Collapsed" PlaceholderText="Enter a valid format..."/>
 
+                <StackPanel Name="txtInvalidFormat" Visibility="Collapsed" Orientation="Horizontal" Spacing="10">
+                <TextBlock  Style="{StaticResource BodyStrongTextBlockStyle}" Text="Invalid Format" Foreground="Red" />
+
+                    <HyperlinkButton Content="View Valid Formats" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player/blob/master/Wiki/Features/Usage/ValidTimecodeFormats.md"></HyperlinkButton>
+                </StackPanel>
                 <NumberBox Header="Offset"/>
                 <Button Name="btnFontSettings" Content="Font Settings">
                     <Button.Flyout>
                         <Flyout>
-                            <StackPanel Orientation="Vertical">
-                                
+                            <StackPanel Orientation="Vertical" Spacing="10">
+                                <ComboBox SelectionChanged="cmbFontFamily_SelectionChanged" Name="cmbFontFamily" Header="Font Family"></ComboBox>
+                                <NumberBox ValueChanged="NumberBox_ValueChanged"  Value="36"  Header="Font Size"></NumberBox>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                <ToggleButton Content="Bold" FontWeight="Bold" Name="tglBold" Checked="tglBold_Checked" Unchecked="tglBold_Checked"/>
+                                <ToggleButton Content="Italics" FontStyle="Italic" Name="tglItalics" Checked="tglItalics_Checked" Unchecked="tglItalics_Checked"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                            
+                                    <TextBlock Text="Font Color"/>
+                                </StackPanel>
+                                <ColorPicker ColorChanged="ColorPicker_ColorChanged"/>
+
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>
@@ -103,6 +126,6 @@
             </StackPanel>
 
         </Grid>
-        
+
     </Grid>
 </UserControl>

@@ -239,15 +239,68 @@
              />
                 </winui:FlyleafHost.RenderTransform>
             </winui:FlyleafHost>
-            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel1" Text="Timestamp" Visibility="Collapsed"/>
-            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel2" Text="Timestamp" Visibility="Collapsed"/>
-            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel3" Text="Timestamp" Visibility="Collapsed"/>
-            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel4" Text="Timestamp" Visibility="Collapsed"/>
-            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel5" Text="Timestamp" Visibility="Collapsed"/>
-            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel6" Text="Timestamp" Visibility="Collapsed"/>
-            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel7" Text="Timestamp" Visibility="Collapsed"/>
-            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel8" Text="Timestamp" Visibility="Collapsed"/>
-            <TextBlock Margin="40, 40" FontSize="36" Name="txtLabel9" Text="Timestamp" Visibility="Collapsed"/>
+            <TextBlock x:Name="txtLabel1" Text="Timestamp" Visibility="Collapsed" Margin="40, 40"
+           FontFamily="{x:Bind watermarkFontValues.Label1FontFamily, Mode=OneWay}"
+           FontSize="{x:Bind watermarkFontValues.Label1FontSize, Mode=OneWay}"
+           FontWeight="{x:Bind watermarkFontValues.Label1FontWeight, Mode=OneWay}"
+           FontStyle="{x:Bind watermarkFontValues.Label1FontStyle, Mode=OneWay}"
+           Foreground="{x:Bind watermarkFontValues.Label1FontColor, Mode=OneWay}"/>
+
+            <TextBlock x:Name="txtLabel2" Text="Timestamp" Visibility="Collapsed" Margin="40, 40"
+           FontFamily="{x:Bind watermarkFontValues.Label2FontFamily, Mode=OneWay}"
+           FontSize="{x:Bind watermarkFontValues.Label2FontSize, Mode=OneWay}"
+                       FontWeight="{x:Bind watermarkFontValues.Label2FontWeight, Mode=OneWay}"
+FontStyle="{x:Bind watermarkFontValues.Label2FontStyle, Mode=OneWay}"
+           Foreground="{x:Bind watermarkFontValues.Label2FontColor, Mode=OneWay}"/>
+
+            <TextBlock x:Name="txtLabel3" Text="Timestamp" Visibility="Collapsed" Margin="40, 40"
+           FontFamily="{x:Bind watermarkFontValues.Label3FontFamily, Mode=OneWay}"
+           FontSize="{x:Bind watermarkFontValues.Label3FontSize, Mode=OneWay}"
+                       FontWeight="{x:Bind watermarkFontValues.Label3FontWeight, Mode=OneWay}"
+FontStyle="{x:Bind watermarkFontValues.Label3FontStyle, Mode=OneWay}"
+           Foreground="{x:Bind watermarkFontValues.Label3FontColor, Mode=OneWay}"/>
+
+            <TextBlock x:Name="txtLabel4" Text="Timestamp" Visibility="Collapsed" Margin="40, 40"
+           FontFamily="{x:Bind watermarkFontValues.Label4FontFamily, Mode=OneWay}"
+           FontSize="{x:Bind watermarkFontValues.Label4FontSize, Mode=OneWay}"
+                       FontWeight="{x:Bind watermarkFontValues.Label4FontWeight, Mode=OneWay}"
+                       FontStyle="{x:Bind watermarkFontValues.Label4FontStyle, Mode=OneWay}"
+           Foreground="{x:Bind watermarkFontValues.Label4FontColor, Mode=OneWay}"/>
+
+            <TextBlock x:Name="txtLabel5" Text="Timestamp" Visibility="Collapsed" Margin="40, 40"
+           FontFamily="{x:Bind watermarkFontValues.Label5FontFamily, Mode=OneWay}"
+           FontSize="{x:Bind watermarkFontValues.Label5FontSize, Mode=OneWay}"
+                                     FontWeight="{x:Bind watermarkFontValues.Label5FontWeight, Mode=OneWay}"
+              FontStyle="{x:Bind watermarkFontValues.Label5FontStyle, Mode=OneWay}"
+           Foreground="{x:Bind watermarkFontValues.Label5FontColor, Mode=OneWay}"/>
+
+            <TextBlock x:Name="txtLabel6" Text="Timestamp" Visibility="Collapsed" Margin="40, 40"
+           FontFamily="{x:Bind watermarkFontValues.Label6FontFamily, Mode=OneWay}"
+           FontSize="{x:Bind watermarkFontValues.Label6FontSize, Mode=OneWay}"
+                                     FontWeight="{x:Bind watermarkFontValues.Label6FontWeight, Mode=OneWay}"
+              FontStyle="{x:Bind watermarkFontValues.Label6FontStyle, Mode=OneWay}"
+           Foreground="{x:Bind watermarkFontValues.Label6FontColor, Mode=OneWay}"/>
+
+            <TextBlock x:Name="txtLabel7" Text="Timestamp" Visibility="Collapsed" Margin="40, 40"
+           FontFamily="{x:Bind watermarkFontValues.Label7FontFamily, Mode=OneWay}"
+                                     FontWeight="{x:Bind watermarkFontValues.Label7FontWeight, Mode=OneWay}"
+              FontStyle="{x:Bind watermarkFontValues.Label7FontStyle, Mode=OneWay}"
+           FontSize="{x:Bind watermarkFontValues.Label7FontSize, Mode=OneWay}"
+           Foreground="{x:Bind watermarkFontValues.Label7FontColor, Mode=OneWay}"/>
+
+            <TextBlock x:Name="txtLabel8" Text="Timestamp" Visibility="Collapsed" Margin="40, 40"
+           FontFamily="{x:Bind watermarkFontValues.Label8FontFamily, Mode=OneWay}"
+                                     FontWeight="{x:Bind watermarkFontValues.Label8FontWeight, Mode=OneWay}"
+              FontStyle="{x:Bind watermarkFontValues.Label8FontStyle, Mode=OneWay}"
+           FontSize="{x:Bind watermarkFontValues.Label8FontSize, Mode=OneWay}"
+           Foreground="{x:Bind watermarkFontValues.Label8FontColor, Mode=OneWay}"/>
+
+            <TextBlock x:Name="txtLabel9" Text="Timestamp" Visibility="Collapsed" Margin="40, 40"
+           FontFamily="{x:Bind watermarkFontValues.Label9FontFamily, Mode=OneWay}"
+           FontSize="{x:Bind watermarkFontValues.Label9FontSize, Mode=OneWay}"
+                                     FontWeight="{x:Bind watermarkFontValues.Label9FontWeight, Mode=OneWay}"
+              FontStyle="{x:Bind watermarkFontValues.Label9FontStyle, Mode=OneWay}"
+           Foreground="{x:Bind watermarkFontValues.Label9FontColor, Mode=OneWay}"/>
             <StackPanel Name="stkRecording" Visibility="Collapsed" Orientation="Horizontal" Spacing="5" VerticalAlignment="Top" Margin="10, 10">
                 <Image Width="15" Source="/Assets/recordicon.png"></Image>
 
@@ -555,7 +608,7 @@ CornerRadius="16" >
                Grid.Row="4" Grid.Column="1" 
                Name="txtFramesDroppedAudio" IsTextSelectionEnabled="True"/>
 
-                                        
+
 
                                         <!-- Separator 2 -->
                                         <MenuFlyoutSeparator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,8"/>

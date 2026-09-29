@@ -18,6 +18,7 @@ namespace Vusic_Player.Configuration.ClassModels
         private string _format = "HH:MM:SS:FF";
         private int _formatindex = 0;
         private string _endString = "00:00:00.000";
+
         private string _label = string.Empty;
         private string _fontName = "Segoe UI";
         private string _position = "Top Left";
@@ -126,6 +127,13 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _label;
             set => SetProperty(ref _label, value);
         }
+
+        public string FontName
+        {
+            get => _fontName;
+            set => SetProperty(ref _fontName, value);
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
