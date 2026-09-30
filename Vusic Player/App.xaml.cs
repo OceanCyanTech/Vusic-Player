@@ -32,7 +32,6 @@ namespace Vusic_Player
 
     public partial class App : Application
     {
-        private Window? _window;
         public static Window? MainWindowInstance;
         public static Window? OceanDialogInstance;
         public static Window? VideoDialogInstance;

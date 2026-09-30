@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Playback;
 
 namespace Vusic_Player.Configuration.Helper.VideoProperties
 {
@@ -23,10 +24,25 @@ namespace Vusic_Player.Configuration.Helper.VideoProperties
 
         public object ConvertBack(object value, Type targetType, object parameter, string language) => null;
         public static event Action? OnRecordRequest;
-        public static event Action<int, string, string>? WatermarkCalled;
-        public static void CallWatermark(int index, string position, string format)
+        public static event Action<int, bool>? WatermarkVisibilityChanged;
+
+        public static event Action<int, string, string, TimeSpan, WatermarkMode, DateTime?, double, double, int, string>? WatermarkCalled;
+        public static void SetWatermarkVisibility(int labelIndex, bool isVisible)
         {
-            WatermarkCalled?.Invoke(index, position, format);
+            WatermarkVisibilityChanged?.Invoke(labelIndex, isVisible);
+        }
+        public static void CallWatermark(
+            int index,
+            string position,
+            string format,
+            TimeSpan offset,
+            WatermarkMode mode,
+            DateTime baseDateTime,
+            double frameRate = 30.0,
+            double bpm = 120.0,
+            int beatsPerBar = 4, string customwatermarktext = "")
+        {
+            WatermarkCalled?.Invoke(index, position, format, offset, mode, baseDateTime, frameRate, bpm, beatsPerBar, customwatermarktext);
         }
         public static event Action? OnRecordStopRequest;
         public static string currentRecordPath = string.Empty;

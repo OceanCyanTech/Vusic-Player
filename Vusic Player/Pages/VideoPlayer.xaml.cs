@@ -170,6 +170,17 @@ namespace Vusic_Player.Pages
             Screen.WatermarkCalled -= Screen_WatermarkCalled;
             Screen.WatermarkCalled += Screen_WatermarkCalled;
             InitializeLabels();
+            Screen.WatermarkVisibilityChanged += (labelIndex, isVisible) =>
+            {
+                if (labelIndex is >= 1 and <= 9)
+                {
+                    var targetLabel = _labels[labelIndex - 1];
+                    targetLabel.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+
+                    // Check if timer should continue running or stop
+                    CheckAndManageTimer();
+                }
+            };
         }
         private void ApplyAlignment(FrameworkElement element, string alignment)
         {
@@ -212,21 +223,106 @@ namespace Vusic_Player.Pages
 
             _playbackTimer.Tick += (s, e) =>
             {
-                   if (PlayerService.Masterplayer == null) return;
+                if (PlayerService.Masterplayer == null) return;
 
                 long curTicks = PlayerService.Masterplayer.CurTime;
-                TimeSpan currentSpan = TimeSpan.FromTicks(curTicks);
+                long totalTicks = PlayerService.Masterplayer.Duration;
 
                 foreach (var lbl in _labels)
                 {
-                    if (lbl.Visibility == Visibility.Visible)
+                    if (lbl.Visibility == Visibility.Visible && lbl.Tag is LabelInfo watermark)
                     {
-                        string fmt = lbl.Tag as string ?? @"hh\:mm\:ss\:ff";
-                        lbl.Text = FormatTimestamp(currentSpan, curTicks, fmt);
+                        // Skip updating static text at 60 FPS!
+                        if (watermark.Mode == WatermarkMode.CustomStaticWatermark)
+                        {
+                            continue;
+                        }
+
+                        lbl.Text = GenerateWatermarkText(curTicks, totalTicks, watermark);
                     }
                 }
             };
+        }
 
+        private string GenerateWatermarkText(long curTicks, long totalTicks, LabelInfo watermark)
+        {
+            string fmt = string.IsNullOrEmpty(watermark.Format) ? @"hh\:mm\:ss\:ff" : watermark.Format;
+            TimeSpan offset = watermark.Offset; // Assuming watermark.Offset is TimeSpan (or use TimeSpan.FromSeconds(watermark.Offset))
+
+            try
+            {
+                switch (watermark.Mode)
+                {
+                    case WatermarkMode.ElapsedPlaybackTime:
+                        {
+                            TimeSpan elapsed = TimeSpan.FromTicks(curTicks) + offset;
+                            if (elapsed < TimeSpan.Zero) elapsed = TimeSpan.Zero;
+                            return FormatTimestamp(elapsed, curTicks, fmt);
+                        }
+
+                    case WatermarkMode.RemainingPlaybackTime:
+                        {
+                            long remainingTicks = Math.Max(0, totalTicks - curTicks);
+                            TimeSpan remaining = TimeSpan.FromTicks(remainingTicks) + offset;
+                            if (remaining < TimeSpan.Zero) remaining = TimeSpan.Zero;
+                            return FormatTimestamp(remaining, remainingTicks, fmt);
+                        }
+
+                    case WatermarkMode.CurrentVsTotalDuration:
+                        {
+                            TimeSpan current = TimeSpan.FromTicks(curTicks) + offset;
+                            TimeSpan total = TimeSpan.FromTicks(totalTicks);
+                            return $"{FormatTimestamp(current, curTicks, fmt)} / {FormatTimestamp(total, totalTicks, fmt)}";
+                        }
+
+                    case WatermarkMode.CurrentSystemTime:
+                        {
+                            // Current real-world wall clock time + offset
+                            DateTime now = DateTime.Now.Add(offset);
+                            string cleanFmt = fmt.Replace(@"\", ""); // Strip TimeSpan escape characters for DateTime
+                            return now.ToString(cleanFmt);
+                        }
+
+                    case WatermarkMode.CustomInitialOffset:
+                        {
+                            // Starts playback from a custom offset timestamp (e.g., standard SMPTE tape start at 01:00:00:00)
+                            TimeSpan customTime = offset + TimeSpan.FromTicks(curTicks);
+                            return FormatTimestamp(customTime, curTicks, fmt);
+                        }
+
+                    case WatermarkMode.RunningFrames:
+                        {
+                            // Calculate frames using the selected FPS (defaulting to 30 if not specified)
+                            double fps = watermark.FrameRate > 0 ? watermark.FrameRate : 30.0;
+                            double seconds = (TimeSpan.FromTicks(curTicks) + offset).TotalSeconds;
+                            long frameNumber = (long)Math.Max(0, Math.Floor(seconds * fps));
+                            return frameNumber.ToString(); // Or formatted as padded frames: frameNumber.ToString("D6")
+                        }
+
+                    case WatermarkMode.MusicalTimecode:
+                        {
+                            // Bars and Beats calculation based on BPM and Time Signature
+                            double bpm = watermark.BPM > 0 ? watermark.BPM : 120.0;
+                            int beatsPerBar = watermark.BeatsPerBar > 0 ? watermark.BeatsPerBar : 4;
+
+                            double totalSeconds = (TimeSpan.FromTicks(curTicks) + offset).TotalSeconds;
+                            double totalBeats = Math.Max(0, (totalSeconds / 60.0) * bpm);
+
+                            int bar = (int)(totalBeats / beatsPerBar) + 1;
+                            int beat = (int)(totalBeats % beatsPerBar) + 1;
+                            int sixteenth = (int)((totalBeats * 4) % 4) + 1;
+
+                            return $"{bar}.{beat}.{sixteenth}";
+                        }
+
+                    default:
+                        return TimeSpan.FromTicks(curTicks).ToString(@"hh\:mm\:ss\:ff");
+                }
+            }
+            catch
+            {
+                return TimeSpan.FromTicks(curTicks).ToString(@"hh\:mm\:ss\:ff");
+            }
         }
         private string FormatTimestamp(TimeSpan timeSpan, long curTicks, string format)
         {
@@ -257,25 +353,64 @@ namespace Vusic_Player.Pages
                 return timeSpan.ToString(@"hh\:mm\:ss\:ff");
             }
         }
-        private void Screen_WatermarkCalled(int arg1, string arg2, string format)
+        private void Screen_WatermarkCalled(
+            int labelIndex,
+            string position,
+            string format,
+            TimeSpan offset,
+            WatermarkMode mode,
+            DateTime? baseDateTime,
+            double frameRate,
+            double bpm,
+            int beatsPerBar, string customstatic = "")
         {
-            // If arg1 is the label number (1-9) and arg2 is the alignment string:
-            int labelIndex = arg1;
-            switch (labelIndex)
+            if (labelIndex is >= 1 and <= 9)
             {
-                case >= 1 and <= 9:
-                    var targetLabel = _labels[labelIndex - 1];
-                    targetLabel.Visibility = Visibility.Visible;
-                    targetLabel.Tag = format;
-                    ApplyAlignment(targetLabel, arg2);
-                    // Start only if it isn't running yet
-                    if (!_playbackTimer.IsEnabled)
-                    {
-                        _playbackTimer.Start();
-                    }
-                    break;
+                var targetLabel = _labels[labelIndex - 1];
+
+                targetLabel.Tag = new LabelInfo
+                {
+                    Format = format,
+                    Offset = offset,
+                    Mode = mode,
+                    FrameRate = frameRate,
+                    BPM = bpm,
+                    BeatsPerBar = beatsPerBar
+                };
+
+                targetLabel.Visibility = Visibility.Visible;
+                if (mode == WatermarkMode.CustomStaticWatermark)
+                {
+                 
+                    targetLabel.Text = customstatic;
+                }
+                CheckAndManageTimer();
+                ApplyAlignment(targetLabel, position);
+
+                if (!_playbackTimer.IsEnabled)
+                {
+                    _playbackTimer.Start();
+                }
             }
         }
+
+        private void CheckAndManageTimer()
+        {
+            bool hasDynamicLabels = _labels.Any(lbl =>
+                lbl.Visibility == Visibility.Visible &&
+                lbl.Tag is LabelInfo info &&
+                info.Mode != WatermarkMode.CustomStaticWatermark);
+
+            if (hasDynamicLabels)
+            {
+                if (!_playbackTimer.IsEnabled) _playbackTimer.Start();
+            }
+            else
+            {
+                if (_playbackTimer.IsEnabled) _playbackTimer.Stop();
+            }
+        }
+
         public interface ISystemMediaTransportControlsInterop
 
         {
@@ -1184,6 +1319,7 @@ namespace Vusic_Player.Pages
                 if (string.IsNullOrEmpty(PlayerService.CurrentPlayingPath) || PlayerService.Masterplayer == null) return;
 
                 var settings = await SettingsLoader.LoadSettingsAsync();
+
                 var item = settings.SavedVideoProgress.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
                 if (item != null)
                 {
@@ -1229,7 +1365,11 @@ namespace Vusic_Player.Pages
 
                 await SettingsLoader.SaveSettingsAsync(settings);
             };
-            SaveTimer?.Start();
+            var settings = await SettingsLoader.LoadSettingsAsync();
+            if (settings.IsVideoHistoryDisabled)
+            {
+                SaveTimer?.Start();
+            }
             if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
             {
                 //z   isEpisodeVideo = vdprg.IsEpisode ?? false;

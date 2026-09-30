@@ -31,24 +31,6 @@ namespace Vusic_Player.UI.UserViews.Grids
 {
     public class CountToVisibility : IValueConverter
     {
-        public class CountToVisibilityReverse : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, string language)
-            {
-                if (value is int count)
-                {
-                    return count == 0 ? Visibility.Collapsed : Visibility.Visible;
-                }
-
-                return Visibility.Visible;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, string language)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is int count)
@@ -64,6 +46,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             throw new NotImplementedException();
         }
     }
+
 
     public sealed partial class ContinuePlayingRecentsVideo : UserControl
     {
@@ -108,9 +91,20 @@ namespace Vusic_Player.UI.UserViews.Grids
             else
             {
                 // Retrieve the item at the end of the list
-                var lastSavedItem = settings.SavedVideoProgress.LastOrDefault();
-                var remainingItems = settings.SavedVideoProgress.SkipLast(1).Reverse().ToList();
+                var hiddenVideos = settings.HiddenMedia;
 
+
+                // Filter out hidden entries first
+                var hiddenPathSet = new HashSet<string>(
+     hiddenVideos.Select(h => h.FilePath),
+     StringComparer.OrdinalIgnoreCase
+ );
+
+                var visibleVideos = settings.SavedVideoProgress
+                    .Where(x => !hiddenPathSet.Contains(x.FilePath))
+                    .ToList();
+                var lastSavedItem = visibleVideos.LastOrDefault();
+                var remainingItems = visibleVideos.SkipLast(1).Reverse().ToList();
                 if (lastSavedItem != null)
                 {
                     ContinuePlaying.videoProgressMain = lastSavedItem;
@@ -720,6 +714,36 @@ namespace Vusic_Player.UI.UserViews.Grids
             await SettingsLoader.SaveSettingsAsync(currentSettings);
             stkEnabledEmptyRecents.Visibility = Visibility.Visible;
             stkDisabledEmptyRecents.Visibility = Visibility.Collapsed;
+        }
+
+        private async void mnftHideVideoFromContinuePlaying_Click(object sender, RoutedEventArgs e)
+        {
+            if (ContinuePlaying.videoProgressMain == null) return;
+            var settings = await SettingsLoader.LoadSettingsAsync();
+            settings.HiddenMedia.Add(new HiddenMediaItem { FilePath = ContinuePlaying.videoProgressMain.FilePath });
+            // Retrieve the item at the end of the list
+            var lastSavedItem = settings.SavedVideoProgress.LastOrDefault();
+            if (lastSavedItem != null)
+                settings.SavedVideoProgress.Remove(lastSavedItem);
+            await SettingsLoader.SaveSettingsAsync(settings);
+            await LoadSettings();
+        }
+
+        private async void mnftHideVideoFromContinuePlayingRecents_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vdprg)
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.HiddenMedia.Add(new HiddenMediaItem { FilePath = vdprg.FilePath });
+                var existingpath = currentSettings.SavedVideoProgress.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
+                if (existingpath != null)
+                {
+                    currentSettings.SavedVideoProgress.Remove(existingpath);
+                }
+                VideoProgressList.Remove(vdprg);
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+
         }
     }
 }

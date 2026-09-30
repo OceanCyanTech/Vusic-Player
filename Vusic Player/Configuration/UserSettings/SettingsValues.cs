@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Vusic_Player.Configuration.ClassModels;
@@ -21,6 +22,7 @@ namespace Vusic_Player.Configuration.UserSettings
 
         public ObservableCollection<int> VersionCounter { get; set; } = new();
         public ObservableCollection<FolderModel> FoldersRecent { get; set; } = new();
+        public HashSet<HiddenMediaItem> HiddenMedia { get; set; } = new();
         public ObservableCollection<ArtistModel> ArtistsList { get; set; } = new();
         public ObservableCollection<AlbumModel> AlbumsList { get; set; } = new();
         public ObservableCollection<GenreModel> GenresList { get; set; } = new();

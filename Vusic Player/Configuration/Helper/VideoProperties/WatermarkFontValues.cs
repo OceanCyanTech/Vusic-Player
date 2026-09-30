@@ -19,7 +19,8 @@ namespace Vusic_Player.Configuration.Playback
         CurrentSystemTime,          // Current System Time
         CustomInitialOffset,        // Custom Initial Offset
         RunningFrames,              // Running Frames (Frame Rate to be Selected)
-        MusicalTimecode             // Musical Timecode (Bars and Beats)
+        MusicalTimecode,// Musical Timecode (Bars and Beats)
+        CustomStaticWatermark
     }
     public class WatermarkFontValues : INotifyPropertyChanged
     {

@@ -7,22 +7,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    <UserControl.Resources>
+        <local:CountToVisibility x:Key="CountToVisConverter"/>
+    </UserControl.Resources>
     <Grid RowSpacing="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Watermark Overlay" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
         <TextBlock Text="Display a watermark overlay with custom text or a running timecode on the video." Grid.Row="1"/>
-        <TextBlock Text="Timecode" Grid.Row="2" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+        <TextBlock Text="Add upto 9 Watermark Labels" Grid.Row="2" Style="{StaticResource BodyStrongTextBlockStyle}"/>
 
-        <CheckBox Grid.Row="3" VerticalAlignment="Center" Content="Display Running Timecodes" Name="chkDisplayRunningTimeCode"/>
-        <Grid Grid.Row="4" ColumnSpacing="30">
+        <Grid Grid.Row="3" ColumnSpacing="30">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -32,52 +33,96 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Button Content="Add new Timecoded Label to Display" Name="btnNewTimeCodedLabel" Visibility="Visible" Click="btnNewTimeCodedLabel_Click"/>
-                <ListView SelectionChanged="lstViewAddedTimeCodeLabels_SelectionChanged" ItemsSource="{x:Bind timestamplabels, Mode=OneWay}" Grid.Row="1" Name="lstViewAddedTimeCodeLabels">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid ColumnSpacing="50">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock VerticalAlignment="Center" Text="{Binding Label}"/>
-                                <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Position}" Grid.Column="1"/>
-                                <CheckBox Content="Show" Grid.Column="2" IsChecked="{Binding IsShown}"/>
-                            </Grid>
+                <Button Content="Add new Label to Display" Name="btnNewTimeCodedLabel" Visibility="Visible" Click="btnNewTimeCodedLabel_Click"/>
+                        <ListView SelectionChanged="lstViewAddedTimeCodeLabels_SelectionChanged" 
+          ItemsSource="{x:Bind timestamplabels, Mode=OneWay}" 
+          Grid.Row="1" 
+          Name="lstViewAddedTimeCodeLabels">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnSpacing="50" Background="Transparent">
+                                        <!-- Right-click Context Menu -->
+                                        <Grid.ContextFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="Remove" 
+                                        Icon="Delete" 
+                                        Click="MenuFlyoutItem_Remove_Click"/>
+                                            </MenuFlyout>
+                                        </Grid.ContextFlyout>
 
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
 
-            </Grid>
-            <StackPanel VerticalAlignment="Center" Visibility="Visible" Grid.Column="1" Orientation="Vertical" Spacing="10" Grid.Row="4">
-                <ComboBox Grid.Row="4" SelectedIndex="0" VerticalAlignment="Center" Header="Position">
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Label}"/>
+                                        <TextBlock VerticalAlignment="Center" 
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
+                           Text="{Binding Position}" 
+                           Grid.Column="1"/>
+
+                                        <!-- CheckBox with TwoWay binding and Checked/Unchecked events -->
+                                        <CheckBox Content="Show" 
+                          Grid.Column="2" 
+                          IsChecked="{Binding IsShown, Mode=TwoWay}"
+                          Checked="chkShow_Checked" 
+                          Unchecked="chkShow_Unchecked"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+            <StackPanel VerticalAlignment="Center" Visibility="{x:Bind timestamplabels.Count, Mode=OneWay, Converter={StaticResource CountToVisConverter}}" Grid.Column="1" Orientation="Vertical" Spacing="10" Grid.Row="4">
+                <ComboBox Name="cmbPosition" SelectionChanged="cmbPosition_SelectionChanged" Grid.Row="4" SelectedIndex="0" VerticalAlignment="Center" Header="Position">
                     <ComboBox.Items>
                         <ComboBoxItem Content="Top Left"/>
                         <ComboBoxItem Content="Top Center"/>
                         <ComboBoxItem Content="Top Right"/>
                         <ComboBoxItem Content="Left"/>
-                        <ComboBoxItem Content="Centre"/>
+                        <ComboBoxItem Content="Center"/>
                         <ComboBoxItem Content="Right"/>
                         <ComboBoxItem Content="Bottom Left"/>
                         <ComboBoxItem Content="Bottom Center"/>
                         <ComboBoxItem Content="Bottom Right"/>
                     </ComboBox.Items>
                 </ComboBox>
-                <ComboBox Grid.Row="5" SelectedIndex="0" VerticalAlignment="Center" Header="Mode">
+                <ComboBox Name="cmbMode" SelectionChanged="cmbMode_SelectionChanged" Grid.Row="5" SelectedIndex="0" VerticalAlignment="Center" Header="Mode">
                     <ComboBox.Items>
                         <ComboBoxItem Content="Elapsed Time of Video"/>
                         <ComboBoxItem Content="Remaining Time of Video"/>
-                        <ComboBoxItem Content="Remaining Time of Video"/>
                         <ComboBoxItem Content="Current Time vs Total Duration"/>
                         <ComboBoxItem Content="Current System Time"/>
-                        <ComboBoxItem Content="Custom Initial Offset"/>
+                        <ComboBoxItem Visibility="Collapsed" Content="Custom Initial Offset"/>
                         <ComboBoxItem Content="Running Frames (Frame Rate to be Selected)"/>
                         <ComboBoxItem Content="Musical Timecode (Bars and Beats)"/>
+                        <ComboBoxItem Content="Custom Static Watermark Text"/>
                     </ComboBox.Items>
                 </ComboBox>
+                <StackPanel x:Name="pnlFramesConfig" Visibility="Collapsed" Spacing="8" Margin="0,8,0,0">
+                    <ComboBox x:Name="cmbFrameRate" Header="Frame Rate (FPS)" SelectedIndex="4" SelectionChanged="cmbFrameRate_SelectionChanged">
+                        <ComboBoxItem Content="23.976"/>
+                        <ComboBoxItem Content="24"/>
+                        <ComboBoxItem Content="25"/>
+                        <ComboBoxItem Content="29.97"/>
+                        <ComboBoxItem Content="30"/>
+                        <ComboBoxItem Content="50"/>
+                        <ComboBoxItem Content="59.94"/>
+                        <ComboBoxItem Content="60"/>
+                    </ComboBox>
+                </StackPanel>
+                <TextBox PlaceholderText="Enter custom watermark text..." Name="txtCustomStaticWatermark" TextChanged="txtWatermarkCustomText_TextChanged"  Visibility="Collapsed"/>
+
+                <!-- Musical Timecode Configuration (Visible only when Mode == MusicalTimecode) -->
+                <StackPanel x:Name="pnlMusicalConfig" Visibility="Collapsed" Spacing="8" Margin="0,8,0,0">
+                    <NumberBox x:Name="numBpm" Header="BPM" Value="120" Minimum="20" Maximum="400" SpinButtonPlacementMode="Inline" ValueChanged="numBpm_ValueChanged"/>
+                    <ComboBox x:Name="cmbBeatsPerBar" Header="Beats per Bar (Time Signature)" SelectedIndex="1" SelectionChanged="cmbBeatsPerBar_SelectionChanged">
+                        <ComboBoxItem Content="3 (3/4)"/>
+                        <ComboBoxItem Content="4 (4/4)"/>
+                        <ComboBoxItem Content="6 (6/8)"/>
+                        <ComboBoxItem Content="7 (7/8)"/>
+                    </ComboBox>
+                </StackPanel>
                 <ComboBox Name="cmbFormat" SelectionChanged="cmbFormat_SelectionChanged" SelectedIndex="0"  Visibility="Visible" Grid.Row="5" VerticalAlignment="Center" Header="Format">
                     <ComboBox.Items>
                         <ComboBoxItem Content="hh:mm:ss:ff"/>
@@ -102,7 +147,7 @@
 
                     <HyperlinkButton Content="View Valid Formats" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player/blob/master/Wiki/Features/Usage/ValidTimecodeFormats.md"></HyperlinkButton>
                 </StackPanel>
-                <NumberBox Header="Offset"/>
+                <NumberBox ValueChanged="numOffset_ValueChanged" Header="Offset (Milliseconds)" Value="0" Name="numOffset"/>
                 <Button Name="btnFontSettings" Content="Font Settings">
                     <Button.Flyout>
                         <Flyout>

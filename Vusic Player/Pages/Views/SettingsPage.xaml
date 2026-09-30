@@ -5,13 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:grids="using:Vusic_Player.UI.UserViews.Grids"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <grids:CountToVisibility x:Key="CountToVisConverter"/>
+        <grids:CountToVisibilityReverse x:Key="CountToVisReverseConverter"/>
+    </Page.Resources>
     <Grid  Margin="30, 30">
         <NavigationView IsBackButtonVisible="Collapsed" PaneDisplayMode="Top" SelectionChanged="nvgNavigationMain_SelectionChanged" IsSettingsVisible="False"  Name="nvgNavigationMain">
             <NavigationView.MenuItems>
-                <NavigationViewItem Name="nvgitHomePage" Content="Home Page Options"/>
+                <NavigationViewItem IsSelected="True" Name="nvgitHomePage" Content="Home Page Options"/>
                 <NavigationViewItem Name="nvgitMusicOptions" Content="Music Options"/>
                 <NavigationViewItem Name="nvgitVideoOptions" Content="Video Options"/>
                 <NavigationViewItem Name="nvgitAppSettings" Content="App Config"/>
@@ -55,7 +58,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>  
+                        <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>
                         <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Spacing="15">
                             <StackPanel Orientation="Horizontal" Spacing="20">
                                 <Image VerticalAlignment="Center" Width="50" Source="/Assets/appicon.png"></Image>
@@ -92,7 +95,7 @@
                         <HyperlinkButton Content="Documentation and Support" Grid.Row="10"/>
                         <HyperlinkButton Content="Share your feedback to help us improve the app" Grid.Row="11"/>
                     </Grid>
-                    <Grid Name="grdMusicOptions" RowSpacing="30">
+                    <Grid Name="grdMusicOptions" RowSpacing="30" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -117,8 +120,10 @@
                             </Button.Flyout>
                         </Button>
                     </Grid>
-                    <Grid Name="grdVideoOptions" RowSpacing="30">
+                    <Grid Name="grdVideoOptions" RowSpacing="30" Visibility="Collapsed">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -130,10 +135,55 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Text="Video Options" Style="{StaticResource TitleTextBlockStyle}"/>
+
+
                         <MenuFlyoutSeparator Grid.Row="1"/>
-                        <TextBlock Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
-                        <TextBlock Text="Permanently delete all playlists you've created." Grid.Row="3"/>
-                        <Button Grid.Row="4"  Content="Delete all Playlists">
+                        <TextBlock Text="Continue Playing" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="3">
+                            <CheckBox Checked="chkSaveHistory_Checked" Unchecked="chkSaveHistory_Checked" Content="Save videos to history" Name="chkSaveHistory"/>
+
+                            <TextBlock Text="Delete all history of videos you've viewed on Vusic Player." Grid.Row="3"/>
+                            <Button Grid.Row="4"  Content="Delete all Video History">
+                                <Button.Flyout>
+                                    <Flyout>
+                                        <StackPanel Orientation="Vertical" Spacing="10">
+                                            <TextBlock Text="Are you sure you want to delete all video history?"/>
+                                            <TextBlock Text="This cannot be undone"/>
+                                            <Button Content="Confirm Delete" Name="btnDeleteAllVideoHistory" Click="btnDeleteAllVideoHistory_Click" Style="{StaticResource AccentButtonStyle}" />
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                            <HyperlinkButton Content="View hidden videos" Name="hypBlockedVideos" Click="hypBlockedVideos_Click" Grid.Row="3"/>
+                            <Grid RowSpacing="15" Name="grdHiddenVideos" Visibility="Collapsed">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <ListView ItemsSource="{x:Bind HiddenVideos, Mode=OneWay}" Name="lstHiddenVideos" >
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnSpacing="20">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding FilePath}"/>
+                                                <Button Grid.Column="1" Background="Transparent"  Content="Remove from hidden list" Name="btnRemoveVideoFromHiddenList" Click="btnRemoveVideoFromHiddenList_Click"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                                <TextBlock Text="There are no hidden videos!" Grid.Row="1"
+           Visibility="{x:Bind GetEmptyVisibility(HiddenVideos.Count), Mode=OneWay}" />
+                            </Grid>
+                            <MenuFlyoutSeparator />
+
+                        </StackPanel>
+                    <TextBlock Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="4"/>
+                        <TextBlock Text="Permanently delete all playlists you've created." Grid.Row="5"/>
+                        <Button Grid.Row="6"  Content="Delete all Playlists">
                             <Button.Flyout>
                                 <Flyout>
                                     <StackPanel Orientation="Vertical" Spacing="10">
@@ -145,10 +195,10 @@
                             </Button.Flyout>
                         </Button>
 
-                        <MenuFlyoutSeparator Grid.Row="5"/>
-                        <TextBlock Text="Shows" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="6"/>
-                        <TextBlock Text="Permanently delete all shows you've created." Grid.Row="7"/>
-                        <Button Grid.Row="8"  Content="Delete all Shows">
+                        <MenuFlyoutSeparator Grid.Row="7"/>
+                        <TextBlock Text="Shows" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="8"/>
+                        <TextBlock Text="Permanently delete all shows you've created." Grid.Row="9"/>
+                        <Button Grid.Row="10"  Content="Delete all Shows">
                             <Button.Flyout>
                                 <Flyout>
                                     <StackPanel Orientation="Vertical" Spacing="10">
