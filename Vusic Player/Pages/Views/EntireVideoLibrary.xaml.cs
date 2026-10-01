@@ -362,6 +362,8 @@ namespace Vusic_Player.Pages.Views
                             currentSettings.IsMusicEnabled = isChecked;
                             break;
                     }
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+
                 }
                 else
                 {
@@ -420,8 +422,14 @@ namespace Vusic_Player.Pages.Views
             //Check box for including sub-directories
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             stkLoading.Visibility = Visibility.Visible;
-
-            currentSettings.IncludeSubDirMusLib = chkIncludeSubDirectories.IsChecked ?? true;
+            if(chkIncludeSubDirectories.IsChecked == true)
+            {
+                currentSettings.IncludeSubDirMusLib = true;
+            }
+            else
+            {
+                currentSettings.IncludeSubDirMusLib = false;
+            }
             await SettingsLoader.SaveSettingsAsync(currentSettings);
 
             LoadFolders();
@@ -867,13 +875,6 @@ namespace Vusic_Player.Pages.Views
                 OceanContentDialog.HideDlg();
                 MainWindow.ShowWindow();
             });
-        }
-        private void OceanContentDialog_PrimaryRequested1()
-        {
-            Debug.WriteLine("Yes create");
-            PlaylistCreation.CallShowCreation();
-            OceanContentDialog.HideDlg();
-            MainWindow.ShowWindow();
         }
         #endregion
 

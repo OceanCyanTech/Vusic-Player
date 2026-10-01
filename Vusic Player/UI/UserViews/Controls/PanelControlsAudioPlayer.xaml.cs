@@ -181,15 +181,13 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         }
 
-  
-        ObservableCollection<DeviceOutputShow> AudioDevices = new ObservableCollection<DeviceOutputShow>();
-        private void mnftMultiDevice_Click(object sender, RoutedEventArgs e)
+        public void OpenMultiDeviceController()
         {
 
             AudioDevices.Clear();
             ttMultiDeviceOutput.IsOpen = true;
             multiOutputMixer.ItemsSource = AudioDevices;
-            if(PlayerService.Masterplayer == null)
+            if (PlayerService.Masterplayer == null)
             {
                 grdNoMediaPlaying.Visibility = Visibility.Visible;
                 multiOutputMixer.Visibility = Visibility.Collapsed;
@@ -206,9 +204,18 @@ namespace Vusic_Player.UI.UserViews.Controls
                 if (!isDefault)
                 {
                     var volume = PlayerService.GetVolumeOfDevice(device.Id);
-                    AudioDevices.Add(new DeviceOutputShow { DeviceID = device.Id, DeviceName = device.Name ?? "Unknown Device", DeviceVolume = $"{volume*100.0f}%", Volume = volume*100.0f });
+                    Debug.WriteLine("Each volume is " + volume);
+
+                    AudioDevices.Add(new DeviceOutputShow { DeviceID = device.Id, DeviceName = device.Name ?? "Unknown Device", DeviceVolume = $"{volume * 100.0f}%", Volume = volume * 100.0f });
                 }
             }
+
+        }
+        ObservableCollection<DeviceOutputShow> AudioDevices = new ObservableCollection<DeviceOutputShow>();
+        private void mnftMultiDevice_Click(object sender, RoutedEventArgs e)
+        {
+
+            OpenMultiDeviceController();
         }
 
         private void btnRefreshDevices_Click(object sender, RoutedEventArgs e)
@@ -232,6 +239,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                 if (!isDefault)
                 {
                     var volume = PlayerService.GetVolumeOfDevice(device.Id);
+                    Debug.WriteLine("Each volume is " + volume);
                     AudioDevices.Add(new DeviceOutputShow { DeviceID = device.Id, DeviceName = device.Name ?? "Unknown Device", DeviceVolume = $"{volume * 100.0f}%", Volume = volume * 100.0f });
                 }
             }

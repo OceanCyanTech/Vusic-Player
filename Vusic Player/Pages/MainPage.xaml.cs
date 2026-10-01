@@ -51,11 +51,11 @@ namespace Vusic_Player.Pages
             App.MasterFrame = frmRoot;
             frmMain.Navigate(typeof(HomeView));
             PlayerService.mainXamlRoot = XamlRoot;
-            
+
             _originalHeader = nvgMain.Header;
 
         }
-       
+
         private void UpdatePlaceholderText()
         {
             _suggestions = new List<string>
@@ -125,7 +125,7 @@ namespace Vusic_Player.Pages
                 var seasoncountstring = $"• {show.SeasonCount} {(show.SeasonCount == 1 ? "season" : "seasons")}";
                 newObservableShows.Add(new Show { Poster = show.Poster ?? "ms-appx:///Assets/appicon.png", ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory, ReleaseDate = show.ReleaseDate });
             }
-            foreach(var playlist in currentSettings.SavedPlaylists)
+            foreach (var playlist in currentSettings.SavedPlaylists)
             {
                 newObservablePlaylists.Add(new PlaylistItem { PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, PlaylistId = playlist.PlaylistId, PlaylistNowPlaying = playlist.PlaylistNowPlaying, Thumbnail = playlist.Thumbnail, plthumb = new BitmapImage(new Uri(playlist.ThumbnailString)), DateCreation = playlist.DateCreation, PlaylistGenre = playlist.PlaylistGenre, SongsPaths = playlist.SongsPaths });
 
@@ -156,7 +156,7 @@ namespace Vusic_Player.Pages
             //    SetGridBackground();
             if (e.SourcePageType == typeof(HomeView))
             {
-                      txtHeader.Text = "Home";
+                txtHeader.Text = "Home";
             }
             else if (e.SourcePageType == typeof(MusicLibrary))
                 txtHeader.Text = "Music Library";
@@ -370,9 +370,20 @@ namespace Vusic_Player.Pages
 
         private void chckMultioutput_Checked(object sender, RoutedEventArgs e)
         {
-            PlayerService.MultiDeviceOutput = chckMultioutput.IsChecked ?? false;
+            if (chckMultioutput.IsChecked == true)
+            {
+                mediacontroller.MultiDeviceOutputFeature = true;
+                PlayerService.SetupMultiAudioOutput();
+            }
+            else
+            {
+                mediacontroller.MultiDeviceOutputFeature = false;
+            }
         }
 
-
+        private void btnMultiDeviceOptions_Click(object sender, RoutedEventArgs e)
+        {
+            panelControlAudioPlayer.OpenMultiDeviceController();
+        }
     }
 }

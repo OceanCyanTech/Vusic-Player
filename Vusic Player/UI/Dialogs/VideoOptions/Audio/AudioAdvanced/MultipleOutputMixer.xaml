@@ -9,6 +9,7 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <local:CountToDeviceTextConverter x:Key="DeviceTextConverter"/>
+        <local:VolumeToPercentConverter x:Key="VolumeToPercentConverter"/>
     </UserControl.Resources>
     <Grid>
 
@@ -17,19 +18,28 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
 
             </Grid.RowDefinitions>
             <TextBlock Text="Multi-Device Output" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
             <Button Style="{StaticResource AccentButtonStyle}" Name="btnOutputModeUI" Click="btnOutputModeUI_Click" Content="List Mode"  Grid.Row="1"></Button>
-
-            <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="10">
-                <TextBlock Text="{x:Bind ItemsSource.Count, Mode=OneWay, Converter={StaticResource DeviceTextConverter}}" Name="txtDevicesHeader" Style="{StaticResource BodyLargeTextBlockStyle}" Grid.Row="2"></TextBlock>
+            <MenuFlyoutSeparator Grid.Row="2"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="10">
+                <TextBlock Text="{x:Bind ItemsSource.Count, Mode=OneWay, Converter={StaticResource DeviceTextConverter}}" Name="txtDevicesHeader" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="2"></TextBlock>
                 <Button Name="btnRefresh" ToolTipService.ToolTip="Refresh" Click="btnRefresh_Click">
                     <Image Source="/Assets/appicon.png" Width="20"/>
                 </Button>
+                <Button Name="btnSearch" ToolTipService.ToolTip="Find Devices">
+                    <Image Source="/Assets/searchicon.png" Width="20"/>
+                    <Button.Flyout>
+                        <Flyout>
+                            <AutoSuggestBox Name="asbSearchDevices" PlaceholderText="Find Devices..." QueryIcon="Find" TextChanged="asbSearchDevices_TextChanged" QuerySubmitted="asbSearchDevices_QuerySubmitted"/>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
             </StackPanel>
-            <ListView ItemsSource="{x:Bind ItemsSource, Mode=OneWay}" Visibility="Collapsed"  Grid.Row="3" Name="lstViewDevices">
+            <ListView ItemsSource="{x:Bind ItemsSource, Mode=OneWay}" Visibility="Collapsed"  Grid.Row="4" Name="lstViewDevices">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid ToolTipService.ToolTip="{Binding DeviceName}" ColumnSpacing="10">
@@ -47,19 +57,22 @@
                             <Image Source="{Binding DeviceThumbnail}" Width ="20"/>
                             <TextBlock Text="{Binding DeviceName}" TextTrimming="CharacterEllipsis" Grid.Column ="1"/>
                             <TextBlock Text="{Binding DeviceVolume}" Grid.Column ="2"/>
-                            <Button ToolTipService.ToolTip="Volume" Grid.Column="3" Background="Transparent" BorderBrush="Transparent">
+                            <Button  ToolTipService.ToolTip="Volume" Grid.Column="3" Background="Transparent" BorderBrush="Transparent">
                                 <Image Width="15" Source="/Assets/volume.png"/>
                                 <Button.Flyout>
                                     <Flyout>
                                         <StackPanel Orientation="Vertical" Spacing="10">
                                             <TextBlock Text="Volume"/>
-                                            <Grid Margin="5,0">
+                                            <Grid Margin="5,0" ColumnSpacing="10">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <NumberBox Maximum="200" Minimum="0" Value="{Binding Volume}" ValueChanged="NumberBox_ValueChanged"/>
-                                                <TextBlock Text="{Binding DeviceVolume}" Grid.Column="1"/>
+                                                <NumberBox Value="{Binding Volume, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+           Maximum="200" 
+           Minimum="0" 
+           PreviewKeyDown="NumberBox_PreviewKeyDown" />
+                                                <TextBlock VerticalAlignment="Center" Text="{Binding DeviceVolume}" Grid.Column="1"/>
                                             </Grid>
                                             <Button Style="{StaticResource AccentButtonStyle}" Content="Set Volume" Name="btnSetVolume" Click="btnSetVolume_Click"></Button>
                                         </StackPanel>
@@ -70,7 +83,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <ListView Visibility="Collapsed" Name="lstViewMixers" ItemsSource="{x:Bind ItemsSource, Mode=OneWay}" Grid.Row="3">
+            <ListView Visibility="Visible" Name="lstViewMixers" ItemsSource="{x:Bind ItemsSource, Mode=OneWay}" Grid.Row="4">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid Name="grdMixers" Margin="0, 10" RowSpacing="20">
@@ -82,21 +95,35 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="{Binding DeviceName}"/>
-                            <Grid Grid.Row="1" ColumnSpacing="5">
+                            <TextBlock Text="{Binding DeviceName}" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <Grid Grid.Row="1" ColumnSpacing="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="{Binding DeviceVolume}"/>
-                                <controls:OceanSlider Width="90"  Grid.Column="1" Value="{Binding Volume}" ValueChangedWithSender="OceanSlider_ValueChangedWithSender" ValueChanged="OceanSlider_ValueChanged"/>
+                                <controls:OceanSlider VerticalAlignment="Center" Width="90" Minimum="0" Maximum="200" IsTooltipEnabled="False"  Grid.Column="1" Value="{Binding Volume}" ValueChangedWithSender="OceanSlider_ValueChangedWithSender" />
                             </Grid>
+                            <MenuFlyoutSeparator Grid.Row="2"/>
                         </Grid>
 
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Grid  Grid.Row="4"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Name="btnCloseSearch" CornerRadius="12" Background="Transparent" BorderBrush="Transparent" Click="btnCloseSearch_Click" ToolTipService.ToolTip="Close Search Results" HorizontalAlignment="Right" Margin="20, 0">
+                    <FontIcon Glyph="&#xE711;" FontSize="36"></FontIcon>
+                </Button>
+                <Frame VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Name="frmSearchResultsNOMATCH"></Frame>
+
+            </Grid>
+
             <TeachingTip Name="ttRenameDevice" IsOpen="False">
                 <StackPanel Orientation="Vertical" Spacing="10">
                     <TextBox Name="txtRenameDevice" PlaceholderText="Rename device..."/>

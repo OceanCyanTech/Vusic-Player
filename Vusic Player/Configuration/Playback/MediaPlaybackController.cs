@@ -77,6 +77,7 @@ namespace Vusic_Player.Configuration.Playback
         private double _speedValue = 1;
         private double _pitchValue = 1;
         private bool _chaptersEnabled = false;
+        private bool _multideviceoutput = false;
         private string _volumeGlyph = "\uE767";
         private string _fullScreenToolTip = "Set Full Screen";
         private string _playPauseToolTip = "Play";
@@ -142,6 +143,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _chaptersEnabled, value))
                 {
                     OnPropertyChanged(nameof(ChaptersEnabled));
+                }
+            }
+        }
+        public bool MultiDeviceOutputFeature
+        {
+            get => _multideviceoutput;
+            set
+            {
+                if (SetProperty(ref _multideviceoutput, value))
+                {
+                    OnPropertyChanged(nameof(MultiDeviceOutputFeature));
                 }
             }
         }

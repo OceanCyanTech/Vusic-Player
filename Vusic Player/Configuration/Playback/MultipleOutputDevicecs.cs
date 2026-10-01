@@ -68,7 +68,7 @@ public class SingleDevicePipeline : IDisposable
     public void SetVolume(float volume)
     {
         if (float.IsNaN(volume) || float.IsInfinity(volume)) volume = 0.0f;
-        _volume = Math.Clamp(volume, 0.0f, 1.0f);
+        _volume = Math.Clamp(volume, 0.0f, 2.0f);
 
         ApplyVolume();
     }

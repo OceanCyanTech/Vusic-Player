@@ -6,15 +6,20 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Pages.Views;
+using Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral;
 using Vusic_Player.UI.UserViews.Controls;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -24,6 +29,51 @@ using Windows.Foundation.Collections;
 
 namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
 {
+    public class VolumeToPercentConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            try
+            {
+                if (value == null) return 0.0;
+
+                double val = System.Convert.ToDouble(value);
+                if (double.IsNaN(val) || double.IsInfinity(val)) return 0.0;
+
+                // 0.5f in model -> 50.0 in NumberBox
+                return val * 100.0;
+            }
+            catch
+            {
+                return 0.0;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            try
+            {
+                if (value == null) return DependencyProperty.UnsetValue;
+
+                double val = System.Convert.ToDouble(value);
+                if (double.IsNaN(val) || double.IsInfinity(val)) return DependencyProperty.UnsetValue;
+
+                // 200.0 in NumberBox -> 2.0f in model
+                float result = (float)(val / 100.0);
+
+                // Respect targetType if the binding specifically expects float vs double
+                if (targetType == typeof(double)) return (double)result;
+
+                return result;
+            }
+            catch
+            {
+                // DependencyProperty.UnsetValue tells XAML to ignore the bad update 
+                // rather than wiping out the property with 0
+                return DependencyProperty.UnsetValue;
+            }
+        }
+    }
     public class CountToDeviceTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -153,8 +203,10 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
             if (sender is Button btn && btn.DataContext is DeviceOutputShow device)
             {
                 var volume = device.Volume;
-                device.DeviceVolume = $"{volume * 100.0f}%";
-                PlayerService.SetVolumeOfDevice(device.DeviceID, (float)volume);
+                Debug.WriteLine(volume + " IS THE VOLUME");
+                device.DeviceVolume = $"{(volume).ToString("F2")}%";
+                var volumetosend = volume / 100;
+                PlayerService.SetVolumeOfDevice(device.DeviceID, (float)volumetosend);
 
             }
         }
@@ -174,19 +226,175 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
             }
         }
 
-        private void OceanSlider_ValueChanged(double obj)
-        {
-
-        }
 
         private void OceanSlider_ValueChangedWithSender(object sender, double value)
         {
-            if (sender is OceanSlider oceanslider && oceanslider.DataContext is DeviceOutputShow device)
+            if (sender is OceanSlider slider && slider.DataContext is DeviceOutputShow device)
             {
-                var volume = device.Volume;
-                device.DeviceVolume = $"{volume * 100.0f}%";
-                PlayerService.SetVolumeOfDevice(device.DeviceID, (float)volume);
+                // Change the clamp maximum from 1.0f to 2.0f to allow up to 200%
+                float newVolume = Math.Clamp((float)(value / 100.0), 0.0f, 2.0f);
+
+                device.Volume = newVolume;
+                device.DeviceVolume = $"{(newVolume * 100.0f).ToString("F2")}%";
+
+                PlayerService.SetVolumeOfDevice(device.DeviceID, newVolume);
             }
+        }
+
+        private void NumberBox_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                if (sender is NumberBox numBox && numBox.DataContext is DeviceOutputShow device)
+                {
+                    TextBox? innerBox = FindVisualChild<TextBox>(numBox);
+
+                    // 2. Read the text from the inner box (fallback to numBox.Text if null)
+                    string currentRawText = innerBox != null ? innerBox.Text : numBox.Text;
+                    // Safe focus move for WinUI 3 Desktop
+                    if (double.TryParse(currentRawText, out double numboxval))
+                    {
+                        device.DeviceVolume = $"{(numboxval).ToString("F2")}%";
+                        var volumetosend = numboxval / 100;
+                        PlayerService.SetVolumeOfDevice(device.DeviceID, (float)volumetosend);
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
+        private static T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < childCount; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T typedChild)
+                    return typedChild;
+
+                T? childOfChild = FindVisualChild<T>(child);
+                if (childOfChild != null)
+                    return childOfChild;
+            }
+            return null;
+        }
+        ObservableCollection<DeviceOutputShow> searchresults = new ObservableCollection<DeviceOutputShow>();
+        private void asbSearchDevices_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (string.IsNullOrEmpty(sender.Text))
+            {
+
+                searchresults.Clear();
+                grdNoSearchResults.Visibility = Visibility.Collapsed;
+                if (btnOutputModeUI.Content.ToString() == "Mixer Mode")
+                {
+                    lstViewDevices.ItemsSource = ItemsSource;
+                    lstViewDevices.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Debug.WriteLine("GridView");
+                    lstViewMixers.ItemsSource = ItemsSource;
+                    lstViewMixers.Visibility = Visibility.Visible;
+
+                }
+                return;
+            }
+
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var results = GetFilteredResults(sender.Text);
+
+                searchresults.Clear();
+                foreach (var item in results) searchresults.Add(item);
+
+                sender.ItemsSource = results.Any() ? null : new List<string> { "No matches found!" };
+                if (btnOutputModeUI.Content.ToString() == "Mixer Mode")
+                {
+                    lstViewDevices.ItemsSource = searchresults;
+                }
+                else
+                {
+                    Debug.WriteLine("searching in gridview");
+                    lstViewMixers.ItemsSource = searchresults;
+
+                }
+            }
+
+        }
+        private IEnumerable<DeviceOutputShow> GetFilteredResults(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return Enumerable.Empty<DeviceOutputShow>();
+
+            var rawQuery = query.Trim();
+
+
+            var textQuery = rawQuery.Trim();
+
+            return ItemsSource.Where(s =>
+            {
+                bool textMatch = !string.IsNullOrEmpty(textQuery) && (
+                    (s.DeviceName?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (s.DeviceID?.Contains(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+                );
+
+
+
+                return textMatch;
+            })
+            .OrderByDescending(s => s.DeviceName.StartsWith(textQuery, StringComparison.OrdinalIgnoreCase) == true)
+            .ThenBy(s => s.DeviceName);
+        }
+
+
+        private void asbSearchDevices_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var results = GetFilteredResults(sender.Text);
+
+            if (results.Any())
+            {
+                grdNoSearchResults.Visibility = Visibility.Collapsed;
+                if (btnOutputModeUI.Content.ToString() == "Mixer Mode")
+                {
+                    lstViewDevices.Visibility = Visibility.Visible;
+                    Grid.SetRow(grdNoSearchResults, 2);
+                }
+                else
+                {
+                    Grid.SetRow(grdNoSearchResults, 3);
+
+                    lstViewMixers.Visibility = Visibility.Visible;
+                }
+
+                searchresults.Clear();
+                foreach (var item in results) searchresults.Add(item);
+            }
+            else if (ItemsSource.Count > 0)
+            {
+                if (btnOutputModeUI.Content.ToString() == "Mixer Mode")
+                {
+
+
+                    lstViewDevices.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+
+                    lstViewDevices.Visibility = Visibility.Collapsed;
+                }
+                grdNoSearchResults.Visibility = Visibility.Visible;
+                frmSearchResultsNOMATCH.Navigate(typeof(NoSearchResultsPage), null, new DrillInNavigationTransitionInfo());
+            }
+        }
+
+        private void btnCloseSearch_Click(object sender, RoutedEventArgs e)
+        {
+            asbSearchDevices.Text = "";
+            asbSearchDevices.ItemsSource = null;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

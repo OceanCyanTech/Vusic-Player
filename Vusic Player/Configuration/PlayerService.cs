@@ -63,7 +63,6 @@ namespace Vusic_Player.Configuration
         public static bool InVideoPage = false;
         public static XAudio2MultiOutputEngine? _multiAudioEngine;
 
-        public static bool MultiDeviceOutput = false;
 
         public static bool JustDisposed = false;
         public static void PIPRestoreAction()
@@ -264,9 +263,9 @@ namespace Vusic_Player.Configuration
 
                 var headphonedevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Headphone"));
                 var speakerdevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Speaker"));
-                if (MultiDeviceOutput)
+                if (UIController.MultiDeviceOutputFeature)
                 {
-                    // SetupMultiAudioOutput();
+                    SetupMultiAudioOutput();
                 }
                 //var devices = FlyleafNAudioMultiOutput.GetAvailableDevices();
                 //foreach (var device in devices)
@@ -426,7 +425,7 @@ namespace Vusic_Player.Configuration
                 _multiAudioEngine.SetDeviceVolume(deviceId, volume);
             }
         }
-        private static void SetupMultiAudioOutput()
+        public static void SetupMultiAudioOutput()
         {
             if (Masterplayer == null) return;
             // Create engine instance attached to Flyleaf player

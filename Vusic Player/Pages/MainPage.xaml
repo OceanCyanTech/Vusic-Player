@@ -102,10 +102,10 @@ Stretch="UniformToFill"/>
 
                             <playback_views:PlayPauseControls SpaceWidth="10" Margin="0, 5" Grid.Row="5" HorizontalAlignment="Center"></playback_views:PlayPauseControls>
                             <playback_views:VolumeSlider Margin="0, 0" Grid.Row="6"></playback_views:VolumeSlider>
-                            <playback_views:PanelControlsAudioPlayer ExpandedViewButtonToolTip="Expanded View" Grid.Row="7"></playback_views:PanelControlsAudioPlayer>
+                            <playback_views:PanelControlsAudioPlayer x:Name="panelControlAudioPlayer"  ExpandedViewButtonToolTip="Expanded View" Grid.Row="7"></playback_views:PanelControlsAudioPlayer>
                             <CheckBox HorizontalAlignment="Center" Name="chckMultioutput" Grid.Row="8" Content="Multi-Device Audio Output" Checked="chckMultioutput_Checked" Unchecked="chckMultioutput_Checked"/>
 
-                            <Button Name="btnMultiDeviceOptions" Content="Multi-Device Audio Output Mixer" HorizontalAlignment="Center" Margin="0, 10" Grid.Row="9"/>
+                            <Button Click="btnMultiDeviceOptions_Click" IsEnabled="{x:Bind mediacontroller.MultiDeviceOutputFeature,Mode=OneWay}" Name="btnMultiDeviceOptions" Content="Multi-Device Audio Output Mixer" HorizontalAlignment="Center" Margin="0, 10" Grid.Row="9"/>
                             
                         </Grid>
                     </Grid>
