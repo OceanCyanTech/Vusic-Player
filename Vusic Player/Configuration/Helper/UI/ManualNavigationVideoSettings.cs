@@ -14,6 +14,11 @@ namespace Vusic_Player.Configuration.Helper.UI
         public static int PanelIndex = 0;
 
         public static event Action? NavigCalled;
+        public static event Action? ClearWatermarkvalues;
+        public static void CallClearance()
+        {
+            ClearWatermarkvalues?.Invoke();
+        }
         public static void CallNavig()
         {
             Debug.WriteLine("SPEAK I KNOW HY: " + TabIndex + " " + SubtabIndex + " " + PanelIndex);

@@ -48,6 +48,17 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions
             //  this.PreviewKeyDown += PlayerSettingsHost_PreviewKeyDown; ;
             SearchVideoOptions.IndexResults(ctlViewSettings, ctlPlaybackSpeed, ctlVideoStream, ctlSnapshotSettings, ctlRecordSettings, ctlVideoFilters, ctlVideoRotation, ctlFlip, ctlCustomAspectRatio, ctlAudioPitch, ctlAudioGeneral, ctlAudioDevice, ctlAudioDelay, ctlEqualizer, ctlSubtitleGeneral, ctlSubtitleGeneral, ctlSubtitleCustomize, ctlDelay, ctlWatermarkOverlay);
             ManualNavigationVideoSettings.NavigCalled += ManualNavigationVideoSettings_NavigCalled;
+            ManualNavigationVideoSettings.ClearWatermarkvalues += ManualNavigationVideoSettings_ClearWatermarkvalues;
+        }
+
+        private void ManualNavigationVideoSettings_ClearWatermarkvalues()
+        {
+            ClearWatermarkVal();
+        }
+
+        public void ClearWatermarkVal()
+        {
+            ctlWatermarkOverlay.ClearValues();
         }
         private void lstViewSearchOptions_AlwaysPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {

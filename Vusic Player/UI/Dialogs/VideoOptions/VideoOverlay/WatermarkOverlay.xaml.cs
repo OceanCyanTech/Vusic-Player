@@ -49,16 +49,8 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
         public WatermarkOverlay()
         {
             InitializeComponent();
-            PresetPositions.Add("Top Left");
-            PresetPositions.Add("Top Center");
-            PresetPositions.Add("Top Right");
-            PresetPositions.Add("Right");
-            PresetPositions.Add("Left");
-            PresetPositions.Add("Center");
-            PresetPositions.Add("Bottom Left");
-            PresetPositions.Add("Bottom Right");
-            PresetPositions.Add("Bottom Center");
 
+            InitializePresetPositions();
             var systemFonts = Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies()
                                .OrderBy(f => f)
                                .ToList();
@@ -71,6 +63,19 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                               ?? systemFonts.FirstOrDefault();
 
             cmbFontFamily.SelectedItem = defaultFont;
+        }
+        private void InitializePresetPositions()
+        {
+            AlreadyOccupiedPositions.Clear();
+            PresetPositions.Add("Top Left");
+            PresetPositions.Add("Top Center");
+            PresetPositions.Add("Top Right");
+            PresetPositions.Add("Right");
+            PresetPositions.Add("Left");
+            PresetPositions.Add("Center");
+            PresetPositions.Add("Bottom Left");
+            PresetPositions.Add("Bottom Right");
+            PresetPositions.Add("Bottom Center");
         }
         ObservableCollection<TimestampWatermark> timestamplabels = new ObservableCollection<TimestampWatermark>();
         List<string> AlreadyOccupiedPositions = new List<string>();
@@ -240,6 +245,11 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     selectedTimestamp.BeatsPerBar
                 );
             }
+        }
+        public void ClearValues()
+        {
+            timestamplabels.Clear();
+            InitializePresetPositions();
         }
         private void btnNewTimeCodedLabel_Click(object sender, RoutedEventArgs e)
         {

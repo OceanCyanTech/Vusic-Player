@@ -49,7 +49,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             audioReverbControl.ReverbExpand -= AudioReverbControl_ReverbExpand;
             audioReverbControl.ReverbExpand += AudioReverbControl_ReverbExpand;
         }
-
+       
         private void AudioReverbControl_ReverbExpand()
         {
             ttReverb.IsOpen = false;

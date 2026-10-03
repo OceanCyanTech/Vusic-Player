@@ -224,6 +224,7 @@ where T : DependencyObject
         public static void HideDialog()
         {
             if (_appWindow == null) return;
+          
             MainWindow.ShowWindow();
             _appWindow.Hide();
         }

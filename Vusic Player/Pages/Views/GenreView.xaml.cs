@@ -321,7 +321,7 @@ namespace Vusic_Player.Pages.Views
                 {
                     if (AudioMetadata.ChangeGenre(song.Path, targetGenre) == false)
                     {
-                        Debug.WriteLine($"ERROR OCCURED IN ADDING {filepath} TO ARTIST: " + targetGenre);
+                        Debug.WriteLine($"ERROR OCCURED IN ADDING {filepath} TO GENRE: " + targetGenre);
                     }
                 }
 

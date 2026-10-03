@@ -1366,7 +1366,7 @@ namespace Vusic_Player.Pages
                 await SettingsLoader.SaveSettingsAsync(settings);
             };
             var settings = await SettingsLoader.LoadSettingsAsync();
-            if (settings.IsVideoHistoryDisabled)
+            if (settings.IsVideoHistoryDisabled ==false)
             {
                 SaveTimer?.Start();
             }
@@ -2185,6 +2185,7 @@ namespace Vusic_Player.Pages
                             PlayerService.Pause();
                         }
                     }
+                    ManualNavigationVideoSettings.CallClearance();
                     PlayerService.InVideoPage = false;
                 }
 
