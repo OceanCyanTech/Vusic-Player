@@ -20,7 +20,6 @@ namespace Vusic_Player.Configuration.AppConfig
             WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             return AppWindow.GetFromWindowId(myWndId);
         }
-        public event Action<bool>? FullScreenToggled;
         public static MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
 
         public static void FullScreenToggle()

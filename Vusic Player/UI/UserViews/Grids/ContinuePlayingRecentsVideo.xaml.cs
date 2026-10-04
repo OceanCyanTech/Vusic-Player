@@ -500,15 +500,8 @@ namespace Vusic_Player.UI.UserViews.Grids
         {
             if (ContinuePlaying.videoProgressMain == null) return;
 
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var favourites = currentSettings.Favourites;
-            var exist = favourites.FirstOrDefault(o => o.FilePath == ContinuePlaying.videoProgressMain.FilePath);
-            bool isFav = false;
-            if (exist != null)
-            {
-                isFav = true;
-            }
-            var newsong = new SongModel { IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, Title = ContinuePlaying.videoProgressMain.FileName, FilePath = ContinuePlaying.videoProgressMain.FilePath, IsEpisode = ContinuePlaying.videoProgressMain.IsEpisode, Glyph = "\uE8B2", VisibilityofVideoInfo = Visibility.Visible, IsFavourite = isFav, MediaType = "Video" };
+      
+            var newsong = new SongModel { IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, Title = ContinuePlaying.videoProgressMain.FileName, FilePath = ContinuePlaying.videoProgressMain.FilePath, IsEpisode = ContinuePlaying.videoProgressMain.IsEpisode, Glyph = "\uE8B2", VisibilityofVideoInfo = Visibility.Visible, MediaType = "Video" };
             QueueService.VusicQueue.Add(newsong);
             QueueService.VusicQueueNext.Add(newsong);
         }

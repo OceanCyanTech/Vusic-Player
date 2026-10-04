@@ -627,7 +627,6 @@ namespace Vusic_Player.Pages.Views
             Microsoft.UI.Dispatching.DispatcherQueue dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
             // 1. Keep the UI-bound settings/existing paths check on the UI thread
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var favourites = currentSettings.Favourites?.ToList() ?? new List<FavouriteItems>();
 
             // 1. Snapshot currently loaded paths
             var existingPaths = AllAvailableSongs
@@ -681,7 +680,6 @@ namespace Vusic_Player.Pages.Views
                     {
                         using (var tagFile = TagLib.File.Create(filePath))
                         {
-                            bool isFav = favourites.Any(p => string.Equals(Path.GetFullPath(p.FilePath), filePath, StringComparison.OrdinalIgnoreCase));
 
                             string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
                                 ? Path.GetFileNameWithoutExtension(filePath)
@@ -702,7 +700,6 @@ namespace Vusic_Player.Pages.Views
                                 Artist = artist,
                                 FilePath = filePath,
                                 SongDuration = tagFile.Properties.Duration,
-                                IsFavourite = isFav
                             });
                         }
                     }
@@ -739,7 +736,6 @@ namespace Vusic_Player.Pages.Views
                             Artist = liteTrack.Artist,
                             FilePath = liteTrack.FilePath,
                             SongDuration = liteTrack.SongDuration,
-                            IsFavourite = liteTrack.IsFavourite,
                             Glyph = "\uEC4F"
                         });
                     }

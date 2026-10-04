@@ -71,50 +71,42 @@ namespace Vusic_Player.Pages.Views
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            base.OnNavigatedTo(e);
+
+            FavouritesItemsCol.Clear();
+
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var favourites = currentSettings.Favourites;
+            var favourites = currentSettings?.Favourites;
+            if (favourites == null) return;
+
             foreach (var favourite in favourites)
             {
-                if (File.Exists(favourite.FilePath))
+                if (string.IsNullOrEmpty(favourite.FilePath) || !File.Exists(favourite.FilePath))
+                    continue;
+
+                StorageFile file = await StorageFile.GetFileFromPathAsync(favourite.FilePath);
+                MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
+
+                string title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
+                string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
+                string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
+
+                string fileExtension = file.FileType.ToLowerInvariant();
+                bool isVideo = Extensions.VideoExtensions.List.Contains(fileExtension);
+
+                FavouritesItemsCol.Add(new SongModel
                 {
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(favourite.FilePath);
-                    MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
-
-
-                    string title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
-                    string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
-                    string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
-                    var glyph = "\uEC4F";
-
-                    string fileExtension = file.FileType.ToLowerInvariant();
-                    Visibility visibility = Visibility.Visible;
-                    Visibility visibilityofvidtext = Visibility.Collapsed;
-                    if (Extensions.VideoExtensions.List.Contains(fileExtension))
-                    {
-
-                        glyph = "\uE8B2";
-                        visibility = Visibility.Collapsed;
-                        visibilityofvidtext = Visibility.Visible;
-                    }
-                    double opac = 1.0;
-                    string text = "Remove from Favourites";
-                    FavouritesItemsCol.Add(new SongModel
-                    {
-                        Title = title,
-                        AlbumName = album,
-                        Artist = artist,
-                        SongDuration = properties.Duration,
-                        FilePath = file.Path,
-                        FavOpacity = opac,
-                        FavString = text,
-                        VisibilityofAudioMeta = visibility,
-                        VisibilityofVideoInfo = visibilityofvidtext,
-                        IsFavourite = true,
-                        Glyph = glyph,
-                    });
-                }
+                    Title = title,
+                    AlbumName = album,
+                    Artist = artist,
+                    SongDuration = properties.Duration,
+                    FilePath = file.Path,
+                    Glyph = isVideo ? "\uE8B2" : "\uEC4F",
+                    VisibilityofAudioMeta = isVideo ? Visibility.Collapsed : Visibility.Visible,
+                    VisibilityofVideoInfo = isVideo ? Visibility.Visible : Visibility.Collapsed
+                    // IsFavourite, FavString, and FavOpacity are automatically resolved by SongModel!
+                });
             }
-            base.OnNavigatedTo(e);
         }
         private void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
@@ -141,53 +133,51 @@ namespace Vusic_Player.Pages.Views
         private async void btnAddItemsToFav_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
-            var media = await FilePickers.MediaPicker.PickMultipleMediaFilesAsync(App.MainWindowInstance, "Select Media to add to Favourites");
-            if(media != null)
+
+            var media = await FilePickers.MediaPicker.PickMultipleMediaFilesAsync(
+                App.MainWindowInstance,
+                "Select Media to add to Favourites"
+            );
+
+            if (media == null || media.Count == 0) return;
+
+            // Filter to only new items not already favorited
+            var newMediaFiles = media
+                .Where(item => !GlobalFavourites.Instance.IsFavourite(item.Path))
+                .ToList();
+
+            if (!newMediaFiles.Any()) return;
+
+            // 1. Bulk persist to settings and notify listeners
+            await GlobalFavourites.Instance.SetFavouritesRangeAsync(
+                newMediaFiles.Select(m => m.Path),
+                add: true
+            );
+
+            // 2. Add newly favorited songs to the current view
+            foreach (var item in newMediaFiles)
             {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var favourites = currentSettings.Favourites;
-                foreach(var item in media)
+                MusicProperties properties = await item.Properties.GetMusicPropertiesAsync();
+
+                string title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : item.DisplayName;
+                string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
+                string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
+
+                string fileExtension = item.FileType.ToLowerInvariant();
+                bool isVideo = Extensions.VideoExtensions.List.Contains(fileExtension);
+
+                FavouritesItemsCol.Add(new SongModel
                 {
-                    var exist = favourites.FirstOrDefault(p => p.FilePath == item.Path);
-                    if(exist == null)
-                    {
-                        MusicProperties properties = await item.Properties.GetMusicPropertiesAsync();
-                        favourites.Add(new FavouriteItems { FilePath = item.Path });
-
-                        string title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : item.DisplayName;
-                        string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
-                        string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
-                        var glyph = "\uEC4F";
-
-                        string fileExtension = item.FileType.ToLowerInvariant();
-                        Visibility visibility = Visibility.Visible;
-                        Visibility visibilityofvidtext = Visibility.Collapsed;
-                        if (Extensions.VideoExtensions.List.Contains(fileExtension))
-                        {
-
-                            glyph = "\uE8B2";
-                            visibility = Visibility.Collapsed;
-                            visibilityofvidtext = Visibility.Visible;
-                        }
-                        double opac = 1.0;
-                        string text = "Remove from Favourites";
-                        FavouritesItemsCol.Add(new SongModel
-                        {
-                            Title = title,
-                            AlbumName = album,
-                            Artist = artist,
-                            SongDuration = properties.Duration,
-                            FilePath = item.Path,
-                            FavOpacity = opac,
-                            FavString = text,
-                            VisibilityofAudioMeta = visibility,
-                            VisibilityofVideoInfo = visibilityofvidtext,
-                            IsFavourite = true,
-                            Glyph = glyph,
-                        });
-                    }
-                }
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    Title = title,
+                    AlbumName = album,
+                    Artist = artist,
+                    SongDuration = properties.Duration,
+                    FilePath = item.Path,
+                    Glyph = isVideo ? "\uE8B2" : "\uEC4F",
+                    VisibilityofAudioMeta = isVideo ? Visibility.Collapsed : Visibility.Visible,
+                    VisibilityofVideoInfo = isVideo ? Visibility.Visible : Visibility.Collapsed
+                    // IsFavourite, FavString, and FavOpacity are automatically resolved
+                });
             }
         }
     }

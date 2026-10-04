@@ -32,49 +32,11 @@ namespace Vusic_Player.Pages.Views
         public MusicLibrary()
         {
             InitializeComponent();
-            userplaylists.OpenPlaylistClick += Userplaylists_OpenPlaylistClick;
-            userplaylists.GridViewItemClick += Userplaylists_GridViewItemClick;
+      
             NavigationToPlaylist.NavigCalled += NavigationToPlaylist_NavigCalled;
         }
 
-        private void Userplaylists_GridViewItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (e.ClickedItem is PlaylistItem playlist)
-            {
-                if (_isopening) return;
-                try
-                {
-
-                    _isopening = true;
-                    this.Frame.Navigate(typeof(PlaylistView), playlist);
-
-                }
-                finally
-                {
-                    _isopening = false;
-
-                }
-            }
-        }
         private bool _isopening = false;
-        private void Userplaylists_OpenPlaylistClick(object sender, RoutedEventArgs e)
-        {
-            if (sender is MenuFlyoutItem mnft && mnft.DataContext is PlaylistItem playlist)
-            {
-                if (_isopening) return;
-                try
-                {
-
-                    _isopening = true;
-                    this.Frame.Navigate(typeof(PlaylistView), playlist);
-
-                }
-                finally
-                {
-                    _isopening = false;
-                }
-            }
-        }
 
         private void NavigationToPlaylist_NavigCalled()
         {
@@ -82,7 +44,6 @@ namespace Vusic_Player.Pages.Views
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
 
             base.OnNavigatedFrom(e);
         }
@@ -129,13 +90,7 @@ namespace Vusic_Player.Pages.Views
             });
         }
 
-        private void OceanContentDialog_PrimaryRequested()
-        {
-            PlaylistCreation.CallPlaylistCreation();
-            OceanContentDialog.HideDlg();
-            MainWindow.ShowWindow();
-
-        }
+        
 
         private void btnOpenMusic_Click(object sender, RoutedEventArgs e)
         {

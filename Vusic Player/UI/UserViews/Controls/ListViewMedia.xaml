@@ -5,13 +5,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters" xmlns:usersettings="using:Vusic_Player.Configuration.UserSettings"
     mc:Ignorable="d">
 
     <UserControl.Resources>
         <converters:FavoriteToGlyphConverter x:Key="FavoritetoGlyphConv"/>
         <converters:FavoriteToColorConverter x:Key="FavoritetoColorConv"/>
-
+        <usersettings:IsFavouriteConverter x:Key="IsFavouriteConverter"/>
         <MenuFlyout x:Key="mnftMainContext" Opened="mnftContext_Opened"  x:Name="mnftContext" >
             <MenuFlyoutItem Text="{Binding Title}"  IsEnabled="False" Name="txtHeaderContext"></MenuFlyoutItem>
             <MenuFlyoutSeparator/>
@@ -56,7 +56,7 @@
                     <FontIcon Glyph="&#xECC8;"></FontIcon>
                 </MenuFlyoutSubItem.Icon>
             </MenuFlyoutSubItem>
-            <MenuFlyoutItem Text="{Binding IsFavourite, Converter={StaticResource FavToolTipConverter}}" Tag="Favo"  x:Name="mnftAddToFavourites" Click="mnftAddToFavourites_Click" >
+            <MenuFlyoutItem Text="{Binding FavString}" Tag="Favo"  x:Name="mnftAddToFavourites" Click="mnftAddToFavourites_Click" >
                 <MenuFlyoutItem.Icon>
                     <FontIcon Name="OutlineHeart" 
 Glyph="{Binding IsFavourite, Converter={StaticResource FavoritetoGlyphConv}, Mode=OneWay}" 

@@ -840,34 +840,17 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private async void mnftAddToFavourites_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem mnft && mnft.DataContext is SongModel song)
+            if (sender is FrameworkElement { DataContext: SongModel song } && song.FilePath != null)
             {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                var pathtocheck = song.FilePath;
-                if (pathtocheck == null) return;
-                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-                if (existing != null)
+                bool wasFav = song.IsFavourite;
+                await GlobalFavourites.Instance.ToggleFavouriteAsync(song.FilePath);
+
+                if (wasFav)
                 {
-                    song.IsFavourite = false;
-                    Favourites.Remove(existing);
-                    song.FavString = "Add to Favourites";
                     FavouritesRemoved?.Invoke(song);
-
-
                 }
-                else
-                {
-                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
-                    song.IsFavourite = true;
-                    song.FavString = "Remove from Favourites";
-                }
-
-
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
         }
-
         private SongModel? GetSelectedSong(object sender)
         {
             // Helper to get SongModel from sender
@@ -1075,38 +1058,21 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private async void btnFavourite_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Content is Grid rootGrid && btn.DataContext is SongModel song)
+            if (sender is Button { DataContext: SongModel song, Content: Grid rootGrid } && song.FilePath != null)
             {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                var pathtocheck = song.FilePath;
-                if (pathtocheck == null) return;
-                var fillHeartIcon = rootGrid.FindName("HeartIcon") as FontIcon;
-                if (fillHeartIcon == null) return;
-                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-                if (existing == null)
-                {
-                    fillHeartIcon.Glyph = "\uEB52";
-                    song.IsFavourite = true;
-                    AnimateHeartFull(fillHeartIcon, true);
-                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
-                    song.FavString = "Remove from Favourites";
+                bool wasFav = song.IsFavourite;
+                await GlobalFavourites.Instance.ToggleFavouriteAsync(song.FilePath);
 
-                }
-                else
+                if (wasFav)
                 {
-                    song.IsFavourite = false;
-                    fillHeartIcon.Glyph = "\uEB51";
-                    AnimateHeartFull(fillHeartIcon, false);
-                    Favourites.Remove(existing);
-                    song.FavString = "Add to Favourites";
                     FavouritesRemoved?.Invoke(song);
-
                 }
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
 
+                if (rootGrid.FindName("HeartIcon") is FontIcon heartIcon)
+                {
+                    AnimateHeartFull(heartIcon, !wasFav);
+                }
             }
-            // Favourite button click logic
         }
         private void AnimateHeartFull(FontIcon targetIcon, bool isBecomingFavorite)
         {
@@ -1145,10 +1111,6 @@ namespace Vusic_Player.UI.UserViews.Controls
             var brush = compositor.CreateColorBrush();
             visual.Properties.InsertColor("Color", isBecomingFavorite ? Colors.Red : Colors.Gray);
 
-            // Start the color transition
-            // Note: For FontIcon, it's often easier to just swap the Glyph 
-            // and let the Composition color animation handle the tint.
-            targetIcon.Foreground = new SolidColorBrush(isBecomingFavorite ? Colors.Red : Colors.Gray);
         }
         private void TriggerHeartAnimation(UIElement target)
         {
@@ -1250,57 +1212,23 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private async void btnRemoveSelectionsFromFavourites_Click(object sender, RoutedEventArgs e)
         {
-            var songss = SelectedItems.Cast<SongModel>().ToList(); // Converting to a list is safer if you evaluate multiple times
+            var selectedSongs = SelectedItems.OfType<SongModel>().ToList();
+            if (!selectedSongs.Any()) return;
 
-            bool allAreFavorites = songss.All(item => item.IsFavourite);
+            // If any selected song is a favorite, unfavorite all of them; otherwise, favorite all of them.
+            bool removeFavorites = selectedSongs.Any(s => s.IsFavourite);
+            var paths = selectedSongs.Select(s => s.FilePath);
 
-            bool noneAreFavorites = !songss.Any(item => item.IsFavourite);
+            await GlobalFavourites.Instance.SetFavouritesRangeAsync(paths, add: !removeFavorites);
 
-            bool partialFavorites = songss.Any(item => item.IsFavourite) && !songss.All(item => item.IsFavourite);
-            if (songss.Any(item => item.IsFavourite))
+            if (removeFavorites)
             {
-                Debug.WriteLine("All/Partial");
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                foreach (var item in songss)
+                foreach (var song in selectedSongs)
                 {
-                    var pathtocheck = item.FilePath;
-                    if (pathtocheck == null) return;
-                    var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-
-                    if (existing != null)
-                    {
-                        item.IsFavourite = false;
-                        item.FavString = "Add to Favourites";
-                        Favourites.Remove(existing);
-                    }
-
+                    FavouritesRemoved?.Invoke(song);
                 }
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
-            }
-            else if (noneAreFavorites)
-            {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                foreach (var item in songss)
-                {
-                    var pathtocheck = item.FilePath;
-                    if (pathtocheck == null) return;
-                    var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-
-                    if (existing == null)
-                    {
-                        item.IsFavourite = true;
-                        item.FavString = "Remove from Favourites";
-
-                        Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
-                    }
-
-                }
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
         }
-
         private void mnftSelectitem_Click(object sender, RoutedEventArgs e)
         {
             // Select item from flyout logic

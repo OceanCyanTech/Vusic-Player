@@ -76,7 +76,7 @@ namespace Vusic_Player.Pages.Views
           e.Action == NotifyCollectionChangedAction.Move)
             {
                 // UpdateUI();
-
+                
                 Debug.WriteLine("Moved");
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 var playl = currentSettings.SavedPlaylists;
@@ -445,7 +445,6 @@ namespace Vusic_Player.Pages.Views
                             string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
                             string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
 
-                            bool isfav = favSet.Any(f => f.FilePath == file.Path);
                             ts += properties.Duration;
                             var colorbrush = new SolidColorBrush(Microsoft.UI.Colors.White);
                             var glyph = "\uEC4F";
@@ -471,8 +470,6 @@ namespace Vusic_Player.Pages.Views
                                 visibility = Visibility.Collapsed;
                                 visibilityofvidtext = Visibility.Visible;
                             }
-                            double opac = isfav ? 1.0 : 0.0;
-                            string text = isfav ? "Remove from Favourites" : "Add to Favourites";
                             SongCollection.Add(new SongModel
                             {
                                 Title = title,
@@ -480,11 +477,8 @@ namespace Vusic_Player.Pages.Views
                                 Artist = artist,
                                 SongDuration = properties.Duration,
                                 FilePath = file.Path,
-                                FavOpacity = opac,
-                                FavString = text,
                                 VisibilityofAudioMeta = visibility,
                                 VisibilityofVideoInfo = visibilityofvidtext,
-                                IsFavourite = favSet.Any(f => f.FilePath == file.Path),
                                 Glyph = glyph,
                                 TitleColor = colorbrush,
 
@@ -535,7 +529,7 @@ namespace Vusic_Player.Pages.Views
                         string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
                         string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
 
-                        bool isfav = favSet.Any(f => f.FilePath == path);
+                      
                         ts += properties.Duration;
                         var colorbrush = new SolidColorBrush(Microsoft.UI.Colors.White);
 
@@ -562,9 +556,6 @@ namespace Vusic_Player.Pages.Views
                                 glyph = "\uE768";
                             }
                         }
-
-                        double opac = isfav ? 1.0 : 0.0;
-                        string text = isfav ? "Remove from Favourites" : "Add to Favourites";
                         SongCollection.Add(new SongModel
                         {
                             Title = title,
@@ -572,11 +563,8 @@ namespace Vusic_Player.Pages.Views
                             Artist = artist,
                             SongDuration = properties.Duration,
                             FilePath = file.Path,
-                            FavOpacity = opac,
-                            FavString = text,
                             VisibilityofAudioMeta = visibility,
                             VisibilityofVideoInfo = visibilityofvidtext,
-                            IsFavourite = favSet.Any(f => f.FilePath == file.Path),
                             Glyph = glyph,
                             TitleColor = colorbrush,
                         });

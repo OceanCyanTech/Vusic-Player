@@ -5,20 +5,27 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
@@ -38,43 +45,118 @@ namespace Vusic_Player.Pages.Views
         public QueuePage()
         {
             InitializeComponent();
- //          frmNowPlaying.Navigate(typeof(MusicPlayerFull));
-
+            //          frmNowPlaying.Navigate(typeof(MusicPlayerFull));
+            FileSystemWatch.FileModified -= FileSystemWatch_FileModified;
+            FileSystemWatch.FileModified += FileSystemWatch_FileModified;
 
         }
-        public ObservableCollection<SongModel> VusicQueueList => QueueService.VusicQueueNext;
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private readonly ConcurrentDictionary<string, CancellationTokenSource> _debouncers = new();
+        private CancellationTokenSource? _artistReloadCts;
+
+        private void FileSystemWatch_FileModified(string filePath, string arg2, string arg3, string arg4, TimeSpan duration, string genre)
         {
+            // If an update is already pending for this file, cancel it and restart the timer
+            if (_debouncers.TryRemove(filePath, out var existingCts))
+            {
+                existingCts.Cancel();
+                existingCts.Dispose();
+            }
 
+            var cts = new CancellationTokenSource();
+            _debouncers[filePath] = cts;
+
+            Task.Run(async () =>
+            {
+                try
+                {
+                    // Wait 300ms for Windows Explorer to finish writing and close the file
+                    await Task.Delay(300, cts.Token);
+
+                    if (cts.Token.IsCancellationRequested) return;
+
+                    // Retry reading tags in case File Explorer still holds a brief lock
+                    for (int attempt = 0; attempt < 5; attempt++)
+                    {
+                        try
+                        {
+                            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                            var abstraction = new SimpleStreamAbstraction(filePath, stream);
+                            using var tagFile = TagLib.File.Create(abstraction);
+
+                            string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
+                                ? Path.GetFileNameWithoutExtension(filePath)
+                                : tagFile.Tag.Title;
+                            var tag = tagFile.Tag;
+                            string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
+                                  ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
+                                  : string.Join(", ", tag.AlbumArtists);
+
+                            string album = string.IsNullOrWhiteSpace(tagFile.Tag.Album)
+                                ? "Unknown Album"
+                                : tagFile.Tag.Album;
+
+                            TimeSpan duration = tagFile.Properties.Duration;
+
+                            // Update SQLite Database
+                            await DatabaseService.UpdateSongMetadataAsync(filePath, title, artist, album);
+
+                            // Safely dispatch to UI Thread once
+                            DispatcherQueue.TryEnqueue(() =>
+                            {
+                                UpdateSongInCollections(filePath, album, artist, title, duration);
+                            });
+
+                            break; // Success! Exit retry loop
+                        }
+                        catch (Exception ex) when (ex is IOException || ex is COMException)
+                        {
+                            // File is still locked by Explorer; wait 200ms and try again
+                            await Task.Delay(200, cts.Token);
+                        }
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    // Normal - superseded by a newer event for the same file
+                }
+                finally
+                {
+                    _debouncers.TryRemove(filePath, out _);
+                    cts.Dispose();
+                }
+            });
         }
+        private async void UpdateSongInCollections(string filePath, string newAlbum, string newArtist, string newTitle, TimeSpan duration)
+        {
+            UpdateSong(QueueService.VusicQueue?.FirstOrDefault(s => s.FilePath == filePath));
+            UpdateSong(QueueService.VusicQueueNext?.FirstOrDefault(s => s.FilePath == filePath));
+
+            void UpdateSong(SongModel? song)
+            {
+                if (song == null) return;
+
+                song.AlbumName = newAlbum;
+                song.Artist = newArtist;
+                song.Title = newTitle;
+                song.SongDuration = duration;
+                Debug.WriteLine($"[Watcher] Queue updated: {filePath}");
+            }
+        }
+
+        public ObservableCollection<SongModel> VusicQueueList => QueueService.VusicQueueNext;
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             QueueService.SyncQueueLists();
             var currentsettings = await SettingsLoader.LoadSettingsAsync();
             var favourites = currentsettings.Favourites;
-            foreach (var item in QueueService.VusicQueue)
-            {
-                var defaultitem = favourites.FirstOrDefault(p => p.FilePath == item.FilePath);
-                if (defaultitem != null)
-                {
-                    item.IsFavourite = true;
-                }
-            }
-            foreach (var item in QueueService.VusicQueueNext)
-            {
-                var defaultitem = favourites.FirstOrDefault(p => p.FilePath == item.FilePath);
-                if (defaultitem != null)
-                {
-                    item.IsFavourite = true;
-                }
-            }
             if (QueueService.IsShuffleTrue)
             {
                 tglShuffleQueue.IsChecked = true;
                 UpdateAddonText();
                 UpdateViews();
             }
-            if(btnViewQueue.IsChecked == false)
+            if (btnViewQueue.IsChecked == false)
             {
                 int count = QueueService.VusicQueueNext.Count;
                 mediacontroller.ItemsCount = $"• {count} {(count == 1 ? "item" : "items")}";
@@ -297,7 +379,7 @@ namespace Vusic_Player.Pages.Views
 
 
             }
-      //      UpdateViews();
+            //      UpdateViews();
             UpdateAddonText();
         }
 
@@ -332,33 +414,76 @@ namespace Vusic_Player.Pages.Views
 
 
         }
+        PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
 
         private async void btnSaveQueue_Click(object sender, RoutedEventArgs e)
         {
-            if (App.MainWindowInstance == null) return;
-            PlaylistCreation.suggestedplaylistname = "Queue";
-            PlaylistCreation.CallExistingItems(QueueService.VusicQueue);
-            FileInfo.RefreshValues -= FileInfo_RefreshValues;
-            FileInfo.RefreshValues += FileInfo_RefreshValues;
-            var sendablequeue = QueueService.VusicQueue;
-            foreach (var item in sendablequeue)
+            var currentQueue = (btnViewQueue.IsChecked == true)
+? QueueService.VusicQueue
+: QueueService.VusicQueueNext;
+            Instance.MediaPaths.Clear();
+            Instance.MediaSongModels.Clear();
+
+            ttEditPlaylist.IsOpen = true;
+            Instance.PlCover = new BitmapImage(new Uri("ms-appx:///Assets/playlistdefaultdark.png"));
+            Instance.Thumbnail = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
+
+            Instance.PlaylistName = "Queue Playlist";
+            Instance.Genre = "";
+            Instance.MediaSongModels = new ObservableCollection<SongModel>(currentQueue);
+            Instance.IsAppInstanceOceanDialog = false;
+
+            RoutedEventHandler? saveHandler = null;
+            saveHandler = async (s, args) =>
             {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-                string fileExtension = Path.GetExtension(file.Path).ToLower();
-                if (Extensions.AudioExtensions.List.Contains(fileExtension))
+                btnSavePlaylistEdited.Click -= saveHandler;
+                Debug.WriteLine("SAVE SHOW CALLED");
+                if (Instance.PlaylistName == "")
                 {
-                    item.Glyph = "\uEC4F";
+                    Instance.PlaylistName = "Queue Playlist";
                 }
-                else if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                string baseName = Instance.PlaylistName.Trim();
+
+                string finalName = baseName;
+
+                if (Instance.PlaylistName.Trim() != "Queue Playlist")
                 {
-                    item.Glyph = "\uE8B2";
+
+                    if (string.IsNullOrEmpty(baseName)) baseName = "Queue Playlist";
+
+                    int counter = 1;
+                    while (currentSettings.SavedPlaylists.Any(p =>
+                        string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        finalName = $"{baseName} ({counter++})";
+                    }
                 }
 
+                var newPlaylist = new PlaylistItem
+                {
+                    PlaylistId = Guid.NewGuid().ToString(), // Assign a fresh unique ID
+                    PlaylistName = finalName,
+                    PlaylistGenre = Instance.Genre,
+                    PlaylistCount = Instance.PlaylistCount,
+                    plthumb = Instance.PlCover,
+                    Thumbnail = Instance.Thumbnail,
+                    ThumbnailString = Instance.ThumbnailString,
+                    SongsPaths = Instance.MediaPaths
+                };
 
-            }
-            OceanContentDialog.Show("Save Queue to New Playlist", "Save", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "saveicon", "", "", sendablequeue, "Queue");
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested; ;
+                currentSettings.SavedPlaylists.Add(newPlaylist);
+
+
+
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+                // Close popup/flyout and reset flags
+                ttEditPlaylist.IsOpen = false;
+                Instance.IsAppInstanceOceanDialog = true;
+            };
+            btnSavePlaylistEdited.Click += saveHandler;
+
         }
         private async Task UpdateAllMetadataAsync()
         {
@@ -419,53 +544,6 @@ namespace Vusic_Player.Pages.Views
             UpdateUI(currentQueue);
             var upnextstring = (btnViewQueue.IsChecked == true) ? "Full Queue" : "Up Next";
             txtUpNext.Text = upnextstring;
-            if (btnViewQueue.IsChecked == true)
-            {
-                // UpdateViews();
-
-            }
-            else
-            {
-                //    var item = QueueService.VusicQueue.LastOrDefault(p => p.VisibilityOfStrikeThrough == Visibility.Visible);
-                //    if(item != null)
-                //    {
-                //        var indexcurrent = QueueService.VusicQueue.IndexOf(item);
-                //        QueueService.VusicQueueNext.Clear();
-                //        if (indexcurrent >= 0 && indexcurrent < QueueService.VusicQueue.Count - 1)
-                //        {
-                //            QueueService.VusicQueueNext.Clear();
-                //            for (int i = indexcurrent + 1; i < QueueService.VusicQueue.Count; i++)
-                //            {
-                //                var itemindex = QueueService.VusicQueue[i];
-                //                if (itemindex != null)
-                //                {
-                //                    var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == itemindex.FilePath);
-                //                    if (exist == null)
-                //                    {
-                //                                QueueService.VusicQueueNext.Add( itemindex);
-                //                    }
-                //                }
-                //            }
-                //        }
-                //    }
-                //    var currentpath = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
-                //    if(currentpath != null)
-                //    {
-                //        QueueService.VusicQueueNext.Remove(currentpath);
-                //    }
-                //}
-               
-                //var currentQueue = (btnViewQueue.IsChecked == true)
-                //    ? QueueService.VusicQueue
-                //    : QueueService.VusicQueueNext;
-                //btnRestartandPlay.Visibility = (btnViewQueue.IsChecked == true) ? Visibility.Visible : Visibility.Collapsed;
-                //
-                //lstViewQueue.ItemsSource = currentQueue;
-                //mediacontroller.QueuePageEmptyVisibility = currentQueue.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-                //lstViewQueue.UpdateGlyphs();
-
-                
-            }
         }
         private void UpdateUI(ObservableCollection<SongModel> currentQueue)
         {
@@ -534,6 +612,7 @@ namespace Vusic_Player.Pages.Views
                                 QueueService.VusicQueueNext.Add(new SongModel
                                 {
                                     Title = title,
+
                                     IsAudioItem = false,
                                     VisibilityofAudioMeta = Visibility.Collapsed,
                                     VisibilityofVideoInfo = Visibility.Visible,
@@ -549,16 +628,32 @@ namespace Vusic_Player.Pages.Views
             }
 
         }
+        private void txtArtist_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.NavigationFrame == null) return;
+            App.NavigationFrame.Navigate(typeof(ArtistView), mediacontroller.ArtistDisplayName);
+        }
+        private void txtAlbum_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.NavigationFrame == null) return;
+            App.NavigationFrame.Navigate(typeof(AlbumView), mediacontroller.AlbumDisplayName);
 
+        }
+        private void sldMain_DragStarted()
+        {
+            PlayerService.SldMain_DragStarted();
+        }
+
+        private void sldMain_DragCompleted()
+        {
+            PlayerService.SldMain_DragCompleted(sldMain);
+        }
         private void btnRelocate_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
 
-        }
 
         private void btnCloseSearch_Click(object sender, RoutedEventArgs e)
         {
@@ -567,10 +662,7 @@ namespace Vusic_Player.Pages.Views
             asbFindQueue.ItemsSource = null;
         }
 
-        private void btnOpenMediaFile_Click(object sender, RoutedEventArgs e)
-        {
 
-        }
 
         private void btnRestartandPlay_Click(object sender, RoutedEventArgs e)
         {
@@ -585,7 +677,7 @@ namespace Vusic_Player.Pages.Views
             QueueService.PlayMedia(refreshedobservablecoll, tglShuffleQueue.IsChecked ?? false, tglLoopQueue.IsChecked ?? false);
         }
 
-        private void lstViewQueue_FileInformationCalled(ListViewMedia sender, string args)
+        private void btnCancelEdit_Click(object sender, RoutedEventArgs e)
         {
 
         }

@@ -181,7 +181,21 @@ namespace Vusic_Player.Pages
                     CheckAndManageTimer();
                 }
             };
+            GlobalFavourites.Instance.FavouritesChanged += OnGlobalFavouritesChanged;
         }
+        private void OnGlobalFavouritesChanged(string changedPath)
+        {
+            if (string.Equals(PlayerService.CurrentPlayingPath, changedPath, StringComparison.OrdinalIgnoreCase))
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    UpdateHeartButtonUI(GlobalFavourites.Instance.IsFavourite(changedPath), animate: false);
+                });
+            }
+        }
+
+        // When the player starts or switches tracks:
+     
         private void ApplyAlignment(FrameworkElement element, string alignment)
         {
             var (h, v) = alignment switch
@@ -657,39 +671,29 @@ namespace Vusic_Player.Pages
 
         private async void btnFavourite_Click(object sender, RoutedEventArgs e)
         {
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var Favourites = currentSettings.Favourites;
-            var pathtocheck = PlayerService.CurrentPlayingPath;
-            if (pathtocheck == null) return;
-            var fillHeartIcon = HeartIcon;
-            if (fillHeartIcon == null) return;
-            var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-            if (existing == null)
-            {
-                fillHeartIcon.Glyph = "\uEB52";
-                ToolTipService.SetToolTip(btnFavourite, "Remove from Favourites");
-                AnimateHeartFull(fillHeartIcon, true);
-                Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
-                // song.FavString = "Remove from Favourites";
+            var path = PlayerService.CurrentPlayingPath;
+            if (string.IsNullOrEmpty(path)) return;
 
-            }
-            else
-            {
+            bool willBeFav = !GlobalFavourites.Instance.IsFavourite(path);
 
-                fillHeartIcon.Glyph = "\uEB51";
-                AnimateHeartFull(fillHeartIcon, false);
-                Favourites.Remove(existing);
-                ToolTipService.SetToolTip(btnFavourite, "Add to Favourites");
+            // 1. Let GlobalFavourites update the set, persist to JSON, and notify all SongModels
+            await GlobalFavourites.Instance.ToggleFavouriteAsync(path);
 
-
-
-            }
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
-
-
-            // Favourite button click logic
+            // 2. Update the standalone button UI state
+            UpdateHeartButtonUI(willBeFav, animate: true);
         }
+        private void UpdateHeartButtonUI(bool isFav, bool animate = false)
+        {
+            if (HeartIcon == null || btnFavourite == null) return;
 
+            HeartIcon.Glyph = isFav ? "\uEB52" : "\uEB51";
+            ToolTipService.SetToolTip(btnFavourite, isFav ? "Remove from Favourites" : "Add to Favourites");
+
+            if (animate)
+            {
+                AnimateHeartFull(HeartIcon, isFav);
+            }
+        }
         private async void btnOpenVidSplash_Click(object sender, RoutedEventArgs e)
         {
 
@@ -851,19 +855,15 @@ namespace Vusic_Player.Pages
         {
             FullScreen.FullScreenToggle();
         }
-        private async void CheckForFavourite()
+        private void CheckForFavourite()
         {
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var favourites = currentSettings.Favourites;
-            var exist = favourites.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
-            if (exist != null)
-            {
-                HeartIcon.Glyph = "\uEB52";
+            if (HeartIcon == null || btnFavourite == null) return;
 
-                AnimateHeartFull(HeartIcon, true);
-                ToolTipService.SetToolTip(btnFavourite, "Remove from Favourites");
+            var currentPath = PlayerService.CurrentPlayingPath;
+            bool isFav = GlobalFavourites.Instance.IsFavourite(currentPath);
 
-            }
+            HeartIcon.Glyph = isFav ? "\uEB52" : "\uEB51";
+            ToolTipService.SetToolTip(btnFavourite, isFav ? "Remove from Favourites" : "Add to Favourites");
         }
         private void mnftSubtitleOptions_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
@@ -1292,7 +1292,6 @@ namespace Vusic_Player.Pages
                 txtSplash.Text = "An unexpected error occured! Check log page under App Settings for more details";
                 Logger.Log("[ERR-PLY-001] Media player instance is null. Unable to initialize playback.", "VideoPlayerPage.OpenVideo", Logger.LogLevelType.Error);
             }
-            CheckForFavourite();
             base.OnNavigatedTo(e);
         }
 
@@ -1362,7 +1361,7 @@ namespace Vusic_Player.Pages
                         TotalDuration = PlayerService.Masterplayer.Duration
                     });
                 }
-
+                CheckForFavourite();
                 await SettingsLoader.SaveSettingsAsync(settings);
             };
             var settings = await SettingsLoader.LoadSettingsAsync();

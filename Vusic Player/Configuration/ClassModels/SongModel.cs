@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Dispatching;
 using System.Text.Json.Serialization;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Vusic_Player.Configuration.UserSettings;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -201,6 +202,35 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
+        public SongModel()
+        {
+            GlobalFavourites.Instance.FavouritesChanged += OnGlobalFavouritesChanged;
+        }
+
+        private void OnGlobalFavouritesChanged(string changedPath)
+        {
+            // Only react if this specific track's path was modified
+            if (!string.Equals(FilePath, changedPath, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            // Ensure PropertyChanged fires on the UI Thread
+            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            if (dispatcher != null && !dispatcher.HasThreadAccess)
+            {
+                dispatcher.TryEnqueue(NotifyFavouriteProperties);
+            }
+            else
+            {
+                NotifyFavouriteProperties();
+            }
+        }
+
+        private void NotifyFavouriteProperties()
+        {
+            OnPropertyChanged(nameof(IsFavourite));
+            OnPropertyChanged(nameof(FavOpacity));
+            OnPropertyChanged(nameof(FavString));
+        }
         public bool IsCompleted
         {
             get => isCompleted;
@@ -213,48 +243,9 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
-        private bool _isFavorite;
-        public bool IsFavourite
-        {
-            get => _isFavorite;
-            set
-            {
-                if (_isFavorite != value)
-                {
-                    _isFavorite = value;
-                    // This "notifies" the Button and the Menu to update their visuals
-                    OnPropertyChanged();
-                }
-            }
-        }
-        private double opaci;
-        public double FavOpacity
-        {
-            get => opaci;
-            set
-            {
-                if (opaci != value)
-                {
-                    opaci = value;
-                    // This "notifies" the Button and the Menu to update their visuals
-                    OnPropertyChanged();
-                }
-            }
-        }
-        private string favtext = "Add to favourites";
-        public string FavString
-        {
-            get => favtext;
-            set
-            {
-                if (favtext != value)
-                {
-                    favtext = value;
-                    // This "notifies" the Button and the Menu to update their visuals
-                    OnPropertyChanged();
-                }
-            }
-        }
+        public bool IsFavourite => GlobalFavourites.Instance.IsFavourite(FilePath);
+        public double FavOpacity => IsFavourite ? 1.0 : 0.0;
+        public string FavString => IsFavourite ? "Remove from Favourites" : "Add to Favourites";
         public string? Title
         {
             get => _title;

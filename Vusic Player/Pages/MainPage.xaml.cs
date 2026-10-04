@@ -53,9 +53,13 @@ namespace Vusic_Player.Pages
             PlayerService.mainXamlRoot = XamlRoot;
 
             _originalHeader = nvgMain.Header;
-
+            InitializeFav();
         }
-
+        private async void InitializeFav()
+        {
+            await globalFavourites.InitializeAsync();
+        }
+        GlobalFavourites globalFavourites => GlobalFavourites.Instance;
         private void UpdatePlaceholderText()
         {
             _suggestions = new List<string>

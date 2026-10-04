@@ -254,7 +254,7 @@ namespace Vusic_Player
             counter.Add(counter2);
             await SettingsLoader.SaveSettingsAsync(currentSettings);
 
-            txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} 050926";
+            txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} 051026";
             //txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} {DateTime.Now.ToString("MMddyy")}.{counter2}";
 
         }

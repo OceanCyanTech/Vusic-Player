@@ -350,38 +350,20 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         private async void btnFavourite_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Content is Grid rootGrid && btn.DataContext is GroupedCollectionModel group && group.Data is SongModel song)
+            if (sender is Button { Content: Grid rootGrid, DataContext: GroupedCollectionModel { Data: SongModel song } }
+                && !string.IsNullOrEmpty(song.FilePath))
             {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                var pathtocheck = song.FilePath;
-                if (pathtocheck == null) return;
-                var fillHeartIcon = rootGrid.FindName("HeartIcon") as FontIcon;
-                if (fillHeartIcon == null) return;
-                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-                if (existing == null)
+                bool wasFav = song.IsFavourite;
+
+                // Persist change, update internal hash set, and notify all SongModel instances
+                await GlobalFavourites.Instance.ToggleFavouriteAsync(song.FilePath);
+
+                // Run heart scale/pop animation
+                if (rootGrid.FindName("HeartIcon") is FontIcon heartIcon)
                 {
-                    fillHeartIcon.Glyph = "\uEB52";
-                    song.IsFavourite = true;
-                    AnimateHeartFull(fillHeartIcon, true);
-                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
-                    song.FavString = "Remove from Favourites";
-
+                    AnimateHeartFull(heartIcon, !wasFav);
                 }
-                else
-                {
-                    song.IsFavourite = false;
-                    fillHeartIcon.Glyph = "\uEB51";
-                    AnimateHeartFull(fillHeartIcon, false);
-                    Favourites.Remove(existing);
-                    song.FavString = "Add to Favourites";
-
-
-                }
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
-
             }
-
         }
         private void AnimateHeartFull(FontIcon targetIcon, bool isBecomingFavorite)
         {
@@ -1644,32 +1626,11 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private async void mnftAddToFavourites_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModel group && group.Data is SongModel song)
+            if (sender is MenuFlyoutItem { DataContext: GroupedCollectionModel { Data: SongModel song } }
+                && !string.IsNullOrEmpty(song.FilePath))
             {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                var pathtocheck = song.FilePath;
-                if (pathtocheck == null) return;
-                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-                if (existing != null)
-                {
-                    song.IsFavourite = false;
-                    Favourites.Remove(existing);
-                    song.FavString = "Add to Favourites";
-
-                }
-                else
-                {
-                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
-                    song.IsFavourite = true;
-                    song.FavString = "Remove from Favourites";
-
-                }
-
-
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                await GlobalFavourites.Instance.ToggleFavouriteAsync(song.FilePath);
             }
-
         }
         SongModel currentcontextfileitem = new();
         private void btnOpenRecycleBin_Click(object sender, RoutedEventArgs e)

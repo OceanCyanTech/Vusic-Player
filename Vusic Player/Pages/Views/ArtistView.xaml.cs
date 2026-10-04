@@ -592,10 +592,8 @@ public sealed partial class ArtistView : Page
                 AlbumName = item.AlbumName,
                 Artist = item.Artist,
                 FilePath = item.FilePath,
-                FavOpacity = item.IsFavourite ? 1.0 : 0.0,
-                FavString = item.IsFavourite ? "Remove from Favourites" : "Add to Favourites",
+               
                 SongDuration = item.SongDuration,
-                IsFavourite = item.IsFavourite,
                 Glyph = glyph,
                 TitleColor = colorbrush,
                 Remove = "Remove from History",

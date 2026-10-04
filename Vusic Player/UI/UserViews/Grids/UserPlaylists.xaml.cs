@@ -23,6 +23,7 @@ using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Vusic_Player.UI.UserViews.Controls;
 using Windows.Foundation;
@@ -34,7 +35,7 @@ using Windows.Storage;
 
 namespace Vusic_Player.UI.UserViews.Grids
 {
-    
+
     public class CountToVisibilityReverse : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -208,12 +209,18 @@ namespace Vusic_Player.UI.UserViews.Grids
                 grdViewPlaylists.DeselectAll();
         }
 
-     
+
 
         public event RoutedEventHandler? OpenPlaylistClick;
         private void mnftOpenPlaylist_Click(object sender, RoutedEventArgs e)
         {
-            OpenPlaylistClick?.Invoke(sender, e);
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is PlaylistItem playlist)
+            {
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(PlaylistView), playlist);
+                }
+            }
         }
 
         private async void mnftPlayAll_Click(object sender, RoutedEventArgs e)
@@ -265,12 +272,12 @@ namespace Vusic_Player.UI.UserViews.Grids
                 {
                     var file = await StorageFile.GetFileFromPathAsync(song);
                     var musicprops = await file.Properties.GetMusicPropertiesAsync();
-                    songmodels.Add(new SongModel { Title = string.IsNullOrEmpty(musicprops.Title) ? Path.GetFileNameWithoutExtension(song): musicprops.Title, SongDuration = musicprops.Duration, FilePath = song });
+                    songmodels.Add(new SongModel { Title = string.IsNullOrEmpty(musicprops.Title) ? Path.GetFileNameWithoutExtension(song) : musicprops.Title, SongDuration = musicprops.Duration, FilePath = song });
                     Instance.MediaPaths.Add(song);
                 }
                 ttEditPlaylist.IsOpen = true;
                 Instance.PlCover = new BitmapImage(playlist.Thumbnail);
-                Instance.Thumbnail = playlist.Thumbnail ??new Uri("ms - appx:///Assets/playlistdefaultdark.png");
+                Instance.Thumbnail = playlist.Thumbnail ?? new Uri("ms - appx:///Assets/playlistdefaultdark.png");
 
                 Instance.PlaylistName = playlist.PlaylistName;
                 Instance.Genre = playlist.PlaylistGenre ?? "";
@@ -356,9 +363,15 @@ namespace Vusic_Player.UI.UserViews.Grids
         public event ItemClickEventHandler? GridViewItemClick;
         private void grdViewPlaylists_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (chkSelect.IsChecked == false && IsItemClickDisabled == false)
+            if (chkSelect.IsChecked == false)
             {
-                GridViewItemClick?.Invoke(sender, e);
+                if (e.ClickedItem is PlaylistItem playlist)
+                {
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(PlaylistView), playlist);
+                    }
+                }
             }
         }
 
@@ -393,7 +406,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                 if (iscreating) return;
                 try
                 {
-                    iscreating = true; 
+                    iscreating = true;
                     var currentSettings = await SettingsLoader.LoadSettingsAsync();
                     string baseName = Instance.PlaylistName.Trim();
 
@@ -406,10 +419,10 @@ namespace Vusic_Player.UI.UserViews.Grids
                     {
                         finalName = $"{baseName} ({counter++})";
                     }
-                    var newplaylist = new PlaylistItem { PlaylistName =finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
                     Debug.WriteLine(newplaylist.PlaylistName);
                     Instance.PlaylistsMaster.Add(newplaylist);
-                 
+
                     currentSettings.SavedPlaylists.Add(newplaylist);
                     await SettingsLoader.SaveSettingsAsync(currentSettings);
                     OceanContentDialog.HideDlg();
@@ -453,7 +466,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private void mnftAddtoQueue_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is MenuFlyoutItem mnft && mnft.DataContext is PlaylistItem playlist)
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is PlaylistItem playlist)
             {
                 foreach (var item in playlist.SongsPaths)
                 {
@@ -462,7 +475,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     string Artist = "Unknown Artist";
                     string Album = "Unknown Album";
                     TimeSpan? Duration = TimeSpan.Zero;
-                    if(exist != null)
+                    if (exist != null)
                     {
                         Title = exist.Title;
                         Artist = exist.Artist;
@@ -473,7 +486,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     QueueService.VusicQueueNext.Add(new SongModel { Title = Title, FilePath = item, Artist = Artist, AlbumName = Album, SongDuration = Duration });
                 }
             }
-          
+
         }
     }
 }
