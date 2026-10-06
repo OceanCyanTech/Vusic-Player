@@ -465,7 +465,6 @@ namespace Vusic_Player.Pages.Views
                     PlaylistId = Guid.NewGuid().ToString(), // Assign a fresh unique ID
                     PlaylistName = finalName,
                     PlaylistGenre = Instance.Genre,
-                    PlaylistCount = Instance.PlaylistCount,
                     plthumb = Instance.PlCover,
                     Thumbnail = Instance.Thumbnail,
                     ThumbnailString = Instance.ThumbnailString,
@@ -602,23 +601,15 @@ namespace Vusic_Player.Pages.Views
                                 QueueService.VusicQueue.Add(new SongModel
                                 {
                                     Title = title,
-                                    IsAudioItem = false,
-                                    VisibilityofAudioMeta = Visibility.Collapsed,
-                                    VisibilityofVideoInfo = Visibility.Visible,
+                                
                                     SongDuration = properties.Duration,
                                     FilePath = file.Path,
-                                    Glyph = "\uE8B2"
                                 });
                                 QueueService.VusicQueueNext.Add(new SongModel
                                 {
                                     Title = title,
-
-                                    IsAudioItem = false,
-                                    VisibilityofAudioMeta = Visibility.Collapsed,
-                                    VisibilityofVideoInfo = Visibility.Visible,
                                     SongDuration = properties.Duration,
                                     FilePath = file.Path,
-                                    Glyph = "\uE8B2"
                                 });
                             }
                         }

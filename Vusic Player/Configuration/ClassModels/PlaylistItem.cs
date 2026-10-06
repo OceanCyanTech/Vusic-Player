@@ -21,7 +21,7 @@ namespace Vusic_Player.Configuration.ClassModels
         private Uri? _thumbnail;
         private bool _isPlaylistVideo = false;
         private string? _playlistGenre = "";
-        private DateTime _dateCreation;
+        private DateTime _dateCreation = DateTime.Now;
         private HashSet<string> _songsPaths = new();
         private ObservableCollection<SongModel> _songs = new();
         private string _playlistName = "Playlist";
@@ -44,11 +44,7 @@ namespace Vusic_Player.Configuration.ClassModels
             set => SetProperty(ref _seasonIndex, value);
         }
 
-        public string PlaylistCount
-        {
-            get => _playlistCount;
-            set => SetProperty(ref _playlistCount, value);
-        }
+        public string PlaylistCount => $"{SongsPaths.Count} {(SongsPaths.Count == 1 ? "item" : "items")}";
 
         public string PlaylistNowPlaying
         {

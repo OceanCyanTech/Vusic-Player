@@ -13,10 +13,12 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 
 
 
@@ -234,6 +236,21 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 App.NavigationFrame.Navigate(typeof(EntireMusicLibrary), "EntireHistory");
             }
+        }
+
+        private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = new ObservableCollection<SongModel>();
+            foreach (var item in recentMusics)
+            {
+                if (File.Exists(item.SongPath))
+                {
+                    var currentfile = await StorageFile.GetFileFromPathAsync(item.SongPath);
+                    var musicprops = await currentfile.Properties.GetMusicPropertiesAsync();
+                    observablecollection.Add(new SongModel { Title = item.SongName, FilePath = item.SongPath, AlbumName = musicprops.Album, Artist = musicprops.Artist });
+                }
+            }
+            QueueService.PlayMedia(observablecollection, false, false);
         }
     }
 }

@@ -5,10 +5,80 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Grids"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     mc:Ignorable="d">
-
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+    <StackPanel Orientation="Horizontal" Spacing="20">
+        <TextBlock Text="Instant Playlists" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+        <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
+                <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAll" Visibility="Visible" Checked="chckSelectAll_Checked" Unchecked="chckSelectAll_Checked"></CheckBox>
+           
+        </StackPanel>
+    </StackPanel>
+    <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"  ItemsSource="{x:Bind instantPlaylists, Mode=OneWay}"
+ x:Name="grdViewPlaylists" SelectionMode="Single" IsItemClickEnabled="True" CanDragItems="True" AllowDrop="True" CanReorderItems="True"
+ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" >
+        <GridView.ItemTemplate>
+            <DataTemplate >
+                <StackPanel ToolTipService.ToolTip="{Binding PlaylistName}" Orientation="Vertical">
+                    <ani:Implicit.Animations>
+                        <ani:ImplicitAnimationSet>
+                            <ani:ScaleAnimation Duration="0:0:0.2" />
+                        </ani:ImplicitAnimationSet>
+                    </ani:Implicit.Animations>
+                    <StackPanel  VerticalAlignment="Stretch">
+                        <StackPanel.ContextFlyout>
+                            <MenuFlyout Opened="MenuFlyout_Opened">
+                                <MenuFlyoutItem Name="mnftOpenPlaylist" Click="mnftOpenPlaylist_Click" Text="Open Playlist">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutSeparator/>
+                                <MenuFlyoutItem Name="mnftPlayAll" Click="mnftPlayAll_Click" Text="Play all">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Name="mnftAddtoQueue" Click="mnftAddtoQueue_Click" Text="Add to Queue">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Name="mnftShufflePlay" Click="mnftShufflePlay_Click" Text="Shuffle and Play">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Name="mnftEditPlaylist" Click="mnftEditPlaylist_Click" Text="Edit Playlist">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutSeparator/>
+                                <MenuFlyoutItem Name="mnftDeletePlaylist" Click="mnftDeletePlaylist_Click" Text="Delete Playlist">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </StackPanel.ContextFlyout>
 
+                        <Image Source="{Binding Thumbnail}" Width="150" Height="100" Stretch="UniformToFill"/>
+
+                        <TextBlock Text="{Binding PlaylistName}" Visibility="Visible" TextWrapping="Wrap" />
+                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding PlaylistCount}" Visibility="Visible" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding PlaylistNowPlaying}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Visibility="Visible" TextWrapping="Wrap" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+        </GridView.ItemTemplate>
+    </GridView>
     </Grid>
+
 </UserControl>

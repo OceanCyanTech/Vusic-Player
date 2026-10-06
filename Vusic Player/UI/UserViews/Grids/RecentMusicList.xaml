@@ -13,8 +13,9 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="1" Visibility="Visible" Name="grdRecents">
+        <Grid Grid.Column="1" Visibility="Visible" Name="grdRecents" RowSpacing="20">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
@@ -32,7 +33,13 @@
                     </Button>
                 </StackPanel>
             </StackPanel>
-            <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="1" x:Name="grdvRecents"></controls:GridViewRecentMusic>
+            <Button Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click" CornerRadius="12" >
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="20" Source="/Assets/play.png"/>
+                    <TextBlock Text="Play all"/>
+                </StackPanel>
+            </Button>
+            <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="2" x:Name="grdvRecents"></controls:GridViewRecentMusic>
 
         </Grid>
         <Grid Name="grdEmptySuggestions" Visibility="Visible" Grid.Column="1">

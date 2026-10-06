@@ -53,7 +53,7 @@
             <TeachingTip Title="Pitch Control" Name="ttPitch" IsOpen="False">
                 <audiogeneral:Pitch x:Name="pitchControl" Margin="20, 20"/>
             </TeachingTip>
-            <TeachingTip Name="ttReverb" Target="{x:Bind btnEffects}" IsOpen="False" Title="Audio Reverb" PreferredPlacement="Auto">
+            <TeachingTip Name="ttReverb" Closed="ttReverb_Closed" Target="{x:Bind btnEffects}" IsOpen="False" Title="Audio Reverb" PreferredPlacement="Auto">
 
                 <TeachingTip.Content>
                     <ScrollViewer Width="280" >

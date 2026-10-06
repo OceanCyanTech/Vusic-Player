@@ -76,7 +76,6 @@ namespace Vusic_Player
             return DefSubclassProc(hWnd, uMsg, wParam, lParam);
         }
 
-        private InputPreTranslateKeyboardSource? _keyboardSource;
         private IntPtr _hwnd;
         private SUBCLASSPROC _subclassProc;
         [DllImport("comctl32.dll", SetLastError = true)]

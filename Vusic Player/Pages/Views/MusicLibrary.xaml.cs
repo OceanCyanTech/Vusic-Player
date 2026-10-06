@@ -7,16 +7,23 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.UI.Navig;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Extensions;
+using Vusic_Player.FilePickers;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -70,7 +77,7 @@ namespace Vusic_Player.Pages.Views
                     {
                         finalName = $"{baseName} ({counter++})";
                     }
-                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate,  SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
                     Debug.WriteLine(newplaylist.PlaylistName);
                     Instance.PlaylistsMaster.Add(newplaylist);
 
@@ -92,8 +99,25 @@ namespace Vusic_Player.Pages.Views
 
         
 
-        private void btnOpenMusic_Click(object sender, RoutedEventArgs e)
+        private async void btnOpenMusic_Click(object sender, RoutedEventArgs e)
         {
+            if (App.MainWindowInstance == null) return;
+            var media = await MediaPicker.PickSingle(App.MainWindowInstance, "Open Media");
+            if (media != null)
+            {
+                bool isAudio = AudioExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                bool isVideo = VideoExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                if (isAudio)
+                {
+
+                    if (File.Exists(media.Path))
+                    {
+                        var single = await MediaListCreate.GetSongModelsAsync(new List<string>() { media.Path });
+                        QueueService.PlayMedia(single, false, false);
+                    }
+                }
+             
+            }
 
         }
 
@@ -156,7 +180,7 @@ namespace Vusic_Player.Pages.Views
                     {
                         finalName = $"{baseName} ({counter++})";
                     }
-                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
                     Debug.WriteLine(newplaylist.PlaylistName);
                     Instance.PlaylistsMaster.Add(newplaylist);
 

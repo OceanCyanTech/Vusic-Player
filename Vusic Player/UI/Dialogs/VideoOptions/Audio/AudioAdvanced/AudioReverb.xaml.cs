@@ -806,6 +806,16 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
         //        Debug.WriteLine($"Error: {ex.Message}");
         //    }
         //}
+        public void ClearProgress()
+        {
+            if (txtApplyReverbProgress.Text == "Reverb Applied Successfully")
+            {
+                prgApplyingReverb.Value = 0;
+                prgApplyingReverb.Visibility = Visibility.Collapsed;
+                txtApplyReverbProgress.Visibility = Visibility.Collapsed;
+                txtApplyReverbProgress.Text = "";
+            }
+        }
         private static long curtimetemp;
         private static TimeSpan curtime;
         bool isPaused = false;

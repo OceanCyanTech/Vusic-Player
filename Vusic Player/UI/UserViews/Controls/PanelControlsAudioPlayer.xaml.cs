@@ -249,5 +249,10 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             ttReverb.IsOpen = false;
         }
+
+        private void ttReverb_Closed(TeachingTip sender, TeachingTipClosedEventArgs args)
+        {
+            audioReverbControl.ClearProgress();
+        }
     }
 }

@@ -8,12 +8,13 @@ using Microsoft.UI.Dispatching;
 using System.Text.Json.Serialization;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Vusic_Player.Configuration.UserSettings;
+using System.Linq;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
     public class SongModel : INotifyPropertyChanged
     {
-        private string? _title;
+        private string _title = "";
         public TimeSpan? SongDuration { get; set; }
 
         private Brush? _titleColor;
@@ -81,12 +82,9 @@ namespace Vusic_Player.Configuration.ClassModels
                 OnPropertyChanged();
             }
         }
-        private string _glyph = "\uEC4F";// Default color
-        public string Glyph
-        {
-            get => _glyph;
-            set { _glyph = value; OnPropertyChanged(nameof(Glyph)); }
-        }
+        public string Glyph => (File.Exists(FilePath) && Extensions.VideoExtensions.List.Contains(Path.GetExtension(FilePath))) ? "\uE8B2" : "\uEC4F";
+
+
         private string mediatype = "Playlist";// Default color
         public string MediaType
         {
@@ -133,19 +131,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
-        private bool isAudioItem = true;
-        public bool IsAudioItem
-        {
-            get => isAudioItem;
-            set
-            {
-                if (isAudioItem != value)
-                {
-                    isAudioItem = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+        public bool IsAudioItem => (File.Exists(FilePath) && Extensions.AudioExtensions.List.Contains(Path.GetExtension(FilePath)));
         public string FormattedDuration
         {
             get
@@ -178,30 +164,9 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
-        public Visibility VisibilityofAudioMeta
-        {
-            get => visibilityofaudiometadata;
-            set
-            {
-                if (visibilityofaudiometadata != value)
-                {
-                    visibilityofaudiometadata = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        public Visibility VisibilityofVideoInfo
-        {
-            get => visibilityofvidinfo;
-            set
-            {
-                if (visibilityofvidinfo != value)
-                {
-                    visibilityofvidinfo = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+        public Visibility VisibilityofAudioMeta => (File.Exists(FilePath) && Extensions.AudioExtensions.List.Contains(Path.GetExtension(FilePath))) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility VisibilityofVideoInfo => (File.Exists(FilePath) && Extensions.VideoExtensions.List.Contains(Path.GetExtension(FilePath))) ? Visibility.Visible : Visibility.Collapsed;
+
         public SongModel()
         {
             GlobalFavourites.Instance.FavouritesChanged += OnGlobalFavouritesChanged;
@@ -246,7 +211,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public bool IsFavourite => GlobalFavourites.Instance.IsFavourite(FilePath);
         public double FavOpacity => IsFavourite ? 1.0 : 0.0;
         public string FavString => IsFavourite ? "Remove from Favourites" : "Add to Favourites";
-        public string? Title
+        public string Title
         {
             get => _title;
             set

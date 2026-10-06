@@ -22,7 +22,7 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="20">
-                <TextBlock Text="Recents" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                <TextBlock Text="Playlists" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"/>
                 <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Toggled" Unchecked="chkSelect_Toggled"></CheckBox>
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
                     <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAll" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>

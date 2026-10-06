@@ -143,7 +143,6 @@ namespace Vusic_Player.Pages
                 }
             });
         }
-        private IntPtr _hwnd;
 
         public VideoPlayer()
         {

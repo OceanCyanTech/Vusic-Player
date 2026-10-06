@@ -98,7 +98,6 @@ namespace Vusic_Player.Pages.Views
                             }
                         }
                         int count = SongCollection.Count;
-                        existingmasterplaylist.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
                     }
                     if (defaulexi != null)
                     {
@@ -116,8 +115,6 @@ namespace Vusic_Player.Pages.Views
                                 defaulexi.SongsPaths.Add(item.FilePath);
                             }
                         }
-                        int count = SongCollection.Count;
-                        defaulexi.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
                     }
                 }
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
@@ -265,7 +262,6 @@ namespace Vusic_Player.Pages.Views
                 }
                 currentPlaylist.PlaylistName = finalName;
                 currentPlaylist.PlaylistGenre = Instance.Genre;
-                currentPlaylist.PlaylistCount = Instance.PlaylistCount;
                 currentPlaylist.plthumb = Instance.PlCover;
                 currentPlaylist.Thumbnail = Instance.Thumbnail;
                 currentPlaylist.ThumbnailString = Instance.ThumbnailString;
@@ -297,7 +293,6 @@ namespace Vusic_Player.Pages.Views
                         }
                     }
                     existingplaylist.PlaylistGenre = Instance.Genre;
-                    existingplaylist.PlaylistCount = Instance.PlaylistCount;
                     existingplaylist.plthumb = Instance.PlCover;
                     existingplaylist.Thumbnail = Instance.Thumbnail;
                     existingplaylist.ThumbnailString = Instance.ThumbnailString;
@@ -452,23 +447,14 @@ namespace Vusic_Player.Pages.Views
                             if (PlayerService.CurrentPlayingPath == file.Path)
                             {
                                 colorbrush = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
-                                if (PlayerService.Masterplayer!.IsPlaying)
-                                    glyph = "\uE769";
-                                else
-                                {
-                                    glyph = "\uE768";
-                                }
+                           
                             }
 
-                            Visibility visibility = Visibility.Visible;
-                            Visibility visibilityofvidtext = Visibility.Collapsed;
                             string fileExtension = file.FileType.ToLowerInvariant();
                             if (Extensions.VideoExtensions.List.Contains(fileExtension))
                             {
                                 Debug.WriteLine("Yes is video");
                                 glyph = "\uE8B2";
-                                visibility = Visibility.Collapsed;
-                                visibilityofvidtext = Visibility.Visible;
                             }
                             SongCollection.Add(new SongModel
                             {
@@ -477,9 +463,6 @@ namespace Vusic_Player.Pages.Views
                                 Artist = artist,
                                 SongDuration = properties.Duration,
                                 FilePath = file.Path,
-                                VisibilityofAudioMeta = visibility,
-                                VisibilityofVideoInfo = visibilityofvidtext,
-                                Glyph = glyph,
                                 TitleColor = colorbrush,
 
                             });
@@ -536,25 +519,11 @@ namespace Vusic_Player.Pages.Views
                         var glyph = "\uEC4F";
 
                         string fileExtension = file.FileType.ToLowerInvariant();
-                        Visibility visibility = Visibility.Visible;
-                        Visibility visibilityofvidtext = Visibility.Collapsed;
-                        if (Extensions.VideoExtensions.List.Contains(fileExtension))
-                        {
-
-                            glyph = "\uE8B2";
-                            visibility = Visibility.Collapsed;
-                            visibilityofvidtext = Visibility.Visible;
-                        }
+                  
                         if (PlayerService.CurrentPlayingPath == file.Path)
                         {
                             colorbrush = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
-                            if (PlayerService.Masterplayer!.IsPlaying)
-
-                                glyph = "\uE769";
-                            else
-                            {
-                                glyph = "\uE768";
-                            }
+                       
                         }
                         SongCollection.Add(new SongModel
                         {
@@ -563,9 +532,6 @@ namespace Vusic_Player.Pages.Views
                             Artist = artist,
                             SongDuration = properties.Duration,
                             FilePath = file.Path,
-                            VisibilityofAudioMeta = visibility,
-                            VisibilityofVideoInfo = visibilityofvidtext,
-                            Glyph = glyph,
                             TitleColor = colorbrush,
                         });
                         lstViewUnified.ItemsSource = SongCollection;

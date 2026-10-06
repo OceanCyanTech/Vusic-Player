@@ -48,7 +48,6 @@ namespace Vusic_Player.Configuration
         public static FileStream? filestreamcurrent;
         public static string CurrentPlayingPath { get; set; } = "";
 
-        public static event Action? OnVideoCalled;
         public static event Action? ErrorCalled;
         public static string ErrorString { get; set; } = "";
         public static event Action? PlayCalled;

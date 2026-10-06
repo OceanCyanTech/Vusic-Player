@@ -54,7 +54,6 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         private Uri _thumbnail = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
         private string _thumbnailString = "ms-appx:///Assets/playlistdefaultdark.png";
         private DateTime _creationdate = DateTime.Now;
-        private string _playlistCount = "0 items";
         private HashSet<string> _songsPaths = new();
         private ObservableCollection<SongModel> _mediaSongModels = new();
 
