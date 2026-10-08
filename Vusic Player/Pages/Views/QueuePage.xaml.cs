@@ -51,7 +51,6 @@ namespace Vusic_Player.Pages.Views
 
         }
         private readonly ConcurrentDictionary<string, CancellationTokenSource> _debouncers = new();
-        private CancellationTokenSource? _artistReloadCts;
 
         private void FileSystemWatch_FileModified(string filePath, string arg2, string arg3, string arg4, TimeSpan duration, string genre)
         {

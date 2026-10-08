@@ -105,7 +105,6 @@ namespace Vusic_Player.UI.UserViews.Controls
                 }
             }
         }
-        bool isFullView = false;
         private void btnLyrics_Click(object sender, RoutedEventArgs e)
         {
             if (PlayerService.CurrentPlayingPath == "") return;

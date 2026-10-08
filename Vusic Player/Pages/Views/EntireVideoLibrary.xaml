@@ -11,7 +11,7 @@
     <Grid Margin="30, 0" Name="grdMaster">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition ></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid Name="grdLegend" Margin="0, 30" HorizontalAlignment="Center"  Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -34,7 +34,7 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition ></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Grid HorizontalAlignment="Left" Grid.Row="0">

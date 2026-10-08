@@ -313,14 +313,12 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                                     localSeasons.Add(new PlaylistItem
                                     {
                                         PlaylistName = $"Season {seasonNum}",
-                                        PlaylistCount = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}",
                                         PlaylistId = actualContentPath,
                                         SeasonNumber = seasonNum
                                     });
                                 }
                                 else
                                 {
-                                    existingSeason.PlaylistCount = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
                                     existingSeason.PlaylistId = actualContentPath;
                                 }
                             }
@@ -389,10 +387,6 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                 var songModels = data.Episodes.Select(item => new SongModel
                 {
                     Title = Path.GetFileName(item.FilePath),
-                    VisibilityofVideoInfo = Visibility.Visible,
-                    VisibilityofAudioMeta = Visibility.Collapsed,
-                    Glyph = "\uE8B2",
-                    IsAudioItem = false,
                     FilePath = item.FilePath
                 }).ToList();
 
@@ -605,14 +599,13 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                                     localSeasons.Add(new PlaylistItem
                                     {
                                         PlaylistName = $"Season {seasonNum}",
-                                        PlaylistCount = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}",
+                                 
                                         PlaylistId = actualContentPath,
                                         SeasonNumber = seasonNum
                                     });
                                 }
                                 else
                                 {
-                                    existingSeason.PlaylistCount = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
                                     existingSeason.PlaylistId = actualContentPath;
                                 }
                             }
@@ -678,10 +671,6 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                 var songModels = data.Episodes.Select(item => new SongModel
                 {
                     Title = Path.GetFileName(item.FilePath),
-                    VisibilityofVideoInfo = Visibility.Visible,
-                    VisibilityofAudioMeta = Visibility.Collapsed,
-                    Glyph = "\uE8B2",
-                    IsAudioItem = false,
                     FilePath = item.FilePath
                 }).ToList();
 

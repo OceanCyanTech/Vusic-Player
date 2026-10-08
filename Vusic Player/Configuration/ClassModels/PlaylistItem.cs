@@ -15,7 +15,6 @@ namespace Vusic_Player.Configuration.ClassModels
         private string _playlistId = "";
         private int _seasonNumber = 1;
         private int _seasonIndex = 0;
-        private string _playlistCount = "0 items";
         private string _playlistNowPlaying = "";
         private string _thumbnailString = "ms-appx:///Assets/playlistdefaultdark.png";
         private Uri? _thumbnail;

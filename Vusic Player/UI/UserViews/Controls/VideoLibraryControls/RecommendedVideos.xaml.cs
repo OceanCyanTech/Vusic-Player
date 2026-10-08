@@ -325,7 +325,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             ObservableCollection<SongModel> temp = new ObservableCollection<SongModel>();
             foreach (var item in RecommendedVideoList)
             {
-                temp.Add(new SongModel { IsAudioItem = false, VisibilityofVideoInfo = Visibility.Visible, Glyph = "\uE8B2", VisibilityofAudioMeta = Visibility.Collapsed, FilePath = item.FilePath, Title = item.FileName });
+                temp.Add(new SongModel {FilePath = item.FilePath, Title = item.FileName });
             }
 
             QueueService.PlayMedia(temp, false, false);
@@ -335,8 +335,8 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
         {
             if(sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vd)
             {
-                QueueService.VusicQueue.Add(new SongModel { IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, FilePath = vd.FilePath, Title = vd.FileName, Glyph = "\uE8B2" });
-                QueueService.VusicQueueNext.Add(new SongModel { IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, FilePath = vd.FilePath, Title = vd.FileName, Glyph = "\uE8B2" });
+                QueueService.VusicQueue.Add(new SongModel { FilePath = vd.FilePath, Title = vd.FileName});
+                QueueService.VusicQueueNext.Add(new SongModel { FilePath = vd.FilePath, Title = vd.FileName});
             }
         }
     }

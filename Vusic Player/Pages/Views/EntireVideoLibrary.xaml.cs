@@ -157,33 +157,77 @@ namespace Vusic_Player.Pages.Views
             }
 
             AllAvailableVideos.Clear();
-            LoadAllFiles();
+            await LoadAllFilesAsync();
             stkLoading.Visibility = Visibility.Collapsed;
         }
 
-        private async void LoadAllFiles()
+        private async Task LoadAllFilesAsync()
         {
+            stkLoading.Visibility = Visibility.Visible;
+            await Task.Yield(); // Allow spinner to draw
+
             bool includeSubDirs = chkIncludeSubDirectories.IsChecked == true;
 
-            AllAvailableVideos.Clear();
-            var rawfiles = FilesInDatabase.rawSongs;
-            foreach (var folder in foldersListOpened)
-            {
-                var videofiles = rawfiles.Where(p => !string.IsNullOrEmpty(p.FilePath) && VideoExtensions.List.Contains(Path.GetExtension(p.FilePath).ToLowerInvariant()) && Path.GetDirectoryName(p.FilePath) == folder.FolderPath);
+            var excludedPaths = foldersListOpened
+                .Where(f => !f.isChecked && !string.IsNullOrWhiteSpace(f.FolderPath))
+                .Select(f => f.FolderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar)
+                .ToList();
 
-                foreach (var videof in videofiles)
+            var activeFolders = foldersListOpened
+                .Where(f => f.isChecked && !string.IsNullOrWhiteSpace(f.FolderPath))
+                .Select(f => f.FolderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar)
+                .ToList();
+
+            var rawFiles = FilesInDatabase.rawSongs;
+
+            // 1. Background filtering
+            var matchingVideos = await Task.Run(() =>
+            {
+                var resultList = new List<SongModel>();
+                var seenPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var validExtensions = new HashSet<string>(VideoExtensions.List, StringComparer.OrdinalIgnoreCase);
+
+                foreach (var raw in rawFiles)
                 {
-                    if (AllAvailableVideos.Any(v => string.Equals(v.FilePath, videof.FilePath, StringComparison.OrdinalIgnoreCase)))
+                    if (string.IsNullOrEmpty(raw.FilePath)) continue;
+                    if (!validExtensions.Contains(Path.GetExtension(raw.FilePath))) continue;
+                    if (excludedPaths.Any(ex => raw.FilePath.StartsWith(ex, StringComparison.OrdinalIgnoreCase))) continue;
+
+                    bool isMatch = includeSubDirs
+                        ? activeFolders.Any(af => raw.FilePath.StartsWith(af, StringComparison.OrdinalIgnoreCase))
+                        : activeFolders.Any(af => string.Equals(Path.GetDirectoryName(raw.FilePath), af.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase));
+
+                    if (isMatch && seenPaths.Add(raw.FilePath))
                     {
-                        continue;
+                        resultList.Add(new SongModel
+                        {
+                            Title = raw.Title,
+                            FilePath = raw.FilePath,
+                            SongDuration = raw.SongDuration,
+                            Genre = raw.Genre
+                        });
                     }
-                    Debug.WriteLine("ADDING FILE: " + videof.FilePath);
-                    AllAvailableVideos.Add(new SongModel { Title = videof.Title, FilePath = videof.FilePath, SongDuration = videof.SongDuration, Genre = videof.Genre, IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible, Glyph = "\uE8B2" });
                 }
+                return resultList;
+            });
+
+            // 2. DETACH the control to prevent UI thrashing
+            AllVideosGroupedCollection.ItemsSource = null!;
+
+            // 3. Clear and fill the collection instantly
+            AllAvailableVideos.Clear();
+            foreach (var item in matchingVideos)
+            {
+                AllAvailableVideos.Add(item);
             }
+
+            // 4. RE-ATTACH: GroupedCollectionView processes the entire list in ONE single pass
+            AllVideosGroupedCollection.ItemsSource = AllAvailableVideos;
+
             txtVideoCount.Text = $"• {AllAvailableVideos.Count} {(AllAvailableVideos.Count == 1 ? "item" : "items")}";
             grdEmptyLibrary.Visibility = (AllAvailableVideos.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
             AllVideosGroupedCollection.Visibility = (AllAvailableVideos.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
+            stkLoading.Visibility = Visibility.Collapsed;
         }
         #endregion
 
@@ -221,89 +265,42 @@ namespace Vusic_Player.Pages.Views
         #region Folder Toggle Button
         private async void btnGenericFolder_Checked(object sender, RoutedEventArgs e)
         {
-            //       Folder check/uncheck event
             if (sender is ToggleButton tgl && tgl.DataContext is FoldersListOpened folder)
             {
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 UserDataPaths paths = UserDataPaths.GetDefault();
+                bool isChecked = tgl.IsChecked ?? false;
 
+                // 1. Update in-memory state
+                folder.isChecked = isChecked;
+
+                // 2. Persist to settings
                 if (folder.IsHighLevelFolder)
                 {
-                    bool isChecked = tgl.IsChecked ?? false;
-
                     switch (folder.FolderPath)
                     {
-                        case var p when p == paths.Documents:
-                            currentSettings.IsDocumentEnabled = isChecked;
-                            break;
-                        case var p when p == paths.Downloads:
-                            currentSettings.IsDownloadsEnabled = isChecked;
-                            break;
-                        case var p when p == paths.Pictures:
-                            currentSettings.IsPicturesEnabled = isChecked;
-                            break;
-                        case var p when p == paths.Videos:
-                            currentSettings.IsVideosEnabled = isChecked;
-                            break;
-                        case var p when p == paths.Music:
-                            currentSettings.IsMusicEnabled = isChecked;
-                            break;
+                        case var p when p == paths.Documents: currentSettings.IsDocumentEnabled = isChecked; break;
+                        case var p when p == paths.Downloads: currentSettings.IsDownloadsEnabled = isChecked; break;
+                        case var p when p == paths.Pictures: currentSettings.IsPicturesEnabled = isChecked; break;
+                        case var p when p == paths.Videos: currentSettings.IsVideosEnabled = isChecked; break;
+                        case var p when p == paths.Music: currentSettings.IsMusicEnabled = isChecked; break;
                     }
-
                 }
                 else
                 {
-                    if (tgl.IsChecked == true)
+                    var saved = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+                    if (saved != null)
                     {
-                        var folderssaved = currentSettings.SavedFoldersOpened;
-                        var exist = folderssaved.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
-                        if (exist != null)
-                        {
-                            exist.isChecked = true;
-                        }
-                        var exist2 = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
-
-                        if (exist2 != null)
-                        {
-                            exist2.isChecked = true;
-                        }
-                        LoadAllFiles();
-
-                    }
-                    else if (tgl.IsChecked == false)
-                    {
-                        var folderssaved = currentSettings.SavedFoldersOpened;
-                        var exist = folderssaved.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
-                        if (exist != null)
-                        {
-                            exist.isChecked = false;
-                        }
-                        var exist2 = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
-
-                        if (exist2 != null)
-                        {
-                            exist2.isChecked = true;
-                        }
-                        var folderpath = folder.FolderPath;
-                        string folderWithBackslash = folderpath.EndsWith(Path.DirectorySeparatorChar.ToString())
-                    ? folderpath
-                    : folderpath + Path.DirectorySeparatorChar;
-
-                        var songsInThisFolder = AllAvailableVideos.Where(p =>
-                p.FilePath.StartsWith(folderWithBackslash, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-                        foreach (var song in songsInThisFolder)
-                        {
-                            AllAvailableVideos.Remove(song);
-                        }
+                        saved.isChecked = isChecked;
                     }
                 }
+
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
 
+                // 3. Re-run scan to honor exclusions and checked states
+                await LoadAllFilesAsync();
             }
         }
-
         private void mnftOpenFolder_Click(object sender, RoutedEventArgs e)
         {
             //Open Folder in File Explorer
@@ -342,7 +339,7 @@ namespace Vusic_Player.Pages.Views
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 if (tgl.IsHighLevelFolder)
                 {
-                    bool isChecked =false;
+                    bool isChecked = false;
 
                     switch (tgl.FolderPath)
                     {
@@ -380,7 +377,7 @@ namespace Vusic_Player.Pages.Views
                 }
 
                 AllAvailableVideos.Clear();
-                LoadAllFiles();
+                await LoadAllFilesAsync();
             }
         }
 
@@ -422,7 +419,7 @@ namespace Vusic_Player.Pages.Views
             //Check box for including sub-directories
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             stkLoading.Visibility = Visibility.Visible;
-            if(chkIncludeSubDirectories.IsChecked == true)
+            if (chkIncludeSubDirectories.IsChecked == true)
             {
                 currentSettings.IncludeSubDirMusLib = true;
             }
@@ -613,7 +610,7 @@ namespace Vusic_Player.Pages.Views
                     Debug.WriteLine("ITEM FILE APTHS " + item.FilePath);
                     if (File.Exists(item.FilePath))
                     {
-                        tempTransfer.Add(new SongModel { Title = existingvideo.Title, SongDuration = existingvideo.SongDuration, FilePath = existingvideo.FilePath, VisibilityofAudioMeta = Visibility.Collapsed, VisibilityofVideoInfo = Visibility.Visible });
+                        tempTransfer.Add(new SongModel { Title = existingvideo.Title, SongDuration = existingvideo.SongDuration, FilePath = existingvideo.FilePath });
                     }
                 }
             }
@@ -811,7 +808,7 @@ namespace Vusic_Player.Pages.Views
             foreach (var playlist in playlists)
             {
                 Debug.WriteLine("PLAYLIST BEING ADDED IS :" + playlist.PlaylistName);
-                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
+                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
             }
             Debug.WriteLine("Playlst3");
             //UI 
@@ -834,7 +831,7 @@ namespace Vusic_Player.Pages.Views
             OceanContentDialog.HideDlg();
             MainWindow.ShowWindow();
         }
-        
+
 
         #endregion
 
@@ -896,7 +893,7 @@ namespace Vusic_Player.Pages.Views
 
         #endregion
 
-      
+
 
         private void AllPlaylistGroupedCollection_playlistcollectionchanged()
         {

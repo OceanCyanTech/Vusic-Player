@@ -200,7 +200,6 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 PlaylistGenre = txtEditGenre.Text,
 
                 PlaylistId = playlistID,
-                PlaylistCount = $"{AllSongs.Count} {(AllSongs.Count == 1 ? "item" : "items")}",
                 PlaylistNowPlaying = "",
                 SongsPaths = AllSongs
             .Select(s => s.FilePath)
@@ -213,7 +212,6 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             Debug.WriteLine("PlaylistID CALL " + playlistID);
             PlaylistCreation.CallPlaylistCreationAdd();
         }
-        PlaylistItem? playlistItemtoEdit;
         public void PlaylistEdit(PlaylistItem playlist)
         {
             Debug.WriteLine("DYD");
@@ -254,7 +252,6 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 PlaylistName = txtEditPlaylistName.Text,
                 PlaylistGenre = txtEditGenre.Text,
                 SongsPaths = songpaths,
-                PlaylistCount = $"{AllSongs.Count} {(AllSongs.Count == 1 ? "item" : "items")}",
                 Thumbnail = defaultPath
     ,
             };
@@ -279,19 +276,13 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                         var musicProps = await file.Properties.GetMusicPropertiesAsync();
 
                         string duration = FormatTimeSpanDuration.Format(musicProps.Duration);
-                        var glyph = "\uEC4F";
+                  
                         string fileExtension = file.FileType.ToLowerInvariant();
-                        if (Extensions.VideoExtensions.List.Contains(fileExtension))
-                        {
-
-                            glyph = "\uE8B2";
-                        }
                         AllSongs.Add(new SongModel
                         {
                             Title = Path.GetFileNameWithoutExtension(file.Path),
                             SongDuration = musicProps.Duration,
                             FilePath = file.Path,
-                            Glyph = glyph
 
                         });
                     }
@@ -393,14 +384,9 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                     if (Instance.MediaSongModels.Any(s => s.FilePath == file.Path)) continue;
                     TimeSpan duration = (await file.Properties.GetMusicPropertiesAsync()).Duration;
                     string fileExtension = file.FileType.ToLowerInvariant();
-                    var glyph = "\uEC4F";
                     if (Extensions.VideoExtensions.List.Contains(fileExtension))
                     {
-
-                        glyph = "\uE8B2";
                         duration = (await file.Properties.GetVideoPropertiesAsync()).Duration;
-
-
                     }
                     Instance.MediaPaths.Add(file.Path);
 
@@ -409,8 +395,6 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                         Title = Path.GetFileNameWithoutExtension(file.Path),
                         SongDuration = duration,
                         FilePath = file.Path,
-                        IsAudioItem = !IsVideoPlaylist,
-                        Glyph = glyph
                     });
                 }
                 lstViewPlaylistAddedSongs.StartBringIntoView();
@@ -436,11 +420,9 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                     if (Instance.MediaSongModels.Any(s => s.FilePath == file.Path)) continue;
                     TimeSpan duration = (await file.Properties.GetMusicPropertiesAsync()).Duration;
                     string fileExtension = file.FileType.ToLowerInvariant();
-                    var glyph = "\uEC4F";
+               
                     if (Extensions.VideoExtensions.List.Contains(fileExtension))
                     {
-
-                        glyph = "\uE8B2";
                         duration = (await file.Properties.GetVideoPropertiesAsync()).Duration;
 
 
@@ -452,8 +434,6 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                         Title = Path.GetFileNameWithoutExtension(file.Path),
                         SongDuration = duration,
                         FilePath = file.Path,
-                        IsAudioItem = !IsVideoPlaylist,
-                        Glyph = glyph
                     });
                 }
                 lstViewPlaylistAddedSongs.StartBringIntoView();

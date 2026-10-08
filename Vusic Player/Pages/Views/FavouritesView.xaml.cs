@@ -101,9 +101,6 @@ namespace Vusic_Player.Pages.Views
                     Artist = artist,
                     SongDuration = properties.Duration,
                     FilePath = file.Path,
-                    Glyph = isVideo ? "\uE8B2" : "\uEC4F",
-                    VisibilityofAudioMeta = isVideo ? Visibility.Collapsed : Visibility.Visible,
-                    VisibilityofVideoInfo = isVideo ? Visibility.Visible : Visibility.Collapsed
                     // IsFavourite, FavString, and FavOpacity are automatically resolved by SongModel!
                 });
             }
@@ -173,9 +170,6 @@ namespace Vusic_Player.Pages.Views
                     Artist = artist,
                     SongDuration = properties.Duration,
                     FilePath = item.Path,
-                    Glyph = isVideo ? "\uE8B2" : "\uEC4F",
-                    VisibilityofAudioMeta = isVideo ? Visibility.Collapsed : Visibility.Visible,
-                    VisibilityofVideoInfo = isVideo ? Visibility.Visible : Visibility.Collapsed
                     // IsFavourite, FavString, and FavOpacity are automatically resolved
                 });
             }

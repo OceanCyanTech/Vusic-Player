@@ -239,7 +239,7 @@ CornerRadius="16"
                         <TextBlock Margin="10,5" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Playlist will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                     </StackPanel>
 
-                    <vusic:ListViewMedia Grid.Row="2" VisiblityofViewButton="Visible" x:Name="lstViewUnified"></vusic:ListViewMedia>
+                    <vusic:ListViewMedia Grid.Row="2" VisiblityofViewButton="Visible" ItemsSource="{x:Bind SongCollection, Mode=OneWay}" x:Name="lstViewUnified"></vusic:ListViewMedia>
 
                 </Grid>
             </Grid>

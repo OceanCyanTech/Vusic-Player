@@ -183,7 +183,6 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                                 if (defaultitem == null)
                                 {
                                     exist.SongsPaths.Add(item.FilePath);
-                                    exist.PlaylistCount = $"{exist.SongsPaths.Count} {(exist.SongsPaths.Count == 1 ? "item" : "items")}";
                                 }
                             }
                         }

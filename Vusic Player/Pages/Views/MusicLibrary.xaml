@@ -96,7 +96,7 @@ AlwaysUseFallback="False"/>
             <TextBlock Tapped="TextBlock_Tapped_1" Text="Instant Playlists for you" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
 
             <Expander Grid.Row="5" 
-          Header="Recommendations"
+          Header="Recommendations" HorizontalContentAlignment="Stretch"
           HorizontalAlignment="Stretch" Name="expRecommend" Expanding="expRecent_Expanding">
                 <Expander.Resources>
                     <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />
@@ -105,7 +105,7 @@ AlwaysUseFallback="False"/>
                     <SolidColorBrush x:Key="ExpanderHeaderPointerOverBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="ExpanderHeaderPressedBackground" Color="Transparent" />
                 </Expander.Resources>
-                <grids:InstantPlaylists />
+                <grids:InstantPlaylists HorizontalAlignment="Left"/>
 
             </Expander>
 
@@ -113,7 +113,7 @@ AlwaysUseFallback="False"/>
 
             <Expander Grid.Row="7"  Background="Transparent"
           Header="Explore Genres"
-          HorizontalAlignment="Stretch" Name="expGenres" Expanding="expRecent_Expanding">
+          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Name="expGenres" Expanding="expRecent_Expanding">
                 <Expander.Resources>
                     <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
@@ -123,7 +123,6 @@ AlwaysUseFallback="False"/>
                 </Expander.Resources>
                 <StackPanel Height="240">
                     <grids:DiveInGenres />
-                    <grids:TopTracks Visibility="Collapsed" />
                 </StackPanel>
             </Expander>
 

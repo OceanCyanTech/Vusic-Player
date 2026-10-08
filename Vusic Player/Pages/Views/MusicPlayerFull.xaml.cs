@@ -156,7 +156,6 @@ namespace Vusic_Player.Pages.Views
             base.OnNavigatedTo(e);
         }
 
-        public event EventHandler<Type>? NavigationRequested;
         private void sldMain_DragStarted()
         {
             PlayerService.SldMain_DragStarted();

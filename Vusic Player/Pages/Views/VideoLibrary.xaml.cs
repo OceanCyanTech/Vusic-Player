@@ -83,7 +83,7 @@ namespace Vusic_Player.Pages.Views
                     {
                         finalName = $"{baseName} ({counter++})";
                     }
-                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = PlaylistInstance.Genre, plthumb = PlaylistInstance.PlCover, PlaylistId = PlaylistInstance.PlaylistID, DateCreation = PlaylistInstance.CreationDate, PlaylistCount = PlaylistInstance.PlaylistCount, SongsPaths = new HashSet<string>(PlaylistInstance.MediaPaths), Thumbnail = PlaylistInstance.Thumbnail };
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = PlaylistInstance.Genre, plthumb = PlaylistInstance.PlCover, PlaylistId = PlaylistInstance.PlaylistID, DateCreation = PlaylistInstance.CreationDate, SongsPaths = new HashSet<string>(PlaylistInstance.MediaPaths), Thumbnail = PlaylistInstance.Thumbnail };
                     Debug.WriteLine(newplaylist.PlaylistName);
                     PlaylistInstance.PlaylistsMaster.Add(newplaylist);
 

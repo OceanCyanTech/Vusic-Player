@@ -21,8 +21,6 @@ namespace Vusic_Player.Configuration.ClassModels
         private int _year;
         private int seasonindexassociated;
         private Visibility visibilityofstrikethrough = Visibility.Collapsed;
-        private Visibility visibilityofaudiometadata = Visibility.Visible;
-        private Visibility visibilityofvidinfo = Visibility.Collapsed;
         private string _artist = "";
         private string _genre = "";
         private string _albumName = "";
@@ -82,7 +80,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 OnPropertyChanged();
             }
         }
-        public string Glyph => (File.Exists(FilePath) && Extensions.VideoExtensions.List.Contains(Path.GetExtension(FilePath))) ? "\uE8B2" : "\uEC4F";
+        public string Glyph => (PlayerService.CurrentPlayingPath == FilePath) ? (PlayerService.Masterplayer != null && PlayerService.Masterplayer.IsPlaying ? "\uE768" : "\uE769") : ((File.Exists(FilePath) && Extensions.VideoExtensions.List.Contains(Path.GetExtension(FilePath))) ? "\uE8B2" : "\uEC4F");
 
 
         private string mediatype = "Playlist";// Default color

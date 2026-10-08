@@ -211,7 +211,6 @@ namespace Vusic_Player.UI.UserViews.Grids
 
 
 
-        public event RoutedEventHandler? OpenPlaylistClick;
         private void mnftOpenPlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is PlaylistItem playlist)
@@ -310,7 +309,6 @@ namespace Vusic_Player.UI.UserViews.Grids
                     }
                     playlist.PlaylistName = finalName;
                     playlist.PlaylistGenre = Instance.Genre;
-                    playlist.PlaylistCount = Instance.PlaylistCount;
                     playlist.plthumb = Instance.PlCover;
                     playlist.Thumbnail = Instance.Thumbnail;
                     playlist.ThumbnailString = Instance.ThumbnailString;
@@ -320,7 +318,6 @@ namespace Vusic_Player.UI.UserViews.Grids
                     {
                         existingplaylist.PlaylistName = finalName;
                         existingplaylist.PlaylistGenre = Instance.Genre;
-                        existingplaylist.PlaylistCount = Instance.PlaylistCount;
                         existingplaylist.plthumb = Instance.PlCover;
                         existingplaylist.Thumbnail = Instance.Thumbnail;
                         existingplaylist.ThumbnailString = Instance.ThumbnailString;
@@ -360,7 +357,6 @@ namespace Vusic_Player.UI.UserViews.Grids
                 });
             }
         }
-        public event ItemClickEventHandler? GridViewItemClick;
         private void grdViewPlaylists_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (chkSelect.IsChecked == false)
@@ -419,7 +415,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     {
                         finalName = $"{baseName} ({counter++})";
                     }
-                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, PlaylistCount = Instance.PlaylistCount, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
                     Debug.WriteLine(newplaylist.PlaylistName);
                     Instance.PlaylistsMaster.Add(newplaylist);
 

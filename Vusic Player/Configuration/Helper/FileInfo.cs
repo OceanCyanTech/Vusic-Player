@@ -789,7 +789,6 @@ namespace Vusic_Player.Configuration.Helper
             }
             FileInfoRequested?.Invoke(this, path);
         }
-        public static event Action<string>? FileInfoCalled;
 
         private static bool _isClosing = false;
         private static long curtimetemp;

@@ -220,7 +220,6 @@ public sealed partial class ArtistView : Page
         txtEmptySongs.Visibility = FoundSongs.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         lstViewAllSongs.Visibility = FoundSongs.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
     }
-    TimeSpan ts;
     public ObservableCollection<SongModel> FoundSongs { get; set; } = new ObservableCollection<SongModel>();
     ObservableCollection<ArtistDiscAlbumModel> albumCollection = new ObservableCollection<ArtistDiscAlbumModel>();
     public ObservableCollection<SongModel> Singles { get; set; } = new ObservableCollection<SongModel>();
@@ -578,12 +577,11 @@ public sealed partial class ArtistView : Page
         foreach (var item in rawMatches)
         {
             var colorbrush = new SolidColorBrush(Microsoft.UI.Colors.White);
-            var glyph = "\uEC4F";
 
             if (currentPlayingPath == item.FilePath)
             {
                 colorbrush = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
-                glyph = isPlaying ? "\uE769" : "\uE768";
+           
             }
 
             mostplayedsongs.Add(new SongModel
@@ -594,7 +592,6 @@ public sealed partial class ArtistView : Page
                 FilePath = item.FilePath,
                
                 SongDuration = item.SongDuration,
-                Glyph = glyph,
                 TitleColor = colorbrush,
                 Remove = "Remove from History",
                 MediaType = "ArtistMP",
@@ -1403,7 +1400,7 @@ public sealed partial class ArtistView : Page
 
             foreach (var song in albumModel.Songs)
             {
-                observablesongs.Add(new SongModel { Artist = song.Artist, Glyph = song.Glyph, Title = song.Title, FilePath = song.FilePath });
+                observablesongs.Add(new SongModel { Artist = song.Artist, Title = song.Title, FilePath = song.FilePath });
                 if (!string.IsNullOrEmpty(song.Artist))
                     uniqueArtists.Add(song.Artist);
             }

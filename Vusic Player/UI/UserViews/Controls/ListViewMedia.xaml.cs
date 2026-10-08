@@ -241,41 +241,19 @@ namespace Vusic_Player.UI.UserViews.Controls
                 var storagefile = await StorageFile.GetFileFromPathAsync(item.FilePath);
 
                 string fileExtension = Path.GetExtension(item.FilePath ?? "").ToLower();
-                if (Extensions.VideoExtensions.List.Contains(fileExtension))
-                {
-                    Debug.WriteLine("Called 3" + item.FilePath);
 
-                    item.Glyph = "\uE8B2";
-                }
-                else if (Extensions.AudioExtensions.List.Contains(fileExtension))
-                {
-                    Debug.WriteLine("Called 4" + item.FilePath);
-
-                    item.Glyph = "\uEC4F";
-                }
             }
             var exist = ItemsSource.ToList().FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
             if (exist == null) return;
             Debug.WriteLine("TRUHAM 1");
             exist.TitleColor = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
-            if (PlayerService.Masterplayer!.IsPlaying)
-            {
-                Debug.WriteLine("Called 5" + exist.FilePath);
 
-                exist.Glyph = "\uE769";
-            }
-            else
-            {
-                Debug.WriteLine("Called 6 " + exist.FilePath);
-
-                exist.Glyph = "\uE768";
-            }
             //if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(exist.FilePath)))
 
         }
         private async void PlayerService_PlayCalled()
         {
-           UpdateGlyphs();
+            UpdateGlyphs();
             //{
             //    exist.Glyph = "\uE8B2";
             //}
@@ -429,7 +407,6 @@ namespace Vusic_Player.UI.UserViews.Controls
                         {
                             playliitem.SongsPaths.Add(path);
                             int count = playliitem.SongsPaths.Count;
-                            playliitem.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
                             await SettingsLoader.SaveSettingsAsync(currentSettings);
                             ttAddedToPlaylist.Title = $"{Path.GetFileNameWithoutExtension(path)} has been added to {playliitem.PlaylistName}";
 
@@ -483,13 +460,15 @@ namespace Vusic_Player.UI.UserViews.Controls
                     }
                     else
                     {
-                        //if (App.UltimateFrame != null)
-                        //{
-                        //    if (App.NavigationFrame == null) return;
-                        //    NavigationManager.LastContentPageType = App.NavigationFrame.CurrentSourcePageType;
-                        //    App.UltimateFrame.Navigate(typeof(VideoPlay), selectedSong.FilePath);
-                        //}
-
+                        if (App.NavigationFrame == null) return;
+                        if (PlayerService.InVideoPage == false)
+                        {
+                            App.NavigationFrame.Navigate(typeof(VideoPlayer), selectedSong.FilePath);
+                        }
+                        else
+                        {
+                            PlayerService.OpenPath(selectedSong.FilePath);
+                        }
                     }
                 }
             }
@@ -792,8 +771,6 @@ namespace Vusic_Player.UI.UserViews.Controls
         bool isPaused2 = false;
         public static MediaPlaybackController media => MediaPlaybackController.Instance;
         public event Action<SongModel>? ItemRemoved;
-        private static long curtimetemp;
-        private static TimeSpan curtime;
 
         private void OceanContentDialog_PrimaryRequested()
         {
@@ -1640,7 +1617,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                                     if (defaultitem == null)
                                     {
                                         exist.SongsPaths.Add(item.FilePath);
-                                        exist.PlaylistCount = $"{exist.SongsPaths.Count} {(exist.SongsPaths.Count == 1 ? "item" : "items")}";
+
                                     }
                                 }
                             }
@@ -1763,7 +1740,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void chckSelectAllGridView_Checked(object sender, RoutedEventArgs e)
         {
-            if(chckSelectAllGridView.IsChecked == true)
+            if (chckSelectAllGridView.IsChecked == true)
             {
                 grdViewMain.SelectAll();
             }

@@ -501,7 +501,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             if (ContinuePlaying.videoProgressMain == null) return;
 
       
-            var newsong = new SongModel { IsAudioItem = false, VisibilityofAudioMeta = Visibility.Collapsed, Title = ContinuePlaying.videoProgressMain.FileName, FilePath = ContinuePlaying.videoProgressMain.FilePath, IsEpisode = ContinuePlaying.videoProgressMain.IsEpisode, Glyph = "\uE8B2", VisibilityofVideoInfo = Visibility.Visible, MediaType = "Video" };
+            var newsong = new SongModel {Title = ContinuePlaying.videoProgressMain.FileName, FilePath = ContinuePlaying.videoProgressMain.FilePath, IsEpisode = ContinuePlaying.videoProgressMain.IsEpisode, MediaType = "Video" };
             QueueService.VusicQueue.Add(newsong);
             QueueService.VusicQueueNext.Add(newsong);
         }

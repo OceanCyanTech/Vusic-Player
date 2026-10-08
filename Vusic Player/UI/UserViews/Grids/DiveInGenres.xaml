@@ -9,6 +9,63 @@
     mc:Ignorable="d">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Genres" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"/>
+        <GridView Name="grdViewGenres" Margin="0, 20" Grid.Row="1" ItemsSource="{x:Bind genresRecommended, Mode=OneWay}" ItemClick="grdViewGenres_ItemClick" IsItemClickEnabled="True">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal" VerticalAlignment="Stretch" ItemWidth="140"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Grid RowSpacing="10">
+                        <Grid.ContextFlyout>
+                            <MenuFlyout >
+                                <MenuFlyoutItem Text="Open Genre" Name="mnftOpenGenre" Click="mnftOpenGenre_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Play" Name="mnftPlayGenre" Click="mnftPlayGenre_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Play Shuffled" Name="mnftPlayGenreShuffled" Click="mnftPlayGenreShuffled_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Play on Loop" Name="mnftPlayGenreLoop" Click="mnftPlayGenreLoop_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Play Shuffled and on Loop" Name="mnftPlayGenreLoopShuffle" Click="mnftPlayGenreLoopShuffle_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="d"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                              
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Width="50" Source="{Binding GenreCover}"/>
+                        <TextBlock Text="{Binding GenreName}" Grid.Row="1"/>
+                        <TextBlock Text="{Binding GenreCount}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="2"/>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
 
     </Grid>
 </UserControl>

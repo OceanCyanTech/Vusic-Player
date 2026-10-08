@@ -44,7 +44,6 @@ namespace Vusic_Player.Pages.Views
         {
             InitializeComponent();
         }
-        MasterSearchIndex.Filters SearchFilterMain = MasterSearchIndex.Filters.All;
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             SearchResultsPageState.alreadyNavigatedtoSearchResultsPage = false;

@@ -22,6 +22,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -45,7 +46,7 @@ namespace Vusic_Player.Pages.Views
         public EntireMusicLibrary()
         {
             InitializeComponent();
-            FirstTimeLaunch();
+          //  FirstTimeLaunch();
             AllAvailableSongs.CollectionChanged -= AllAvailableSongs_CollectionChanged;
             AllAvailableSongs.CollectionChanged += AllAvailableSongs_CollectionChanged;
             foldersListOpened.CollectionChanged -= FoldersListOpened_CollectionChanged;
@@ -213,7 +214,7 @@ namespace Vusic_Player.Pages.Views
             foreach (var playlist in playlists)
             {
                 Debug.WriteLine("PLAYLIST BEING ADDED IS :" + playlist.PlaylistName);
-                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, PlaylistCount = playlist.PlaylistCount, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
+                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
             }
             Debug.WriteLine("Playlst3");
             stkNoPlaylists.Visibility = Visibility.Collapsed;
@@ -595,209 +596,75 @@ namespace Vusic_Player.Pages.Views
             chkIncludeSubDirectories.IsChecked = currentSettings.IncludeSubDirMusLib;
         }
         public ObservableCollection<SongModel> AllAvailableSongs = new ObservableCollection<SongModel>();
-        private async Task LoadAllFiles(List<string> searchPaths)
+        private async Task LoadAllFilesAsync()
         {
-            //List<StorageFile> allFoundFiles = new List<StorageFile>();
+            stkLoading.Visibility = Visibility.Visible;
+            await Task.Yield(); // Allow spinner to draw
+
             bool includeSubDirs = chkIncludeSubDirectories.IsChecked == true;
 
-            // 1. Gather all files
-            //foreach (var path in searchPaths)
-            //{
-            //    try
-            //    {
-            //        StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
-            //        var queryOptions = new QueryOptions(CommonFileQuery.OrderByName, AudioExtensions.List)
-            //        {
-            //            FolderDepth = includeSubDirs ? FolderDepth.Deep : FolderDepth.Shallow
-            //        };
+            var excludedPaths = foldersListOpened
+                .Where(f => !f.isChecked && !string.IsNullOrWhiteSpace(f.FolderPath))
+                .Select(f => f.FolderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar)
+                .ToList();
 
-            //        queryOptions.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, null);
+            var activeFolders = foldersListOpened
+                .Where(f => f.isChecked && !string.IsNullOrWhiteSpace(f.FolderPath))
+                .Select(f => f.FolderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar)
+                .ToList();
 
-            //        var queryResult = folder.CreateFileQueryWithOptions(queryOptions);
-            //        IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync();
-            //        allFoundFiles.AddRange(files);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Debug.WriteLine($"Error scanning path {path}: {ex.Message}");
-            //    }
-            //}
+            var rawFiles = FilesInDatabase.rawSongs;
 
-            //if (allFoundFiles.Count == 0) return;
-            Microsoft.UI.Dispatching.DispatcherQueue dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-            // 1. Keep the UI-bound settings/existing paths check on the UI thread
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-
-            // 1. Snapshot currently loaded paths
-            var existingPaths = AllAvailableSongs
-                .Select(s => string.IsNullOrWhiteSpace(s.FilePath) ? "" : Path.GetFullPath(s.FilePath))
-                .Where(p => !string.IsNullOrEmpty(p))
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-            // 2. Scan and parse completely using the Lite Model
-            List<AudioTrackLite> discoveredTracks = await Task.Run(() =>
+            // 1. Background filtering
+            var matchingVideos = await Task.Run(() =>
             {
-                var uniqueFilesToParse = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var resultList = new List<SongModel>();
+                var seenPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var validExtensions = new HashSet<string>(AudioExtensions.List, StringComparer.OrdinalIgnoreCase);
 
-                foreach (var path in searchPaths)
+                foreach (var raw in rawFiles)
                 {
-                    try
+                    if (string.IsNullOrEmpty(raw.FilePath)) continue;
+                    if (!validExtensions.Contains(Path.GetExtension(raw.FilePath))) continue;
+                    if (excludedPaths.Any(ex => raw.FilePath.StartsWith(ex, StringComparison.OrdinalIgnoreCase))) continue;
+
+                    bool isMatch = includeSubDirs
+                        ? activeFolders.Any(af => raw.FilePath.StartsWith(af, StringComparison.OrdinalIgnoreCase))
+                        : activeFolders.Any(af => string.Equals(Path.GetDirectoryName(raw.FilePath), af.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase));
+
+                    if (isMatch && seenPaths.Add(raw.FilePath))
                     {
-                        var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == path);
-                        if (exist != null)
+                        resultList.Add(new SongModel
                         {
-                            if (exist.isChecked)
-                            {
-                                if (!Directory.Exists(path)) continue;
-
-                                var searchOption = includeSubDirs ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-                                var directoryInfo = new DirectoryInfo(path);
-                                var files = directoryInfo.EnumerateFiles("*.*", searchOption)
-                                    .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
-
-                                foreach (var file in files)
-                                {
-                                    string normalizedPath = Path.GetFullPath(file.FullName);
-                                    if (!existingPaths.Contains(normalizedPath))
-                                    {
-                                        uniqueFilesToParse.Add(normalizedPath);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"Error scanning path {path}: {ex.Message}");
-                    }
-                }
-
-                var liteList = new List<AudioTrackLite>();
-
-                foreach (var filePath in uniqueFilesToParse)
-                {
-                    try
-                    {
-                        using (var tagFile = TagLib.File.Create(filePath))
-                        {
-
-                            string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
-                                ? Path.GetFileNameWithoutExtension(filePath)
-                                : tagFile.Tag.Title;
-
-                            string album = string.IsNullOrWhiteSpace(tagFile.Tag.Album)
-                                ? "Unknown Album"
-                                : tagFile.Tag.Album;
-
-                            string artist = string.IsNullOrWhiteSpace(string.Join(',', tagFile.Tag.AlbumArtists))
-                                ? "Unknown Artist"
-                                : string.Join(',', tagFile.Tag.AlbumArtists);
-
-                            liteList.Add(new AudioTrackLite
-                            {
-                                Title = title,
-                                AlbumName = album,
-                                Artist = artist,
-                                FilePath = filePath,
-                                SongDuration = tagFile.Properties.Duration,
-                            });
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"TagLib parsing error for {filePath}: {ex.Message}");
-                    }
-                }
-
-                return liteList;
-            });
-
-            // 3. Batch conversion to your original SongModel on the UI thread
-            int batchSize = 40;
-            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-
-            for (int i = 0; i < discoveredTracks.Count; i += batchSize)
-            {
-                var batch = discoveredTracks.Skip(i).Take(batchSize).ToList();
-             
-                dispatcher.TryEnqueue(() =>
-                {
-                    foreach (var liteTrack in batch)
-                    {
-                        // Direct duplicate guard-check against the UI collection
-                        if (AllAvailableSongs.Any(s => string.Equals(Path.GetFullPath(s.FilePath), liteTrack.FilePath, StringComparison.OrdinalIgnoreCase)))
-                            continue;
-
-                        // Instantiate your original SongModel safely inside the UI Thread Context
-                        AllAvailableSongs.Add(new SongModel
-                        {
-                            Title = liteTrack.Title,
-                            AlbumName = liteTrack.AlbumName,
-                            Artist = liteTrack.Artist,
-                            FilePath = liteTrack.FilePath,
-                            SongDuration = liteTrack.SongDuration,
-                            Glyph = "\uEC4F"
+                            Title = raw.Title,
+                            FilePath = raw.FilePath,
+                            SongDuration = raw.SongDuration,
+                            Genre = raw.Genre,
+                            Artist = raw.Artist,
+                            AlbumName = raw.AlbumName
                         });
                     }
-                });
+                }
+                return resultList;
+            });
 
-                // Breath frame for the UI engine
-                await Task.Delay(16);
+            // 2. DETACH the control to prevent UI thrashing
+            AllMusicGroupedCollection.ItemsSource = null!;
 
+            // 3. Clear and fill the collection instantly
+            AllAvailableSongs.Clear();
+            foreach (var item in matchingVideos)
+            {
+                AllAvailableSongs.Add(item);
             }
+
+            // 4. RE-ATTACH: GroupedCollectionView processes the entire list in ONE single pass
+            AllMusicGroupedCollection.ItemsSource = AllAvailableSongs;
+
             txtMusicCount.Text = $"• {AllAvailableSongs.Count} {(AllAvailableSongs.Count == 1 ? "item" : "items")}";
-
-            //var parsingTasks = allFoundFiles.Select(async file =>
-            //{
-            //    if (existingPaths.Contains(file.Path)) return null;
-
-            //    try
-            //    {
-            //        // Safely called on the UI thread context, but executes asynchronously
-            //        var musicProperties = await file.Properties.GetMusicPropertiesAsync();
-            //        bool isFav = favourites.Any(p => p.FilePath == file.Path);
-
-            //        string title = string.IsNullOrWhiteSpace(musicProperties.Title)
-            //            ? file.DisplayName
-            //            : musicProperties.Title;
-
-            //        string album = string.IsNullOrWhiteSpace(musicProperties.Album)
-            //            ? "Unknown Album"
-            //            : musicProperties.Album;
-
-            //        string artist = string.IsNullOrWhiteSpace(musicProperties.Artist)
-            //            ? "Unknown Artist"
-            //            : musicProperties.Artist;
-
-            //        return new SongModel
-            //        {
-            //            Title = title,
-            //            AlbumName = album,
-            //            Artist = artist,
-            //            FilePath = file.Path,
-            //            SongDuration = musicProperties.Duration,
-            //            IsFavourite = isFav,
-            //            Glyph = "\uEC4F"
-            //        };
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Debug.WriteLine($"Native parsing error for {file.Name}: {ex.Message}");
-            //        return null;
-            //    }
-            //});
-
-            //// 3. Await all metadata lookups in parallel. The UI stays 100% fluid here.
-            //var results = await Task.WhenAll(parsingTasks);
-
-            //// 4. Filter out nulls (skipped/failed files) and batch add to your UI collection
-            //foreach (var song in results)
-            //{
-            //    if (song != null)
-            //    {
-            //        AllAvailableSongs.Add(song);
-            //    }
-            //}
+            grdEmptyLibrary.Visibility = (AllAvailableSongs.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
+            AllMusicGroupedCollection.Visibility = (AllAvailableSongs.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
+            stkLoading.Visibility = Visibility.Collapsed;
         }
         private async Task ScanAllFoldersAsync(List<string> searchPaths)
         {
@@ -891,13 +758,28 @@ namespace Vusic_Player.Pages.Views
         private async void LoadFolders()
         {
             UserDataPaths paths = UserDataPaths.GetDefault();
-
+            grdViewFolders.ItemsSource = foldersListOpened;
             // Assigning the system paths to the Tag property
 
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
 
             var folders = currentSettings.SavedFoldersOpened;
+            var folderMappings = new (bool IsEnabled, string Path)[]
+    {
+    (currentSettings.IsDocumentEnabled, paths.Documents),
+    (currentSettings.IsDownloadsEnabled, paths.Downloads),
+    (currentSettings.IsPicturesEnabled, paths.Pictures),
+    (currentSettings.IsVideosEnabled, paths.Videos),
+    (currentSettings.IsMusicEnabled, paths.Music),
+    };
 
+            foreach (var (isEnabled, path) in folderMappings)
+            {
+                if (isEnabled)
+                {
+                    foldersListOpened.Add(new FoldersListOpened { FolderPath = path, IsHighLevelFolder = true, FolderName = Path.GetFileName(path), isChecked = true });
+                }
+            }
             foreach (var item in currentSettings.SavedFoldersOpened)
             {
                 if (item.Show == true)
@@ -923,53 +805,44 @@ namespace Vusic_Player.Pages.Views
                         }
                     }
                 }
-                //    ToggleButton toggleButton = new();
-                //    if (item.isChecked)
-                //    {
-                //        toggleButton.IsChecked = true;
-                //    }
-                //    toggleButton.ContextFlyout = (MenuFlyout)this.Resources["FolderContextMenu"];
-                //    var flyout = toggleButton.ContextFlyout as MenuFlyout;
-                //    var openItem = flyout.Items[0] as MenuFlyoutItem; // "Open Location"
-                //    var removeItem = flyout.Items[2] as MenuFlyoutItem; // "Remove" (skip separator)
-
-                //    // Detach old handlers if any, and attach a specific one for THIS button
-                //    openItem.Click += (s, e) =>
-                //    {
-                //        string path = item.FolderPath;
-                //        if (System.IO.Directory.Exists(path))
-                //        {
-                //            System.Diagnostics.
-                //            ("explorer.exe", $"/select,\"{path}\"");
-                //        }
-                //    };
-                //    toggleButton.Tag = item.FolderPath;
-                //    toggleButton.CornerRadius = new CornerRadius(16);
-                //    toggleButton.FontSize = 16;
-                //    ToolTipService.SetToolTip(toggleButton, item.FolderPath);
-
-                //    toggleButton.Padding = new Thickness(10);
-                //    toggleButton.Content = Path.GetFileName(item.FolderPath);
-                //    if (App.Current.Resources.TryGetValue("SurfaceStrokeColorDefaultBrush", out object resource))
-                //    {
-                //        toggleButton.BorderBrush = (Brush)resource;
-                //    }
-                //    toggleButton.Background = new SolidColorBrush(Microsoft.UI.Colors.Transparent);
-                //    stkAddedFolders.Children.Add(toggleButton);
-                //}
             }
-            List<string> fpaths = new();
-            foreach (var item in foldersListOpened)
-            {
-                if (item.isChecked == true)
-                {
-                    fpaths.Add(item.FolderPath);
-                }
-            }
+
             AllAvailableSongs.Clear();
-            await LoadAllFiles(fpaths);
+            await LoadAllFilesAsync();
             stkLoading.Visibility = Visibility.Collapsed;
         }
+        //private async void LoadAllFiles()
+        //{
+        //    try
+        //    {
+        //        bool includeSubDirs = chkIncludeSubDirectories.IsChecked == true;
+
+        //        AllAvailableSongs.Clear();
+        //        var rawfiles = FilesInDatabase.rawSongs;
+        //        foreach (var folder in foldersListOpened)
+        //        {
+        //            var audiofiles = rawfiles.Where(p => !string.IsNullOrEmpty(p.FilePath) && AudioExtensions.List.Contains(Path.GetExtension(p.FilePath).ToLowerInvariant()) && Path.GetDirectoryName(p.FilePath) == folder.FolderPath);
+
+        //            foreach (var videof in audiofiles)
+        //            {
+        //                if (AllAvailableSongs.Any(v => string.Equals(v.FilePath, videof.FilePath, StringComparison.OrdinalIgnoreCase)))
+        //                {
+        //                    continue;
+        //                }
+        //                Debug.WriteLine("ADDING FILE: " + videof.FilePath);
+        //                AllAvailableSongs.Add(new SongModel { Title = videof.Title, FilePath = videof.FilePath, SongDuration = videof.SongDuration, Artist = videof.Artist, AlbumName = videof.AlbumName, Genre = videof.Genre });
+        //            }
+        //        }
+        //        txtMusicCount.Text = $"• {AllAvailableSongs.Count} {(AllAvailableSongs.Count == 1 ? "item" : "items")}";
+        //        grdEmptyLibrary.Visibility = (AllAvailableSongs.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
+        //        AllMusicGroupedCollection.Visibility = (AllAvailableSongs.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
+        //    }
+        //    finally
+        //    {
+        //        stkLoading.Visibility = Visibility.Collapsed;
+        //    }
+        //}
+
         ObservableCollection<FoldersListOpened> foldersListOpened = new();
         private async void LoadItems(List<string> paths)
         {
@@ -1046,36 +919,36 @@ namespace Vusic_Player.Pages.Views
         }
         private async void btnAddFolders_Click(object sender, RoutedEventArgs e)
         {
-
+            //Add folders to list
             var obser = new ObservableCollection<SongModel>();
 
             if (App.MainWindowInstance == null) return;
             var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Choose Folder", Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
             if (folder != null)
             {
-                var alreadyexist = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.Path);
-                if (alreadyexist != null) return;
-
-                foldersListOpened.Add(new FoldersListOpened { FolderPath = folder.Path, FolderName = Path.GetFileName(folder.Path), isChecked = true });
                 // Detach old handlers if any, and attach a specific one for THIS button
 
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                Debug.WriteLine("folder add");
                 var check = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == folder.Path);
+                var savedfolders = currentSettings.SavedFoldersOpened;
                 if (check == null)
                 {
-                    currentSettings.SavedFoldersOpened.Add(new FoldersListOpened { FolderPath = folder.Path, isChecked = true });
+                    Debug.WriteLine("folder add NULL CHECK");
+
+                    savedfolders.Add(new FoldersListOpened { FolderPath = folder.Path, isChecked = true, FolderName = Path.GetFileName(folder.Path) });
                     await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    Debug.WriteLine("folder add NULL CHECK test");
+                    var alreadyexist = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.Path);
+                    if (alreadyexist != null) return;
+
+                    foldersListOpened.Add(new FoldersListOpened { FolderPath = folder.Path, FolderName = Path.GetFileName(folder.Path), isChecked = true });
+
                 }
             }
         }
 
-        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-        }
 
-        private void ToggleButton_Checked1(object sender, RoutedEventArgs e)
-        {
-        }
 
         private void mnftOpenFolder_Click(object sender, RoutedEventArgs e)
         {
@@ -1108,131 +981,96 @@ namespace Vusic_Player.Pages.Views
 
         private async void mnftRemoveFolder_Click(object sender, RoutedEventArgs e)
         {
-
+            //Remove Folder from the List
             if (sender is MenuFlyoutItem MNFT && MNFT.DataContext is FoldersListOpened tgl)
-
             {
                 foldersListOpened.Remove(tgl);
+                UserDataPaths paths = UserDataPaths.GetDefault();
 
-                var currentse = await SettingsLoader.LoadSettingsAsync();
-                if (tgl.FolderPath is string str)
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                if (tgl.IsHighLevelFolder)
                 {
-                    var folder = currentse.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == str);
+                    bool isChecked = false;
 
-
-                    if (folder != null)
+                    switch (tgl.FolderPath)
                     {
-                        Debug.WriteLine(str);
-
-                        currentse.SavedFoldersOpened.Remove(folder);
-
+                        case var p when p == paths.Documents:
+                            currentSettings.IsDocumentEnabled = isChecked;
+                            break;
+                        case var p when p == paths.Downloads:
+                            currentSettings.IsDownloadsEnabled = isChecked;
+                            break;
+                        case var p when p == paths.Pictures:
+                            currentSettings.IsPicturesEnabled = isChecked;
+                            break;
+                        case var p when p == paths.Videos:
+                            currentSettings.IsVideosEnabled = isChecked;
+                            break;
+                        case var p when p == paths.Music:
+                            currentSettings.IsMusicEnabled = isChecked;
+                            break;
                     }
-                    await SettingsLoader.SaveSettingsAsync(currentse);
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+
                 }
-                List<string> fpaths = new();
-                foreach (var item in foldersListOpened)
+                else
                 {
-                    if (item.isChecked == true)
+                    if (tgl.FolderPath is string str)
                     {
-                        fpaths.Add(item.FolderPath);
+                        var folder = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == str);
+                        if (folder != null)
+                        {
+                            Debug.WriteLine(str);
+                            currentSettings.SavedFoldersOpened.Remove(folder);
+                        }
+                        await SettingsLoader.SaveSettingsAsync(currentSettings);
                     }
                 }
+
                 AllAvailableSongs.Clear();
-                await LoadAllFiles(fpaths);
+                await LoadAllFilesAsync();
             }
         }
 
         private async void btnGenericFolder_Checked(object sender, RoutedEventArgs e)
         {
-            if (sender is ToggleButton tgl)
+            if (sender is ToggleButton tgl && tgl.DataContext is FoldersListOpened folder)
             {
-                if (tgl.IsChecked == true)
-                {
-                    if (tgl.DataContext is FoldersListOpened folder)
-                    {
-                        var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                        var folderssaved = currentSettings.SavedFoldersOpened;
-                        var exist = folderssaved.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
-                        if (exist != null)
-                        {
-                            exist.isChecked = true;
-                        }
-                        var exist2 = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                UserDataPaths paths = UserDataPaths.GetDefault();
+                bool isChecked = tgl.IsChecked ?? false;
 
-                        if (exist2 != null)
-                        {
-                            exist2.isChecked = true;
-                        }
-                        await SettingsLoader.SaveSettingsAsync(currentSettings);
-                        var folderpath = folder.FolderPath;
-                        var list = new List<string>();
-                        list.Add(folderpath);
-                        await LoadAllFiles(list);
+                // 1. Update in-memory state
+                folder.isChecked = isChecked;
+
+                // 2. Persist to settings
+                if (folder.IsHighLevelFolder)
+                {
+                    switch (folder.FolderPath)
+                    {
+                        case var p when p == paths.Documents: currentSettings.IsDocumentEnabled = isChecked; break;
+                        case var p when p == paths.Downloads: currentSettings.IsDownloadsEnabled = isChecked; break;
+                        case var p when p == paths.Pictures: currentSettings.IsPicturesEnabled = isChecked; break;
+                        case var p when p == paths.Videos: currentSettings.IsVideosEnabled = isChecked; break;
+                        case var p when p == paths.Music: currentSettings.IsMusicEnabled = isChecked; break;
                     }
                 }
-            }
-            //if (sender is ToggleButton tgl)
-            //{
-
-            //    Debug.WriteLine("add");
-            //    if (tgl.DataContext is FoldersListOpened fol)
-            //    {
-            //        Debug.WriteLine("add2");
-
-            //        var path = fol.FolderPath;
-            //        Debug.WriteLine(path);
-
-            //               AllAvailableSongs.Clear();
-            //        List<string> paths = new();
-            //        paths.Add(path);
-            //        LoadItems(paths);
-            //    }
-            //    //        await ScanAllFoldersAsync(paths);
-            //    //        AllMusicGroupedCollection.ItemsSource = AllAvailableSongs;
-
-            //    //    }
-            //    //}
-
-        }
-
-        private async void btnGenericFolder_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (sender is ToggleButton btn && btn.DataContext is FoldersListOpened folder)
-            {
-                if (btn.IsChecked == false)
+                else
                 {
-                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                    var folderssaved = currentSettings.SavedFoldersOpened;
-                    var exist = folderssaved.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
-                    if (exist != null)
+                    var saved = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+                    if (saved != null)
                     {
-                        exist.isChecked = false;
-                    }
-                    var exist2 = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
-
-                    if (exist2 != null)
-                    {
-                        exist2.isChecked = true;
-                    }
-                    await SettingsLoader.SaveSettingsAsync(currentSettings);
-                    var folderpath = folder.FolderPath;
-                    string folderWithBackslash = folderpath.EndsWith(Path.DirectorySeparatorChar.ToString())
-                ? folderpath
-                : folderpath + Path.DirectorySeparatorChar;
-
-                    // 2. Use .Any() to see if AT LEAST ONE song is in this folder
-                    var songsInThisFolder = AllAvailableSongs.Where(p =>
-            p.FilePath.StartsWith(folderWithBackslash, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-
-                    // Now you have the songs! For example, if you want to remove them:
-                    foreach (var song in songsInThisFolder)
-                    {
-                        AllAvailableSongs.Remove(song);
+                        saved.isChecked = isChecked;
                     }
                 }
+
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+                // 3. Re-run scan to honor exclusions and checked states
+                await LoadAllFilesAsync();
             }
         }
+
 
         private async void btnClearHistory_Click(object sender, RoutedEventArgs e)
         {
@@ -1278,11 +1116,7 @@ namespace Vusic_Player.Pages.Views
 
         }
 
-        private void mnftViewFileInfo_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
+        
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("PALSY");
@@ -1451,23 +1285,20 @@ namespace Vusic_Player.Pages.Views
 
         private async void chkIncludeSubDirectories_Checked(object sender, RoutedEventArgs e)
         {
+            //Check box for including sub-directories
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             stkLoading.Visibility = Visibility.Visible;
-
-            currentSettings.IncludeSubDirMusLib = chkIncludeSubDirectories.IsChecked ?? true;
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
-            List<string> fpaths = new();
-            foreach (var item in foldersListOpened)
+            if (chkIncludeSubDirectories.IsChecked == true)
             {
-                if (item.isChecked == true)
-                {
-                    fpaths.Add(item.FolderPath);
-                }
+                currentSettings.IncludeSubDirMusLib = true;
             }
-            AllAvailableSongs.Clear();
-            await LoadAllFiles(fpaths);
-            stkLoading.Visibility = Visibility.Collapsed;
+            else
+            {
+                currentSettings.IncludeSubDirMusLib = false;
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
 
+            LoadFolders();
         }
         private IEnumerable<GenreModel> GetFilteredResultsGenre(string query)
         {
@@ -1785,13 +1616,51 @@ namespace Vusic_Player.Pages.Views
             stkNoPlaylists.Visibility = Visibility.Visible;
             AllPlaylistGroupedCollection.Visibility = Visibility.Collapsed;
         }
+        PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
 
-        private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
+        bool iscreating = false;
+        private  void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
-            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist");
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);
+            Debug.WriteLine("BTNNEWPLAYLIST");
+            OceanContentDialog.PrimaryRequested += (async () =>
+            {
+                if (iscreating) return;
+                try
+                {
+                    iscreating = true;
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    string baseName = Instance.PlaylistName.Trim();
+
+                    if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                    string finalName = baseName;
+                    int counter = 1;
+                    while (currentSettings.SavedPlaylists.Any(p =>
+                        string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        finalName = $"{baseName} ({counter++})";
+                    }
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
+                    Debug.WriteLine(newplaylist.PlaylistName);
+                    Instance.PlaylistsMaster.Add(newplaylist);
+
+                    currentSettings.SavedPlaylists.Add(newplaylist);
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    OceanContentDialog.HideDlg();
+                    MainWindow.ShowWindow();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("An unexpected error occured: " + ex.Message, "PlaylistCreate.MusicLibPage", Logger.LogLevelType.Error);
+                }
+                finally
+                {
+                    iscreating = false;
+                }
+            });
+
         }
 
         private void OceanContentDialog_PrimaryRequested()

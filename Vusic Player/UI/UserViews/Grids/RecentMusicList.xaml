@@ -48,9 +48,19 @@
                     <Image Width="90" Source="/Assets/musicnoteicon.png"></Image>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Listen to music to show them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
-                <Button HorizontalAlignment="Center"  Content="Turn off Recent Music"></Button>
+                <Button HorizontalAlignment="Center"  Content="Turn off Recent Music" Name="btnDisableRecents" Click="btnDisableRecents_Click"></Button>
             </StackPanel>
         </Grid>
+        <Grid Name="grdDisabledRecents" Visibility="Collapsed" Grid.Column="1">
+            <StackPanel Orientation="Vertical" Spacing="15">
+                <StackPanel Orientation="Vertical" Spacing="20">
+                    <Image Width="90" Source="/Assets/musicnoteicon.png"></Image>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Saving to history has been disabled!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                </StackPanel>
+                <Button HorizontalAlignment="Center"  Content="Turn on Saving to History" Name="btnEnableHistory" Click="btnEnableHistory_Click"></Button>
+            </StackPanel>
+        </Grid>
+
     </Grid>
 
 </UserControl>

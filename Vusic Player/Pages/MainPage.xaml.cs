@@ -261,7 +261,7 @@ namespace Vusic_Player.Pages
                 frmMain.Navigate(pageType, null, new DrillInNavigationTransitionInfo());
             }
         }
-        ObservableCollection<MasterSearchModel> searchResultsMaster = new ObservableCollection<MasterSearchModel>();
+        ObservableCollection<MasterSearchModel> searchResultsMaster = [];
         private CancellationTokenSource? _cts;
 
         private async void asbMaster_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

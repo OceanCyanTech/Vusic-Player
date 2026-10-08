@@ -76,7 +76,7 @@ namespace Vusic_Player.Pages
 
         DateTime recordStartTime;
         DispatcherTimer? SubtitleTimer;
-        DispatcherTimer RecordTimer;
+        DispatcherTimer? RecordTimer;
         DispatcherTimer? SaveTimer;
         bool LoadingProgress = false;
         public GlowService Glow => GlowService.Instance;
@@ -173,11 +173,14 @@ namespace Vusic_Player.Pages
             {
                 if (labelIndex is >= 1 and <= 9)
                 {
-                    var targetLabel = _labels[labelIndex - 1];
-                    targetLabel.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+                    if (_labels != null)
+                    {
+                        var targetLabel = _labels[labelIndex - 1];
+                        targetLabel.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
 
-                    // Check if timer should continue running or stop
-                    CheckAndManageTimer();
+                        // Check if timer should continue running or stop
+                        CheckAndManageTimer();
+                    }
                 }
             };
             GlobalFavourites.Instance.FavouritesChanged += OnGlobalFavouritesChanged;
@@ -217,8 +220,8 @@ namespace Vusic_Player.Pages
             element.HorizontalAlignment = h;
             element.VerticalAlignment = v;
         }
-        private TextBlock[] _labels;
-        private DispatcherTimer _playbackTimer;
+        private TextBlock[]? _labels;
+        private DispatcherTimer? _playbackTimer;
 
         private void InitializeLabels()
         {
@@ -379,6 +382,7 @@ namespace Vusic_Player.Pages
         {
             if (labelIndex is >= 1 and <= 9)
             {
+                if (_labels == null) return;
                 var targetLabel = _labels[labelIndex - 1];
 
                 targetLabel.Tag = new LabelInfo
@@ -400,7 +404,7 @@ namespace Vusic_Player.Pages
                 CheckAndManageTimer();
                 ApplyAlignment(targetLabel, position);
 
-                if (!_playbackTimer.IsEnabled)
+                if (_playbackTimer != null && !_playbackTimer.IsEnabled)
                 {
                     _playbackTimer.Start();
                 }
@@ -409,11 +413,13 @@ namespace Vusic_Player.Pages
 
         private void CheckAndManageTimer()
         {
+            if (_labels == null) return;
             bool hasDynamicLabels = _labels.Any(lbl =>
                 lbl.Visibility == Visibility.Visible &&
                 lbl.Tag is LabelInfo info &&
                 info.Mode != WatermarkMode.CustomStaticWatermark);
 
+            if (_playbackTimer == null) return;
             if (hasDynamicLabels)
             {
                 if (!_playbackTimer.IsEnabled) _playbackTimer.Start();
@@ -533,7 +539,7 @@ namespace Vusic_Player.Pages
                     RecFrame.Width = PlayerService.Masterplayer.Video.Width;
                     RecFrame.Height = PlayerService.Masterplayer.Video.Height;
                     recordStartTime = DateTime.Now;
-                    RecordTimer.Start();
+                    RecordTimer?.Start();
                 });
             };
             Screen.OnRecordStopRequest += () =>
@@ -920,7 +926,7 @@ namespace Vusic_Player.Pages
             foreach (var item in listofotherepisodes)
             {
 
-                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
+                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), FilePath = item.FilePath });
             }
             foreach (var item in observablesongcollection)
             {
@@ -1010,7 +1016,6 @@ namespace Vusic_Player.Pages
                                         var newSeason = new PlaylistItem
                                         {
                                             PlaylistName = seasonName,
-                                            PlaylistCount = episodeCountString,
 
                                             // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
                                             PlaylistId = actualContentPath,
@@ -1022,7 +1027,6 @@ namespace Vusic_Player.Pages
                                     }
                                     else
                                     {
-                                        existingSeason.PlaylistCount = episodeCountString;
                                         existingSeason.PlaylistId = actualContentPath; // Update path if found
                                     }
                                 }
@@ -1031,7 +1035,8 @@ namespace Vusic_Player.Pages
                             string activeSeasonDir = rootPath;
 
                             // Walk up from the file's containing folder
-                            DirectoryInfo dirWalker = new System.IO.FileInfo(vdprg.FilePath).Directory;
+                            DirectoryInfo dirWalker = new System.IO.FileInfo(vdprg.FilePath).Directory ;
+                            if (dirWalker == null) return;
                             Logger.Log(dirWalker.FullName, "IsEpisodeVideo.VideoPlayerPage", Logger.LogLevelType.Success);
                             while (dirWalker != null)
                             {
@@ -1549,7 +1554,7 @@ namespace Vusic_Player.Pages
                 var observablesongcollection = new ObservableCollection<SongModel>();
                 foreach (var item in enumeratedepisodes)
                 {
-                    observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
+                    observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), FilePath = item.FilePath });
                 }
                 foreach (var item in observablesongcollection)
                 {
@@ -1907,7 +1912,7 @@ namespace Vusic_Player.Pages
 
                         string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
 
-                        seasons.Add(new PlaylistItem { PlaylistName = seasonName, PlaylistId = actualContentPath, PlaylistCount = episodeCountString, SeasonNumber = seasonNum });
+                        seasons.Add(new PlaylistItem { PlaylistName = seasonName, PlaylistId = actualContentPath, SeasonNumber = seasonNum });
 
 
                     }
@@ -2410,7 +2415,6 @@ namespace Vusic_Player.Pages
         int count = 0;
         public MediaProperties.AudioProperties.Device ViewModel { get; } = new();
 
-        int decodedaudio = 0;
         private void StatsTimerRealTime_Tick(object? sender, object e)
         {
             if (PlayerService.Masterplayer == null) return;

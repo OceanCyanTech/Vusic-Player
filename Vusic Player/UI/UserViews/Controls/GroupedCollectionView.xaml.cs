@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -1430,7 +1432,6 @@ namespace Vusic_Player.UI.UserViews.Controls
                         {
                             playliitem.SongsPaths.Add(path);
                             int count = playliitem.SongsPaths.Count;
-                            playliitem.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
                             await SettingsLoader.SaveSettingsAsync(currentSettings);
                             ttAddedToPlaylist.Title = $"{Path.GetFileNameWithoutExtension(path)} has been added to {playliitem.PlaylistName}";
 
@@ -1590,7 +1591,6 @@ namespace Vusic_Player.UI.UserViews.Controls
                                     if (defaultitem == null)
                                     {
                                         exist.SongsPaths.Add(item.FilePath);
-                                        exist.PlaylistCount = $"{exist.SongsPaths.Count} {(exist.SongsPaths.Count == 1 ? "item" : "items")}";
                                     }
                                 }
                             }
@@ -1896,42 +1896,81 @@ namespace Vusic_Player.UI.UserViews.Controls
                 QueueService.PlayMedia(observabletemp, false, false);
             }
         }
-
-        private void mnftEditPlaylist_Click(object sender, RoutedEventArgs e)
+        PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
+        private async void mnftEditPlaylist_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem currentPlaylist)
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)
             {
-                if (App.MainWindowInstance == null) return;
-                PlaylistCreation.playlistItem = currentPlaylist;
-                OceanContentDialog.Show("Edit Playlist", "Save", "", "Cancel", OceanDialogWindow.ContentType.PlaylistEdit, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "saveicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "", "", "", "", "", currentPlaylist, true);
-
-
-                OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
-                OceanContentDialog.PrimaryRequested += () =>
+                Instance.MediaPaths.Clear();
+                Instance.MediaSongModels.Clear();
+                ObservableCollection<SongModel> songmodels = new ObservableCollection<SongModel>();
+                foreach (var song in playlist.SongsPaths)
                 {
-                    Debug.WriteLine(PlaylistCreation.playlistItem.PlaylistName + " shshd");
-                    currentPlaylist = PlaylistCreation.playlistItem;
-                    foreach (var song in PlaylistCreation.playlistItem.SongsPaths)
+                    var file = await StorageFile.GetFileFromPathAsync(song);
+                    var musicprops = await file.Properties.GetMusicPropertiesAsync();
+                    songmodels.Add(new SongModel { Title = string.IsNullOrEmpty(musicprops.Title) ? Path.GetFileNameWithoutExtension(song) : musicprops.Title, SongDuration = musicprops.Duration, FilePath = song });
+                    Instance.MediaPaths.Add(song);
+                }
+                ttEditPlaylist.IsOpen = true;
+                Instance.PlCover = new BitmapImage(playlist.Thumbnail);
+                Instance.Thumbnail = playlist.Thumbnail ?? new Uri("ms - appx:///Assets/playlistdefaultdark.png");
+
+                Instance.PlaylistName = playlist.PlaylistName;
+                Instance.Genre = playlist.PlaylistGenre ?? "";
+                Instance.MediaSongModels = new ObservableCollection<SongModel>(songmodels);
+                Instance.IsAppInstanceOceanDialog = false;
+
+                btnSavePlaylistEdited.Click += (async (object sender, RoutedEventArgs e) =>
+                {
+                    Debug.WriteLine("SAVE SHOW CALLED");
+                    if (Instance.PlaylistName == "")
                     {
-                        Debug.WriteLine("DODNG " + song);
+                        Instance.PlaylistName = playlist.PlaylistName;
                     }
-                    group.Data.PlaylistName = PlaylistCreation.playlistItem.PlaylistName;
-                    group.Data.PlaylistCount = PlaylistCreation.playlistItem.PlaylistCount;
-                    group.Data.PlaylistGenre = PlaylistCreation.playlistItem.PlaylistGenre;
-                    group.Data.SongsPaths = PlaylistCreation.playlistItem.SongsPaths;
-                    currentPlaylist.PlaylistName = PlaylistCreation.playlistItem.PlaylistName;
-                    OceanContentDialog.HideDlg();
-                    MainWindow.ShowWindow();
-                    List<PlaylistItem> inenumerable = new List<PlaylistItem>();
-                    foreach (var timelineitem in TimelineCollectionPlaylist)
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    string baseName = Instance.PlaylistName.Trim();
+
+                    string finalName = baseName;
+
+                    if (Instance.PlaylistName.Trim() != playlist.PlaylistName.Trim())
                     {
-                        inenumerable.Add(timelineitem.Data);
+
+                        if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                        int counter = 1;
+                        while (currentSettings.SavedPlaylists.Any(p =>
+                            string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            finalName = $"{baseName} ({counter++})";
+                        }
                     }
-                    GenerateTimelinePlaylist(inenumerable);
-                };
+                    playlist.PlaylistName = finalName;
+                    playlist.PlaylistGenre = Instance.Genre;
+                    playlist.plthumb = Instance.PlCover;
+                    playlist.Thumbnail = Instance.Thumbnail;
+                    playlist.ThumbnailString = Instance.ThumbnailString;
+                    playlist.SongsPaths = Instance.MediaPaths;
+                    var existingplaylist = currentSettings.SavedPlaylists.FirstOrDefault(p => p.PlaylistId == playlist.PlaylistId);
+                    if (existingplaylist != null)
+                    {
+                        existingplaylist.PlaylistName = finalName;
+                        existingplaylist.PlaylistGenre = Instance.Genre;
+                        existingplaylist.plthumb = Instance.PlCover;
+                        existingplaylist.Thumbnail = Instance.Thumbnail;
+                        existingplaylist.ThumbnailString = Instance.ThumbnailString;
+                        existingplaylist.SongsPaths = Instance.MediaPaths;
+                        await SettingsLoader.SaveSettingsAsync(currentSettings);
+                        ttEditPlaylist.IsOpen = false;
+                        Instance.IsAppInstanceOceanDialog = true;
+
+                    }
+                });
             }
         }
-
+        private void btnCancelEdit_Click(object sender, RoutedEventArgs e)
+        {
+            ttEditPlaylist.IsOpen = false;
+        }
         private void mnftOpenPlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is GroupedCollectionModelPlaylist group && group.Data is PlaylistItem playlist)

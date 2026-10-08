@@ -30,12 +30,13 @@
             <ToggleButton  Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnHistory" FontSize="26" Padding="15" Content="Music History" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="5"></ToggleButton>
         </Grid>
 
-        <Grid Name="grdAllMusic" Margin="20, 30" Grid.Row="1">
+        <Grid Name="grdAllMusic" Margin="20, 30" Grid.Row="1" RowSpacing="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" ></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition ></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Grid HorizontalAlignment="Left" Grid.Row="0">
@@ -71,7 +72,7 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <controls1:WrapPanel VerticalAlignment="Stretch" Orientation="Horizontal" Grid.Row="1" Margin="0, 20" >
+            <controls1:WrapPanel VerticalAlignment="Stretch" MaxHeight="95" Orientation="Horizontal" Grid.Row="1" Margin="0, 20" >
                 <GridView SelectionMode="None" VerticalAlignment="Stretch" Name="grdViewFolders" Grid.Row="1">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -80,7 +81,7 @@
                     </GridView.ItemsPanel>
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Click="btnAll_Click" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Unchecked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+                            <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Click="btnAll_Click" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
                                 <ToggleButton.ContextFlyout>
                                     <MenuFlyout >
                                         <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">

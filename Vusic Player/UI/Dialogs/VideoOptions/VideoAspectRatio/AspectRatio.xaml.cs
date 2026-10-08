@@ -38,6 +38,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoAspectRatio
 
         private void Preset_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            if (_isUpdating) return;
             if (sender is Button btn && btn.Content is string ratio)
             {
                 var parts = ratio.Split(':');

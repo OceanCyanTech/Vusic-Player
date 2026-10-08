@@ -1233,7 +1233,7 @@ namespace Vusic_Player.Pages.Views
                 {
                     title = Path.GetFileNameWithoutExtension(item.Path);
                 }
-                observable.Add(new SongModel { Title = title, FilePath = item.Path, SongDuration = props.Duration, AlbumName = props.Album, Artist = props.Artist, Glyph = "\uEC4F", IsAudioItem = true });
+                observable.Add(new SongModel { Title = title, FilePath = item.Path, SongDuration = props.Duration, AlbumName = props.Album, Artist = props.Artist });
             }
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Edit Properties for Multiple", "Close", "", "", OceanDialogWindow.ContentType.MassEditing, OceanContentDialogDefault.Primary, XamlRoot, 950, 900, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", observable, "", "", "", "", "");
@@ -1871,12 +1871,12 @@ namespace Vusic_Player.Pages.Views
                 if (AudioExtensions.List.Contains(fileExtension))
                 {
                     var properties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    temporaryobservable.Add(new SongModel { FilePath = item.Path, Title = Path.GetFileNameWithoutExtension(item.Path), IsAudioItem = true, Glyph = "\uEC4F", SongDuration = properties.Duration });
+                    temporaryobservable.Add(new SongModel { FilePath = item.Path, Title = Path.GetFileNameWithoutExtension(item.Path),SongDuration = properties.Duration });
                 }
                 else
                 {
                     var properties = await storagefile.Properties.GetVideoPropertiesAsync();
-                    temporaryobservable.Add(new SongModel { FilePath = item.Path, Title = Path.GetFileNameWithoutExtension(item.Path), IsAudioItem = true, Glyph = "\uE8B2", SongDuration = properties.Duration });
+                    temporaryobservable.Add(new SongModel { FilePath = item.Path, Title = Path.GetFileNameWithoutExtension(item.Path) });
                 }
             }
             if (App.MainWindowInstance == null) return;
@@ -1940,7 +1940,6 @@ namespace Vusic_Player.Pages.Views
                             }
                         }
                         var count = existplaylist.SongsPaths.Count;
-                        existplaylist.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
                         ;
                     }
 
@@ -1989,7 +1988,6 @@ namespace Vusic_Player.Pages.Views
                         {
                             playliitem.SongsPaths.Add(path);
                             int count = playliitem.SongsPaths.Count;
-                            playliitem.PlaylistCount = $"{count} {(count == 1 ? "item" : "items")}";
                             await SettingsLoader.SaveSettingsAsync(currentSettings);
                             ttAddedToPlaylist.Title = $"{Path.GetFileNameWithoutExtension(path)} has been added to {playliitem.PlaylistName}";
 

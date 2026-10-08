@@ -22,7 +22,7 @@ namespace Vusic_Player.Configuration.Helper.VideoProperties
             return isRecording ? "Stop Recording" : "Start Recording";
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language) => null;
+        public object ConvertBack(object value, Type targetType, object parameter, string? language) => null;
         public static event Action? OnRecordRequest;
         public static event Action<int, bool>? WatermarkVisibilityChanged;
 

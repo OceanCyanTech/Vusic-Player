@@ -395,9 +395,17 @@ namespace Vusic_Player.Pages.Views
                 foreach (var item in SongCollection.ToList())
                 {
                     StorageFile file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-                    MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
-                    timespan += properties.Duration;
-                    Debug.WriteLine(properties.Duration + "  " + item.Title);
+                    if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(item.FilePath)))
+                    {
+                        VideoProperties properties = await file.Properties.GetVideoPropertiesAsync();
+                        timespan += properties.Duration;
+
+                    }
+                    else
+                    {
+                        MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
+                        timespan += properties.Duration;
+                    }
                 }
                 stkLoading.Visibility = Visibility.Collapsed;
                 string formatted = timespan.TotalHours >= 1 ? timespan.ToString(@"h\:mm\:ss") : timespan.ToString(@"m\:ss");
@@ -442,7 +450,6 @@ namespace Vusic_Player.Pages.Views
 
                             ts += properties.Duration;
                             var colorbrush = new SolidColorBrush(Microsoft.UI.Colors.White);
-                            var glyph = "\uEC4F";
 
                             if (PlayerService.CurrentPlayingPath == file.Path)
                             {
@@ -454,7 +461,6 @@ namespace Vusic_Player.Pages.Views
                             if (Extensions.VideoExtensions.List.Contains(fileExtension))
                             {
                                 Debug.WriteLine("Yes is video");
-                                glyph = "\uE8B2";
                             }
                             SongCollection.Add(new SongModel
                             {
@@ -466,7 +472,6 @@ namespace Vusic_Player.Pages.Views
                                 TitleColor = colorbrush,
 
                             });
-                            lstViewUnified.ItemsSource = SongCollection;
 
 
                         }
@@ -506,17 +511,32 @@ namespace Vusic_Player.Pages.Views
                     if (File.Exists(path))
                     {
                         StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-                        MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
 
-                        string title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
-                        string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
-                        string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
-
+                        string title = "";
+                        string album = "Unknown Album";
+                        string artist = "Unknown Artist";
+                        TimeSpan temp = TimeSpan.Zero;
                       
-                        ts += properties.Duration;
+                        if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(path)))
+                        {
+                            VideoProperties properties = await file.Properties.GetVideoPropertiesAsync();
+                            title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
+
+                            ts += properties.Duration;
+                            temp = properties.Duration;
+                        }
+                        else
+                        {
+                            MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
+
+                             title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
+                             album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
+                             artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
+                            ts += properties.Duration;
+                            temp = properties.Duration;
+                        }
                         var colorbrush = new SolidColorBrush(Microsoft.UI.Colors.White);
 
-                        var glyph = "\uEC4F";
 
                         string fileExtension = file.FileType.ToLowerInvariant();
                   
@@ -530,11 +550,10 @@ namespace Vusic_Player.Pages.Views
                             Title = title,
                             AlbumName = album,
                             Artist = artist,
-                            SongDuration = properties.Duration,
+                            SongDuration = temp,
                             FilePath = file.Path,
                             TitleColor = colorbrush,
                         });
-                        lstViewUnified.ItemsSource = SongCollection;
 
 
 
@@ -593,7 +612,7 @@ namespace Vusic_Player.Pages.Views
                 currentPlaylist = playlist;
                 Configuration.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
                 Configuration.Helper.FileInfo.RefreshValues += FileInfo_RefreshValues;
-                //     txtPlaylistName.Text = playlist.PlaylistName;
+                    txtPlaylistName.Text = playlist.PlaylistName;
                 playlistID = playlist.PlaylistId;
                 genreList.Clear();
                 if (playlist.PlaylistGenre != null)
@@ -624,7 +643,7 @@ namespace Vusic_Player.Pages.Views
                 txtItemCount.Text = playlist.PlaylistCount;
                 imgPlaylistCover.Source = new BitmapImage(playlist.Thumbnail);
                 LoadItemsOnly(playlist);
-                UpdateUI();
+            //    UpdateUI();
             }
             base.OnNavigatedTo(e);
         }

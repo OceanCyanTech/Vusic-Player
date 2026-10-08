@@ -35,9 +35,7 @@ public sealed partial class AlbumView : Page
 {
     public ObservableCollection<SongModel> FoundSongs { get; set; } = new ObservableCollection<SongModel>();
     HashSet<string> uniqueArtists = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-    TimeSpan ts;
     private bool _isRenaming = false;
-    bool isPaused2 = false;
 
     private ObservableCollection<ArtistShow> ArtistShows { get; set; } = new ObservableCollection<ArtistShow>();
     public AlbumView()

@@ -30,7 +30,6 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
         public static event Action? PrimaryRequested;
         public static event Action? SecondaryRequested;
         public static event Action? CloseRequested;
-        public static event Action? HideRequested;
         static OceanPopup? populs;
         private static OceanDialogWindow? currentDialog;
         public static void KillDlg()
@@ -65,7 +64,6 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
         {
             PrimaryRequested = null;
         }
-        static PlaylistItem? pl;
         public static void Show(string Title, string PrimaryButtonText, string SecondaryButtonText, string CloseButtonText, OceanDialogWindow.ContentType contentType, OceanContentDialogDefault DefaultButton, XamlRoot root, int Width, int Height, OceanContentDialogType DialogType, Window ParentWindow, string PrimaryButtonIcon, string SecondaryButtonIcon, string CloseButtonIcon, ObservableCollection<SongModel> existingitems, string SuggestedPlaylistName, string mssgtext = "", string mssgimage = "appicon", string artist = "", string AlbumDetails = "", PlaylistItem? playlist = null, bool isPlaylistEdit = false, bool isAudioPlaylist = true)
         {
             bool secondaryvisible = !string.IsNullOrEmpty(SecondaryButtonText);

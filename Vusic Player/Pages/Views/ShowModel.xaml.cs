@@ -362,7 +362,6 @@ namespace Vusic_Player.Pages.Views
                                 var newSeason = new PlaylistItem
                                 {
                                     PlaylistName = seasonName,
-                                    PlaylistCount = episodeCountString,
 
                                     // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
                                     PlaylistId = actualContentPath,
@@ -373,7 +372,6 @@ namespace Vusic_Player.Pages.Views
                             }
                             else
                             {
-                                existingSeason.PlaylistCount = episodeCountString;
                                 existingSeason.PlaylistId = actualContentPath; // Update path if found
                             }
                         }
@@ -560,7 +558,6 @@ namespace Vusic_Player.Pages.Views
                             seasons.Add(new PlaylistItem
                             {
                                 PlaylistName = seasonName,
-                                PlaylistCount = episodeCountString,
 
                                 // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
                                 PlaylistId = actualContentPath,
@@ -573,7 +570,7 @@ namespace Vusic_Player.Pages.Views
                     {
                         Debug.WriteLine("11TEST");
 
-                        existingSeason.PlaylistCount = episodeCountString;
+                        
                         existingSeason.PlaylistId = actualContentPath; // Update path if found
                     }
                 }
@@ -643,7 +640,7 @@ namespace Vusic_Player.Pages.Views
             if (currentshow == null) return;
             foreach (var item in EpisodesList)
             {
-                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
+                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath),  FilePath = item.FilePath });
             }
             foreach (var item in observablesongcollection)
             {
@@ -1199,7 +1196,7 @@ namespace Vusic_Player.Pages.Views
             if (currentshow == null) return;
             foreach (var item in EpisodesList)
             {
-                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath, SongDuration = item.DurationTimeSpan });
+                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath),FilePath = item.FilePath, SongDuration = item.DurationTimeSpan });
             }
             foreach (var item in observablesongcollection)
             {

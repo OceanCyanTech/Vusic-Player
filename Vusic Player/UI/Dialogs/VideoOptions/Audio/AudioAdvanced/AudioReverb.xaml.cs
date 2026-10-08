@@ -818,7 +818,6 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
         }
         private static long curtimetemp;
         private static TimeSpan curtime;
-        bool isPaused = false;
         public static MediaPlaybackController media => MediaPlaybackController.Instance;
 
         private void Masterplayer_OpenCompleted1(object? sender, OpenCompletedArgs e)

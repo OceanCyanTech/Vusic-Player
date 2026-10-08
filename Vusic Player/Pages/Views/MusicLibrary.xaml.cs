@@ -43,7 +43,6 @@ namespace Vusic_Player.Pages.Views
             NavigationToPlaylist.NavigCalled += NavigationToPlaylist_NavigCalled;
         }
 
-        private bool _isopening = false;
 
         private void NavigationToPlaylist_NavigCalled()
         {

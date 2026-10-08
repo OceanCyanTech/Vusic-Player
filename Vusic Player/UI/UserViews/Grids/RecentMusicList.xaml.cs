@@ -39,6 +39,12 @@ namespace Vusic_Player.UI.UserViews.Grids
             recentMusics.CollectionChanged += RecentMusics_CollectionChanged;
             recentMusics.Clear();
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if(currentSettings.IsMusicHistoryDisabled == true)
+            {
+                grdEmptySuggestions.Visibility = Visibility.Collapsed;
+                grdRecents.Visibility = Visibility.Collapsed;
+                grdDisabledRecents.Visibility = Visibility.Visible;
+            }
             var recentmusic = currentSettings.RecentMusic.Take(5);
 
 
@@ -129,65 +135,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         }
 
-        private void btnPlay_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void mnftStartPreviousCW_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void mnftStartFirstCW_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void mnftRemoveCW_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void mnftCopyFilePathCW_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void mnftOpenFileLocCW_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void mnftFileInfoCW_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void mnftAddToFavCW_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void StackPanel_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-
-        }
-
-        private void StackPanel_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-
-        }
-
-        private void grdvRecents_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void grdvRecents_ItemClick(object sender, ItemClickEventArgs e)
-        {
-
-        }
+ 
 
         private void chkSelect_Checked(object sender, RoutedEventArgs e)
         {
@@ -251,6 +199,28 @@ namespace Vusic_Player.UI.UserViews.Grids
                 }
             }
             QueueService.PlayMedia(observablecollection, false, false);
+        }
+
+        private async void btnDisableRecents_Click(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.IsMusicHistoryDisabled = true;
+            currentSettings.RecentMusic.Clear();
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            grdEmptySuggestions.Visibility = Visibility.Collapsed;
+            grdRecents.Visibility = Visibility.Collapsed;
+            grdDisabledRecents.Visibility = Visibility.Visible;
+        }
+
+        private async void btnEnableHistory_Click(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.IsMusicHistoryDisabled = false;
+            currentSettings.RecentMusic.Clear();
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            grdEmptySuggestions.Visibility = Visibility.Visible;
+            grdRecents.Visibility = Visibility.Collapsed;
+            grdDisabledRecents.Visibility = Visibility.Collapsed;
         }
     }
 }

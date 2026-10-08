@@ -536,7 +536,6 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
                             }
                             exist.SongsPaths = playlistItem.SongsPaths;
                             exist.Thumbnail = playlistItem.Thumbnail;
-                            exist.PlaylistCount = $"{playlistItem.SongsPaths.Count} {(playlistItem.SongsPaths.Count == 1 ? "item" : "items")}";
                             await SettingsLoader.SaveSettingsAsync(currentSettings);
                         }
                     }
