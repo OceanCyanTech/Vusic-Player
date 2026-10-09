@@ -54,6 +54,17 @@ namespace Vusic_Player.Pages
 
             _originalHeader = nvgMain.Header;
             InitializeFav();
+            InitializeWatermark();
+        }
+        private async void InitializeWatermark()
+        {
+            var settings = await SettingsLoader.LoadSettingsAsync();
+
+            // 2. Hydrate the watermark singleton if settings exist
+            if (settings?.Watermark != null)
+            {
+                WatermarkFontValues.Instance.LoadFromSettingsModel(settings.Watermark);
+            }
         }
         private async void InitializeFav()
         {

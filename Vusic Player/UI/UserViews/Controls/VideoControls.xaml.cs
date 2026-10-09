@@ -872,5 +872,11 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             MediaStats?.Invoke();
         }
+
+        private void mnftWatermarkOptions_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.MainWindowInstance == null) { return; }
+            var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 4, 0);
+        }
     }
 }

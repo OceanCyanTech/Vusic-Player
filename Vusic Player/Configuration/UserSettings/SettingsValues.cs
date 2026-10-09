@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Playback;
 using PlaylistItem = Vusic_Player.Configuration.ClassModels.PlaylistItem;
 
 namespace Vusic_Player.Configuration.UserSettings
@@ -33,6 +34,11 @@ namespace Vusic_Player.Configuration.UserSettings
 
         public ObservableCollection<FavouriteItems> Favourites { get; set; } = new();
         public ObservableCollection<MediaOptions> VideoFilesOptions { get; set; } = new();
+        public WatermarkSettingsModel Watermark { get; set; } = new();
+        public ObservableCollection<TimestampWatermark> TimestampWatermarksLabels { get; set; } = new();
+
+        public bool IsSavingWatermarkValues { get; set; } = false;
+        public bool IsShowingWatermarkValues { get; set; } = true;
         public bool IsTimeStampEnabledOnSnapshot { get; set; } = false;
         public int ArtistView_selectorbarindex { get; set; } = 0;
         public bool IncludeSubDirMusLib { get; set; } = true;

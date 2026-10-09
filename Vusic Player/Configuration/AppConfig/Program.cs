@@ -24,7 +24,7 @@ namespace Vusic_Player.Configuration.AppConfig
 
             if (!isRedirect)
             {
-                Application.Start((p) =>
+                    Application.Start((p) =>
                 {
                     var context = new DispatcherQueueSynchronizationContext(
                         DispatcherQueue.GetForCurrentThread());

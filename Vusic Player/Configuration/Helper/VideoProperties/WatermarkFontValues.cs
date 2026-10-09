@@ -1,16 +1,56 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Windows.UI.Text;
 using Vusic_Player;
 using Vusic_Player.Configuration.ClassModels;
-using Microsoft.UI.Xaml;
-using System;
+using Vusic_Player.Configuration.UserSettings;
+using Windows.UI;
+using Windows.UI.Text;
 
 namespace Vusic_Player.Configuration.Playback
 {
+    public static class WatermarkSerializationHelpers
+    {
+        public static string ToHex(this Brush brush)
+        {
+            if (brush is SolidColorBrush scb)
+            {
+                return $"#{scb.Color.A:X2}{scb.Color.R:X2}{scb.Color.G:X2}{scb.Color.B:X2}";
+            }
+            return "#FFFFFFFF";
+        }
+
+        public static SolidColorBrush FromHex(string hex)
+        {
+            try
+            {
+                hex = hex.Replace("#", string.Empty);
+                byte a = 255;
+                int pos = 0;
+
+                if (hex.Length == 8)
+                {
+                    a = Convert.ToByte(hex.Substring(pos, 2), 16);
+                    pos += 2;
+                }
+
+                byte r = Convert.ToByte(hex.Substring(pos, 2), 16);
+                byte g = Convert.ToByte(hex.Substring(pos + 2, 2), 16);
+                byte b = Convert.ToByte(hex.Substring(pos + 4, 2), 16);
+
+                return new SolidColorBrush(Color.FromArgb(a, r, g, b));
+            }
+            catch
+            {
+                return new SolidColorBrush(Colors.White);
+            }
+        }
+    }
     public enum WatermarkMode
     {
         ElapsedPlaybackTime,        // Elapsed Time of Video
@@ -27,7 +67,33 @@ namespace Vusic_Player.Configuration.Playback
         public static WatermarkFontValues Instance { get; } = new WatermarkFontValues();
 
         #region Backing Fields
+        // Label 1
+        private Visibility _label1IsVisible = Visibility.Collapsed;
 
+        // Label 2
+        private Visibility _label2IsVisible = Visibility.Collapsed;
+
+        // Label 3
+        private Visibility _label3IsVisible = Visibility.Collapsed;
+
+        // Label 4
+        private Visibility _label4IsVisible = Visibility.Collapsed;
+
+        // Label 5
+        private Visibility _label5IsVisible = Visibility.Collapsed;
+
+        // Label 6
+        private Visibility _label6IsVisible = Visibility.Collapsed;
+
+        // Label 7
+        private Visibility _label7IsVisible = Visibility.Collapsed;
+
+        // Label 8
+        private Visibility _label8IsVisible = Visibility.Collapsed;
+
+        // Label 9
+        private Visibility _label9IsVisible = Visibility.Collapsed;
+        private Visibility _overallVisible = Visibility.Collapsed;
         // Label 1
         private double _label1FontSize = 36;
         private Brush _label1FontColor = new SolidColorBrush(Colors.White);
@@ -62,6 +128,7 @@ namespace Vusic_Player.Configuration.Playback
         private WatermarkMode _label3Mode = WatermarkMode.ElapsedPlaybackTime;
 
         // Label 4
+        private ObservableCollection<TimestampWatermark> _timestamplabels = new ObservableCollection<TimestampWatermark>();
         private double _label4FontSize = 36;
         private Brush _label4FontColor = new SolidColorBrush(Colors.White);
         private string _label4FontFamily = "Segoe UI";
@@ -218,7 +285,16 @@ namespace Vusic_Player.Configuration.Playback
         public HorizontalAlignment Label8HorizontalAlignment { get => _label8HorizontalAlignment; set => SetProperty(ref _label8HorizontalAlignment, value); }
         public VerticalAlignment Label8VerticalAlignment { get => _label8VerticalAlignment; set => SetProperty(ref _label8VerticalAlignment, value); }
         public WatermarkMode Label8Mode { get => _label8Mode; set => SetProperty(ref _label8Mode, value); }
-
+        public Visibility Label1IsVisible { get => _label1IsVisible; set => SetProperty(ref _label1IsVisible, value); }
+        public Visibility Label2IsVisible { get => _label2IsVisible; set => SetProperty(ref _label2IsVisible, value); }
+        public Visibility Label3IsVisible { get => _label3IsVisible; set => SetProperty(ref _label3IsVisible, value); }
+        public Visibility Label4IsVisible { get => _label4IsVisible; set => SetProperty(ref _label4IsVisible, value); }
+        public Visibility Label5IsVisible { get => _label5IsVisible; set => SetProperty(ref _label5IsVisible, value); }
+        public Visibility Label6IsVisible { get => _label6IsVisible; set => SetProperty(ref _label6IsVisible, value); }
+        public Visibility Label7IsVisible { get => _label7IsVisible; set => SetProperty(ref _label7IsVisible, value); }
+        public Visibility Label8IsVisible { get => _label8IsVisible; set => SetProperty(ref _label8IsVisible, value); }
+        public Visibility Label9IsVisible { get => _label9IsVisible; set => SetProperty(ref _label9IsVisible, value); }
+        public Visibility OverallVisibility { get => _overallVisible; set => SetProperty(ref _overallVisible, value); }
         // --- Label 9 ---
         public double Label9FontSize { get => _label9FontSize; set => SetProperty(ref _label9FontSize, value); }
         public Brush Label9FontColor { get => _label9FontColor; set => SetProperty(ref _label9FontColor, value); }
@@ -228,10 +304,198 @@ namespace Vusic_Player.Configuration.Playback
         public TimeSpan Label9Offset { get => _label9Offset; set => SetProperty(ref _label9Offset, value); }
         public HorizontalAlignment Label9HorizontalAlignment { get => _label9HorizontalAlignment; set => SetProperty(ref _label9HorizontalAlignment, value); }
         public VerticalAlignment Label9VerticalAlignment { get => _label9VerticalAlignment; set => SetProperty(ref _label9VerticalAlignment, value); }
+        public ObservableCollection<TimestampWatermark> TimestampWatermarksLabels { get => _timestamplabels; set => SetProperty(ref _timestamplabels, value); }
         public WatermarkMode Label9Mode { get => _label9Mode; set => SetProperty(ref _label9Mode, value); }
 
         #endregion
+        public WatermarkSettingsModel ToSettingsModel()
+        {
+            return new WatermarkSettingsModel
+            {
+                Label1 = new()
+                {
+                    IsVisible = Label1IsVisible,
+                    FontSize = Label1FontSize,
+                    HexColor = Label1FontColor.ToHex(),
+                    FontFamily = Label1FontFamily,
+                    FontWeight = Label1FontWeight.Weight,
+                    FontStyle = Label1FontStyle,
+                    Offset = Label1Offset,
+                    HorizontalAlignment = Label1HorizontalAlignment,
+                    VerticalAlignment = Label1VerticalAlignment,
+                    Mode = Label1Mode
+                },
+                Label2 = new()
+                {
+                    IsVisible = Label2IsVisible,
+                    FontSize = Label2FontSize,
+                    HexColor = Label2FontColor.ToHex(),
+                    FontFamily = Label2FontFamily,
+                    FontWeight = Label2FontWeight.Weight,
+                    FontStyle = Label2FontStyle,
+                    Offset = Label2Offset,
+                    HorizontalAlignment = Label2HorizontalAlignment,
+                    VerticalAlignment = Label2VerticalAlignment,
+                    Mode = Label2Mode
+                },
+                Label3 = new()
+                {
+                    IsVisible = Label3IsVisible,
+                    FontSize = Label3FontSize,
+                    HexColor = Label3FontColor.ToHex(),
+                    FontFamily = Label3FontFamily,
+                    FontWeight = Label3FontWeight.Weight,
+                    FontStyle = Label3FontStyle,
+                    Offset = Label3Offset,
+                    HorizontalAlignment = Label3HorizontalAlignment,
+                    VerticalAlignment = Label3VerticalAlignment,
+                    Mode = Label3Mode
+                },
+                Label4 = new()
+                {
+                    IsVisible = Label4IsVisible,
+                    FontSize = Label4FontSize,
+                    HexColor = Label4FontColor.ToHex(),
+                    FontFamily = Label4FontFamily,
+                    FontWeight = Label4FontWeight.Weight,
+                    FontStyle = Label4FontStyle,
+                    Offset = Label4Offset,
+                    HorizontalAlignment = Label4HorizontalAlignment,
+                    VerticalAlignment = Label4VerticalAlignment,
+                    Mode = Label4Mode
+                },
+                Label5 = new()
+                {
+                    IsVisible = Label5IsVisible,
+                    FontSize = Label5FontSize,
+                    HexColor = Label5FontColor.ToHex(),
+                    FontFamily = Label5FontFamily,
+                    FontWeight = Label5FontWeight.Weight,
+                    FontStyle = Label5FontStyle,
+                    Offset = Label5Offset,
+                    HorizontalAlignment = Label5HorizontalAlignment,
+                    VerticalAlignment = Label5VerticalAlignment,
+                    Mode = Label5Mode
+                },
+                Label6 = new()
+                {
+                    IsVisible = Label6IsVisible,
+                    FontSize = Label6FontSize,
+                    HexColor = Label6FontColor.ToHex(),
+                    FontFamily = Label6FontFamily,
+                    FontWeight = Label6FontWeight.Weight,
+                    FontStyle = Label6FontStyle,
+                    Offset = Label6Offset,
+                    HorizontalAlignment = Label6HorizontalAlignment,
+                    VerticalAlignment = Label6VerticalAlignment,
+                    Mode = Label6Mode
+                },
+                Label7 = new()
+                {
+                    IsVisible = Label7IsVisible,
+                    FontSize = Label7FontSize,
+                    HexColor = Label7FontColor.ToHex(),
+                    FontFamily = Label7FontFamily,
+                    FontWeight = Label7FontWeight.Weight,
+                    FontStyle = Label7FontStyle,
+                    Offset = Label7Offset,
+                    HorizontalAlignment = Label7HorizontalAlignment,
+                    VerticalAlignment = Label7VerticalAlignment,
+                    Mode = Label7Mode
+                },
+                Label8 = new()
+                {
+                    IsVisible = Label8IsVisible,
+                    FontSize = Label8FontSize,
+                    HexColor = Label8FontColor.ToHex(),
+                    FontFamily = Label8FontFamily,
+                    FontWeight = Label8FontWeight.Weight,
+                    FontStyle = Label8FontStyle,
+                    Offset = Label8Offset,
+                    HorizontalAlignment = Label8HorizontalAlignment,
+                    VerticalAlignment = Label8VerticalAlignment,
+                    Mode = Label8Mode
+                },
+                Label9 = new()
+                {
+                    IsVisible = Label9IsVisible,
+                    FontSize = Label9FontSize,
+                    HexColor = Label9FontColor.ToHex(),
+                    FontFamily = Label9FontFamily,
+                    FontWeight = Label9FontWeight.Weight,
+                    FontStyle = Label9FontStyle,
+                    Offset = Label9Offset,
+                    HorizontalAlignment = Label9HorizontalAlignment,
+                    VerticalAlignment = Label9VerticalAlignment,
+                    Mode = Label9Mode
+                }
+            };
+        }
+        public void LoadFromSettingsModel(WatermarkSettingsModel model)
+        {
+            if (model == null) return;
 
+            void Apply(WatermarkLabelSettingsModel source,
+                       Action<Visibility> setVisible,
+                       Action<double> setSize, Action<Brush> setColor,
+                       Action<string> setFont, Action<FontWeight> setWeight, Action<FontStyle> setStyle,
+                       Action<TimeSpan> setOffset, Action<HorizontalAlignment> setHAlign,
+                       Action<VerticalAlignment> setVAlign, Action<WatermarkMode> setMode)
+            {
+                if (source == null) return;
+                setVisible(source.IsVisible);
+                setSize(source.FontSize);
+                setColor(WatermarkSerializationHelpers.FromHex(source.HexColor));
+                setFont(source.FontFamily);
+                setWeight(new FontWeight { Weight = source.FontWeight });
+                setStyle(source.FontStyle);
+                setOffset(source.Offset);
+                setHAlign(source.HorizontalAlignment);
+                setVAlign(source.VerticalAlignment);
+                setMode(source.Mode);
+            }
+
+            Apply(model.Label1, v => Label1IsVisible = v, v => Label1FontSize = v, v => Label1FontColor = v, v => Label1FontFamily = v, v => Label1FontWeight = v, v => Label1FontStyle = v, v => Label1Offset = v, v => Label1HorizontalAlignment = v, v => Label1VerticalAlignment = v, v => Label1Mode = v);
+            Apply(model.Label2, v => Label2IsVisible = v, v => Label2FontSize = v, v => Label2FontColor = v, v => Label2FontFamily = v, v => Label2FontWeight = v, v => Label2FontStyle = v, v => Label2Offset = v, v => Label2HorizontalAlignment = v, v => Label2VerticalAlignment = v, v => Label2Mode = v);
+            Apply(model.Label3, v => Label3IsVisible = v, v => Label3FontSize = v, v => Label3FontColor = v, v => Label3FontFamily = v, v => Label3FontWeight = v, v => Label3FontStyle = v, v => Label3Offset = v, v => Label3HorizontalAlignment = v, v => Label3VerticalAlignment = v, v => Label3Mode = v);
+            Apply(model.Label4, v => Label4IsVisible = v, v => Label4FontSize = v, v => Label4FontColor = v, v => Label4FontFamily = v, v => Label4FontWeight = v, v => Label4FontStyle = v, v => Label4Offset = v, v => Label4HorizontalAlignment = v, v => Label4VerticalAlignment = v, v => Label4Mode = v);
+            Apply(model.Label5, v => Label5IsVisible = v, v => Label5FontSize = v, v => Label5FontColor = v, v => Label5FontFamily = v, v => Label5FontWeight = v, v => Label5FontStyle = v, v => Label5Offset = v, v => Label5HorizontalAlignment = v, v => Label5VerticalAlignment = v, v => Label5Mode = v);
+            Apply(model.Label6, v => Label6IsVisible = v, v => Label6FontSize = v, v => Label6FontColor = v, v => Label6FontFamily = v, v => Label6FontWeight = v, v => Label6FontStyle = v, v => Label6Offset = v, v => Label6HorizontalAlignment = v, v => Label6VerticalAlignment = v, v => Label6Mode = v);
+            Apply(model.Label7, v => Label7IsVisible = v, v => Label7FontSize = v, v => Label7FontColor = v, v => Label7FontFamily = v, v => Label7FontWeight = v, v => Label7FontStyle = v, v => Label7Offset = v, v => Label7HorizontalAlignment = v, v => Label7VerticalAlignment = v, v => Label7Mode = v);
+            Apply(model.Label8, v => Label8IsVisible = v, v => Label8FontSize = v, v => Label8FontColor = v, v => Label8FontFamily = v, v => Label8FontWeight = v, v => Label8FontStyle = v, v => Label8Offset = v, v => Label8HorizontalAlignment = v, v => Label8VerticalAlignment = v, v => Label8Mode = v);
+            Apply(model.Label9, v => Label9IsVisible = v, v => Label9FontSize = v, v => Label9FontColor = v, v => Label9FontFamily = v, v => Label9FontWeight = v, v => Label9FontStyle = v, v => Label9Offset = v, v => Label9HorizontalAlignment = v, v => Label9VerticalAlignment = v, v => Label9Mode = v);
+        }
+        private static System.Timers.Timer? _debounceTimer;
+
+        public WatermarkFontValues()
+        {
+            PropertyChanged += OnWatermarkPropertyChanged;
+        }
+
+        private void OnWatermarkPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            // Ignore internal or non-saving notifications if any
+            TriggerDebouncedSave();
+        }
+
+        private void TriggerDebouncedSave()
+        {
+            _debounceTimer?.Stop();
+            _debounceTimer?.Dispose();
+
+            // Wait 500ms after the last property change before writing to disk
+            _debounceTimer = new System.Timers.Timer(500) { AutoReset = false };
+            _debounceTimer.Elapsed += async (_, _) =>
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                if (currentSettings.IsSavingWatermarkValues)
+                {
+                    currentSettings.Watermark = Instance.ToSettingsModel();
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                }
+            };
+            _debounceTimer.Start();
+        }
         #region INotifyPropertyChanged Implementation
 
         public event PropertyChangedEventHandler? PropertyChanged;

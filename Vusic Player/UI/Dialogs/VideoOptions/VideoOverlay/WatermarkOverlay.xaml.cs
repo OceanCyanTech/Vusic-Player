@@ -19,6 +19,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Text;
@@ -63,7 +64,14 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                               ?? systemFonts.FirstOrDefault();
 
             cmbFontFamily.SelectedItem = defaultFont;
+            this.Loaded += WatermarkOverlay_Loaded;
         }
+
+        private void WatermarkOverlay_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadSettings();
+        }
+
         private void InitializePresetPositions()
         {
             AlreadyOccupiedPositions.Clear();
@@ -77,6 +85,8 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
             PresetPositions.Add("Bottom Right");
             PresetPositions.Add("Bottom Center");
         }
+        WatermarkFontValues watermarkFontValues => WatermarkFontValues.Instance;
+
         ObservableCollection<TimestampWatermark> timestamplabels = new ObservableCollection<TimestampWatermark>();
         List<string> AlreadyOccupiedPositions = new List<string>();
         List<string> PresetPositions = new List<string>();
@@ -251,7 +261,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
             timestamplabels.Clear();
             InitializePresetPositions();
         }
-        private void btnNewTimeCodedLabel_Click(object sender, RoutedEventArgs e)
+        private async void btnNewTimeCodedLabel_Click(object sender, RoutedEventArgs e)
         {
             if (timestamplabels.Count < 9 && PresetPositions.Count > 0)
             {
@@ -283,7 +293,9 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     };
 
                     timestamplabels.Add(newLabel);
-
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    currentSettings.TimestampWatermarksLabels = new ObservableCollection<TimestampWatermark>(timestamplabels);
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
                     _isUpdatingUi = true;
                     try
                     {
@@ -370,7 +382,6 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                 }
             }
         }
-        WatermarkFontValues watermarkFontValues => WatermarkFontValues.Instance;
         private int GetSelectedLabelIndex(string label)
         {
             // Extracts the digit from strings like "Timestamp 1" -> 1
@@ -406,7 +417,26 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                 }
             }
         }
-
+        private async void LoadSettings()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            chkSaveWatermarkValues.IsChecked = currentSettings.IsSavingWatermarkValues;
+            chkShowWatermarkValues.IsChecked = currentSettings.IsShowingWatermarkValues;
+            if (currentSettings.IsSavingWatermarkValues == true)
+            {
+                timestamplabels = new ObservableCollection<TimestampWatermark>(currentSettings.TimestampWatermarksLabels);
+             //   timestamplabels = new ObservableCollection<TimestampWatermark>(watermarkFontValues.TimestampWatermarksLabels);
+            }
+        }
+        private async void SaveSettings()
+        {
+            //var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            //if (currentSettings.IsSavingWatermarkValues == true)
+            //{
+            //    currentSettings.WatermarkValueSaved = watermarkFontValues;
+            //    await SettingsLoader.SaveSettingsAsync(currentSettings);
+            //}
+        }
         private void NumberBox_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (lstViewAddedTimeCodeLabels.SelectedItems.Count != 1) return;
@@ -431,6 +461,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     case 8: watermarkFontValues.Label8FontSize = fontSize; break;
                     case 9: watermarkFontValues.Label9FontSize = fontSize; break;
                 }
+                SaveSettings();
             }
         }
 
@@ -457,6 +488,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     case 8: watermarkFontValues.Label8FontColor = brush; break;
                     case 9: watermarkFontValues.Label9FontColor = brush; break;
                 }
+                SaveSettings();
             }
         }
 
@@ -476,6 +508,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                 Debug.WriteLine(Format + " is the selected format");
                 var mode = WatermarkModeObtain();
                 Screen.CallWatermark(index, timestamp.Position, Format, TimeSpan.FromMilliseconds(numOffset.Value), mode, DateTime.Now);
+                SaveSettings();
             }
         }
         private void txtWatermarkCustomText_TextChanged(object sender, TextChangedEventArgs e)
@@ -750,5 +783,48 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                 );
             }
         }
+
+      
+
+        private async void chkSaveWatermarkValues_Checked(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if (chkSaveWatermarkValues.IsChecked == false)
+            {
+                currentSettings.IsSavingWatermarkValues = false;
+            }
+            else
+            {
+                currentSettings.IsSavingWatermarkValues = true;
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+        private async void chkShowWatermarkValues_Checked(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if (chkShowWatermarkValues.IsChecked == false)
+            {
+                currentSettings.IsShowingWatermarkValues = false;
+                grdMain1.Visibility = Visibility.Collapsed;
+                grdMain2.Visibility = Visibility.Collapsed;
+                txtDisplay1.Visibility = Visibility.Collapsed;
+                txtDisplay2.Visibility = Visibility.Collapsed;
+                watermarkFontValues.OverallVisibility = Visibility.Collapsed;
+            }
+            else
+            {
+                grdMain1.Visibility = Visibility.Visible;
+                grdMain2.Visibility = Visibility.Visible;
+                txtDisplay1.Visibility = Visibility.Visible;
+                txtDisplay2.Visibility = Visibility.Visible;
+                currentSettings.IsShowingWatermarkValues = true;
+
+                watermarkFontValues.OverallVisibility = Visibility.Visible;
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+       
     }
 }

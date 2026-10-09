@@ -103,7 +103,7 @@ namespace Vusic_Player.Pages
             if (_smtc != null)
             {
                 _smtc.PlaybackStatus = status;
-              
+
             }
         }
         private void PlayerService_PlayPauseChanged()
@@ -163,7 +163,7 @@ namespace Vusic_Player.Pages
             SubtitleTimer = new();
             SubtitleTimer.Interval = TimeSpan.FromMilliseconds(250);
             SubtitleTimer.Tick += SubtitleTimer_Tick;
-            PlayerService.ErrorCalled -= PlayerService_ErrorCalled; 
+            PlayerService.ErrorCalled -= PlayerService_ErrorCalled;
             PlayerService.ErrorCalled += PlayerService_ErrorCalled;
 
             Screen.WatermarkCalled -= Screen_WatermarkCalled;
@@ -184,6 +184,17 @@ namespace Vusic_Player.Pages
                 }
             };
             GlobalFavourites.Instance.FavouritesChanged += OnGlobalFavouritesChanged;
+            LoadSettings();
+        }
+        private async void LoadSettings()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if (currentSettings.IsShowingWatermarkValues == true)
+            {
+
+                watermarkFontValues.OverallVisibility = Visibility.Visible;
+                watermarkFontValues.TimestampWatermarksLabels = new ObservableCollection<TimestampWatermark>(currentSettings.TimestampWatermarksLabels);
+            }
         }
         private void OnGlobalFavouritesChanged(string changedPath)
         {
@@ -197,7 +208,7 @@ namespace Vusic_Player.Pages
         }
 
         // When the player starts or switches tracks:
-     
+
         private void ApplyAlignment(FrameworkElement element, string alignment)
         {
             var (h, v) = alignment switch
@@ -398,7 +409,7 @@ namespace Vusic_Player.Pages
                 targetLabel.Visibility = Visibility.Visible;
                 if (mode == WatermarkMode.CustomStaticWatermark)
                 {
-                 
+
                     targetLabel.Text = customstatic;
                 }
                 CheckAndManageTimer();
@@ -523,7 +534,6 @@ namespace Vusic_Player.Pages
         private void PlayerService_PIPRestore()
         {
             hostMedia.Player = PlayerService.Masterplayer;
-
         }
 
         private void InitiateRecord()
@@ -1035,7 +1045,7 @@ namespace Vusic_Player.Pages
                             string activeSeasonDir = rootPath;
 
                             // Walk up from the file's containing folder
-                            DirectoryInfo dirWalker = new System.IO.FileInfo(vdprg.FilePath).Directory ;
+                            DirectoryInfo dirWalker = new System.IO.FileInfo(vdprg.FilePath).Directory;
                             if (dirWalker == null) return;
                             Logger.Log(dirWalker.FullName, "IsEpisodeVideo.VideoPlayerPage", Logger.LogLevelType.Success);
                             while (dirWalker != null)
@@ -1313,7 +1323,7 @@ namespace Vusic_Player.Pages
             }
 
             // Assign it to the UI grid
-      //      PlayerService.Masterplayer.Config.Video.SDRDisplayNits = 55;
+            //      PlayerService.Masterplayer.Config.Video.SDRDisplayNits = 55;
             SubtitleTimer?.Start();
             SaveTimer = new DispatcherTimer();
             SaveTimer.Interval = TimeSpan.FromSeconds(4);
@@ -1369,7 +1379,7 @@ namespace Vusic_Player.Pages
                 await SettingsLoader.SaveSettingsAsync(settings);
             };
             var settings = await SettingsLoader.LoadSettingsAsync();
-            if (settings.IsVideoHistoryDisabled ==false)
+            if (settings.IsVideoHistoryDisabled == false)
             {
                 SaveTimer?.Start();
             }
@@ -2535,7 +2545,7 @@ namespace Vusic_Player.Pages
 
         }
 
-       
+
         private void mnftFileInfoEpisode_Click(object sender, RoutedEventArgs e)
         {
             if (sender is FrameworkElement btn && btn.DataContext is EpisodeModel episode)

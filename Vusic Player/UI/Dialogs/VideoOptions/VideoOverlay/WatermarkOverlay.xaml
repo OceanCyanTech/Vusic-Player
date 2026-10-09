@@ -15,26 +15,33 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Spacing="20">
         <TextBlock Text="Watermark Overlay" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
-        <TextBlock Text="Display a watermark overlay with custom text or a running timecode on the video." Grid.Row="1"/>
-        <TextBlock Text="Add upto 9 Watermark Labels" Grid.Row="2" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-
-        <Grid Grid.Row="3" ColumnSpacing="30">
+            <CheckBox Content="Show Watermark Values" Name="chkShowWatermarkValues" Checked="chkShowWatermarkValues_Checked" Unchecked="chkShowWatermarkValues_Checked"></CheckBox>
+        </StackPanel>
+        <TextBlock Name="txtDisplay1" Text="Display a watermark overlay with custom text or a running timecode on the video." Grid.Row="1"/>
+        <TextBlock Name="txtDisplay2" Text="Add upto 9 Watermark Labels" Grid.Row="2" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+        <Grid Name="grdMain1" RowSpacing="20" Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Content="Add new Label to Display"  Name="btnNewTimeCodedLabel" Visibility="Visible" Click="btnNewTimeCodedLabel_Click"/>
+                <CheckBox Name="chkSaveWatermarkValues" Checked="chkSaveWatermarkValues_Checked" Unchecked="chkSaveWatermarkValues_Checked" Content="Save watermark values for every video"/>
+            </StackPanel>
+        </Grid>
+        <Grid Name="grdMain2" Grid.Row="4" ColumnSpacing="30">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Grid RowSpacing="20">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Button Content="Add new Label to Display" Name="btnNewTimeCodedLabel" Visibility="Visible" Click="btnNewTimeCodedLabel_Click"/>
-                        <ListView SelectionChanged="lstViewAddedTimeCodeLabels_SelectionChanged" 
+         
+                <ListView SelectionChanged="lstViewAddedTimeCodeLabels_SelectionChanged" 
           ItemsSource="{x:Bind timestamplabels, Mode=OneWay}" 
           Grid.Row="1" 
           Name="lstViewAddedTimeCodeLabels">
@@ -72,8 +79,8 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                    </Grid>
-            <StackPanel VerticalAlignment="Center" Visibility="{x:Bind timestamplabels.Count, Mode=OneWay, Converter={StaticResource CountToVisConverter}}" Grid.Column="1" Orientation="Vertical" Spacing="10" Grid.Row="4">
+                    
+            <StackPanel  VerticalAlignment="Center" Visibility="{x:Bind timestamplabels.Count, Mode=OneWay, Converter={StaticResource CountToVisConverter}}" Grid.Column="1" Orientation="Vertical" Spacing="10" Grid.Row="4">
                 <ComboBox Name="cmbPosition" SelectionChanged="cmbPosition_SelectionChanged" Grid.Row="4" SelectedIndex="0" VerticalAlignment="Center" Header="Position">
                     <ComboBox.Items>
                         <ComboBoxItem Content="Top Left"/>

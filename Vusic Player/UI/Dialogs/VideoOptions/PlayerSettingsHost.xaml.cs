@@ -755,6 +755,7 @@ DependencyProperty.Register(
             spSearchResults.Visibility = Visibility.Collapsed;
 
             var query = asbSearchOptions.Text.ToLower();
+            btnSearchQuery.Margin = new Thickness(0, 0, 0, 0);
 
             searchres.Clear();
 
@@ -763,7 +764,7 @@ DependencyProperty.Register(
                 var suggestions = SearchVideoOptions.searchIndex.Where(s =>
                     s.Keywords != null &&
                     s.Keywords.Any(k => k.ToLower().Contains(query)));
-
+                btnSearchQuery.Margin = new Thickness(20, 0, 0, 0);
                 foreach (var item in suggestions)
                 {
                     searchres.Add(item);
