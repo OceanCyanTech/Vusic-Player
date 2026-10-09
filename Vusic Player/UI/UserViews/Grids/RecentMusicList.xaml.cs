@@ -44,6 +44,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                 grdEmptySuggestions.Visibility = Visibility.Collapsed;
                 grdRecents.Visibility = Visibility.Collapsed;
                 grdDisabledRecents.Visibility = Visibility.Visible;
+                return;
             }
             var recentmusic = currentSettings.RecentMusic.Take(5);
 

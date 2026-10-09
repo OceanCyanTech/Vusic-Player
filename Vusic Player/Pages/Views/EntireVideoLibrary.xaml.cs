@@ -636,6 +636,7 @@ namespace Vusic_Player.Pages.Views
             chkSelect.Visibility = Visibility.Collapsed;
             grdViewAllRecentMusic.Visibility = Visibility.Collapsed;
             stkDisabledHistory.Visibility = Visibility.Visible;
+            stkEmptyHistory.Visibility = Visibility.Collapsed;
             btnPlayAll.Visibility = Visibility.Collapsed;
             btnClearHistory.Visibility = Visibility.Collapsed;
         }

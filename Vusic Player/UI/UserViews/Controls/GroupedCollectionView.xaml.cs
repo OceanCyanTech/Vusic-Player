@@ -68,7 +68,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             TimelineCollectionArtist.CollectionChanged += TimelineCollectionArtist_CollectionChanged;
             TimelineCollectionAlbum.CollectionChanged -= TimelineCollectionAlbum_CollectionChanged;
             TimelineCollectionShow.CollectionChanged += TimelineCollectionShow_CollectionChanged;
-            TimelineCollectionSearch.CollectionChanged += TimelineCollectionSearch_CollectionChanged; ; 
+            TimelineCollectionSearch.CollectionChanged += TimelineCollectionSearch_CollectionChanged; ;
         }
 
         private void TimelineCollectionSearch_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -1149,7 +1149,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     grdNoSearchResults.Visibility = Visibility.Collapsed;
 
                     MainTimelineList.Visibility = Visibility.Visible;
-                 
+
                     searchresultsshows.Clear();
                     foreach (var item in results) searchresultsshows.Add(item);
                 }
@@ -1307,7 +1307,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void mnftViewAlbum_Click(object sender, RoutedEventArgs e)
         {
-           
+
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is GroupedCollectionModelAlbum album)
             {
                 if (App.NavigationFrame == null) return;
@@ -1906,10 +1906,24 @@ namespace Vusic_Player.UI.UserViews.Controls
                 ObservableCollection<SongModel> songmodels = new ObservableCollection<SongModel>();
                 foreach (var song in playlist.SongsPaths)
                 {
-                    var file = await StorageFile.GetFileFromPathAsync(song);
-                    var musicprops = await file.Properties.GetMusicPropertiesAsync();
-                    songmodels.Add(new SongModel { Title = string.IsNullOrEmpty(musicprops.Title) ? Path.GetFileNameWithoutExtension(song) : musicprops.Title, SongDuration = musicprops.Duration, FilePath = song });
-                    Instance.MediaPaths.Add(song);
+                    if (File.Exists(song))
+                    {
+                        if (File.GetAttributes(song) == System.IO.FileAttributes.Hidden)
+                        {
+                            continue;
+                        }
+                        try
+                        {
+                            var file = await StorageFile.GetFileFromPathAsync(song);
+                            var musicprops = await file.Properties.GetMusicPropertiesAsync();
+                            songmodels.Add(new SongModel { Title = string.IsNullOrEmpty(musicprops.Title) ? Path.GetFileNameWithoutExtension(song) : musicprops.Title, SongDuration = musicprops.Duration, FilePath = song });
+                            Instance.MediaPaths.Add(song);
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
                 }
                 ttEditPlaylist.IsOpen = true;
                 Instance.PlCover = new BitmapImage(playlist.Thumbnail);

@@ -777,7 +777,11 @@ namespace Vusic_Player.Pages.Views
             {
                 if (isEnabled)
                 {
-                    foldersListOpened.Add(new FoldersListOpened { FolderPath = path, IsHighLevelFolder = true, FolderName = Path.GetFileName(path), isChecked = true });
+                    var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == path);
+                    if (exist == null)
+                    {
+                        foldersListOpened.Add(new FoldersListOpened { FolderPath = path, IsHighLevelFolder = true, FolderName = Path.GetFileName(path), isChecked = true });
+                    }
                 }
             }
             foreach (var item in currentSettings.SavedFoldersOpened)
@@ -1092,6 +1096,7 @@ namespace Vusic_Player.Pages.Views
             chkSelect.Visibility = Visibility.Collapsed;
             grdViewAllRecentMusic.Visibility = Visibility.Collapsed;
             stkDisabledHistory.Visibility = Visibility.Visible;
+            stkEmptyHistory.Visibility = Visibility.Collapsed;
             btnPlayAll.Visibility = Visibility.Collapsed;
             btnClearHistory.Visibility = Visibility.Collapsed;
         }
