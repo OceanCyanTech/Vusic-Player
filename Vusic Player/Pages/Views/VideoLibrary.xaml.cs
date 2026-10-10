@@ -59,7 +59,18 @@ namespace Vusic_Player.Pages.Views
         }
         PlaylistCreationValues PlaylistInstance => PlaylistCreationValues.Instance;
         bool iscreating = false;
-
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            expRecents.Visibility = currentSettings.Panel1VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
+            expRecommended.Visibility = currentSettings.Panel2VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
+            txtDisplay1.Visibility = currentSettings.Panel2VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
+            txtDisplay2.Visibility = currentSettings.Panel3VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
+            txtDisplay3.Visibility = currentSettings.Panel4VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
+            expVideoPlaylists.Visibility = currentSettings.Panel3VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
+            expShows.Visibility = currentSettings.Panel4VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
+            base.OnNavigatedTo(e);
+        }
         private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;

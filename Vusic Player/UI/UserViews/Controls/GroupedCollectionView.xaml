@@ -13,7 +13,6 @@
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converter:FavoriteToGlyphConverter x:Key="FavoritetoGlyphConv"/>
         <converter:FavoriteToColorConverter x:Key="FavoritetoColorConv"/>
-
         <DataTemplate x:Key="SharedSongItemTemplate" x:DataType="classmodel:SongModel">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -51,13 +50,16 @@
                 </StackPanel>
 
                 <TextBlock ToolTipService.ToolTip="{x:Bind FormattedDuration, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{x:Bind FormattedDuration, Mode=OneWay}" TextWrapping="Wrap" Margin="0, 20"/>
-
-                <Button ToolTipService.ToolTip="{x:Bind FavString, Mode=OneWay}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" Click="btnFavourite_Click" Background="Transparent" BorderThickness="0">
+                <Button ToolTipService.ToolTip="{x:Bind FavString, Mode=OneWay}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" 
+Click="btnFavourite_Click"
+Background="Transparent" 
+BorderThickness="0"
+                                            >
                     <Grid>
-                        <FontIcon Name="OutlineHeart2" Glyph="&#xEB51;" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Gray" FontSize="16"/>
-                        <FontIcon Name="FillHeart" Glyph="&#xEB52;" Opacity="{x:Bind FavOpacity, Mode=OneWay}" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Red" RenderTransformOrigin="0.5,0.5" FontSize="16">
+                        <FontIcon x:Name="HeartIcon" RenderTransformOrigin="0.5,0.5" Glyph="{x:Bind IsFavourite, Converter={StaticResource FavoritetoGlyphConv}, Mode=OneWay}" Foreground="{x:Bind IsFavourite, Converter={StaticResource FavoritetoColorConv}, Mode=OneWay}"
+  >
                             <FontIcon.RenderTransform>
-                                <ScaleTransform ScaleX="{x:Bind FavOpacity, Mode=OneWay}" ScaleY="{x:Bind FavOpacity, Mode=OneWay}"/>
+                                <ScaleTransform x:Name="HeartScale" ScaleX="1" ScaleY="1"/>
                             </FontIcon.RenderTransform>
                         </FontIcon>
                     </Grid>
@@ -120,7 +122,7 @@
                                     <FontIcon Glyph="&#xECC8;"></FontIcon>
                                 </MenuFlyoutSubItem.Icon>
                             </MenuFlyoutSubItem>
-                            <MenuFlyoutItem Text="{Binding Data.IsFavourite, Converter={StaticResource FavToolTipConverter}}" Click="mnftAddToFavourites_Click" Tag="Favo"  x:Name="mnftAddToFavourites" >
+                            <MenuFlyoutItem Text="{Binding Data.FavString}" Tag="Favo"  x:Name="mnftAddToFavourites" Click="mnftAddToFavourites_Click" >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Name="OutlineHeart" 
 Glyph="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoGlyphConv}, Mode=OneWay}" 
@@ -129,8 +131,8 @@ Foreground="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoColor
                                 </MenuFlyoutItem.Icon>
 
                             </MenuFlyoutItem>
-                        
-                            
+
+
                             <MenuFlyoutSeparator Visibility="Collapsed"></MenuFlyoutSeparator>
                             <MenuFlyoutItem Visibility="Collapsed" Text="Tools"  Name="mnftTools" >
                                 <MenuFlyoutItem.Icon>

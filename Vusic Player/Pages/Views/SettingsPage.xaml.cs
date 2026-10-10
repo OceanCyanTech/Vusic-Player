@@ -27,7 +27,6 @@ namespace Vusic_Player.Pages.Views
 
     public sealed partial class SettingsPage : Page
     {
-
         public SettingsPage()
         {
             InitializeComponent();
@@ -36,14 +35,25 @@ namespace Vusic_Player.Pages.Views
         private async void LoadSettings()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            if (currentSettings.IsVideoHistoryDisabled)
-            {
-                chkSaveHistory.IsChecked = false;
-            }
-            else
-            {
-                chkSaveHistory.IsChecked = true;
-            }
+            chkSaveHistory.IsChecked = !currentSettings.IsVideoHistoryDisabled;
+
+            // Home Page Panels (Panel1VisibilityHome - Panel4VisibilityHome)
+            chkHomeContinueRecent.IsChecked = currentSettings.Panel1VisibilityHome;
+            chkHomeRecentMusic.IsChecked = currentSettings.Panel2VisibilityHome;
+            chkHomeMusicMix.IsChecked = currentSettings.Panel3VisibilityHome;
+            chkHomeFavouritesRecommendations.IsChecked = currentSettings.Panel4VisibilityHome;
+
+            // Music Panels (Panel1VisibilityMusic - Panel4VisibilityMusic)
+            chkMusicRecent.IsChecked = currentSettings.Panel1VisibilityMusic;
+            chkMusicPlaylists.IsChecked = currentSettings.Panel2VisibilityMusic;
+            chkMusicInstantPlaylists.IsChecked = currentSettings.Panel3VisibilityMusic;
+            chkMusicGenreRecommendations.IsChecked = currentSettings.Panel4VisibilityMusic;
+
+            // Video Panels (Panel1VisibilityVideo - Panel4VisibilityVideo)
+            chkVideoContinueRecent.IsChecked = currentSettings.Panel1VisibilityVideo;
+            chkVideoRecommended.IsChecked = currentSettings.Panel2VisibilityVideo;
+            chkVideoPlaylists.IsChecked = currentSettings.Panel3VisibilityVideo;
+            chkVideoShows.IsChecked = currentSettings.Panel4VisibilityVideo;
         }
         private void btnViewLog_Click(object sender, RoutedEventArgs e)
         {
@@ -58,6 +68,7 @@ namespace Vusic_Player.Pages.Views
             if (args.SelectedItemContainer == null)
                 return;
             grdAppSettings.Visibility = Visibility.Collapsed;
+            grdHomeOptions.Visibility = Visibility.Collapsed;
             frmAboutOptions.Visibility = Visibility.Collapsed;
             grdMusicOptions.Visibility = Visibility.Collapsed;
             grdVideoOptions.Visibility = Visibility.Collapsed;
@@ -65,7 +76,7 @@ namespace Vusic_Player.Pages.Views
             hypBlockedVideos.Content = "View hidden videos";
             if (args.SelectedItemContainer == nvgitHomePage)
             {
-
+                grdHomeOptions.Visibility = Visibility.Visible;
             }
 
             else if (args.SelectedItemContainer == nvgitMusicOptions)
@@ -243,5 +254,165 @@ namespace Vusic_Player.Pages.Views
                 hypBlockedVideos.Content = "View hidden videos";
             }
         }
+
+        private async void chkHidePanel1_Checked(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if(sender is CheckBox chkbox && chkbox.Content is string str)
+            {
+                if(str == "Continue Playing and Recent Videos")
+                {
+                    if(chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel1VisibilityHome = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel1VisibilityHome = false;
+                    }
+                }
+                else if (str == "Recent Music")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel2VisibilityHome = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel2VisibilityHome = false;
+                    }
+                }
+                else if (str == "Music Mix")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel3VisibilityHome = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel3VisibilityHome = false;
+                    }
+                }
+                else if (str == "Favourites Recommendations")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel4VisibilityHome = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel4VisibilityHome = false;
+                    }
+                }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+        }
+
+        private async void chkHidePanel2_Checked(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if (sender is CheckBox chkbox && chkbox.Content is string str)
+            {
+                if (str == "Recent Music")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel1VisibilityMusic = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel1VisibilityMusic = false;
+                    }
+                }
+                else if (str == "Playlists")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel2VisibilityMusic = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel2VisibilityMusic = false;
+                    }
+                }
+                else if (str == "Instant Playlists")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel3VisibilityMusic = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel3VisibilityMusic = false;
+                    }
+                }
+                else if (str == "Genre Recommendations")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel4VisibilityMusic = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel4VisibilityMusic = false;
+                    }
+                }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+        }
+
+        private async void chkHidePanel3_Checked(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if (sender is CheckBox chkbox && chkbox.Content is string str)
+            {
+                if (str == "Continue Playing and Recent Videos")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel1VisibilityVideo = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel1VisibilityVideo = false;
+                    }
+                }
+                else if (str == "Recommended Videos")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel2VisibilityVideo = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel2VisibilityVideo = false;
+                    }
+                }
+                else if (str == "Playlists")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel3VisibilityVideo = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel3VisibilityVideo = false;
+                    }
+                }
+                else if (str == "Shows")
+                {
+                    if (chkbox.IsChecked == true)
+                    {
+                        currentSettings.Panel4VisibilityVideo = true;
+                    }
+                    else
+                    {
+                        currentSettings.Panel4VisibilityVideo = false;
+                    }
+                }
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+        }
+
     }
 }

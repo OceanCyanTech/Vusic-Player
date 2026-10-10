@@ -15,6 +15,7 @@ using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
 using Windows.Foundation;
@@ -33,8 +34,16 @@ namespace Vusic_Player.Pages.Views
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            expRecentsVideo.Visibility = currentSettings.Panel1VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+            txtDisplay1.Visibility = currentSettings.Panel2VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+            txtDisplay2.Visibility = currentSettings.Panel3VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+            txtDisplay3.Visibility = currentSettings.Panel4VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+            expRecentMusic.Visibility = currentSettings.Panel2VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+            expMusicMix.Visibility = currentSettings.Panel3VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+            expFav.Visibility = currentSettings.Panel4VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
             base.OnNavigatedTo(e);
         }
         private async void btnOpenMedia_Click(object sender, RoutedEventArgs e)

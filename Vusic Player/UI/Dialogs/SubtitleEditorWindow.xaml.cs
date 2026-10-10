@@ -131,6 +131,13 @@ namespace Vusic_Player.UI.Dialogs
                 presenter.IsResizable = true;
             }
         }
+        public static void KillDialog()
+        {
+            if (_instance != null)
+            {
+                _instance.Close();
+            }
+        }
         private void ResizeWind(int Width, int Height)
         {
             var hwnd = WindowNative.GetWindowHandle(this);

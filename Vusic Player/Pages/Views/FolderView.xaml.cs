@@ -255,65 +255,26 @@ namespace Vusic_Player.Pages.Views
         }
         private async void mnftAddToFavourites_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FileItem song)
+            if (sender is FrameworkElement { DataContext: FileItem song } && song.Path != null)
             {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                var pathtocheck = song.Path;
-                if (pathtocheck == null) return;
-                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-                if (existing != null)
-                {
-                    song.IsFavourite = false;
-                    Favourites.Remove(existing);
-                    song.FavString = "Add to Favourites";
+                bool wasFav = song.IsFavourite;
+                await GlobalFavourites.Instance.ToggleFavouriteAsync(song.Path);
 
-                }
-                else
-                {
-                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
-                    song.IsFavourite = true;
-                    song.FavString = "Remove from Favourites";
-
-                }
-
-
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
         }
         public ObservableCollection<FolderModel> BreadcrumbItems { get; set; } = new();
         private async void btnFavourite_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Content is Grid rootGrid && btn.DataContext is FileItem song)
+            if (sender is Button { DataContext: FileItem file, Content: Grid rootGrid } && file.Path != null)
             {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                var pathtocheck = song.Path;
-                if (pathtocheck == null) return;
-                var fillHeartIcon = rootGrid.FindName("HeartIcon") as FontIcon;
-                if (fillHeartIcon == null) return;
-                var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-                if (existing == null)
+                bool wasFav = file.IsFavourite;
+                await GlobalFavourites.Instance.ToggleFavouriteAsync(file.Path);
+
+
+                if (rootGrid.FindName("HeartIcon") is FontIcon heartIcon)
                 {
-                    fillHeartIcon.Glyph = "\uEB52";
-                    song.IsFavourite = true;
-                    AnimateHeartFull(fillHeartIcon, true);
-                    Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
-                    song.FavString = "Remove from Favourites";
-
+                    AnimateHeartFull(heartIcon, !wasFav);
                 }
-                else
-                {
-                    song.IsFavourite = false;
-                    fillHeartIcon.Glyph = "\uEB51";
-                    AnimateHeartFull(fillHeartIcon, false);
-                    Favourites.Remove(existing);
-                    song.FavString = "Add to Favourites";
-
-
-                }
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
-
             }
             // Favourite button click logic
         }
@@ -412,6 +373,7 @@ namespace Vusic_Player.Pages.Views
                     {
                         folders.Add(new FolderModel { FolderName = folder.FolderName, FolderPath = FolderPath });
                     }
+                    MasterSearchIndex.FoldersOpenedMaster = new ObservableCollection<FolderModel>(folders);
                     await SettingsLoader.SaveSettingsAsync(currentSettings);
                     await GetFiles(FolderPath);
                     prgLoading.Visibility = Visibility.Collapsed;
@@ -1275,59 +1237,20 @@ namespace Vusic_Player.Pages.Views
             ItemsDeselected();
 
         }
-
         private async void btnRemoveSelectionsFromFavourites_Click(object sender, RoutedEventArgs e)
         {
-            var songss = grdViewMain.SelectedItems.Cast<FileItem>().ToList(); // Converting to a list is safer if you evaluate multiple times
-            bool allAreFavorites = songss.All(item => item.IsFavourite);
+            var selectedSongs = grdViewMain.SelectedItems.OfType<FileItem>().ToList();
+            if (!selectedSongs.Any()) return;
 
-            bool noneAreFavorites = !songss.Any(item => item.IsFavourite);
+            // If any selected song is a favorite, unfavorite all of them; otherwise, favorite all of them.
+            bool removeFavorites = selectedSongs.Any(s => s.IsFavourite);
+            var paths = selectedSongs.Select(s => s.Path);
 
-            bool partialFavorites = songss.Any(item => item.IsFavourite) && !songss.All(item => item.IsFavourite);
-            if (songss.Any(item => item.IsFavourite))
-            {
-                Debug.WriteLine("All/Partial");
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                foreach (var item in songss)
-                {
-                    var pathtocheck = item.Path;
-                    if (pathtocheck == null) return;
-                    var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
+            await GlobalFavourites.Instance.SetFavouritesRangeAsync(paths, add: !removeFavorites);
 
-                    if (existing != null)
-                    {
-                        item.IsFavourite = false;
-                        item.FavString = "Add to Favourites";
-                        Favourites.Remove(existing);
-                    }
-
-                }
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
-            }
-            else if (noneAreFavorites)
-            {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var Favourites = currentSettings.Favourites;
-                foreach (var item in songss)
-                {
-                    var pathtocheck = item.Path;
-                    if (pathtocheck == null) return;
-                    var existing = Favourites.FirstOrDefault(p => p.FilePath == pathtocheck);
-
-                    if (existing == null)
-                    {
-                        item.IsFavourite = true;
-                        item.FavString = "Remove from Favourites";
-
-                        Favourites.Add(new FavouriteItems { FilePath = pathtocheck });
-                    }
-
-                }
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
-            }
-
+         
         }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -2001,20 +1924,7 @@ namespace Vusic_Player.Pages.Views
                 };
 
             }
-            var mnftAddtoFav = flyout?.Items
-   .OfType<MenuFlyoutItem>()
-   .FirstOrDefault(x => x.Name == "mnftAddToFavourites");
-
-            if (mnftAddtoFav == null) return;
-            if (selectedsong.IsFavourite == true)
-            {
-                mnftAddtoFav.Text = "Remove from Favourites";
-            }
-            else
-            {
-
-                mnftAddtoFav.Text = "Add to Favourites";
-            }
+           
         }
         private void hypPlaylistAdded_Click(object sender, RoutedEventArgs e)
         {

@@ -29,6 +29,8 @@ using WinRT.Interop;
 using Windows.Foundation.Collections;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Vusic_Player.UI.Dialogs;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -116,6 +118,9 @@ namespace Vusic_Player
             {
                 MediaControlSystem.Unregister(_hwnd);
                 RemoveWindowSubclass(_hwnd, _subclassProc, 0);
+                OceanContentDialog.KillDlg();
+                VideoOptionsWindow.KillDialog();
+                SubtitleEditorWindow.KillDialog();
             };
 
         }

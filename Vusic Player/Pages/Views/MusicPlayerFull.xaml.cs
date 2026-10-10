@@ -96,16 +96,18 @@ namespace Vusic_Player.Pages.Views
                 }
                 else if (isVideo)
                 {
-                    if (PlayerService.InVideoPage == false)
+                    if (File.Exists(media.Path))
                     {
-                        if (File.Exists(media.Path))
-                            Frame.Navigate(typeof(VideoPlayer), media.Path);
-                    }
-                    else
-                    {
-                        PlayerService.OpenPath(media.Path);
-                    }
+                        if (PlayerService.InVideoPage == false)
+                        {
 
+                            Frame.Navigate(typeof(VideoPlayer), media.Path);
+                        }
+                        else
+                        {
+                            PlayerService.OpenPath(media.Path);
+                        }
+                    }
                 }
                 else
                 {

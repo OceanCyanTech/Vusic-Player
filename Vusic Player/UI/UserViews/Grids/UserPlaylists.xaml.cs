@@ -56,7 +56,6 @@ namespace Vusic_Player.UI.UserViews.Grids
 
     public sealed partial class UserPlaylists : UserControl
     {
-        public ObservableCollection<PlaylistItem> Playlists { get; set; } = new();
         PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
 
         public bool IsItemClickDisabled
@@ -98,16 +97,16 @@ namespace Vusic_Player.UI.UserViews.Grids
             _isLoadingData = true;
             try
             {
-                Playlists.Clear();
+                Instance.PlaylistsMaster.Clear();
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 foreach (var playlist in currentSettings.SavedPlaylists)
                 {
 
-                    Playlists.Add(playlist);
+                    Instance.PlaylistsMaster.Add(playlist);
 
                 }
-                grdViewPlaylists.ItemsSource = Playlists;
-                Playlists.CollectionChanged += Playlists_CollectionChanged;
+                grdViewPlaylists.ItemsSource = Instance.PlaylistsMaster;
+                Instance.PlaylistsMaster.CollectionChanged += Playlists_CollectionChanged;
                 UpdateUI();
             }
             finally
@@ -125,8 +124,9 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 Debug.WriteLine("Moved");
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                currentSettings.SavedPlaylists = Playlists;
-                MasterSearchIndex.PlaylistsMaster = Playlists;
+                currentSettings.SavedPlaylists = Instance.PlaylistsMaster;
+               
+                MasterSearchIndex.PlaylistsMaster = Instance.PlaylistsMaster;
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
                 UpdateUI();
             }
@@ -134,46 +134,9 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private bool _isSavingPlaylist = false;
 
-        private async void PlaylistCreation_CreationCallAdd()
-        {
-            if (_isSavingPlaylist) return;
-            _isSavingPlaylist = true;
-            try
-            {
-                if (PlaylistCreation.playlistItem != null)
-                {
-                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                    if (PlaylistCreation.playlistItem.PlaylistName is string name)
-                    {
-                        string baseName = name.Trim();
-
-                        if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
-
-                        string finalName = baseName;
-                        int counter = 1;
-                        while (currentSettings.SavedPlaylists.Any(p =>
-                            string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
-                        {
-                            finalName = $"{baseName} ({counter++})";
-                        }
-                        PlaylistCreation.playlistItem.PlaylistName = finalName;
-                    }
-                    Playlists.Add(PlaylistCreation.playlistItem);
-
-                    currentSettings.SavedPlaylists.Add(PlaylistCreation.playlistItem);
-                    MasterSearchIndex.PlaylistsMaster.Add(PlaylistCreation.playlistItem);
-                    await SettingsLoader.SaveSettingsAsync(currentSettings);
-                }
-                UpdateUI();
-            }
-            finally
-            {
-                _isSavingPlaylist = false;
-            }
-        }
         private void UpdateUI()
         {
-            if (Playlists.Count == 0)
+            if (Instance.PlaylistsMaster.Count == 0)
             {
                 grdRecents.Visibility = Visibility.Collapsed;
                 grdEmptySuggestions.Visibility = Visibility.Visible;
@@ -184,15 +147,6 @@ namespace Vusic_Player.UI.UserViews.Grids
                 grdEmptySuggestions.Visibility = Visibility.Collapsed;
             }
         }
-        private void btnPlay_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-
-
-
-
         private void chkSelect_Toggled(object sender, RoutedEventArgs e)
         {
             bool isChecked = chkSelect.IsChecked ?? false;

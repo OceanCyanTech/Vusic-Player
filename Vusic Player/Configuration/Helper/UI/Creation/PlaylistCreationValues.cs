@@ -50,7 +50,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         private List<string> _directory =  new List<string>();
         private string _playlistName = "Playlist";
         private BitmapImage _plThumb = new BitmapImage(new Uri("ms-appx:///Assets/playlistdefaultdark.png"));
-        private string _playlistID = "";
+        private string _playlistID  = Guid.NewGuid().ToString();
         private Uri _thumbnail = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
         private string _thumbnailString = "ms-appx:///Assets/playlistdefaultdark.png";
         private DateTime _creationdate = DateTime.Now;

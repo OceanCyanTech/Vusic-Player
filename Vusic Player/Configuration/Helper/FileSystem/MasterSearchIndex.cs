@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
@@ -32,10 +33,12 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             Shows,
             Genres
         }
-        public static ObservableCollection<PlaylistItem> PlaylistsMaster = new ObservableCollection<PlaylistItem>();
-        public static ObservableCollection<Show> ShowsMaster = new ObservableCollection<Show>();
+
+        public static ObservableCollection<PlaylistItem> PlaylistsMaster = PlaylistCreationValues.Instance.PlaylistsMaster;
+        public static ObservableCollection<Show> ShowsMaster = ShowCreationValues.Instance.ShowsMaster;
         public static ObservableCollection<FolderModel> FoldersOpenedMaster = new ObservableCollection<FolderModel>();
         public static ObservableCollection<string> Pages = new ObservableCollection<string>();
+        public static ObservableCollection<string> Folders = new ObservableCollection<string>();
         static MasterSearchIndex()
         {
             ShowsMaster.CollectionChanged -= ShowsMaster_CollectionChanged;
@@ -504,6 +507,47 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 }
             }
         }
+        private static IEnumerable<(MasterSearchModel, int)> SearchFoldersOpened(string rawQuery, string[] tokens)
+        {
+
+            var folders = FoldersOpenedMaster;
+            foreach (var folder in folders)
+            {
+                var name = Path.GetFileNameWithoutExtension(folder.FolderPath);
+                int score = 0;
+                if (string.Equals(name, rawQuery, StringComparison.OrdinalIgnoreCase))
+                {
+                    score = 100;
+                }
+                else if (name.StartsWith(rawQuery, StringComparison.OrdinalIgnoreCase))
+                {
+                    score = 70;
+                }
+                // All individual tokens match somewhere in the page name (Score: 50) -> e.g. "Conan Gray" in "Conan Lee Gray"
+                else if (tokens.Length > 0 && tokens.All(t => name.Contains(t, StringComparison.OrdinalIgnoreCase)))
+                {
+                    score = 50;
+                }
+
+                // Boost score slightly if track has high play counts
+                //if (score > 0 && track.PlayCount > 0)
+                //{
+                //    score += Math.Min(track.PlayCount, 5); // cap play count boost
+                //}
+
+                if (score > 0)
+                {
+                    yield return (new MasterSearchModel
+                    {
+                        ResultMain = name,
+                        SubInformation = "Folder",
+                        FolderPath = folder.FolderPath,
+                        ImageThumbnail = $"ms-appx:///Assets/foldericon.png"
+                    }, score + 6);
+                }
+            }
+        }
+
         public static async Task<List<MasterSearchModel>> ProcessFindQueryFullAsync(string query)
         {
             var cleanQuery = NormalizeForSearch(query.Trim());
@@ -520,6 +564,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 candidates.AddRange(SearchShows(query.Trim(), queryTokens));
                 candidates.AddRange(SearchGenres(query.Trim(), queryTokens));
                 candidates.AddRange(SearchPages(query.Trim(), queryTokens));
+                candidates.AddRange(SearchFoldersOpened(query.Trim(), queryTokens));
                 return candidates.OrderByDescending(x => x.Score).Select(x => x.Model).ToList();
             });
         }
@@ -538,6 +583,8 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 candidates.AddRange(SearchPlaylists(query.Trim(), queryTokens));
                 candidates.AddRange(SearchShows(query.Trim(), queryTokens));
                 candidates.AddRange(SearchGenres(query.Trim(), queryTokens));
+                candidates.AddRange(SearchPages(query.Trim(), queryTokens));
+                candidates.AddRange(SearchFoldersOpened(query.Trim(), queryTokens));
                 return candidates.OrderByDescending(x => x.Score).Select(x => x.Model).Take(6).ToList();
                 //               //First Result is Direct Match/Starts with (and preferred with most played)
                 //               var firstResult = rawMedia.FirstOrDefault(p =>

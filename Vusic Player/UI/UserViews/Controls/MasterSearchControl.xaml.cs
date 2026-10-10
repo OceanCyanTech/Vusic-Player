@@ -12,10 +12,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.UI.Navig;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Extensions;
+using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -147,16 +152,16 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (!string.IsNullOrWhiteSpace(query))
             {
                 var suggestions = await MasterSearchIndex.ProcessFindQueryAsync(query);
-                foreach(var item in suggestions)
+                foreach (var item in suggestions)
                 {
-               //     bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant());
+                    //     bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant());
                     var existingitem = searchResultsMaster.FirstOrDefault(p => p.FilePath == item.FilePath);
-                    if(existingitem == null)
+                    if (existingitem == null)
                     {
                         searchResultsMaster.Add(new MasterSearchModel { FilePath = item.FilePath, ResultMain = item.ResultMain, SubInformation = item.SubInformation, ImageThumbnail = item.ImageThumbnail });
                     }
                 }
-      //          MasterSearchIndex.TestMethod(query);
+                //          MasterSearchIndex.TestMethod(query);
 
                 //foreach (var item in suggestions)
                 //{
@@ -198,7 +203,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         }
 
-        private void lstViewSearchOptions_ItemClick(object sender, ItemClickEventArgs e)
+        private async void lstViewSearchOptions_ItemClick(object sender, ItemClickEventArgs e)
         {
             popupSearch.IsOpen = false;
 
@@ -206,19 +211,83 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (selected != null)
             {
                 Debug.WriteLine("yesssssdshs");
-                if (selected.SearchFilter == Filters.Artist)
+                if (selected.SubInformation == "Artist")
                 {
-                    Debug.WriteLine("ARTISARTHUR " + selected.SubInformation);
+                    Debug.WriteLine("ARTISARTHUR " + selected.ResultMain);
                     if (App.NavigationFrame != null)
                     {
-                        App.NavigationFrame.Navigate(typeof(ArtistView), selected.Artist);
+                        App.NavigationFrame.Navigate(typeof(ArtistView), selected.ResultMain);
                     }
                 }
-                else if (selected.SearchFilter == Filters.Album)
+                else if (selected.SubInformation == "Song")
+                {
+                    Debug.WriteLine("ARTISARTHUR " + selected.ResultMain);
+                    if (File.Exists(selected.FilePath))
+                    {
+                        ObservableCollection<SongModel> single = new();
+                        string Title = Path.GetFileNameWithoutExtension(selected.FilePath);
+
+                        single.Add(new SongModel { FilePath = selected.FilePath, Title = Title, AlbumName = AudioMetadata.Album(selected.FilePath), Artist = AudioMetadata.Artist(selected.FilePath), SongDuration = await AudioMetadata.GetTimeSpanDuration(selected.FilePath) });
+                        QueueService.PlayMedia(single, false, false);
+                    }
+                }
+                else if (selected.SubInformation == "Video")
+                {
+                    Debug.WriteLine("ARTISARTHUR " + selected.ResultMain);
+                    if (File.Exists(selected.FilePath))
+                    {
+                        if (PlayerService.InVideoPage == false)
+                        {
+                            if (App.NavigationFrame != null)
+                                App.NavigationFrame.Navigate(typeof(VideoPlayer), selected.FilePath);
+                        }
+                        else
+                        {
+                            PlayerService.OpenPath(selected.FilePath);
+                        }
+                    }
+                }
+                else if (selected.SubInformation == "Album")
                 {
                     if (App.NavigationFrame != null)
                     {
-                        App.NavigationFrame.Navigate(typeof(AlbumView), selected.Album);
+                        App.NavigationFrame.Navigate(typeof(AlbumView), selected.ResultMain);
+                    }
+                }
+                else if (selected.SubInformation == "Genre")
+                {
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(GenreView), selected.ResultMain);
+                    }
+                }
+                else if (selected.SubInformation == "Playlist")
+                {
+                    System.Diagnostics.Debug.WriteLine($"Selected ID: '{selected.PlaylistID}', Name: '{selected.ResultMain}'");
+                    var existingplaylist = PlaylistCreationValues.Instance.PlaylistsMaster.FirstOrDefault(p => p.PlaylistId == selected.PlaylistID);
+                    if (App.NavigationFrame != null)
+                    {
+                        if (existingplaylist != null)
+                            App.NavigationFrame.Navigate(typeof(PlaylistView), existingplaylist);
+                    }
+                }
+                else if (selected.SubInformation == "Show")
+                {
+                    System.Diagnostics.Debug.WriteLine($"Selected ID: '{selected.ShowID}', Name: '{selected.ResultMain}'");
+                    var existingshow = ShowCreationValues.Instance.ShowsMaster.FirstOrDefault(p => p.ShowID == selected.ShowID);
+                    if (App.NavigationFrame != null)
+                    {
+                        if (existingshow != null)
+                            App.NavigationFrame.Navigate(typeof(Show), existingshow);
+                    }
+                }
+                else if (selected.SubInformation == "Folder")
+                {
+                    System.Diagnostics.Debug.WriteLine($"Selected PATH: '{selected.FolderPath}', Name: '{selected.ResultMain}'");
+
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(FolderView), new FolderModel { FolderName = Path.GetFileName(selected.FolderPath), FolderPath = selected.FolderPath });
                     }
                 }
             }

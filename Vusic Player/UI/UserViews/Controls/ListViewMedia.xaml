@@ -50,6 +50,16 @@
                     <FontIcon Glyph="&#xE70F;"></FontIcon>
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Go to file location"  Name="mnftGoToFileLocation" Click="mnftGoToFileLocation_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE70F;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Copy File Path"  Name="mnftCopyFilePath" Click=" mnftCopyFilePath_Click" >
+                <MenuFlyoutItem.Icon>
+                    <FontIcon Glyph="&#xE70F;"></FontIcon>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
             <MenuFlyoutSeparator/>
             <MenuFlyoutSubItem Text="Add to Playlist"  x:Name="mnftAddtoPlaylist" >
                 <MenuFlyoutSubItem.Icon>

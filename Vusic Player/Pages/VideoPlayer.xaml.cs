@@ -50,6 +50,7 @@ using Vusic_Player.UI;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral;
+using Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Spi;
 using Windows.Media;
@@ -189,11 +190,198 @@ namespace Vusic_Player.Pages
         private async void LoadSettings()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            if (currentSettings.IsShowingWatermarkValues == true)
-            {
+            if (currentSettings == null) return;
+            if (currentSettings.IsSavingWatermarkValues == false) return;
+            bool isOverallVisible = currentSettings.IsShowingWatermarkValues == true;
+            watermarkFontValues.OverallVisibility = isOverallVisible ? Visibility.Visible : Visibility.Collapsed;
 
-                watermarkFontValues.OverallVisibility = Visibility.Visible;
-                watermarkFontValues.TimestampWatermarksLabels = new ObservableCollection<TimestampWatermark>(currentSettings.TimestampWatermarksLabels);
+            if (!isOverallVisible || currentSettings.TimestampWatermarksLabels == null)
+            {
+                _playbackTimer?.Stop();
+                return;
+            }
+
+            // 1. Reset all 9 slots first
+            for (int i = 1; i <= 9; i++)
+            {
+                SetLabelVisibility(i, Visibility.Collapsed);
+            }
+
+            if (_labels != null)
+            {
+                foreach (var lbl in _labels)
+                {
+                    lbl.Tag = null;
+                }
+            }
+
+            // 2. Hydrate each label slot into both watermarkFontValues and runtime tags
+            int labelIndex = 1;
+            foreach (var savedLabel in currentSettings.TimestampWatermarksLabels)
+            {
+                if (labelIndex > 9) break;
+
+                if (savedLabel.IsVisible == Visibility.Visible && _labels != null)
+                {
+                    // Fix index subtraction
+                    var targetLabel = _labels[labelIndex - 1];
+
+                    // Hydrate the bound watermarkFontValues so x:Bind updates the UI
+                    ApplyValuesToWatermarkFontValues(labelIndex, savedLabel);
+
+                    // Runtime tag for the playback tick loop
+                    targetLabel.Tag = new LabelInfo
+                    {
+                        Offset = savedLabel.Offset,
+                        Mode = savedLabel.Mode,
+                        Format = string.Empty,
+                        FrameRate = 30.0,
+                        BPM = 120.0,
+                        BeatsPerBar = 4
+                    };
+
+                    // Trigger visibility
+                    SetLabelVisibility(labelIndex, Visibility.Visible);
+                }
+
+                labelIndex++;
+            }
+
+            // 3. Start playback timer
+            CheckAndManageTimer();
+        }
+
+        private void ApplyValuesToWatermarkFontValues(int slot, WatermarkLabelSettingsModel saved)
+        {
+            var brush = WatermarkSerializationHelpers.FromHex(saved.HexColor);
+            var weight = new Windows.UI.Text.FontWeight { Weight = saved.FontWeight };
+            string font = saved.FontFamily ?? "Segoe UI";
+
+            switch (slot)
+            {
+                case 1:
+                    watermarkFontValues.Label1FontSize = saved.FontSize;
+                    watermarkFontValues.Label1FontColor = brush;
+                    watermarkFontValues.Label1FontFamily = font;
+                    watermarkFontValues.Label1FontWeight = weight;
+                    watermarkFontValues.Label1FontStyle = saved.FontStyle;
+                    watermarkFontValues.Label1HorizontalAlignment = saved.HorizontalAlignment;
+                    watermarkFontValues.Label1VerticalAlignment = saved.VerticalAlignment;
+                    watermarkFontValues.Label1Offset = saved.Offset;
+                    watermarkFontValues.Label1Mode = saved.Mode;
+                    break;
+
+                case 2:
+                    watermarkFontValues.Label2FontSize = saved.FontSize;
+                    watermarkFontValues.Label2FontColor = brush;
+                    watermarkFontValues.Label2FontFamily = font;
+                    watermarkFontValues.Label2FontWeight = weight;
+                    watermarkFontValues.Label2FontStyle = saved.FontStyle;
+                    watermarkFontValues.Label2HorizontalAlignment = saved.HorizontalAlignment;
+                    watermarkFontValues.Label2VerticalAlignment = saved.VerticalAlignment;
+                    watermarkFontValues.Label2Offset = saved.Offset;
+                    watermarkFontValues.Label2Mode = saved.Mode;
+                    break;
+
+                case 3:
+                    watermarkFontValues.Label3FontSize = saved.FontSize;
+                    watermarkFontValues.Label3FontColor = brush;
+                    watermarkFontValues.Label3FontFamily = font;
+                    watermarkFontValues.Label3FontWeight = weight;
+                    watermarkFontValues.Label3FontStyle = saved.FontStyle;
+                    watermarkFontValues.Label3HorizontalAlignment = saved.HorizontalAlignment;
+                    watermarkFontValues.Label3VerticalAlignment = saved.VerticalAlignment;
+                    watermarkFontValues.Label3Offset = saved.Offset;
+                    watermarkFontValues.Label3Mode = saved.Mode;
+                    break;
+
+                case 4:
+                    watermarkFontValues.Label4FontSize = saved.FontSize;
+                    watermarkFontValues.Label4FontColor = brush;
+                    watermarkFontValues.Label4FontFamily = font;
+                    watermarkFontValues.Label4FontWeight = weight;
+                    watermarkFontValues.Label4FontStyle = saved.FontStyle;
+                    watermarkFontValues.Label4HorizontalAlignment = saved.HorizontalAlignment;
+                    watermarkFontValues.Label4VerticalAlignment = saved.VerticalAlignment;
+                    watermarkFontValues.Label4Offset = saved.Offset;
+                    watermarkFontValues.Label4Mode = saved.Mode;
+                    break;
+
+                case 5:
+                    watermarkFontValues.Label5FontSize = saved.FontSize;
+                    watermarkFontValues.Label5FontColor = brush;
+                    watermarkFontValues.Label5FontFamily = font;
+                    watermarkFontValues.Label5FontWeight = weight;
+                    watermarkFontValues.Label5FontStyle = saved.FontStyle;
+                    watermarkFontValues.Label5HorizontalAlignment = saved.HorizontalAlignment;
+                    watermarkFontValues.Label5VerticalAlignment = saved.VerticalAlignment;
+                    watermarkFontValues.Label5Offset = saved.Offset;
+                    watermarkFontValues.Label5Mode = saved.Mode;
+                    break;
+
+                case 6:
+                    watermarkFontValues.Label6FontSize = saved.FontSize;
+                    watermarkFontValues.Label6FontColor = brush;
+                    watermarkFontValues.Label6FontFamily = font;
+                    watermarkFontValues.Label6FontWeight = weight;
+                    watermarkFontValues.Label6FontStyle = saved.FontStyle;
+                    watermarkFontValues.Label6HorizontalAlignment = saved.HorizontalAlignment;
+                    watermarkFontValues.Label6VerticalAlignment = saved.VerticalAlignment;
+                    watermarkFontValues.Label6Offset = saved.Offset;
+                    watermarkFontValues.Label6Mode = saved.Mode;
+                    break;
+
+                case 7:
+                    watermarkFontValues.Label7FontSize = saved.FontSize;
+                    watermarkFontValues.Label7FontColor = brush;
+                    watermarkFontValues.Label7FontFamily = font;
+                    watermarkFontValues.Label7FontWeight = weight;
+                    watermarkFontValues.Label7FontStyle = saved.FontStyle;
+                    watermarkFontValues.Label7HorizontalAlignment = saved.HorizontalAlignment;
+                    watermarkFontValues.Label7VerticalAlignment = saved.VerticalAlignment;
+                    watermarkFontValues.Label7Offset = saved.Offset;
+                    watermarkFontValues.Label7Mode = saved.Mode;
+                    break;
+
+                case 8:
+                    watermarkFontValues.Label8FontSize = saved.FontSize;
+                    watermarkFontValues.Label8FontColor = brush;
+                    watermarkFontValues.Label8FontFamily = font;
+                    watermarkFontValues.Label8FontWeight = weight;
+                    watermarkFontValues.Label8FontStyle = saved.FontStyle;
+                    watermarkFontValues.Label8HorizontalAlignment = saved.HorizontalAlignment;
+                    watermarkFontValues.Label8VerticalAlignment = saved.VerticalAlignment;
+                    watermarkFontValues.Label8Offset = saved.Offset;
+                    watermarkFontValues.Label8Mode = saved.Mode;
+                    break;
+
+                case 9:
+                    watermarkFontValues.Label9FontSize = saved.FontSize;
+                    watermarkFontValues.Label9FontColor = brush;
+                    watermarkFontValues.Label9FontFamily = font;
+                    watermarkFontValues.Label9FontWeight = weight;
+                    watermarkFontValues.Label9FontStyle = saved.FontStyle;
+                    watermarkFontValues.Label9HorizontalAlignment = saved.HorizontalAlignment;
+                    watermarkFontValues.Label9VerticalAlignment = saved.VerticalAlignment;
+                    watermarkFontValues.Label9Offset = saved.Offset;
+                    watermarkFontValues.Label9Mode = saved.Mode;
+                    break;
+            }
+        }
+        // Helper to route the slot index to the right watermarkFontValues property
+        private void SetLabelVisibility(int index, Visibility isVisible)
+        {
+            switch (index)
+            {
+                case 1: watermarkFontValues.Label1IsVisible = isVisible; break;
+                case 2: watermarkFontValues.Label2IsVisible = isVisible; break;
+                case 3: watermarkFontValues.Label3IsVisible = isVisible; break;
+                case 4: watermarkFontValues.Label4IsVisible = isVisible; break;
+                case 5: watermarkFontValues.Label5IsVisible = isVisible; break;
+                case 6: watermarkFontValues.Label6IsVisible = isVisible; break;
+                case 7: watermarkFontValues.Label7IsVisible = isVisible; break;
+                case 8: watermarkFontValues.Label8IsVisible = isVisible; break;
+                case 9: watermarkFontValues.Label9IsVisible = isVisible; break;
             }
         }
         private void OnGlobalFavouritesChanged(string changedPath)
@@ -389,39 +577,143 @@ namespace Vusic_Player.Pages
             DateTime? baseDateTime,
             double frameRate,
             double bpm,
-            int beatsPerBar, string customstatic = "")
+            int beatsPerBar,
+            string customstatic = "")
         {
-            if (labelIndex is >= 1 and <= 9)
+            if (labelIndex is < 1 or > 9 || _labels == null) return;
+
+            var targetLabel = _labels[labelIndex - 1];
+
+            // 1. Convert position string to WinUI alignments
+            var (hAlign, vAlign) = ParseAlignment(position);
+
+            // 2. Update watermarkFontValues so {x:Bind} pushes the changes to the UI
+            UpdateWatermarkFontValuesSlot(labelIndex, hAlign, vAlign, offset, mode, isVisible: Visibility.Visible);
+
+            // 3. Cache runtime metadata in Tag for the playback timer loop
+            targetLabel.Tag = new LabelInfo
             {
-                if (_labels == null) return;
-                var targetLabel = _labels[labelIndex - 1];
+                Format = format,
+                Offset = offset,
+                Mode = mode,
+                FrameRate = frameRate,
+                BPM = bpm,
+                BeatsPerBar = beatsPerBar
+            };
 
-                targetLabel.Tag = new LabelInfo
-                {
-                    Format = format,
-                    Offset = offset,
-                    Mode = mode,
-                    FrameRate = frameRate,
-                    BPM = bpm,
-                    BeatsPerBar = beatsPerBar
-                };
-
-                targetLabel.Visibility = Visibility.Visible;
-                if (mode == WatermarkMode.CustomStaticWatermark)
-                {
-
-                    targetLabel.Text = customstatic;
-                }
-                CheckAndManageTimer();
-                ApplyAlignment(targetLabel, position);
-
-                if (_playbackTimer != null && !_playbackTimer.IsEnabled)
-                {
-                    _playbackTimer.Start();
-                }
+            // 4. Handle custom static text if applicable
+            if (mode == WatermarkMode.CustomStaticWatermark)
+            {
+                targetLabel.Text = customstatic;
             }
+
+            // 5. Ensure the playback timer starts if dynamic labels exist
+            CheckAndManageTimer();
         }
 
+        private (HorizontalAlignment, VerticalAlignment) ParseAlignment(string position)
+        {
+            return position switch
+            {
+                "Top Left" => (HorizontalAlignment.Left, VerticalAlignment.Top),
+                "Top Center" => (HorizontalAlignment.Center, VerticalAlignment.Top),
+                "Top Right" => (HorizontalAlignment.Right, VerticalAlignment.Top),
+
+                "Center Left" or "Left" => (HorizontalAlignment.Left, VerticalAlignment.Center),
+                "Center" => (HorizontalAlignment.Center, VerticalAlignment.Center),
+                "Center Right" or "Right" => (HorizontalAlignment.Right, VerticalAlignment.Center),
+
+                "Bottom Left" => (HorizontalAlignment.Left, VerticalAlignment.Bottom),
+                "Bottom Center" => (HorizontalAlignment.Center, VerticalAlignment.Bottom),
+                "Bottom Right" => (HorizontalAlignment.Right, VerticalAlignment.Bottom),
+
+                _ => (HorizontalAlignment.Left, VerticalAlignment.Top)
+            };
+        }
+
+        private void UpdateWatermarkFontValuesSlot(
+            int slot,
+            HorizontalAlignment hAlign,
+            VerticalAlignment vAlign,
+            TimeSpan offset,
+            WatermarkMode mode,
+            Visibility isVisible)
+        {
+            switch (slot)
+            {
+                case 1:
+                    watermarkFontValues.Label1HorizontalAlignment = hAlign;
+                    watermarkFontValues.Label1VerticalAlignment = vAlign;
+                    watermarkFontValues.Label1Offset = offset;
+                    watermarkFontValues.Label1Mode = mode;
+                    watermarkFontValues.Label1IsVisible = isVisible;
+                    break;
+
+                case 2:
+                    watermarkFontValues.Label2HorizontalAlignment = hAlign;
+                    watermarkFontValues.Label2VerticalAlignment = vAlign;
+                    watermarkFontValues.Label2Offset = offset;
+                    watermarkFontValues.Label2Mode = mode;
+                    watermarkFontValues.Label2IsVisible = isVisible;
+                    break;
+
+                case 3:
+                    watermarkFontValues.Label3HorizontalAlignment = hAlign;
+                    watermarkFontValues.Label3VerticalAlignment = vAlign;
+                    watermarkFontValues.Label3Offset = offset;
+                    watermarkFontValues.Label3Mode = mode;
+                    watermarkFontValues.Label3IsVisible = isVisible;
+                    break;
+
+                case 4:
+                    watermarkFontValues.Label4HorizontalAlignment = hAlign;
+                    watermarkFontValues.Label4VerticalAlignment = vAlign;
+                    watermarkFontValues.Label4Offset = offset;
+                    watermarkFontValues.Label4Mode = mode;
+                    watermarkFontValues.Label4IsVisible = isVisible;
+                    break;
+
+                case 5:
+                    watermarkFontValues.Label5HorizontalAlignment = hAlign;
+                    watermarkFontValues.Label5VerticalAlignment = vAlign;
+                    watermarkFontValues.Label5Offset = offset;
+                    watermarkFontValues.Label5Mode = mode;
+                    watermarkFontValues.Label5IsVisible = isVisible;
+                    break;
+
+                case 6:
+                    watermarkFontValues.Label6HorizontalAlignment = hAlign;
+                    watermarkFontValues.Label6VerticalAlignment = vAlign;
+                    watermarkFontValues.Label6Offset = offset;
+                    watermarkFontValues.Label6Mode = mode;
+                    watermarkFontValues.Label6IsVisible = isVisible;
+                    break;
+
+                case 7:
+                    watermarkFontValues.Label7HorizontalAlignment = hAlign;
+                    watermarkFontValues.Label7VerticalAlignment = vAlign;
+                    watermarkFontValues.Label7Offset = offset;
+                    watermarkFontValues.Label7Mode = mode;
+                    watermarkFontValues.Label7IsVisible = isVisible;
+                    break;
+
+                case 8:
+                    watermarkFontValues.Label8HorizontalAlignment = hAlign;
+                    watermarkFontValues.Label8VerticalAlignment = vAlign;
+                    watermarkFontValues.Label8Offset = offset;
+                    watermarkFontValues.Label8Mode = mode;
+                    watermarkFontValues.Label8IsVisible = isVisible;
+                    break;
+
+                case 9:
+                    watermarkFontValues.Label9HorizontalAlignment = hAlign;
+                    watermarkFontValues.Label9VerticalAlignment = vAlign;
+                    watermarkFontValues.Label9Offset = offset;
+                    watermarkFontValues.Label9Mode = mode;
+                    watermarkFontValues.Label9IsVisible = isVisible;
+                    break;
+            }
+        }
         private void CheckAndManageTimer()
         {
             if (_labels == null) return;

@@ -48,6 +48,18 @@ namespace Vusic_Player.Pages.Views
         {
             this.Frame.Navigate(typeof(PlaylistView), NavigationToPlaylist.playlisttosend);
         }
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            expRecent.Visibility = currentSettings.Panel1VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
+            expPlaylists.Visibility = currentSettings.Panel2VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
+            txtDisplay1.Visibility = currentSettings.Panel2VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
+            txtDisplay2.Visibility = currentSettings.Panel3VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
+            txtDisplay3.Visibility = currentSettings.Panel4VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
+            expRecommend.Visibility = currentSettings.Panel3VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
+            expGenres.Visibility = currentSettings.Panel4VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
+            base.OnNavigatedTo(e);
+        }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
 

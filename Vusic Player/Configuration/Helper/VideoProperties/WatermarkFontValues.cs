@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using Vusic_Player;
 using Vusic_Player.Configuration.ClassModels;
@@ -16,7 +17,7 @@ namespace Vusic_Player.Configuration.Playback
 {
     public static class WatermarkSerializationHelpers
     {
-        public static string ToHex(this Brush brush)
+        public static string ToHex(this Brush? brush)
         {
             if (brush is SolidColorBrush scb)
             {
@@ -25,23 +26,35 @@ namespace Vusic_Player.Configuration.Playback
             return "#FFFFFFFF";
         }
 
-        public static SolidColorBrush FromHex(string hex)
+        public static SolidColorBrush FromHex(string? hex)
         {
+            if (string.IsNullOrWhiteSpace(hex))
+                return new SolidColorBrush(Colors.White);
+
+            hex = hex.Trim().TrimStart('#');
+
             try
             {
-                hex = hex.Replace("#", string.Empty);
                 byte a = 255;
-                int pos = 0;
+                byte r, g, b;
 
-                if (hex.Length == 8)
+                if (hex.Length == 8) // AARRGGBB
                 {
-                    a = Convert.ToByte(hex.Substring(pos, 2), 16);
-                    pos += 2;
+                    a = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                    r = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                    g = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                    b = byte.Parse(hex.Substring(6, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                 }
-
-                byte r = Convert.ToByte(hex.Substring(pos, 2), 16);
-                byte g = Convert.ToByte(hex.Substring(pos + 2, 2), 16);
-                byte b = Convert.ToByte(hex.Substring(pos + 4, 2), 16);
+                else if (hex.Length == 6) // RRGGBB
+                {
+                    r = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                    g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                    b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    return new SolidColorBrush(Colors.White);
+                }
 
                 return new SolidColorBrush(Color.FromArgb(a, r, g, b));
             }

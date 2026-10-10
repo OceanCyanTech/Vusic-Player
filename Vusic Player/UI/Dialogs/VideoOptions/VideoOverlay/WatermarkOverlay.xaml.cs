@@ -15,6 +15,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.VideoProperties;
@@ -67,8 +68,9 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
             this.Loaded += WatermarkOverlay_Loaded;
         }
 
-        private void WatermarkOverlay_Loaded(object sender, RoutedEventArgs e)
+        private async void WatermarkOverlay_Loaded(object sender, RoutedEventArgs e)
         {
+  
             LoadSettings();
         }
 
@@ -87,7 +89,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
         }
         WatermarkFontValues watermarkFontValues => WatermarkFontValues.Instance;
 
-        ObservableCollection<TimestampWatermark> timestamplabels = new ObservableCollection<TimestampWatermark>();
+        ObservableCollection<TimestampWatermark> timestamplabels = WatermarkFontValues.Instance.TimestampWatermarksLabels;
         List<string> AlreadyOccupiedPositions = new List<string>();
         List<string> PresetPositions = new List<string>();
         private string FormattedString(int index)
@@ -294,7 +296,50 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
 
                     timestamplabels.Add(newLabel);
                     var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                    currentSettings.TimestampWatermarksLabels = new ObservableCollection<TimestampWatermark>(timestamplabels);
+                    var tempObservableCollection = new ObservableCollection<WatermarkLabelSettingsModel>();
+
+                    foreach (var timestamp in timestamplabels)
+                    { 
+                  
+                        // Convert Position string (e.g., "Top Left") to WinUI Alignments
+                        var (hAlign, vAlign) = timestamp.Position switch
+                        {
+                            "Top Left" => (HorizontalAlignment.Left, VerticalAlignment.Top),
+                            "Top Center" => (HorizontalAlignment.Center, VerticalAlignment.Top),
+                            "Top Right" => (HorizontalAlignment.Right, VerticalAlignment.Top),
+
+                            "Center Left" or "Left" => (HorizontalAlignment.Left, VerticalAlignment.Center),
+                            "Center" => (HorizontalAlignment.Center, VerticalAlignment.Center),
+                            "Center Right" or "Right" => (HorizontalAlignment.Right, VerticalAlignment.Center),
+
+                            "Bottom Left" => (HorizontalAlignment.Left, VerticalAlignment.Bottom),
+                            "Bottom Center" => (HorizontalAlignment.Center, VerticalAlignment.Bottom),
+                            "Bottom Right" => (HorizontalAlignment.Right, VerticalAlignment.Bottom),
+
+                            _ => (HorizontalAlignment.Left, VerticalAlignment.Top)
+                        };
+
+                        // Convert Brush to Hex string
+                        string hexColor = timestamp.FontColor != null
+                            ? timestamp.FontColor.ToHex()
+                            : "#FFFFFFFF";
+
+                        tempObservableCollection.Add(new WatermarkLabelSettingsModel
+                        {
+                            IsVisible = Visibility.Visible,
+                            FontSize = timestamp.FontSize,
+                            HexColor = hexColor,
+                            FontFamily = string.IsNullOrWhiteSpace(timestamp.FontName) ? "Segoe UI" : timestamp.FontName,
+                            Offset = timestamp.Offset,
+                            HorizontalAlignment = hAlign,
+                            VerticalAlignment = vAlign,
+                            Mode = timestamp.Mode
+                        });
+                    }
+
+                    currentSettings.TimestampWatermarksLabels = tempObservableCollection;
+
+                    // Persist the updated configuration to disk
                     await SettingsLoader.SaveSettingsAsync(currentSettings);
                     _isUpdatingUi = true;
                     try
@@ -393,6 +438,75 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
             }
             return -1;
         }
+        private System.Timers.Timer? _saveDebounceTimer;
+        private void RequestSaveSettings()
+        {
+            // Don't save if UI is just reflecting model data (e.g. during selection changes)
+            if (_isUpdatingUi) return;
+
+            // Reset the debounce timer (waits 400ms after the last edit before writing to disk)
+            _saveDebounceTimer?.Stop();
+            _saveDebounceTimer?.Dispose();
+
+            _saveDebounceTimer = new System.Timers.Timer(400) { AutoReset = false };
+            _saveDebounceTimer.Elapsed += async (_, _) =>
+            {
+                // Marshaling back to UI thread to safely read ObservableCollection and controls
+                DispatcherQueue.TryEnqueue(async () =>
+                {
+                    await SaveCurrentWatermarkSettingsAsync();
+                });
+            };
+            _saveDebounceTimer.Start();
+        }
+        private async Task SaveCurrentWatermarkSettingsAsync()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if (currentSettings == null) return;
+
+            // Only save if the user has opted to save values
+            if (chkSaveWatermarkValues.IsChecked != true) return;
+
+            var tempCollection = new ObservableCollection<WatermarkLabelSettingsModel>();
+
+            foreach (var timestamp in timestamplabels)
+            {
+                var (hAlign, vAlign) = timestamp.Position switch
+                {
+                    "Top Left" => (HorizontalAlignment.Left, VerticalAlignment.Top),
+                    "Top Center" => (HorizontalAlignment.Center, VerticalAlignment.Top),
+                    "Top Right" => (HorizontalAlignment.Right, VerticalAlignment.Top),
+                    "Center Left" or "Left" => (HorizontalAlignment.Left, VerticalAlignment.Center),
+                    "Center" => (HorizontalAlignment.Center, VerticalAlignment.Center),
+                    "Center Right" or "Right" => (HorizontalAlignment.Right, VerticalAlignment.Center),
+                    "Bottom Left" => (HorizontalAlignment.Left, VerticalAlignment.Bottom),
+                    "Bottom Center" => (HorizontalAlignment.Center, VerticalAlignment.Bottom),
+                    "Bottom Right" => (HorizontalAlignment.Right, VerticalAlignment.Bottom),
+                    _ => (HorizontalAlignment.Left, VerticalAlignment.Top)
+                };
+
+                string hexColor = timestamp.FontColor != null
+                    ? timestamp.FontColor.ToHex()
+                    : "#FFFFFFFF";
+
+                tempCollection.Add(new WatermarkLabelSettingsModel
+                {
+                    IsVisible = timestamp.IsShown ? Visibility.Visible: Visibility.Collapsed ,
+                    FontSize = timestamp.FontSize,
+                    HexColor = hexColor,
+                    FontFamily = string.IsNullOrWhiteSpace(timestamp.FontName) ? "Segoe UI" : timestamp.FontName,
+                    FontWeight = timestamp.FontWeight.Weight,
+                    FontStyle = timestamp.FontStyle,
+                    Offset = timestamp.Offset,
+                    HorizontalAlignment = hAlign,
+                    VerticalAlignment = vAlign,
+                    Mode = timestamp.Mode
+                });
+            }
+
+            currentSettings.TimestampWatermarksLabels = tempCollection;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
         private void cmbFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstViewAddedTimeCodeLabels.SelectedItems.Count != 1) return;
@@ -415,19 +529,10 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     case 8: watermarkFontValues.Label8FontFamily = fontName; break;
                     case 9: watermarkFontValues.Label9FontFamily = fontName; break;
                 }
+                RequestSaveSettings();
             }
         }
-        private async void LoadSettings()
-        {
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            chkSaveWatermarkValues.IsChecked = currentSettings.IsSavingWatermarkValues;
-            chkShowWatermarkValues.IsChecked = currentSettings.IsShowingWatermarkValues;
-            if (currentSettings.IsSavingWatermarkValues == true)
-            {
-                timestamplabels = new ObservableCollection<TimestampWatermark>(currentSettings.TimestampWatermarksLabels);
-             //   timestamplabels = new ObservableCollection<TimestampWatermark>(watermarkFontValues.TimestampWatermarksLabels);
-            }
-        }
+       
         private async void SaveSettings()
         {
             //var currentSettings = await SettingsLoader.LoadSettingsAsync();
@@ -446,7 +551,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
             {
                 double fontSize = args.NewValue;
                 // If your TimestampWatermark has a FontSize property, assign it here:
-                // timestamp.FontSize = fontSize;
+                timestamp.FontSize = fontSize;
 
                 int index = GetSelectedLabelIndex(timestamp.Label);
                 switch (index)
@@ -461,7 +566,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     case 8: watermarkFontValues.Label8FontSize = fontSize; break;
                     case 9: watermarkFontValues.Label9FontSize = fontSize; break;
                 }
-                SaveSettings();
+                RequestSaveSettings();
             }
         }
 
@@ -474,7 +579,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                 var brush = new SolidColorBrush(args.NewColor);
                 // If your TimestampWatermark has a FontColor property, assign it here:
                 // timestamp.FontColor = brush;
-
+                timestamp.FontColor = brush;
                 int index = GetSelectedLabelIndex(timestamp.Label);
                 switch (index)
                 {
@@ -488,7 +593,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     case 8: watermarkFontValues.Label8FontColor = brush; break;
                     case 9: watermarkFontValues.Label9FontColor = brush; break;
                 }
-                SaveSettings();
+                RequestSaveSettings();
             }
         }
 
@@ -508,7 +613,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                 Debug.WriteLine(Format + " is the selected format");
                 var mode = WatermarkModeObtain();
                 Screen.CallWatermark(index, timestamp.Position, Format, TimeSpan.FromMilliseconds(numOffset.Value), mode, DateTime.Now);
-                SaveSettings();
+                RequestSaveSettings();
             }
         }
         private void txtWatermarkCustomText_TextChanged(object sender, TextChangedEventArgs e)
@@ -533,6 +638,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     selectedTimestamp.BeatsPerBar,
                     selectedTimestamp.Label
                 );
+                RequestSaveSettings();
             }
         }
         private void txtCustomFormat_TextChanged(object sender, TextChangedEventArgs e)
@@ -552,6 +658,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
 
                     var mode = WatermarkModeObtain();
                     Screen.CallWatermark(index, timestamp.Position, txtCustomFormat.Text, TimeSpan.FromMilliseconds(numOffset.Value), mode, DateTime.Now);
+                    RequestSaveSettings();
                 }
             }
             else
@@ -572,7 +679,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                 var fontweight = tglBold.IsChecked ?? false ? FontWeights.Bold : FontWeights.Normal;
                 // If your TimestampWatermark has a FontColor property, assign it here:
                 // timestamp.FontColor = brush;
-
+                timestamp.FontWeight = fontweight;
                 int index = GetSelectedLabelIndex(timestamp.Label);
                 switch (index)
                 {
@@ -586,6 +693,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     case 8: watermarkFontValues.Label8FontWeight = fontweight; break;
                     case 9: watermarkFontValues.Label9FontWeight = fontweight; break;
                 }
+                RequestSaveSettings();
             }
         }
 
@@ -597,7 +705,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
             {
                 var fontstyle = tglItalics.IsChecked ?? false ? Windows.UI.Text.FontStyle.Italic : Windows.UI.Text.FontStyle.Normal;
                 // timestamp.FontColor = brush;
-
+                timestamp.FontStyle = fontstyle;
                 int index = GetSelectedLabelIndex(timestamp.Label);
                 switch (index)
                 {
@@ -611,6 +719,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     case 8: watermarkFontValues.Label8FontStyle = fontstyle; break;
                     case 9: watermarkFontValues.Label9FontStyle = fontstyle; break;
                 }
+                RequestSaveSettings();
             }
         }
 
@@ -621,6 +730,8 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
 
                 int index = GetSelectedLabelIndex(timestamp.Label);
                 string Format = FormattedString(cmbFormat.SelectedIndex);
+                TimeSpan newOffset = TimeSpan.FromMilliseconds(args.NewValue);
+                timestamp.Offset = newOffset;
                 if (Format == "Custom Format")
                 {
                     return;
@@ -628,6 +739,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                 Debug.WriteLine(Format + " is the selected format");
                 var mode = WatermarkModeObtain();
                 Screen.CallWatermark(index, timestamp.Position, Format, TimeSpan.FromMilliseconds(numOffset.Value), mode, DateTime.Now);
+                RequestSaveSettings();
             }
         }
         private double GetSelectedFrameRate()
@@ -715,7 +827,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     selectedTimestamp.BPM,
                     selectedTimestamp.BeatsPerBar,
                     selectedTimestamp.Label // Pass custom text string
-                );
+                ); RequestSaveSettings();
             }
         }
         private bool _isUpdatingUi = false;
@@ -781,25 +893,120 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     selectedTimestamp.Mode,
                     DateTime.Now
                 );
+                RequestSaveSettings();
             }
         }
 
-      
+        private void LoadOthers()
+        {
 
-        private async void chkSaveWatermarkValues_Checked(object sender, RoutedEventArgs e)
+        }
+        private async void LoadSettings()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            if (chkSaveWatermarkValues.IsChecked == false)
+            if (currentSettings == null) return;
+
+            _isUpdatingUi = true;
+            try
             {
-                currentSettings.IsSavingWatermarkValues = false;
+                chkShowWatermarkValues.IsChecked = currentSettings.IsShowingWatermarkValues;
+                chkSaveWatermarkValues.IsChecked = currentSettings.IsSavingWatermarkValues;
             }
-            else
+            finally
             {
-                currentSettings.IsSavingWatermarkValues = true;
+                _isUpdatingUi = false;
             }
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+            if (currentSettings.IsSavingWatermarkValues == true && currentSettings.TimestampWatermarksLabels != null)
+            {
+                timestamplabels.Clear();
+                AlreadyOccupiedPositions.Clear();
+
+                int labelIndex = 1;
+
+                foreach (var savedModel in currentSettings.TimestampWatermarksLabels)
+                {
+                    string position = (savedModel.HorizontalAlignment, savedModel.VerticalAlignment) switch
+                    {
+                        (HorizontalAlignment.Left, VerticalAlignment.Top) => "Top Left",
+                        (HorizontalAlignment.Center, VerticalAlignment.Top) => "Top Center",
+                        (HorizontalAlignment.Right, VerticalAlignment.Top) => "Top Right",
+
+                        (HorizontalAlignment.Left, VerticalAlignment.Center) => "Center Left",
+                        (HorizontalAlignment.Center, VerticalAlignment.Center) => "Center",
+                        (HorizontalAlignment.Right, VerticalAlignment.Center) => "Center Right",
+
+                        (HorizontalAlignment.Left, VerticalAlignment.Bottom) => "Bottom Left",
+                        (HorizontalAlignment.Center, VerticalAlignment.Bottom) => "Bottom Center",
+                        (HorizontalAlignment.Right, VerticalAlignment.Bottom) => "Bottom Right",
+
+                        _ => "Top Left"
+                    };
+
+                    int posIndex = GetPositionIndex(position);
+
+                    var watermark = new TimestampWatermark
+                    {
+                        Label = $"Timestamp {labelIndex}",
+                        Position = position,
+                        PositionIndex = posIndex,
+                        FontName = savedModel.FontFamily,
+                        FontSize = savedModel.FontSize,
+                        FontColor = WatermarkSerializationHelpers.FromHex(savedModel.HexColor),
+                        FontWeight = new Windows.UI.Text.FontWeight { Weight = savedModel.FontWeight },
+                        FontStyle = savedModel.FontStyle,
+                        Offset = savedModel.Offset,
+                        Mode = savedModel.Mode,
+                        ModeIndex = (int)savedModel.Mode,
+                        Format = FormattedString((int)savedModel.Mode)
+                    };
+
+                    timestamplabels.Add(watermark);
+
+                    AlreadyOccupiedPositions.Add(position);
+                    PresetPositions.Remove(position);
+
+                    labelIndex++;
+                }
+
+                index = labelIndex;
+
+                if (timestamplabels.Count > 0)
+                {
+                    lstViewAddedTimeCodeLabels.SelectedIndex = 0;
+                }
+            }
         }
 
+        // Hook this to Click="chkSaveWatermarkValues_Click" (or both Checked and Unchecked)
+        private async void chkSaveWatermarkValues_Checked(object sender, RoutedEventArgs e)
+
+        {
+
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+            if (chkSaveWatermarkValues.IsChecked == false)
+
+            {
+
+                currentSettings.IsSavingWatermarkValues = false;
+                currentSettings.TimestampWatermarksLabels.Clear();
+            }
+
+            else
+
+            {
+
+                currentSettings.IsSavingWatermarkValues = true;
+
+
+
+
+            }
+
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+        }
         private async void chkShowWatermarkValues_Checked(object sender, RoutedEventArgs e)
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();

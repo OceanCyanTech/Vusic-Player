@@ -35,9 +35,21 @@ namespace Vusic_Player.Configuration.UserSettings
         public ObservableCollection<FavouriteItems> Favourites { get; set; } = new();
         public ObservableCollection<MediaOptions> VideoFilesOptions { get; set; } = new();
         public WatermarkSettingsModel Watermark { get; set; } = new();
-        public ObservableCollection<TimestampWatermark> TimestampWatermarksLabels { get; set; } = new();
+        public ObservableCollection<WatermarkLabelSettingsModel> TimestampWatermarksLabels { get; set; } = new();
 
         public bool IsSavingWatermarkValues { get; set; } = false;
+        public bool Panel1VisibilityHome { get; set; } = true;
+        public bool Panel2VisibilityHome { get; set; } = true;
+        public bool Panel3VisibilityHome { get; set; } = true;
+        public bool Panel4VisibilityHome { get; set; } = true;
+        public bool Panel1VisibilityMusic { get; set; } = true;
+        public bool Panel2VisibilityMusic { get; set; } = true;
+        public bool Panel3VisibilityMusic { get; set; } = true;
+        public bool Panel4VisibilityMusic { get; set; } = true;
+        public bool Panel1VisibilityVideo { get; set; } = true;
+        public bool Panel2VisibilityVideo { get; set; } = true;
+        public bool Panel3VisibilityVideo { get; set; } = true;
+        public bool Panel4VisibilityVideo { get; set; } = true;
         public bool IsShowingWatermarkValues { get; set; } = true;
         public bool IsTimeStampEnabledOnSnapshot { get; set; } = false;
         public int ArtistView_selectorbarindex { get; set; } = 0;

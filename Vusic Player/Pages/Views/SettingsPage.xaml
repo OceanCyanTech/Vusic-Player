@@ -103,6 +103,9 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Text="Music Options" Style="{StaticResource TitleTextBlockStyle}"/>
                         <MenuFlyoutSeparator Grid.Row="1"/>
@@ -119,9 +122,22 @@
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
+                        <MenuFlyoutSeparator Grid.Row="5"/>
+                        <TextBlock Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="6"/>
+                        <TextBlock Text="Hide or show panels in the music library page." Grid.Row="7"/>
+                        <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="8">
+                            <CheckBox x:Name="chkMusicRecent" Content="Recent Music" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
+                            <CheckBox x:Name="chkMusicPlaylists" Content="Playlists" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
+                            <CheckBox x:Name="chkMusicInstantPlaylists" Content="Instant Playlists" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
+                            <CheckBox x:Name="chkMusicGenreRecommendations" Content="Genre Recommendations" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
+                        </StackPanel>
                     </Grid>
                     <Grid Name="grdVideoOptions" RowSpacing="30" Visibility="Collapsed">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -181,7 +197,7 @@
                             <MenuFlyoutSeparator />
 
                         </StackPanel>
-                    <TextBlock Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="4"/>
+                        <TextBlock Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="4"/>
                         <TextBlock Text="Permanently delete all playlists you've created." Grid.Row="5"/>
                         <Button Grid.Row="6"  Content="Delete all Playlists">
                             <Button.Flyout>
@@ -209,9 +225,38 @@
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
-
+                        <MenuFlyoutSeparator Grid.Row="11"/>
+                        <TextBlock Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="12"/>
+                        <TextBlock Text="Hide or show panels in the video library page." Grid.Row="13"/>
+                        <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="14">
+                            <CheckBox x:Name="chkVideoContinueRecent" Content="Continue Playing and Recent Videos" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
+                            <CheckBox x:Name="chkVideoRecommended" Content="Recommended Videos" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
+                            <CheckBox x:Name="chkVideoPlaylists" Content="Playlists" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
+                            <CheckBox x:Name="chkVideoShows" Content="Shows" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
+                        </StackPanel>
                     </Grid>
-
+                    <Grid Name="grdHomeOptions" RowSpacing="30" Visibility="Visible">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Home Page Options" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <MenuFlyoutSeparator Grid.Row="1"/>
+                        <TextBlock Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                        <TextBlock Text="Hide or show panels in the home page." Grid.Row="3"/>
+                        <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="4">
+                            <CheckBox x:Name="chkHomeContinueRecent" Content="Continue Playing and Recent Videos" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
+                            <CheckBox x:Name="chkHomeRecentMusic" Content="Recent Music" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
+                            <CheckBox x:Name="chkHomeMusicMix" Content="Music Mix" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
+                            <CheckBox x:Name="chkHomeFavouritesRecommendations" Content="Favourites Recommendations" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </ScrollViewer>
         </NavigationView>

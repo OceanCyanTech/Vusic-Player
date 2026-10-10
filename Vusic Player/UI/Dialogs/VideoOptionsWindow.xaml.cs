@@ -228,7 +228,13 @@ where T : DependencyObject
             MainWindow.ShowWindow();
             _appWindow.Hide();
         }
-
+        public static void KillDialog()
+        {
+            if (_instance != null)
+            {
+                _instance.Close();
+            }
+        }
         bool TrySetAcrylicBackdrop(bool useAcrylicThin)
         {
             if (DesktopAcrylicController.IsSupported())

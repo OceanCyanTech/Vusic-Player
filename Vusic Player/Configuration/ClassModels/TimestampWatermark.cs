@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Media;
+﻿using Microsoft.UI.Text;
+using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +8,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Vusic_Player.Configuration.Playback;
+using Windows.UI.Text;
+using FontStyle = Windows.UI.Text.FontStyle;
+using FontWeight = System.Windows.FontWeight;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -17,6 +22,8 @@ namespace Vusic_Player.Configuration.ClassModels
         private TimeSpan _endTime;
         private string _startString = "00:00:00.000";
         private string _format = @"hh\:mm\:ss\:ff";
+        private Windows.UI.Text.FontWeight _fontWeight = Microsoft.UI.Text.FontWeights.Normal;
+        private FontStyle _fontStyle   = FontStyle.Normal;
         private int _formatindex = 0;
         private int _modeindex = 0;
         private int _positionindex = 0;
@@ -175,7 +182,16 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _format;
             set => SetProperty(ref _format, value);
         }
-
+        public Windows.UI.Text.FontWeight FontWeight
+        {
+            get => _fontWeight;
+            set => SetProperty(ref _fontWeight, value);
+        }
+        public FontStyle FontStyle
+        {
+            get => _fontStyle;
+            set => SetProperty(ref _fontStyle, value);
+        }
         public int FormatIndex
         {
             get => _formatindex;

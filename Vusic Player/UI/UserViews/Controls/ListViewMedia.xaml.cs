@@ -422,20 +422,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             }
 
             //Favourites 
-            var mnftAddtoFav = flyout?.Items
-    .OfType<MenuFlyoutItem>()
-    .FirstOrDefault(x => x.Name == "mnftAddToFavourites");
-
-            if (mnftAddtoFav == null) return;
-            if (selectedsong.IsFavourite == true)
-            {
-                mnftAddtoFav.Text = "Remove from Favourites";
-            }
-            else
-            {
-
-                mnftAddtoFav.Text = "Add to Favourites";
-            }
+            
         }
 
         private async void PlaySelection(SongModel selectedSong)
@@ -1761,5 +1748,21 @@ namespace Vusic_Player.UI.UserViews.Controls
             await Task.Delay(2000);
             ttAddedtoQueue.IsOpen = false;
         }
+
+        private void mnftGoToFileLocation_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is MenuFlyoutItem mnft && mnft.DataContext is SongModel song)
+            {
+                OpenFileLocation.PathSelect(song.FilePath);
+            }
+        }
+        private void mnftCopyFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is SongModel song)
+            {
+                CopyToClipboard.CopyStringToClipboard(song.FilePath);
+            }
+        }
+
     }
 }

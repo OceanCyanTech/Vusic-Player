@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.FileSystem;
@@ -817,13 +818,49 @@ namespace Vusic_Player.Pages.Views
             stkNoPlaylists.Visibility = (playlistsAll.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
             AllPlaylistGroupedCollection.Visibility = (playlistsAll.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
         }
-
-        private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
+        bool iscreating = false;
+        private async void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
-            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist");
-            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);
+            Debug.WriteLine("BTNNEWPLAYLIST");
+            OceanContentDialog.PrimaryRequested += (async () =>
+            {
+                if (iscreating) return;
+                try
+                {
+                    iscreating = true;
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    string baseName = PlInstance.PlaylistName.Trim();
+
+                    if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                    string finalName = baseName;
+                    int counter = 1;
+                    while (currentSettings.SavedPlaylists.Any(p =>
+                        string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        finalName = $"{baseName} ({counter++})";
+                    }
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = PlInstance.Genre, plthumb = PlInstance.PlCover, PlaylistId = PlInstance.PlaylistID, DateCreation = PlInstance.CreationDate, SongsPaths = new HashSet<string>(PlInstance.MediaPaths), Thumbnail = PlInstance.Thumbnail };
+                    Debug.WriteLine(newplaylist.PlaylistName);
+                    PlInstance.PlaylistsMaster.Add(newplaylist);
+
+                    currentSettings.SavedPlaylists.Add(newplaylist);
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    OceanContentDialog.HideDlg();
+                    MainWindow.ShowWindow();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("An unexpected error occured: " + ex.Message, "PlaylistCreate.MusicLibPage", Logger.LogLevelType.Error);
+                }
+                finally
+                {
+                    iscreating = false;
+                }
+            });
+
         }
 
         private void OceanContentDialog_PrimaryRequested()
@@ -856,6 +893,7 @@ namespace Vusic_Player.Pages.Views
             AllShowsGroupedCollection.Visibility = (showsAll.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
         }
         ShowCreationValues Instance => ShowCreationValues.Instance;
+        PlaylistCreationValues PlInstance => PlaylistCreationValues.Instance;
 
         private void btnNewShow_Click(object sender, RoutedEventArgs e)
         {
