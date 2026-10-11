@@ -66,7 +66,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
         }
         private async Task LoadRecommendations()
         {
-            var videosongs = FilesInDatabase.rawSongs.Where(p => VideoExtensions.List.Contains(Path.GetExtension(p.FilePath).ToLower()));
+            var videosongs = FilesInDatabase.rawSongs.Where(p => File.Exists(p.FilePath) && VideoExtensions.List.Contains(Path.GetExtension(p.FilePath).ToLower()));
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var donotshowrecommendations = currentSettings.DoNotShowRecommendations;
             var excludedPaths = currentSettings.DoNotShowRecommendations?
@@ -317,6 +317,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 
         private void btnRefreshRecommendations_Click(object sender, RoutedEventArgs e)
         {
+            RecommendedVideoList.Clear();
             LoadSettings();
         }
 
@@ -339,5 +340,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                 QueueService.VusicQueueNext.Add(new SongModel { FilePath = vd.FilePath, Title = vd.FileName});
             }
         }
+
+        
     }
 }

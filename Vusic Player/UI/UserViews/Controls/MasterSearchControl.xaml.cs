@@ -125,9 +125,12 @@ namespace Vusic_Player.UI.UserViews.Controls
             var rawMediaArtist = rawMedia.Where(p => p.Title?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true).Take(count).ToList();
             foreach (var item in rawMediaArtist)
             {
-                var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
-                var imgicon = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "musicnoteicon" : "default";
-                returnableobservable.Add(new MasterSearchModel { ImageThumbnail = $"ms-appx:///Assets/{imgicon}.png", ResultMain = item.Title, SubInformation = subinfo, FilePath = item.FilePath });
+                if (File.Exists(item.FilePath))
+                {
+                    var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
+                    var imgicon = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "musicnoteicon" : "default";
+                    returnableobservable.Add(new MasterSearchModel { ImageThumbnail = $"ms-appx:///Assets/{imgicon}.png", ResultMain = item.Title, SubInformation = subinfo, FilePath = item.FilePath });
+                }
             }
 
             //if (rawMediaTitleBoolCheck)

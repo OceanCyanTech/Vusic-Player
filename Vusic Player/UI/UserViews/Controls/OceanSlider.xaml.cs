@@ -31,9 +31,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         public OceanSlider()
         {
             this.InitializeComponent();
-            //chapt.Add(new ChapterModel { ChapterTitle = "Intro", Starttime = 0 });
-            //chapt.Add(new ChapterModel { ChapterTitle = "Exposition", Starttime = 100000000 });
-            //chapt.Add(new ChapterModel { ChapterTitle = "Rising Action", Starttime = 800000000 });
+            this.IsTabStop = false;
         }
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(OceanSlider),
@@ -174,6 +172,10 @@ namespace Vusic_Player.UI.UserViews.Controls
             VisualStateManager.GoToState(this, "Normal", true);
             InputLayer.ReleasePointerCapture(e.Pointer);
             DragCompleted?.Invoke();
+            if (this.XamlRoot?.Content is UIElement rootElement)
+            {
+                rootElement.Focus(FocusState.Programmatic);
+            }
         }
 
         public bool IsTooltipEnabled { get; set; } = true; // Default to true for the time slider
@@ -445,5 +447,14 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
 
         #endregion
+
+        private void ControlRoot_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Space)
+            {
+                PlayerService.PlayPause();
+                e.Handled = true; // Stop any internal slider handling
+            }
+        }
     }
 }

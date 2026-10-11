@@ -39,6 +39,9 @@ namespace Vusic_Player.Configuration.UserSettings
 
         public bool IsSavingWatermarkValues { get; set; } = false;
         public bool Panel1VisibilityHome { get; set; } = true;
+        public double SkipAhead { get; set; } = 10;
+        public double SkipBack { get; set; } = 10;
+        public string Theme { get; set; } = "Ocean";
         public bool Panel2VisibilityHome { get; set; } = true;
         public bool Panel3VisibilityHome { get; set; } = true;
         public bool Panel4VisibilityHome { get; set; } = true;

@@ -272,19 +272,22 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 {
                     if (!AllSongs.Any(s => s.FilePath == path))
                     {
-                        var file = await StorageFile.GetFileFromPathAsync(path);
-                        var musicProps = await file.Properties.GetMusicPropertiesAsync();
-
-                        string duration = FormatTimeSpanDuration.Format(musicProps.Duration);
-                  
-                        string fileExtension = file.FileType.ToLowerInvariant();
-                        AllSongs.Add(new SongModel
+                        if (File.Exists(path))
                         {
-                            Title = Path.GetFileNameWithoutExtension(file.Path),
-                            SongDuration = musicProps.Duration,
-                            FilePath = file.Path,
+                            var file = await StorageFile.GetFileFromPathAsync(path);
+                            var musicProps = await file.Properties.GetMusicPropertiesAsync();
 
-                        });
+                            string duration = FormatTimeSpanDuration.Format(musicProps.Duration);
+
+                            string fileExtension = file.FileType.ToLowerInvariant();
+                            AllSongs.Add(new SongModel
+                            {
+                                Title = Path.GetFileNameWithoutExtension(file.Path),
+                                SongDuration = musicProps.Duration,
+                                FilePath = file.Path,
+
+                            });
+                        }
                     }
                 }
                 lstViewPlaylistAddedSongs.ItemsSource = AllSongs;

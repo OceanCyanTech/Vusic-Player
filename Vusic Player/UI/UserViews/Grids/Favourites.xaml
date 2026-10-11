@@ -16,6 +16,7 @@
         <Grid Grid.Column="0" Visibility="Collapsed" Margin="15, 0" Name="grdRecents">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="20">
@@ -29,66 +30,67 @@
                     </Button>
                 </StackPanel>
             </StackPanel>
-            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Stretch"
- x:Name="grdvFavourites" SelectionMode="Single" IsItemClickEnabled="True"
-ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" SelectionChanged="grdvFavourites_SelectionChanged">
+            <Button Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click" CornerRadius="12" >
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="20" Source="/Assets/play.png"/>
+                    <TextBlock Text="Play all"/>
+                </StackPanel>
+            </Button>
+            <GridView Grid.Row="2" Visibility="Visible"  VerticalAlignment="Stretch"
+ x:Name="grdvFavourites" SelectionMode="Single" IsItemClickEnabled="True" ItemsSource="{x:Bind FinalList, Mode=OneWay}"
+ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" >
                 <GridView.ItemTemplate>
-                    <DataTemplate >
-                        <StackPanel ToolTipService.ToolTip="{Binding FileName}" Orientation="Vertical" VerticalAlignment="Stretch"
-                         
-      >
-                            <ani:Implicit.Animations>
-                                <ani:ImplicitAnimationSet>
-                                    <ani:ScaleAnimation Duration="0:0:0.2" />
-                                </ani:ImplicitAnimationSet>
-                            </ani:Implicit.Animations>
-                            <Grid Width="250" Height="150" VerticalAlignment="Stretch">
-                                <Grid.ContextFlyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Resume from previous playback">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftStartFirstRec" Text="Play from start">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftRemoveRec" Text="Remove from Continue Playing">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftAddToFavRec" Text="Add to Favourites">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftFileInfoRec" Text= "File Info">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftOpenFileLocRec" Text= "Open file location">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE838;"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftCopyFilePathRec" Text="Copy File Path">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE8C8;"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                    </MenuFlyout>
-                                </Grid.ContextFlyout>
+                    <DataTemplate>
+                        <Grid Width="150" Height="150" 
+                  CornerRadius="6"
+                    ToolTipService.ToolTip="{Binding FileName}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Play" Click="mnftPlay_Click" Name="mnftPlay">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8DA;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Remove from Favourites" Click="mnftRemoveFromFav_Click" Name="mnftRemoveFromFav" Icon="Remove" />
+                                    <MenuFlyoutItem Text="Go to File Location" Click="mnftGoToFileLocation_Click" >
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8DA;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Add to Queue" Click="mnftAddtoQueue_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8DA;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="View File Info" Click="mnftViewFileInfo_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE946;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
 
-                                <Image Source="{Binding Thumbnail}" Width="250" Height="150" Stretch="UniformToFill"/>
+                            <!-- Thumbnail Image -->
+                            <Border CornerRadius="6">
+                                <Image Source="{Binding Thumbnail}" 
+                       Width="150" 
+                                       MaxHeight="90"
+                       Stretch="Uniform" 
+                       HorizontalAlignment="Center" />
+                            </Border>
 
-
-                            </Grid>
-                            <TextBlock Style="{StaticResource BodyLargeStrongTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" TextWrapping="Wrap" />
-                        </StackPanel>
+                            <!-- Text Block with 2-line wrap + ellipsis -->
+                            <TextBlock Text="{Binding FileName}" 
+                       TextWrapping="Wrap" 
+                       MaxLines="2" Grid.Row="1"
+                       TextTrimming="CharacterEllipsis"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Stretch" />
+                        </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
@@ -100,7 +102,6 @@ ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" SelectionChanged="grdvFavou
                     <Image Width="90" Source="/Assets/favicon.png"></Image>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Heart media to show them here!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
-                <Button HorizontalAlignment="Center"  Content="Turn off Favourites Recommendations"></Button>
             </StackPanel>
         </Grid>
     </Grid>

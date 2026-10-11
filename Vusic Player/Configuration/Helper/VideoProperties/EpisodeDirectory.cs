@@ -20,7 +20,7 @@ namespace Vusic_Player.Configuration.Helper.VideoProperties
             var episodePlaceholders = new List<EpisodeModel>();
 
             var videoFiles = Directory.EnumerateFiles(FolderDirectory)
-.Where(file => VideoExtensions.List.Contains(Path.GetExtension(file).ToLower()))
+.Where(file => File.Exists(file) && VideoExtensions.List.Contains(Path.GetExtension(file).ToLower()))
 .OrderBy(file => file)
 .ToList();
             var episodePatterns = new List<string>
@@ -92,7 +92,7 @@ namespace Vusic_Player.Configuration.Helper.VideoProperties
             var updirectory = Path.GetDirectoryName(EpisodePath);
             if (updirectory == null) return new List<EpisodeModel>();
             var videoFiles = Directory.EnumerateFiles(updirectory)
-        .Where(file => VideoExtensions.List.Contains(Path.GetExtension(file).ToLower()))
+        .Where(file => File.Exists(file) && VideoExtensions.List.Contains(Path.GetExtension(file).ToLower()))
         .OrderBy(file => file)
         .ToList();
             var episodePatterns = new List<string>

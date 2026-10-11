@@ -11,7 +11,10 @@
     <Grid>
         <Frame Name="frmVid" Visibility="Collapsed"></Frame>
         <Frame Name="frmRoot">
-            <Grid Name="grdRoot" Visibility="Visible" >
+            <Grid Name="grdRoot" Visibility="Visible" PreviewKeyDown="ControlRoot_PreviewKeyDown" KeyboardAcceleratorPlacementMode="Hidden" >
+                <Grid.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Space" Invoked="Spacebar_Invoked"/>
+                </Grid.KeyboardAccelerators>
                 <Grid.Background>
                     <ImageBrush x:Name="imgSourceBackground" ImageSource="/Assets/oceanglow.png" 
 Stretch="UniformToFill"/>

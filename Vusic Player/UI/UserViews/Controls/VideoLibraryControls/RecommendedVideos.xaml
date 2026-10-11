@@ -45,6 +45,7 @@
         <Grid Grid.Column="1" RowSpacing="40" Name="grdRecents" Visibility="{x:Bind RecommendedVideoList.Count, Converter={StaticResource VisibilityofGridViewandRecents}, Mode=OneWay}" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="20">
@@ -66,7 +67,8 @@
                     </Button>
                 </StackPanel>
             </StackPanel>
-            <GridView Grid.Row="1" Visibility="Visible"  VerticalAlignment="Top"
+        
+            <GridView Grid.Row="2" Visibility="Visible"  VerticalAlignment="Top"
  x:Name="grdvRecents" SelectionMode="Single" IsItemClickEnabled="True" 
 ItemClick="grdvRecents_ItemClick"  Margin="0, 0" ScrollViewer.HorizontalScrollMode="Enabled"
           ScrollViewer.HorizontalScrollBarVisibility="Auto" ItemsSource="{x:Bind RecommendedVideoList, Mode=OneWay}">

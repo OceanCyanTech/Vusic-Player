@@ -238,10 +238,6 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 item.TitleColor = new SolidColorBrush(Microsoft.UI.Colors.White);
 
-                var storagefile = await StorageFile.GetFileFromPathAsync(item.FilePath);
-
-                string fileExtension = Path.GetExtension(item.FilePath ?? "").ToLower();
-
             }
             var exist = ItemsSource.ToList().FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
             if (exist == null) return;
@@ -294,7 +290,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
 
             bool hasVideo = selectedcast.Any(song =>
-     !string.IsNullOrEmpty(song.FilePath) &&
+     !string.IsNullOrEmpty(song.FilePath) && File.Exists(song.FilePath)&&
      Extensions.VideoExtensions.List.Contains(Path.GetExtension(song.FilePath).ToLowerInvariant())
     );
             if (hasVideo)
@@ -1658,16 +1654,18 @@ namespace Vusic_Player.UI.UserViews.Controls
             var observableaudios = new ObservableCollection<SongModel>();
             foreach (var item in ItemsSource)
             {
-                var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-                string fileExtension = file.FileType.ToLowerInvariant();
+                if (File.Exists(item.FilePath))
+                {
+                    string fileExtension = Path.GetExtension(item.FilePath).ToLowerInvariant();
 
-                if (Extensions.VideoExtensions.List.Contains(fileExtension))
-                {
-                    observablevideos.Add(item);
-                }
-                else
-                {
-                    observableaudios.Add(item);
+                    if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                    {
+                        observablevideos.Add(item);
+                    }
+                    else
+                    {
+                        observableaudios.Add(item);
+                    }
                 }
             }
             if (isVideoFirst == true)

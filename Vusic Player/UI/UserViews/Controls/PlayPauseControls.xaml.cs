@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -76,7 +77,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             PlayerService.SeekBefore();
         }
-
+      public  IconHolder IconsInstance => IconHolder.Instance;
         private void btnSeekAfter_Click(object sender, RoutedEventArgs e)
         {
             PlayerService.SeekAhead();

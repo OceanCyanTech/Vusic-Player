@@ -12,7 +12,7 @@
         <Button Name="btnSeekBefore" Click="btnSeekBefore_Click" ToolTipService.ToolTip="Skip 10 seconds before" Padding="2" Background="Transparent" BorderBrush="Transparent">
             <Image Name="imgSeekbefore" 
                Width="{x:Bind ImageWidth, Mode=OneWay}" 
-               Source="/Assets/skip10secondsbackwardlighticon.png"/>
+               Source="{x:Bind IconsInstance.SkipBack, Mode=OneWay}"/>
             
         </Button>
 
@@ -37,7 +37,7 @@
         <Button Name="btnSeekAfter" Click="btnSeekAfter_Click" Padding="2" Background="Transparent" BorderBrush="Transparent">
             <Image Name="imgSeekAfter" 
                Width="{x:Bind ImageWidth, Mode=OneWay}" 
-               Source="/Assets/skip10secondsforwardiconlight.png"/>
+              Source="{x:Bind IconsInstance.SkipAhead, Mode=OneWay}"/>
         </Button>
     </StackPanel>
 

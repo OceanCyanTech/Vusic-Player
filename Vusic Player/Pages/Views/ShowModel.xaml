@@ -44,7 +44,7 @@
 
 
         </Grid>
-        <TeachingTip Title="Rename Show" Target="{x:Bind txtShowName}" IsOpen="False" Name="ttRename">
+        <TeachingTip Title="Rename Show" IsOpen="False" Name="ttRename">
             <StackPanel Margin="0, 20" Orientation="Vertical" Spacing="10">
                 <TextBox Name="txtRenameShow" PlaceholderText="Rename show..."></TextBox>
                 <Button HorizontalAlignment="Stretch" Name="btnOfficialRename" Click="btnOfficialRename_Click">

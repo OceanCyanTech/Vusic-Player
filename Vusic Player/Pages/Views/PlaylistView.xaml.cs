@@ -222,10 +222,13 @@ namespace Vusic_Player.Pages.Views
             ObservableCollection<SongModel> songmodels = new ObservableCollection<SongModel>();
             foreach (var song in currentPlaylist.SongsPaths)
             {
-                var file = await StorageFile.GetFileFromPathAsync(song);
-                var musicprops = await file.Properties.GetMusicPropertiesAsync();
-                songmodels.Add(new SongModel { Title = string.IsNullOrEmpty(musicprops.Title) ? Path.GetFileNameWithoutExtension(song) : musicprops.Title, SongDuration = musicprops.Duration, FilePath = song });
-                Instance.MediaPaths.Add(song);
+                if (File.Exists(song))
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(song);
+                    var musicprops = await file.Properties.GetMusicPropertiesAsync();
+                    songmodels.Add(new SongModel { Title = string.IsNullOrEmpty(musicprops.Title) ? Path.GetFileNameWithoutExtension(song) : musicprops.Title, SongDuration = musicprops.Duration, FilePath = song });
+                    Instance.MediaPaths.Add(song);
+                }
             }
             ttEditPlaylist.IsOpen = true;
             Instance.PlCover = new BitmapImage(currentPlaylist.Thumbnail);
@@ -394,17 +397,20 @@ namespace Vusic_Player.Pages.Views
                 timespan = TimeSpan.Zero;
                 foreach (var item in SongCollection.ToList())
                 {
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-                    if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(item.FilePath)))
+                    if (File.Exists(item.FilePath))
                     {
-                        VideoProperties properties = await file.Properties.GetVideoPropertiesAsync();
-                        timespan += properties.Duration;
+                        StorageFile file = await StorageFile.GetFileFromPathAsync(item.FilePath);
+                        if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(item.FilePath)))
+                        {
+                            VideoProperties properties = await file.Properties.GetVideoPropertiesAsync();
+                            timespan += properties.Duration;
 
-                    }
-                    else
-                    {
-                        MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
-                        timespan += properties.Duration;
+                        }
+                        else
+                        {
+                            MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
+                            timespan += properties.Duration;
+                        }
                     }
                 }
                 stkLoading.Visibility = Visibility.Collapsed;
@@ -505,63 +511,86 @@ namespace Vusic_Player.Pages.Views
                 ts = TimeSpan.Zero;
 
 
-
+                bool hasHiddenFiles = false;
                 foreach (string path in playlist.SongsPaths)
                 {
-                    if (File.Exists(path))
+                    try
                     {
-                        StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-
-                        string title = "";
-                        string album = "Unknown Album";
-                        string artist = "Unknown Artist";
-                        TimeSpan temp = TimeSpan.Zero;
-                      
-                        if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(path)))
+                        if (File.Exists(path))
                         {
-                            VideoProperties properties = await file.Properties.GetVideoPropertiesAsync();
-                            title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
+                            var attributes = File.GetAttributes(path);
+                            if (attributes.HasFlag(System.IO.FileAttributes.Hidden))
+                            {
+                                hasHiddenFiles = true;
+                                continue; // Skip loading the hidden file
+                            }
+                            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
 
-                            ts += properties.Duration;
-                            temp = properties.Duration;
+                            string title = "";
+                            string album = "Unknown Album";
+                            string artist = "Unknown Artist";
+                            TimeSpan temp = TimeSpan.Zero;
+
+                            if (Extensions.VideoExtensions.List.Contains(Path.GetExtension(path)))
+                            {
+                                VideoProperties properties = await file.Properties.GetVideoPropertiesAsync();
+                                title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
+
+                                ts += properties.Duration;
+                                temp = properties.Duration;
+                            }
+                            else
+                            {
+                                MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
+
+                                title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
+                                album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
+                                artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
+                                ts += properties.Duration;
+                                temp = properties.Duration;
+                            }
+                            var colorbrush = new SolidColorBrush(Microsoft.UI.Colors.White);
+
+
+                            string fileExtension = file.FileType.ToLowerInvariant();
+
+                            if (PlayerService.CurrentPlayingPath == file.Path)
+                            {
+                                colorbrush = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
+
+                            }
+                            SongCollection.Add(new SongModel
+                            {
+                                Title = title,
+                                AlbumName = album,
+                                Artist = artist,
+                                SongDuration = temp,
+                                FilePath = file.Path,
+                                TitleColor = colorbrush,
+                            });
+
+
+
+
                         }
-                        else
-                        {
-                            MusicProperties properties = await file.Properties.GetMusicPropertiesAsync();
-
-                             title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file.DisplayName;
-                             album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
-                             artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
-                            ts += properties.Duration;
-                            temp = properties.Duration;
-                        }
-                        var colorbrush = new SolidColorBrush(Microsoft.UI.Colors.White);
-
-
-                        string fileExtension = file.FileType.ToLowerInvariant();
-                  
-                        if (PlayerService.CurrentPlayingPath == file.Path)
-                        {
-                            colorbrush = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
-                       
-                        }
-                        SongCollection.Add(new SongModel
-                        {
-                            Title = title,
-                            AlbumName = album,
-                            Artist = artist,
-                            SongDuration = temp,
-                            FilePath = file.Path,
-                            TitleColor = colorbrush,
-                        });
-
-
-
-
+                    }
+                    catch
+                    {
+                        continue;
                     }
                 }
+                if (hasHiddenFiles)
+                {
+                    infoBarHiddenFiles.Severity = InfoBarSeverity.Informational;
+                    infoBarHiddenFiles.Message = "Hidden files cannot be shown";
+                    infoBarHiddenFiles.IsOpen = true;
+                }
+                else
+                {
+                    infoBarHiddenFiles.IsOpen = false;
+                }
                 bool hasVideo = SongCollection.Any(song =>
-          !string.IsNullOrEmpty(song.FilePath) &&
+          !string.IsNullOrEmpty(song.FilePath) && File.Exists(song.FilePath)&&
           Extensions.VideoExtensions.List.Contains(Path.GetExtension(song.FilePath).ToLowerInvariant())
       );
                 if (hasVideo)

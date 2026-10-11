@@ -65,6 +65,8 @@ namespace Vusic_Player.Pages.Views
         {
             foreach (var item in ProcessedFiles)
             {
+                if (!File.Exists(item.OutputPath)) return;
+
                 var file = await StorageFile.GetFileFromPathAsync(item.OutputPath);
                 var musicprops = await file.Properties.GetMusicPropertiesAsync();
                 QueueService.VusicQueue.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath, SongDuration = musicprops.Duration });
@@ -121,6 +123,7 @@ namespace Vusic_Player.Pages.Views
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
             {
+                if (!File.Exists(file.OutputPath)) return;
                 var stfile = await StorageFile.GetFileFromPathAsync(file.OutputPath);
                 var musicprops = await stfile.Properties.GetMusicPropertiesAsync();
                 QueueService.VusicQueue.Add(new SongModel { FilePath = file.OutputPath, Title = Path.GetFileNameWithoutExtension(file.OutputPath), SongDuration = musicprops.Duration });

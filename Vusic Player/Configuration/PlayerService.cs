@@ -30,6 +30,7 @@ using Windows.Storage;
 using Windows.UI;
 using static Vusic_Player.Configuration.AppConfig.Logger;
 using Logger = Vusic_Player.Configuration.AppConfig.Logger;
+using FileAttributes = System.IO.FileAttributes;
 
 namespace Vusic_Player.Configuration
 {
@@ -143,31 +144,34 @@ namespace Vusic_Player.Configuration
         {
             if (Masterplayer == null) return;
             var currentTicks = Masterplayer.CurTime;
-            var targetTime = TimeSpan.FromTicks(currentTicks).Subtract(TimeSpan.FromSeconds(10));
+            var targetTime = TimeSpan.FromTicks(currentTicks).Subtract(TimeSpan.FromSeconds(SeekServiceInstance.SkipBack));
             if (targetTime < TimeSpan.Zero) targetTime = TimeSpan.Zero;
 
             // 2. Seek using the clean millisecond conversion
             Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
             UIController.CurrentPosition = targetTime.TotalSeconds;
             //         UIController.CurrentPosition = targetTime.TotalSeconds;
-            Configuration.Helper.UI.SeekInfoService.ShowSeek(-10);
+            Configuration.Helper.UI.SeekInfoService.ShowSeek(-SeekServiceInstance.SkipBack);
         }
+        public static SeekService SeekServiceInstance => SeekService.Instance;
         public static void SeekAhead()
         {
             if (Masterplayer == null) return;
 
             // 1. Calculate the new time (Adding 10 seconds via TimeSpan)
             var currentTicks = Masterplayer.CurTime;
-            var targetTime = TimeSpan.FromTicks(currentTicks).Add(TimeSpan.FromSeconds(10));
+            var targetTime = TimeSpan.FromTicks(currentTicks).Add(TimeSpan.FromSeconds(SeekServiceInstance.SkipAhead));
             // 2. Seek to the target (TotalMilliseconds handles the math safely)
             Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
             UIController.CurrentPosition = targetTime.TotalSeconds;
             // 3. Update UI based on the intended target time
             //  UIController.CurrentPosition = targetTime.TotalSeconds;
-            Configuration.Helper.UI.SeekInfoService.ShowSeek(10);
+            Configuration.Helper.UI.SeekInfoService.ShowSeek(SeekServiceInstance.SkipAhead);
         }
         public static async void OpenPath(string fiPath)
         {
+            CurrentMemoryStream?.Dispose();
+            CurrentMemoryStream = null;
             if (File.Exists(fiPath))
             {
 
@@ -179,10 +183,29 @@ namespace Vusic_Player.Configuration
                     Masterplayer = new Player();
                 }
                 CurrentPlayingPath = fiPath;
+                FileAttributes originalAttributes = File.GetAttributes(fiPath);
+                bool wasHidden = originalAttributes.HasFlag(FileAttributes.Hidden);
 
-                filestreamcurrent = new FileStream(fiPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                try
+                {
+                    if (wasHidden)
+                    {
+                        // Temporarily strip the Hidden flag so FFmpeg can open the handle
+                        File.SetAttributes(fiPath, originalAttributes & ~FileAttributes.Hidden);
+                    }
 
-                Masterplayer.Open(filestreamcurrent);
+                    Masterplayer.Open(fiPath);
+                }
+                finally
+                {
+                    if (wasHidden)
+                    {
+                        // Re-apply the Hidden flag immediately after Flyleaf grabs the file handle
+                        File.SetAttributes(fiPath, originalAttributes);
+                    }
+                }
+
+                // Open directly by path (recommended for Flyleaf)
 
 
 
@@ -369,6 +392,7 @@ namespace Vusic_Player.Configuration
                 var keyConfig = Masterplayer.Config.Player.KeyBindings;
 
                 keyConfig.Remove(Key.Left);
+                keyConfig.Remove(Key.Space);
                 keyConfig.Remove(Key.Right);
 
                 keyConfig.Remove(Key.Left, ctrl: true);
@@ -456,6 +480,7 @@ namespace Vusic_Player.Configuration
         public static async void SaveRecents()
         {
             if (CurrentPlayingPath == null) return;
+            if (!File.Exists(CurrentPlayingPath)) return;
             StorageFile file = await StorageFile.GetFileFromPathAsync(CurrentPlayingPath);
 
             string fileExtension = file.FileType.ToLowerInvariant();
@@ -534,6 +559,8 @@ namespace Vusic_Player.Configuration
             //JustDisposed = true;
 
         }
+        public static Stream? CurrentMemoryStream { get; set; }
+        public static bool IsMemoryStreamMode => CurrentMemoryStream != null;
         public static void Play()
         {
             if (JustDisposed == true)
@@ -545,29 +572,35 @@ namespace Vusic_Player.Configuration
 
                 Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
                 if (Masterplayer == null) return;
-                if (System.IO.File.Exists(CurrentPlayingPath))
+                Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
+
+                if (IsMemoryStreamMode && CurrentMemoryStream != null)
                 {
-                    Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
-                    Debug.WriteLine("CALLEDS");
-                    if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
+                    // Rewind the in-memory stream to the start before handing to demuxer
+                    if (CurrentMemoryStream.CanSeek)
                     {
-                        Debug.WriteLine("SJDHDH223");
+                        CurrentMemoryStream.Position = 0;
                     }
-                    else
+
+                    Debug.WriteLine("Re-opening from in-memory stream");
+                    Masterplayer.Open(CurrentMemoryStream);
+                    LoggedMessage?.Invoke("Player Status: Playing", LogLevelType.Information);
+
+                    PlayCalled?.Invoke();
+                    App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
                     {
-                        Debug.WriteLine("FSEC2" + Masterplayer.MainDemuxer.Status.ToString());
-                    }
-                    OpenPath(CurrentPlayingPath);
-                    if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
-                    {
-                        Debug.WriteLine("SJDHDH");
-                    }
-                    else
-                    {
-                        Debug.WriteLine("FSEC" + Masterplayer.MainDemuxer.Status.ToString());
-                    }
+                        var bitm = new BitmapImage(new Uri("ms-appx:///Assets/pause.png"));
+                        UIController.PlayPauseToolTip = "Pause";
+                        UIController.Thumbnail = bitm;
+                        maintimer?.Start();
+                    });
                 }
-                
+                else if (!string.IsNullOrEmpty(CurrentPlayingPath) && System.IO.File.Exists(CurrentPlayingPath))
+                {
+                    Debug.WriteLine("Re-opening from file path: " + CurrentPlayingPath);
+                    OpenPath(CurrentPlayingPath);
+
+                }
                 return;
             }
             if (Masterplayer == null) return;
@@ -630,6 +663,7 @@ namespace Vusic_Player.Configuration
         {
 
             if (Masterplayer == null) return;
+            if (!File.Exists(CurrentPlayingPath)) return;
             var file = await StorageFile.GetFileFromPathAsync(CurrentPlayingPath);
 
             string fileExtension = file.FileType.ToLowerInvariant();

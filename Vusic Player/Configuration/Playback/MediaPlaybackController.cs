@@ -73,6 +73,7 @@ namespace Vusic_Player.Configuration.Playback
         private double _volumeValue = 100;
         private bool _isReversePlayback = false;
         private bool _isFullScreen = false;
+        private bool _isPIP = false;
         private double _zoomValue = 100;
         private double _speedValue = 1;
         private double _pitchValue = 1;
@@ -143,6 +144,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _chaptersEnabled, value))
                 {
                     OnPropertyChanged(nameof(ChaptersEnabled));
+                }
+            }
+        }
+        public bool IsPIP
+        {
+            get => _isPIP;
+            set
+            {
+                if (SetProperty(ref _isPIP, value))
+                {
+                    OnPropertyChanged(nameof(IsPIP));
                 }
             }
         }

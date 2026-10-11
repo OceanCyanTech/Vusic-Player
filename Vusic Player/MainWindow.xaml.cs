@@ -1,6 +1,8 @@
 using FlyleafLib;
 using FlyleafLib.MediaPlayer;
+using Microsoft.UI;
 using Microsoft.UI.Input;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -13,24 +15,27 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using uint_ptr = System.UIntPtr;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views.Onboarding;
+using Vusic_Player.UI.Dialogs;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Vusic_Player.UI.UserViews;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
-using WinRT.Interop;
 using Windows.Foundation.Collections;
+using WinRT.Interop;
+using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
-using Vusic_Player.Configuration.Playback;
-using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Vusic_Player.UI.Dialogs;
+using uint_ptr = System.UIntPtr;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -88,8 +93,7 @@ namespace Vusic_Player
 
         [DllImport("comctl32.dll", SetLastError = true)]
         private static extern IntPtr DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
-
-
+        private AppWindow _appWindow;
         public MainWindow()
         {
             InitializeComponent();
@@ -105,7 +109,14 @@ namespace Vusic_Player
             rootGrid.Loaded += RootGrid_Loaded;
 
             _hwnd = WindowNative.GetWindowHandle(this);
-
+            string iconPath = Path.Combine(
+          Package.Current.InstalledLocation.Path,
+          "Assets",
+          "appicon.ico"
+      );
+            WindowId windowId = Win32Interop.GetWindowIdFromWindow(_hwnd);
+            _appWindow = AppWindow.GetFromWindowId(windowId);
+            _appWindow.SetIcon(iconPath);
             // 2. Register media keys
             MediaControlSystem.Register(_hwnd);
 
@@ -121,6 +132,7 @@ namespace Vusic_Player
                 OceanContentDialog.KillDlg();
                 VideoOptionsWindow.KillDialog();
                 SubtitleEditorWindow.KillDialog();
+               
             };
 
         }
@@ -136,6 +148,7 @@ namespace Vusic_Player
         }
         public static MainWindow ShowWindow()
         {
+           
             if (instance == null)
             {
                 instance = new MainWindow();
@@ -258,7 +271,7 @@ namespace Vusic_Player
             counter.Add(counter2);
             await SettingsLoader.SaveSettingsAsync(currentSettings);
 
-            txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} 051026";
+            txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} 141026";
             //txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} {DateTime.Now.ToString("MMddyy")}.{counter2}";
 
         }

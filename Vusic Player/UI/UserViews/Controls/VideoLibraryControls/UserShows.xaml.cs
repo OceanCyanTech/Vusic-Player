@@ -299,7 +299,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 
                             // Query directory ONCE for all files, then filter in memory (Much faster I/O)
                             var foundFiles = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories)
-                                                      .Where(f => videoExtensions.Contains(Path.GetExtension(f).ToLower()))
+                                                      .Where(f => File.Exists(f) && videoExtensions.Contains(Path.GetExtension(f).ToLower()))
                                                       .ToList();
 
                             if (foundFiles.Any())
@@ -342,7 +342,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             };
 
                     var videoFiles = Directory.EnumerateFiles(folderpath)
-                                              .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
+                                              .Where(file => File.Exists(file) &&  videoExtensions.Contains(Path.GetExtension(file).ToLower()))
                                               .OrderBy(file => file)
                                               .ToList();
 
@@ -585,7 +585,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                             string actualContentPath = path;
 
                             var foundFiles = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories)
-                                                      .Where(f => videoExtensions.Contains(Path.GetExtension(f).ToLower()))
+                                                      .Where(f => File.Exists(f) && videoExtensions.Contains(Path.GetExtension(f).ToLower()))
                                                       .ToList();
 
                             if (foundFiles.Any())
@@ -629,7 +629,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             };
 
                     var videoFiles = Directory.EnumerateFiles(folderpath)
-                                              .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
+                                              .Where(file => File.Exists(file) && videoExtensions.Contains(Path.GetExtension(file).ToLower()))
                                               .OrderBy(file => file)
                                               .ToList();
 

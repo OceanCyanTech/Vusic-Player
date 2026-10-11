@@ -217,6 +217,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                 var exist = QueueService.VusicQueue.FirstOrDefault(p => p.FilePath == selectedSong.FilePath);
                 if (exist == null)
                 {
+                    if (!File.Exists(selectedSong.FilePath)) return;
+
                     var file = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
                     var props = await file.Properties.GetVideoPropertiesAsync();
 

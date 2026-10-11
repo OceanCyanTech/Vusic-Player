@@ -143,7 +143,7 @@ namespace Vusic_Player.Pages.Views
 };
 
                             var videoFiles = Directory.EnumerateFiles(folderpath)
-            .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
+            .Where(file => File.Exists(file) && videoExtensions.Contains(Path.GetExtension(file).ToLower()))
             .OrderBy(file => file)
             .ToList();
 

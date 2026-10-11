@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -17,7 +18,16 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
+using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.AudioProperties;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Extensions;
+using Vusic_Player.FilePickers;
+using Vusic_Player.UI.Dialogs;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Vusic_Player.UI.UserViews.Controls;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media;
@@ -47,6 +57,7 @@ namespace Vusic_Player.UI.UserViews
 
             int width = 550;
             int height = 300;
+            if (!File.Exists(PlayerService.CurrentPlayingPath)) return;
             string fileExtension = Path.GetExtension(PlayerService.CurrentPlayingPath ?? "").ToLower();
             if (Extensions.AudioExtensions.List.Contains(fileExtension))
             {
@@ -65,6 +76,7 @@ namespace Vusic_Player.UI.UserViews
                 }
             }
             SetupSMTC();
+            mediacontroller.IsPIP = true;
             this.SetTitleBar(CustomTitleBar);
             IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             _hwnd = WindowNative.GetWindowHandle(this);
@@ -120,9 +132,62 @@ namespace Vusic_Player.UI.UserViews
                 }
             };
 
+            InitializeSave();
+            this.Closed += PictureInPicture_Closed;
+        }
+        DispatcherTimer? SaveTimer;
 
+        private async void InitializeSave()
+        {
+            SaveTimer = new DispatcherTimer();
+            SaveTimer.Interval = TimeSpan.FromSeconds(4);
+            SaveTimer.Tick += async (s, e) =>
+            {
+                if (string.IsNullOrEmpty(PlayerService.CurrentPlayingPath) || PlayerService.Masterplayer == null) return;
+
+                var settings = await SettingsLoader.LoadSettingsAsync();
+
+                var item = settings.SavedVideoProgress.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
+                if (item != null)
+                {
+                    //Already Exists
+                    int originalindex = settings.SavedVideoProgress.IndexOf(item);
+                    if (originalindex != -1)
+                    {
+                        int lastIndex = settings.SavedVideoProgress.Count - 1;
+                        settings.SavedVideoProgress.Move(originalindex, lastIndex);
+                    }
+                    item.CurrentDuration = PlayerService.Masterplayer.CurTime;
+                    item.TotalDuration = PlayerService.Masterplayer.Duration;
+                }
+                else
+                {
+                    string path = PlayerService.CurrentPlayingPath;
+           
+
+                    settings.SavedVideoProgress.Add(new VideoProgress
+                    {
+
+                        FilePath = path,
+
+                        CurrentDuration = PlayerService.Masterplayer.CurTime,
+                        TotalDuration = PlayerService.Masterplayer.Duration
+                    });
+                }
+                await SettingsLoader.SaveSettingsAsync(settings);
+            };
+            var settings = await SettingsLoader.LoadSettingsAsync();
+            if (settings.IsVideoHistoryDisabled == false)
+            {
+                SaveTimer?.Start();
+            }
+        }
+        private void PictureInPicture_Closed(object sender, WindowEventArgs args)
+        {
+            mediacontroller.IsPIP = false;
 
         }
+
         [System.Runtime.InteropServices.ComImport]
         [System.Runtime.InteropServices.Guid("12604699-522A-45AD-8C80-6078674914F5")]
         [System.Runtime.InteropServices.InterfaceType(System.Runtime.InteropServices.ComInterfaceType.InterfaceIsIInspectable)]
@@ -148,15 +213,18 @@ namespace Vusic_Player.UI.UserViews
             updater.Type = MediaPlaybackType.Video;
 
             updater.VideoProperties.Title = "Vusic Player";
-            StorageFile file = await StorageFile.GetFileFromPathAsync(PlayerService.CurrentPlayingPath);
+            if (File.Exists(PlayerService.CurrentPlayingPath))
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(PlayerService.CurrentPlayingPath);
 
-            // 2. Create the Stream Reference the SMTC expects
-            updater.Thumbnail = RandomAccessStreamReference.CreateFromFile(file);
-            updater.VideoProperties.Subtitle = Path.GetFileName(PlayerService.CurrentPlayingPath);
-            updater.Update();
-            // Hook up the event handler for button presses
-            _smtc.ButtonPressed += SystemControls_ButtonPressed;
-            PlayerService.PlayPauseChanged += PlayerService_PlayPauseChanged;
+                // 2. Create the Stream Reference the SMTC expects
+                updater.Thumbnail = RandomAccessStreamReference.CreateFromFile(file);
+                updater.VideoProperties.Subtitle = Path.GetFileName(PlayerService.CurrentPlayingPath);
+                updater.Update();
+                // Hook up the event handler for button presses
+                _smtc.ButtonPressed += SystemControls_ButtonPressed;
+                PlayerService.PlayPauseChanged += PlayerService_PlayPauseChanged;
+            }
         }
         public async Task<BitmapImage> GetFileThumbnailAsync(string path)
         {
@@ -251,6 +319,9 @@ namespace Vusic_Player.UI.UserViews
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             App.MainWindowInstance?.Close();
+            OceanContentDialog.KillDlg();
+            VideoOptionsWindow.KillDialog();
+            SubtitleEditorWindow.KillDialog();
             this.Close();
 
         }
@@ -295,6 +366,103 @@ namespace Vusic_Player.UI.UserViews
             MainWindow.ShowWindow();
             PlayerService.PIPRestoreAction();
             this.Close();
+        }
+        private void sldVol_ValueChanged(double obj)
+        {
+            PlayerService.VolumeChange(obj);
+        }
+        private async void mnftOpenVideo_Click(object sender, RoutedEventArgs e)
+        {
+            var media = await MediaPicker.PickSingle(this, "Open Media");
+            if (media != null)
+            {
+                bool isAudio = AudioExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                bool isVideo = VideoExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                if (isAudio)
+                {
+                    imgCover.Visibility = Visibility.Visible;
+                    hostMedia.Visibility = Visibility.Collapsed;
+                    txtTitle.Visibility = Visibility.Visible;
+                    if (File.Exists(media.Path))
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            
+
+
+                            ObservableCollection<SongModel> single = new();
+                            string Title = Path.GetFileNameWithoutExtension(media.Path);
+
+                            single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
+                            QueueService.PlayMedia(single, false, false);
+
+                        }
+                    }
+                }
+                else if (isVideo)
+                {
+                    PlayerService.OpenPath(media.Path);
+                    imgCover.Visibility = Visibility.Collapsed;
+                    hostMedia.Visibility = Visibility.Visible;
+                    txtTitle.Visibility = Visibility.Collapsed;
+
+                    if (PlayerService.Masterplayer != null)
+                    {
+                        hostMedia.Player = PlayerService.Masterplayer;
+                    }
+                }
+                else
+                {
+                    //Handle other cases
+                }
+            }
+        }
+        private void mnftFileInfo_Click(object sender, RoutedEventArgs e)
+        {
+            ShowFileInfo();   
+        }
+        private void mnftPrevious_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            QueueService.PlayPrevious();
+        }
+
+        private void mnftSkipBack_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            PlayerService.SeekBefore();
+        }
+
+        private void mnftPlay_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            PlayerService.PlayPause();
+        }
+        private void mnftOpenFileLocation_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileLocation.PathSelect(PlayerService.CurrentPlayingPath);
+        }
+
+        private void mnftSkipForward_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            PlayerService.SeekAhead();
+        }
+
+        private void mnftNext_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            QueueService.PlayNext();
+        }
+
+        public void ShowFileInfo()
+        {
+            if (App.MainWindowInstance is MainWindow wind)
+            {
+                if (PlayerService.CurrentPlayingPath != null)
+                {
+                    wind.ShowFileInfo(PlayerService.CurrentPlayingPath);
+                }
+            }
+        }
+        private void mnftVolume_Click(object sender, RoutedEventArgs e)
+        {
+            ttVolume.IsOpen = true;
         }
     }
 }

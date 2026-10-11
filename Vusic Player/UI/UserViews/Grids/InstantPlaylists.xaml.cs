@@ -246,6 +246,8 @@ namespace Vusic_Player.UI.UserViews.Grids
                 var observabletemp = new ObservableCollection<SongModel>();
                 foreach (var path in playlist.SongsPaths)
                 {
+                    if (!File.Exists(path)) continue;
+
                     var storagefile = await StorageFile.GetFileFromPathAsync(path);
                     var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
                     string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path) : musicproperties.Title;
@@ -265,6 +267,8 @@ namespace Vusic_Player.UI.UserViews.Grids
                 var observabletemp = new ObservableCollection<SongModel>();
                 foreach (var path in playlist.SongsPaths)
                 {
+                    if (!File.Exists(path)) continue;
+
                     var storagefile = await StorageFile.GetFileFromPathAsync(path);
                     var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
                     string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path) : musicproperties.Title;

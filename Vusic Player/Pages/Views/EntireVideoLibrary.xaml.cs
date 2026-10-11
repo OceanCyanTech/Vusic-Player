@@ -191,6 +191,7 @@ namespace Vusic_Player.Pages.Views
                 foreach (var raw in rawFiles)
                 {
                     if (string.IsNullOrEmpty(raw.FilePath)) continue;
+                    if (!File.Exists(raw.FilePath)) continue;
                     if (!validExtensions.Contains(Path.GetExtension(raw.FilePath))) continue;
                     if (excludedPaths.Any(ex => raw.FilePath.StartsWith(ex, StringComparison.OrdinalIgnoreCase))) continue;
 

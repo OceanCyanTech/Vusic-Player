@@ -80,54 +80,9 @@ namespace Vusic_Player.Configuration.AppConfig
                                 App.NavigationFrame.Navigate(typeof(MusicPlayerFull), filePath);
                             }
                         }
-                        //string filePath = file.Path;
-
-                        //string extension = Path.GetExtension(filePath).ToLower();
-
-                        //string[] videoExtensions = { ".mp4", ".mkv", ".avi", ".mov", ".wmv", ".flv", ".webm" };
-                        //string[] audioExtensions = { ".mp3", ".wav", ".aac", ".flac", ".m4a", ".ogg", ".wma" };
-                        //if (videoExtensions.Contains(extension))
-                        //{
-                        //    var videoItems = new ObservableCollection<VideoItem>();
-                        //    videoItems.Add(new VideoItem { FilePath = filePath });
-
-                        //    var playerWindow = new MainWindow(videoItems, filePath, 0, true);
-
-                        //    playerWindow.Activate();
-                        //    App.SetCurrentMainWindow(playerWindow);
-                        //    App.VideoPlayerWindowInstance = playerWindow;
-                        //    HomeWindow.HideWindow();
-
-                        //    return;
+                      
                     }
-                    //    else if (audioExtensions.Contains(extension))
-                    //    {
-                    //        var home = HomeWindow.ShowWindow();
-
-                    //        StorageFile file2 = await StorageFile.GetFileFromPathAsync(filePath);
-                    //        MusicProperties properties = await file2.Properties.GetMusicPropertiesAsync();
-
-                    //        string title = !string.IsNullOrWhiteSpace(properties.Title) ? properties.Title : file2.DisplayName;
-                    //        string album = !string.IsNullOrWhiteSpace(properties.Album) ? properties.Album : "Unknown Album";
-                    //        string artist = !string.IsNullOrWhiteSpace(properties.Artist) ? properties.Artist : "Unknown Artist";
-
-
-                    //        var SongCollection = new ObservableCollection<SongModel>();
-                    //        SongCollection.Add(new SongModel
-                    //        {
-                    //            Title = title,
-                    //            AlbumName = album,
-                    //            Artist = artist,
-                    //            SongDuration = properties.Duration,
-                    //            FilePath = file.Path,
-
-                    //        });
-
-                    //        home.Create();
-                    //        QueueHandler.PlayMedia(SongCollection, false, false);
-                    //        return;
-                    //    }
-                    //}
+                  
                 }
 
 

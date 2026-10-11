@@ -674,12 +674,14 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 if (firstResult != null)
                 {
                     //Adding of first result
+                    if (!File.Exists(firstResult.FilePath)) return rankedResults;
                     bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(firstResult.FilePath).ToLowerInvariant());
 
                     rankedResults.Add(new MasterSearchModel { ResultMain = firstResult.Title, FilePath = firstResult.FilePath, SubInformation = isVideo ? "Video" : "Song", ImageThumbnail = $"ms-appx:///Assets/{(isVideo ? "default" : "musicnoteicon")}.png" });
                 }
                 foreach (var item in nextTwoTitles)
                 {
+                    if (!File.Exists(item.FilePath)) continue;
                     bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant());
 
                     rankedResults.Add(new MasterSearchModel { ResultMain = item.Title, FilePath = item.FilePath, SubInformation = isVideo ? "Video" : "Song", ImageThumbnail = $"ms-appx:///Assets/{(isVideo ? "default" : "musicnoteicon")}.png" });

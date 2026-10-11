@@ -11,7 +11,7 @@
     <Grid x:Name="ControlRoot" 
   
           Background="Transparent" 
-          SizeChanged="ControlRoot_SizeChanged">
+          SizeChanged="ControlRoot_SizeChanged" PreviewKeyDown="ControlRoot_PreviewKeyDown">
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">

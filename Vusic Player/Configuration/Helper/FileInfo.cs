@@ -61,7 +61,10 @@ namespace Vusic_Player.Configuration.Helper
                         SetInternalValues(FilePath);
 
                         OceanContentDialog.HideDlg();
-                        MainWindow.ShowWindow();
+                        if (MediaPlaybackController.Instance.IsPIP == false)
+                        {
+                            MainWindow.ShowWindow();
+                        }
                         HaveToReopen = false;
                         return true;
                     }
@@ -91,7 +94,10 @@ namespace Vusic_Player.Configuration.Helper
                                 {
                                     SetInternalValues(FilePath);
                                     OceanContentDialog.HideDlg();
-                                    MainWindow.ShowWindow();
+                                    if (MediaPlaybackController.Instance.IsPIP == false)
+                                    {
+                                        MainWindow.ShowWindow();
+                                    }
                                     return true;
                                 }
                                 catch
@@ -402,6 +408,7 @@ namespace Vusic_Player.Configuration.Helper
             string newFileName = media.FileName.Trim();
             if (IsStrictlyValidWindowsFileName(newFileName))
             {
+                if (!File.Exists(oldPath)) return;
                 string extension = Path.GetExtension(FilePath);
                 string directory = Path.GetDirectoryName(FilePath)!;
                 string newPath = Path.Combine(directory, newFileName + extension);
@@ -443,7 +450,10 @@ namespace Vusic_Player.Configuration.Helper
                         SetInternalValues(newPath);
 
                         OceanContentDialog.HideDlg();
-                        MainWindow.ShowWindow();
+                        if (MediaPlaybackController.Instance.IsPIP == false)
+                        {
+                            MainWindow.ShowWindow();
+                        }
                     }
                     else
                     {
@@ -501,8 +511,10 @@ namespace Vusic_Player.Configuration.Helper
                                     await SettingsLoader.SaveSettingsAsync(currentSettings);
                                     SetInternalValues(newPath);
                                     OceanContentDialog.HideDlg();
-                                    MainWindow.ShowWindow();
-
+                                    if (MediaPlaybackController.Instance.IsPIP == false)
+                                    {
+                                        MainWindow.ShowWindow();
+                                    }
 
                                 }
                                 catch (Exception ex)
@@ -830,6 +842,7 @@ namespace Vusic_Player.Configuration.Helper
 
                     UpdateFileMetadata(path);
                     OceanContentDialog.HideDlg();
+                    
                     MainWindow.ShowWindow();
                 }
             }
@@ -839,7 +852,10 @@ namespace Vusic_Player.Configuration.Helper
                 Debug.WriteLine(path);
                 UpdateFileMetadata(path);
                 OceanContentDialog.HideDlg();
-                MainWindow.ShowWindow();
+                if (MediaPlaybackController.Instance.IsPIP == false)
+                {
+                    MainWindow.ShowWindow();
+                }
                 JustUpdatedRenamePath = path;
                 using (var tfile = TagLib.File.Create(path))
                 {

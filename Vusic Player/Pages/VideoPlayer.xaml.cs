@@ -185,7 +185,44 @@ namespace Vusic_Player.Pages
                 }
             };
             GlobalFavourites.Instance.FavouritesChanged += OnGlobalFavouritesChanged;
-            LoadSettings();
+            PointerTimer.Interval = TimeSpan.FromSeconds(1);
+            PointerTimer.Tick += PointerTimer_Tick;
+            LoadSettings(); 
+           // RootGrid.AddHandler(
+           //UIElement.PreviewKeyDownEvent,
+           //new KeyEventHandler(RootGrid_PreviewKeyDown),
+           //handledEventsToo: true
+      
+        }
+        int pointertimercount = 2;
+        private void PointerTimer_Tick(object? sender, object e)
+        {
+            pointertimercount--;
+
+            if (pointertimercount <= 0)
+            {
+                RootGrid.SetCursorVisibility(false);
+                PointerTimer.Stop(); // Stop ticking once hidden
+                pointertimercount = 2;
+            }
+        }
+
+        private void RootGrid_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            // Ignore spacebar if user is actively typing in a TextBox or input field
+            if (e.OriginalSource is TextBox || e.OriginalSource is RichEditBox)
+            {
+                return;
+            }
+
+            if (e.Key == Windows.System.VirtualKey.Space)
+            {
+                System.Diagnostics.Debug.WriteLine("Spacebar intercepted even from Slider/Button!");
+                PlayerService.PlayPause();
+
+                // Mark as handled to prevent the Slider or Button from toggling/re-handling
+                e.Handled = true;
+            }
         }
         private async void LoadSettings()
         {
@@ -1069,7 +1106,9 @@ namespace Vusic_Player.Pages
         }
         private void ShowPanel()
         {
-
+            RootGrid.SetCursorVisibility(true);
+            pointertimercount = 2;
+            PointerTimer.Start();
             if (isPinned == false)
             {
                 //ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
@@ -1179,7 +1218,18 @@ namespace Vusic_Player.Pages
 
         }
 
+        private void Spacebar_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            // Don't toggle playback if user is typing in a search bar or text box
+            if (FocusManager.GetFocusedElement(this.Content.XamlRoot) is TextBox ||
+                FocusManager.GetFocusedElement(this.Content.XamlRoot) is RichEditBox)
+            {
+                return;
+            }
 
+            PlayerService.PlayPause();
+            args.Handled = true;
+        }
         private void mnftVideoOptions_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) { return; }
@@ -1337,7 +1387,7 @@ namespace Vusic_Player.Pages
                             string activeSeasonDir = rootPath;
 
                             // Walk up from the file's containing folder
-                            DirectoryInfo dirWalker = new System.IO.FileInfo(vdprg.FilePath).Directory;
+                            DirectoryInfo? dirWalker = new System.IO.FileInfo(vdprg.FilePath).Directory;
                             if (dirWalker == null) return;
                             Logger.Log(dirWalker.FullName, "IsEpisodeVideo.VideoPlayerPage", Logger.LogLevelType.Success);
                             while (dirWalker != null)
@@ -1606,6 +1656,9 @@ namespace Vusic_Player.Pages
             if (PlayerService.Masterplayer == null) return;
             if (PlayerService.CurrentPlayingPath == null) return;
             FadeInOutStoryboardPanel.Begin();
+
+            PointerTimer.Start();
+
             if (ShowInformationOpened)
             {
                 if (PlayerService.DONTSHOWGENERALINFORMATION == false)
@@ -1723,6 +1776,7 @@ namespace Vusic_Player.Pages
             if (!isPinned)
             {
                 isPinned = true;
+
                 Grid.SetRow(grdPlayback, 1);
                 FadeInOutStoryboardPanel.Stop();
 
@@ -1782,6 +1836,7 @@ namespace Vusic_Player.Pages
             }
 
         }
+        DispatcherTimer PointerTimer = new DispatcherTimer();
         private Visibility _isNameVisible = Visibility.Visible;
         public Visibility IsNameVisible
         {
@@ -2247,10 +2302,10 @@ namespace Vusic_Player.Pages
             if (e.Key == Windows.System.VirtualKey.Space)
             {
                 // 1. Perform your custom logic here
-                System.Diagnostics.Debug.WriteLine("Spacebar intercepted!");
-                PlayerService.PlayPause();
-                // 2. Mark the event as handled to stop it from bubbling up to other controls
-                e.Handled = true;
+                //System.Diagnostics.Debug.WriteLine("Spacebar intercepted!");
+                //PlayerService.PlayPause();
+                //// 2. Mark the event as handled to stop it from bubbling up to other controls
+                //e.Handled = true;
             }
             else if (e.Key == Windows.System.VirtualKey.Left)
             {
@@ -2308,7 +2363,7 @@ namespace Vusic_Player.Pages
 
 
                     var videoFiles = Directory.EnumerateFiles(folderpath)
-    .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
+    .Where(file => File.Exists(file) && videoExtensions.Contains(Path.GetExtension(file).ToLower()))
     .OrderBy(file => file)
     .ToList();
 
@@ -2887,6 +2942,11 @@ namespace Vusic_Player.Pages
                     wind.ShowFileInfo(episode.FilePath);
                 }
             }
+        }
+
+        private void FadeInOutStoryboardPanel_Completed(object sender, object e)
+        {
+            //RootGrid.SetCursorVisibility(false);
         }
     }
 }

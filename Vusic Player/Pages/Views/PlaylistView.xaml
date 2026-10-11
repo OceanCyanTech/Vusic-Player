@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="Auto" MaxWidth="400"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TeachingTip Title="Rename Playlist" Target="{x:Bind txtPlaylistName}" IsOpen="False" Name="ttRename">
+            <TeachingTip Title="Rename Playlist"  IsOpen="False" Name="ttRename">
                 <StackPanel Margin="0, 20" Orientation="Vertical" Spacing="10">
                     <TextBox Name="txtRenamePlaylist" PlaceholderText="Rename Playlist..."></TextBox>
                     <Button HorizontalAlignment="Stretch" Name="btnOfficialRename" Click="btnOfficialRename_Click">
@@ -39,7 +39,7 @@
                     </Button>
                 </StackPanel>
             </TeachingTip>
-            <TeachingTip  Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" Target="{x:Bind btnEditPlaylistInfo}">
+            <TeachingTip  Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" >
                 <TeachingTip.Resources>
                     <x:Double x:Key="TeachingTipMinWidth">800</x:Double>
                     <x:Double x:Key="TeachingTipMaxWidth">600</x:Double>
@@ -221,7 +221,15 @@ CornerRadius="16"
                     <TextBlock Text="Added selected item(s) to Queue"/>
                 </StackPanel>
             </TeachingTip>
+            <InfoBar x:Name="infoBarHiddenFiles"
+IsOpen="False" Grid.Column="1"
+Severity="Error"
+                     
+Message="Hidden files cannot be shown"
+IsClosable="True"
+Margin="0,0,0,10" />
             <Grid VerticalAlignment="Stretch" Margin="10, 0" Name="ListPanel" Grid.Column="1">
+                
                 <Grid  >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>

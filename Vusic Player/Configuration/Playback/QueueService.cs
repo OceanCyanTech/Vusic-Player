@@ -543,42 +543,43 @@ namespace Vusic_Player.Configuration.Playback
                         {
                             var firstItemOfNewLoop = VusicQueue[0];
                             PlayerService.CurrentPlayingPath = firstItemOfNewLoop.FilePath;
-                            var file = await StorageFile.GetFileFromPathAsync(firstItemOfNewLoop.FilePath);
-
-                            string fileExtension = file.FileType.ToLowerInvariant();
-                            bool isVideo = false;
-                            if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                            if (File.Exists(firstItemOfNewLoop.FilePath))
                             {
-                                isVideo = true;
-                            }
-                            if (isVideo)
-                            {
-                                Debug.WriteLine("True");
-                                if (App.NavigationFrame != null)
+                                string fileExtension = Path.GetExtension(firstItemOfNewLoop.FilePath).ToLowerInvariant();
+                                bool isVideo = false;
+                                if (Extensions.VideoExtensions.List.Contains(fileExtension))
                                 {
-                                    if (PlayerService.InVideoPage == false)
-                                    {
-                                        App.NavigationFrame.Navigate(typeof(VideoPlayer), firstItemOfNewLoop.FilePath);
-                                    }
-                                    else
-                                    {
-                                        PlayerService.OpenPath(firstItemOfNewLoop.FilePath);
-                                    }
-
+                                    isVideo = true;
                                 }
-                            }
-                            else
-                            {
-                                if (App.NavigationFrame != null)
+                                if (isVideo)
                                 {
-                                    if (PlayerService.InVideoPage == true)
+                                    Debug.WriteLine("True");
+                                    if (App.NavigationFrame != null)
                                     {
-                                        App.NavigationFrame.GoBack();
-                                        PlayerService.InVideoPage = false;
-                                        PlayerService.OpenPath(firstItemOfNewLoop.FilePath);
+                                        if (PlayerService.InVideoPage == false)
+                                        {
+                                            App.NavigationFrame.Navigate(typeof(VideoPlayer), firstItemOfNewLoop.FilePath);
+                                        }
+                                        else
+                                        {
+                                            PlayerService.OpenPath(firstItemOfNewLoop.FilePath);
+                                        }
 
                                     }
+                                }
+                                else
+                                {
+                                    if (App.NavigationFrame != null)
+                                    {
+                                        if (PlayerService.InVideoPage == true)
+                                        {
+                                            App.NavigationFrame.GoBack();
+                                            PlayerService.InVideoPage = false;
+                                            PlayerService.OpenPath(firstItemOfNewLoop.FilePath);
 
+                                        }
+
+                                    }
                                 }
                             }
                         }
@@ -601,56 +602,9 @@ namespace Vusic_Player.Configuration.Playback
                 if (nextindex < VusicQueue.Count)
                 {
                     var item = VusicQueue[nextindex];
-                    var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-
-                    string fileExtension = file.FileType.ToLowerInvariant();
-                    bool isVideo = false;
-                    if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                    if (File.Exists(item.FilePath))
                     {
-                        isVideo = true;
-                    }
-                    if (isVideo)
-                    {
-                        Debug.WriteLine("True");
-                        if (App.NavigationFrame != null)
-                        {
-                            if (PlayerService.InVideoPage == false)
-                            {
-                                App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
-                            }
-                            else
-                            {
-                                PlayerService.OpenPath(item.FilePath);
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        if (App.NavigationFrame != null)
-                        {
-                            if (PlayerService.InVideoPage == true)
-                            {
-                                App.NavigationFrame.GoBack();
-                                PlayerService.InVideoPage = false;
-                                PlayerService.OpenPath(item.FilePath);
-
-                            }
-
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (VusicQueue.Count != 0)
-                {
-                    var firstitem = VusicQueue[0];
-                    if (firstitem != null)
-                    {
-                        var file = await StorageFile.GetFileFromPathAsync(firstitem.FilePath);
-
-                        string fileExtension = file.FileType.ToLowerInvariant();
+                        string fileExtension = Path.GetExtension(item.FilePath).ToLowerInvariant();
                         bool isVideo = false;
                         if (Extensions.VideoExtensions.List.Contains(fileExtension))
                         {
@@ -663,11 +617,11 @@ namespace Vusic_Player.Configuration.Playback
                             {
                                 if (PlayerService.InVideoPage == false)
                                 {
-                                    App.NavigationFrame.Navigate(typeof(VideoPlayer), firstitem.FilePath);
+                                    App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
                                 }
                                 else
                                 {
-                                    PlayerService.OpenPath(firstitem.FilePath);
+                                    PlayerService.OpenPath(item.FilePath);
                                 }
 
                             }
@@ -680,10 +634,59 @@ namespace Vusic_Player.Configuration.Playback
                                 {
                                     App.NavigationFrame.GoBack();
                                     PlayerService.InVideoPage = false;
-                                    PlayerService.OpenPath(firstitem.FilePath);
+                                    PlayerService.OpenPath(item.FilePath);
 
                                 }
 
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (VusicQueue.Count != 0)
+                {
+                    var firstitem = VusicQueue[0];
+                    if (firstitem != null)
+                    {
+                        if (File.Exists(firstitem.FilePath))
+                        {
+                            string fileExtension = Path.GetExtension(firstitem.FilePath).ToLowerInvariant();
+                            bool isVideo = false;
+                            if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                            {
+                                isVideo = true;
+                            }
+                            if (isVideo)
+                            {
+                                Debug.WriteLine("True");
+                                if (App.NavigationFrame != null)
+                                {
+                                    if (PlayerService.InVideoPage == false)
+                                    {
+                                        App.NavigationFrame.Navigate(typeof(VideoPlayer), firstitem.FilePath);
+                                    }
+                                    else
+                                    {
+                                        PlayerService.OpenPath(firstitem.FilePath);
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                if (App.NavigationFrame != null)
+                                {
+                                    if (PlayerService.InVideoPage == true)
+                                    {
+                                        App.NavigationFrame.GoBack();
+                                        PlayerService.InVideoPage = false;
+                                        PlayerService.OpenPath(firstitem.FilePath);
+
+                                    }
+
+                                }
                             }
                         }
                     }

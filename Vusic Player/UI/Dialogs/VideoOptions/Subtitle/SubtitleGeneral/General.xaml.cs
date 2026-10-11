@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
@@ -22,6 +23,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.System;
+using Stream = Vusic_Player.Configuration.Helper.SubtitlesProperties.Stream;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -131,6 +133,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle.SubtitleGeneral
         {
             var btn = sender as HyperlinkButton;
             if (btn == null) return;
+            if (!File.Exists(btn.Content.ToString())) return;
             var file = await StorageFile.GetFileFromPathAsync(btn.Content.ToString());
             var options = new FolderLauncherOptions();
             options.ItemsToSelect.Add(file);
@@ -146,6 +149,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle.SubtitleGeneral
             if (data == null) return;
 
             var path = data?.Path;
+            if (!File.Exists(path)) return;
             var file = await StorageFile.GetFileFromPathAsync(data?.Path);
             var options = new FolderLauncherOptions();
             options.ItemsToSelect.Add(file);

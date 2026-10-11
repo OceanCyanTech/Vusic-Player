@@ -23,6 +23,7 @@ using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -31,6 +32,7 @@ using Vusic_Player.UI.Dialogs;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Page = Microsoft.UI.Xaml.Controls.Page;
+using TextBox = Microsoft.UI.Xaml.Controls.TextBox;
 
 
 namespace Vusic_Player.Pages
@@ -55,6 +57,27 @@ namespace Vusic_Player.Pages
             _originalHeader = nvgMain.Header;
             InitializeFav();
             InitializeWatermark();
+    
+        }
+        private void Spacebar_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            // Don't toggle playback if user is typing in a search bar or text box
+            if (FocusManager.GetFocusedElement(this.Content.XamlRoot) is TextBox ||
+                FocusManager.GetFocusedElement(this.Content.XamlRoot) is RichEditBox)
+            {
+                return;
+            }
+
+            PlayerService.PlayPause();
+            args.Handled = true;
+        }
+        private void ControlRoot_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Space)
+            {
+                PlayerService.PlayPause();
+                e.Handled = true; // Stop any internal slider handling
+            }
         }
         private async void InitializeWatermark()
         {
@@ -127,6 +150,8 @@ namespace Vusic_Player.Pages
         }
         ShowCreationValues showInstance => ShowCreationValues.Instance;
         PlaylistCreationValues playlistInstance => PlaylistCreationValues.Instance;
+        public IconHolder IconsInstance => IconHolder.Instance;
+        public SeekService SeekServiceInstance => SeekService.Instance;
 
         private async void InitializeSettings()
         {
@@ -135,6 +160,19 @@ namespace Vusic_Player.Pages
             MasterSearchIndex.PlaylistsMaster = new ObservableCollection<PlaylistItem>(playlists);
             var newObservableShows = new ObservableCollection<Show>();
             var newObservablePlaylists = new ObservableCollection<PlaylistItem>();
+            string skipBackIcon = currentSettings.SkipBack is 5 or 10 or 15 or 20 or 30
+                    ? $"skip{currentSettings.SkipBack}back.png"
+                    : "skipbackcustom.png";
+
+            IconsInstance.SkipBack = $"ms-appx:///Assets/Themes/{currentSettings.Theme}/{skipBackIcon}";
+            SeekServiceInstance.SkipAhead = currentSettings.SkipAhead;
+            SeekServiceInstance.SkipBack = currentSettings.SkipBack;
+            // Skip Forward Icon
+            string skipAheadIcon = currentSettings.SkipAhead is 5 or 10 or 15 or 20 or 30
+                ? $"skip{currentSettings.SkipAhead}ahead.png"
+                : "skipaheadcustom.png";
+
+            IconsInstance.SkipAhead = $"ms-appx:///Assets/Themes/{currentSettings.Theme}/{skipAheadIcon}";
             foreach (var show in currentSettings.Shows)
             {
                 var seasoncountstring = $"• {show.SeasonCount} {(show.SeasonCount == 1 ? "season" : "seasons")}";
@@ -157,6 +195,7 @@ namespace Vusic_Player.Pages
             MasterSearchIndex.Pages.Add("Log");
             MasterSearchIndex.Pages.Add("Settings");
         }
+
         private async void FrmMain_Navigated(object sender, NavigationEventArgs e)
         {
             nvgMain.AlwaysShowHeader = true;
@@ -323,6 +362,7 @@ namespace Vusic_Player.Pages
             var rawMediaArtist = rawMedia.Where(p => p.Title?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true);
             foreach (var item in rawMediaArtist)
             {
+                if (!File.Exists(item.FilePath)) return new ObservableCollection<MasterSearchModel>(); ;
                 var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
                 returnableobservable.Add(new MasterSearchModel { ImageThumbnail = "ms-appx:///Assets/defaultartist.png", ResultMain = item.Title, SubInformation = subinfo });
             }

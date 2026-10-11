@@ -17,7 +17,7 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TeachingTip Name="ttLoadingShow" Target="{x:Bind grdViewShows}">
+        <TeachingTip Name="ttLoadingShow" >
             <Grid Name="grdLoadingShow" HorizontalAlignment="Center" ColumnSpacing="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -100,7 +100,7 @@ ItemClick="grdViewShows_ItemClick"  Margin="0, 20" >
             </GridView>
 
         </Grid>
-        <TeachingTip Title="Edit Show" Name="ttEditShow" Target="{x:Bind grdViewShows}">
+        <TeachingTip Title="Edit Show" Name="ttEditShow" >
             <Grid RowSpacing="10" Margin="0, 10">
                 <Grid.RowDefinitions>
                     <RowDefinition MaxHeight="200"/>

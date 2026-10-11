@@ -69,6 +69,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         }
         private static void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
+            if (!File.Exists(e.FullPath)) return;
             string extension = Path.GetExtension(e.FullPath).ToLower();
             if (extension != ".mp3" && extension != ".flac" && extension != ".m4a" && extension != ".wav")
             {
@@ -126,6 +127,8 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         public static event Action<string, string, string, string, TimeSpan, string>? FileModified;
         private static void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
+            if (!File.Exists(e.FullPath)) return;
+
             string extension = Path.GetExtension(e.FullPath).ToLower();
             if (AudioExtensions.List.Contains(extension))
             {

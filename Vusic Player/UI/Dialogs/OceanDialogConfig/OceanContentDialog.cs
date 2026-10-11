@@ -98,7 +98,6 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             {
                 CloseRequested?.Invoke();
                 currentDialog.HideDialog();
-         //       MainWindow.ShowWindow();
                 populs.Hide();
                 if (App.MainWindowInstance is MainWindow windowhome)
                 {

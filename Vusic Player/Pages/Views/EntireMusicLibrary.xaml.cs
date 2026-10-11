@@ -625,6 +625,7 @@ namespace Vusic_Player.Pages.Views
                 foreach (var raw in rawFiles)
                 {
                     if (string.IsNullOrEmpty(raw.FilePath)) continue;
+                    if (!File.Exists(raw.FilePath)) continue;
                     if (!validExtensions.Contains(Path.GetExtension(raw.FilePath))) continue;
                     if (excludedPaths.Any(ex => raw.FilePath.StartsWith(ex, StringComparison.OrdinalIgnoreCase))) continue;
 
@@ -688,6 +689,7 @@ namespace Vusic_Player.Pages.Views
 
                     foreach (var file in files)
                     {
+                        if (!File.Exists(file)) continue;
                         string ext = Path.GetExtension(file).ToLower();
                         if (!extensions.Contains(ext)) continue;
 
@@ -874,6 +876,7 @@ namespace Vusic_Player.Pages.Views
 
                 foreach (var file in files)
                 {
+                    if (!File.Exists(file)) continue;
                     string ext = Path.GetExtension(file).ToLower();
 
                     if (!extensions.Contains(ext))

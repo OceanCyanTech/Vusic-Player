@@ -475,7 +475,10 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             CloseRequested?.Invoke();
-            MainWindow.ShowWindow();
+            if (mediacontroller.IsPIP == false)
+            {
+                MainWindow.ShowWindow();
+            }
 
         }
 

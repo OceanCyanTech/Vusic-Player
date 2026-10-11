@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:winui="using:FlyleafLib.Controls.WinUI" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:playbackviews="using:Vusic_Player.UI.UserViews.Controls" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:winui="using:FlyleafLib.Controls.WinUI" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:playbackviews="using:Vusic_Player.UI.UserViews.Controls" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced" xmlns:controls="using:Vusic_Player.UI.Controls"
     mc:Ignorable="d">
     <Page.Resources>
         <!--<converter:DoubleToFormatConverter x:Key="FormatConverter"/>
@@ -83,7 +83,7 @@
                 <LinearDoubleKeyFrame KeyTime="0:0:4.0" Value="0.0" />
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Name="FadeInOutStoryboardPanel">
+        <Storyboard x:Name="FadeInOutStoryboardPanel" Completed="FadeInOutStoryboardPanel_Completed">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="grdRootPlayback"
                             Storyboard.TargetProperty="Opacity">
                 <LinearDoubleKeyFrame KeyTime="0:0:0.1" Value="1.0" />
@@ -111,8 +111,10 @@
         <converters:FavoriteToColorConverter x:Key="FavoritetoColorConv"/>
     </Page.Resources>
 
-    <Grid Name="RootGrid" PreviewKeyDown="MainGrid_PreviewKeyDown">
-
+    <controls:CursorDisappearGrid x:Name="RootGrid" PreviewKeyDown="MainGrid_PreviewKeyDown" KeyboardAcceleratorPlacementMode="Hidden">
+        <controls:CursorDisappearGrid.KeyboardAccelerators>
+            <KeyboardAccelerator Key="Space" Invoked="Spacebar_Invoked" />
+        </controls:CursorDisappearGrid.KeyboardAccelerators>
         <Grid Name="SplashGrid" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
@@ -931,6 +933,6 @@ BorderThickness="0"
             <Image Width="20" Source="/Assets/appicon.png"/>
         </Button>
 
-    </Grid>
+    </controls:CursorDisappearGrid>
 
 </Page>

@@ -144,51 +144,6 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
             Logger.Log(errorLog, "AudioReverb", Logger.LogLevelType.Error);
         }
         string ProcessErrorLog = "";
-        private async Task<string> ExportToFile()
-        {
-            if (App.MainWindowInstance == null) return "";
-            Debug.WriteLine("ExportToFile");
-            var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Export", Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
-            if (folder != null)
-            {
-                if (string.IsNullOrEmpty(txtFileName.Text))
-                {
-                    txtEnterFileNameWarning.Visibility = Visibility.Visible;
-                    return "";
-                }
-                string userFileName = txtFileName.Text.Trim();
-
-                char[] invalidChars = Path.GetInvalidFileNameChars();
-                foreach (char c in invalidChars)
-                {
-                    userFileName = userFileName.Replace(c, '_');
-                }
-                userFileName = userFileName.TrimEnd('.');
-                string outputMp3 = "";
-                outputMp3 = Path.Combine(folder.Path, userFileName + ".mp3");
-                if (File.Exists(outputMp3))
-                {
-                    string extension = Path.GetExtension(outputMp3); // ".mp3"
-                    string nameWithoutExt = Path.GetFileNameWithoutExtension(outputMp3); // e.g., "MyReverbSong"
-                    int counter = 1;
-
-                    while (File.Exists(outputMp3))
-                    {
-                        string newFileName = $"{nameWithoutExt} ({counter}){extension}";
-                        outputMp3 = Path.Combine(folder.Path, newFileName);
-                        counter++;
-                    }
-
-                    txtFileName.Text = Path.GetFileName(outputMp3);
-                    return outputMp3;
-                }
-            }
-            else
-            {
-                return "";
-            }
-            return "";
-        }
         private async void btnApply_Click(object sender, RoutedEventArgs e)
         {
             if (PlayerService.CurrentPlayingPath == null || PlayerService.Masterplayer == null) return;
@@ -324,10 +279,12 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                             ms.Position = 0;
                             if (PlayerService.Masterplayer.IsPlaying == false)
                             {
+                                Debug.WriteLine("FALSE");
+                                Debug.WriteLine(outputMp3) ; 
+                                PlayerService.CurrentMemoryStream = ms;
                                 PlayerService.curtime = curtime;
                                 PlayerService.curtimetemp = curtimetemp;
-                                PlayerService.CurrentPlayingPath = outputMp3;
-                                PlayerService.UIController.MediaDisplayName = Path.GetFileName(outputMp3);
+                        
                                 PlayerService.JustDisposed = true;
                                 PlayerService.filestreamcurrent?.Dispose();
                             }

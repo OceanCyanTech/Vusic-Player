@@ -415,6 +415,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private async void mnftAddToFavCW_Click(object sender, RoutedEventArgs e)
         {
+ 
             if (ContinuePlaying.videoProgressMain == null) return;
 
             var settings = await SettingsLoader.LoadSettingsAsync();
@@ -455,6 +456,7 @@ namespace Vusic_Player.UI.UserViews.Grids
         {
             if (FileInfo.JustUpdatedRenamePath == HighlightVideoPath)
             {
+                if (!File.Exists(HighlightVideoPath)) return;
                 var storagefile = await StorageFile.GetFileFromPathAsync(HighlightVideoPath);
                 var videoprops = await storagefile.Properties.GetVideoPropertiesAsync();
 

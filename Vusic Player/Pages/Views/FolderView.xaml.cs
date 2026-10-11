@@ -117,6 +117,7 @@ namespace Vusic_Player.Pages.Views
                 int totalitemcount = 0;
                 foreach (var file in files)
                 {
+                    if (!File.Exists(file.Path)) continue;
                     FileInfo fileInfo = new FileInfo(file.Path);
                     string filesize = GetFileOrFolderSizeInString(fileInfo.Length);
                     if (fileInfo.Exists)
@@ -371,7 +372,7 @@ namespace Vusic_Player.Pages.Views
                     }
                     else
                     {
-                        folders.Add(new FolderModel { FolderName = folder.FolderName, FolderPath = FolderPath });
+                        folders.Insert(0, new FolderModel { FolderName = folder.FolderName, FolderPath = FolderPath });
                     }
                     MasterSearchIndex.FoldersOpenedMaster = new ObservableCollection<FolderModel>(folders);
                     await SettingsLoader.SaveSettingsAsync(currentSettings);
@@ -441,7 +442,7 @@ namespace Vusic_Player.Pages.Views
             {
                 foreach (var item in selecteditems)
                 {
-
+                    if (!File.Exists(item.Path)) continue;
                     var storagefile = await StorageFile.GetFileFromPathAsync(item.Path);
 
                     string fileExtension = Path.GetExtension(item.Path).ToLower();
@@ -865,7 +866,7 @@ namespace Vusic_Player.Pages.Views
             var selecteditems = grdViewMain.SelectedItems.Cast<FileItem>();
             var anyselected = selecteditems.Any(p => p.isFolder == true);
             bool hasVideo = selecteditems.Any(video =>
-     !string.IsNullOrEmpty(video.Path) &&
+     !string.IsNullOrEmpty(video.Path) && File.Exists(video.Path) &&
      Extensions.VideoExtensions.List.Contains(Path.GetExtension(video.Path).ToLowerInvariant())
     );
             if (hasVideo)
@@ -1094,6 +1095,7 @@ namespace Vusic_Player.Pages.Views
                 }
                 else
                 {
+                    if (!File.Exists(item.Path)) return;
                     string fileExtension = Path.GetExtension(item.Path).ToLower();
                     //          var lockedprocesses = GetLockingProcess.GetLockingProcesses(item.Path);
                     var storagefile = await StorageFile.GetFileFromPathAsync(item.Path);
@@ -1165,6 +1167,8 @@ namespace Vusic_Player.Pages.Views
                     }
                     else
                     {
+                        if (!File.Exists(item.Path)) return;
+
                         string fileExtension = Path.GetExtension(item.Path).ToLower();
 
                         if (AudioExtensions.List.Contains(fileExtension))
@@ -1262,6 +1266,7 @@ namespace Vusic_Player.Pages.Views
         private async void RenameSingleFile(FileItem file, string newname, bool toreopen = false, bool issinglefile = false)
         {
             Debug.WriteLine("Renameoccured");
+            if (!File.Exists(file.Path)) return;
 
             var storagefile = await StorageFile.GetFileFromPathAsync(file.Path);
             string directory = "";
@@ -1788,6 +1793,7 @@ namespace Vusic_Player.Pages.Views
             var temporaryobservable = new ObservableCollection<SongModel>();
             foreach (var item in selecteditems)
             {
+                if (!File.Exists(item.Path)) continue;
                 var storagefile = await StorageFile.GetFileFromPathAsync(item.Path);
                 string fileExtension = Path.GetExtension(item.Path).ToLower();
 
@@ -1946,6 +1952,8 @@ namespace Vusic_Player.Pages.Views
                 }
                 else
                 {
+                    if (!File.Exists(item.Path)) return;
+
                     string fileExtension = Path.GetExtension(item.Path).ToLower();
                     //          var lockedprocesses = GetLockingProcess.GetLockingProcesses(item.Path);
                     var storagefile = await StorageFile.GetFileFromPathAsync(item.Path);
