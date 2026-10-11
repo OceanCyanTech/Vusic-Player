@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
@@ -186,8 +187,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                 App.NavigationFrame.Navigate(typeof(EntireMusicLibrary), "EntireHistory");
             }
         }
-
-        private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
+        private async Task<ObservableCollection<SongModel>> AddToSongModelObservable()
         {
             var observablecollection = new ObservableCollection<SongModel>();
             foreach (var item in recentMusics)
@@ -196,9 +196,14 @@ namespace Vusic_Player.UI.UserViews.Grids
                 {
                     var currentfile = await StorageFile.GetFileFromPathAsync(item.SongPath);
                     var musicprops = await currentfile.Properties.GetMusicPropertiesAsync();
-                    observablecollection.Add(new SongModel { Title = item.SongName, FilePath = item.SongPath, AlbumName = musicprops.Album, Artist = musicprops.Artist });
+                    observablecollection.Add(new SongModel { Title = item.SongName, FilePath = item.SongPath, AlbumName = musicprops.Album, Artist = musicprops.Artist, SongDuration = musicprops.Duration });
                 }
             }
+            return observablecollection;
+        }
+        private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
             QueueService.PlayMedia(observablecollection, false, false);
         }
 
@@ -222,6 +227,24 @@ namespace Vusic_Player.UI.UserViews.Grids
             grdEmptySuggestions.Visibility = Visibility.Visible;
             grdRecents.Visibility = Visibility.Collapsed;
             grdDisabledRecents.Visibility = Visibility.Collapsed;
+        }
+
+        private async void mnftShufflePlay_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, true, false);
+        }
+
+        private async void mnftLoopPlay_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, false, true);
+        }
+
+        private async void mnftLoopShufflePlay_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, true, true);
         }
     }
 }

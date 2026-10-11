@@ -320,18 +320,69 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             RecommendedVideoList.Clear();
             LoadSettings();
         }
-
-        private void btnPlayAll_Click(object sender, RoutedEventArgs e)
+        private async Task<ObservableCollection<SongModel>> AddToSongModelObservable()
         {
-            ObservableCollection<SongModel> temp = new ObservableCollection<SongModel>();
+            var observablecollection = new ObservableCollection<SongModel>();
             foreach (var item in RecommendedVideoList)
             {
-                temp.Add(new SongModel {FilePath = item.FilePath, Title = item.FileName });
-            }
+                if (File.Exists(item.FilePath))
+                {
+                    var currentfile = await StorageFile.GetFileFromPathAsync(item.FilePath);
+                    string extension = Path.GetExtension(item.FilePath);
+                    bool isVideo = VideoExtensions.List.Contains(extension, StringComparer.OrdinalIgnoreCase);
 
-            QueueService.PlayMedia(temp, false, false);
+                    string album = "Unknown Album";
+                    string artist = "Unknown Artist";
+                    TimeSpan duration = TimeSpan.Zero;
+
+                    if (isVideo)
+                    {
+                        var videoProps = await currentfile.Properties.GetVideoPropertiesAsync();
+                        duration = videoProps.Duration;
+                    }
+                    else
+                    {
+                        var musicProps = await currentfile.Properties.GetMusicPropertiesAsync();
+                        album = !string.IsNullOrWhiteSpace(musicProps.Album) ? musicProps.Album : "Unknown Album";
+                        artist = !string.IsNullOrWhiteSpace(musicProps.Artist) ? musicProps.Artist : "Unknown Artist";
+                        duration = musicProps.Duration;
+                    }
+
+                    observablecollection.Add(new SongModel
+                    {
+                        Title = item.FileName,
+                        FilePath = item.FilePath,
+                        AlbumName = album,
+                        Artist = artist,
+                        SongDuration = duration
+                    });
+                }
+            }
+            return observablecollection;
         }
 
+        private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, false, false);
+        }
+        private async void mnftShufflePlay_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, true, false);
+        }
+
+        private async void mnftLoopPlay_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, false, true);
+        }
+
+        private async void mnftLoopShufflePlay_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, true, true);
+        }
         private void mnftAddtoQueue_Click(object sender, RoutedEventArgs e)
         {
             if(sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vd)

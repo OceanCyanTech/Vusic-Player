@@ -436,10 +436,19 @@ namespace Vusic_Player.UI.UserViews.Controls
                     }
                     if (isVideo == false)
                     {
-                        ObservableCollection<SongModel> single = new();
-                        string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
-                        single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title });
-                        QueueService.PlayMedia(single, false, false);
+                        try
+                        {
+                            ObservableCollection<SongModel> single = new();
+                            var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                            var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
+                            string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
+                            single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                            QueueService.PlayMedia(single, false, false);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log("Error Occured: " + ex.Message, "ListViewMedia.PlaySelection", Logger.LogLevelType.Error);
+                        }
                     }
                     else
                     {

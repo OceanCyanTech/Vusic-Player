@@ -55,6 +55,26 @@
                     <Image Source="/Assets/Genres/appicon.png" Width="20"/>
                 </Button>
                 <Button Background="Transparent" BorderBrush="Transparent" Click="btnPlayAll_Click" Name="btnPlayAll" ToolTipService.ToolTip="Play All">
+                    <Button.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="d"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </Button.ContextFlyout>
+
                     <Image Source="/Assets/play.png" Width="20"/>
                 </Button>
                 <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>

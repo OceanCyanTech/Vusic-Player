@@ -49,7 +49,7 @@ namespace Vusic_Player.UI.UserViews
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
         private IntPtr _hwnd;
-        private WinUser.SubclassProc _subclassProc;
+        private WinUser.SubclassProc? _subclassProc;
         private SystemMediaTransportControls? _smtc;
         public PictureInPicture()
         {

@@ -57,7 +57,19 @@ namespace Vusic_Player.Pages.Views
             var tempobservable = new ObservableCollection<SongModel>();
             foreach (var item in ProcessedFiles)
             {
-                tempobservable.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath });
+                if (File.Exists(item.OutputPath))
+                {
+                    try
+                    {
+                        var storagefile = await StorageFile.GetFileFromPathAsync(item.OutputPath);
+                        var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
+                        tempobservable.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath, SongDuration = musicprops.Duration });
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
             }
             QueueService.PlayMedia(tempobservable, false, false);
         }

@@ -56,10 +56,7 @@ namespace Vusic_Player.Pages.Views
 
                 foreach (var folder in currentSettings.FoldersRecent)
                 {
-                
                     string path = folder?.FolderPath?.Trim() ?? string.Empty;
-
-                    // Skip empty paths, non-existent directories, and duplicates
                     if (string.IsNullOrEmpty(path) || !Directory.Exists(path) || !seenPaths.Add(path))
                         continue;
                     if (folder == null) continue;

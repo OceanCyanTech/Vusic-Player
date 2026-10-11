@@ -128,16 +128,25 @@ namespace Vusic_Player.UI.UserViews.Grids
                 }
             }
         }
-        private void mnftPlay_Click(object sender, RoutedEventArgs e)
+        private async void mnftPlay_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is FavouritesRecommend selectedSong)
             {
                 if (File.Exists(selectedSong.FilePath))
                 {
-                    ObservableCollection<SongModel> single = new();
-                    string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
-                    single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title });
-                    QueueService.PlayMedia(single, false, false);
+                    try
+                    {
+                        ObservableCollection<SongModel> single = new();
+                        var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                        var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
+                        string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
+                        single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                        QueueService.PlayMedia(single, false, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log("Error Occured: " + ex.Message, "RecentMusicGridView.PlayRecents", Logger.LogLevelType.Error);
+                    }
                 }
                 else
                 {
@@ -154,11 +163,19 @@ namespace Vusic_Player.UI.UserViews.Grids
                         {
                             selectedSong.FilePath = file.Path;
                             selectedSong.Thumbnail = await FileThumbnailObtain.GetFileThumbnailAsync(file.Path);
-                            ObservableCollection<SongModel> single = new();
-                            string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
-
-                            selectedSong.FileName = Title;
-                            single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title });
+                            try
+                            {
+                                ObservableCollection<SongModel> single = new();
+                                var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                                var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
+                                string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
+                                single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                                QueueService.PlayMedia(single, false, false);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log("Error Occured: " + ex.Message, "RecentMusicGridView.PlayRecents", Logger.LogLevelType.Error);
+                            }
                             QueueService.PlayMedia(single, false, false);
                             OceanContentDialog.HideDlg();
                             MainWindow.ShowWindow();
@@ -169,7 +186,24 @@ namespace Vusic_Player.UI.UserViews.Grids
             }
 
         }
-        private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
+        private async void mnftShufflePlay_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, true, false);
+        }
+
+        private async void mnftLoopPlay_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, false, true);
+        }
+
+        private async void mnftLoopShufflePlay_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
+            QueueService.PlayMedia(observablecollection, true, true);
+        }
+        private async Task<ObservableCollection<SongModel>> AddToSongModelObservable()
         {
             var observablecollection = new ObservableCollection<SongModel>();
             foreach (var item in FinalList)
@@ -178,12 +212,17 @@ namespace Vusic_Player.UI.UserViews.Grids
                 {
                     var currentfile = await StorageFile.GetFileFromPathAsync(item.FilePath);
                     var musicprops = await currentfile.Properties.GetMusicPropertiesAsync();
-                    observablecollection.Add(new SongModel { Title = item.FileName, FilePath = item.FilePath, AlbumName = musicprops.Album, Artist = musicprops.Artist });
+                    observablecollection.Add(new SongModel { Title = item.FileName, FilePath = item.FilePath, AlbumName = musicprops.Album, Artist = musicprops.Artist,SongDuration=musicprops.Duration });
                 }
             }
+            return observablecollection;
+        }
+
+        private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
+        {
+            var observablecollection = await AddToSongModelObservable();
             QueueService.PlayMedia(observablecollection, false, false);
         }
-    
         private void mnftViewFileInfo_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is FavouritesRecommend selectedSong)
@@ -217,7 +256,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
        
 
-        private void grdvFavourites_ItemClick(object sender, ItemClickEventArgs e)
+        private async void grdvFavourites_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (grdvFavourites.SelectionMode == ListViewSelectionMode.Single)
             {
@@ -225,10 +264,19 @@ namespace Vusic_Player.UI.UserViews.Grids
                 if (selectedSong == null) return;
                 if (File.Exists(selectedSong.FilePath))
                 {
-                    ObservableCollection<SongModel> single = new();
-                    string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
-                    single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title });
-                    QueueService.PlayMedia(single, false, false);
+                    try
+                    {
+                        ObservableCollection<SongModel> single = new();
+                        var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                        var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
+                        string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
+                        single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                        QueueService.PlayMedia(single, false, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log("Error Occured: " + ex.Message, "RecentMusicGridView.PlayRecents", Logger.LogLevelType.Error);
+                    }
                 }
                 else
                 {
@@ -248,10 +296,19 @@ namespace Vusic_Player.UI.UserViews.Grids
                             selectedSong.FilePath = file.Path;
                             selectedSong.FileName = title;
                             selectedSong.Thumbnail = await FileThumbnailObtain.GetFileThumbnailAsync(file.Path);
-                            ObservableCollection<SongModel> single = new();
-                            string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
-                            single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title });
-                            QueueService.PlayMedia(single, false, false);
+                            try
+                            {
+                                ObservableCollection<SongModel> single = new();
+                                var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                                var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
+                                string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
+                                single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                                QueueService.PlayMedia(single, false, false);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log("Error Occured: " + ex.Message, "MusicListHome.Play", Logger.LogLevelType.Error);
+                            }
                             OceanContentDialog.HideDlg();
                             MainWindow.ShowWindow();
 

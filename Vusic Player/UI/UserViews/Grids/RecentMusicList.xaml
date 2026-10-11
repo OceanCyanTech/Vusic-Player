@@ -34,6 +34,25 @@
                 </StackPanel>
             </StackPanel>
             <Button Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click" CornerRadius="12" >
+                <Button.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="d"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Button.ContextFlyout>
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="20" Source="/Assets/play.png"/>
                     <TextBlock Text="Play all"/>

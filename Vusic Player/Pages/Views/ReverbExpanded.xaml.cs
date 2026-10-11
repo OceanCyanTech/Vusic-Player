@@ -361,7 +361,7 @@ namespace Vusic_Player.Pages.Views
             {
                 AddedFiles.Remove(file);
                 var exist = ProcessedFiles.FirstOrDefault(p => p.FilePath == file.FilePath);
-                if(exist != null)
+                if (exist != null)
                 {
                     ProcessedFiles.Remove(exist);
                 }
@@ -421,11 +421,11 @@ namespace Vusic_Player.Pages.Views
             {
                 if (App.MainWindowInstance is MainWindow wind)
                 {
-                  wind.ShowFileInfo(file.FilePath);
+                    wind.ShowFileInfo(file.FilePath);
                 }
             }
         }
-      
+
         private void mnftCopyReverbOutputFilePath_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
@@ -447,7 +447,7 @@ namespace Vusic_Player.Pages.Views
 
         private void mnftPlayOriginal_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
             {
                 PlayerService.OpenPath(file.FilePath);
             }
@@ -478,9 +478,21 @@ namespace Vusic_Player.Pages.Views
         private async void btnPlayAllOutput_Click(object sender, RoutedEventArgs e)
         {
             var tempobservable = new ObservableCollection<SongModel>();
-            foreach(var item in ProcessedFiles)
+            foreach (var item in ProcessedFiles)
             {
-                tempobservable.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath });
+                if (File.Exists(item.OutputPath))
+                {
+                    try
+                    {
+                        var storagefile = await StorageFile.GetFileFromPathAsync(item.OutputPath);
+                        var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
+                        tempobservable.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath, SongDuration = musicprops.Duration });
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
             }
             QueueService.PlayMedia(tempobservable, false, false);
         }
