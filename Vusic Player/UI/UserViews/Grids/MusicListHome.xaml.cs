@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
@@ -137,10 +138,10 @@ namespace Vusic_Player.UI.UserViews.Grids
                     try
                     {
                         ObservableCollection<SongModel> single = new();
-                        var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                        var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
                         var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                        string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
-                        single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                        string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
+                        single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
                         QueueService.PlayMedia(single, false, false);
                     }
                     catch (Exception ex)
@@ -166,17 +167,17 @@ namespace Vusic_Player.UI.UserViews.Grids
                             try
                             {
                                 ObservableCollection<SongModel> single = new();
-                                var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                                var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
                                 var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                                string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
-                                single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                                string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
+                                single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
                                 QueueService.PlayMedia(single, false, false);
                             }
                             catch (Exception ex)
                             {
                                 Logger.Log("Error Occured: " + ex.Message, "RecentMusicGridView.PlayRecents", Logger.LogLevelType.Error);
                             }
-                            QueueService.PlayMedia(single, false, false);
+                       
                             OceanContentDialog.HideDlg();
                             MainWindow.ShowWindow();
                         }
@@ -267,10 +268,10 @@ namespace Vusic_Player.UI.UserViews.Grids
                     try
                     {
                         ObservableCollection<SongModel> single = new();
-                        var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                        var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
                         var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                        string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
-                        single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                        string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
+                        single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
                         QueueService.PlayMedia(single, false, false);
                     }
                     catch (Exception ex)
@@ -299,10 +300,10 @@ namespace Vusic_Player.UI.UserViews.Grids
                             try
                             {
                                 ObservableCollection<SongModel> single = new();
-                                var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                                var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
                                 var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                                string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
-                                single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                                string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
+                                single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
                                 QueueService.PlayMedia(single, false, false);
                             }
                             catch (Exception ex)

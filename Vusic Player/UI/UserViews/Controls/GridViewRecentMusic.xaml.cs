@@ -157,7 +157,6 @@ namespace Vusic_Player.UI.UserViews.Controls
                                 selectedSong.SongPath = file.Path;
                                 selectedSong.SongName = title;
                                 selectedSong.Thumbnail = await FileThumbnailObtain.GetFileThumbnailAsync(file.Path);
-                                string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
                                 try
                                 {
                                     ObservableCollection<SongModel> single = new();
@@ -236,7 +235,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log("Error Occured: " + ex.Message, "RecentMusicGridView.PlayRecents", Logger.LogLevelType.Error)
+                        Logger.Log("Error Occured: " + ex.Message, "RecentMusicGridView.PlayRecents", Logger.LogLevelType.Error);
                     }
                 }
                 else

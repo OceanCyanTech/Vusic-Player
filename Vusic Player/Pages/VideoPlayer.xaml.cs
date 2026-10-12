@@ -195,15 +195,22 @@ namespace Vusic_Player.Pages
       
         }
         int pointertimercount = 2;
+        private bool _isCursorSuppressed = false;
         private void PointerTimer_Tick(object? sender, object e)
         {
-            pointertimercount--;
-
-            if (pointertimercount <= 0)
+        
+            if (pointertimercount > 0)
             {
+                pointertimercount--;
+            }
+
+            if (pointertimercount == 0)
+            {
+                _isCursorSuppressed = true;
+
+                // Continuously enforce the hidden cursor on each tick
+                // This instantly catches Windows OSD/volume overrides
                 RootGrid.SetCursorVisibility(false);
-                PointerTimer.Stop(); // Stop ticking once hidden
-                pointertimercount = 2;
             }
         }
 
@@ -2192,7 +2199,14 @@ namespace Vusic_Player.Pages
 
         private void MainGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
+            // Filter micro-shakes/jitter if needed
+            pointertimercount = 2;
             ShowPanel();
+            if (_isCursorSuppressed)
+            {
+                _isCursorSuppressed = false;
+                RootGrid.SetCursorVisibility(true);
+            }
         }
 
         private void MainGrid_PointerEntered(object sender, PointerRoutedEventArgs e)

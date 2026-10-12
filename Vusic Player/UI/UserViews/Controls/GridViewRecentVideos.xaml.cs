@@ -86,7 +86,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         }
 
-        private void mnftPlayRecents_Click(object sender, RoutedEventArgs e)
+        private async void mnftPlayRecents_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress selectedSong)
             {
@@ -95,10 +95,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                     try
                     {
                         ObservableCollection<SongModel> single = new();
-                        var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                        var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
                         var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                        string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
-                        single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                        string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
+                        single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
                         QueueService.PlayMedia(single, false, false);
                     }
                     catch (Exception ex)
@@ -135,10 +135,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                                 try
                                 {
                                     ObservableCollection<SongModel> single = new();
-                                    var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.SongPath);
+                                    var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
                                     var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                                    string Title = Path.GetFileNameWithoutExtension(selectedSong.SongPath);
-                                    single.Add(new SongModel { FilePath = selectedSong.SongPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
+                                    string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
+                                    single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
                                     QueueService.PlayMedia(single, false, false);
                                 }
                                 catch (Exception ex)

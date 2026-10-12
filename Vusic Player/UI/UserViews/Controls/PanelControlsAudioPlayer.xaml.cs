@@ -253,5 +253,13 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             audioReverbControl.ClearProgress();
         }
+
+        private void mnftFormatConverter_Click(object sender, RoutedEventArgs e)
+        {
+            if(App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(FormatConverter));
+            }
+        }
     }
 }
