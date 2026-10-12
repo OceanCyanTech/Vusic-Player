@@ -7,9 +7,12 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Extensions;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -23,12 +26,39 @@ namespace Vusic_Player.Pages.Views
     /// </summary>
     public sealed partial class FormatConverter : Page
     {
+        ObservableCollection<FileFormatConverterModel> AddedFiles = new ObservableCollection<FileFormatConverterModel>();
+        ObservableCollection<FileFormatConverterModel> ProcessedFiles = new ObservableCollection<FileFormatConverterModel>();
         public FormatConverter()
         {
             InitializeComponent();
         }
 
         private void btnAddAudioFiles_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void cmbFromFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void cmbToFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void btnConvert_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnOutput_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnConvertAll_Click(object sender, RoutedEventArgs e)
         {
 
         }
