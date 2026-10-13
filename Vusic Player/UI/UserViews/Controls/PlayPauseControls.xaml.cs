@@ -24,7 +24,6 @@ namespace Vusic_Player.UI.UserViews.Controls
     public sealed partial class PlayPauseControls : UserControl
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
-
         public PlayPauseControls()
         {
             InitializeComponent();

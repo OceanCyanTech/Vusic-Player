@@ -12,6 +12,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
     {
         private string _theme = "Ocean";
         private string _skipback = $"ms-appx:///Assets/Themes/Ocean/skip10back.png";
+        private string _next= $"ms-appx:///Assets/Themes/Ocean/next.png";
         private string _skipahead = $"ms-appx:///Assets/Themes/Ocean/skip10ahead.png";
       
         public static IconHolder Instance { get; } = new IconHolder();
@@ -20,6 +21,11 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         {
             get => _theme;
             set => SetProperty(ref _theme, value);
+        }
+        public string Next
+        {
+            get => _next;
+            set => SetProperty(ref _next, value);
         }
         public string SkipBack
         {

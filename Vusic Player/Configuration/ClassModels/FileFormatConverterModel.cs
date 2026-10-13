@@ -17,6 +17,8 @@ namespace Vusic_Player.Configuration.ClassModels
         private string _filename = "";
         private string _glyph = "\uEC4F";
         private string _fromformat = ".mp3";
+        private List<string> _audioextensions = new List<string>();
+        private List<string> _videoextensions = new List<string>();
         public TimeSpan? Duration { get; set; }
 
         private string _toformat = ".wav";
@@ -38,9 +40,32 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
+        public List<string> VideoExtensionsList
+        {
+            get => _videoextensions;
+            set
+            {
+                if (_videoextensions != value)
+                {
+                    _videoextensions = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public List<string> AudioExtensionsList
+        {
+            get => _audioextensions;
+            set
+            {
+                if (_audioextensions != value)
+                {
+                    _audioextensions = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-        public List<string> AudioExtension = new List<string>(AudioExtensions.List);
-        public List<string> VideoExtension = new List<string>(VideoExtensions.List);
+
         public string FormattedDuration
         {
             get

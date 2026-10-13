@@ -8,8 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources>
-        <local:CountToAudioFilesConverter x:Key="CountToAudioFilesConv"/>
-        <local:CountToAudioFilesProcessedConverter x:Key="CountToAudioFilesProcessedConv"/>
+        <local:CountToMediaFilesConverter x:Key="CountToAudioFilesConv"/>
+        <local:CountToMediaFilesProcessedConverter x:Key="CountToAudioFilesProcessedConv"/>
     </Page.Resources>
     <Grid Margin="40, 40" RowSpacing="40">
         <Grid.RowDefinitions>
@@ -26,19 +26,19 @@
         <Button Name="btnAddAudioFiles" Click="btnAddAudioFiles_Click" Grid.Row="2">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Source="/Assets/addicon.png" Width="20"/>
-                <TextBlock Text="Add Audio Files"/>
+                <TextBlock Text="Add Media Files"/>
             </StackPanel>
         </Button>
         <TextBlock Text="{x:Bind AddedFiles.Count, Converter={StaticResource CountToAudioFilesConv}, Mode=OneWay}" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         <TextBlock Text="{x:Bind ProcessedFiles.Count, Converter={StaticResource CountToAudioFilesProcessedConv}, Mode=OneWay}" Grid.Row="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-        <Button Name="btnConvertAll" Click="btnConvertAll_Click" Content="Convert" Style="{StaticResource AccentButtonStyle}" Grid.Row="5"/>
+        <Button Name="btnConvertAll" Click="btnConvertAll_Click" Content="Convert All" Style="{StaticResource AccentButtonStyle}" Grid.Row="5"/>
 
         <ListView Name="lstViewFiles" Grid.Row="6" ItemsSource="{x:Bind AddedFiles, Mode=OneWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid ToolTipService.ToolTip="{Binding FilePath}">
+                    <Grid ColumnSpacing="30" ToolTipService.ToolTip="{Binding FilePath}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -49,10 +49,13 @@
                         <FontIcon FontSize="14" Glyph="{Binding Glyph}"/>
                         <TextBlock Text="{Binding FileName}" Grid.Column="1"/>
                         <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding FormattedDuration}" Grid.Column="2"/>
-                        <ComboBox Name="cmbFromFormat" SelectionChanged="cmbFromFormat_SelectionChanged" Grid.Column="3" ItemsSource="{Binding AudioExtension}"/>
-                        <ComboBox Name="cmbToFormat" SelectionChanged="cmbToFormat_SelectionChanged" Grid.Column="4" ItemsSource="{Binding VideoExtension}"/>
+                        <TextBlock Text="{Binding FromFormat}" Grid.Column="3"/>
+                        <ComboBox SelectedIndex="0" Name="cmbToFormat"  Grid.Column="4" ItemsSource="{Binding AudioExtensionsList}"/>
                         <Button Name="btnConvert" Click="btnConvert_Click" Content="Convert" Style="{StaticResource AccentButtonStyle}" Grid.Column="5"/>
                         <Button Name="btnOutput" Click="btnOutput_Click" Grid.Column="6" ToolTipService.ToolTip="Open File Output Location">
+                            <FontIcon FontSize="14" Glyph="&#xE838;"/>
+                        </Button>
+                        <Button Name="btnCustomOutput" Click="btnCustomOutput_Click" Grid.Column="6" ToolTipService.ToolTip="Choose Custom Output Location (Default is same as file location with a unique name)">
                             <FontIcon FontSize="14" Glyph="&#xE838;"/>
                         </Button>
                     </Grid>

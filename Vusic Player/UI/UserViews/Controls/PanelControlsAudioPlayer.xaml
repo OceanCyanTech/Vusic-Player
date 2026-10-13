@@ -78,7 +78,7 @@
                 <Button.Flyout>
                     <Flyout>
                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-                            <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Audio Tools"  Name="btnTools" IsEnabled="True" >
+                            <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Media Tools"  Name="btnTools" IsEnabled="True" >
                                 <Button.Flyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem Text="Pitch" Click="mnftPitch_Click">

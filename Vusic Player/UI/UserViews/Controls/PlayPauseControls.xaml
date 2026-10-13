@@ -31,7 +31,7 @@
         <Button Name="btnNext" Click="btnNext_Click" Padding="2" Background="Transparent" BorderBrush="Transparent">
             <Image Name="imgNext" 
                Width="{x:Bind ImageWidth, Mode=OneWay}" 
-               Source="/Assets/next.png"/>
+               Source="{x:Bind IconsInstance.Next, Mode=OneWay}"/>
         </Button>
 
         <Button Name="btnSeekAfter" Click="btnSeekAfter_Click" Padding="2" Background="Transparent" BorderBrush="Transparent">

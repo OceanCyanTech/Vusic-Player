@@ -114,6 +114,8 @@
     <controls:CursorDisappearGrid x:Name="RootGrid" PreviewKeyDown="MainGrid_PreviewKeyDown" KeyboardAcceleratorPlacementMode="Hidden">
         <controls:CursorDisappearGrid.KeyboardAccelerators>
             <KeyboardAccelerator Key="Space" Invoked="Spacebar_Invoked" />
+            
+            
         </controls:CursorDisappearGrid.KeyboardAccelerators>
         <Grid Name="SplashGrid" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ChildrenTransitions>
