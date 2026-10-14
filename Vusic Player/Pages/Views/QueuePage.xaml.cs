@@ -540,6 +540,12 @@ namespace Vusic_Player.Pages.Views
             mediacontroller.IsFullQueueMode = btnViewQueue.IsChecked ?? false;
             lstViewQueue.ItemsSource = currentQueue;
             UpdateUI(currentQueue);
+          
+            int count = currentQueue.Count;
+            mediacontroller.QueuePageEmptyVisibility = (count == 0)
+                   ? Visibility.Visible
+                   : Visibility.Collapsed;
+            mediacontroller.ItemsCount = $"• {count} {(count == 1 ? "item" : "items")}";
             var upnextstring = (btnViewQueue.IsChecked == true) ? "Full Queue" : "Up Next";
             txtUpNext.Text = upnextstring;
         }

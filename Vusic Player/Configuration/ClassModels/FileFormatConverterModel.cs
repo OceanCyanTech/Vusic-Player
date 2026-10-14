@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Extensions;
 
 namespace Vusic_Player.Configuration.ClassModels
@@ -16,7 +18,9 @@ namespace Vusic_Player.Configuration.ClassModels
         private string _filepath = "";
         private string _filename = "";
         private string _glyph = "\uEC4F";
+        private bool _isenabled = true;
         private string _fromformat = ".mp3";
+        private string _imagestate = "";
         private List<string> _audioextensions = new List<string>();
         private List<string> _videoextensions = new List<string>();
         public TimeSpan? Duration { get; set; }
@@ -40,6 +44,18 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
+        public bool IsEnabled
+        {
+            get => _isenabled;
+            set
+            {
+                if (_isenabled != value)
+                {
+                    _isenabled = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         public List<string> VideoExtensionsList
         {
             get => _videoextensions;
@@ -52,6 +68,8 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
+        // Inside FileFormatConverterModel
+        public bool CanPlayOutput => !string.IsNullOrEmpty(OutputPath) && File.Exists(OutputPath) && Progress >= 100;
         public List<string> AudioExtensionsList
         {
             get => _audioextensions;
@@ -116,6 +134,18 @@ namespace Vusic_Player.Configuration.ClassModels
                 }
             }
         }
+        public string ImageState
+        {
+            get => _imagestate;
+            set
+            {
+                if (_imagestate != value)
+                {
+                    _imagestate = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         public string ToFormat
         {
             get => _toformat;
@@ -137,6 +167,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 {
                     _outputpath = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(CanPlayOutput));
                 }
             }
         }
@@ -172,6 +203,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 if (_progress != value)
                 {
                     _progress = value;
+                    OnPropertyChanged(nameof(CanPlayOutput));
                     OnPropertyChanged();
                 }
             }

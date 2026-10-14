@@ -79,120 +79,113 @@ namespace Vusic_Player.UI.UserViews.Grids
             }
             else
             {
-               
                 stkEnabledEmptyRecents.Visibility = Visibility.Visible;
                 stkDisabledEmptyRecents.Visibility = Visibility.Collapsed;
             }
-  
+
             if (settings.SavedVideoProgress.Count == 0)
             {
                 grdHighlightVideo.Visibility = Visibility.Collapsed;
+                grdRecents.Visibility = Visibility.Collapsed;
+                grdEmptyRecents.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Filter out hidden entries
+            var hiddenVideos = settings.HiddenMedia;
+            var hiddenPathSet = new HashSet<string>(
+                hiddenVideos.Select(h => h.FilePath),
+                StringComparer.OrdinalIgnoreCase
+            );
+
+            // Filter out hidden videos AND videos that have reached or passed 97% completion
+            var visibleVideos = settings.SavedVideoProgress
+                .Where(x => !hiddenPathSet.Contains(x.FilePath)
+                         && x.TotalDuration > 0
+                         && x.CurrentDuration < x.TotalDuration
+                         && x.CurrentDuration <= 0.97 * x.TotalDuration && File.Exists(x.FilePath))
+                .ToList();
+
+            var lastSavedItem = visibleVideos.LastOrDefault();
+            var remainingItems = visibleVideos.SkipLast(1).Reverse().ToList();
+
+            if (lastSavedItem != null)
+            {
+                grdHighlightVideo.Visibility = Visibility.Visible;
+                ContinuePlaying.videoProgressMain = lastSavedItem;
+                ContinuePlaying.InvokeCall();
             }
             else
             {
-                // Retrieve the item at the end of the list
-                var hiddenVideos = settings.HiddenMedia;
+                grdHighlightVideo.Visibility = Visibility.Collapsed;
+            }
 
+            if (remainingItems.Count > 0)
+            {
+                grdRecents.Visibility = Visibility.Visible;
+                grdEmptyRecents.Visibility = Visibility.Collapsed;
 
-                // Filter out hidden entries first
-                var hiddenPathSet = new HashSet<string>(
-     hiddenVideos.Select(h => h.FilePath),
-     StringComparer.OrdinalIgnoreCase
- );
-
-                var visibleVideos = settings.SavedVideoProgress
-                    .Where(x => !hiddenPathSet.Contains(x.FilePath))
-                    .ToList();
-                var lastSavedItem = visibleVideos.LastOrDefault();
-                var remainingItems = visibleVideos.SkipLast(1).Reverse().ToList();
-                if (lastSavedItem != null)
+                VideoProgressList.Clear();
+                foreach (var item in remainingItems)
                 {
-                    ContinuePlaying.videoProgressMain = lastSavedItem;
-                    ContinuePlaying.InvokeCall();
-
-                }
-                else
-                {
-                    grdHighlightVideo.Visibility = Visibility.Collapsed;
-                }
-                if (remainingItems.Count > 0)
-                {
-
-                    grdRecents.Visibility = Visibility.Visible;
-                    grdEmptyRecents.Visibility = Visibility.Collapsed;
-
-                    VideoProgressList.Clear();
-                    foreach (var item in remainingItems)
+                    if (item.FilePath is string path && File.Exists(path))
                     {
-                        if (item.FilePath is string path)
+                        var videoprogressitem = new VideoProgress
                         {
-                            if (File.Exists(path))
-                            {
-                                var videoprogressitem = new VideoProgress { FilePath = path, IsEpisode = item.IsEpisode };
-                                var file = await StorageFile.GetFileFromPathAsync(path);
-                                string fileExtension = file.FileType.ToLowerInvariant();
-                                if (Extensions.VideoExtensions.List.Contains(fileExtension))
-                                {
-                                    Debug.WriteLine("REQ PATH SI " + path);
-                                    videoprogressitem.FileName = Path.GetFileNameWithoutExtension(path);
-                                }
-                                //    item.Thumbnail = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, 0.25);
+                            FilePath = path,
+                            IsEpisode = item.IsEpisode,
+                            CurrentDuration = item.CurrentDuration,
+                            TotalDuration = item.TotalDuration
+                        };
 
-                                var totalduration = item.TotalDuration;
-                                var currentduration = item.CurrentDuration;
-                                var percent97 = 0.97 * totalduration;
-                                if (currentduration < totalduration && currentduration <= percent97)
-                                {
-                                    videoprogressitem.CurrentDuration = currentduration;
-                                    videoprogressitem.TotalDuration = totalduration;
-                                    VideoProgressList.Add(videoprogressitem);
-                                    var fallbackUri = "ms-appx:///Assets/default.png";
-                                    videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
-                                    var percentage = (videoprogressitem.CurrentDuration / videoprogressitem.TotalDuration);
-
-                                    var task = Task.Run(async () =>
-                                    {
-                                        var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, percentage);
-                                        Debug.WriteLine("The thumbnail path is " + thumb);
-
-                                        DispatcherQueue.TryEnqueue(async () =>
-                                        {
-                                            try
-                                            {
-                                                var bitmap = new BitmapImage();
-                                                using (var stream = File.OpenRead(thumb))
-                                                {
-                                                    await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
-                                                }
-                                                videoprogressitem.Thumbnail = bitmap;
-                                                videoprogressitem.ThumbnailPath = thumb;
-                                                File.Delete(thumb);
-
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
-                                                Debug.WriteLine("An unexpected error occured: " + ex.Message);
-                                            }
-                                        });
-
-                                    });
-                                }
-                            }
+                        var file = await StorageFile.GetFileFromPathAsync(path);
+                        string fileExtension = file.FileType.ToLowerInvariant();
+                        if (Extensions.VideoExtensions.List.Contains(fileExtension))
+                        {
+                            Debug.WriteLine("REQ PATH SI " + path);
+                            videoprogressitem.FileName = Path.GetFileNameWithoutExtension(path);
                         }
+
+                        VideoProgressList.Add(videoprogressitem);
+
+                        var fallbackUri = "ms-appx:///Assets/default.png";
+                        videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
+                        var percentage = videoprogressitem.CurrentDuration / videoprogressitem.TotalDuration;
+
+                        var task = Task.Run(async () =>
+                        {
+                            var thumb = await FileThumbnailObtain.ExtractVidThumbnailBasic(path, percentage);
+                            Debug.WriteLine("The thumbnail path is " + thumb);
+
+                            DispatcherQueue.TryEnqueue(async () =>
+                            {
+                                try
+                                {
+                                    var bitmap = new BitmapImage();
+                                    using (var stream = File.OpenRead(thumb))
+                                    {
+                                        await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                                    }
+                                    videoprogressitem.Thumbnail = bitmap;
+                                    videoprogressitem.ThumbnailPath = thumb;
+                                    File.Delete(thumb);
+                                }
+                                catch (Exception ex)
+                                {
+                                    videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
+                                    Debug.WriteLine("An unexpected error occurred: " + ex.Message);
+                                }
+                            });
+                        });
                     }
-
-
-                    // You can now use lastSavedItem.CurrentDuration to resume playback
-                }
-                else
-                {
-                    grdRecents.Visibility = Visibility.Collapsed;
-                    grdEmptyRecents.Visibility = Visibility.Visible;
                 }
             }
+            else
+            {
+                grdRecents.Visibility = Visibility.Collapsed;
+                grdEmptyRecents.Visibility = Visibility.Visible;
+            }
         }
-
         private async void ContinuePlaying_InvokeList()
         {
             if (ContinuePlaying.videoProgressMain is VideoProgress vd && vd != null)
