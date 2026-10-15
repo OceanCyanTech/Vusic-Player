@@ -11,10 +11,13 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
     public class IconHolder: INotifyPropertyChanged
     {
         private string _theme = "Ocean";
-        private string _skipback = $"ms-appx:///Assets/Themes/Ocean/skip10back.png";
+        private string _skipback = "ms-appx:///Assets/Themes/Ocean/skip10back.png";
         private string _next= $"ms-appx:///Assets/Themes/Ocean/next.png";
         private string _error= $"ms-appx:///Assets/Themes/Ocean/error.png";
+        private string _success= $"ms-appx:///Assets/Themes/Ocean/success.png";
+        private string _info= $"ms-appx:///Assets/Themes/Ocean/infoicon.png";
         private string _skipahead = $"ms-appx:///Assets/Themes/Ocean/skip10ahead.png";
+        private string _fontfamily = $"Bahnschrift";
       
         public static IconHolder Instance { get; } = new IconHolder();
 
@@ -33,6 +36,18 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
             get => _next;
             set => SetProperty(ref _next, value);
         }
+
+        public string Success
+        {
+            get => _success;
+            set => SetProperty(ref _success, value);
+        }
+
+        public string InfoIcon
+        {
+            get => _info;
+            set => SetProperty(ref _info, value);
+        }
         public string SkipBack
         {
             get => _skipback;
@@ -42,6 +57,12 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         {
             get => _skipahead;
             set => SetProperty(ref _skipahead, value);
+        }
+
+        public string FontFamily
+        {
+            get => _fontfamily;
+            set => SetProperty(ref _fontfamily, value);
         }
 
         #region INotifyPropertyChanged Implementation

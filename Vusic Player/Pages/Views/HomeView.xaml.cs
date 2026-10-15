@@ -16,6 +16,7 @@ using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -35,7 +36,7 @@ namespace Vusic_Player.Pages.Views
         {
             InitializeComponent();
         }
-
+        IconHolder IconHolderInstance => IconHolder.Instance;
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();

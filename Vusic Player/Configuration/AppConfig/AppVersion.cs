@@ -10,7 +10,7 @@ namespace Vusic_Player.Configuration.AppConfig
 {
     public class AppVersion
     {
-        public static string VersionString = "1.1.0.0";
+        public static string VersionString = "1.0.0.0";
 
         static int counter2;
         public static async void LoadBuildCounter()

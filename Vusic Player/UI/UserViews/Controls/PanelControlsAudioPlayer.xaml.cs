@@ -261,5 +261,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                 App.NavigationFrame.Navigate(typeof(FormatConverter));
             }
         }
+
+        private void btnLoopToggle_Checked(object sender, RoutedEventArgs e)
+        {
+            QueueService.IsLoopTrue = btnLoopToggle.IsChecked ?? false;
+        }
     }
 }

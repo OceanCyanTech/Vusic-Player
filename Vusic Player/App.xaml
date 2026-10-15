@@ -21,6 +21,7 @@
             <converter:BoolToBrushConverter x:Key="FavColor" 
     TrueBrush="Red" 
     FalseBrush="White"/>
+            <FontFamily x:Key="GlobalFontHolder">Candara</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

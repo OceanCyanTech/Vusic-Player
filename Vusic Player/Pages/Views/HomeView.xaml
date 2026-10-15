@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <ScrollViewer>
-        <Grid Margin="40, 20" RowSpacing="10">
+        <Grid  Margin="40, 20" RowSpacing="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
@@ -24,18 +24,18 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Text="Welcome" Style="{StaticResource TitleLargeTextBlockStyle}" Grid.Row="0"></TextBlock>
+            <TextBlock Text="Welcome"  FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleLargeTextBlockStyle}" Grid.Row="0"></TextBlock>
             <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0, 20" Spacing="10">
                 <Button Name="btnOpenFolder" CornerRadius="12" Margin="0, 0"  Click="btnOpenFolder_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="20" Source="/Assets/openfolder.png"></Image>
-                        <TextBlock Margin="5,0" Text="Open Folder" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                        <TextBlock  VerticalAlignment="Bottom"   FontFamily="{StaticResource GlobalFontHolder}"  Margin="5,0" Text="Open Folder" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </Button>
                 <Button CornerRadius="12" ToolTipService.ToolTip="(Ctrl + O) Open and play any video or audio" Click="btnOpenMedia_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="20" Source="/Assets/importicon.png"></Image>
-                        <TextBlock Margin="5,0" Text="Open Media"  Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                        <Image VerticalAlignment="Top" Width="20" Source="/Assets/importicon.png"></Image>
+                        <TextBlock VerticalAlignment="Bottom" FontFamily="{StaticResource GlobalFontHolder}"    Margin="5,0" Text="Open Media"  Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Modifiers="Control" Key="O"></KeyboardAccelerator>
@@ -44,38 +44,60 @@
             </StackPanel>
 
             <Expander  IsExpanded="True"  Expanding="expRecentsVideo_Expanding" Name="expRecentsVideo" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Header="Continue Playing" HorizontalAlignment="Stretch"  Grid.Row="2">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Continue Playing" FontFamily="{StaticResource GlobalFontHolder}"/>
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
                 <grids:ContinuePlayingRecentsVideo Margin="0, 10"/>
             </Expander>
 
             <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="10">
-                <TextBlock Name="txtDisplay1" Tapped="TextBlock_Tapped" Text="Your Recently Listened" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtDisplay1" Tapped="TextBlock_Tapped" Text="Your Recently Listened" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             </StackPanel>
 
             <Expander HorizontalContentAlignment="Stretch" Header="Recent Music" HorizontalAlignment="Stretch" Grid.Row="4"  IsExpanded="False"  Expanding="expRecentsVideo_Expanding" Name="expRecentMusic">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Recent Music" FontFamily="{StaticResource GlobalFontHolder}"/>
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
+
                 <grids:RecentMusicList />
 
             </Expander>
 
             <StackPanel Orientation="Horizontal" Grid.Row="5" Spacing="10">
-                <TextBlock Name="txtDisplay2" Tapped="TextBlock_Tapped_1" Text="Music For You" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Name="txtDisplay2" Tapped="TextBlock_Tapped_1" Text="Music For You" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             </StackPanel>
 
             <Expander Grid.Row="6" HorizontalContentAlignment="Stretch" Header="Music Suggestions" HorizontalAlignment="Stretch" IsExpanded="False" Expanding="expRecentsVideo_Expanding" Name="expMusicMix">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Music Suggestions" FontFamily="{StaticResource GlobalFontHolder}"/>
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
+
                 <grids:MusicListHome />
 
             </Expander>
 
             <StackPanel Name="txtDisplay3" Orientation="Horizontal" Grid.Row="7" Spacing="10" Margin="0, 10">
-                <TextBlock Tapped="TextBlock_Tapped_2" Text="Jump back to your favourites" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
-                <HyperlinkButton Name="hypViewAllFav" Click="hypViewAllFav_Click" Content="View all favourites" FontSize="16" Margin="0, 10"></HyperlinkButton>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Tapped="TextBlock_Tapped_2" Text="Jump back to your favourites" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}" Name="hypViewAllFav" Click="hypViewAllFav_Click" Content="View all favourites" FontSize="16" Margin="0, 10"></HyperlinkButton>
             </StackPanel>
 
-            <Expander Grid.Row="8" HorizontalContentAlignment="Stretch" Header="Recommended Favourites" HorizontalAlignment="Stretch" IsExpanded="False" Expanding="expRecentsVideo_Expanding" Name="expFav">
+            <Expander FontFamily="{StaticResource GlobalFontHolder}" Grid.Row="8" HorizontalContentAlignment="Stretch" Header="Recommended Favourites" HorizontalAlignment="Stretch" IsExpanded="False" Expanding="expRecentsVideo_Expanding" Name="expFav">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Recommended Favourites" FontFamily="{StaticResource GlobalFontHolder}"/>
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
                 <grids:Favourites />
 
             </Expander>
             <StackPanel Orientation="Horizontal" Grid.Row="9" Spacing="10">
-                <TextBlock Tapped="TextBlock_Tapped_1" Text="Folders Opened" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Tapped="TextBlock_Tapped_1" Text="Folders Opened" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             </StackPanel>
             <StackPanel Visibility="Collapsed" Name="stkFoldersOptions" Orientation="Horizontal" Spacing="20" Grid.Row="10">
                 <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
@@ -102,19 +124,19 @@
                             <!-- Right-click Context Menu -->
                             <Grid.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Open Folder" 
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Open Folder" 
                                         Icon="Folder" Name="mnftOpenFolder"
                                         Click="mnftOpenFolder_Click" />
-                                    <MenuFlyoutItem Text="Open Folder Location" 
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Open Folder Location" 
                                         Icon="OpenFile"
                                         Name="mnftOpenFolderLoc"
                                         Click="mnftOpenFolderLoc_Click" />
-                                    <MenuFlyoutItem Text="Copy Folder Path" 
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Copy Folder Path" 
                                         Icon="Copy"
                                Name="mnftCopyFolderLoc"
      Click="mnftCopyFolderLoc_Click"/>
                                     <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem Text="Remove Folder from List" 
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Remove Folder from List" 
                                         Icon="Delete"
                                              Name="mnftRemoveFolderLoc"
      Click="mnftRemoveFolderLoc_Click" />
@@ -126,7 +148,7 @@
                             VerticalAlignment="Center" 
                             Spacing="6">
                                 <Image Width="80" Source="/Assets/foldericon.png" />
-                                <TextBlock Text="{Binding FolderName}" 
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding FolderName}" 
                                FontSize="12"
                                TextTrimming="CharacterEllipsis" 
                                HorizontalAlignment="Center"
@@ -141,11 +163,11 @@
                 <StackPanel Orientation="Vertical" Spacing="15">
                     <StackPanel Orientation="Vertical" Spacing="20">
                         <Image Width="90" Source="/Assets/foldericon.png"></Image>
-                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="No Folders have been opened yet!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" TextWrapping="Wrap" Text="No Folders have been opened yet!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                         <Button HorizontalAlignment="Center" Name="btnOpenFolder2" CornerRadius="12" Margin="0, 0"  Click="btnOpenFolder_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="20" Source="/Assets/openfolder.png"></Image>
-                                <TextBlock Margin="5,0" Text="Open Folder" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" VerticalAlignment="Bottom" Margin="5,0" Text="Open Folder" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                             </StackPanel>
                         </Button>
                     </StackPanel>

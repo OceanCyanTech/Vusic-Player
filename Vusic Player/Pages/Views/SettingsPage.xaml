@@ -60,16 +60,21 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
+                        <StackPanel Orientation="Vertical" Spacing="30">
                         <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <MenuFlyoutSeparator/>
+                        </StackPanel>
                         <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Spacing="15">
                             <StackPanel Orientation="Horizontal" Spacing="20">
                                 <Image VerticalAlignment="Center" Width="50" Source="/Assets/appicon.png"></Image>
                                 <TextBlock IsTextSelectionEnabled="True" VerticalAlignment="Center" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Vusic Player"></TextBlock>
                             </StackPanel>
-                            <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.1.0.0"></TextBlock>
-                            <TextBlock IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="Preview (Beta 2)"></TextBlock>
-                            <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech"></TextBlock>
-                            <Image Margin="0, 30" HorizontalAlignment="Left" Width="300" Source="/Assets/OceanCyan Logo High.png"></Image>
+                            <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.0.0"></TextBlock>
+                            <TextBlock IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="Preview (RTM)"></TextBlock>
+                            <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech 2026" Name="txtCompanyCopyright"></TextBlock>
+                            
+                            <Image Margin="0, 30" HorizontalAlignment="Left" Width="300" Source="/Assets/OceanCyan Logo High.png"/>
+                            <MenuFlyoutSeparator/>
                             <TextBlock Text="Open Source Licenses" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock Text="FlyleafLib" Style="{StaticResource BodyStrongTextBlockStyle}"/>
                             <TextBlock Text="Copyright © SuRGeoNix"/>
@@ -82,13 +87,17 @@
                         <MenuFlyoutSeparator Grid.Row="2"/>
                         <TextBlock Text="Updates" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}"/>
                         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
-                            <Image Width="30" Source="/Assets/success.png"/>
-                            <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="You are on the latest version of Vusic Player!"/>
+                            <ProgressRing Name="prgCheckingForUpdates" Visibility="Collapsed"/>
+                            <Image Width="30" Name="imgUpdate" Source="/Assets/success.png"/>
+                            <TextBlock VerticalAlignment="Center" Name="txtUpdateInfo" Style="{StaticResource BodyLargeStrongTextBlockStyle}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="You are on the latest version of Vusic Player!"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Spacing="20" Grid.Row="5">
                             <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" Text="The Microsoft Store handles updates automatically. But if you want to double-check right now, you can trigger a manual check below."/>
-
-                            <Button Style="{StaticResource AccentButtonStyle}" Content="Check For Updates"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" Style="{StaticResource AccentButtonStyle}" Content="Check For Updates"/>
+                            <Button Name="btnOpenStore" Click="btnOpenStore_Click"  Content="Open Microsoft Store to Update" Visibility="Collapsed"/>
+                                <HyperlinkButton Name="hypWhatsNew" NavigateUri="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/NewVersionReleasenotes.md" Content="See what's new!" Click="hypWhatsNew_Click" Visibility="Collapsed"/>
+                            </StackPanel>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="6"/>
                         <TextBlock Text="Help" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
@@ -99,6 +108,10 @@
                     </Grid>
                     <Grid Name="grdMusicOptions" RowSpacing="30" Visibility="Collapsed">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -125,9 +138,57 @@
                             </Button.Flyout>
                         </Button>
                         <MenuFlyoutSeparator Grid.Row="5"/>
-                        <TextBlock Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="6"/>
-                        <TextBlock Text="Hide or show panels in the music library page." Grid.Row="7"/>
-                        <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="8">
+                        <TextBlock Text="Audio Metadata" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="6"/> 
+                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="7">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Clear artist profile pictures saved in Vusic Player." Grid.Row="7"/>
+                                <Button Grid.Row="4"  Content="Delete all Artist Profile Pictures">
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel Orientation="Vertical" Spacing="10">
+                                                <TextBlock Text="Are you sure you want to delete all artist profile pictures saved?"/>
+                                                <TextBlock Text="This cannot be undone"/>
+                                                <Button Content="Confirm Delete" Name="btnDeleteAllArtists" Click="btnDeleteAllArtists_Click" Style="{StaticResource AccentButtonStyle}" />
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Clear album covers saved in Vusic Player." Grid.Row="7"/>
+                                <Button Grid.Row="4"  Content="Delete all Album Covers">
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel Orientation="Vertical" Spacing="10">
+                                                <TextBlock Text="Are you sure you want to delete all album covers saved?"/>
+                                                <TextBlock Text="This cannot be undone"/>
+                                                <Button Content="Confirm Delete" Name="btnDeleteAllAlbums" Click="btnDeleteAllAlbums_Click" Style="{StaticResource AccentButtonStyle}" />
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Clear genre covers saved in Vusic Player." Grid.Row="7"/>
+                                <Button Grid.Row="4"  Content="Delete all Genre Covers">
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel Orientation="Vertical" Spacing="10">
+                                                <TextBlock Text="Are you sure you want to delete all genre covers saved?"/>
+                                                <TextBlock Text="This cannot be undone"/>
+                                                <Button Content="Confirm Delete" Name="btnDeleteAllGenres" Click="btnDeleteAllGenres_Click" Style="{StaticResource AccentButtonStyle}" />
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </StackPanel>
+                            <MenuFlyoutSeparator/>
+                        </StackPanel>
+                        <TextBlock Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="8"/>
+                        <TextBlock Text="Hide or show panels in the music library page." Grid.Row="9"/>
+                        <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="10">
                             <CheckBox x:Name="chkMusicRecent" Content="Recent Music" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
                             <CheckBox x:Name="chkMusicPlaylists" Content="Playlists" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
                             <CheckBox x:Name="chkMusicInstantPlaylists" Content="Instant Playlists" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
@@ -269,6 +330,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Text="General Settings" Style="{StaticResource TitleTextBlockStyle}"/>
                         <MenuFlyoutSeparator Grid.Row="1"/>
@@ -298,7 +361,32 @@
                             </ComboBox>
                             <NumberBox ValueChanged="numCustomSkipAhead_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipForward"/>
                         </StackPanel>
+                        <MenuFlyoutSeparator Grid.Row="6"/>
+                        <TextBlock Text="Customization" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="7"/>
+                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="8">
+                        <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="8">
+                            <TextBlock Text="Change Font"/>
+                                <ComboBox Name="cmbFontFamilies"/>
+                                <Button Background="Transparent" 
+        BorderBrush="Transparent" 
+        Grid.Column="5"
+        ToolTipService.ToolTip="Find font...">
+                                    <Image Width="20" Source="/Assets/Themes/Ocean/searchicon.png"/>
+                                    <Button.Flyout>
+                                        <Flyout x:Name="flyoutSearch">
+                                            <AutoSuggestBox x:Name="asbSearchFormats" 
+                            Width="200"
+                            PlaceholderText="Find font..." 
+                            QueryIcon="Find"
+                            TextChanged="asbSearchFormats_TextChanged" 
+                            SuggestionChosen="asbSearchFormats_SuggestionChosen" 
+                            QuerySubmitted="asbSearchFormats_QuerySubmitted"/>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
 
+                            </StackPanel>
+                        </StackPanel>
                     </Grid>
                 </Grid>
             </ScrollViewer>

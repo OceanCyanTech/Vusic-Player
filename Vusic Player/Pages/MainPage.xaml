@@ -32,10 +32,10 @@ Stretch="UniformToFill"/>
                         <NavigationView  IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="nvgMain_BackRequested" Grid.Column="0" Background="Transparent" Name="nvgMain" PaneDisplayMode="Top" IsSettingsVisible="True" SelectionChanged="nvgMain_SelectionChanged">
 
                             <NavigationView.MenuItems>
-                                <NavigationViewItem Name="nvgitHome" Content="Home" Tag="HomePage"></NavigationViewItem>
-                                <NavigationViewItem Name="nvgitMusic" Content="Music Library" Tag="MusicLibrary"></NavigationViewItem>
-                                <NavigationViewItem Name="nvgitVideo" Content="Video Library"></NavigationViewItem>
-                                <NavigationViewItem Name="nvgitQueue" Content="Play Queue" Visibility="Visible"></NavigationViewItem>
+                                <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitHome" Content="Home" Tag="HomePage"></NavigationViewItem>
+                                <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitMusic" Content="Music Library" Tag="MusicLibrary"></NavigationViewItem>
+                                <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitVideo" Content="Video Library"></NavigationViewItem>
+                                <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitQueue" Content="Play Queue" Visibility="Visible"></NavigationViewItem>
                             </NavigationView.MenuItems>
 
                             <NavigationView.Header>
@@ -45,7 +45,7 @@ Stretch="UniformToFill"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <playback_views:MasterSearchControl Grid.Column="1" MinWidth="300" Margin="40, 0" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                                    <TextBlock Grid.Column="0" Name="txtHeader" Text=""/>
+                                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="0" Name="txtHeader" Text=""/>
                                 </Grid>
                             </NavigationView.Header>
 
@@ -77,7 +77,7 @@ Stretch="UniformToFill"/>
                             </Grid.RowDefinitions>
                             <Image Name="imgThumbnailCover" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}" Width="150" Grid.Row="0"></Image>
 
-                            <TextBlock  Margin="0, 20, 0, 0" HorizontalAlignment="Center"  Name="txtSongName" TextTrimming="CharacterEllipsis" MaxLines="1" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="NoWrap" >
+                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Margin="0, 20, 0, 0" HorizontalAlignment="Center"  Name="txtSongName" TextTrimming="CharacterEllipsis" MaxLines="1" Grid.Row="1" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="NoWrap" >
 
                             </TextBlock>
                             <Grid Grid.Row="2" Margin="0, 5, 0, 0">
@@ -85,10 +85,10 @@ Stretch="UniformToFill"/>
                                     <ColumnDefinition></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <HyperlinkButton Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}">
+                                <HyperlinkButton  FontFamily="{StaticResource GlobalFontHolder}"  Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}">
 
                                 </HyperlinkButton>
-                                <HyperlinkButton Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName,Mode=OneWay}">
+                                <HyperlinkButton   FontFamily="{StaticResource GlobalFontHolder}" Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName,Mode=OneWay}">
 
                                 </HyperlinkButton>
                             </Grid>
@@ -99,16 +99,16 @@ Stretch="UniformToFill"/>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="11" Opacity="0.8"/>
-                                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="11" Opacity="0.8"/>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="11" Opacity="0.8"/>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="11" Opacity="0.8"/>
                             </Grid>
 
                             <playback_views:PlayPauseControls SpaceWidth="10" Margin="0, 5" Grid.Row="5" HorizontalAlignment="Center"></playback_views:PlayPauseControls>
                             <playback_views:VolumeSlider Margin="0, 0" Grid.Row="6"></playback_views:VolumeSlider>
                             <playback_views:PanelControlsAudioPlayer x:Name="panelControlAudioPlayer"  ExpandedViewButtonToolTip="Expanded View" Grid.Row="7"></playback_views:PanelControlsAudioPlayer>
-                            <CheckBox HorizontalAlignment="Center" Name="chckMultioutput" Grid.Row="8" Content="Multi-Device Audio Output" Checked="chckMultioutput_Checked" Unchecked="chckMultioutput_Checked"/>
+                            <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" Name="chckMultioutput" Grid.Row="8" Content="Multi-Device Audio Output" Checked="chckMultioutput_Checked" Unchecked="chckMultioutput_Checked"/>
 
-                            <Button Click="btnMultiDeviceOptions_Click" IsEnabled="{x:Bind mediacontroller.MultiDeviceOutputFeature,Mode=OneWay}" Name="btnMultiDeviceOptions" Content="Multi-Device Audio Output Mixer" HorizontalAlignment="Center" Margin="0, 10" Grid.Row="9"/>
+                            <Button  FontFamily="{StaticResource GlobalFontHolder}"  Click="btnMultiDeviceOptions_Click" IsEnabled="{x:Bind mediacontroller.MultiDeviceOutputFeature,Mode=OneWay}" Name="btnMultiDeviceOptions" Content="Multi-Device Audio Output Mixer" HorizontalAlignment="Center" Margin="0, 10" Grid.Row="9"/>
                             
                         </Grid>
                     </Grid>

@@ -10,14 +10,19 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI.Customization;
+using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Configuration.UserSettings;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -177,6 +182,7 @@ namespace Vusic_Player.Pages.Views
             else if (args.SelectedItemContainer == nvgitAboutHelp)
             {
                 frmAboutOptions.Visibility = Visibility.Visible;
+                CheckForUpdates();
             }
 
         }
@@ -719,6 +725,192 @@ namespace Vusic_Player.Pages.Views
             {
                 _isSyncing = false;
             }
+        }
+
+        private async void btnDeleteAllArtists_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var artistModels = currentSettings.ArtistsList;
+                artistModels.Clear();
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, "SettingsPage.DeleteAllArtists", Logger.LogLevelType.Error);
+                txtInfo.Text = "An unexpected error occured. See log page for more info.";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
+            }
+            finally
+            {
+                txtInfo.Text = "Successfully deleted all artist profile pictures!";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
+            }
+
+        }
+
+        private async void btnDeleteAllAlbums_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var artistModels = currentSettings.AlbumsList;
+                artistModels.Clear();
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, "SettingsPage.DeleteAllAlbums", Logger.LogLevelType.Error);
+                txtInfo.Text = "An unexpected error occured. See log page for more info.";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
+            }
+            finally
+            {
+                txtInfo.Text = "Successfully deleted all album covers!";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
+            }
+
+        }
+
+        private async void btnDeleteAllGenres_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var artistModels = currentSettings.GenresList;
+                artistModels.Clear();
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, "SettingsPage.DeleteAllGenres", Logger.LogLevelType.Error);
+                txtInfo.Text = "An unexpected error occured. See log page for more info.";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
+            }
+            finally
+            {
+                txtInfo.Text = "Successfully deleted all genre covers!";
+                ttInfo.IsOpen = true;
+                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                await Task.Delay(2000);
+                ttInfo.IsOpen = false;
+            }
+        }
+        private static readonly HttpClient _httpClient = new HttpClient();
+        private const string VersionEndpoint = "https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/version.json";
+
+        public async Task<bool> IsUpdateAvailableAsync()
+        {
+            try
+            {
+                // Avoid caching so the app always gets fresh data
+                using var request = new HttpRequestMessage(HttpMethod.Get, VersionEndpoint);
+                request.Headers.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue { NoCache = true };
+
+                var response = await _httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode) return false;
+
+                var json = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(json);
+
+                string remoteVersionStr = doc.RootElement.GetProperty("latestVersion").GetString() ?? "";
+                Version remoteVersion = Version.Parse(remoteVersionStr);
+                Debug.WriteLine(remoteVersionStr);
+                // Get current running app package version
+                var packageVersion  =Package.Current.Id.Version;
+                Version currentVersion = new Version(packageVersion.Major, packageVersion.Minor, packageVersion.Build);
+
+                // True if remote is strictly newer
+                return remoteVersion > currentVersion;
+            }
+            catch (Exception ex)
+            {
+                // Network drop, offline mode, or parse failure - fail silently
+                System.Diagnostics.Debug.WriteLine($"Update check failed: {ex.Message}");
+                return false;
+            }
+        }
+        private async void btnCheckForUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            imgUpdate.Visibility = Visibility.Collapsed;
+            prgCheckingForUpdates.Visibility = Visibility.Visible;
+            btnOpenStore.Visibility = Visibility.Collapsed;
+            hypWhatsNew.Visibility = Visibility.Collapsed;
+            CheckForUpdates();
+        }
+        private async void CheckForUpdates()
+        {
+            if (CheckInternet.IsInternetAvailable())
+            {
+                if (await IsUpdateAvailableAsync())
+                {
+                    txtUpdateInfo.Text = "A new version of Vusic Player is available!";
+
+                    imgUpdate.Source = new BitmapImage(new Uri(IconsInstance.InfoIcon));
+                    imgUpdate.Visibility = Visibility.Visible;
+                    prgCheckingForUpdates.Visibility = Visibility.Collapsed;
+                    btnOpenStore.Visibility = Visibility.Visible;
+                    hypWhatsNew.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    txtUpdateInfo.Text = "You are on the latest version of Vusic Player!";
+
+                    imgUpdate.Source = new BitmapImage(new Uri(IconsInstance.Success));
+                    imgUpdate.Visibility = Visibility.Visible;
+                    prgCheckingForUpdates.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                txtUpdateInfo.Text = "Cannot check for updates. Make sure you're internet connection is stable.";
+                imgUpdate.Source = new BitmapImage(new Uri(IconsInstance.Error));
+                imgUpdate.Visibility = Visibility.Visible;
+                prgCheckingForUpdates.Visibility = Visibility.Collapsed;
+            }
+
+        }
+        private async void btnOpenStore_Click(object sender, RoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(
+    new Uri("ms-windows-store://pdp/?ProductId=YOUR_12_CHAR_ID")
+);
+        }
+
+        private void hypWhatsNew_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void asbSearchFormats_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+
+        }
+
+        private void asbSearchFormats_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+
+        }
+
+        private void asbSearchFormats_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+
         }
     }
 }

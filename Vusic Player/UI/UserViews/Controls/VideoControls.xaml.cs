@@ -878,5 +878,11 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (App.MainWindowInstance == null) { return; }
             var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 0, 4, 0);
         }
+
+        private void btnLoopToggle_Checked(object sender, RoutedEventArgs e)
+        {
+                QueueService.IsLoopTrue = btnLoopToggle.IsChecked ?? false;
+            
+        }
     }
 }

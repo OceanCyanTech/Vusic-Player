@@ -29,28 +29,32 @@
             </Button.KeyboardAccelerators>
             <FontIcon Glyph="&#xE838;" Foreground="White" FontSize="14"/>
         </Button>
-        <Button Name="btnVolume" ToolTipService.ToolTip="Volume" Grid.Column="1" Margin="15, 0" Background="Transparent" BorderBrush="Transparent" Padding="2" >
-            <FontIcon Glyph="{x:Bind mediacontroller.VolumeGlyph, Mode=OneWay}" Name="fntIcon" Foreground="{x:Bind mediacontroller.VolumeForeground, Mode=OneWay}" FontSize="14" Opacity="0.8"/>
-            <Button.Flyout>
-                <Flyout>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Volume"></TextBlock>
-                        <StackPanel Name="volStackPanel" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
-                            <local:OceanSlider x:Name="sldVol" IsTooltipEnabled="False" Margin="10, 0" IsEnabled="True" ValueChanged="sldVol_ValueChanged" Maximum="250" Value="100" Width="70">
-                                <ToolTipService.ToolTip>
-                                    <ToolTip Visibility="Visible" x:Name="VolumeToolTip" Content="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" />
-                                </ToolTipService.ToolTip>
-                            </local:OceanSlider>
-                            <StackPanel Margin="0, 10" Orientation="Horizontal" >
-                                <TextBlock FontSize="12" Foreground="White" Name="txtVolumepercent" />
-                                <TextBlock FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
+        <StackPanel Orientation="Horizontal" Spacing="0" Grid.Column="1">
+            <Button Name="btnVolume" ToolTipService.ToolTip="Volume" Grid.Column="1" Margin="15, 0" Background="Transparent" BorderBrush="Transparent" Padding="2" >
+                <FontIcon Glyph="{x:Bind mediacontroller.VolumeGlyph, Mode=OneWay}" Name="fntIcon" Foreground="{x:Bind mediacontroller.VolumeForeground, Mode=OneWay}" FontSize="14" Opacity="0.8"/>
+                <Button.Flyout>
+                    <Flyout>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Volume"></TextBlock>
+                            <StackPanel Name="volStackPanel" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
+                                <local:OceanSlider x:Name="sldVol" IsTooltipEnabled="False" Margin="10, 0" IsEnabled="True" ValueChanged="sldVol_ValueChanged" Maximum="250" Value="100" Width="70">
+                                    <ToolTipService.ToolTip>
+                                        <ToolTip Visibility="Visible" x:Name="VolumeToolTip" Content="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" />
+                                    </ToolTipService.ToolTip>
+                                </local:OceanSlider>
+                                <StackPanel Margin="0, 10" Orientation="Horizontal" >
+                                    <TextBlock FontSize="12" Foreground="White" Name="txtVolumepercent" />
+                                    <TextBlock FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
+                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </Flyout>
-            </Button.Flyout>
-        </Button>
-
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <ToggleButton VerticalAlignment="Center" Name="btnLoopToggle" ToolTipService.ToolTip="Toggle Loop" Grid.Column="2" Checked="btnLoopToggle_Checked" Unchecked="btnLoopToggle_Checked" Background="Transparent" BorderBrush="Transparent" Padding="2" >
+                <FontIcon Glyph="&#xE8EE;" FontSize="14" Opacity="0.8"/>
+            </ToggleButton>
+        </StackPanel>
         <local:PlayPauseControls Grid.Column="2" Margin="15, 0" HorizontalAlignment="Center"></local:PlayPauseControls>
         <ToggleButton Grid.Column="3" Name="btnFullScreen" IsChecked="{x:Bind mediacontroller.IsFullScreen, Mode=TwoWay}" Checked="btnFullScreen_Checked" Unchecked="btnFullScreen_Unchecked" Padding="5" Margin="10, 0" ToolTipService.ToolTip="{x:Bind mediacontroller.FullScreenToolTip, Mode=OneWay}" Background="Transparent" BorderBrush="Transparent" IsEnabled="True">
             
