@@ -1,0 +1,6 @@
+{
+  "latestVersion": "1.0.0.0",
+  "minRequiredVersion": "1.0.0",
+  "releaseNotes": "RTM RELEASE",
+  "storeUri": "ms-windows-store://pdp/?ProductId=YOUR_PRODUCT_ID"
+}
