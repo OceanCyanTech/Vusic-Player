@@ -14,6 +14,8 @@ namespace Vusic_Player.Configuration.UserSettings
         public ObservableCollection<VideoProgress> DoNotShowRecommendations { get; set; } = new();
         public ObservableCollection<FoldersListOpened> SavedFoldersOpened { get; set; } = new();
         public bool IsDocumentEnabled { get; set; } = true;
+        public bool IsSplashEnabled { get; set; } = true;
+        public string StartupPage { get; set; } = "Home";
         public bool IsDownloadsEnabled { get; set; } = true;
         public bool IsPicturesEnabled { get; set; } = true;
         public bool IsVideosEnabled { get; set; } = true;
@@ -42,6 +44,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public double SkipAhead { get; set; } = 10;
         public double SkipBack { get; set; } = 10;
         public string Theme { get; set; } = "Ocean";
+        public string FontFamily { get; set; } = "Ocean";
         public bool Panel2VisibilityHome { get; set; } = true;
         public bool Panel3VisibilityHome { get; set; } = true;
         public bool Panel4VisibilityHome { get; set; } = true;

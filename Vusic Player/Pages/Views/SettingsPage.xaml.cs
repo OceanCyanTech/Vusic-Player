@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,12 +20,19 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Internet;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 
 namespace Vusic_Player.Pages.Views
@@ -42,7 +50,19 @@ namespace Vusic_Player.Pages.Views
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             chkSaveHistory.IsChecked = !currentSettings.IsVideoHistoryDisabled;
-
+            chkShowSplash.IsChecked = currentSettings.IsSplashEnabled;
+            if (currentSettings.StartupPage == "Home")
+            {
+                cmbStartupPage.SelectedIndex = 0;
+            }
+            else if (currentSettings.StartupPage == "Music")
+            {
+                cmbStartupPage.SelectedIndex = 1;
+            }
+            else if (currentSettings.StartupPage == "Video")
+            {
+                cmbStartupPage.SelectedIndex = 2;
+            }
             // Home Page Panels (Panel1VisibilityHome - Panel4VisibilityHome)
             chkHomeContinueRecent.IsChecked = currentSettings.Panel1VisibilityHome;
             chkHomeRecentMusic.IsChecked = currentSettings.Panel2VisibilityHome;
@@ -169,6 +189,8 @@ namespace Vusic_Player.Pages.Views
             else if (args.SelectedItemContainer == nvgitPlayback)
             {
                 grdGeneral.Visibility = Visibility.Visible;
+                LoadFonts();
+
             }
             else if (args.SelectedItemContainer == nvgitVideoOptions)
             {
@@ -178,6 +200,7 @@ namespace Vusic_Player.Pages.Views
             else if (args.SelectedItemContainer == nvgitAppSettings)
             {
                 grdAppSettings.Visibility = Visibility.Visible;
+                LoadFolders();
             }
             else if (args.SelectedItemContainer == nvgitAboutHelp)
             {
@@ -186,7 +209,115 @@ namespace Vusic_Player.Pages.Views
             }
 
         }
+        List<FontStyleModel> systemFonts = new List<FontStyleModel>();
+        private void LoadFonts()
+        {
+            var systemFontstemp = Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies()
+                              .OrderBy(f => f)
+                              .ToList();
 
+            systemFonts.Clear(); // Ensure list is clean
+            foreach (var font in systemFontstemp)
+            {
+                systemFonts.Add(new Configuration.ClassModels.FontStyleModel
+                {
+                    FontFam = new FontFamily(font),
+                    FontName = font
+                });
+            }
+
+            cmbFontFamilies.ItemsSource = systemFonts;
+
+            if (Application.Current.Resources.TryGetValue("GlobalFontHolder", out object resource)
+                && resource is FontFamily currentFont)
+            {
+                string fontName = currentFont.Source;
+                var def = systemFonts.FirstOrDefault(p => p.FontName.Equals(fontName, StringComparison.OrdinalIgnoreCase))
+                       ?? systemFonts.FirstOrDefault(p => p.FontName.Equals("Segoe UI Variable Text", StringComparison.OrdinalIgnoreCase))
+                       ?? systemFonts.FirstOrDefault();
+
+                cmbFontFamilies.SelectedItem = def;
+            }
+        }
+
+        private void asbSearchFormats_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                string query = sender.Text?.Trim() ?? string.Empty;
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    sender.ItemsSource = null;
+                    return;
+                }
+
+                // Return font names matching the search query
+                sender.ItemsSource = systemFonts
+                    .Where(f => f.FontName.Contains(query, StringComparison.OrdinalIgnoreCase))
+                    .Select(f => f.FontName)
+                    .ToList();
+            }
+        }
+
+        private void asbSearchFormats_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            if (args.SelectedItem is string chosenFontName)
+            {
+                // Select matching item directly from the loaded systemFonts list
+                var matchedModel = systemFonts.FirstOrDefault(f =>
+                    string.Equals(f.FontName, chosenFontName, StringComparison.OrdinalIgnoreCase));
+
+                if (matchedModel != null)
+                {
+                    ApplySelectedFormat(sender, matchedModel);
+                }
+            }
+        }
+
+        private void asbSearchFormats_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            string targetName = args.ChosenSuggestion as string;
+
+            if (string.IsNullOrWhiteSpace(targetName))
+            {
+                targetName = args.QueryText?.Trim();
+            }
+
+            if (string.IsNullOrWhiteSpace(targetName)) return;
+
+            // Search existing font list for exact match first, then partial match
+            var matchedModel = systemFonts.FirstOrDefault(f =>
+                                   string.Equals(f.FontName, targetName, StringComparison.OrdinalIgnoreCase))
+                            ?? systemFonts.FirstOrDefault(f =>
+                                   f.FontName.Contains(targetName, StringComparison.OrdinalIgnoreCase));
+
+            if (matchedModel != null)
+            {
+                ApplySelectedFormat(sender, matchedModel);
+            }
+        }
+
+        private void ApplySelectedFormat(AutoSuggestBox sender, FontStyleModel format)
+        {
+            // 1. Clear search text
+            sender.Text = string.Empty;
+
+            // 2. Select the existing reference in the ComboBox
+            cmbFontFamilies.SelectedItem = format;
+
+            // 3. Close the Flyout if hosted inside one
+            DependencyObject current = sender;
+            while (current != null && !(current is FlyoutPresenter))
+            {
+                current = VisualTreeHelper.GetParent(current);
+            }
+
+            if (current is FlyoutPresenter fp && fp.Parent is Popup popup)
+            {
+                popup.IsOpen = false;
+            }
+        }
         private async void btnDeleteAllPlaylists_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -833,7 +964,7 @@ namespace Vusic_Player.Pages.Views
                 Version remoteVersion = Version.Parse(remoteVersionStr);
                 Debug.WriteLine(remoteVersionStr);
                 // Get current running app package version
-                var packageVersion  =Package.Current.Id.Version;
+                var packageVersion = Package.Current.Id.Version;
                 Version currentVersion = new Version(packageVersion.Major, packageVersion.Minor, packageVersion.Build);
 
                 // True if remote is strictly newer
@@ -893,24 +1024,366 @@ namespace Vusic_Player.Pages.Views
 );
         }
 
-        private void hypWhatsNew_Click(object sender, RoutedEventArgs e)
+
+
+        private void btnRefreshFonts_Click(object sender, RoutedEventArgs e)
         {
+            LoadFonts();
+        }
+
+        private async void cmbFontFamilies_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+            if (cmbFontFamilies.SelectedItem is FontStyleModel fontst && fontst.FontName is string str)
+            {
+                Application.Current.Resources["GlobalFontHolder"] = str;
+                if (currentSettings.FontFamily != str)
+                {
+                    stkRestartApp.Visibility = Visibility.Visible;
+                }
+                currentSettings.FontFamily = str;
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+        private async void btnResetFont_Click(object sender, RoutedEventArgs e)
+        {
+            var defaultfont = systemFonts.FirstOrDefault(p => p.FontName == "Segoe UI Variable Display");
+            if (defaultfont != null)
+            {
+                cmbFontFamilies.SelectedItem = defaultfont;
+            }
+        }
+
+        private void btnRestartVusicPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            AppRestartFailureReason result = AppInstance.Restart(string.Empty);
+
+            // If restart succeeds, the current process terminates automatically.
+            // If it fails, inspect the failure reason:
+            switch (result)
+            {
+                case AppRestartFailureReason.RestartPending:
+                    // A restart request is already processing
+                    break;
+                case AppRestartFailureReason.InvalidUser:
+                    // The user token is invalid
+                    break;
+                case AppRestartFailureReason.Other:
+                    // General failure, handle fallback
+                    break;
+            }
+        }
+
+        private async void btnRefreshDatabase_Click(object sender, RoutedEventArgs e)
+        {
+            // Prevent re-entrancy
+            btnRefreshDatabase.IsEnabled = false;
+
+            try
+            {
+                ttInfo.IsOpen = true;
+                txtInfo.Text = "Clearing media database...";
+                imgInfo.Source = new BitmapImage(new Uri(IconsInstance.Refresh));
+
+                // 1. Clear database and reset state
+                await DatabaseService.ClearDatabaseAsync();
+                await FilesInDatabase.ResetLibraryAsync();
+
+                txtInfo.Text = "Media Database cleared successfully.";
+                await Task.Delay(1000); // Shorter visual confirmation
+
+                // 2. Reload data
+                txtInfo.Text = "Re-scanning media library...";
+                await FilesInDatabase.InitializeDatabaseFunctionsAsync();
+
+
+                // 3. Await the background service, or track its task explicitly
+                await FilesInDatabase.RunBackgroundServiceAsync();
+                await FilesInDatabase.LoadAllFiles();
+                txtInfo.Text = "Media Database successfully re-scanned.";
+                await Task.Delay(2000);
+            }
+            catch (Exception ex)
+            {
+                txtInfo.Text = $"Database refresh failed: {ex.Message}";
+                await Task.Delay(3000);
+            }
+            finally
+            {
+                ttInfo.IsOpen = false;
+                btnRefreshDatabase.IsEnabled = true;
+            }
+        }
+        ObservableCollection<FoldersListOpened> foldersListOpened = new();
+
+        private async void LoadFolders()
+        {
+            UserDataPaths paths = UserDataPaths.GetDefault();
+            grdViewFolders.ItemsSource = foldersListOpened;
+            // Assigning the system paths to the Tag property
+
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+            var folders = currentSettings.SavedFoldersOpened;
+            var folderMappings = new (bool IsEnabled, string Path)[]
+    {
+    (currentSettings.IsDocumentEnabled, paths.Documents),
+    (currentSettings.IsDownloadsEnabled, paths.Downloads),
+    (currentSettings.IsPicturesEnabled, paths.Pictures),
+    (currentSettings.IsVideosEnabled, paths.Videos),
+    (currentSettings.IsMusicEnabled, paths.Music),
+    };
+
+            foreach (var (isEnabled, path) in folderMappings)
+            {
+                if (isEnabled)
+                {
+                    var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == path);
+                    if (exist == null)
+                    {
+                        foldersListOpened.Add(new FoldersListOpened { FolderPath = path, IsHighLevelFolder = true, FolderName = Path.GetFileName(path), isChecked = true });
+                    }
+                }
+            }
+            foreach (var item in currentSettings.SavedFoldersOpened)
+            {
+                if (item.Show == true)
+                {
+                    var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == item.FolderPath);
+                    if (exist == null)
+                    {
+                        item.FolderName = Path.GetFileName(item.FolderPath);
+                        foldersListOpened.Add(item);
+                    }
+
+                }
+                else
+                {
+                    Debug.WriteLine("item show = false " + item.FolderPath);
+                    var exist = foldersListOpened.FirstOrDefault(p => p.FolderPath == item.FolderPath);
+                    if (exist != null)
+                    {
+                        if (exist.Show == false)
+                        {
+
+                            foldersListOpened.Remove(item);
+                        }
+                    }
+                }
+            }
+        }
+
+        private async void btnGenericFolder_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is ToggleButton tgl && tgl.DataContext is FoldersListOpened folder)
+            {
+                tgl.IsEnabled = false; // Prevent rapid re-toggling during I/O
+
+                try
+                {
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    UserDataPaths paths = UserDataPaths.GetDefault();
+                    bool isChecked = tgl.IsChecked ?? false;
+
+                    // 1. Update in-memory state
+                    folder.isChecked = isChecked;
+
+                    // 2. Persist to settings
+                    if (folder.IsHighLevelFolder)
+                    {
+                        switch (folder.FolderPath)
+                        {
+                            case var p when p == paths.Documents: currentSettings.IsDocumentEnabled = isChecked; break;
+                            case var p when p == paths.Downloads: currentSettings.IsDownloadsEnabled = isChecked; break;
+                            case var p when p == paths.Pictures: currentSettings.IsPicturesEnabled = isChecked; break;
+                            case var p when p == paths.Videos: currentSettings.IsVideosEnabled = isChecked; break;
+                            case var p when p == paths.Music: currentSettings.IsMusicEnabled = isChecked; break;
+                        }
+                    }
+                    else
+                    {
+                        var saved = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+                        if (saved != null)
+                        {
+                            saved.isChecked = isChecked;
+                        }
+                    }
+
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+                    // 3. Dynamically purge or index without restarting
+                    if (!isChecked)
+                    {
+                        await FilesInDatabase.DisableFolderAsync(folder.FolderPath);
+                    }
+                    else
+                    {
+                        await FilesInDatabase.EnableFolderAsync(folder.FolderPath);
+                    }
+                }
+                finally
+                {
+                    tgl.IsEnabled = true;
+                }
+            }
+        }
+
+        private void mnftOpenFolder_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (sender is MenuFlyoutItem MNFT && MNFT.DataContext is FoldersListOpened tgl)
+            {
+
+                if (tgl.FolderPath != null)
+                {
+
+                    if (Directory.Exists(tgl.FolderPath))
+                    {
+
+                        Process.Start("explorer.exe", $"\"{tgl.FolderPath}\"");
+                    }
+                }
+            }
+        }
+
+        private void mnftCopyPathFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem MNFT && MNFT.DataContext is FoldersListOpened tgl)
+            {
+                if (tgl.FolderPath is string str)
+                {
+                    CopyToClipboard.CopyStringToClipboard(str);
+                }
+            }
+        }
+
+        private async void mnftRemoveFolder_Click(object sender, RoutedEventArgs e)
+        {
+            //Remove Folder from the List
+            if (sender is MenuFlyoutItem MNFT && MNFT.DataContext is FoldersListOpened tgl)
+            {
+                foldersListOpened.Remove(tgl);
+                UserDataPaths paths = UserDataPaths.GetDefault();
+
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                if (tgl.IsHighLevelFolder)
+                {
+                    bool isChecked = false;
+
+                    switch (tgl.FolderPath)
+                    {
+                        case var p when p == paths.Documents:
+                            currentSettings.IsDocumentEnabled = isChecked;
+                            break;
+                        case var p when p == paths.Downloads:
+                            currentSettings.IsDownloadsEnabled = isChecked;
+                            break;
+                        case var p when p == paths.Pictures:
+                            currentSettings.IsPicturesEnabled = isChecked;
+                            break;
+                        case var p when p == paths.Videos:
+                            currentSettings.IsVideosEnabled = isChecked;
+                            break;
+                        case var p when p == paths.Music:
+                            currentSettings.IsMusicEnabled = isChecked;
+                            break;
+                    }
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+                }
+                else
+                {
+                    if (tgl.FolderPath is string str)
+                    {
+                        var folder = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == str);
+                        if (folder != null)
+                        {
+                            Debug.WriteLine(str);
+                            currentSettings.SavedFoldersOpened.Remove(folder);
+                        }
+                        await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    }
+                }
+            }
+        }
+
+
+        private async void btnAddFolders_Click(object sender, RoutedEventArgs e)
+        {
+            //Add folders to list
+            var obser = new ObservableCollection<SongModel>();
+
+            if (App.MainWindowInstance == null) return;
+            var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Choose Folder", Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
+            if (folder != null)
+            {
+                // Detach old handlers if any, and attach a specific one for THIS button
+
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                Debug.WriteLine("folder add");
+                var check = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == folder.Path);
+                var savedfolders = currentSettings.SavedFoldersOpened;
+                if (check == null)
+                {
+                    Debug.WriteLine("folder add NULL CHECK");
+
+                    savedfolders.Add(new FoldersListOpened { FolderPath = folder.Path, isChecked = true, FolderName = Path.GetFileName(folder.Path) });
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    Debug.WriteLine("folder add NULL CHECK test");
+                    var alreadyexist = foldersListOpened.FirstOrDefault(p => p.FolderPath == folder.Path);
+                    if (alreadyexist != null) return;
+
+                    foldersListOpened.Add(new FoldersListOpened { FolderPath = folder.Path, FolderName = Path.GetFileName(folder.Path), isChecked = true });
+
+                }
+            }
+        }
+
+        private async void cmbStartupPage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            switch (cmbStartupPage.SelectedIndex)
+            {
+                case 0:
+                    currentSettings.StartupPage = "Home";
+                    break;
+
+                case 1:
+                    currentSettings.StartupPage = "Music";
+                    break;
+
+                case 2:
+                    currentSettings.StartupPage = "Video";
+                    break;
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+        private async void chkShowSplash_Checked(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if(chkShowSplash.IsChecked == false)
+            {
+                currentSettings.IsSplashEnabled = false;
+            }
+            else
+            {
+                currentSettings.IsSplashEnabled = true;
+
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
 
         }
 
-        private void asbSearchFormats_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+
+        private async void btnAppLock_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void asbSearchFormats_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-
-        }
-
-        private void asbSearchFormats_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Set App Lock", "Set", "", "Close", OceanDialogWindow.ContentType.AppLock, OceanContentDialogDefault.Primary, XamlRoot, 600, 600, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", ""
+, new ObservableCollection<SongModel>(), "");
+            MediaPlaybackController.Instance.PrimaryButtonEnable = false;
         }
     }
 }

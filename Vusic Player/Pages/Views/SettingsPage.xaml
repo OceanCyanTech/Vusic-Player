@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:grids="using:Vusic_Player.UI.UserViews.Grids"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:grids="using:Vusic_Player.UI.UserViews.Grids" xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
     <Page.Resources>
         <grids:CountToVisibility x:Key="CountToVisConverter"/>
@@ -38,12 +38,76 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Text="App Configuration" Style="{StaticResource TitleTextBlockStyle}"/>
                         <MenuFlyoutSeparator Grid.Row="1"/>
                         <TextBlock Text="App Log" Grid.Row="2" Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock Text="View events that are recorded when Vusic Player performs informative/successful actions or unexpectedly crashes due to bugs" Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
-                        <Button Name="btnViewLog" Grid.Row="4" Content="View App Log" Style="{StaticResource AccentButtonStyle}" Click="btnViewLog_Click"></Button>
+                        <Button Name="btnViewLog" Grid.Row="4" Content="View App Log" Style="{StaticResource AccentButtonStyle}" Click="btnViewLog_Click"/>
+                        <MenuFlyoutSeparator Grid.Row="5"/>
+                        <TextBlock Text="Media Database" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Re-scan the media database. The media database will be cleared and rescaned fresh." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="7"/>
+                        <Button Content="Re-scan Database" Name="btnRefreshDatabase" Click="btnRefreshDatabase_Click" Grid.Row="8"/>
+                        <MenuFlyoutSeparator Grid.Row="9"/>
+                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
+                            <TextBlock Text="Folder Permissions" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Text="Toggle or add folders that Vusic Player is allowed to read and display in the Library Pages." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
+                            <controls1:WrapPanel VerticalAlignment="Stretch" MaxHeight="95" Orientation="Horizontal" Grid.Row="1" Margin="0, 20" >
+                                <GridView SelectionMode="None" VerticalAlignment="Stretch" Name="grdViewFolders" Grid.Row="1">
+                                    <GridView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsWrapGrid Orientation="Horizontal" ItemWidth="NaN" />
+                                        </ItemsPanelTemplate>
+                                    </GridView.ItemsPanel>
+                                    <GridView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16"  Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+                                                <ToggleButton.ContextFlyout>
+                                                    <MenuFlyout >
+                                                        <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <FontIcon Glyph="d"></FontIcon>
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+                                                        <MenuFlyoutItem Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <FontIcon Glyph="d"></FontIcon>
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+                                                        <MenuFlyoutItem Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <FontIcon Glyph="d"></FontIcon>
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+                                                    </MenuFlyout>
+
+                                                </ToggleButton.ContextFlyout>
+                                            </ToggleButton>
+                                        </DataTemplate>
+                                    </GridView.ItemTemplate>
+                                </GridView>
+                                <TextBlock Text="No folders added." Visibility="Collapsed"  Name="txtNofoldersadded" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
+                                <Button CornerRadius="16" VerticalAlignment="Stretch" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                                        <TextBlock Text="Add Folder"></TextBlock>
+                                    </StackPanel>
+                                </Button>
+                            </controls1:WrapPanel>
+                            <MenuFlyoutSeparator/>
+                            <TextBlock Text="Startup" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Text="Configure app startup settings." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
+                            <CheckBox Name="chkShowSplash" Content="Show Splash Screen" Checked="chkShowSplash_Checked" Unchecked="chkShowSplash_Checked"/>
+                            <ComboBox Header="Page to show when app starts" SelectedIndex="0" Name="cmbStartupPage" SelectionChanged="cmbStartupPage_SelectionChanged">
+                                <ComboBox.Items>
+                                    <ComboBoxItem Content="Home Page"/>
+                                    <ComboBoxItem Content="Music Library Page"/>
+                                    <ComboBoxItem Content="Video Library Page"/>    
+                                </ComboBox.Items>
+                            </ComboBox>
+                            <Button Content="App Lock" Click="btnAppLock_Click"  Name="btnAppLock" Style="{StaticResource AccentButtonStyle}"/>
+                        </StackPanel>
                     </Grid>
                     <Grid Name="frmAboutOptions" Visibility="Collapsed" RowSpacing="30">
                         <Grid.RowDefinitions>
@@ -61,7 +125,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Vertical" Spacing="30">
-                        <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>
                             <MenuFlyoutSeparator/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Spacing="15">
@@ -72,7 +136,7 @@
                             <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.0.0"></TextBlock>
                             <TextBlock IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="Preview (RTM)"></TextBlock>
                             <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech 2026" Name="txtCompanyCopyright"></TextBlock>
-                            
+
                             <Image Margin="0, 30" HorizontalAlignment="Left" Width="300" Source="/Assets/OceanCyan Logo High.png"/>
                             <MenuFlyoutSeparator/>
                             <TextBlock Text="Open Source Licenses" Style="{StaticResource SubtitleTextBlockStyle}"/>
@@ -94,9 +158,9 @@
                         <StackPanel Orientation="Vertical" Spacing="20" Grid.Row="5">
                             <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" Text="The Microsoft Store handles updates automatically. But if you want to double-check right now, you can trigger a manual check below."/>
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Button Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" Style="{StaticResource AccentButtonStyle}" Content="Check For Updates"/>
-                            <Button Name="btnOpenStore" Click="btnOpenStore_Click"  Content="Open Microsoft Store to Update" Visibility="Collapsed"/>
-                                <HyperlinkButton Name="hypWhatsNew" NavigateUri="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/NewVersionReleasenotes.md" Content="See what's new!" Click="hypWhatsNew_Click" Visibility="Collapsed"/>
+                                <Button Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" Style="{StaticResource AccentButtonStyle}" Content="Check For Updates"/>
+                                <Button Name="btnOpenStore" Click="btnOpenStore_Click"  Content="Open Microsoft Store to Update" Visibility="Collapsed"/>
+                                <HyperlinkButton Name="hypWhatsNew" NavigateUri="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/NewVersionReleasenotes.md" Content="See what's new!" Visibility="Collapsed"/>
                             </StackPanel>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="6"/>
@@ -138,7 +202,7 @@
                             </Button.Flyout>
                         </Button>
                         <MenuFlyoutSeparator Grid.Row="5"/>
-                        <TextBlock Text="Audio Metadata" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="6"/> 
+                        <TextBlock Text="Audio Metadata" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="6"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="7">
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <TextBlock Text="Clear artist profile pictures saved in Vusic Player." Grid.Row="7"/>
@@ -340,12 +404,12 @@
                         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
                             <TextBlock VerticalAlignment="Center" Text="Backward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
                             <ComboBox SelectedIndex="1" Name="cmbSkipBackward" SelectionChanged="cmbSkipBackward_SelectionChanged">
-                                <ComboBoxItem Content="5 seconds"/>
-                                <ComboBoxItem Content="10 seconds"/>
-                                <ComboBoxItem Content="15 seconds"/>
-                                <ComboBoxItem Content="20 seconds"/>
-                                <ComboBoxItem Content="30 seconds"/>
-                                <ComboBoxItem Content="Custom"/>
+                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="5 seconds"/>
+                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="10 seconds"/>
+                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="15 seconds"/>
+                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="20 seconds"/>
+                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="30 seconds"/>
+                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="Custom"/>
                             </ComboBox>
                             <NumberBox ValueChanged="numCustomSkipBack_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipBack"/>
                         </StackPanel>
@@ -362,11 +426,17 @@
                             <NumberBox ValueChanged="numCustomSkipAhead_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipForward"/>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="6"/>
-                        <TextBlock Text="Customization" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="7"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Customization" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="7"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="8">
-                        <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="8">
-                            <TextBlock Text="Change Font"/>
-                                <ComboBox Name="cmbFontFamilies"/>
+                            <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="8">
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Change Font"/>
+                                <ComboBox SelectionChanged="cmbFontFamilies_SelectionChanged" Name="cmbFontFamilies">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding FontName}" FontFamily="{Binding FontFam}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <Button Background="Transparent" 
         BorderBrush="Transparent" 
         Grid.Column="5"
@@ -384,7 +454,16 @@
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
-
+                                <Button Background="Transparent" Name="btnRefreshFonts" ToolTipService.ToolTip="Refresh Fonts" Click="btnRefreshFonts_Click">
+                                    <Image Width="20" Source="{x:Bind IconsInstance.Refresh, Mode=OneWay}"/>
+                                </Button>
+                                <Button Background="Transparent" Name="btnResetFont" ToolTipService.ToolTip="Reset Font" Click="btnResetFont_Click">
+                                    <Image Width="20" Source="{x:Bind IconsInstance.Refresh, Mode=OneWay}"/>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Name="stkRestartApp" Visibility="Collapsed" Orientation="Horizontal" Spacing="30" Grid.Row="8">
+                                <TextBlock VerticalAlignment="Center" Text="Changes will be applied when Vusic Player is opened the next time."/>
+                                <Button Style="{StaticResource AccentButtonStyle}" Content="Restart Vusic Player" Click="btnRestartVusicPlayer_Click" Name="btnRestartVusicPlayer"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>
@@ -392,8 +471,8 @@
             </ScrollViewer>
         </NavigationView>
         <TeachingTip Name="ttInfo">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <Image Source="/Assets/success.png" Name="imgInfo" Width="40"/>
+            <StackPanel Width="600" Orientation="Horizontal" Spacing="10">
+                <Image Source="/Assets/success.png" Name="imgInfo" Width="25"/>
                 <TextBlock Name="txtInfo"/>
             </StackPanel>
         </TeachingTip>

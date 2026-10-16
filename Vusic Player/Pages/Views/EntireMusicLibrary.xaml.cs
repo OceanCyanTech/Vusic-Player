@@ -850,80 +850,6 @@ namespace Vusic_Player.Pages.Views
         //}
 
         ObservableCollection<FoldersListOpened> foldersListOpened = new();
-        private async void LoadItems(List<string> paths)
-        {
-            var userPaths = UserDataPaths.GetDefault();
-            var ObservableCollectioln = AllAvailableSongs;
-
-            var extensions = AudioExtensions.List;
-
-            foreach (var path in paths)
-            {
-                if (!Directory.Exists(path))
-                    continue;
-
-                IEnumerable<string> files;
-
-                try
-                {
-                    files = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories);
-                    Debug.WriteLine("check1");
-                }
-                catch
-                {
-                    continue;
-                }
-
-                foreach (var file in files)
-                {
-                    if (!File.Exists(file)) continue;
-                    string ext = Path.GetExtension(file).ToLower();
-
-                    if (!extensions.Contains(ext))
-                        continue;
-
-                    try
-                    {
-                        StorageFile storageFile =
-                            await StorageFile.GetFileFromPathAsync(file);
-
-                        MusicProperties props =
-                            await storageFile.Properties.GetMusicPropertiesAsync();
-                        Debug.WriteLine("check2");
-
-                        var song = new SongModel
-                        {
-                            Title = string.IsNullOrEmpty(props.Title)
-                                ? Path.GetFileNameWithoutExtension(file)
-                                : props.Title,
-
-                            Artist = string.IsNullOrEmpty(props.Artist)
-                                ? "Unknown"
-                                : props.Artist,
-
-                            AlbumName = props.Album ?? "",
-
-                        };
-
-                        await DispatcherQueue.EnqueueAsync(() =>
-                        {
-                            Debug.WriteLine("check3");
-
-                            ObservableCollectioln.Add(song);
-
-                        });
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log(ex.Message, "EntireMusicLibrarySearchFiles", Logger.LogLevelType.Error);
-                    }
-                }
-
-            }
-            AllMusicGroupedCollection.ItemsSource = ObservableCollectioln;
-            
-        }
         private async void btnAddFolders_Click(object sender, RoutedEventArgs e)
         {
             //Add folders to list
@@ -1043,42 +969,56 @@ namespace Vusic_Player.Pages.Views
         {
             if (sender is ToggleButton tgl && tgl.DataContext is FoldersListOpened folder)
             {
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                UserDataPaths paths = UserDataPaths.GetDefault();
-                bool isChecked = tgl.IsChecked ?? false;
+                tgl.IsEnabled = false; // Prevent rapid re-toggling during I/O
 
-                // 1. Update in-memory state
-                folder.isChecked = isChecked;
-
-                // 2. Persist to settings
-                if (folder.IsHighLevelFolder)
+                try
                 {
-                    switch (folder.FolderPath)
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    UserDataPaths paths = UserDataPaths.GetDefault();
+                    bool isChecked = tgl.IsChecked ?? false;
+
+                    // 1. Update in-memory state
+                    folder.isChecked = isChecked;
+
+                    // 2. Persist to settings
+                    if (folder.IsHighLevelFolder)
                     {
-                        case var p when p == paths.Documents: currentSettings.IsDocumentEnabled = isChecked; break;
-                        case var p when p == paths.Downloads: currentSettings.IsDownloadsEnabled = isChecked; break;
-                        case var p when p == paths.Pictures: currentSettings.IsPicturesEnabled = isChecked; break;
-                        case var p when p == paths.Videos: currentSettings.IsVideosEnabled = isChecked; break;
-                        case var p when p == paths.Music: currentSettings.IsMusicEnabled = isChecked; break;
+                        switch (folder.FolderPath)
+                        {
+                            case var p when p == paths.Documents: currentSettings.IsDocumentEnabled = isChecked; break;
+                            case var p when p == paths.Downloads: currentSettings.IsDownloadsEnabled = isChecked; break;
+                            case var p when p == paths.Pictures: currentSettings.IsPicturesEnabled = isChecked; break;
+                            case var p when p == paths.Videos: currentSettings.IsVideosEnabled = isChecked; break;
+                            case var p when p == paths.Music: currentSettings.IsMusicEnabled = isChecked; break;
+                        }
+                    }
+                    else
+                    {
+                        var saved = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
+                        if (saved != null)
+                        {
+                            saved.isChecked = isChecked;
+                        }
+                    }
+
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+                    // 3. Dynamically purge or index without restarting
+                    if (!isChecked)
+                    {
+                        await FilesInDatabase.DisableFolderAsync(folder.FolderPath);
+                    }
+                    else
+                    {
+                        await FilesInDatabase.EnableFolderAsync(folder.FolderPath);
                     }
                 }
-                else
+                finally
                 {
-                    var saved = currentSettings.SavedFoldersOpened.FirstOrDefault(p => p.FolderPath == folder.FolderPath);
-                    if (saved != null)
-                    {
-                        saved.isChecked = isChecked;
-                    }
+                    tgl.IsEnabled = true;
                 }
-
-                await SettingsLoader.SaveSettingsAsync(currentSettings);
-
-                // 3. Re-run scan to honor exclusions and checked states
-                await LoadAllFilesAsync();
             }
         }
-
-
         private async void btnClearHistory_Click(object sender, RoutedEventArgs e)
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();

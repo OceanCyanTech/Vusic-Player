@@ -1240,51 +1240,58 @@ public sealed partial class ArtistView : Page
     ObservableCollection<SongModel> AlbumSongs = new();
     private async Task SearchAlbumFiles(string albumname)
     {
+        if (string.IsNullOrWhiteSpace(albumname)) return;
 
-        string targetAlbum = albumname;
         AlbumSongs.Clear();
 
+        // 1. Fetch matching tracks directly from SQLite
+        var songs = await DatabaseService.GetSongsByAlbumAsync(albumname);
 
-        string[] searchPaths = {
-        UserDataPaths.GetDefault().Music,
-        UserDataPaths.GetDefault().Downloads,
-        UserDataPaths.GetDefault().Pictures,
-        UserDataPaths.GetDefault().Documents,
-        UserDataPaths.GetDefault().Videos
-    };
+        if (songs.Count == 0) return;
 
-        List<StorageFile> allFoundFiles = new List<StorageFile>();
-
-        foreach (var path in searchPaths)
+        await Task.Run(async () =>
         {
-            Debug.WriteLine("JSJS2");
-
-            try
+            foreach (var song in songs)
             {
-                StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
-                var queryOptions = new QueryOptions(CommonFileQuery.OrderByMusicProperties, AudioExtensions.List);
-                queryOptions.ApplicationSearchFilter = $"System.Music.AlbumTitle:=\"{targetAlbum}\"";
+                try
+                {
+                    if (File.Exists(song.FilePath))
+                    {
+                        // 2. Modify disk file metadata using TagLib
+                        using var tagFile = TagLib.File.Create(song.FilePath);
+                        tagFile.Tag.Album = "";
+                        tagFile.Save();
 
-                var query = folder.CreateFileQueryWithOptions(queryOptions);
-                var files = await query.GetFilesAsync();
-                allFoundFiles.AddRange(files);
+                        // 3. Keep SQLite metadata in sync
+                        await DatabaseService.UpdateSongMetadataAsync(
+                            song.FilePath,
+                            song.Title,
+                            song.Artist,
+                            newAlbum: "",
+                            genre: song.Genre ?? "Unknown Genre"
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Failed clearing album tag for '{song.FilePath}': {ex.Message}");
+                }
             }
-            catch { /* Handle access denied */ }
-        }
+        });
 
-        if (allFoundFiles.Count > 0)
+        // 4. Update the in-memory rawSongs collection
+        lock (FilesInDatabase.rawSongs)
         {
-            Debug.WriteLine("JSJS");
-            foreach (var file in allFoundFiles)
+            foreach (var song in songs)
             {
-                var tagFile = TagLib.File.Create(file.Path);
-                tagFile.Tag.Album = "";
-                tagFile.Save();
-
+                var match = FilesInDatabase.rawSongs.FirstOrDefault(s => s.FilePath == song.FilePath);
+                if (match != null)
+                {
+                    match.AlbumName = "";
+                }
             }
         }
     }
-
     // --- Image Large Viewer ---
     // If you plan to handle the ContentDialog showing the large image:
     private async void ShowLargeImage()

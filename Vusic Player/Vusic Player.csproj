@@ -27,6 +27,7 @@
     <None Remove="FFmpeg\swresample-6.dll" />
     <None Remove="FFmpeg\swscale-9.dll" />
     <None Remove="Pages\MainPage.xaml" />
+    <None Remove="Pages\SplashScreen.xaml" />
     <None Remove="Pages\VideoPlayer.xaml" />
     <None Remove="Pages\Views\AlbumView.xaml" />
     <None Remove="Pages\Views\ArtistView.xaml" />
@@ -125,6 +126,7 @@
     <None Remove="UI\UserViews\Grids\InstantPlaylists.xaml" />
     <None Remove="UI\UserViews\Grids\MusicListHome.xaml" />
     <None Remove="UI\UserViews\Grids\RecentMusicList.xaml" />
+    <None Remove="UI\UserViews\Grids\SetAppLock.xaml" />
     <None Remove="UI\UserViews\Grids\TopTracks.xaml" />
     <None Remove="UI\UserViews\Grids\UserPlaylists.xaml" />
     <None Remove="UI\UserViews\PictureInPicture.xaml" />
@@ -248,6 +250,16 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\SplashScreen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Grids\SetAppLock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Views\FormatConverter.xaml">

@@ -61,9 +61,10 @@ namespace Vusic_Player.Pages.Views.Onboarding
             {
                 txtMain.Text = "Optimizing Vusic Player...";
                 //UpdateStatus("Optimizing Vusic Player");
-                FilesInDatabase.InitializeDatabaseFunctions();
-               await FilesInDatabase.LoadAllFiles();
-                _ = FilesInDatabase.RunBackgroundServiceAsync();
+             await   FilesInDatabase.InitializeDatabaseFunctionsAsync();
+
+               await FilesInDatabase.RunBackgroundServiceAsync();
+                await FilesInDatabase.LoadAllFiles();
                 //        UpdateStatus("Indexing your media files");
                 txtMain.Text = "Indexing your media files...";
 

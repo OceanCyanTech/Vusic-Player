@@ -59,24 +59,37 @@ namespace Vusic_Player.Pages
             InitializeWatermark();
     
         }
+        private bool IsTextInputFocused()
+        {
+            var focused = FocusManager.GetFocusedElement(this.Content.XamlRoot);
+            return focused is TextBox
+                || focused is RichEditBox
+                || focused is AutoSuggestBox;
+        }
+
         private void Spacebar_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            // Don't toggle playback if user is typing in a search bar or text box
-            if (FocusManager.GetFocusedElement(this.Content.XamlRoot) is TextBox ||
-                FocusManager.GetFocusedElement(this.Content.XamlRoot) is RichEditBox)
+            if (IsTextInputFocused())
             {
-                return;
+                return; // Let user type space into the text box
             }
 
             PlayerService.PlayPause();
             args.Handled = true;
         }
+
         private void ControlRoot_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Space)
             {
+                // Don't swallow space if user is typing in a search/text box!
+                if (IsTextInputFocused())
+                {
+                    return;
+                }
+
                 PlayerService.PlayPause();
-                e.Handled = true; // Stop any internal slider handling
+                e.Handled = true;
             }
         }
         private async void InitializeWatermark()

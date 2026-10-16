@@ -57,90 +57,67 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             listviewItems.HideSort();
 
             ts = TimeSpan.Zero;
-            string targetAlbum = txtAlbumName.Text;
+            string targetAlbum = txtAlbumName.Text?.Trim() ?? string.Empty;
             FoundSongs.Clear();
             uniqueArtists.Clear();
 
-            ttProgress.IsOpen = true;
-            prgProgress.IsIndeterminate = true; // Slide back and forth while we gather files
-            prgProgress.Value = 0;
-
-            string[] searchPaths = {
-        UserDataPaths.GetDefault().Music,
-        UserDataPaths.GetDefault().Downloads,
-        UserDataPaths.GetDefault().Documents,
-        UserDataPaths.GetDefault().Videos
-    };
-
-            List<StorageFile> allFoundFiles = new List<StorageFile>();
-
-            foreach (var path in searchPaths)
+            if (string.IsNullOrEmpty(targetAlbum))
             {
-                try
-                {
-                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
-                    var queryOptions = new QueryOptions(CommonFileQuery.OrderByMusicProperties, new[] { ".mp3", ".flac", ".m4a" });
-                    queryOptions.ApplicationSearchFilter = $"System.Music.AlbumTitle:=\"{targetAlbum}\"";
-
-                    var query = folder.CreateFileQueryWithOptions(queryOptions);
-                    var files = await query.GetFilesAsync();
-                    allFoundFiles.AddRange(files);
-                }
-                catch { /* Handle access denied */ }
+                txtDuration.Text = "• 0:00";
+                txtArtistsInvolved.Text = "• None";
+                txtCount.Text = "• 0 items";
+                return;
             }
 
-            if (allFoundFiles.Count > 0)
-            {
-                prgProgress.IsIndeterminate = false;
-                prgProgress.Maximum = allFoundFiles.Count;
+            ttProgress.IsOpen = true;
+            prgProgress.IsIndeterminate = false;
+            prgProgress.Value = 0;
 
+            // 1. Fetch matching tracks directly from SQLite in one query
+            var songs = await DatabaseService.GetSongsByAlbumAsync(targetAlbum);
+
+            if (songs.Count > 0)
+            {
+                prgProgress.Maximum = songs.Count;
                 int processedCount = 0;
 
-                foreach (var file in allFoundFiles)
+                foreach (var song in songs)
                 {
-                    var tagFile = TagLib.File.Create(file.Path);
-                    var tag = tagFile.Tag;
-
-                    var props = await file.Properties.GetMusicPropertiesAsync();
-                    ts += props.Duration;
-                    string artistName = !string.IsNullOrWhiteSpace(props.AlbumArtist)
-                        ? props.AlbumArtist : props.Artist;
-                    string title = !string.IsNullOrWhiteSpace(props.Title) ? props.Title : Path.GetFileNameWithoutExtension(file.Path);
-                    if (!string.IsNullOrEmpty(artistName))
-                        uniqueArtists.Add(artistName);
-                    var artistna = props.Artist;
-                    if (artistna == "")
+                    if (song.SongDuration.HasValue)
                     {
-                        artistna = "Unknown Artist";
+                        ts += song.SongDuration.Value;
                     }
-                    FoundSongs.Add(new SongModel
+
+                    if (!string.IsNullOrWhiteSpace(song.Artist) && song.Artist != "Unknown Artist")
                     {
-                        Title = title,
-                        Artist = artistna,
-                        AlbumName = props.Album,
-                        SongDuration = props.Duration,
-                        FilePath = file.Path
-                    });
-                    string albumName = string.IsNullOrWhiteSpace(tag.Album)
-                         ? "Unknown Album"
-                         : tag.Album;
-                    string artists = (tag.AlbumArtists != null && tag.AlbumArtists.Length > 0)
-    ? string.Join(", ", tag.AlbumArtists)
-    : "Unknown Artist";
+                        uniqueArtists.Add(song.Artist);
+                    }
+
+                    FoundSongs.Add(song);
 
                     processedCount++;
                     prgProgress.Value = processedCount;
                 }
             }
+
+            // 2. Bind collection to UI
             listviewItems.ItemsSource = FoundSongs;
+
+            // 3. Format header/footer statistics
             string formatted = ts.TotalHours >= 1
-         ? ts.ToString(@"h\:mm\:ss")
-         : ts.ToString(@"m\:ss");
+                ? ts.ToString(@"h\:mm\:ss")
+                : ts.ToString(@"m\:ss");
+
             txtDuration.Text = "• " + formatted;
+
             var sortedArtists = uniqueArtists.OrderBy(a => a);
-            txtArtistsInvolved.Text = "• " + string.Join(", ", sortedArtists);
-            txtCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "item" : "items")}";
-            await Task.Delay(500);
+            txtArtistsInvolved.Text = uniqueArtists.Count > 0
+                ? "• " + string.Join(", ", sortedArtists)
+                : "• Unknown Artist";
+
+            txtCount.Text = $"• {FoundSongs.Count} {(FoundSongs.Count == 1 ? "item" : "items")}";
+
+            await Task.Delay(300);
             ttProgress.IsOpen = false;
         }
         string OriginalAlbumname = "";

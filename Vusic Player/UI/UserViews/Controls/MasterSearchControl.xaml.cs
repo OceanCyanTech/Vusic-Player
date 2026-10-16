@@ -64,40 +64,56 @@ namespace Vusic_Player.UI.UserViews.Controls
                 return;
             }
 
-            // 2. Handle Up Arrow at the very top
+            // 2. Handle Up Arrow at the top
             if (e.Key == Windows.System.VirtualKey.Up && currentIndex == 0)
             {
-                e.Handled = true; // Stop WinUI from changing selection
+                e.Handled = true;
                 lstViewSearchOptions.SelectedIndex = -1;
                 asbSearchOptions.Focus(FocusState.Programmatic);
                 return;
             }
 
-            // 3. Handle Down Arrow at the very bottom
+            // 3. Handle Down Arrow at the bottom (loop back to top)
             if (e.Key == Windows.System.VirtualKey.Down && currentIndex == totalItems - 1)
             {
-                e.Handled = true; // Stop WinUI from dead-ending
-                lstViewSearchOptions.SelectedIndex = 0; // Explicitly loop to top
+                e.Handled = true;
+                lstViewSearchOptions.SelectedIndex = 0;
                 return;
             }
-            if ((e.Key >= Windows.System.VirtualKey.A && e.Key <= Windows.System.VirtualKey.Z) ||
-        (e.Key >= Windows.System.VirtualKey.Number0 && e.Key <= Windows.System.VirtualKey.Number9) ||
-        (e.Key >= Windows.System.VirtualKey.NumberPad0 && e.Key <= Windows.System.VirtualKey.NumberPad9) ||
-        e.Key == Windows.System.VirtualKey.Space ||
-        e.Key == Windows.System.VirtualKey.Back)
-            {
-                // Clear the list selection highlight
-                lstViewSearchOptions.SelectedIndex = -1;
 
-                // Shift focus back to the TextBox
+            // 4. Typing while list has focus: transfer input cleanly to AutoSuggestBox
+            if ((e.Key >= Windows.System.VirtualKey.A && e.Key <= Windows.System.VirtualKey.Z) ||
+                (e.Key >= Windows.System.VirtualKey.Number0 && e.Key <= Windows.System.VirtualKey.Number9) ||
+                (e.Key >= Windows.System.VirtualKey.NumberPad0 && e.Key <= Windows.System.VirtualKey.NumberPad9) ||
+                e.Key == Windows.System.VirtualKey.Space ||
+                e.Key == Windows.System.VirtualKey.Back)
+            {
+                e.Handled = true; // Consume event to prevent focus conflict / double-firing
+
+                lstViewSearchOptions.SelectedIndex = -1;
                 asbSearchOptions.Focus(FocusState.Programmatic);
 
-                // Move the cursor to the very end of the text box string so typing appends cleanly
+                if (e.Key == Windows.System.VirtualKey.Back)
+                {
+                    if (!string.IsNullOrEmpty(asbSearchOptions.Text))
+                    {
+                        asbSearchOptions.Text = asbSearchOptions.Text[..^1];
+                    }
+                }
+                else if (e.Key == Windows.System.VirtualKey.Space)
+                {
+                    asbSearchOptions.Text += " ";
+                }
+                else
+                {
+                    // Simple character conversion for basic letters/digits
+                    char charToAdd = (char)e.Key;
+                    asbSearchOptions.Text += char.ToLowerInvariant(charToAdd);
+                }
+
+                // Put cursor at end of text
                 asbSearchOptions.SelectionStart = asbSearchOptions.Text.Length;
                 asbSearchOptions.SelectionLength = 0;
-
-                // Do NOT set e.Handled = true here! 
-                // Leaving it false allows WinUI to pass the letter directly into the newly-focused TextBox.
             }
         }
         private void CommitSelection(MasterSearchModel selected)
@@ -164,16 +180,6 @@ namespace Vusic_Player.UI.UserViews.Controls
                         searchResultsMaster.Add(new MasterSearchModel { FilePath = item.FilePath, ResultMain = item.ResultMain, SubInformation = item.SubInformation, ImageThumbnail = item.ImageThumbnail });
                     }
                 }
-                //          MasterSearchIndex.TestMethod(query);
-
-                //foreach (var item in suggestions)
-                //{
-                //    var existingitem = searchResultsMaster.FirstOrDefault(p => p.FilePath == item.FilePath);
-                //    if (existingitem == null)
-                //    {
-                //        searchResultsMaster.Add(item);
-                //    }
-                //}
             }
             else
             {
@@ -298,6 +304,12 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void asbSearchOptions_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
+            if (e.Key == Windows.System.VirtualKey.Space)
+            {
+                // Do NOT set e.Handled = true; 
+                // Just return so default textbox input handling processes the space character
+                return;
+            }
             if (lstViewSearchOptions.Items.Count == 0 || lstViewSearchOptions.Visibility != Visibility.Visible) return;
 
             if (e.Key == Windows.System.VirtualKey.Down)

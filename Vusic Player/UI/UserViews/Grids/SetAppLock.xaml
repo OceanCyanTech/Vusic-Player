@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.UserViews.Grids.SetAppLock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.UserViews.Grids"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid RowSpacing="30" Margin="0, 20" PreviewKeyDown="Grid_PreviewKeyDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="Set a 4 or 6-digit pin as app lock."/>
+        <TextBlock Grid.Row="1" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="If you forget the pin, all the app settings will be reset to default."/>
+        <StackPanel HorizontalAlignment="Center"  Grid.Row="2" Orientation="Horizontal" Spacing="10" Name="stkFirstPasswordSet">
+            <TextBox Name="txtNum1" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+            <TextBox Name="txtNum2" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+            <TextBox Name="txtNum3" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+            <TextBox Name="txtNum4" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+        </StackPanel>
+    </Grid>
+</UserControl>

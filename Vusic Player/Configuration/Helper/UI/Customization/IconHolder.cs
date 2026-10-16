@@ -13,6 +13,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _theme = "Ocean";
         private string _skipback = "ms-appx:///Assets/Themes/Ocean/skip10back.png";
         private string _next= $"ms-appx:///Assets/Themes/Ocean/next.png";
+        private string _refresh= $"ms-appx:///Assets/Themes/Ocean/refresh.png";
         private string _error= $"ms-appx:///Assets/Themes/Ocean/error.png";
         private string _success= $"ms-appx:///Assets/Themes/Ocean/success.png";
         private string _info= $"ms-appx:///Assets/Themes/Ocean/infoicon.png";
@@ -25,6 +26,11 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         {
             get => _theme;
             set => SetProperty(ref _theme, value);
+        }
+        public string Refresh
+        {
+            get => _refresh;
+            set => SetProperty(ref _refresh, value);
         }
         public string Error
         {

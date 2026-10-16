@@ -33,12 +33,12 @@
                     <Image Name="imgAlbumCover" Tapped="imgAlbumCover_Tapped" Width="300" Height="300" >
                         <Image.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Text="Change Image" Click="btnSetAlbumCover_Click">
+                                <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}"  Text="Change Image" Click="btnSetAlbumCover_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="x"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Remove Image" Name="mnftRemoveImage" Click="mnftRemoveImage_Click">
+                                <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}"  Text="Remove Image" Name="mnftRemoveImage" Click="mnftRemoveImage_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="x"></FontIcon>
                                     </MenuFlyoutItem.Icon>
@@ -49,13 +49,13 @@
                 </Border>
             </Viewbox>
 
-            <TeachingTip Title="Finding files across your libraries" Name="ttProgress" >
+            <TeachingTip  FontFamily="{StaticResource GlobalFontHolder}"  Title="Finding files across your libraries" Name="ttProgress" >
                 <StackPanel Orientation="Horizontal" Margin="0, 20">
                     <ProgressBar Name="prgProgress" IsIndeterminate="True" Width="300" Margin="10, 0"></ProgressBar>
                 </StackPanel>
             </TeachingTip>
             <StackPanel Grid.Row="1" Margin="0, 20" Orientation="Vertical" HorizontalAlignment="Center">
-                <TextBlock Text="Album name" Name="txtAlbumName" 
+                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Album name" Name="txtAlbumName" 
                Style="{StaticResource TitleTextBlockStyle}" 
                HorizontalAlignment="Center" 
                TextWrapping="Wrap" />

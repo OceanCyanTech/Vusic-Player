@@ -10,6 +10,7 @@ using Vortice.Direct2D1.Effects;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Extensions;
 using Windows.Storage;
+using FileAttributes = System.IO.FileAttributes;
 
 namespace Vusic_Player.Configuration.Helper.FileSystem
 {
@@ -19,7 +20,21 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             ApplicationData.Current.LocalFolder.Path, "vusicplayer_library.db");
 
         private static readonly string ConnectionString = $"Data Source={DbPath};";
+        public static async Task ClearDatabaseAsync()
+        {
+            await Task.Run(() =>
+            {
+                using var connection = new SqliteConnection(ConnectionString);
+                connection.Open();
 
+                using var command = connection.CreateCommand();
+                // Delete all rows and shrink the SQLite file footprint
+                command.CommandText = @"
+            DELETE FROM Songs;
+            VACUUM;";
+                command.ExecuteNonQuery();
+            });
+        }
         public static void InitializeDatabase()
         {
             using var connection = new SqliteConnection(ConnectionString);
@@ -325,8 +340,96 @@ Genre TEXT,
 
             transaction.Commit();
         }
+        public static async Task<List<string>> RemoveFolderFilesAsync(string folderPath)
+        {
+            var removedPaths = new List<string>();
+            string normalizedPrefix = Path.GetFullPath(folderPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar;
 
+            await Task.Run(() =>
+            {
+                using var connection = new SqliteConnection(ConnectionString);
+                connection.Open();
 
+                using (var selectCmd = connection.CreateCommand())
+                {
+                    // SQLite LIKE matching to find all files within the directory tree
+                    selectCmd.CommandText = "SELECT FilePath FROM Songs WHERE FilePath LIKE @prefix || '%'";
+                    selectCmd.Parameters.AddWithValue("@prefix", normalizedPrefix);
+
+                    using var reader = selectCmd.ExecuteReader();
+                    int colPath = reader.GetOrdinal("FilePath");
+                    while (reader.Read())
+                    {
+                        removedPaths.Add(reader.GetString(colPath));
+                    }
+                }
+
+                if (removedPaths.Count > 0)
+                {
+                    using var deleteCmd = connection.CreateCommand();
+                    deleteCmd.CommandText = "DELETE FROM Songs WHERE FilePath LIKE @prefix || '%'";
+                    deleteCmd.Parameters.AddWithValue("@prefix", normalizedPrefix);
+                    deleteCmd.ExecuteNonQuery();
+                }
+            });
+
+            return removedPaths;
+        }
+        public static async Task RemoveDisallowedFolderFilesAsync(IEnumerable<string> allowedFolders)
+        {
+            var allowedList = allowedFolders
+                .Where(p => !string.IsNullOrWhiteSpace(p))
+                .Select(p => Path.GetFullPath(p).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
+                .ToList();
+
+            await Task.Run(() =>
+            {
+                var songsToRemove = new List<string>();
+
+                using (var connection = new SqliteConnection(ConnectionString))
+                {
+                    connection.Open();
+
+                    // 1. Fetch all FilePaths from SQLite
+                    using (var selectCmd = new SqliteCommand("SELECT FilePath FROM Songs", connection))
+                    using (var reader = selectCmd.ExecuteReader())
+                    {
+                        int colPath = reader.GetOrdinal("FilePath");
+                        while (reader.Read())
+                        {
+                            string filePath = reader.GetString(colPath);
+
+                            // 2. Check if this file belongs to ANY of the allowed folders
+                            bool isAllowed = allowedList.Any(allowedFolder =>
+                                filePath.StartsWith(allowedFolder + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
+                                filePath.StartsWith(allowedFolder, StringComparison.OrdinalIgnoreCase));
+
+                            if (!isAllowed)
+                            {
+                                songsToRemove.Add(filePath);
+                            }
+                        }
+                    }
+
+                    // 3. Batch delete any orphaned records from SQLite
+                    if (songsToRemove.Count > 0)
+                    {
+                        using var transaction = connection.BeginTransaction();
+                        using var deleteCmd = connection.CreateCommand();
+                        deleteCmd.CommandText = "DELETE FROM Songs WHERE FilePath = $path";
+                        var pPath = deleteCmd.Parameters.Add("$path", SqliteType.Text);
+
+                        foreach (var path in songsToRemove)
+                        {
+                            pPath.Value = path;
+                            deleteCmd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+            });
+        }
         public static async Task<bool> UpdateSongMetadataAsync(string filePath, string newTitle, string newArtist, string newAlbum, string genre = "Unknown Genre")
         {
             return await Task.Run(() =>
@@ -371,45 +474,52 @@ Genre TEXT,
             });
         }
         public static async Task ScanAndSyncDiskAsync(
-    HashSet<string> existingPaths,
-    DispatcherQueue? dispatcher = null,
-    Action<AudioTrackLite>? onSongDiscovered = null)
+            IEnumerable<string> targetFolders,
+            HashSet<string> existingPaths,
+            DispatcherQueue? dispatcher = null,
+            Action<AudioTrackLite>? onSongDiscovered = null)
         {
-            List<string> safePaths = new()
-    {
-        Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"),
-        Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-        Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
-        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-    };
+            if (targetFolders == null) return;
+            System.Diagnostics.Debug.WriteLine($"===> ScanAndSyncDiskAsync called with folders: {string.Join(", ", targetFolders)}");
+            System.Diagnostics.Debug.WriteLine($"===> Called from:\n{Environment.StackTrace}\n");
 
+            if (targetFolders.Any(f => f.Contains("Pictures", StringComparison.OrdinalIgnoreCase)))
+            {
+                System.Diagnostics.Debug.WriteLine("🔥 PICTURES PASSED DURING SCAN!");
+                System.Diagnostics.Debug.WriteLine($"🔥 CALL STACK:\n{Environment.StackTrace}\n");
+            }
             await Task.Run(async () =>
             {
                 var newlyDiscoveredSongs = new List<AudioTrackLite>();
                 int filesProcessedThisRun = 0;
 
-                foreach (var path in safePaths)
+                foreach (var path in targetFolders)
                 {
-                    if (string.IsNullOrEmpty(path) || !Directory.Exists(path)) continue;
+                    if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path)) continue;
 
-                try
-                {
-                    var enumOptions = new EnumerationOptions
+                    try
                     {
-                        IgnoreInaccessible = true,
-                        RecurseSubdirectories = true,
-                        AttributesToSkip = System.IO.FileAttributes.Hidden | System.IO.FileAttributes.System
-                    };
+                        var enumOptions = new EnumerationOptions
+                        {
+                            IgnoreInaccessible = true,
+                            RecurseSubdirectories = true,
+                            AttributesToSkip = FileAttributes.Hidden | FileAttributes.System | FileAttributes.ReparsePoint
+                        };
 
-                    var directoryInfo = new DirectoryInfo(path);
-                    var files = directoryInfo.EnumerateFiles("*.*", enumOptions)
-                        .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase) || VideoExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
+                        var directoryInfo = new DirectoryInfo(path);
+                        var files = directoryInfo.EnumerateFiles("*.*", enumOptions)
+                            .Where(f => AudioExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase)
+                                     || VideoExtensions.List.Contains(f.Extension, StringComparer.OrdinalIgnoreCase));
 
                         foreach (var file in files)
                         {
                             string normalizedPath = Path.GetFullPath(file.FullName);
 
+                            if (normalizedPath.Contains(@"OneDrive\Pictures", StringComparison.OrdinalIgnoreCase))
+                            {
+                                System.Diagnostics.Debug.WriteLine($"🚨 [LEAK DETECTED]: {normalizedPath}");
+                                System.Diagnostics.Debug.WriteLine($"🚨 [SCANNER CURRENT ROOT (path)]: {path}");
+                            }
                             if (existingPaths.Contains(normalizedPath)) continue;
 
                             try
@@ -422,25 +532,20 @@ Genre TEXT,
 
                                 var tag = tagFile.Tag;
                                 string title = string.IsNullOrWhiteSpace(tag.Title)
-                                     ? Path.GetFileNameWithoutExtension(normalizedPath)
-                                     : tag.Title;
+                                    ? Path.GetFileNameWithoutExtension(normalizedPath)
+                                    : tag.Title;
                                 string genre = string.IsNullOrWhiteSpace(string.Join(", ", tag.Genres)) ? "Unknown Genre" : string.Join(", ", tag.Genres);
 
-                                // Use standard FileStream + SimpleStreamAbstraction to bypass WinRT COM marshaling
                                 if (AudioExtensions.List.Contains(fileExtension, StringComparer.OrdinalIgnoreCase))
                                 {
-
                                     string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
                                         ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
                                         : string.Join(", ", tag.AlbumArtists);
-
-                                 
 
                                     string album = string.IsNullOrWhiteSpace(tag.Album)
                                         ? "Unknown Album"
                                         : tag.Album;
 
-                                   
                                     var newSong = new AudioTrackLite
                                     {
                                         FilePath = normalizedPath,
@@ -454,24 +559,25 @@ Genre TEXT,
 
                                     newlyDiscoveredSongs.Add(newSong);
                                 }
-                                else if(VideoExtensions.List.Contains(fileExtension, StringComparer.OrdinalIgnoreCase))
+                                else if (VideoExtensions.List.Contains(fileExtension, StringComparer.OrdinalIgnoreCase))
                                 {
                                     var newSong = new AudioTrackLite
                                     {
                                         FilePath = normalizedPath,
                                         Title = title,
+                                        NormalizedTitle = NormalizeForSearch(title),
                                         SongDuration = tagFile.Properties.Duration,
                                         Genre = genre
                                     };
 
                                     newlyDiscoveredSongs.Add(newSong);
                                 }
+
                                 existingPaths.Add(normalizedPath);
 
                                 if (newlyDiscoveredSongs.Count % 15 == 0 && onSongDiscovered != null)
                                 {
                                     var batch = newlyDiscoveredSongs.TakeLast(15).ToList();
-
                                     if (dispatcher != null)
                                     {
                                         dispatcher.TryEnqueue(() =>

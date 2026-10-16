@@ -101,10 +101,7 @@ namespace Vusic_Player
             frmMain.Navigate(typeof(OptimizeApp));
             // AppVersion.LoadBuildCounter();
             LoadVersion();
-
-            //Player pl = new Player();
-            //pl.Open(@"C:\Users\bnara\Downloads\Heartstopper Season 4\E08 Apart.mp4");
-            //mainengine.Player = pl;
+            LoadFonts();
             this.ExtendsContentIntoTitleBar = true;
             rootGrid.Loaded += RootGrid_Loaded;
 
@@ -136,7 +133,21 @@ namespace Vusic_Player
             };
 
         }
-
+        private async void LoadFonts()
+        {
+            try
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var font = currentSettings.FontFamily;
+                Application.Current.Resources["GlobalFontHolder"] = new FontFamily(font);
+            }
+            catch
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var font = currentSettings.FontFamily;
+                Application.Current.Resources["GlobalFontHolder"] = "Segoe UI Variable Text";
+            }
+        }
         private static MainWindow? instance;
         public static MainWindow? HideWindow()
         {
