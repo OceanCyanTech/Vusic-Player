@@ -1383,7 +1383,11 @@ namespace Vusic_Player.Pages.Views
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Set App Lock", "Close", "", "", OceanDialogWindow.ContentType.AppLock, OceanContentDialogDefault.Primary, XamlRoot, 700, 800, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", ""
 , new ObservableCollection<SongModel>(), "");
-            MediaPlaybackController.Instance.PrimaryButtonEnable = false;
+            OceanContentDialog.PrimaryRequested += (() =>
+            {
+                OceanContentDialog.HideDlg();
+                MainWindow.ShowWindow();
+            });
         }
     }
 }

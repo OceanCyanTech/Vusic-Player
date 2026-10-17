@@ -303,7 +303,9 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             }
             else if (contentType == ContentType.AppLock)
             {
+
                 AppLock.Visibility = Visibility.Visible;
+                AppLock.ShowDashboard();
             }
             cnt = contentType;
             SetImage(imgPrimary, pbi);

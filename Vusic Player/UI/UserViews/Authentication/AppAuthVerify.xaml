@@ -30,7 +30,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Enter pin to proceed." Style="{StaticResource TitleTextBlockStyle}"/>
+        <TextBlock Text="Enter pin to proceed." HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"/>
         <TextBlock Text="" Name="txtIncorrectPassword" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="1"/>
         <StackPanel HorizontalAlignment="Center"  Grid.Row="2" Orientation="Horizontal" Spacing="10" Name="stkFirstPasswordSet">
             <StackPanel.RenderTransform>

@@ -28,7 +28,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Vusic Player is locked!" Style="{StaticResource TitleTextBlockStyle}"/>
+        <TextBlock Text="Vusic Player is locked!" HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"/>
         <authentication:AppAuthVerify x:Name="AppAuthVer" AuthenticationSuccess="AppAuthVer_AuthenticationSuccess" Grid.Row="1"/>
     </Grid>
 </Page>

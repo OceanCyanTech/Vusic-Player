@@ -13,6 +13,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System;
@@ -82,7 +83,6 @@ public sealed partial class SetAppLock : UserControl
                 e.Handled = true;
                 btnSet.Visibility = Visibility.Collapsed;
                 txtConfirmPassword.Text = "Confirm Password";
-                MediaPlaybackController.Instance.PrimaryButtonEnable = false;
                 btnNext.IsEnabled = false;
 
                 if (index > 0)
@@ -109,7 +109,6 @@ public sealed partial class SetAppLock : UserControl
         if (isMatch)
         {
             txtConfirmPassword.Text = "Confirm Password";
-            MediaPlaybackController.Instance.PrimaryButtonEnable = true;
 
             btnSet.Visibility = Visibility.Visible;
             btnSet.Focus(FocusState.Programmatic);
@@ -147,7 +146,6 @@ public sealed partial class SetAppLock : UserControl
         txtConfirmPassword.Visibility = Visibility.Visible;
         btnNext.Visibility = Visibility.Collapsed;
         btnBack.Visibility = Visibility.Visible;
-        MediaPlaybackController.Instance.PrimaryButtonEnable = false;
     }
     private void chkIsSixDigit_Checked(object sender, RoutedEventArgs e)
     {
@@ -167,7 +165,6 @@ public sealed partial class SetAppLock : UserControl
     {
         btnNext.Visibility = Visibility.Visible;
         btnBack.Visibility = Visibility.Collapsed;
-        MediaPlaybackController.Instance.PrimaryButtonEnable = false;
         txtConfirmPassword.Visibility = Visibility.Collapsed;
         index = 3;
 
@@ -191,6 +188,7 @@ public sealed partial class SetAppLock : UserControl
     private void btnGoBack_Click(object sender, RoutedEventArgs e)
     {
         grdMain.Visibility = Visibility.Visible;
+        txtNum1.Focus(FocusState.Programmatic);
         grdConfirmation.Visibility = Visibility.Collapsed;
     }
 
@@ -227,14 +225,60 @@ public sealed partial class SetAppLock : UserControl
 
     private void btnChangePassword_Click(object sender, RoutedEventArgs e)
     {
+        grdSuccess.Visibility = Visibility.Collapsed;
+        grdVerify.Visibility = Visibility.Visible;
+        string? password = PinService.RetrievePin();
+        AppAuthVer.SetNoOfDigits();
 
+        AppAuthVer.BringFocus(password!);
+        AppAuthVer.AuthenticationSuccess += (() =>
+        {
+            PinService.RemovePin();
+            grdVerify.Visibility = Visibility.Collapsed;
+            grdMain.Visibility = Visibility.Visible;
+            txtNum1.Focus(FocusState.Programmatic);
+
+            btnSet.Visibility = Visibility.Collapsed;
+            btnBack.Visibility = Visibility.Collapsed;
+            btnNext.Visibility = Visibility.Visible;
+            chkIsSixDigit.IsEnabled = true;
+            txtNum1.Text = "";
+            txtNum2.Text = "";
+            txtNum3.Text = "";
+            txtNum4.Text = "";
+            txtNum5.Text = "";
+            txtNum6.Text = "";
+            txtConfirmPassword.Text = "";
+            btnNext.IsEnabled = true;
+        });
     }
 
     private void btnDone_Click(object sender, RoutedEventArgs e)
     {
-
+        OceanContentDialog.HideDlg();
+        MainWindow.ShowWindow();
+        grdDashboard.Visibility = Visibility.Visible;
+        grdSuccess.Visibility = Visibility.Collapsed;
     }
+   public void ShowDashboard()
+    {
+      
+        grdDashboard.Visibility = Visibility.Collapsed;
+        grdSuccess.Visibility = Visibility.Collapsed;
+        grdRemove.Visibility = Visibility.Collapsed;
+        grdMain.Visibility = Visibility.Visible;
+        txtNum1.Focus(FocusState.Programmatic);
 
+        grdConfirmation.Visibility = Visibility.Collapsed;
+        grdVerify.Visibility = Visibility.Collapsed;
+
+
+        if (PinService.IsPinEnabled())
+        {
+            grdMain.Visibility = Visibility.Collapsed;
+            grdDashboard.Visibility = Visibility.Visible;
+        }
+    }
 
     private void btnNo_Click(object sender, RoutedEventArgs e)
     {
@@ -246,12 +290,15 @@ public sealed partial class SetAppLock : UserControl
         grdRemove.Visibility = Visibility.Collapsed;
         grdVerify.Visibility = Visibility.Visible;
         string? password = PinService.RetrievePin();
+        AppAuthVer.SetNoOfDigits();
         AppAuthVer.BringFocus(password!);
         AppAuthVer.AuthenticationSuccess += (() =>
         {
             PinService.RemovePin();
             grdVerify.Visibility = Visibility.Collapsed;
             grdMain.Visibility = Visibility.Visible;
+            txtNum1.Focus(FocusState.Programmatic);
+
             btnSet.Visibility = Visibility.Collapsed;
             btnBack.Visibility = Visibility.Collapsed;
             btnNext.Visibility = Visibility.Visible;
@@ -263,7 +310,6 @@ public sealed partial class SetAppLock : UserControl
             txtNum5.Text = "";
             txtNum6.Text = "";
             txtConfirmPassword.Text = "";
-            MediaPlaybackController.Instance.PrimaryButtonEnable = false;
             btnNext.IsEnabled = true;
         });
     }
@@ -272,6 +318,8 @@ public sealed partial class SetAppLock : UserControl
     {
         grdDashboard.Visibility = Visibility.Collapsed;
         grdVerify.Visibility = Visibility.Visible;
+        AppAuthVer.SetNoOfDigits();
+
         string? password = PinService.RetrievePin();
         AppAuthVer.BringFocus(password!);
         AppAuthVer.AuthenticationSuccess += (() =>
@@ -279,6 +327,8 @@ public sealed partial class SetAppLock : UserControl
             PinService.RemovePin();
             grdVerify.Visibility = Visibility.Collapsed;
             grdMain.Visibility = Visibility.Visible;
+            txtNum1.Focus(FocusState.Programmatic);
+
             btnSet.Visibility = Visibility.Collapsed;
             btnBack.Visibility = Visibility.Collapsed;
             btnNext.Visibility = Visibility.Visible;
@@ -290,7 +340,6 @@ public sealed partial class SetAppLock : UserControl
             txtNum5.Text = "";
             txtNum6.Text = "";
             txtConfirmPassword.Text = "";
-            MediaPlaybackController.Instance.PrimaryButtonEnable = false;
             btnNext.IsEnabled = true;
         });
     }
@@ -299,6 +348,8 @@ public sealed partial class SetAppLock : UserControl
     {
         grdDashboard.Visibility = Visibility.Collapsed;
         grdVerify.Visibility = Visibility.Visible;
+        AppAuthVer.SetNoOfDigits();
+
         string? password = PinService.RetrievePin();
         AppAuthVer.BringFocus(password!);
         AppAuthVer.AuthenticationSuccess += (() =>
@@ -306,6 +357,8 @@ public sealed partial class SetAppLock : UserControl
             PinService.RemovePin();
             grdVerify.Visibility = Visibility.Collapsed;
             grdMain.Visibility = Visibility.Visible;
+            txtNum1.Focus(FocusState.Programmatic);
+
             btnSet.Visibility = Visibility.Collapsed;
             btnBack.Visibility = Visibility.Collapsed;
             btnNext.Visibility = Visibility.Visible;
@@ -317,7 +370,6 @@ public sealed partial class SetAppLock : UserControl
             txtNum5.Text = "";
             txtNum6.Text = "";
             txtConfirmPassword.Text = "";
-            MediaPlaybackController.Instance.PrimaryButtonEnable = false;
             btnNext.IsEnabled = true;
         });
     }

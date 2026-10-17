@@ -32,6 +32,37 @@ namespace Vusic_Player.UI.UserViews.Authentication
             if (password != null)
             {
                 noofdigits = password.Length;
+                if (noofdigits == 6)
+                {
+                    txtNum5.Visibility = Visibility.Visible;
+                    txtNum6.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    txtNum5.Visibility = Visibility.Collapsed;
+                    txtNum6.Visibility = Visibility.Collapsed;
+
+                }
+            }
+         
+        }
+        public void SetNoOfDigits()
+        {
+            password = PinService.RetrievePin();
+            if (password != null)
+            {
+                noofdigits = password.Length;
+                if (noofdigits == 6)
+                {
+                    txtNum5.Visibility = Visibility.Visible;
+                    txtNum6.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    txtNum5.Visibility = Visibility.Collapsed;
+                    txtNum6.Visibility = Visibility.Collapsed;
+
+                }
             }
         }
         public event Action? AuthenticationSuccess;
@@ -94,7 +125,6 @@ namespace Vusic_Player.UI.UserViews.Authentication
             else if (e.Key == VirtualKey.Back)
             {
                 e.Handled = true;
-                MediaPlaybackController.Instance.PrimaryButtonEnable = false;
 
                 if (index > 0)
                 {
