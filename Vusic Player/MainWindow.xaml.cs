@@ -98,8 +98,6 @@ namespace Vusic_Player
         {
             InitializeComponent();
             EngineService.StartEngine();
-            frmMain.Navigate(typeof(OptimizeApp));
-            // AppVersion.LoadBuildCounter();
             LoadVersion();
             LoadFonts();
             this.ExtendsContentIntoTitleBar = true;
@@ -129,8 +127,19 @@ namespace Vusic_Player
                 OceanContentDialog.KillDlg();
                 VideoOptionsWindow.KillDialog();
                 SubtitleEditorWindow.KillDialog();
-               
+
             };
+            if (PinService.IsPinEnabled())
+            {
+                frmMain.Navigate(typeof(AppLockVerify));
+
+            }
+            else
+            {
+                frmMain.Navigate(typeof(OptimizeApp));
+            }
+            // AppVersion.LoadBuildCounter();
+        
 
         }
         private async void LoadFonts()

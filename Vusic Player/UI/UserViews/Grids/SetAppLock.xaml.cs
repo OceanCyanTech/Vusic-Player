@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -12,6 +5,17 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.Playback;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,80 +27,298 @@ public sealed partial class SetAppLock : UserControl
     public SetAppLock()
     {
         InitializeComponent();
+        if (PinService.IsPinEnabled())
+        {
+            grdMain.Visibility = Visibility.Collapsed;
+            grdDashboard.Visibility = Visibility.Visible;
+        }
     }
-    int index = 0;
-    int pass1 = 0;
-    int pass2 = 0;
-    int pass3= 0;
-    int pass4= 0;
-    private void Grid_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+    private readonly int[] pass = new int[6];
+    private readonly int[] confirmPass = new int[6];
+    private int index = 0;
+    private async void Grid_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if(e.Key == Windows.System.VirtualKey.Number1 ||
-            e.Key == Windows.System.VirtualKey.Number2 ||
-            e.Key == Windows.System.VirtualKey.Number3 ||
-            e.Key == Windows.System.VirtualKey.Number4 ||
-            e.Key == Windows.System.VirtualKey.Number5 ||
-            e.Key == Windows.System.VirtualKey.Number6 ||
-            e.Key == Windows.System.VirtualKey.Number7 ||
-            e.Key == Windows.System.VirtualKey.Number8 ||
-            e.Key == Windows.System.VirtualKey.Number9 ||
-            e.Key == Windows.System.VirtualKey.Number0)
+        if (grdMain.Visibility == Visibility.Visible)
         {
-            switch (index)
+            int digit = -1;
+            if (e.Key >= VirtualKey.Number0 && e.Key <= VirtualKey.Number9)
             {
-                case 0:
-                    pass1 = (e.Key - Windows.System.VirtualKey.Number0);
-                    txtNum1.Text = "•";
+                digit = (int)(e.Key - VirtualKey.Number0);
+            }
+            else if (e.Key >= VirtualKey.NumberPad0 && e.Key <= VirtualKey.NumberPad9)
+            {
+                digit = (int)(e.Key - VirtualKey.NumberPad0);
+            }
+
+            int maxDigits = (chkIsSixDigit.IsChecked == true) ? 6 : 4;
+            TextBox[] textBoxes = [txtNum1, txtNum2, txtNum3, txtNum4, txtNum5, txtNum6];
+
+            // Handle Number Input
+            if (digit != -1)
+            {
+                e.Handled = true; // Stop event bubbling to eliminate input latency
+
+                if (index < maxDigits)
+                {
+                    pass[index] = digit;
+                    textBoxes[index].Text = "•";
                     index++;
-                    break;
 
-                case 1:
-                    pass2 = (e.Key - Windows.System.VirtualKey.Number0);
-                    txtNum2.Text = "•";
-                    index++;
-                    break;
+                    if (index == maxDigits)
+                    {
+                        btnNext.IsEnabled = true;
 
+                        // Verification check if in confirmation mode
+                        if (chkIsSixDigit.IsEnabled == false)
+                        {
+                            ValidatePinMatch(maxDigits);
+                        }
+                    }
+                }
+            }
+            // Handle Backspace
+            else if (e.Key == VirtualKey.Back)
+            {
+                e.Handled = true;
+                btnSet.Visibility = Visibility.Collapsed;
+                txtConfirmPassword.Text = "Confirm Password";
+                MediaPlaybackController.Instance.PrimaryButtonEnable = false;
+                btnNext.IsEnabled = false;
 
-                case 2:
-                    pass3 = (e.Key - Windows.System.VirtualKey.Number0);
-                    txtNum3.Text = "•";
-                    index++;
-                    break;
-
-                case 3:
-                    pass4 = (e.Key - Windows.System.VirtualKey.Number0);
-                    txtNum4.Text = "•"; 
-                    break;
+                if (index > 0)
+                {
+                    index--;
+                    pass[index] = 0;
+                    textBoxes[index].Text = "";
+                }
             }
         }
-        else if(e.Key == Windows.System.VirtualKey.Back)
+    }
+    private void ValidatePinMatch(int length)
+    {
+        bool isMatch = true;
+        for (int i = 0; i < length; i++)
         {
-            switch (index)
+            if (pass[i] != confirmPass[i])
             {
-                case 0:
-                    pass1 = 0;
-                    txtNum1.Text = "";
-                    break;
-
-                case 1:
-                    pass2 = 0;
-                    txtNum2.Text = "";
-                    index--;
-                    break;
-
-
-                case 2:
-                    pass3 = 0;
-                    txtNum3.Text = "";
-                    index--;
-                    break;
-
-                case 3:
-                    pass4 = 0;
-                    txtNum4.Text = "";
-                    index--;
-                    break;
+                isMatch = false;
+                break;
             }
         }
+
+        if (isMatch)
+        {
+            txtConfirmPassword.Text = "Confirm Password";
+            MediaPlaybackController.Instance.PrimaryButtonEnable = true;
+
+            btnSet.Visibility = Visibility.Visible;
+            btnSet.Focus(FocusState.Programmatic);
+
+        }
+        else
+        {
+            btnSet.Visibility = Visibility.Collapsed;
+
+            txtConfirmPassword.Text = "Confirm Password - Passwords Don't Match";
+            ShakeStoryboard.Begin();
+        }
+    }
+    private void btnUseWindowsAuthentication_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnNext_Click(object sender, RoutedEventArgs e)
+    {
+        chkIsSixDigit.IsEnabled = false;
+
+        // Copy entered digits into confirmPass
+        Array.Copy(pass, confirmPass, pass.Length);
+        Array.Clear(pass, 0, pass.Length);
+
+        // Clear all textboxes
+        TextBox[] textBoxes = [txtNum1, txtNum2, txtNum3, txtNum4, txtNum5, txtNum6];
+        foreach (var tb in textBoxes)
+        {
+            tb.Text = "";
+        }
+
+        index = 0;
+        txtConfirmPassword.Visibility = Visibility.Visible;
+        btnNext.Visibility = Visibility.Collapsed;
+        btnBack.Visibility = Visibility.Visible;
+        MediaPlaybackController.Instance.PrimaryButtonEnable = false;
+    }
+    private void chkIsSixDigit_Checked(object sender, RoutedEventArgs e)
+    {
+        if (chkIsSixDigit.IsChecked == true)
+        {
+            txtNum5.Visibility = Visibility.Visible;
+            txtNum6.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            txtNum5.Visibility = Visibility.Collapsed;
+            txtNum6.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void btnBack_Click(object sender, RoutedEventArgs e)
+    {
+        btnNext.Visibility = Visibility.Visible;
+        btnBack.Visibility = Visibility.Collapsed;
+        MediaPlaybackController.Instance.PrimaryButtonEnable = false;
+        txtConfirmPassword.Visibility = Visibility.Collapsed;
+        index = 3;
+
+        if (chkIsSixDigit.IsChecked == true)
+        {
+            index = 5;
+        }
+        chkIsSixDigit.IsEnabled = true;
+
+        txtNum1.Text = "•";
+        txtNum2.Text = "•";
+        txtNum3.Text = "•";
+        txtNum4.Text = "•";
+        if (chkIsSixDigit.IsChecked == true)
+        {
+            txtNum5.Text = "•";
+            txtNum6.Text = "•";
+        }
+    }
+
+    private void btnGoBack_Click(object sender, RoutedEventArgs e)
+    {
+        grdMain.Visibility = Visibility.Visible;
+        grdConfirmation.Visibility = Visibility.Collapsed;
+    }
+
+    private void btnProceed_Click(object sender, RoutedEventArgs e)
+    {
+        if (chkIsSixDigit.IsChecked == false)
+        {
+            PinService.SavePin(pass, 4);
+
+
+        }
+        else
+        {
+            PinService.SavePin(pass, 6);
+
+        }
+        grdSuccess.Visibility = Visibility.Visible;
+        grdConfirmation.Visibility = Visibility.Collapsed;
+    }
+
+    private void btnSet_Click(object sender, RoutedEventArgs e)
+    {
+        grdMain.Visibility = Visibility.Collapsed;
+        grdConfirmation.Visibility = Visibility.Visible;
+        btnProceed.Focus(FocusState.Programmatic);
+
+    }
+
+    private void btnRemovePassword_Click(object sender, RoutedEventArgs e)
+    {
+        grdSuccess.Visibility = Visibility.Collapsed;
+        grdRemove.Visibility = Visibility.Visible;
+    }
+
+    private void btnChangePassword_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnDone_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+
+    private void btnNo_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnYes_Click(object sender, RoutedEventArgs e)
+    {
+        grdRemove.Visibility = Visibility.Collapsed;
+        grdVerify.Visibility = Visibility.Visible;
+        string? password = PinService.RetrievePin();
+        AppAuthVer.BringFocus(password!);
+        AppAuthVer.AuthenticationSuccess += (() =>
+        {
+            PinService.RemovePin();
+            grdVerify.Visibility = Visibility.Collapsed;
+            grdMain.Visibility = Visibility.Visible;
+            btnSet.Visibility = Visibility.Collapsed;
+            btnBack.Visibility = Visibility.Collapsed;
+            btnNext.Visibility = Visibility.Visible;
+            chkIsSixDigit.IsEnabled = true;
+            txtNum1.Text = "";
+            txtNum2.Text = "";
+            txtNum3.Text = "";
+            txtNum4.Text = "";
+            txtNum5.Text = "";
+            txtNum6.Text = "";
+            txtConfirmPassword.Text = "";
+            MediaPlaybackController.Instance.PrimaryButtonEnable = false;
+            btnNext.IsEnabled = true;
+        });
+    }
+
+    private void btnChangeCurrentPin_Click(object sender, RoutedEventArgs e)
+    {
+        grdDashboard.Visibility = Visibility.Collapsed;
+        grdVerify.Visibility = Visibility.Visible;
+        string? password = PinService.RetrievePin();
+        AppAuthVer.BringFocus(password!);
+        AppAuthVer.AuthenticationSuccess += (() =>
+        {
+            PinService.RemovePin();
+            grdVerify.Visibility = Visibility.Collapsed;
+            grdMain.Visibility = Visibility.Visible;
+            btnSet.Visibility = Visibility.Collapsed;
+            btnBack.Visibility = Visibility.Collapsed;
+            btnNext.Visibility = Visibility.Visible;
+            chkIsSixDigit.IsEnabled = true;
+            txtNum1.Text = "";
+            txtNum2.Text = "";
+            txtNum3.Text = "";
+            txtNum4.Text = "";
+            txtNum5.Text = "";
+            txtNum6.Text = "";
+            txtConfirmPassword.Text = "";
+            MediaPlaybackController.Instance.PrimaryButtonEnable = false;
+            btnNext.IsEnabled = true;
+        });
+    }
+
+    private void btnRemoveCurrentPin_Click(object sender, RoutedEventArgs e)
+    {
+        grdDashboard.Visibility = Visibility.Collapsed;
+        grdVerify.Visibility = Visibility.Visible;
+        string? password = PinService.RetrievePin();
+        AppAuthVer.BringFocus(password!);
+        AppAuthVer.AuthenticationSuccess += (() =>
+        {
+            PinService.RemovePin();
+            grdVerify.Visibility = Visibility.Collapsed;
+            grdMain.Visibility = Visibility.Visible;
+            btnSet.Visibility = Visibility.Collapsed;
+            btnBack.Visibility = Visibility.Collapsed;
+            btnNext.Visibility = Visibility.Visible;
+            chkIsSixDigit.IsEnabled = true;
+            txtNum1.Text = "";
+            txtNum2.Text = "";
+            txtNum3.Text = "";
+            txtNum4.Text = "";
+            txtNum5.Text = "";
+            txtNum6.Text = "";
+            txtConfirmPassword.Text = "";
+            MediaPlaybackController.Instance.PrimaryButtonEnable = false;
+            btnNext.IsEnabled = true;
+        });
     }
 }

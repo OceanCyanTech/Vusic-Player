@@ -5,23 +5,115 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Grids"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:authentication="using:Vusic_Player.UI.UserViews.Authentication"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Storyboard x:Name="ShakeStoryboard">
+            <DoubleAnimationUsingKeyFrames 
+            Storyboard.TargetName="ShakeTransform"
+            Storyboard.TargetProperty="X">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-12" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.10" Value="10" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="-8" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.20" Value="6" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.25" Value="-3" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.30" Value="0" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+    <Grid>
+        <Grid Name="grdDashboard" Visibility="Collapsed"  Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock HorizontalAlignment="Center" Text="What do you want to do?" Style="{StaticResource TitleTextBlockStyle}"/>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10" Grid.Row="1">
+                <Button Style="{StaticResource AccentButtonStyle}" Content="Change Current PIN" Name="btnChangeCurrentPin" Click="btnChangeCurrentPin_Click"/>
+                <Button Style="{StaticResource AccentButtonStyle}"  Content="Remove PIN" Name="btnRemoveCurrentPin" Click="btnRemoveCurrentPin_Click"/>
+            </StackPanel>
+        </Grid>
+        <Grid Name="grdVerify" Visibility="Collapsed"  Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30">
+            <authentication:AppAuthVerify x:Name="AppAuthVer"/>
+        </Grid>
+        <Grid Name="grdRemove" Visibility="Collapsed" Margin="0, 20" HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Are you sure you want to remove the set PIN?" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+            <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="1">
+             
+                <Button Content="Yes" Name="btnYes" Click="btnYes_Click"/>
+                <Button Content="No" Name="btnNo" Click="btnNo_Click"/>
+            </StackPanel>
+        </Grid>
+        <Grid Name="grdSuccess" Visibility="Collapsed" Margin="0, 20" HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="PIN has been successfully set."/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="30" HorizontalAlignment="Center">
 
-    <Grid RowSpacing="30" Margin="0, 20" PreviewKeyDown="Grid_PreviewKeyDown">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+                <Button Content="Remove PIN" Click="btnRemovePassword_Click" Name="btnRemovePassword"/>
+                <Button Content="Change PIN" Click="btnChangePassword_Click" Name="btnChangePassword"/>
+                <Button Content="Done" Click="btnDone_Click" Name="btnDone"/>
+            </StackPanel>
+        </Grid>
+        <Grid Name="grdConfirmation" Visibility="Collapsed" Margin="0, 20" HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="If you forget the pin, all the app settings will be reset to default. Are you sure you want to proceed?"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="30" HorizontalAlignment="Center">
 
-        <TextBlock Grid.Row="0" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="Set a 4 or 6-digit pin as app lock."/>
-        <TextBlock Grid.Row="1" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="If you forget the pin, all the app settings will be reset to default."/>
-        <StackPanel HorizontalAlignment="Center"  Grid.Row="2" Orientation="Horizontal" Spacing="10" Name="stkFirstPasswordSet">
-            <TextBox Name="txtNum1" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
-            <TextBox Name="txtNum2" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
-            <TextBox Name="txtNum3" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
-            <TextBox Name="txtNum4" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
-        </StackPanel>
+                <Button Content="Go Back" Click="btnGoBack_Click" Name="btnGoBack"/>
+                <Button Content="Proceed" Click="btnProceed_Click" Name="btnProceed" Style="{StaticResource AccentButtonStyle}"/>
+            </StackPanel>
+        </Grid>
+        <Grid RowSpacing="30" Margin="0, 20" Name="grdMain" PreviewKeyDown="Grid_PreviewKeyDown">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="Set a 4 or 6-digit pin as app lock."/>
+            <TextBlock Grid.Row="1" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="If you forget the pin, all the app settings will be reset to default."/>
+            <CheckBox Name="chkIsSixDigit" Content="6-Digit Pin" Grid.Row="2" Checked="chkIsSixDigit_Checked" Unchecked="chkIsSixDigit_Checked"/>
+            <StackPanel HorizontalAlignment="Center"  Grid.Row="4" Orientation="Horizontal" Spacing="10" Name="stkFirstPasswordSet">
+                <StackPanel.RenderTransform>
+                    <TranslateTransform x:Name="ShakeTransform" X="0" Y="0"/>
+                </StackPanel.RenderTransform>
+                <TextBox  IsTabStop="False" Name="txtNum1" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox IsTabStop="False" Name="txtNum2" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox IsTabStop="False" Name="txtNum3" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox IsTabStop="False" Name="txtNum4" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox IsTabStop="False" Visibility="Collapsed" Name="txtNum5" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox IsTabStop="False" Visibility="Collapsed" Name="txtNum6" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+            </StackPanel>
+            <TextBlock Grid.Row="3" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Name="txtConfirmPassword" Visibility="Collapsed" Text="Confirm Password"/>
+
+            <Button Name="btnNext" IsEnabled="False" Content="Next" Click="btnNext_Click" Grid.Row="5" HorizontalAlignment="Right" Style="{StaticResource AccentButtonStyle}">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Enter"/>
+                </Button.KeyboardAccelerators>
+            </Button>
+            <Button Name="btnUseWindowsAuthentication" Click="btnUseWindowsAuthentication_Click" Content="Use Windows Authentication Instead" Grid.Row="5" HorizontalAlignment="Left" />
+            <Button Name="btnBack" Grid.Row="6" Content="Back" Visibility="Collapsed" Click="btnBack_Click"/>
+            <Button Name="btnSet" Click="btnSet_Click" Grid.Row="6" HorizontalAlignment="Right" Style="{StaticResource AccentButtonStyle}" Visibility="Collapsed" Content="Set">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Enter"/>  
+                </Button.KeyboardAccelerators>
+            </Button>
+        </Grid>
     </Grid>
 </UserControl>

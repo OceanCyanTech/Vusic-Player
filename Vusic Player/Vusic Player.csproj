@@ -26,6 +26,7 @@
     <None Remove="FFmpeg\ffprobe.exe" />
     <None Remove="FFmpeg\swresample-6.dll" />
     <None Remove="FFmpeg\swscale-9.dll" />
+    <None Remove="Pages\AppLockVerify.xaml" />
     <None Remove="Pages\MainPage.xaml" />
     <None Remove="Pages\SplashScreen.xaml" />
     <None Remove="Pages\VideoPlayer.xaml" />
@@ -96,6 +97,7 @@
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml" />
+    <None Remove="UI\UserViews\Authentication\AppAuthVerify.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewAllRecentVideos.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewRecentVideos.xaml" />
@@ -250,6 +252,11 @@
     <Content Update="Assets\audiofile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\AppLockVerify.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\SplashScreen.xaml">
@@ -698,6 +705,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Authentication\AppAuthVerify.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
