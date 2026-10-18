@@ -3,7 +3,7 @@
     x:Class="Vusic_Player.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Vusic_Player" xmlns:converter="using:Vusic_Player.Configuration.Helper.Converters">
+    xmlns:local="using:Vusic_Player" xmlns:converter="using:Vusic_Player.Configuration.Helper.Converters" xmlns:customization="using:Vusic_Player.Configuration.Helper.UI.Customization">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -22,6 +22,7 @@
     TrueBrush="Red" 
     FalseBrush="White"/>
             <FontFamily x:Key="GlobalFontHolder">Candara</FontFamily>
+            <customization:IconHolder x:Key="GlobalIconHolder"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

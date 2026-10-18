@@ -11,6 +11,8 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
     public class IconHolder: INotifyPropertyChanged
     {
         private string _theme = "Ocean";
+        private string _backgroundblur = "ms-appx:///Assets/Themes/Ocean/backgroundblur.png";
+
         private string _skipback = "ms-appx:///Assets/Themes/Ocean/skip10back.png";
         private string _next= $"ms-appx:///Assets/Themes/Ocean/next.png";
         private string _refresh= $"ms-appx:///Assets/Themes/Ocean/refresh.png";
@@ -19,8 +21,51 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _info= $"ms-appx:///Assets/Themes/Ocean/infoicon.png";
         private string _skipahead = $"ms-appx:///Assets/Themes/Ocean/skip10ahead.png";
         private string _fontfamily = $"Bahnschrift";
-      
+        private string _openfolder = "ms-appx:///Assets/Themes/Ocean/openfolder.png";
+        private string _importicon = "ms-appx:///Assets/Themes/Ocean/importicon.png";
+        private string _removeicon = "ms-appx:///Assets/Themes/Ocean/removeicon.png";
+        private string _foldericon = "ms-appx:///Assets/Themes/Ocean/foldericon.png";
+        private string _sampleimage = "ms-appx:///Assets/Themes/Ocean/sampleimage.png";
+        private string _tickicon = "ms-appx:///Assets/Themes/Ocean/tickicon.png";
+        private string _defaultvideo = "ms-appx:///Assets/Themes/Ocean/defaultvideo.png";
+
         public static IconHolder Instance { get; } = new IconHolder();
+        public string SampleImage
+        {
+            get => _sampleimage;
+            set
+            {
+                if (_sampleimage != value)
+                {
+                    _sampleimage = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string TickIcon
+        {
+            get => _tickicon;
+            set
+            {
+                if (_tickicon != value)
+                {
+                    _tickicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string DefaultVideo
+        {
+            get => _defaultvideo;
+            set
+            {
+                if (_defaultvideo != value)
+                {
+                    _defaultvideo = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public string Theme
         {
@@ -36,6 +81,66 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         {
             get => _error;
             set => SetProperty(ref _error, value);
+        }
+        public string BackgroundBlur
+        {
+            get => _backgroundblur;
+            set
+            {
+                if (_backgroundblur != value)
+                {
+                    _backgroundblur = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Openfolder
+        {
+            get => _openfolder;
+            set
+            {
+                if (_openfolder != value)
+                {
+                    _openfolder = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Importicon
+        {
+            get => _importicon;
+            set
+            {
+                if (_importicon != value)
+                {
+                    _importicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Removeicon
+        {
+            get => _removeicon;
+            set
+            {
+                if (_removeicon != value)
+                {
+                    _removeicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string FolderIcon
+        {
+            get => _foldericon;
+            set
+            {
+                if (_foldericon != value)
+                {
+                    _foldericon = value;
+                    OnPropertyChanged();
+                }
+            }
         }
         public string Next
         {

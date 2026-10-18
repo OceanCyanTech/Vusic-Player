@@ -23,6 +23,16 @@
         </Storyboard>
     </UserControl.Resources>
     <Grid>
+        <Grid Name="grdWinAuth" Visibility="Collapsed" Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock HorizontalAlignment="Center" Text="Windows Authentication has been set!" Style="{StaticResource TitleTextBlockStyle}"/>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10" Grid.Row="1">
+                <Button Name="btnRemoveAuthentication" Click="btnRemoveAuthentication_Click" Content="Remove Windows Authentication"/>
+            </StackPanel>
+        </Grid>
         <Grid Name="grdDashboard" Visibility="Collapsed"  Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -93,12 +103,12 @@
                 <StackPanel.RenderTransform>
                     <TranslateTransform x:Name="ShakeTransform" X="0" Y="0"/>
                 </StackPanel.RenderTransform>
-                <TextBox  IsTabStop="False" Name="txtNum1" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
-                <TextBox IsTabStop="False" Name="txtNum2" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
-                <TextBox IsTabStop="False" Name="txtNum3" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
-                <TextBox IsTabStop="False" Name="txtNum4" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
-                <TextBox IsTabStop="False" Visibility="Collapsed" Name="txtNum5" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
-                <TextBox IsTabStop="False" Visibility="Collapsed" Name="txtNum6" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox   Name="txtNum1" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox  Name="txtNum2" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox  Name="txtNum3" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox  Name="txtNum4" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox  Visibility="Collapsed" Name="txtNum5" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
+                <TextBox  Visibility="Collapsed" Name="txtNum6" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
             </StackPanel>
             <TextBlock Grid.Row="3" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Name="txtConfirmPassword" Visibility="Collapsed" Text="Confirm Password"/>
 

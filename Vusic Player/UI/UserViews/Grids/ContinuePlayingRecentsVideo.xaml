@@ -5,9 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Grids"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vusic_player="using:Vusic_Player.UI.UserViews.Controls" xmlns:ani="using:CommunityToolkit.WinUI.Animations" xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vusic_player="using:Vusic_Player.UI.UserViews.Controls" xmlns:ani="using:CommunityToolkit.WinUI.Animations" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <converters:FavoriteToGlyphConverter x:Key="FavoritetoGlyphConv"/>
         <local:CountToVisibilityReverse x:Key="VisibilityofGridViewandRecents"/>
         <local:CountToVisibility x:Key="VisibilityofEmpty"/>
     </UserControl.Resources>
@@ -51,7 +52,7 @@
 
                     <Border CornerRadius="12">
                         <Border.Background>
-                            <ImageBrush x:Name="CoverBackground" ImageSource="/Assets/sampleimage.jpg" Stretch="UniformToFill"/>
+                            <ImageBrush x:Name="CoverBackground" ImageSource="{Binding SampleImage, Source={StaticResource GlobalIconHolder}}" Stretch="UniformToFill"/>
                         </Border.Background>
                     </Border>
 
@@ -105,7 +106,7 @@
                         </Button>
                         <TeachingTip Target="{x:Bind btnOptions}" IsOpen="False" Name="ttCopiedToClipboard">
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <Image Source="/Assets/tickicon.png" Width="25"></Image>
+                                <Image Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" Width="25"></Image>
                                 <TextBlock Text="Copied File Path to Clipboard"></TextBlock>
                             </StackPanel>
                         </TeachingTip>
@@ -120,29 +121,29 @@
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Name="mnftStartFirstCW" Click="mnftStartFirstCW_Click" Text="Play from Start">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <FontIcon Glyph="&#xE768;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Name="mnftRemoveCW" Click="mnftRemoveCW_Click" Text="Remove from Continue Playing">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <FontIcon Glyph="&#xE894;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Name="mnftAddToQueueCW" Click="mnftAddToQueueCW_Click" Text="Add to Queue">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <ImageIcon Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Name="mnftAddToFavCW" Click="mnftAddToFavCW_Click" Text="Add to Favourites">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <FontIcon Name="fnticonFav" Glyph="&#xEB51;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Name="mnftFileInfoCW" Click="mnftFileInfoCW_Click" Text= "File Info">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <FontIcon Glyph="&#xE946;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Name="mnftOpenFileLocCW" Click="mnftOpenFileLocCW_Click" Text= "Open file location">
@@ -158,7 +159,7 @@
                                     <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Name="mnftHideVideoFromContinuePlayingCW" Click="mnftHideVideoFromContinuePlaying_Click" Text="Hide Video From Continue Playing">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xE8C8;"></FontIcon>
+                                            <FontIcon Glyph="&#xED1A;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                 </MenuFlyout>
@@ -182,7 +183,7 @@
                     <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Unchecked"></CheckBox>
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromContinueWatchingSelected_Click"  Name="btnRemoveFromContinueWatchingSelected" >
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -209,20 +210,26 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
                             <Grid Width="200" Height="100" VerticalAlignment="Top">
                                 <Grid.ContextFlyout>
                                     <MenuFlyout Opened="MenuFlyout_Opened_1">
-                                        <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Resume from previous playback" Click="mnftStartPreviousRec_Click">
+                                        <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Resume from Previous playback" Click="mnftStartPreviousRec_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <FontIcon Glyph="&#xE823;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftStartFirstRec" Text="Play from start" Click="mnftStartFirstRec_Click">
+                                        <MenuFlyoutItem Name="mnftStartFirstRec" Text="Play from Start" Click="mnftStartFirstRec_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <FontIcon Glyph="&#xE768;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem Name="mnftRemoveRec" Text="Remove from Continue Playing" Click="mnftRemoveRec_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <FontIcon Glyph="&#xE894;"></FontIcon>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem Name="mnftAddToQueue" Text="Add to Queue" Click="mnftAddToQueue_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <ImageIcon Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">
@@ -233,7 +240,7 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem Name="mnftFileInfoRec" Text= "File Info" Click="mnftFileInfoRec_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <FontIcon Glyph="&#xE946;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Name="mnftOpenFileLocRec" Text= "Open file location" Click="mnftOpenFileLocRec_Click">
@@ -249,7 +256,7 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem Name="mnftHideVideoFromContinuePlayingRecents" Click="mnftHideVideoFromContinuePlayingRecents_Click" Text="Hide Video From Continue Playing Recents">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE8C8;"></FontIcon>
+                                                <FontIcon Glyph="&#xED1A;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                     </MenuFlyout>
@@ -270,14 +277,14 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
         <Grid Name="grdEmptyRecents" Visibility="{x:Bind VideoProgressList.Count, Converter={StaticResource VisibilityofEmpty}, Mode=OneWay}" Grid.Column="1">
             <StackPanel Name="stkEnabledEmptyRecents"  Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
-                    <Image Width="90" Source="/Assets/default.png"></Image>
+                    <Image Width="90" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Start watching videos to see them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button HorizontalAlignment="Center"  Content="Disable Recents" Name="btnDisableRecents" Click="btnDisableRecents_Click"></Button>
             </StackPanel>
             <StackPanel Name="stkDisabledEmptyRecents" Visibility="Collapsed"  Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
-                    <Image Width="90" Source="/Assets/default.png"></Image>
+                    <Image Width="90" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Saving to Recents has been disabled." Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button HorizontalAlignment="Center"  Content="Enable Recents" Name="btnEnableRecents" Click="btnEnableRecents_Click"></Button>

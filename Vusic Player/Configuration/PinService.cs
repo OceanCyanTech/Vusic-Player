@@ -27,6 +27,27 @@ namespace Vusic_Player.Configuration
             string pin = IntToString(digits, length);
             vault.Add(new PasswordCredential("VusicPlayer_AppPin", "OceanCyanMasterPin", pin));
         }
+        public static void SaveWindowsAuthBool()
+        {
+            var vault = new PasswordVault();
+
+            vault.Add(new PasswordCredential("VusicPlayer_AppWindowsAuth", "OceanCyanMasterPin", "1"));
+        }
+        public static void RemoveWindowsAuthentication()
+        {
+            var vault = new PasswordVault();
+
+            try
+            {
+                var credential = vault.Retrieve("VusicPlayer_AppWindowsAuth", "OceanCyanMasterPin");
+                vault.Remove(credential);
+            }
+            catch
+            {
+
+            }
+        }
+
         public static void RemovePin()
         {
             var vault = new PasswordVault();
@@ -86,5 +107,20 @@ namespace Vusic_Player.Configuration
                 return false;
             }
         }
+
+        public static bool IsWindowsAuthEnabled()
+        {
+            var vault = new PasswordVault();
+            try
+            {
+                var cred = vault.Retrieve("VusicPlayer_AppWindowsAuth", "OceanCyanMasterPin");
+                return cred != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }

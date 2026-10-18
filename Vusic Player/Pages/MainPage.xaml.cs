@@ -51,13 +51,34 @@ namespace Vusic_Player.Pages
             App.NavigationFrame = frmMain;
             App.VideoPlayerFrame = frmVid;
             App.MasterFrame = frmRoot;
-            frmMain.Navigate(typeof(HomeView));
+            CheckforStartupPage();
             PlayerService.mainXamlRoot = XamlRoot;
 
             _originalHeader = nvgMain.Header;
             InitializeFav();
             InitializeWatermark();
     
+        }
+        private async void CheckforStartupPage()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+            var startuppage = currentSettings.StartupPage;
+            if(startuppage == "Home")
+            {
+                nvgitHome.IsSelected = true;
+                frmMain.Navigate(typeof(HomeView));
+            }
+            else if(startuppage == "Music")
+            {
+                nvgitMusic.IsSelected = true;
+                frmMain.Navigate(typeof(MusicLibrary));
+            }
+            else if (startuppage == "Video")
+            {
+                nvgitVideo.IsSelected = true;
+                frmMain.Navigate(typeof(VideoLibrary));
+            }
         }
         private bool IsTextInputFocused()
         {

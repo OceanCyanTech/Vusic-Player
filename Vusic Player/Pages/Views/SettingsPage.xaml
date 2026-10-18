@@ -107,6 +107,15 @@
                                 </ComboBox.Items>
                             </ComboBox>
                             <Button Content="App Lock" Click="btnAppLock_Click"  Name="btnAppLock" Style="{StaticResource AccentButtonStyle}"/>
+                            <MenuFlyoutSeparator/>
+                            <TextBlock Text="Default App" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Text="Make Vusic Player the default media player app for various media formats." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
+                            <Button Content="Open Settings" Click="btnOpenSettings_Click"  Name="btnOpenSettings" Style="{StaticResource AccentButtonStyle}"/>
+
+                            <MenuFlyoutSeparator/>
+                            <TextBlock Text="App Reset" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <Button Content="Reset All Vusic Player Settings" Click="btnResetAppSettings_Click"  Name="btnResetAppSettings" Style="{StaticResource AccentButtonStyle}"/>
+
                         </StackPanel>
                     </Grid>
                     <Grid Name="frmAboutOptions" Visibility="Collapsed" RowSpacing="30">

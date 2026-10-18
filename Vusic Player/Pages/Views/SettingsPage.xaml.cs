@@ -18,6 +18,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
@@ -32,6 +33,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.System;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 
@@ -1058,6 +1060,10 @@ namespace Vusic_Player.Pages.Views
 
         private void btnRestartVusicPlayer_Click(object sender, RoutedEventArgs e)
         {
+            RestartApp();
+        }
+        private void RestartApp()
+        {
             AppRestartFailureReason result = AppInstance.Restart(string.Empty);
 
             // If restart succeeds, the current process terminates automatically.
@@ -1075,7 +1081,6 @@ namespace Vusic_Player.Pages.Views
                     break;
             }
         }
-
         private async void btnRefreshDatabase_Click(object sender, RoutedEventArgs e)
         {
             // Prevent re-entrancy
@@ -1364,7 +1369,7 @@ namespace Vusic_Player.Pages.Views
         private async void chkShowSplash_Checked(object sender, RoutedEventArgs e)
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            if(chkShowSplash.IsChecked == false)
+            if (chkShowSplash.IsChecked == false)
             {
                 currentSettings.IsSplashEnabled = false;
             }
@@ -1381,13 +1386,57 @@ namespace Vusic_Player.Pages.Views
         private async void btnAppLock_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested; 
             OceanContentDialog.Show("Set App Lock", "Close", "", "", OceanDialogWindow.ContentType.AppLock, OceanContentDialogDefault.Primary, XamlRoot, 700, 800, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", ""
 , new ObservableCollection<SongModel>(), "");
-            OceanContentDialog.PrimaryRequested += (() =>
-            {
-                OceanContentDialog.HideDlg();
-                MainWindow.ShowWindow();
-            });
+             
+        }
+
+        private void OceanContentDialog_PrimaryRequested()
+        {
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+     
+        }
+
+        private void btnResetAppSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.MainWindowInstance == null) return;
+
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested1;
+            OceanContentDialog.Show(
+                "Confirm Reset", "Confirm", "", "Cancel",
+                OceanDialogWindow.ContentType.MessageShow,
+                OceanContentDialogDefault.Primary,
+                XamlRoot, 400, 400,
+                OceanContentDialogType.Elevated,
+                App.MainWindowInstance, "", "", "",
+                new ObservableCollection<SongModel>(), "",
+                "Are you sure you want to reset all Vusic Player Settings?", "warning");
+        }
+
+        private void OceanContentDialog_PrimaryRequested1()
+        {
+            SettingsFunctions.ResetAllSettings();
+            PinService.RemovePin();
+            PinService.RemoveWindowsAuthentication();
+            RestartApp();
+        }
+
+
+        private async void btnOpenSettings_Click(object sender, RoutedEventArgs e)
+        {
+            string pfn = Package.Current.Id.FamilyName;
+
+            // Replace "App" with the Id attribute defined in <Application Id="..." ...> in Package.appxmanifest
+            string aumid = $"{pfn}!App";
+
+            string uriString = $"ms-settings:defaultapps?registeredAUMID={Uri.EscapeDataString(aumid)}";
+            await Launcher.LaunchUriAsync(new Uri(uriString));
         }
     }
 }

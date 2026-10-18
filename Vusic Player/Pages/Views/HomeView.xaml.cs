@@ -49,7 +49,26 @@ namespace Vusic_Player.Pages.Views
             expFav.Visibility = currentSettings.Panel4VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
             FoldersOpened.CollectionChanged -= FoldersOpened_CollectionChanged;
             FoldersOpened.Clear();
-
+            expFav.IsExpanded = false;
+            expRecentMusic.IsExpanded = false;
+            expRecentsVideo.IsExpanded = false;
+            expMusicMix.IsExpanded = false;
+            if (currentSettings.ExpandedPanelHomeView == "expRecentsVideo")
+            {
+                expRecentsVideo.IsExpanded = true;
+            }
+            else if (currentSettings.ExpandedPanelHomeView == "expRecentMusic")
+            {
+                expRecentMusic.IsExpanded = true;
+            }
+            else if (currentSettings.ExpandedPanelHomeView == "expMusicMix")
+            {
+                expMusicMix.IsExpanded = true;
+            }
+            else if (currentSettings.ExpandedPanelHomeView == "expFav")
+            {
+                expFav.IsExpanded = true;
+            }
             if (currentSettings?.FoldersRecent != null)
             {
                 // Use a HashSet with OrdinalIgnoreCase to track and filter duplicate paths
@@ -157,7 +176,7 @@ namespace Vusic_Player.Pages.Views
             }
         }
 
-        private void expRecentsVideo_Expanding(Expander sender, ExpanderExpandingEventArgs args)
+        private async void expRecentsVideo_Expanding(Expander sender, ExpanderExpandingEventArgs args)
         {
             if (!this.IsLoaded) return;
 
@@ -168,6 +187,10 @@ namespace Vusic_Player.Pages.Views
             if (sender != expMusicMix) expMusicMix.IsExpanded = false;
 
             if (sender != expFav) expFav.IsExpanded = false;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.ExpandedPanelHomeView = sender.Name;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+
         }
 
         private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)

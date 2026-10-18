@@ -16,6 +16,9 @@ namespace Vusic_Player.Configuration.UserSettings
         public bool IsDocumentEnabled { get; set; } = true;
         public bool IsSplashEnabled { get; set; } = true;
         public string StartupPage { get; set; } = "Home";
+        public string ExpandedPanelHomeView { get; set; } = "expRecentsVideo";
+        public string ExpandedPanelMusicLib { get; set; } = "expRecent";
+        public string ExpandedPanelVideoLib { get; set; } = "expRecents";
         public bool IsDownloadsEnabled { get; set; } = true;
         public bool IsPicturesEnabled { get; set; } = true;
         public bool IsVideosEnabled { get; set; } = true;

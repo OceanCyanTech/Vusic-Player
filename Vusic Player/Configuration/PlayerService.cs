@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -29,8 +30,8 @@ using Windows.Devices.Spi;
 using Windows.Storage;
 using Windows.UI;
 using static Vusic_Player.Configuration.AppConfig.Logger;
-using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 using FileAttributes = System.IO.FileAttributes;
+using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 
 namespace Vusic_Player.Configuration
 {
@@ -75,6 +76,50 @@ namespace Vusic_Player.Configuration
             {
                 var curTime = TimeSpan.FromTicks(Masterplayer.CurTime);
                 UIController.CurrentPosition = curTime.TotalSeconds;
+            }
+        }
+        private const uint SHARD_PATHW = 0x00000003;
+
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+        private static extern void SHAddToRecentDocs(uint uFlags, IntPtr pv);
+        public static void RemoveFileFromExplorerHome(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath)) return;
+
+            try
+            {
+                // 1. Locate the Shell Recent directory
+                string recentDir = Environment.GetFolderPath(Environment.SpecialFolder.Recent);
+                string fileNameOnly = Path.GetFileName(filePath);
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+
+                var dir = new DirectoryInfo(recentDir);
+                if (!dir.Exists) return;
+
+                // 2. Find and delete the shortcut Explorer generated
+                foreach (var file in dir.GetFiles("*.lnk"))
+                {
+                    // Check if the link name contains the file name
+                    if (file.Name.Contains(fileNameWithoutExt, StringComparison.OrdinalIgnoreCase))
+                    {
+                        try
+                        {
+                            file.Delete();
+                        }
+                        catch
+                        {
+                            // File might be briefly locked while Explorer creates the tile
+                        }
+                    }
+                }
+
+                // 3. Notify the shell that the recent docs list changed
+                // Passing 0 and IntPtr.Zero to SHAddToRecentDocs clears the shell cache
+                 SHAddToRecentDocs(0, IntPtr.Zero);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ExplorerHomePrivacy] Error: {ex.Message}");
             }
         }
         public static void VolumeChange(double obj)
@@ -175,8 +220,11 @@ namespace Vusic_Player.Configuration
             if (File.Exists(fiPath))
             {
 
-
-                if (Masterplayer == null)
+                if (PinService.IsPinEnabled() || PinService.IsWindowsAuthEnabled())
+                {
+                    RemoveFileFromExplorerHome(fiPath);   
+                }
+                    if (Masterplayer == null)
                 {
                     //conf.Video.VideoProcessor = VideoProcessors.Flyleaf;
                     //conf.Video.SuperResolution = true;

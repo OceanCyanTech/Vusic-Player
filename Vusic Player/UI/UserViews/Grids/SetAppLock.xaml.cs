@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -17,6 +18,7 @@ using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System;
+using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -122,9 +124,27 @@ public sealed partial class SetAppLock : UserControl
             ShakeStoryboard.Begin();
         }
     }
-    private void btnUseWindowsAuthentication_Click(object sender, RoutedEventArgs e)
+    private async void btnUseWindowsAuthentication_Click(object sender, RoutedEventArgs e)
     {
+        IntPtr hwnd = WindowNative.GetWindowHandle(App.OceanDialogInstance);
 
+        bool verified = await AppLockAuth.VerifyCurrentUserAsync(
+           hwnd,
+           "Verify your identity to configure App Lock for Vusic Player."
+       );
+
+        if (verified)
+        {
+            Debug.WriteLine("THANK YOU");
+            PinService.SaveWindowsAuthBool();
+            grdMain.Visibility = Visibility.Collapsed;
+            PinService.RemovePin();
+            grdWinAuth.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            Debug.WriteLine("Verification failed, cancelled, or unavailable.");
+        }
     }
 
     private void btnNext_Click(object sender, RoutedEventArgs e)
@@ -252,7 +272,16 @@ public sealed partial class SetAppLock : UserControl
             btnNext.IsEnabled = true;
         });
     }
-
+    public void ClearAll()
+    {
+        AppAuthVer.ClearAll();
+        txtNum1.Text = "";
+        txtNum2.Text = "";
+        txtNum3.Text = "";
+        txtNum4.Text = "";
+        txtNum5.Text = "";
+        txtNum6.Text = "";
+    }
     private void btnDone_Click(object sender, RoutedEventArgs e)
     {
         OceanContentDialog.HideDlg();
@@ -260,9 +289,9 @@ public sealed partial class SetAppLock : UserControl
         grdDashboard.Visibility = Visibility.Visible;
         grdSuccess.Visibility = Visibility.Collapsed;
     }
-   public void ShowDashboard()
+    public async void ShowDashboard()
     {
-      
+
         grdDashboard.Visibility = Visibility.Collapsed;
         grdSuccess.Visibility = Visibility.Collapsed;
         grdRemove.Visibility = Visibility.Collapsed;
@@ -277,12 +306,35 @@ public sealed partial class SetAppLock : UserControl
         {
             grdMain.Visibility = Visibility.Collapsed;
             grdDashboard.Visibility = Visibility.Visible;
+
+        }
+        else
+        {
+            if (PinService.IsWindowsAuthEnabled())
+            {
+                grdDashboard.Visibility = Visibility.Collapsed;
+                grdMain.Visibility = Visibility.Collapsed;
+                IntPtr hwnd = WindowNative.GetWindowHandle(App.OceanDialogInstance);
+
+                bool verified = await AppLockAuth.VerifyCurrentUserAsync(
+                   hwnd,
+                   "Verify your identity to configure App Lock for Vusic Player."
+               );
+
+                if (verified)
+                {
+                    grdDashboard.Visibility = Visibility.Collapsed;
+                    grdMain.Visibility = Visibility.Collapsed;
+                    grdWinAuth.Visibility = Visibility.Visible;
+                }
+            }
         }
     }
 
     private void btnNo_Click(object sender, RoutedEventArgs e)
     {
-
+        grdRemove.Visibility = Visibility.Collapsed;
+        grdSuccess.Visibility = Visibility.Visible;
     }
 
     private void btnYes_Click(object sender, RoutedEventArgs e)
@@ -372,5 +424,22 @@ public sealed partial class SetAppLock : UserControl
             txtConfirmPassword.Text = "";
             btnNext.IsEnabled = true;
         });
+    }
+
+    private async void btnRemoveAuthentication_Click(object sender, RoutedEventArgs e)
+    {
+        IntPtr hwnd = WindowNative.GetWindowHandle(App.OceanDialogInstance);
+
+        bool verified = await AppLockAuth.VerifyCurrentUserAsync(
+           hwnd,
+           "Verify your identity to configure App Lock for Vusic Player."
+       );
+
+        if (verified)
+        {
+            PinService.RemoveWindowsAuthentication();
+            grdMain.Visibility = Visibility.Visible;
+            grdWinAuth.Visibility = Visibility.Collapsed;
+        }
     }
 }

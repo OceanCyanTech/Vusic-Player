@@ -23,6 +23,18 @@
         </Storyboard>
 
     </UserControl.Resources>
+    <Grid>
+        <Grid Name="grdForgotPin" Visibility="Collapsed" Margin="20,20" HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="A new pin can be set after all the app settings are reset including personalization, media history, etc. Are you sure you want to proceed?"  Style="{StaticResource BodyLargeStrongTextBlockStyle}" />
+            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10" Grid.Row="1">
+                <Button Name="btnConfirmReset" Click="btnConfirmReset_Click" Content="Confirm Reset"/>
+                <Button Name="btnCancel" Click="btnCancel_Click" Content="Cancel"/>
+            </StackPanel>
+        </Grid>
     <Grid IsTabStop="True" Name="grdVerify" PreviewKeyDown="Grid_PreviewKeyDown"  HorizontalAlignment="Center" VerticalAlignment="Center" RowSpacing="30" Margin="0, 20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -43,7 +55,7 @@
             <TextBox  Visibility="Collapsed" Name="txtNum5" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
             <TextBox  Visibility="Collapsed" Name="txtNum6" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
         </StackPanel>
-        <HyperlinkButton Content="Forgot Pin." HorizontalAlignment="Center" Grid.Row="3"/>
+        <HyperlinkButton Content="Forgot Pin." Name="hypForgotPin" Click="hypForgotPin_Click" HorizontalAlignment="Center" Grid.Row="3"/>
     </Grid>
-
+    </Grid>
 </UserControl>

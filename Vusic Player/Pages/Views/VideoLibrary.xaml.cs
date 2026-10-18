@@ -69,6 +69,27 @@ namespace Vusic_Player.Pages.Views
             txtDisplay3.Visibility = currentSettings.Panel4VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
             expVideoPlaylists.Visibility = currentSettings.Panel3VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
             expShows.Visibility = currentSettings.Panel4VisibilityVideo ? Visibility.Visible : Visibility.Collapsed;
+
+            expRecents.IsExpanded = false;
+            expRecommended.IsExpanded = false;
+            expVideoPlaylists.IsExpanded = false;
+            expShows.IsExpanded = false;
+            if (currentSettings.ExpandedPanelVideoLib == "expRecents")
+            {
+                expRecents.IsExpanded = true;
+            }
+            else if (currentSettings.ExpandedPanelVideoLib == "expRecommended")
+            {
+                expRecommended.IsExpanded = true;
+            }
+            else if (currentSettings.ExpandedPanelVideoLib == "expVideoPlaylists")
+            {
+                expVideoPlaylists.IsExpanded = true;
+            }
+            else if (currentSettings.ExpandedPanelVideoLib == "expShows")
+            {
+                expShows.IsExpanded = true;
+            }
             base.OnNavigatedTo(e);
         }
         private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
@@ -126,7 +147,7 @@ namespace Vusic_Player.Pages.Views
             this.Frame.Navigate(typeof(EntireVideoLibrary), "Videos");
         }
 
-        private void Expander_Expanding(Expander sender, ExpanderExpandingEventArgs args)
+        private async void Expander_Expanding(Expander sender, ExpanderExpandingEventArgs args)
         {
             if (!this.IsLoaded) return;
 
@@ -135,7 +156,9 @@ namespace Vusic_Player.Pages.Views
             if (sender != expRecommended) expRecommended.IsExpanded = false;
 
             if (sender != expVideoPlaylists) expVideoPlaylists.IsExpanded = false;
-
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.ExpandedPanelVideoLib = sender.Name;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
         ShowCreationValues Instance => ShowCreationValues.Instance;
 
@@ -178,6 +201,30 @@ namespace Vusic_Player.Pages.Views
         private void TextBlock_Tapped_2(object sender, TappedRoutedEventArgs e)
         {
             expShows.IsExpanded = true;
+        }
+
+        private void mnftViewFullVideoHistory_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(EntireVideoLibrary), "Videos");
+        }
+
+        private async void mnftDisableRecentVideos_Click(object sender, RoutedEventArgs e)
+        {
+            if (mnftDisableRecentVideos.Text == "Disable Recent Videos")
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.IsVideoHistoryDisabled = true;
+                currentSettings.SavedVideoProgress.Clear();
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                mnftDisableRecentVideos.Text = "Enable Recent Videos";
+                ContinuePlay
+
+                    PENDING;
+            }
+            else
+            {
+
+            }
         }
     }
 

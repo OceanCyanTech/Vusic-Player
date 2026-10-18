@@ -53,19 +53,19 @@ AlwaysUseFallback="False"/>
           IsExpanded="True"  Expanding="Expander_Expanding" Name="expRecents">
                 <Expander.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="View Full Video History">
+                        <MenuFlyoutItem Text="View Full Video History" Name="mnftViewFullVideoHistory" Click="mnftViewFullVideoHistory_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <FontIcon Glyph="&#xE81C;"></FontIcon>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Disable Recent Videos">
+                        <MenuFlyoutItem Text="Disable Recent Videos" Name="mnftDisableRecentVideos" Click="mnftDisableRecentVideos_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <ImageIcon Source="/Assets/disablehistoryfonticon.png"></ImageIcon>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>
                 </Expander.ContextFlyout>
-                <grids:ContinuePlayingRecentsVideo/>
+                <grids:ContinuePlayingRecentsVideo x:Name="ContinuePlay"/>
             </Expander>
             <TextBlock Name="txtDisplay1"  Text="Recommended" Tapped="TextBlock_Tapped" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
             <Expander Grid.Row="3"  Expanding="Expander_Expanding" Name="expRecommended"

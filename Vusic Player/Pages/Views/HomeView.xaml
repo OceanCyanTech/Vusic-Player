@@ -28,13 +28,13 @@
             <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0, 20" Spacing="10">
                 <Button Name="btnOpenFolder" CornerRadius="12" Margin="0, 0"  Click="btnOpenFolder_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="20" Source="/Assets/openfolder.png"></Image>
+                        <Image Width="20" Source="{Binding Openfolder, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock  VerticalAlignment="Bottom"   FontFamily="{StaticResource GlobalFontHolder}"  Margin="5,0" Text="Open Folder" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </Button>
                 <Button CornerRadius="12" ToolTipService.ToolTip="(Ctrl + O) Open and play any video or audio" Click="btnOpenMedia_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image VerticalAlignment="Top" Width="20" Source="/Assets/importicon.png"></Image>
+                        <Image VerticalAlignment="Top" Width="20" Source="{Binding Importicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock VerticalAlignment="Bottom" FontFamily="{StaticResource GlobalFontHolder}"    Margin="5,0" Text="Open Media"  Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                     <Button.KeyboardAccelerators>
@@ -43,7 +43,7 @@
                 </Button>
             </StackPanel>
 
-            <Expander  IsExpanded="True"  Expanding="expRecentsVideo_Expanding" Name="expRecentsVideo" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Header="Continue Playing" HorizontalAlignment="Stretch"  Grid.Row="2">
+            <Expander   IsExpanded="False"  Expanding="expRecentsVideo_Expanding" Name="expRecentsVideo" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Header="Continue Playing" HorizontalAlignment="Stretch"  Grid.Row="2">
                 <Expander.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="Continue Playing" FontFamily="{StaticResource GlobalFontHolder}"/>
@@ -105,7 +105,7 @@
                     <CheckBox Content="Select all" Name="chckSelectAllFolders" Visibility="Visible" Checked="chckSelectAllFolders_Checked" Unchecked="chckSelectAllFolders_Checked"/>
                     <Button ToolTipService.ToolTip="Remove from Folders Opened" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemove_Click"  Name="btnRemove" >
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -147,7 +147,7 @@
                             <StackPanel HorizontalAlignment="Center" 
                             VerticalAlignment="Center" 
                             Spacing="6">
-                                <Image Width="80" Source="/Assets/foldericon.png" />
+                                <Image Width="80" Source="{Binding FolderIcon, Source={StaticResource GlobalIconHolder}}" />
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding FolderName}" 
                                FontSize="12"
                                TextTrimming="CharacterEllipsis" 
@@ -162,11 +162,11 @@
             <Grid Name="grdEmptySuggestions" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="12" Visibility="Visible" >
                 <StackPanel Orientation="Vertical" Spacing="15">
                     <StackPanel Orientation="Vertical" Spacing="20">
-                        <Image Width="90" Source="/Assets/foldericon.png"></Image>
+                        <Image Width="90" Source="{Binding FolderIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" TextWrapping="Wrap" Text="No Folders have been opened yet!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                         <Button HorizontalAlignment="Center" Name="btnOpenFolder2" CornerRadius="12" Margin="0, 0"  Click="btnOpenFolder_Click">
                             <StackPanel Orientation="Horizontal">
-                                <Image Width="20" Source="/Assets/openfolder.png"></Image>
+                                <Image Width="20" Source="{Binding Openfolder, Source={StaticResource GlobalIconHolder}}"></Image>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}" VerticalAlignment="Bottom" Margin="5,0" Text="Open Folder" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                             </StackPanel>
                         </Button>

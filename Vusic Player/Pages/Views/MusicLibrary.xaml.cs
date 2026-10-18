@@ -58,6 +58,27 @@ namespace Vusic_Player.Pages.Views
             txtDisplay3.Visibility = currentSettings.Panel4VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
             expRecommend.Visibility = currentSettings.Panel3VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
             expGenres.Visibility = currentSettings.Panel4VisibilityMusic ? Visibility.Visible : Visibility.Collapsed;
+
+            expRecent.IsExpanded = false;
+            expPlaylists.IsExpanded = false;
+            expRecommend.IsExpanded = false;
+            expGenres.IsExpanded = false;
+            if (currentSettings.ExpandedPanelMusicLib == "expRecent")
+            {
+                expRecent.IsExpanded = true;
+            }
+            else if (currentSettings.ExpandedPanelMusicLib == "expPlaylists")
+            {
+                expPlaylists.IsExpanded = true;
+            }
+            else if (currentSettings.ExpandedPanelMusicLib == "expRecommend")
+            {
+                expRecommend.IsExpanded = true;
+            }
+            else if (currentSettings.ExpandedPanelMusicLib == "expGenres")
+            {
+                expGenres.IsExpanded = true;
+            }
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -139,7 +160,7 @@ namespace Vusic_Player.Pages.Views
             this.Frame.Navigate(typeof(EntireMusicLibrary));
         }
 
-        private void expRecent_Expanding(Expander sender, ExpanderExpandingEventArgs args)
+        private async void expRecent_Expanding(Expander sender, ExpanderExpandingEventArgs args)
         {
             if (!this.IsLoaded) return;
 
@@ -150,6 +171,10 @@ namespace Vusic_Player.Pages.Views
             if (sender != expRecent) expRecent.IsExpanded = false;
 
             if (sender != expRecommend) expRecommend.IsExpanded = false;
+
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.ExpandedPanelMusicLib = sender.Name;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
         private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)

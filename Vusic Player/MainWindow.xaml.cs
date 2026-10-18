@@ -21,6 +21,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
@@ -129,18 +130,33 @@ namespace Vusic_Player
                 SubtitleEditorWindow.KillDialog();
 
             };
-            if (PinService.IsPinEnabled())
-            {
-                frmMain.Navigate(typeof(AppLockVerify));
-
-            }
-            else
-            {
-                frmMain.Navigate(typeof(OptimizeApp));
-            }
+            CheckAuthentication();
             // AppVersion.LoadBuildCounter();
         
 
+        }
+        private async void CheckAuthentication()
+        {
+            if (PinService.IsPinEnabled() || PinService.IsWindowsAuthEnabled())
+            {
+           //     string aumid = $"{Package.Current.Id.FamilyName}!App";
+
+            //    ShellDestinationsManager.ClearRecentDestinations(aumid);
+                frmMain.Navigate(typeof(AppLockVerify));
+            }
+            else
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+                if (currentSettings.IsSplashEnabled == false)
+                {
+                    frmMain.Navigate(typeof(OptimizeApp));
+                }
+                else
+                {
+                    frmMain.Navigate(typeof(Vusic_Player.Pages.SplashScreen));
+                }
+            }
         }
         private async void LoadFonts()
         {

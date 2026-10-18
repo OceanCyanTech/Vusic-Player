@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System;
@@ -135,6 +138,48 @@ namespace Vusic_Player.UI.UserViews.Authentication
             }
 
 
+        }
+
+        private void hypForgotPin_Click(object sender, RoutedEventArgs e)
+        {
+            grdVerify.Visibility = Visibility.Collapsed;
+            grdForgotPin.Visibility = Visibility.Visible;
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            grdVerify.Visibility = Visibility.Visible;
+            grdForgotPin.Visibility = Visibility.Collapsed;
+        }
+        public void ClearAll()
+        {
+            txtNum1.Text = "";
+            txtNum2.Text = "";
+            txtNum3.Text = "";
+            txtNum4.Text = "";
+            txtNum5.Text = "";
+            txtNum6.Text = "";
+        }
+        private async void btnConfirmReset_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsFunctions.ResetAllSettings();
+            PinService.RemovePin();
+            AppRestartFailureReason result = AppInstance.Restart(string.Empty);
+
+            // If restart succeeds, the current process terminates automatically.
+            // If it fails, inspect the failure reason:
+            switch (result)
+            {
+                case AppRestartFailureReason.RestartPending:
+                    // A restart request is already processing
+                    break;
+                case AppRestartFailureReason.InvalidUser:
+                    // The user token is invalid
+                    break;
+                case AppRestartFailureReason.Other:
+                    // General failure, handle fallback
+                    break;
+            }
         }
     }
 }

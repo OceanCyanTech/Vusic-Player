@@ -8,7 +8,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid RowSpacing="30" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <Image Width="90" Source="/Assets/appicon.png"/>
+            <TextBlock VerticalAlignment="Center" Text="Vusic Player" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+        </StackPanel>
+        <Image VerticalAlignment="Bottom" Width="190" Grid.Row="1" Source="/Assets/OceanCyan Logo High.png"/>
 
     </Grid>
 </Page>

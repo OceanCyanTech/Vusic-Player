@@ -21,6 +21,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
@@ -148,7 +149,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
                         VideoProgressList.Add(videoprogressitem);
 
-                        var fallbackUri = "ms-appx:///Assets/default.png";
+                        var fallbackUri = IconHolder.Instance.DefaultVideo;
                         videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
                         var percentage = videoprogressitem.CurrentDuration / videoprogressitem.TotalDuration;
 
@@ -416,6 +417,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
             if (mnftAddToFavCW.Text == "Add to Favourites")
             {
+                fnticonFav.Glyph = "\uEB52";
                 var exist = favourites.FirstOrDefault(p => p.FilePath == ContinuePlaying.videoProgressMain.FilePath);
                 if (exist == null)
                 {
@@ -424,6 +426,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             }
             else
             {
+                fnticonFav.Glyph = "\uEB51";
                 var exist = favourites.FirstOrDefault(p => p.FilePath == ContinuePlaying.videoProgressMain.FilePath);
                 if (exist != null)
                 {
@@ -495,10 +498,21 @@ namespace Vusic_Player.UI.UserViews.Grids
         {
             if (ContinuePlaying.videoProgressMain == null) return;
 
-      
-            var newsong = new SongModel {Title = ContinuePlaying.videoProgressMain.FileName, FilePath = ContinuePlaying.videoProgressMain.FilePath, IsEpisode = ContinuePlaying.videoProgressMain.IsEpisode, MediaType = "Video" };
-            QueueService.VusicQueue.Add(newsong);
-            QueueService.VusicQueueNext.Add(newsong);
+            if (File.Exists(ContinuePlaying.videoProgressMain.FilePath))
+            {
+                try
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(ContinuePlaying.videoProgressMain.FilePath);
+                    var vidprops = await storagefile.Properties.GetVideoPropertiesAsync();
+                    var newsong = new SongModel { Title = ContinuePlaying.videoProgressMain.FileName, FilePath = ContinuePlaying.videoProgressMain.FilePath, IsEpisode = ContinuePlaying.videoProgressMain.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
+                    QueueService.VusicQueue.Add(newsong);
+                    QueueService.VusicQueueNext.Add(newsong);
+                }
+                catch
+                {
+
+                }
+            }
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -626,7 +640,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             var mnftAddtoFav = flyout?.Items
     .OfType<MenuFlyoutItem>()
     .FirstOrDefault(x => x.Name == "mnftAddToFavCW");
-
+           
             if (mnftAddtoFav == null) return;
             if (ContinuePlaying.videoProgressMain == null) return;
 
@@ -641,10 +655,11 @@ namespace Vusic_Player.UI.UserViews.Grids
             if (isFav == true)
             {
                 mnftAddtoFav.Text = "Remove from Favourites";
+                fnticonFav.Glyph = "\uEB52";
             }
             else
             {
-
+                fnticonFav.Glyph = "\uEB51";
                 mnftAddtoFav.Text = "Add to Favourites";
             }
         }
@@ -674,10 +689,15 @@ namespace Vusic_Player.UI.UserViews.Grids
             if (isFav == true)
             {
                 mnftAddtoFav.Text = "Remove from Favourites";
+                FontIcon fnticon = new FontIcon();
+                fnticon.Glyph = "\uEB52";
+                mnftAddtoFav.Icon = fnticon;
             }
             else
             {
-
+                FontIcon fnticon = new FontIcon();
+                fnticon.Glyph = "\uEB51";
+                mnftAddtoFav.Icon = fnticon;
                 mnftAddtoFav.Text = "Add to Favourites";
             }
         }
@@ -692,7 +712,12 @@ namespace Vusic_Player.UI.UserViews.Grids
             stkEnabledEmptyRecents.Visibility = Visibility.Collapsed;
             stkDisabledEmptyRecents.Visibility = Visibility.Visible;
         }
-
+       public void ShowDisable()
+        {
+            grdHighlightVideo.Visibility = Visibility.Collapsed;
+            stkEnabledEmptyRecents.Visibility = Visibility.Collapsed;
+            stkDisabledEmptyRecents.Visibility = Visibility.Visible;
+        }
         private async void btnEnableRecents_Click(object sender, RoutedEventArgs e)
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
@@ -732,6 +757,28 @@ namespace Vusic_Player.UI.UserViews.Grids
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
 
+        }
+
+        private async void mnftAddToQueue_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vdprg)
+            {
+                if (File.Exists(vdprg.FilePath))
+                {
+                    try
+                    {
+                        var storagefile = await StorageFile.GetFileFromPathAsync(vdprg.FilePath);
+                        var vidprops = await storagefile.Properties.GetVideoPropertiesAsync();
+                        var newsong = new SongModel { Title = vdprg.FileName, FilePath =vdprg.FilePath, IsEpisode = vdprg.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
+                        QueueService.VusicQueue.Add(newsong);
+                        QueueService.VusicQueueNext.Add(newsong);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
         }
     }
 }

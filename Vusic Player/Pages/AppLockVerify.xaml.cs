@@ -11,9 +11,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views.Onboarding;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,6 +31,43 @@ namespace Vusic_Player.Pages
         public AppLockVerify()
         {
             InitializeComponent();
+            this.Loaded += AppLockVerify_Loaded;
+        }
+
+        private void AppLockVerify_Loaded(object sender, RoutedEventArgs e)
+        {
+            CheckAuthentication();
+        }
+
+        private async void CheckAuthentication()
+        {
+                if (PinService.IsWindowsAuthEnabled())
+                {
+                AppAuthVer.Visibility = Visibility.Collapsed;
+                Debug.WriteLine("YES_WINDOWS AUTH");
+                if (App.MainWindowInstance == null) return;
+                IntPtr hwnd = WindowNative.GetWindowHandle(App.MainWindowInstance);
+
+                // 2. Display the modal Windows security dialog
+                bool verified = await AppLockAuth.VerifyCurrentUserAsync(
+              hwnd,
+              "Verify your identity to unlock Vusic Player.");
+
+                if (verified)
+                {
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+                    if (currentSettings.IsSplashEnabled == false)
+                    {
+                        Frame.Navigate(typeof(OptimizeApp));
+                    }
+                    else
+                    {
+                        Frame.Navigate(typeof(SplashScreen));
+                    }
+                }
+            }
+
         }
 
         private void Grid_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
@@ -35,12 +75,20 @@ namespace Vusic_Player.Pages
 
         }
 
-        private void AppAuthVer_AuthenticationSuccess()
+        private async void AppAuthVer_AuthenticationSuccess()
         {
             Debug.WriteLine("PARVARTI");
-          
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+            if (currentSettings.IsSplashEnabled == false)
+            {
                 Frame.Navigate(typeof(OptimizeApp));
-       
+            }
+            else
+            {
+                Frame.Navigate(typeof(SplashScreen));
+            }
+
         }
     }
 }

@@ -16,7 +16,7 @@
                     <KeyboardAccelerator Key="Space" Invoked="Spacebar_Invoked"/>
                 </Grid.KeyboardAccelerators>
                 <Grid.Background>
-                    <ImageBrush x:Name="imgSourceBackground" ImageSource="/Assets/oceanglow.png" 
+                    <ImageBrush x:Name="imgSourceBackground" ImageSource="{Binding BackgroundBlur, Source={StaticResource GlobalIconHolder}}"
 Stretch="UniformToFill"/>
                 </Grid.Background>
                 <Border CornerRadius="20" x:Name="Bordermain">
@@ -32,7 +32,7 @@ Stretch="UniformToFill"/>
                         <NavigationView  IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="nvgMain_BackRequested" Grid.Column="0" Background="Transparent" Name="nvgMain" PaneDisplayMode="Top" IsSettingsVisible="True" SelectionChanged="nvgMain_SelectionChanged">
 
                             <NavigationView.MenuItems>
-                                <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitHome" Content="Home" Tag="HomePage"></NavigationViewItem>
+                                <NavigationViewItem   FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitHome" Content="Home" Tag="HomePage"></NavigationViewItem>
                                 <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitMusic" Content="Music Library" Tag="MusicLibrary"></NavigationViewItem>
                                 <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitVideo" Content="Video Library"></NavigationViewItem>
                                 <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitQueue" Content="Play Queue" Visibility="Visible"></NavigationViewItem>
