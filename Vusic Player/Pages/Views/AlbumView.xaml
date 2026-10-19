@@ -98,31 +98,31 @@ CornerRadius="16"
                                     <TextBox GotFocus="txtRename_GotFocus" Width="150" Grid.Column="0" 
                              Name="txtRename" PlaceholderText="Rename album" />
                                     <Button Background="Transparent" BorderBrush="Transparent" Margin="5, 0" Grid.Column="1" Click="btnRenameAlbum_Click" Name="btnRenameAlbum" >
-                                        <Image Margin="5, 0" Width="20" Source="/Assets/tickicon.png" />
+                                        <Image Margin="5, 0" Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" />
                                     </Button>
                                 </Grid>
                             </Flyout>
                         </Button.Flyout>
-                        <Image Width="25" Source="/Assets/renameicon.png" />
+                        <Image Width="25" Source="{Binding RenameIcon, Source={StaticResource GlobalIconHolder}}" />
                     </Button>
 
                     <Button Name="btnPlayAll" Background="Transparent" BorderBrush="Transparent" Click="btnPlayAll_Click" Margin="5"
             ToolTipService.ToolTip="Play all songs of Album">
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="25" Source="/Assets/play.png" />
+                            <Image Width="25" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}" />
                             <TextBlock Margin="5,2" Text="Play all" />
                         </StackPanel>
                     </Button>
 
                     <ToggleButton Checked="btnShuffle_Checked" Unchecked="btnShuffle_Checked" Name="btnShuffle" Background="Transparent" BorderBrush="Transparent" Margin="5"
                   ToolTipService.ToolTip="Shuffle Album">
-                        <Image Width="25" Source="/Assets/shuffleicon.png" />
+                        <Image Width="25" Source="{Binding ShuffleIcon, Source={StaticResource GlobalIconHolder}}" />
                     </ToggleButton>
 
                     <Button Name="btnAddSongs" Background="Transparent" BorderBrush="Transparent" Click="btnAddSongs_Click" Margin="5"
             ToolTipService.ToolTip="Add songs to this Album">
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="25" Source="/Assets/addicon.png" />
+                            <Image Width="25" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" />
                             <TextBlock Margin="5,2" Text="Add Songs" />
                         </StackPanel>
                     </Button>
@@ -133,13 +133,13 @@ ToolTipService.ToolTip="Set Album Cover">
                                 <StackPanel Orientation="Vertical" Spacing="5">
                                     <Button Name="btnFindAlbumCoverOnline" Click="btnFindAlbumCoverOnline_Click">
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Width="25" Source="/Assets/addimgicon.png" />
+                                            <Image Width="25" Source="{Binding AddImageIcon, Source={StaticResource GlobalIconHolder}}" />
                                             <TextBlock Margin="5,2" Text="Find artist picture online" />
                                         </StackPanel>
                                     </Button>
                                     <Button Name="btnFindAlbumCoverLocal" Click="btnSetAlbumCover_Click" >
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Width="25" Source="/Assets/addimgicon.png" />
+                                            <Image Width="25" Source="{Binding AddImageIcon, Source={StaticResource GlobalIconHolder}}" />
                                             <TextBlock Margin="5,2" Text="Find artist picture on disk" />
                                         </StackPanel>
                                     </Button>
@@ -147,7 +147,7 @@ ToolTipService.ToolTip="Set Album Cover">
                             </Flyout>
                         </Button.Flyout>
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="25" Source="/Assets/addimgicon.png" />
+                            <Image Width="25" Source="{Binding AddImageIcon, Source={StaticResource GlobalIconHolder}}" />
                             <TextBlock Margin="5,2" Text="Set Album Cover" />
                         </StackPanel>
                     </Button>
@@ -156,7 +156,7 @@ ToolTipService.ToolTip="Set Album Cover">
             <Button Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="3" Margin="0, 20" HorizontalAlignment="Center" Content="Add Album to Queue" Click="btnAddtoQueue_Click"></Button>
             <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="25" Source="/Assets/success.png"/>
+                    <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Added item(s) to Queue"/>
                 </StackPanel>
             </TeachingTip>

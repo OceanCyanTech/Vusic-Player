@@ -2,11 +2,7 @@
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 
@@ -46,7 +42,7 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             if (currentDialog == null) return;
             CloseRequested?.Invoke();
             currentDialog.HideDialog();
-          //  MainWindow.ShowWindow();
+            //  MainWindow.ShowWindow();
             populs.Hide();
             if (App.MainWindowInstance is MainWindow windowhome)
             {

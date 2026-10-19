@@ -25,10 +25,10 @@
                 <Image Source="/Assets/appicon.png" Width="20"></Image>
             </Button>
             <StackPanel Visibility="Collapsed" Background="#FF442726" Padding="10, 0" CornerRadius="12" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10" Margin="10, 0" Grid.Column="1" Grid.Row="0" Name="InfoBar">
-                <Image Width="20" Source="/Assets/error.png" Name="infoBarIcon"></Image>
+                <Image Width="20" Source="{Binding Error, Source={StaticResource GlobalIconHolder}}" Name="infoBarIcon"></Image>
                 <TextBlock Name="txtError" Text="Error" VerticalAlignment="Center"></TextBlock>
                 <Button Background="Transparent" BorderBrush="Transparent" Click="Button_Click">
-                    <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                    <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                 </Button>
             </StackPanel>
 
@@ -44,7 +44,7 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Source="/Assets/success.png" Width="60"></Image>
+            <Image Grid.Row="0" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}" Width="60"></Image>
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0, 20" HorizontalAlignment="Center" Grid.Row="1" Text="Successfully removed Album Name from the items."></TextBlock>
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0, 20" HorizontalAlignment="Center" Grid.Row="2" Text="You can close this dialog."></TextBlock>
             <Button HorizontalAlignment="Center" Click="btnUndo_Click" Name="btnUndo" Grid.Row="3" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Content="Undo"></Button>
@@ -126,7 +126,7 @@ Stretch="UniformToFill"/>
                         <TextBlock Name="txtDuration" Text="• 55:07" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
                         <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,5,0,0">
-                            <Image Source="/Assets/defaultartist.png" Width="32" Height="32"/>
+                            <Image Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}" Width="32" Height="32"/>
                             <TextBlock Name="txtArtistsInvolved" 
                            Text="• Artists"  IsTextSelectionEnabled="True"
                            VerticalAlignment="Center" 

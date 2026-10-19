@@ -150,7 +150,7 @@ Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}
         </TeachingTip>
         <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <Image Width="25" Source="/Assets/success.png"/>
+                <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Text="Added selected item(s) to Queue"/>
             </StackPanel>
         </TeachingTip>
@@ -198,13 +198,13 @@ ToolTipService.ToolTip="Sort items">
                     </MenuFlyout>
                 </Button.Flyout>
                 <StackPanel Orientation="Horizontal">
-                    <Image Width="25" Source="/Assets/sorticon.png" />
+                    <Image Width="25" Source="{Binding SortIcon, Source={StaticResource GlobalIconHolder}}" />
                 </StackPanel>
             </Button>
             <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="Collapsed" Spacing="10" Name="stkMultiOptions">
                 <Button Name="btnRemoveSelections" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Remove from playlist" Margin="0, 10" >
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        <Image Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                     <Button.Flyout>
                         <Flyout x:Name="flyoutDelete">
@@ -217,12 +217,12 @@ ToolTipService.ToolTip="Sort items">
                 </Button>
                 <Button Name="btnEditAlbumMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Edit Album property" Margin="0, 10" Click="btnEditAlbumMass_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        <Image Source="{Binding EditAlbumMass, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                 </Button>
                 <Button Name="btnEditArtistMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Edit Artist property" Margin="0, 10" Click="btnEditAlbumMass_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        <Image Source="{Binding EditArtistMass, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                 </Button>
                 <Button Name="btnAddtoPlaylistMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Add selected items to a playlist" Margin="0, 10" Click="btnAddtoPlaylistMass_Click">
@@ -238,17 +238,17 @@ ToolTipService.ToolTip="Sort items">
 
                 <Button Name="btnSelectAll" ToolTipService.ToolTip="Select All" Margin="0, 10" Click="btnSelectAll_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        <Image Source="{Binding SelectAll, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                 </Button>
                 <Button Name="btnClearSelection" ToolTipService.ToolTip="Clear Selection" Margin="0, 10" Click="btnClearSelection_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        <Image Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                 </Button>
                 <Button Name="btnRemoveSelectionsFromFavourites"  ToolTipService.ToolTip="Favourites" Margin="0, 10" Click="btnRemoveSelectionsFromFavourites_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/favicon.png" Width="20"></Image>
+                        <Image Source="{Binding FavIcon, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -334,7 +334,7 @@ Visibility="{Binding VisibilityOfStrikeThrough}" />
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Image Grid.Column="0" Source="/Assets/defaultartist.png" Width="15" Height="15" Margin="0,0,4,0" VerticalAlignment="Center" ToolTipService.ToolTip="Artist"/>
+                            <Image Grid.Column="0" Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}" Width="15" Height="15" Margin="0,0,4,0" VerticalAlignment="Center" ToolTipService.ToolTip="Artist"/>
 
                             <HyperlinkButton Grid.Column="1" Click="hypArtist_Click" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <Grid>
@@ -354,7 +354,7 @@ Visibility="{Binding VisibilityOfStrikeThrough}" />
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Image Grid.Column="0" Source="/Assets/defaultalbum.png" Width="15" Height="15" Margin="0,0,4,0" VerticalAlignment="Center" ToolTipService.ToolTip="Album"/>
+                            <Image Grid.Column="0" Source="{Binding DefaultAlbum, Source={StaticResource GlobalIconHolder}}" Width="15" Height="15" Margin="0,0,4,0" VerticalAlignment="Center" ToolTipService.ToolTip="Album"/>
 
                             <HyperlinkButton Grid.Column="1" Click="hypAlbum_Click" Padding="0" MinWidth="0" MinHeight="0" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <Grid>
@@ -423,7 +423,7 @@ SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   N
                             </Grid>
                         </HyperlinkButton>
                         <StackPanel Visibility="{Binding VisibilityofAudioMeta}" Orientation="Horizontal" Grid.Column="2">
-                            <Image ToolTipService.ToolTip="Artist" Width="25" Source="/Assets/defaultartist.png" ></Image>
+                            <Image ToolTipService.ToolTip="Artist" Width="25" Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}" ></Image>
                             <HyperlinkButton Grid.Column="2" Name="hypArtist" ToolTipService.ToolTip="{Binding Artist}" Click="hypArtist_Click"   Visibility="Visible"  Margin="0, 0">
                                 <TextBlock Text="{Binding Artist}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                             </HyperlinkButton>
@@ -434,7 +434,7 @@ SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   N
 
                         </StackPanel>
                         <StackPanel Visibility="{Binding VisibilityofAudioMeta}"  Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
-                            <Image ToolTipService.ToolTip="Album" Width="25" Source="/Assets/defaultalbum.png" ></Image>
+                            <Image ToolTipService.ToolTip="Album" Width="25" Source="{Binding DefaultAlbum, Source={StaticResource GlobalIconHolder}}" ></Image>
                             <HyperlinkButton ToolTipService.ToolTip="{Binding AlbumName}" Grid.Column="3" Name="hypAlbum" Click="hypAlbum_Click"   Visibility="Visible"  Margin="0, 0">
                                 <TextBlock Text="{Binding AlbumName}"   FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                             </HyperlinkButton>

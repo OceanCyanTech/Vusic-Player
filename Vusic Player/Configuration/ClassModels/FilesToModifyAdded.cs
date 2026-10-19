@@ -1,12 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -87,8 +81,8 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _progress;
             set { _progress = value; OnPropertyChanged(); }
         }
-      
-      
+
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {

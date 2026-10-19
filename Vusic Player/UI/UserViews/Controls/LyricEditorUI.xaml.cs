@@ -1,10 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,18 +8,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
-using Vusic_Player.Configuration.Helper.SubtitlesProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -58,14 +49,14 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void SubtitleEditorUI_Loaded(object sender, RoutedEventArgs e)
         {
-           
+
             PlayerService.SeekCompleted += PlayerService_SeekCompleted;
         }
-        
+
 
         private void PlayerService_SeekCompleted(int obj)
         {
-  
+
             TimeSpan timespan = TimeSpan.FromMilliseconds(obj);
             Debug.WriteLine("RECEIVED SEEK: " + timespan.ToString());
             var currentCue = Subtitles.FirstOrDefault(cue =>
@@ -163,7 +154,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                 var newSubtitle = new SubtitleCueModel { StartTime = startTime, EndTime = endTime, StartString = startTime.ToString(format), EndString = endTime.ToString(endFormat) };
                 Subtitles.Insert(index + 1, newSubtitle);
                 lstViewSubtitles.SelectedIndex = index + 1;
-                
+
                 subDifference.Value = 3;
 
                 for (int i = index + 2; i < Subtitles.Count; i++)
@@ -258,7 +249,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 Subtitles.Add(cue);
             }
-           
+
             rawcontent = rawContent;
             if (tglView.Content.ToString() == "Visual Editor")
             {
@@ -498,9 +489,9 @@ namespace Vusic_Player.UI.UserViews.Controls
                         Subtitles.Add(cue);
                     }
                 }
-                }
             }
-        
+        }
+
 
         private void lstViewSubtitles_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -922,7 +913,7 @@ allowedFormats,
 
         }
 
-   
+
 
         private void btnGetCurrentTimeStart_Click(object sender, RoutedEventArgs e)
         {

@@ -1,12 +1,10 @@
-﻿using FlyleafLib;
-using FlyleafLib.MediaPlayer;
+﻿using FlyleafLib.MediaPlayer;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
@@ -842,7 +840,7 @@ namespace Vusic_Player.Configuration.Helper
 
                     UpdateFileMetadata(path);
                     OceanContentDialog.HideDlg();
-                    
+
                     MainWindow.ShowWindow();
                 }
             }

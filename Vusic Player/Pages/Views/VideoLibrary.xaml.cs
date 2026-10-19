@@ -1,31 +1,20 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
-using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
-using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
-using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -44,16 +33,16 @@ namespace Vusic_Player.Pages.Views
             var media = await MediaPicker.PickSingleVideo(App.MainWindowInstance, "Open Video");
             if (media != null)
             {
-             
-                    if (PlayerService.InVideoPage == false)
-                    {
-                        if (File.Exists(media.Path))
-                            Frame.Navigate(typeof(VideoPlayer), media.Path);
-                    }
-                    else
-                    {
-                        PlayerService.OpenPath(media.Path);
-                    }
+
+                if (PlayerService.InVideoPage == false)
+                {
+                    if (File.Exists(media.Path))
+                        Frame.Navigate(typeof(VideoPlayer), media.Path);
+                }
+                else
+                {
+                    PlayerService.OpenPath(media.Path);
+                }
 
             }
         }
@@ -136,14 +125,14 @@ namespace Vusic_Player.Pages.Views
         }
         private void OceanContentDialog_PrimaryRequested()
         {
-         //   PlaylistCreation.CallPlaylistCreation();
+            //   PlaylistCreation.CallPlaylistCreation();
             OceanContentDialog.HideDlg();
-    //        MainWindow.ShowWindow();
+            //        MainWindow.ShowWindow();
 
         }
         private void hypViewEntireLib_Click(object sender, RoutedEventArgs e)
         {
-        //    LibraryStore.IsMusicLibrary = false;
+            //    LibraryStore.IsMusicLibrary = false;
             this.Frame.Navigate(typeof(EntireVideoLibrary), "Videos");
         }
 
@@ -167,7 +156,7 @@ namespace Vusic_Player.Pages.Views
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Create New Show Model", "Create", "", "Cancel", OceanDialogWindow.ContentType.ShowModel, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "", "", "", "", "", new PlaylistItem(), false, false);
             Debug.WriteLine("BTNNEWSHOW");
-            OceanContentDialog.PrimaryRequested += (async() =>
+            OceanContentDialog.PrimaryRequested += (async () =>
             {
                 var newshow = new Show { Name = Instance.ShowName, Description = Instance.Description, Genre = Instance.Genre, Creators = Instance.Creators, Crew = Instance.Cast, Directory = Instance.Directory, ShowID = Instance.ShowID, Tags = Instance.Tags, Poster = Instance.PosterPath };
                 Debug.WriteLine(newshow.Name);
@@ -185,7 +174,7 @@ namespace Vusic_Player.Pages.Views
             Debug.WriteLine("Yes create");
             PlaylistCreation.CallShowCreation();
             OceanContentDialog.HideDlg();
-           MainWindow.ShowWindow();
+            MainWindow.ShowWindow();
         }
 
         private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)

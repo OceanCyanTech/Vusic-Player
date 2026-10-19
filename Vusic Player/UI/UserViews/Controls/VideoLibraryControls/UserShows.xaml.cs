@@ -1,36 +1,26 @@
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -98,7 +88,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                 foreach (var show in currentSettings.Shows)
                 {
                     var seasoncountstring = $"{show.SeasonCount} {(show.SeasonCount == 1 ? "season" : "seasons")}";
-                    MasterSearchIndex.ShowsMaster.Add(new Show { Poster = show.Poster ?? "ms-appx:///Assets/appicon.png", ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory });
+                    MasterSearchIndex.ShowsMaster.Add(new Show { Poster = show.Poster ?? IconHolder.Instance.DefaultShow, ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory });
                 }
                 grdViewShows.ItemsSource = MasterSearchIndex.ShowsMaster;
                 //     MasterSearchIndex.ShowsMaster.CollectionChanged += MasterSearchIndex.ShowsMaster_CollectionChanged; ;
@@ -212,16 +202,16 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             var selected = grdViewShows.SelectedItems.Cast<Show>().ToList();
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Confirm Delete", "Delete", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "deleteicon", "", "", new ObservableCollection<SongModel>(), "", $"Are you sure you want to delete the selected shows? This cannot be undone.", "warning");
-            OceanContentDialog.PrimaryRequested += (async() =>
+            OceanContentDialog.PrimaryRequested += (async () =>
             {
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 OceanContentDialog.HideDlg();
                 MainWindow.ShowWindow();
-                
+
                 foreach (var item in selected)
                 {
                     var existingshow = currentSettings.Shows.FirstOrDefault(p => p.ShowID == item.ShowID);
-                    if(existingshow != null)
+                    if (existingshow != null)
                     {
                         currentSettings.Shows.Remove(existingshow);
                     }
@@ -342,7 +332,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             };
 
                     var videoFiles = Directory.EnumerateFiles(folderpath)
-                                              .Where(file => File.Exists(file) &&  videoExtensions.Contains(Path.GetExtension(file).ToLower()))
+                                              .Where(file => File.Exists(file) && videoExtensions.Contains(Path.GetExtension(file).ToLower()))
                                               .OrderBy(file => file)
                                               .ToList();
 
@@ -551,7 +541,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
         {
             ttEditShow.IsOpen = false;
         }
-     //   Commented Out
+        //   Commented Out
         private async void mnftAddToQueue_Click(object sender, RoutedEventArgs e)
         {
             if (!(sender is MenuFlyoutItem mnft && mnft.DataContext is Show show)) return;
@@ -599,7 +589,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                                     localSeasons.Add(new PlaylistItem
                                     {
                                         PlaylistName = $"Season {seasonNum}",
-                                 
+
                                         PlaylistId = actualContentPath,
                                         SeasonNumber = seasonNum
                                     });

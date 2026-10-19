@@ -1,26 +1,14 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using NAudio.Midi;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using TagLib.Matroska;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 
 
@@ -221,10 +209,10 @@ namespace Vusic_Player.UI.UserViews.Controls
 
             double closestSnapTarget = calculatedValue;
             double minDistance = double.MaxValue;
-        
-            if(chapt != null)
+
+            if (chapt != null)
             {
-                foreach(var chapter in chapt)
+                foreach (var chapter in chapt)
                 {
                     double chapterSeconds = TimeSpan.FromTicks(chapter.StartTime).TotalSeconds;
                     double distance = Math.Abs(calculatedValue - chapterSeconds);
@@ -375,8 +363,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                     Width = markerWidth,
                     Height = markerHeight,
                     Fill = new SolidColorBrush(Microsoft.UI.Colors.Cyan),
-                  
-                   
+
+
                 };
                 chapteritem.Tapped += ((object sender, TappedRoutedEventArgs e) =>
                 {

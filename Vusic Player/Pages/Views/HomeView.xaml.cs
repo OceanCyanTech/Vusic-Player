@@ -1,9 +1,10 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
+
+#region Namespaces
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.UI;
@@ -21,176 +22,172 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+#endregion
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+/*  OCEANCYAN TECH HEADER
+ VUSIC PLAYER - VERSION v1.0.0.0
+© OCEANCYAN TECH 2026
+
+PAGE - HOMEVIEW
+BUILD 211026
+ */
 
 namespace Vusic_Player.Pages.Views
 {
-
     public sealed partial class HomeView : Page
     {
+        #region Fields
+        IconHolder IconHolderInstance => IconHolder.Instance;
+        ObservableCollection<FolderModel> FoldersOpened = new ObservableCollection<FolderModel>();
+
+        #endregion
+
+        #region Page Properties
         public HomeView()
         {
             InitializeComponent();
         }
-        IconHolder IconHolderInstance => IconHolder.Instance;
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            expRecentsVideo.Visibility = currentSettings.Panel1VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
-            txtDisplay1.Visibility = currentSettings.Panel2VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
-            txtDisplay2.Visibility = currentSettings.Panel3VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
-            txtDisplay3.Visibility = currentSettings.Panel4VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
-            expRecentMusic.Visibility = currentSettings.Panel2VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
-            expMusicMix.Visibility = currentSettings.Panel3VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
-            expFav.Visibility = currentSettings.Panel4VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
-            FoldersOpened.CollectionChanged -= FoldersOpened_CollectionChanged;
-            FoldersOpened.Clear();
-            expFav.IsExpanded = false;
-            expRecentMusic.IsExpanded = false;
-            expRecentsVideo.IsExpanded = false;
-            expMusicMix.IsExpanded = false;
-            if (currentSettings.ExpandedPanelHomeView == "expRecentsVideo")
+            try
             {
-                expRecentsVideo.IsExpanded = true;
-            }
-            else if (currentSettings.ExpandedPanelHomeView == "expRecentMusic")
-            {
-                expRecentMusic.IsExpanded = true;
-            }
-            else if (currentSettings.ExpandedPanelHomeView == "expMusicMix")
-            {
-                expMusicMix.IsExpanded = true;
-            }
-            else if (currentSettings.ExpandedPanelHomeView == "expFav")
-            {
-                expFav.IsExpanded = true;
-            }
-            if (currentSettings?.FoldersRecent != null)
-            {
-                // Use a HashSet with OrdinalIgnoreCase to track and filter duplicate paths
-                var seenPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-                foreach (var folder in currentSettings.FoldersRecent)
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                expRecentsVideo.Visibility = currentSettings.Panel1VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+                txtDisplay1.Visibility = currentSettings.Panel2VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+                txtDisplay2.Visibility = currentSettings.Panel3VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+                txtDisplay3.Visibility = currentSettings.Panel4VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+                expRecentMusic.Visibility = currentSettings.Panel2VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+                expMusicMix.Visibility = currentSettings.Panel3VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+                expFav.Visibility = currentSettings.Panel4VisibilityHome ? Visibility.Visible : Visibility.Collapsed;
+                FoldersOpened.CollectionChanged -= FoldersOpened_CollectionChanged;
+                FoldersOpened.Clear();
+                expFav.IsExpanded = false;
+                expRecentMusic.IsExpanded = false;
+                expRecentsVideo.IsExpanded = false;
+                expMusicMix.IsExpanded = false;
+                if (currentSettings.ExpandedPanelHomeView == "expRecentsVideo")
                 {
-                    string path = folder?.FolderPath?.Trim() ?? string.Empty;
-                    if (string.IsNullOrEmpty(path) || !Directory.Exists(path) || !seenPaths.Add(path))
-                        continue;
-                    if (folder == null) continue;
-                    FoldersOpened.Add(new FolderModel
-                    {
-                        FolderName = string.IsNullOrWhiteSpace(folder.FolderName)
-                            ? new DirectoryInfo(path).Name
-                            : folder.FolderName,
-                        FolderPath = path
-                    });
+                    expRecentsVideo.IsExpanded = true;
                 }
-            }
+                else if (currentSettings.ExpandedPanelHomeView == "expRecentMusic")
+                {
+                    expRecentMusic.IsExpanded = true;
+                }
+                else if (currentSettings.ExpandedPanelHomeView == "expMusicMix")
+                {
+                    expMusicMix.IsExpanded = true;
+                }
+                else if (currentSettings.ExpandedPanelHomeView == "expFav")
+                {
+                    expFav.IsExpanded = true;
+                }
+                if (currentSettings?.FoldersRecent != null)
+                {
+                    var seenPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            if (FoldersOpened.Count == 0)
-            {
-                grdEmptySuggestions.Visibility = Visibility.Visible;
-                grdViewFoldersOpened.Visibility = Visibility.Collapsed;
-                stkFoldersOptions.Visibility = Visibility.Collapsed;
+                    foreach (var folder in currentSettings.FoldersRecent)
+                    {
+                        string path = folder?.FolderPath?.Trim() ?? string.Empty;
+                        if (string.IsNullOrEmpty(path) || !Directory.Exists(path) || !seenPaths.Add(path))
+                            continue;
+                        if (folder == null) continue;
+                        FoldersOpened.Add(new FolderModel
+                        {
+                            FolderName = string.IsNullOrWhiteSpace(folder.FolderName)
+                                ? new DirectoryInfo(path).Name
+                                : folder.FolderName,
+                            FolderPath = path
+                        });
+                    }
+                }
+                ManageVisibilityFolderGrid();
+                FoldersOpened.CollectionChanged += FoldersOpened_CollectionChanged;
             }
-            else
+            catch (Exception ex)
             {
-                grdEmptySuggestions.Visibility = Visibility.Collapsed;
-                grdViewFoldersOpened.Visibility = Visibility.Visible;
-                stkFoldersOptions.Visibility = Visibility.Visible;
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.ONNAVIGATEDTO", Logger.LogLevelType.Error);
             }
-
-            // Subscribe to collection changes after the initial load is complete
-            FoldersOpened.CollectionChanged += FoldersOpened_CollectionChanged;
             base.OnNavigatedTo(e);
         }
 
-        private async void FoldersOpened_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            if (currentSettings == null) return;
-
-            // Deduplicate by path (case-insensitive) before persisting
-            var uniqueFolders = FoldersOpened
-                .Where(f => !string.IsNullOrWhiteSpace(f.FolderPath))
-                .DistinctBy(f => f.FolderPath, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            currentSettings.FoldersRecent = new ObservableCollection<FolderModel>(uniqueFolders);
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
-        }
-        ObservableCollection<FolderModel> FoldersOpened = new ObservableCollection<FolderModel>();
         private async void btnOpenMedia_Click(object sender, RoutedEventArgs e)
         {
-            if (App.MainWindowInstance == null) return;
-            var media = await MediaPicker.PickSingle(App.MainWindowInstance, "Open Media");
-            if (media != null)
+            try
             {
-                bool isAudio = AudioExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
-                bool isVideo = VideoExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
-                if (isAudio)
+                if (App.MainWindowInstance == null) return;
+                var media = await MediaPicker.PickSingle(App.MainWindowInstance, "Open Media");
+                if (media != null)
                 {
-
-                    if (File.Exists(media.Path))
-                    {
-                        ObservableCollection<SongModel> single = new();
-                        string Title = Path.GetFileNameWithoutExtension(media.Path);
-
-                        single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
-                        QueueService.PlayMedia(single, false, false);
-                    }
-                }
-                else if (isVideo)
-                {
-                    if (PlayerService.InVideoPage == false)
+                    bool isAudio = AudioExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                    bool isVideo = VideoExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                    if (isAudio)
                     {
                         if (File.Exists(media.Path))
-                            Frame.Navigate(typeof(VideoPlayer), media.Path);
+                        {
+                            ObservableCollection<SongModel> single = new();
+                            string Title = Path.GetFileNameWithoutExtension(media.Path);
+
+                            single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
+                            QueueService.PlayMedia(single, false, false);
+                        }
+                    }
+                    else if (isVideo)
+                    {
+                        if (PlayerService.InVideoPage == false)
+                        {
+                            if (File.Exists(media.Path))
+                                Frame.Navigate(typeof(VideoPlayer), media.Path);
+                        }
+                        else
+                        {
+                            PlayerService.OpenPath(media.Path);
+                        }
                     }
                     else
                     {
-                        PlayerService.OpenPath(media.Path);
+                        ShowException("Error", "Cannot Open file of Invalid Format");
                     }
-                    
-                }
-                else
-                {
-                    //Handle other cases
                 }
             }
-        }
-
-        private async void btnOpenFolder_Click(object sender, RoutedEventArgs e)
-        {
-            if (App.MainWindowInstance == null) return;
-            var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Open Folder", Windows.Storage.Pickers.PickerLocationId.Downloads);
-            if(folder != null)
+            catch (Exception ex)
             {
-                if(App.NavigationFrame != null)
-                {
-                    App.NavigationFrame.Navigate(typeof(FolderView), new FolderModel { FolderName = Path.GetFileName(folder.Path), FolderPath = folder.Path });
-                }
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.OPENMEDIA", Logger.LogLevelType.Error);
             }
         }
+        private void ShowException(string title, string Message)
+        {
+            ttEXCEPTION.Title = title;
+            txtExceptionError.Text = Message;
+            ttEXCEPTION.IsOpen = true;
+        }
+        #endregion
 
+        #region Expander Properties
         private async void expRecentsVideo_Expanding(Expander sender, ExpanderExpandingEventArgs args)
         {
-            if (!this.IsLoaded) return;
+            try
+            {
+                if (!this.IsLoaded) return;
 
-            if (sender != expRecentsVideo) expRecentsVideo.IsExpanded = false;
+                if (sender != expRecentsVideo) expRecentsVideo.IsExpanded = false;
 
-            if (sender != expRecentMusic) expRecentMusic.IsExpanded = false;
+                if (sender != expRecentMusic) expRecentMusic.IsExpanded = false;
 
-            if (sender != expMusicMix) expMusicMix.IsExpanded = false;
+                if (sender != expMusicMix) expMusicMix.IsExpanded = false;
 
-            if (sender != expFav) expFav.IsExpanded = false;
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            currentSettings.ExpandedPanelHomeView = sender.Name;
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
-
+                if (sender != expFav) expFav.IsExpanded = false;
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.ExpandedPanelHomeView = sender.Name;
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+            catch (Exception ex)
+            {
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.EXPANDER_EXPANDING", Logger.LogLevelType.Error);
+            }
         }
 
         private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
@@ -207,113 +204,179 @@ namespace Vusic_Player.Pages.Views
         {
             expFav.IsExpanded = true;
         }
+        #endregion
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        #region Folders Grid
+        private async void FoldersOpened_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Frame.Navigate(typeof(DummyPage));
+            try
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                if (currentSettings == null) return;
+                var uniqueFolders = FoldersOpened
+                    .Where(f => !string.IsNullOrWhiteSpace(f.FolderPath))
+                    .DistinctBy(f => f.FolderPath, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
 
+                currentSettings.FoldersRecent = new ObservableCollection<FolderModel>(uniqueFolders);
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+            }
+            catch
+            {
+                //IGNORE
+            }
         }
-
-        private void hypViewAllFav_Click(object sender, RoutedEventArgs e)
+        private async void btnOpenFolder_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(FavouritesView));
+            try
+            {
+                if (App.MainWindowInstance == null) return;
+                var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Open Folder", Windows.Storage.Pickers.PickerLocationId.Downloads);
+                if (folder != null)
+                {
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(FolderView), new FolderModel { FolderName = Path.GetFileName(folder.Path), FolderPath = folder.Path });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.OPENFOLDER", Logger.LogLevelType.Error);
+            }
         }
-
         private void chkSelect_Checked(object sender, RoutedEventArgs e)
         {
             grdViewFoldersOpened.SelectionMode = chkSelect.IsChecked == true ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Single;
             selectMoreOptions.Visibility = chkSelect.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
         }
-
         private async void chckSelectAllFolders_Checked(object sender, RoutedEventArgs e)
         {
             if (chckSelectAllFolders.IsChecked == true) grdViewFoldersOpened.SelectAll();
             else grdViewFoldersOpened.SelectedItems.Clear();
         }
-
         private async void btnRemove_Click(object sender, RoutedEventArgs e)
         {
-       
-            var selecteditems = grdViewFoldersOpened.SelectedItems.OfType<FolderModel>().ToList();
-            foreach(var selecteditem in selecteditems)
+            //Remove Folders
+            try
             {
-                FoldersOpened.Remove(selecteditem);
+                var selecteditems = grdViewFoldersOpened.SelectedItems.OfType<FolderModel>().ToList();
+                foreach (var selecteditem in selecteditems)
+                {
+                    FoldersOpened.Remove(selecteditem);
+                }
+                ManageVisibilityFolderGrid();
             }
-            if (FoldersOpened.Count == 0)
+            catch (Exception ex)
             {
-                grdEmptySuggestions.Visibility = Visibility.Visible;
-                grdViewFoldersOpened.Visibility = Visibility.Collapsed;
-                stkFoldersOptions.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                grdEmptySuggestions.Visibility = Visibility.Collapsed;
-                grdViewFoldersOpened.Visibility = Visibility.Visible;
-                stkFoldersOptions.Visibility = Visibility.Visible;
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.REMOVEFOLDER", Logger.LogLevelType.Error);
             }
         }
-
+        private void ManageVisibilityFolderGrid()
+        {
+            grdEmptySuggestions.Visibility = FoldersOpened.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            grdViewFoldersOpened.Visibility = FoldersOpened.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            stkFoldersOptions.Visibility = FoldersOpened.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        }
         private void grdViewFoldersOpened_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (chkSelect.IsChecked == true) return;
-            if(e.ClickedItem is FolderModel folder)
+            try
             {
-                if(App.NavigationFrame != null)
+                if (chkSelect.IsChecked == true) return;
+                if (e.ClickedItem is FolderModel folder)
                 {
-                    App.NavigationFrame.Navigate(typeof(FolderView), folder);
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(FolderView), folder);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.FOLDERITEMCLICKED", Logger.LogLevelType.Error);
             }
         }
 
         private void mnftOpenFolder_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FolderModel folder)
+            try
             {
-                if (App.NavigationFrame != null)
+                if (sender is MenuFlyoutItem mnft && mnft.DataContext is FolderModel folder)
                 {
-                    App.NavigationFrame.Navigate(typeof(FolderView), folder);
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(FolderView), folder);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.OPENFOLDERMENUFLYOUT", Logger.LogLevelType.Error);
             }
         }
 
         private void mnftOpenFolderLoc_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FolderModel folder)
+            try
             {
-                if (Directory.Exists(folder.FolderPath))
+                if (sender is MenuFlyoutItem mnft && mnft.DataContext is FolderModel folder)
                 {
-
-                    Process.Start("explorer.exe", $"\"{folder.FolderPath}\"");
+                    if (Directory.Exists(folder.FolderPath))
+                    {
+                        Process.Start("explorer.exe", $"\"{folder.FolderPath}\"");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.OPENFOLDERLOC", Logger.LogLevelType.Error);
             }
         }
 
         private void mnftCopyFolderLoc_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FolderModel folder)
+            try
             {
-                CopyToClipboard.CopyStringToClipboard(folder.FolderPath);
+                if (sender is MenuFlyoutItem mnft && mnft.DataContext is FolderModel folder)
+                {
+                    CopyToClipboard.CopyStringToClipboard(folder.FolderPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.COPYFOLDERLOC", Logger.LogLevelType.Error);
             }
         }
 
         private void mnftRemoveFolderLoc_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem mnft && mnft.DataContext is FolderModel folder)
+            try
             {
-                FoldersOpened.Remove(folder);
-                if (FoldersOpened.Count == 0)
+                if (sender is MenuFlyoutItem mnft && mnft.DataContext is FolderModel folder)
                 {
-                    grdEmptySuggestions.Visibility = Visibility.Visible;
-                    grdViewFoldersOpened.Visibility = Visibility.Collapsed;
-                    stkFoldersOptions.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    grdEmptySuggestions.Visibility = Visibility.Collapsed;
-                    grdViewFoldersOpened.Visibility = Visibility.Visible;
-                    stkFoldersOptions.Visibility = Visibility.Visible;
+                    FoldersOpened.Remove(folder);
+                    ManageVisibilityFolderGrid();
                 }
             }
+            catch (Exception ex)
+            {
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.REMOVEFOLDERMENUFLYOUT", Logger.LogLevelType.Error);
+            }
         }
+        #endregion
+
+        #region Miscellaneous
+        private void hypViewAllFav_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(FavouritesView));
+        }
+        #endregion
     }
 }

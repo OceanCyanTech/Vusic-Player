@@ -1,23 +1,19 @@
-﻿using FlyleafLib;
+﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
+
+using FlyleafLib;
 using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using NAudio.CoreAudioApi;
-using NAudio.Midi;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
@@ -26,7 +22,6 @@ using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Vusic_Player.UI.UserViews.Controls;
-using Windows.Devices.Spi;
 using Windows.Storage;
 using Windows.UI;
 using static Vusic_Player.Configuration.AppConfig.Logger;
@@ -76,6 +71,10 @@ namespace Vusic_Player.Configuration
             {
                 var curTime = TimeSpan.FromTicks(Masterplayer.CurTime);
                 UIController.CurrentPosition = curTime.TotalSeconds;
+                if (UIController.IsTotalDurationTapped)
+                {
+                    UIController.TotalDuration = UIController.TotalDurationTemp - UIController.CurrentPosition;
+                }
             }
         }
         private const uint SHARD_PATHW = 0x00000003;
@@ -115,7 +114,7 @@ namespace Vusic_Player.Configuration
 
                 // 3. Notify the shell that the recent docs list changed
                 // Passing 0 and IntPtr.Zero to SHAddToRecentDocs clears the shell cache
-                 SHAddToRecentDocs(0, IntPtr.Zero);
+                SHAddToRecentDocs(0, IntPtr.Zero);
             }
             catch (Exception ex)
             {
@@ -222,9 +221,9 @@ namespace Vusic_Player.Configuration
 
                 if (PinService.IsPinEnabled() || PinService.IsWindowsAuthEnabled())
                 {
-                    RemoveFileFromExplorerHome(fiPath);   
+                    RemoveFileFromExplorerHome(fiPath);
                 }
-                    if (Masterplayer == null)
+                if (Masterplayer == null)
                 {
                     //conf.Video.VideoProcessor = VideoProcessors.Flyleaf;
                     //conf.Video.SuperResolution = true;
@@ -294,6 +293,7 @@ namespace Vusic_Player.Configuration
                 TimeSpan duration = musicProps.Duration;
                 Debug.WriteLine("DURATION: " + duration);
                 UIController.TotalDuration = duration.TotalSeconds;
+                UIController.TotalDurationTemp = duration.TotalSeconds;
                 string title = !string.IsNullOrWhiteSpace(musicProps.Title) ? musicProps.Title : Path.GetFileNameWithoutExtension(file.Path);
 
                 UIController.MediaDisplayName = title;

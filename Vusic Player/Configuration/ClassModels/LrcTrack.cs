@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -23,7 +18,7 @@ namespace Vusic_Player.Configuration.ClassModels
 
         [JsonPropertyName("duration")]
         public double Duration { get; set; }
-    
+
 
         [JsonPropertyName("plainLyrics")]
         public string PlainLyrics { get; set; } = "";

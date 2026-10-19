@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using System.Windows.Documents;
 
 namespace Vusic_Player.Configuration.ClassModels
 {

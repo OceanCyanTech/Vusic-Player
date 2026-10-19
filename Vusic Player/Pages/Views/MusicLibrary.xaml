@@ -23,7 +23,7 @@
             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
                 <Button CornerRadius="12"   Grid.Column="0" Name="btnNewPlaylist" Click="btnNewPlaylist_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </Button>
@@ -37,7 +37,7 @@ AlwaysUseFallback="False"/>
                     </Button.Background>
                     <StackPanel Orientation="Horizontal">
 
-                        <Image Width="20" Source="/Assets/importicon.png"></Image>
+                        <Image Width="20" Source="{Binding Importicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock Margin="5,0" Text="Open Music" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
 
@@ -52,19 +52,19 @@ AlwaysUseFallback="False"/>
           IsExpanded="True" Name="expRecent" Expanding="expRecent_Expanding">
                 <Expander.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="View Full Music History">
+                        <MenuFlyoutItem Text="View Full Music History" Name="mnftViewFullMusicHistory" Click="mnftViewFullMusicHistory_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <FontIcon Glyph="&#xE81C;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Disable Recent Music">
+                        <MenuFlyoutItem Text="Disable Recent Music" Name="mnftDisableRecentMusic" Click="mnftDisableRecentMusic_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <ImageIcon Source="/Assets/disablehistoryfonticon.png"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>
                 </Expander.ContextFlyout>
-                <grids:RecentMusicList />
+                <grids:RecentMusicList x:Name="recentMusicList"/>
             </Expander>
             <TextBlock Name="txtDisplay1"  Tapped="TextBlock_Tapped" Text="My Playlists" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
 
@@ -85,7 +85,7 @@ AlwaysUseFallback="False"/>
                     </Grid.RowDefinitions>
                     <Button Grid.Row="0"  Click="btnCreateNewPlaylist_Click" Name="btnCreateNewPlaylist">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Image Source="/Assets/addicon.png" Width="15"/>
+                            <Image Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" Width="15"/>
                             <TextBlock Text="Create New Playlist"/>
                         </StackPanel>
                     </Button>

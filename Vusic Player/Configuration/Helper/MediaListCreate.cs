@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Windows.Storage;
@@ -15,7 +14,7 @@ namespace Vusic_Player.Configuration.Helper
         public static async Task<ObservableCollection<SongModel>> GetSongModelsAsync(List<string> Paths)
         {
             ObservableCollection<SongModel> Songs = new ObservableCollection<SongModel>();
-            foreach(var path in Paths)
+            foreach (var path in Paths)
             {
                 if (File.Exists(path))
                 {

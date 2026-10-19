@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Threading;
 using Windows.UI;
 using DispatcherTimer = Microsoft.UI.Xaml.DispatcherTimer;
 

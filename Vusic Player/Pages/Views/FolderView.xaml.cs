@@ -2,27 +2,18 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Hosting;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.DirectoryServices;
-using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
@@ -35,12 +26,7 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Devices.Geolocation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.UI.StartScreen;
 
 
 namespace Vusic_Player.Pages.Views
@@ -1252,7 +1238,7 @@ namespace Vusic_Player.Pages.Views
 
             await GlobalFavourites.Instance.SetFavouritesRangeAsync(paths, add: !removeFavorites);
 
-         
+
         }
 
 
@@ -1800,7 +1786,7 @@ namespace Vusic_Player.Pages.Views
                 if (AudioExtensions.List.Contains(fileExtension))
                 {
                     var properties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    temporaryobservable.Add(new SongModel { FilePath = item.Path, Title = Path.GetFileNameWithoutExtension(item.Path),SongDuration = properties.Duration });
+                    temporaryobservable.Add(new SongModel { FilePath = item.Path, Title = Path.GetFileNameWithoutExtension(item.Path), SongDuration = properties.Duration });
                 }
                 else
                 {
@@ -1930,7 +1916,7 @@ namespace Vusic_Player.Pages.Views
                 };
 
             }
-           
+
         }
         private void hypPlaylistAdded_Click(object sender, RoutedEventArgs e)
         {

@@ -1,22 +1,15 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
-using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.UI.Navig;
@@ -25,8 +18,7 @@ using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Vusic_Player.UI.UserViews.Grids;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -39,7 +31,7 @@ namespace Vusic_Player.Pages.Views
         public MusicLibrary()
         {
             InitializeComponent();
-      
+
             NavigationToPlaylist.NavigCalled += NavigationToPlaylist_NavigCalled;
         }
 
@@ -109,7 +101,7 @@ namespace Vusic_Player.Pages.Views
                     {
                         finalName = $"{baseName} ({counter++})";
                     }
-                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate,  SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = Instance.Genre, plthumb = Instance.PlCover, PlaylistId = Instance.PlaylistID, DateCreation = Instance.CreationDate, SongsPaths = new HashSet<string>(Instance.MediaPaths), Thumbnail = Instance.Thumbnail };
                     Debug.WriteLine(newplaylist.PlaylistName);
                     Instance.PlaylistsMaster.Add(newplaylist);
 
@@ -129,7 +121,7 @@ namespace Vusic_Player.Pages.Views
             });
         }
 
-        
+
 
         private async void btnOpenMusic_Click(object sender, RoutedEventArgs e)
         {
@@ -148,7 +140,7 @@ namespace Vusic_Player.Pages.Views
                         QueueService.PlayMedia(single, false, false);
                     }
                 }
-             
+
             }
 
         }
@@ -237,5 +229,36 @@ namespace Vusic_Player.Pages.Views
 
         }
 
+        private void mnftViewFullMusicHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(EntireMusicLibrary), "EntireHistory");
+            }
+        }
+
+        private async void mnftDisableRecentMusic_Click(object sender, RoutedEventArgs e)
+        {
+            if (mnftDisableRecentMusic.Text == "Disable Recent Music")
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.IsVideoHistoryDisabled = true;
+                currentSettings.SavedVideoProgress.Clear();
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                mnftDisableRecentMusic.Text = "Enable Recent Music";
+                recentMusicList.ShowDisable();
+            }
+            else
+            {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.IsVideoHistoryDisabled = false;
+                currentSettings.SavedVideoProgress.Clear();
+
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                mnftDisableRecentMusic.Text = "Disable Recent Music";
+                recentMusicList.ShowEnable();
+            }
+
+        }
     }
 }

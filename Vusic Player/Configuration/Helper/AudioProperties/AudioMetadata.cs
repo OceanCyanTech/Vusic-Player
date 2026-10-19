@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Vusic_Player.Configuration.AppConfig;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using Vusic_Player.Configuration.Helper.FileSystem;
-using Vusic_Player.Configuration.AppConfig;
 
 namespace Vusic_Player.Configuration.Helper.AudioProperties
 {
@@ -150,7 +150,7 @@ namespace Vusic_Player.Configuration.Helper.AudioProperties
             {
                 Debug.WriteLine("REMOV EGENRE ZERO PROCESS");
 
-                file.Tag.Genres =[name];
+                file.Tag.Genres = [name];
                 file.Save();
                 file.Dispose();
                 return true;

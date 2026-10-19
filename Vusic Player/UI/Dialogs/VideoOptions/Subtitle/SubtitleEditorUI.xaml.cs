@@ -1,35 +1,20 @@
-using Flyleaf.FFmpeg;
-using FlyleafLib.MediaFramework.MediaStream;
-using FlyleafLib.MediaPlayer;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
-using Vusic_Player.Configuration.Helper.SubtitlesProperties;
 using Vusic_Player.Configuration.Helper.UI;
-using Vusic_Player.Extensions;
-using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -69,7 +54,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
         private void SubtitleEditorUI_Loaded(object sender, RoutedEventArgs e)
         {
             chkFromVideo.IsChecked = true;
-            if(cmbEmbeddedSubTracks.Items.Count != 0)
+            if (cmbEmbeddedSubTracks.Items.Count != 0)
             {
                 ComboBoxSelection(0);
             }
@@ -393,7 +378,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             FilePathOpened = "";
             txtTextEditor.Text = "";
             chkFromVideo.IsChecked = false;
-        
+
         }
 
 
@@ -959,7 +944,7 @@ allowedFormats,
             if (chkFromVideo.IsChecked == false) return;
             ComboBoxSelection(cmbEmbeddedSubTracks.SelectedIndex);
         }
-        
+
         public static async Task<string> ExtractSubtitlesAsync(string videoPath, int subStreamIndex = 0)
         {
             if (subStreamIndex < 0 || string.IsNullOrEmpty(videoPath))
@@ -1030,7 +1015,7 @@ allowedFormats,
         private void chkFromVideo_Checked(object sender, RoutedEventArgs e)
         {
             cmbEmbeddedSubTracks.Visibility = chkFromVideo.IsChecked ?? false ? Visibility.Visible : Visibility.Collapsed;
-           
+
         }
     }
 }

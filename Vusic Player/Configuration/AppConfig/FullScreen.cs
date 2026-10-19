@@ -1,10 +1,6 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using WinRT.Interop;

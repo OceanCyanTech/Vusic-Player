@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
+using System;
 using System.Threading.Tasks;
 using Vusic_Player.Extensions;
 using Windows.Storage;
@@ -15,7 +15,7 @@ namespace Vusic_Player.FilePickers
             var openPicker = new FileOpenPicker();
             var hWnd = WindowNative.GetWindowHandle(window);
             InitializeWithWindow.Initialize(openPicker, hWnd);
-            
+
             foreach (var ext in LyricExtensions.List)
             {
                 openPicker.FileTypeFilter.Add(ext);

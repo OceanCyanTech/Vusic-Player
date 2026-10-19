@@ -31,7 +31,7 @@
                     <Image Source="/Assets/appicon.png" Width="20"/>
                 </Button>
                 <Button Name="btnSearch" ToolTipService.ToolTip="Find Devices">
-                    <Image Source="/Assets/searchicon.png" Width="20"/>
+                    <Image Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                     <Button.Flyout>
                         <Flyout>
                             <AutoSuggestBox Name="asbSearchDevices" PlaceholderText="Find Devices..." QueryIcon="Find" TextChanged="asbSearchDevices_TextChanged" QuerySubmitted="asbSearchDevices_QuerySubmitted"/>
@@ -128,7 +128,7 @@
                 <StackPanel Orientation="Vertical" Spacing="10">
                     <TextBox Name="txtRenameDevice" PlaceholderText="Rename device..."/>
                     <Button Name="btnRenameDevice">
-                        <Image Width="20" Source="/Assets/tickicon.png"/>
+                        <Image Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}"/>
                     </Button>
                 </StackPanel>
             </TeachingTip>

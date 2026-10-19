@@ -26,7 +26,7 @@
         <TextBlock Text="Convert between various formats. Audio to Video is not possible." Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         <Button Name="btnAddAudioFiles" Click="btnAddAudioFiles_Click" Grid.Row="2">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <Image Source="/Assets/addicon.png" Width="20"/>
+                <Image Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 <TextBlock Text="Add Media Files"/>
             </StackPanel>
         </Button>
@@ -122,7 +122,7 @@
         BorderBrush="Transparent" 
         Grid.Column="5"
         ToolTipService.ToolTip="Find formats...">
-                            <Image Width="20" Source="/Assets/Themes/Ocean/searchicon.png"/>
+                                <Image Width="20" Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}"/>
                             <Button.Flyout>
                                 <Flyout x:Name="flyoutSearch">
                                     <AutoSuggestBox x:Name="asbSearchFormats" 

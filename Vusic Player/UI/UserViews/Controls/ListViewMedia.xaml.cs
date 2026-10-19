@@ -3,22 +3,17 @@ using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Hosting;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
@@ -31,8 +26,6 @@ using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -290,7 +283,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
 
             bool hasVideo = selectedcast.Any(song =>
-     !string.IsNullOrEmpty(song.FilePath) && File.Exists(song.FilePath)&&
+     !string.IsNullOrEmpty(song.FilePath) && File.Exists(song.FilePath) &&
      Extensions.VideoExtensions.List.Contains(Path.GetExtension(song.FilePath).ToLowerInvariant())
     );
             if (hasVideo)
@@ -418,7 +411,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             }
 
             //Favourites 
-            
+
         }
 
         private async void PlaySelection(SongModel selectedSong)
@@ -1758,7 +1751,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void mnftGoToFileLocation_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is MenuFlyoutItem mnft && mnft.DataContext is SongModel song)
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is SongModel song)
             {
                 OpenFileLocation.PathSelect(song.FilePath);
             }

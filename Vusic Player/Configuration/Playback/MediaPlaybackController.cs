@@ -5,9 +5,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Vusic_Player;
 using Vusic_Player.Configuration.ClassModels;
 
 namespace Vusic_Player.Configuration.Playback
@@ -38,7 +36,7 @@ namespace Vusic_Player.Configuration.Playback
 
                 foreach (var item in currentQueue)
                 {
-                   totalDuration += item.SongDuration ?? TimeSpan.Zero;
+                    totalDuration += item.SongDuration ?? TimeSpan.Zero;
                 }
 
                 if (totalDuration.TotalHours < 1)
@@ -59,7 +57,9 @@ namespace Vusic_Player.Configuration.Playback
 
         private double _currentPosition;
         private bool isFullQueue = false;
+        private bool isTotalDurationTapped = false;
         private double _totalDuration;
+        private double _totalDurationTemp;
         private string _songName = "Nothing playing";
         private string _lrcTrackPath = "";
         private string itemscount = "• 0 items";
@@ -79,6 +79,7 @@ namespace Vusic_Player.Configuration.Playback
         private double _pitchValue = 1;
         private bool _chaptersEnabled = false;
         private double _maxVol = 100;
+        private double _maxSearchResults = 6;
         private bool _multideviceoutput = false;
         private string _volumeGlyph = "\uE767";
         private string _fullScreenToolTip = "Set Full Screen";
@@ -101,6 +102,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _currentPosition, value))
                 {
                     OnPropertyChanged(nameof(RunningDurationString));
+                }
+            }
+        }
+        public bool IsTotalDurationTapped
+        {
+            get => isTotalDurationTapped;
+            set
+            {
+                if (SetProperty(ref isTotalDurationTapped, value))
+                {
+                    OnPropertyChanged(nameof(IsTotalDurationTapped));
                 }
             }
         }
@@ -156,6 +168,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref _maxVol, value))
                 {
                     OnPropertyChanged(nameof(MaximumVolume));
+                }
+            }
+        }
+        public double MaximumSearchResults
+        {
+            get => _maxSearchResults;
+            set
+            {
+                if (SetProperty(ref _maxSearchResults, value))
+                {
+                    OnPropertyChanged(nameof(MaximumSearchResults));
                 }
             }
         }
@@ -264,6 +287,17 @@ namespace Vusic_Player.Configuration.Playback
             set
             {
                 if (SetProperty(ref _totalDuration, value))
+                {
+                    OnPropertyChanged(nameof(TotalDurationString));
+                }
+            }
+        }
+        public double TotalDurationTemp
+        {
+            get => _totalDurationTemp;
+            set
+            {
+                if (SetProperty(ref _totalDurationTemp, value))
                 {
                     OnPropertyChanged(nameof(TotalDurationString));
                 }

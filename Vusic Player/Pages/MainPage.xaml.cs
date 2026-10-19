@@ -1,7 +1,5 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -11,14 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.DirectoryServices;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
@@ -28,9 +22,6 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
-using Vusic_Player.UI.Dialogs;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Page = Microsoft.UI.Xaml.Controls.Page;
 using TextBox = Microsoft.UI.Xaml.Controls.TextBox;
 
@@ -57,19 +48,19 @@ namespace Vusic_Player.Pages
             _originalHeader = nvgMain.Header;
             InitializeFav();
             InitializeWatermark();
-    
+
         }
         private async void CheckforStartupPage()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
 
             var startuppage = currentSettings.StartupPage;
-            if(startuppage == "Home")
+            if (startuppage == "Home")
             {
                 nvgitHome.IsSelected = true;
                 frmMain.Navigate(typeof(HomeView));
             }
-            else if(startuppage == "Music")
+            else if (startuppage == "Music")
             {
                 nvgitMusic.IsSelected = true;
                 frmMain.Navigate(typeof(MusicLibrary));
@@ -197,6 +188,7 @@ namespace Vusic_Player.Pages
             string skipBackIcon = currentSettings.SkipBack is 5 or 10 or 15 or 20 or 30
                     ? $"skip{currentSettings.SkipBack}back.png"
                     : "skipbackcustom.png";
+            mediacontroller.MaximumSearchResults = currentSettings.MaxSearchResults;
             mediacontroller.MaximumVolume = currentSettings.MaxVolume;
             IconsInstance.SkipBack = $"ms-appx:///Assets/Themes/{currentSettings.Theme}/{skipBackIcon}";
             SeekServiceInstance.SkipAhead = currentSettings.SkipAhead;
@@ -473,6 +465,11 @@ namespace Vusic_Player.Pages
         private void btnMultiDeviceOptions_Click(object sender, RoutedEventArgs e)
         {
             panelControlAudioPlayer.OpenMultiDeviceController();
+        }
+
+        private void txtTotalDuration_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+        
         }
     }
 }

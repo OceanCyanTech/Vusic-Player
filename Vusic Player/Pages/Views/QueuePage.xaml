@@ -193,12 +193,12 @@ AlwaysUseFallback="False"/>
 
                                 <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" IsEnabled="True" Name="btnRemoveSelectionFromQueue" Click="btnRemoveSelectionFromQueue_Click"
                     ToolTipService.ToolTip="Remove selection from queue">
-                                    <Image Width="20" Source="/Assets/deleteicon.png"/>
+                                    <Image Width="20" Source="{Binding DeleteIcon, Source={StaticResource GlobalIconHolder}}"/>
                                 </Button>
 
                                 <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Checked="tglShuffleQueue_Checked" Unchecked="tglShuffleQueue_Checked" Name="tglShuffleQueue"
                           ToolTipService.ToolTip="Shuffle Play Queue">
-                                    <Image Width="20" Source="/Assets/shuffleicon.png"/>
+                                    <Image Width="20" Source="{Binding ShuffleIcon, Source={StaticResource GlobalIconHolder}}"/>
                                     <ToggleButton.ContextFlyout>
                                         <MenuFlyout>
                                             <MenuFlyoutItem Text="Shuffle and play all" Name="mnftShuffleandPlayAll">
@@ -253,7 +253,7 @@ AlwaysUseFallback="False"/>
                             </ToggleButton>
                             <Button IsEnabled="True" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnAddtoQueue" Click="btnAddtoQueue_Click"
 ToolTipService.ToolTip="Add media to queue">
-                                <Image Width="20" Source="/Assets/addicon.png"/>
+                                <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"/>
                             </Button>
                             <Button IsEnabled="True" Visibility="Collapsed" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnRestartandPlay" Click="btnRestartandPlay_Click"
 ToolTipService.ToolTip="Play all from start">

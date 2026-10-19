@@ -1,30 +1,21 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.Pages;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 
@@ -95,7 +86,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                         }
 
                         RecommendedVideoList.Add(videoprogressitem);
-                        var fallbackUri = "ms-appx:///Assets/default.png";
+                        var fallbackUri = IconHolder.Instance.DefaultVideo;
                         videoprogressitem.Thumbnail = new BitmapImage(new Uri(fallbackUri));
 
                         var task = Task.Run(async () =>
@@ -176,6 +167,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 
                 if (mnft.Text == "Add to Favourites")
                 {
+                    mnft.Icon = new FontIcon { Glyph = "\uEB52" };
                     var exist = favourites.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
                     if (exist == null)
                     {
@@ -184,6 +176,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
                 }
                 else
                 {
+                    mnft.Icon = new FontIcon { Glyph = "\uEB51" };
                     var exist = favourites.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
                     if (exist != null)
                     {
@@ -258,11 +251,13 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             if (mnftAddtoFav == null) return;
             if (isFav == true)
             {
+                mnftAddtoFav.Icon = new FontIcon { Glyph = "\uEB52" };
+
                 mnftAddtoFav.Text = "Remove from Favourites";
             }
             else
             {
-
+                mnftAddtoFav.Icon = new FontIcon { Glyph = "\uEB51" };
                 mnftAddtoFav.Text = "Add to Favourites";
             }
         }
@@ -385,13 +380,13 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
         }
         private void mnftAddtoQueue_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vd)
+            if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vd)
             {
-                QueueService.VusicQueue.Add(new SongModel { FilePath = vd.FilePath, Title = vd.FileName});
-                QueueService.VusicQueueNext.Add(new SongModel { FilePath = vd.FilePath, Title = vd.FileName});
+                QueueService.VusicQueue.Add(new SongModel { FilePath = vd.FilePath, Title = vd.FileName });
+                QueueService.VusicQueueNext.Add(new SongModel { FilePath = vd.FilePath, Title = vd.FileName });
             }
         }
 
-        
+
     }
 }

@@ -17,7 +17,7 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Image Source="/Assets/success.png" Width="90" Grid.Row="0"></Image>
+            <Image Source="{Binding Success, Source={StaticResource GlobalIconHolder}}" Width="90" Grid.Row="0"></Image>
             <TextBlock Text="Playlist has been deleted." Grid.Row="1" Name="txtPlaylistDeleted" Style="{StaticResource TitleTextBlockStyle}"/>
             <Button Name="btnGoToHome" Click="btnGoToHome_Click" HorizontalAlignment="Center" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="2">
                 <StackPanel Orientation="Horizontal" Spacing="10">
@@ -35,7 +35,7 @@
                 <StackPanel Margin="0, 20" Orientation="Vertical" Spacing="10">
                     <TextBox Name="txtRenamePlaylist" PlaceholderText="Rename Playlist..."></TextBox>
                     <Button HorizontalAlignment="Stretch" Name="btnOfficialRename" Click="btnOfficialRename_Click">
-                        <Image Source="/Assets/tickicon.png" Width="20"/>
+                        <Image Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                     </Button>
                 </StackPanel>
             </TeachingTip>
@@ -154,20 +154,20 @@ CornerRadius="16"
 
                         <Button Margin="5" CornerRadius="12" Background="Transparent" Name="btnRenamePlaylist" BorderBrush="Transparent" ToolTipService.ToolTip="Rename Playlist"  Click="btnRenamePlaylist_Click">
 
-                            <Image Width="25" Source="/Assets/editicon.png" />
+                            <Image Width="25" Source="{Binding EditIcon, Source={StaticResource GlobalIconHolder}}" />
                         </Button>
 
                         <Button CornerRadius="12" Name="btnPlayAll" Click="btnPlayAll_Click" Margin="5" Background="Transparent" BorderBrush="Transparent"
                 ToolTipService.ToolTip="Play all songs in Playlist">
                             <StackPanel Orientation="Horizontal">
-                                <Image Width="25" Source="/Assets/play.png" />
+                                <Image Width="25" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}" />
                                 <TextBlock Margin="5,2" Text="Play all" />
                             </StackPanel>
                         </Button>
 
                         <ToggleButton CornerRadius="12" Name="btnShuffle" Checked="btnShuffle_Checked" Unchecked="btnShuffle_Checked" Margin="5" Background="Transparent" BorderBrush="Transparent"
                       ToolTipService.ToolTip="Shuffle playlist">
-                            <Image Width="25" Source="/Assets/shuffleicon.png" />
+                            <Image Width="25" Source="{Binding ShuffleIcon, Source={StaticResource GlobalIconHolder}}" />
                         </ToggleButton>
                         <ToggleButton CornerRadius="12" Name="btnLoop"  Checked="btnLoop_Checked" Unchecked="btnLoop_Checked"  Margin="5" Background="Transparent" BorderBrush="Transparent"
          ToolTipService.ToolTip="Loop playlist">
@@ -177,13 +177,13 @@ CornerRadius="16"
                         <Button CornerRadius="12" Name="btnAddSongs2" Margin="5" Background="Transparent" BorderBrush="Transparent"
                 ToolTipService.ToolTip="Add songs to this playlist" Click="btnAdd_Click">
                             <StackPanel Orientation="Horizontal">
-                                <Image Width="25" Source="/Assets/addicon.png" />
+                                <Image Width="25" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" />
                                 <TextBlock Margin="5,2" Text="Add Songs" />
                             </StackPanel>
                         </Button>
                         <Button CornerRadius="12" Name="btnDeletePlaylist" Click="btnDeletePlaylist_Click" Margin="5" ToolTipService.ToolTip="Delete Playlist" Background="Transparent" BorderBrush="Transparent">
                             <StackPanel Orientation="Horizontal">
-                                <Image Width="25" Source="/Assets/deleteicon.png" />
+                                <Image Width="25" Source="{Binding DeleteIcon, Source={StaticResource GlobalIconHolder}}" />
                                 <TextBlock Margin="5,2 " Text="Delete playlist" />
                             </StackPanel>
                         </Button>
@@ -200,7 +200,7 @@ CornerRadius="16"
                 <TextBlock Text="Loading..." Style="{StaticResource TitleTextBlockStyle}"/>
             </StackPanel>
             <StackPanel Visibility="Collapsed" VerticalAlignment="Center" Orientation="Vertical" Grid.Column="1" Name="panelEmptyplaylists">
-                <Image Source="/Assets/openfolder.png" Width="100"></Image>
+                <Image Source="{Binding PlaylistIcon, Source={StaticResource GlobalIconHolder}}" Width="100"></Image>
                 <TextBlock Margin="0, 40" HorizontalAlignment="Center" Name="txtEmptyPlaylist" Text="You have no songs in this playlist" VerticalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                 <Button Name="btnAdd" HorizontalAlignment="Center" Click="btnAdd_Click" Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal">
@@ -217,7 +217,7 @@ CornerRadius="16"
             </StackPanel>
             <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="25" Source="/Assets/success.png"/>
+                    <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Added selected item(s) to Queue"/>
                 </StackPanel>
             </TeachingTip>

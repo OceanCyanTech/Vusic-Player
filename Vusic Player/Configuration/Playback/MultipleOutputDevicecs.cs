@@ -1,11 +1,11 @@
 ﻿//NEW REVISED: 
+using FlyleafLib.MediaFramework.MediaFrame;
+using FlyleafLib.MediaPlayer;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using FlyleafLib.MediaFramework.MediaFrame;
-using FlyleafLib.MediaPlayer;
 using Vortice.Multimedia;
 using Vortice.XAudio2;
 
@@ -200,7 +200,7 @@ public class SingleDevicePipeline : IDisposable
         }
         catch (Exception ex)
         {
-            Debug.WriteLine("Device Lost: " + DeviceId + ". Expected Error: " + ex.Message) ;
+            Debug.WriteLine("Device Lost: " + DeviceId + ". Expected Error: " + ex.Message);
             DeviceDisconnected?.Invoke(this, DeviceId);
         }
     }

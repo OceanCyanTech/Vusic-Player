@@ -1,10 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Vusic_Player.Configuration.ClassModels
@@ -32,7 +29,7 @@ namespace Vusic_Player.Configuration.ClassModels
             get => _duration;
             set { _duration = value; OnPropertyChanged(); }
         }
-        public string FilePath { get; set; }   = "";
+        public string FilePath { get; set; } = "";
         public string? CurrentShowDirectory { get; set; }
         [JsonIgnore]
         private BitmapImage? _thumbnail;

@@ -1,19 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.MediaProperties.VideoProperties;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 
 
@@ -36,7 +25,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
             chkGlow.Unchecked += chkGlow_Checked;
         }
 
-     
+
         #region View and Glow Settings Events
 
         private void sldZoom_ValueChanged(double obj)
@@ -52,7 +41,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
 
         private void chkGlow_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            if(chkGlow.IsChecked == true)
+            if (chkGlow.IsChecked == true)
             {
                 GlowService.Instance.GlowEffectVisibility = Visibility.Visible;
                 tglMoreGlowOptions.IsEnabled = true;
@@ -73,7 +62,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
             }
         }
 
-    
+
 
         private void tglMoreGlowOptions_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {

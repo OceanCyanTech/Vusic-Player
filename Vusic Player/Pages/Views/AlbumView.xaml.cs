@@ -11,10 +11,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
-using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
@@ -22,12 +20,7 @@ using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
-using Vusic_Player.Extensions;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
-using Windows.Storage.Search;
 
 namespace Vusic_Player.Pages.Views;
 

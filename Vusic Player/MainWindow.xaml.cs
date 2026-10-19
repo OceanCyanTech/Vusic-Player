@@ -1,38 +1,23 @@
-using FlyleafLib;
-using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
-using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
-using Vusic_Player.Configuration.Helper;
-using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views.Onboarding;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Vusic_Player.UI.UserViews;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using WinRT.Interop;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
@@ -132,16 +117,16 @@ namespace Vusic_Player
             };
             CheckAuthentication();
             // AppVersion.LoadBuildCounter();
-        
+
 
         }
         private async void CheckAuthentication()
         {
             if (PinService.IsPinEnabled() || PinService.IsWindowsAuthEnabled())
             {
-           //     string aumid = $"{Package.Current.Id.FamilyName}!App";
+                //     string aumid = $"{Package.Current.Id.FamilyName}!App";
 
-            //    ShellDestinationsManager.ClearRecentDestinations(aumid);
+                //    ShellDestinationsManager.ClearRecentDestinations(aumid);
                 frmMain.Navigate(typeof(AppLockVerify));
             }
             else
@@ -184,7 +169,7 @@ namespace Vusic_Player
         }
         public static MainWindow ShowWindow()
         {
-           
+
             if (instance == null)
             {
                 instance = new MainWindow();

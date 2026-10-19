@@ -1,9 +1,5 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
@@ -12,26 +8,20 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Vusic_Player.UI.UserViews.Controls;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
@@ -540,7 +530,7 @@ namespace Vusic_Player.Pages.Views
             mediacontroller.IsFullQueueMode = btnViewQueue.IsChecked ?? false;
             lstViewQueue.ItemsSource = currentQueue;
             UpdateUI(currentQueue);
-          
+
             int count = currentQueue.Count;
             mediacontroller.QueuePageEmptyVisibility = (count == 0)
                    ? Visibility.Visible
@@ -606,7 +596,7 @@ namespace Vusic_Player.Pages.Views
                                 QueueService.VusicQueue.Add(new SongModel
                                 {
                                     Title = title,
-                                
+
                                     SongDuration = properties.Duration,
                                     FilePath = file.Path,
                                 });

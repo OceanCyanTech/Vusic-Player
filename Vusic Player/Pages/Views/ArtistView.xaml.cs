@@ -15,28 +15,19 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
-using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
-using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Vusic_Player.UI.UserViews.Grids;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Search;
 
 
 namespace Vusic_Player.Pages.Views;
@@ -171,7 +162,7 @@ public sealed partial class ArtistView : Page
             }
         }
 
-        if (!foundInAny && matchesArtist )
+        if (!foundInAny && matchesArtist)
         {
             FoundSongs?.Add(new SongModel
             {
@@ -581,7 +572,7 @@ public sealed partial class ArtistView : Page
             if (currentPlayingPath == item.FilePath)
             {
                 colorbrush = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
-           
+
             }
 
             mostplayedsongs.Add(new SongModel
@@ -590,7 +581,7 @@ public sealed partial class ArtistView : Page
                 AlbumName = item.AlbumName,
                 Artist = item.Artist,
                 FilePath = item.FilePath,
-               
+
                 SongDuration = item.SongDuration,
                 TitleColor = colorbrush,
                 Remove = "Remove from History",
@@ -747,54 +738,54 @@ public sealed partial class ArtistView : Page
         var artistss = currentSettings.ArtistsList;
         var existartist = artistss.FirstOrDefault(p => p.Name == txtArtistName.Text);
         string newArtistName = txtRename.Text?.Trim() ?? "";
-     
-        
-            if (string.IsNullOrEmpty(newArtistName))
-            {
-                _isRenaming = false;
-                btnRenameArtist.IsEnabled = true;
-                return;
-            }
 
-            var filePathsToProcess = FoundSongs
-            .Where(s => !string.IsNullOrEmpty(s.FilePath))
-            .Select(s => s.FilePath)
-            .ToList();
-            try
-            {
-                List<string> filepathstemp = new List<string>();
-                await Task.Run(() =>
-                {
-                    foreach (var filePath in filePathsToProcess)
-                    {
-                        // This triggers FileSystemWatcher automatically when saved!
-                        AudioMetadata.ChangeArtistName(filePath, newArtistName);
-                    }
-                });
 
-                if (existartist != null)
+        if (string.IsNullOrEmpty(newArtistName))
+        {
+            _isRenaming = false;
+            btnRenameArtist.IsEnabled = true;
+            return;
+        }
+
+        var filePathsToProcess = FoundSongs
+        .Where(s => !string.IsNullOrEmpty(s.FilePath))
+        .Select(s => s.FilePath)
+        .ToList();
+        try
+        {
+            List<string> filepathstemp = new List<string>();
+            await Task.Run(() =>
+            {
+                foreach (var filePath in filePathsToProcess)
                 {
-                    existartist.Name = newArtistName;
-                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    // This triggers FileSystemWatcher automatically when saved!
+                    AudioMetadata.ChangeArtistName(filePath, newArtistName);
                 }
+            });
 
-
-
-                txtArtistName.Text = newArtistName;
-                flyoutRename.Hide();
-            }
-            catch (Exception ex)
+            if (existartist != null)
             {
-                Logger.Log(ex.Message, "ArtistPage.RenameArtist", Logger.LogLevelType.Error);
+                existartist.Name = newArtistName;
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
-            finally
-            {
-                // 7. Always restore state and resume watchers
-                _isRenaming = false;
-                btnRenameArtist.IsEnabled = true;
-            }
-        
-   
+
+
+
+            txtArtistName.Text = newArtistName;
+            flyoutRename.Hide();
+        }
+        catch (Exception ex)
+        {
+            Logger.Log(ex.Message, "ArtistPage.RenameArtist", Logger.LogLevelType.Error);
+        }
+        finally
+        {
+            // 7. Always restore state and resume watchers
+            _isRenaming = false;
+            btnRenameArtist.IsEnabled = true;
+        }
+
+
     }
     private void OceanContentDialog_PrimaryRequested()
     {

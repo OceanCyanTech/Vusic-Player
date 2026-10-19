@@ -1,27 +1,16 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using Microsoft.Windows.AppLifecycle;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -97,8 +86,8 @@ namespace Vusic_Player
                         MainWindow.ShowWindow();
                         if (NavigationFrame != null)
                         {
-                          
-                                NavigationFrame.Navigate(typeof(MusicPlayerFull), filePath);
+
+                            NavigationFrame.Navigate(typeof(MusicPlayerFull), filePath);
                         }
                     }
                 }

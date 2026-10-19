@@ -2,19 +2,13 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
@@ -27,9 +21,6 @@ using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Vusic_Player.UI.UserViews.Controls;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -163,7 +154,7 @@ namespace Vusic_Player.UI.UserViews
                 else
                 {
                     string path = PlayerService.CurrentPlayingPath;
-           
+
 
                     settings.SavedVideoProgress.Add(new VideoProgress
                     {
@@ -387,7 +378,7 @@ namespace Vusic_Player.UI.UserViews
                     {
                         if (App.NavigationFrame != null)
                         {
-                            
+
 
 
                             ObservableCollection<SongModel> single = new();
@@ -419,7 +410,7 @@ namespace Vusic_Player.UI.UserViews
         }
         private void mnftFileInfo_Click(object sender, RoutedEventArgs e)
         {
-            ShowFileInfo();   
+            ShowFileInfo();
         }
         private void mnftPrevious_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {

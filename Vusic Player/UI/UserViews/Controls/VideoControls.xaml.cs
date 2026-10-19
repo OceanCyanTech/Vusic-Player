@@ -5,12 +5,10 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
@@ -24,11 +22,7 @@ using Vusic_Player.FilePickers;
 using Vusic_Player.MediaProperties.AudioProperties;
 using Vusic_Player.MediaProperties.PlaybackProperties;
 using Vusic_Player.MediaProperties.VideoProperties;
-using Vusic_Player.Pages;
 using Vusic_Player.UI.Dialogs;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage.FileProperties;
 using WinRT.Interop;
 using UserControl = Microsoft.UI.Xaml.Controls.UserControl;
 
@@ -805,7 +799,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         public void OpenSubtitlesMenu()
         {
-            if(btnSubtitles.Flyout != null)
+            if (btnSubtitles.Flyout != null)
             {
                 btnSubtitles.Flyout.ShowAt(btnSubtitles);
             }
@@ -824,7 +818,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                 btnAudio.Flyout.ShowAt(btnAudio);
             }
         }
-        
+
         public void ShowFileInfo()
         {
             if (App.MainWindowInstance is MainWindow wind)
@@ -881,8 +875,8 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void btnLoopToggle_Checked(object sender, RoutedEventArgs e)
         {
-                QueueService.IsLoopTrue = btnLoopToggle.IsChecked ?? false;
-            
+            QueueService.IsLoopTrue = btnLoopToggle.IsChecked ?? false;
+
         }
     }
 }

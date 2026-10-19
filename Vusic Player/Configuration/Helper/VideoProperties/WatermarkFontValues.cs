@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using Vusic_Player;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.UserSettings;
 using Windows.UI;

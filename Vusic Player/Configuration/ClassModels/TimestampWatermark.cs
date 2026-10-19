@@ -1,18 +1,10 @@
-﻿using Microsoft.UI.Text;
-using Microsoft.UI.Xaml.Media;
+﻿using Microsoft.UI.Xaml.Media;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using Vusic_Player.Configuration.Playback;
-using Windows.UI.Text;
 using FontStyle = Windows.UI.Text.FontStyle;
-using FontWeight = System.Windows.FontWeight;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -23,7 +15,7 @@ namespace Vusic_Player.Configuration.ClassModels
         private string _startString = "00:00:00.000";
         private string _format = @"hh\:mm\:ss\:ff";
         private Windows.UI.Text.FontWeight _fontWeight = Microsoft.UI.Text.FontWeights.Normal;
-        private FontStyle _fontStyle   = FontStyle.Normal;
+        private FontStyle _fontStyle = FontStyle.Normal;
         private int _formatindex = 0;
         private int _modeindex = 0;
         private int _positionindex = 0;
@@ -42,7 +34,7 @@ namespace Vusic_Player.Configuration.ClassModels
 
         // Backing fields for FrameRate, BPM, and BeatsPerBar
         private double _frameRate = 30.0;
-        private string _customstaticwatermark ="";
+        private string _customstaticwatermark = "";
         private int _frameRateIndex = 4; // Default to index of 30 fps
         private double _bpm = 120.0;
         private int _beatsPerBar = 4;

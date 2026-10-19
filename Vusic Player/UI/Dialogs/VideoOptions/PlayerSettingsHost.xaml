@@ -322,7 +322,7 @@ AlwaysUseFallback="False"/>
                 <StackPanel.ChildrenTransitions>
                     <EntranceThemeTransition FromVerticalOffset="30"></EntranceThemeTransition>
                 </StackPanel.ChildrenTransitions>
-                <Image Width="50" Source="/Assets/searchicon.png"></Image>
+                <Image Width="50" Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                 <TextBlock Text="Hmm... we couldn't find that. Try something else!" VerticalAlignment="Center" TextWrapping="Wrap" Style="{StaticResource SubtitleTextBlockStyle}" ></TextBlock>
             </StackPanel>
         </Grid>

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using System.Collections.ObjectModel;
 
 namespace Vusic_Player.Configuration.ClassModels

@@ -22,19 +22,19 @@
         <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="10">
         <Button Background="Transparent" Name="btnPlayAll" Click="btnPlayAll_Click">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <Image Width="20" Source="/Assets/play.png"/>
+                    <Image Width="20" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Text="Play All"/>
             </StackPanel>
             </Button>
             <Button Background="Transparent" Name="btnAddtoQueue" Click="btnAddtoQueue_Click">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="20" Source="/Assets/play.png"/>
+                    <Image Width="20" Source="{Binding AddToQueue, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Add to Queue"/>
                 </StackPanel>
             </Button>
             <Button Background="Transparent" Name="btnAddItemsToFav" Click="btnAddItemsToFav_Click">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="20" Source="/Assets/play.png"/>
+                    <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Add new items to Favourites"/>
                 </StackPanel>
             </Button>
@@ -42,7 +42,7 @@
         <controls:ListViewMedia x:Name="lstViewFav" VisiblityofViewButton="Visible" Grid.Row="2" ItemsSource="{x:Bind FavouritesItemsCol, Mode=OneWay}"></controls:ListViewMedia>
         <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <Image Width="25" Source="/Assets/success.png"/>
+                <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Text="Added selected item(s) to Queue"/>
             </StackPanel>
         </TeachingTip>

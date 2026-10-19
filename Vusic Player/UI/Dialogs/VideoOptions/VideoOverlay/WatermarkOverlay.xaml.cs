@@ -1,29 +1,20 @@
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Text;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -70,7 +61,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
 
         private async void WatermarkOverlay_Loaded(object sender, RoutedEventArgs e)
         {
-  
+
             LoadSettings();
         }
 
@@ -299,8 +290,8 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                     var tempObservableCollection = new ObservableCollection<WatermarkLabelSettingsModel>();
 
                     foreach (var timestamp in timestamplabels)
-                    { 
-                  
+                    {
+
                         // Convert Position string (e.g., "Top Left") to WinUI Alignments
                         var (hAlign, vAlign) = timestamp.Position switch
                         {
@@ -491,7 +482,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
 
                 tempCollection.Add(new WatermarkLabelSettingsModel
                 {
-                    IsVisible = timestamp.IsShown ? Visibility.Visible: Visibility.Collapsed ,
+                    IsVisible = timestamp.IsShown ? Visibility.Visible : Visibility.Collapsed,
                     FontSize = timestamp.FontSize,
                     HexColor = hexColor,
                     FontFamily = string.IsNullOrWhiteSpace(timestamp.FontName) ? "Segoe UI" : timestamp.FontName,
@@ -532,7 +523,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
                 RequestSaveSettings();
             }
         }
-       
+
         private async void SaveSettings()
         {
             //var currentSettings = await SettingsLoader.LoadSettingsAsync();
@@ -1032,6 +1023,6 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
-       
+
     }
 }

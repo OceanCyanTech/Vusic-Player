@@ -1,13 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +10,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
@@ -30,8 +24,6 @@ using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.System;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
@@ -84,6 +76,7 @@ namespace Vusic_Player.Pages.Views
             chkVideoShows.IsChecked = currentSettings.Panel4VisibilityVideo;
 
             numMaxVolume.Value = currentSettings.MaxVolume;
+            numMaxSearchResults.Value = currentSettings.MaxSearchResults;
             _isSyncing = true;
             try
             {
@@ -1389,17 +1382,17 @@ namespace Vusic_Player.Pages.Views
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested1;
             OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
-            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested; 
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
             OceanContentDialog.Show("Set App Lock", "Close", "", "", OceanDialogWindow.ContentType.AppLock, OceanContentDialogDefault.Primary, XamlRoot, 700, 800, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", ""
 , new ObservableCollection<SongModel>(), "");
-             
+
         }
 
         private void OceanContentDialog_PrimaryRequested()
         {
             OceanContentDialog.HideDlg();
             MainWindow.ShowWindow();
-     
+
         }
 
         private void btnResetAppSettings_Click(object sender, RoutedEventArgs e)
@@ -1443,9 +1436,22 @@ namespace Vusic_Player.Pages.Views
         private async void numMaxVolume_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            currentSettings.MaxVolume = numMaxVolume.Value; 
+            currentSettings.MaxVolume = numMaxVolume.Value;
             MediaPlaybackController.Instance.MaximumVolume = numMaxVolume.Value;
             await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+        private async void numMaxSearchResults_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.MaxSearchResults = numMaxSearchResults.Value;
+            MediaPlaybackController.Instance.MaximumSearchResults = numMaxSearchResults.Value;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+        private void btnViewPrivacyStatement_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

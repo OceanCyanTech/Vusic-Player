@@ -1,24 +1,14 @@
 using FlyleafLib.MediaPlayer;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Pages.Views;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -280,11 +270,11 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                             if (PlayerService.Masterplayer.IsPlaying == false)
                             {
                                 Debug.WriteLine("FALSE");
-                                Debug.WriteLine(outputMp3) ; 
+                                Debug.WriteLine(outputMp3);
                                 PlayerService.CurrentMemoryStream = ms;
                                 PlayerService.curtime = curtime;
                                 PlayerService.curtimetemp = curtimetemp;
-                        
+
                                 PlayerService.JustDisposed = true;
                                 PlayerService.filestreamcurrent?.Dispose();
                             }
@@ -883,7 +873,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
 
         private void btnApplyMultiple_Click(object sender, RoutedEventArgs e)
         {
-            if(App.NavigationFrame != null)
+            if (App.NavigationFrame != null)
             {
                 if (App.NavigationFrame.CurrentSourcePageType != typeof(ReverbExpanded))
                 {

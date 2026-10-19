@@ -102,6 +102,7 @@
     <None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewRecentVideos.xaml" />
     <None Remove="UI\UserViews\Controls\GroupedCollectionView.xaml" />
+    <None Remove="UI\UserViews\Controls\KeyboardShortcutsGuide.xaml" />
     <None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
     <None Remove="UI\UserViews\Controls\LyricEditorUI.xaml" />
     <None Remove="UI\UserViews\Controls\MasterSearchControl.xaml" />
@@ -739,4 +740,15 @@
     <PackageCertificateKeyFile>Vusic Player_TemporaryKey.pfx</PackageCertificateKeyFile>
 	  
   </PropertyGroup>
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Coding\Vusic Player\Vusic Player\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Coding\Vusic Player\Vusic Player\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\KeyboardShortcutsGuide.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 </Project>

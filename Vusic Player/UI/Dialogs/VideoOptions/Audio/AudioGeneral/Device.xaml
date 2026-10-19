@@ -52,7 +52,7 @@
                 Grid.Column="1" 
                 Margin="4,0,0,0" 
                 Padding="4">
-                    <Image Source="ms-appx:///Assets/searchicon.png" Width="16" Height="16"/>
+                    <Image Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}" Width="16" Height="16"/>
                 </Button>
             </Grid>
 

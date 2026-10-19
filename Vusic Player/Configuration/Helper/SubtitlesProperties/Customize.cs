@@ -1,13 +1,11 @@
 ﻿using Microsoft.Graphics.Canvas.Text;
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Text;
-using Microsoft.UI.Text;
 
 namespace Vusic_Player.Configuration.Helper.SubtitlesProperties
 {

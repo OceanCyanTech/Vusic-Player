@@ -8,9 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
-using System.Windows.Media.Media3D;
 using Vusic_Player.Configuration.Helper.UI;
 using WinRT;
 using WinRT.Interop;
@@ -224,7 +222,7 @@ where T : DependencyObject
         public static void HideDialog()
         {
             if (_appWindow == null) return;
-          
+
             MainWindow.ShowWindow();
             _appWindow.Hide();
         }
@@ -379,7 +377,7 @@ where T : DependencyObject
             _instance.Activate();
             return _instance;
         }
-        private  void Navigate(int TabIndex, int SubTabIndex, int PanelIndex)
+        private void Navigate(int TabIndex, int SubTabIndex, int PanelIndex)
         {
             //if (_instance == null) return;
             //TabInd = TabIndex;

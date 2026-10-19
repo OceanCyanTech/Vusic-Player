@@ -18,12 +18,11 @@
             <CheckBox Content="Select" Grid.Row="1" Visibility="Collapsed" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
             <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
                 <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAll" Visibility="Visible" Checked="chckSelectAll_Checked" Unchecked="chckSelectAll_Checked"></CheckBox>
-
             </StackPanel>
         </StackPanel>
         <Button Name="btnRefreshPlaylists" Click="btnRefreshPlaylists_Click" Grid.Row="1">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <Image Width="20" Source="/Assets/appicon.png"/>
+                <Image Width="20" Source="{Binding Refresh, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Text="Refresh Playlists"/>
             </StackPanel>
         </Button>
@@ -43,28 +42,28 @@ ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" >
                                 <MenuFlyout >
                                     <MenuFlyoutItem Name="mnftOpenPlaylist" Click="mnftOpenPlaylist_Click" Text="Open Playlist">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <FontIcon Glyph="&#xE8A7;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Name="mnftPlayAll" Click="mnftPlayAll_Click" Text="Play all">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <FontIcon Glyph="&#xE768;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Name="mnftAddtoQueue" Click="mnftAddtoQueue_Click" Text="Add to Queue">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Name="mnftShufflePlay" Click="mnftShufflePlay_Click" Text="Shuffle and Play">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <FontIcon Glyph="&#xE8B1;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Name="mnftSavePlaylist" Click="mnftSavePlaylist_Click" Text="Save Playlist">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"></FontIcon>
+                                            <FontIcon Glyph="&#xE74E;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
 
@@ -83,7 +82,7 @@ ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" >
         </GridView>
         <TeachingTip Name="ttPlaylistSaved" >
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <Image Width="25" Source="/Assets/success.png"/>
+                <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Text="Instant Playlist saved!"/>
             </StackPanel>
         </TeachingTip>

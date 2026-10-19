@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Vortice.Direct2D1.Effects;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Extensions;
 using Windows.Storage;

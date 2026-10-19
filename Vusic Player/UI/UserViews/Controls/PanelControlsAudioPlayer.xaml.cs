@@ -1,25 +1,15 @@
 using FlyleafLib;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -49,7 +39,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             audioReverbControl.ReverbExpand -= AudioReverbControl_ReverbExpand;
             audioReverbControl.ReverbExpand += AudioReverbControl_ReverbExpand;
         }
-       
+
         private void AudioReverbControl_ReverbExpand()
         {
             ttReverb.IsOpen = false;
@@ -256,7 +246,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void mnftFormatConverter_Click(object sender, RoutedEventArgs e)
         {
-            if(App.NavigationFrame != null)
+            if (App.NavigationFrame != null)
             {
                 App.NavigationFrame.Navigate(typeof(FormatConverter));
             }

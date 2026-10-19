@@ -18,7 +18,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Image Name="imgMissingInfo" Width="130" Source="/Assets/appicon.png" Grid.Row="0"/>
+            <Image Name="imgMissingInfo" Width="130" Source="{Binding MissingIcon, Source={StaticResource GlobalIconHolder}}" Grid.Row="0"/>
             <TextBlock  HorizontalAlignment="Center" Name="txtMissingInfo" Grid.Row="1" Style="{StaticResource TitleTextBlockStyle}" Text="The requested directory is missing or inaccessible!"/>
             <Button Content="Go to Home Page" Grid.Row="2" HorizontalAlignment="Center" Click="Button_Click"/>
         </Grid>
@@ -40,14 +40,14 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Name="txtFolderName" IsTextSelectionEnabled="True" MaxWidth="800" TextTrimming="CharacterEllipsis" MaxLines="2" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
-                <Button IsEnabled="False" Name="btnRenameFolder" Click="btnRenameFolder_Click" ToolTipService.ToolTip="rename fol" Grid.Column="1">
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                <Button IsEnabled="False" Name="btnRenameFolder" Click="btnRenameFolder_Click" ToolTipService.ToolTip="Rename Folder" Grid.Column="1">
+                    <Image Width="20" Source="{Binding RenameIcon, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
-                <Button Name="btnOpenFolderLoc" Click="btnOpenFolderLoc_Click" ToolTipService.ToolTip="Open folder locati" Grid.Column="2">
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                <Button Name="btnOpenFolderLoc" Click="btnOpenFolderLoc_Click" ToolTipService.ToolTip="Open Folder Location" Grid.Column="2">
+                    <Image Width="20" Source="{Binding Openfolder, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
                 <Button Name="btnCopyFolderLocation" Click="btnCopyFolderLocation_Click" ToolTipService.ToolTip="Copy Folder Location" Grid.Column="3">
-                    <Image Name="imgCopyButton" Width="20" Source="/Assets/appicon.png"/>
+                    <Image Name="imgCopyButton" Width="20" Source="{Binding CopyIcon, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
             </Grid>
             <BreadcrumbBar ItemClicked="brdcrumBarMain_ItemClicked" Name="brdcrumBarMain" Grid.Row="1" >
@@ -68,7 +68,7 @@
                     <InfoBar IsClosable="False" Name="ifbRenameInfo" IsOpen="False"/>
                     <TextBox Name="txtRenameFolder" PlaceholderText="Rename folder..."/>
                     <Button HorizontalAlignment="Stretch" Name="btnConfirmRename" Click="btnConfirmRename_Click">
-                        <Image Width="20" Source="/Assets/tickicon.png"/>
+                        <Image Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}"/>
                     </Button>
                 </StackPanel>
             </TeachingTip>
@@ -83,30 +83,27 @@
                             <RadioMenuFlyoutItem Text="Sort by Extension" Name="mnftByExtension" Click="mnftByExtension_Click"/>
                         </MenuFlyout>
                     </Button.Flyout>
-                    <Image Width="20" Source="/Assets/sorticon.png"/>
+                    <Image Width="20" Source="{Binding SortIcon, Source={StaticResource GlobalIconHolder}}"/>
 
                 </Button>
                 <Button Name="btnPlay" ToolTipService.ToolTip="Play Media" Click="btnPlay_Click" Visibility="Collapsed" >
-                    <Image Width="20" Source="/Assets/play.png"/>
+                    <Image Width="20" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
 
                 <Button Name="btnRenameFiles" ToolTipService.ToolTip="Rename File(s)" Click="btnRenameFiles_Click" Visibility="Collapsed" >
-                    <Image Width="20" Source="/Assets/appicon.png"/>
-                </Button>
-                <Button Name="btnMoveFiles" ToolTipService.ToolTip="Move File(s)" Click="btnMoveFiles_Click" Visibility="Collapsed" >
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <Image Width="20" Source="{Binding RenameIcon, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
                 <Button Name="btnAddToPlaylist" ToolTipService.ToolTip="Add Selected Media to Playlist(s)" Click="btnAddToPlaylist_Click" Visibility="Collapsed" >
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <Image Width="20" Source="{Binding AddToPlaylist, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
                 <Button Name="btnAddtoQueue" ToolTipService.ToolTip="Add to Queue" Click="btnAddtoQueue_Click" Visibility="Collapsed" >
-                    <Image Width="20" Source="/Assets/play.png"/>
+                    <Image Width="20" Source="{Binding AddToQueue, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
                 <Button Name="btnDeleteFiles" ToolTipService.ToolTip="Delete File(s)" Click="btnDeleteFiles_Click" Visibility="Collapsed" >
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <Image Width="20" Source="{Binding DeleteIcon, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
                 <Button Name="btnCreateShow" ToolTipService.ToolTip="Create a Show from this folder" Click="btnCreateShow_Click" Visibility="Visible" >
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <Image Width="20" Source="{Binding DefaultShow, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
             </StackPanel>
             <AutoSuggestBox QueryIcon="Find" TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" PlaceholderText="Search..." Grid.Row="3"></AutoSuggestBox>
@@ -115,19 +112,19 @@
                 <CheckBox Name="chckSelect" Grid.Row="4" Content="Select" Checked="chckSelect_Checked" Unchecked="chckSelect_Checked"></CheckBox>
                 <Button Name="btnSelectAll" ToolTipService.ToolTip="Select All" Margin="0, 10" Click="btnSelectAll_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        <Image Source="{Binding SelectAll, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                 </Button>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="Collapsed" Spacing="10" Name="stkMultiOptions">
 
                     <Button Name="btnEditAlbumMass" ToolTipService.ToolTip="Edit Album property" Margin="0, 10" Click="btnEditAlbumMass_Click">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                            <Image Source="{Binding EditAlbumMass, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                         </StackPanel>
                     </Button>
                     <Button Name="btnEditArtistMass" ToolTipService.ToolTip="Edit Artist property" Margin="0, 10" Click="btnEditArtistMass_Click">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                            <Image Source="{Binding EditArtistMass, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                         </StackPanel>
                     </Button>
 
@@ -135,12 +132,12 @@
 
                     <Button Name="btnClearSelection" ToolTipService.ToolTip="Clear Selection" Margin="0, 10" Click="btnClearSelection_Click">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                            <Image Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                         </StackPanel>
                     </Button>
                     <Button Name="btnRemoveSelectionsFromFavourites"  ToolTipService.ToolTip="Favourites" Margin="0, 10" Click="btnRemoveSelectionsFromFavourites_Click">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/favicon.png" Width="20"></Image>
+                            <Image Source="{Binding FavIcon, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -237,7 +234,7 @@ BorderThickness="0"
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Image  Width="90" Source="/Assets/appicon.png" Grid.Row="0"/>
+                <Image  Width="90" Source="{Binding FileIcon, Source={StaticResource GlobalIconHolder}}" Grid.Row="0"/>
                 <TextBlock Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Grid.Row="1" Text="No folders or media files in this directory!"/>
             </Grid>
 
@@ -248,7 +245,7 @@ BorderThickness="0"
                     <InfoBar IsClosable="False" Name="ifbRenameFiles" IsOpen="False"/>
                     <TextBox Name="txtRenameFiles" PlaceholderText="Rename..."/>
                     <Button HorizontalAlignment="Stretch" Name="btnConfirmRenameFiles" Click="btnConfirmRenameFiles_Click">
-                        <Image Width="20" Source="/Assets/tickicon.png"/>
+                        <Image Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}"/>
                     </Button>
                     <RadioButtons>
                         <RadioButton Name="rdIncludeNumberAtStart" Content="Include Number at Start"/>
@@ -262,7 +259,7 @@ BorderThickness="0"
                     <InfoBar Name="ifbRenameFile" IsClosable="False" IsOpen="False"/>
                     <TextBox Name="txtRenameFile" PlaceholderText="Rename..."/>
                     <Button HorizontalAlignment="Stretch" Name="btnConfirmRenameFile" Click="btnConfirmRenameFile_Click">
-                        <Image Width="20" Source="/Assets/tickicon.png"/>
+                        <Image Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}"/>
                     </Button>
                     
                 </StackPanel>

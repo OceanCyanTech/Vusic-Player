@@ -22,7 +22,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Image Width="200" Name="imgShowPoster" Grid.Row="0" Source="/Assets/defaultalbum.png"></Image>
+            <Image Width="200" Name="imgShowPoster" Grid.Row="0" Source="{Binding DefaultShow, Source={StaticResource GlobalIconHolder}}"></Image>
             <Button Name="btnUploadShowPoster" Content="Upload Poster for Show" Click="btnUploadShowPoster_Click" Grid.Row="1" HorizontalAlignment="Center"></Button>
             <StackPanel Orientation="Vertical" Grid.Row="2" Spacing="10">
                 <TextBlock  Text="Name of Show or Collection of Videos" ></TextBlock>

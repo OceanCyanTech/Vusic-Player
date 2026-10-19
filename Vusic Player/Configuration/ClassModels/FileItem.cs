@@ -1,13 +1,9 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -101,11 +97,11 @@ namespace Vusic_Player.Configuration.ClassModels
         public DateTime FileCreationTime { get; set; } = DateTime.Now;
         public DateTime FileModifiedTime { get; set; } = DateTime.Now;
         public string Extension { get; set; } = "mp4";
-      
+
         [JsonIgnore]
         private BitmapImage _thumbnail = new();
 
-        public BitmapImage Thumbnail 
+        public BitmapImage Thumbnail
         {
             get => _thumbnail;
             set

@@ -7,12 +7,9 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Documents;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Pages;
-using Windows.Storage;
 
 namespace Vusic_Player.Configuration.Playback
 {

@@ -1,18 +1,16 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
-using Vusic_Player.Pages.Views;
 
 namespace Vusic_Player.Configuration.Helper.FileSystem
 {
@@ -47,7 +45,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
         private static async void ShowsMaster_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-         
+
             if (e.Action == NotifyCollectionChangedAction.Remove ||
             e.Action == NotifyCollectionChangedAction.Add ||
             e.Action == NotifyCollectionChangedAction.Move)
@@ -55,10 +53,10 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 Debug.WriteLine("Moved");
                 Debug.WriteLine("Removed");
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                currentSettings.Shows =ShowsMaster;
+                currentSettings.Shows = ShowsMaster;
                 // MasterSearchIndex.ShowsMaster = ShowsList;
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
-            //    UpdateUI();
+                //    UpdateUI();
             }
         }
 
@@ -284,7 +282,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         .Where(s => !string.IsNullOrWhiteSpace(s.AlbumName) && s.AlbumName != "Unknown Album")
         .Select(s => s.AlbumName)
         .Distinct(StringComparer.OrdinalIgnoreCase);
-            
+
             foreach (var album in distinctAlbums)
             {
                 int score = 0;
@@ -302,7 +300,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                     score = 50;
                 }
 
-              
+
                 if (score > 0)
                 {
                     yield return (new MasterSearchModel
@@ -315,7 +313,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 }
             }
         }
-     
+
         //+2 Bonus
         private static IEnumerable<(MasterSearchModel, int)> SearchShows(string rawQuery, string[] tokens)
         {
@@ -464,7 +462,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         ResultMain = genre,
                         SubInformation = "Genre",
                         ImageThumbnail = $"ms-appx:///Assets/defaultgenre.png"
-                    }, score );
+                    }, score);
                 }
             }
         }
@@ -585,7 +583,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 candidates.AddRange(SearchGenres(query.Trim(), queryTokens));
                 candidates.AddRange(SearchPages(query.Trim(), queryTokens));
                 candidates.AddRange(SearchFoldersOpened(query.Trim(), queryTokens));
-                return candidates.OrderByDescending(x => x.Score).Select(x => x.Model).Take(6).ToList();
+                return candidates.OrderByDescending(x => x.Score).Select(x => x.Model).Take((int)MediaPlaybackController.Instance.MaximumSearchResults).ToList();
                 //               //First Result is Direct Match/Starts with (and preferred with most played)
                 //               var firstResult = rawMedia.FirstOrDefault(p =>
                 //    !string.IsNullOrEmpty(p.NormalizedTitle) && (

@@ -1,24 +1,19 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 
 
@@ -40,7 +35,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             recentMusics.CollectionChanged += RecentMusics_CollectionChanged;
             recentMusics.Clear();
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            if(currentSettings.IsMusicHistoryDisabled == true)
+            if (currentSettings.IsMusicHistoryDisabled == true)
             {
                 grdEmptySuggestions.Visibility = Visibility.Collapsed;
                 grdRecents.Visibility = Visibility.Collapsed;
@@ -137,7 +132,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         }
 
- 
+
 
         private void chkSelect_Checked(object sender, RoutedEventArgs e)
         {
@@ -146,15 +141,6 @@ namespace Vusic_Player.UI.UserViews.Grids
             grdvRecents.GridSelectionMode = isChecked ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Single;
             selectMoreOptions.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
         }
-
-        private void chkSelect_Unchecked(object sender, RoutedEventArgs e)
-        {
-            bool isChecked = chkSelect.IsChecked ?? false;
-
-            grdvRecents.GridSelectionMode = isChecked ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Single;
-            selectMoreOptions.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
-        }
-
         private void chckSelectAllContinuePlaying_Checked(object sender, RoutedEventArgs e)
         {
             if (chckSelectAllContinuePlaying.IsChecked ?? false)
@@ -169,14 +155,6 @@ namespace Vusic_Player.UI.UserViews.Grids
 
             grdvRecents.RemoveSelection();
 
-        }
-
-        private void chckSelectAllContinuePlaying_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (chckSelectAllContinuePlaying.IsChecked ?? false)
-                grdvRecents.SelectAll();
-            else
-                grdvRecents.ClearSelection();
         }
 
 
@@ -213,20 +191,28 @@ namespace Vusic_Player.UI.UserViews.Grids
             currentSettings.IsMusicHistoryDisabled = true;
             currentSettings.RecentMusic.Clear();
             await SettingsLoader.SaveSettingsAsync(currentSettings);
+            ShowDisable();
+        }
+        public void ShowDisable()
+        {
+            recentMusics.Clear();
             grdEmptySuggestions.Visibility = Visibility.Collapsed;
             grdRecents.Visibility = Visibility.Collapsed;
             grdDisabledRecents.Visibility = Visibility.Visible;
         }
-
+        public void ShowEnable()
+        {
+            grdEmptySuggestions.Visibility = Visibility.Visible;
+            grdRecents.Visibility = Visibility.Collapsed;
+            grdDisabledRecents.Visibility = Visibility.Collapsed;
+        }
         private async void btnEnableHistory_Click(object sender, RoutedEventArgs e)
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             currentSettings.IsMusicHistoryDisabled = false;
             currentSettings.RecentMusic.Clear();
             await SettingsLoader.SaveSettingsAsync(currentSettings);
-            grdEmptySuggestions.Visibility = Visibility.Visible;
-            grdRecents.Visibility = Visibility.Collapsed;
-            grdDisabledRecents.Visibility = Visibility.Collapsed;
+            ShowEnable();
         }
 
         private async void mnftShufflePlay_Click(object sender, RoutedEventArgs e)

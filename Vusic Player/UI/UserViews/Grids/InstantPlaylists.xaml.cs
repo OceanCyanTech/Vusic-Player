@@ -1,29 +1,20 @@
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
-using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -70,7 +61,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
             if (tempobservablepaths.Count != 0)
             {
-                var playlist1 = new PlaylistItem { PlaylistName = "Listen Again", PlaylistId = Guid.NewGuid().ToString(), PlaylistGenre = "Most Played", DateCreation = DateTime.Now, SongsPaths = new HashSet<string>(tempobservablepaths), Thumbnail = new Uri("ms-appx:///Assets/musicnoteicon.png") };
+                var playlist1 = new PlaylistItem { PlaylistName = "Listen Again", PlaylistId = Guid.NewGuid().ToString(), PlaylistGenre = "Most Played", DateCreation = DateTime.Now, SongsPaths = new HashSet<string>(tempobservablepaths), Thumbnail = new Uri(IconHolder.Instance.MusicNoteIcon) };
                 instantPlaylists.Add(playlist1);
             }
 
@@ -100,7 +91,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                         PlaylistGenre = "Artist Mix",
                         DateCreation = DateTime.Now,
                         SongsPaths = artistSongs,
-                        Thumbnail = new Uri("ms-appx:///Assets/musicnoteicon.png")
+                        Thumbnail = new Uri(IconHolder.Instance.MusicNoteIcon)
                     });
                 }
             }
@@ -132,7 +123,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                         PlaylistGenre = "Album Mix",
                         DateCreation = DateTime.Now,
                         SongsPaths = albumSongs,
-                        Thumbnail = new Uri("ms-appx:///Assets/musicnoteicon.png")
+                        Thumbnail = new Uri(IconHolder.Instance.MusicNoteIcon)
                     });
                 }
             }
@@ -163,7 +154,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                         PlaylistGenre = topGenre,
                         DateCreation = DateTime.Now,
                         SongsPaths = genreSongs,
-                        Thumbnail = new Uri("ms-appx:///Assets/musicnoteicon.png")
+                        Thumbnail = new Uri(IconHolder.Instance.MusicNoteIcon)
                     });
                 }
             }
@@ -195,7 +186,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     PlaylistGenre = "Discovery",
                     DateCreation = DateTime.Now,
                     SongsPaths = unplayedTracks,
-                    Thumbnail = new Uri("ms-appx:///Assets/musicnoteicon.png")
+                    Thumbnail = new Uri(IconHolder.Instance.MusicNoteIcon)
                 });
             }
         }
@@ -308,7 +299,7 @@ namespace Vusic_Player.UI.UserViews.Grids
         }
 
 
-        
+
 
         private void mnftDeletePlaylist_Click(object sender, RoutedEventArgs e)
         {
@@ -322,7 +313,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     OceanContentDialog.HideDlg();
                     MainWindow.ShowWindow();
                     instantPlaylists.Remove(playlist);
-                
+
                 });
             }
         }
@@ -330,7 +321,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
 
         PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
-       private async void mnftSavePlaylist_Click(object sender, RoutedEventArgs e)
+        private async void mnftSavePlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is PlaylistItem playlist)
             {

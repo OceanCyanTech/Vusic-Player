@@ -1,22 +1,13 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,7 +34,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions
          UIElement.PreviewKeyDownEvent,
          new KeyEventHandler(lstViewSearchOptions_AlwaysPreviewKeyDown),
          true
-     
+
     );
             //  this.PreviewKeyDown += PlayerSettingsHost_PreviewKeyDown; ;
             SearchVideoOptions.IndexResults(ctlViewSettings, ctlPlaybackSpeed, ctlVideoStream, ctlSnapshotSettings, ctlRecordSettings, ctlVideoFilters, ctlVideoRotation, ctlFlip, ctlCustomAspectRatio, ctlAudioPitch, ctlAudioGeneral, ctlAudioDevice, ctlAudioDelay, ctlEqualizer, ctlSubtitleGeneral, ctlSubtitleGeneral, ctlSubtitleCustomize, ctlDelay, ctlWatermarkOverlay);
@@ -144,7 +135,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions
 
         private void PlayerSettingsHost_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-         
+
         }
 
         public void ExecuteNavigation(int tabIdx, int subTabIdx, int panelIdx)
@@ -705,7 +696,7 @@ DependencyProperty.Register(
 
         private void lstViewSearchOptions_ItemClick(object sender, ItemClickEventArgs e)
         {
-            
+
             popupSearch.IsOpen = false;
 
             var selected = e.ClickedItem as SettingSearchResult;
@@ -715,7 +706,7 @@ DependencyProperty.Register(
 
         private void lstViewSearchOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-          
+
             //popupSearch.IsOpen = false;
 
             //var selected = lstViewSearchOptions.SelectedItem as SettingSearchResult;
@@ -740,7 +731,7 @@ DependencyProperty.Register(
                 // Shift focus back to the textbox
                 asbSearchOptions.Focus(FocusState.Programmatic);
             }
-         
+
         }
 
         private void popupSearch_PreviewKeyDown(object sender, KeyRoutedEventArgs e)

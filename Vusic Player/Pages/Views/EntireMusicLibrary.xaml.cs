@@ -2,11 +2,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -14,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
@@ -27,11 +22,7 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Search;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -46,7 +37,7 @@ namespace Vusic_Player.Pages.Views
         public EntireMusicLibrary()
         {
             InitializeComponent();
-          //  FirstTimeLaunch();
+            //  FirstTimeLaunch();
             AllAvailableSongs.CollectionChanged -= AllAvailableSongs_CollectionChanged;
             AllAvailableSongs.CollectionChanged += AllAvailableSongs_CollectionChanged;
             foldersListOpened.CollectionChanged -= FoldersListOpened_CollectionChanged;
@@ -59,7 +50,7 @@ namespace Vusic_Player.Pages.Views
             stkLoading.Visibility = Visibility.Visible;
             LoadFolders();
 
-           
+
         }
         private async void FirstTimeLaunch()
         {
@@ -132,7 +123,7 @@ namespace Vusic_Player.Pages.Views
                 grdAllMusicHistory.Visibility = Visibility.Visible;
                 LoadHistory();
             }
-          
+
             base.OnNavigatedTo(e);
         }
         private async void ToggleButton_Checked(object sender, RoutedEventArgs e)
@@ -223,7 +214,7 @@ namespace Vusic_Player.Pages.Views
 
             recentMusics.CollectionChanged += RecentMusics_CollectionChanged;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            if(currentSettings.IsMusicHistoryDisabled == true)
+            if (currentSettings.IsMusicHistoryDisabled == true)
             {
                 btnDisableHistory.Visibility = Visibility.Collapsed;
                 grdViewAllRecentMusic.Visibility = Visibility.Collapsed;
@@ -533,9 +524,9 @@ namespace Vusic_Player.Pages.Views
 
                 foreach (var genreData in genresSongCounts)
                 {
-                    foreach(var genree in genreData.SongList)
+                    foreach (var genree in genreData.SongList)
                     {
-                        Debug.WriteLine(genree.FilePath + "  isshdhd shfgendre to "+ genreData.GenreName);
+                        Debug.WriteLine(genree.FilePath + "  isshdhd shfgendre to " + genreData.GenreName);
                     }
                     var itemStringCount = $"• {genreData.SongCount} {(genreData.SongCount == 1 ? "item" : "items")}";
 
@@ -1054,7 +1045,7 @@ namespace Vusic_Player.Pages.Views
 
         }
 
-        
+
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("PALSY");
@@ -1450,7 +1441,7 @@ namespace Vusic_Player.Pages.Views
                 Debug.WriteLine("REMOV EGENRE CONTINUE");
 
                 AudioMetadata.ChangeGenre(songlist, "Unknown Genre");
-              await  LoadGenres();
+                await LoadGenres();
             }
         }
 
@@ -1460,7 +1451,7 @@ namespace Vusic_Player.Pages.Views
             {
                 if (App.NavigationFrame != null)
                 {
-               
+
                     App.NavigationFrame.Navigate(typeof(GenreView), genre);
                 }
             }
@@ -1512,7 +1503,7 @@ namespace Vusic_Player.Pages.Views
                 return;
             var selectedgenre = mnftPlay?.DataContext as GenreModel;
             if (selectedgenre == null) return;
-            if(selectedgenre.Songs.Count == 0)
+            if (selectedgenre.Songs.Count == 0)
             {
                 if (mnftPlay == null)
                     return;
@@ -1557,7 +1548,7 @@ namespace Vusic_Player.Pages.Views
         PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
 
         bool iscreating = false;
-        private  void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
+        private void btnNewPlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);

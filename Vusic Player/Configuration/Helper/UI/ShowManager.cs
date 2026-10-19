@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.UserSettings;
 
@@ -14,7 +11,7 @@ namespace Vusic_Player.Configuration.Helper.UI
 {
     public class ShowManager
     {
-     public static   ShowData mainShowPlayable = new ShowData();
+        public static ShowData mainShowPlayable = new ShowData();
 
         public static bool isLastEpisode = false;
         public static int currentseason = 1;
@@ -59,8 +56,8 @@ namespace Vusic_Player.Configuration.Helper.UI
                 if (directorypath != null)
                 {
                     Debug.WriteLine("not null " + directorypath);
-                        bool isInsideAndExists = IsFileInDirectory(directorypath, EpisodePath)
-                                    && File.Exists(EpisodePath);
+                    bool isInsideAndExists = IsFileInDirectory(directorypath, EpisodePath)
+                                && File.Exists(EpisodePath);
                     if (isInsideAndExists)
                     {
                         Debug.WriteLine("not null and exists");
@@ -95,7 +92,7 @@ namespace Vusic_Player.Configuration.Helper.UI
                 }
             }
         }
-        
+
         public static bool IsFileInDirectory(string directoryPath, string filePath)
         {
             string fullDirPath = Path.GetFullPath(directoryPath);

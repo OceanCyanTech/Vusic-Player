@@ -1,12 +1,8 @@
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,20 +10,16 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Xml.Linq;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
-using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Vusic_Player.UI.UserViews.Controls;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -125,7 +117,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                 Debug.WriteLine("Moved");
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 currentSettings.SavedPlaylists = Instance.PlaylistsMaster;
-               
+
                 MasterSearchIndex.PlaylistsMaster = Instance.PlaylistsMaster;
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
                 UpdateUI();
@@ -236,7 +228,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                 }
                 ttEditPlaylist.IsOpen = true;
                 Instance.PlCover = new BitmapImage(playlist.Thumbnail);
-                Instance.Thumbnail = playlist.Thumbnail ?? new Uri("ms - appx:///Assets/playlistdefaultdark.png");
+                Instance.Thumbnail = playlist.Thumbnail ?? new Uri(IconHolder.Instance.PlaylistIcon);
 
                 Instance.PlaylistName = playlist.PlaylistName;
                 Instance.Genre = playlist.PlaylistGenre ?? "";

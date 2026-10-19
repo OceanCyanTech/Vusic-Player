@@ -23,7 +23,7 @@
         <TextBlock Text="Apply reverb to one or more audio files" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         <Button Name="btnAddAudioFiles" Click="btnAddAudioFiles_Click" Grid.Row="2">
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <Image Source="/Assets/addicon.png" Width="20"/>
+                <Image Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 <TextBlock Text="Add Audio Files"/>
             </StackPanel>
         </Button>
@@ -120,13 +120,13 @@ CornerRadius="16"
                             <StackPanel Visibility="Collapsed" Orientation="Horizontal" Name="stkOutputActions" Grid.Row="2" Spacing="10">
                                 <Button Name="btnPlayAllOutput" Click="btnPlayAllOutput_Click">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <Image Width="20" Source="/Assets/play.png"/>
+                                        <Image Width="20" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"/>
                                         <TextBlock Text="Play All Reverb Output"/>
                                     </StackPanel>
                                 </Button>
                                 <Button Name="btnAddtoQueueAllOutput" Click="btnAddtoQueueAllOutput_Click">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <Image Width="20" Source="/Assets/appicon.png"/>
+                                        <Image Width="20" Source="{Binding AddToQueue, Source={StaticResource GlobalIconHolder}}"/>
                                         <TextBlock Text="Add to Queue all Reverb Output"/>
                                     </StackPanel>
                                 </Button>

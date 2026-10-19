@@ -1,14 +1,14 @@
-﻿using System;
-using System.IO;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Dispatching;
-using System.Text.Json.Serialization;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Vusic_Player.Configuration.UserSettings;
+using System;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
+using Vusic_Player.Configuration.UserSettings;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -56,7 +56,7 @@ namespace Vusic_Player.Configuration.ClassModels
         {
             get => _isEpisode;
             set { _isEpisode = value; OnPropertyChanged(); }
-        } 
+        }
         public string AlbumName
         {
             get => _albumName;
@@ -115,7 +115,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 OnPropertyChanged(nameof(DateModified));
             }
         }
-        
+
         private Visibility isMovableitem = Visibility.Visible;
         public Visibility IsMovableItem
         {

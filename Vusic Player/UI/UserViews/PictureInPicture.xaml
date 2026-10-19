@@ -45,13 +45,13 @@
                     </Grid.Resources>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" VerticalAlignment="Center" >
                         <Button BorderBrush="Transparent"  Background="Transparent" CornerRadius="20" ToolTipService.ToolTip="Play">
-                            <Image Source="/Assets/previous.png" Width="26"></Image>
+                            <Image Source="{Binding Previous, Source={StaticResource GlobalIconHolder}}" Width="26"></Image>
                         </Button>
                         <Button Name="btnPlayPause" Click="btnPlayPause_Click"  CornerRadius="20" ToolTipService.ToolTip="{x:Bind mediacontroller.PlayPauseToolTip, Mode=OneWay}" Background="Transparent" BorderBrush="Transparent">
                             <Image Name="imgPlayPause" Source="{x:Bind mediacontroller.Thumbnail, Mode=OneWay}" Width="26"  />
                         </Button>
                         <Button BorderBrush="Transparent"   Background="Transparent" CornerRadius="20" ToolTipService.ToolTip="Play">
-                            <Image Source="/Assets/next.png" Width="26"></Image>
+                            <Image Source="{Binding Next, Source={StaticResource GlobalIconHolder}}" Width="26"></Image>
                         </Button>
                     </StackPanel>
                     <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" BorderBrush="Transparent"   Background="Transparent" Name="btnOptions" CornerRadius="16" ToolTipService.ToolTip="Restore" >
@@ -121,10 +121,10 @@
                             </MenuFlyout>
                         </Button.Flyout>
 
-                        <Image Source="/Assets/options.png" Width="26"></Image>
+                        <Image Source="{Binding Options, Source={StaticResource GlobalIconHolder}}" Width="26"></Image>
                     </Button>
                     <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" BorderBrush="Transparent"   Background="Transparent" Name="btnRestore" CornerRadius="16" ToolTipService.ToolTip="Restore" Click="btnRestore_Click">
-                        <Image Source="/Assets/miniplayer.png" Width="26"></Image>
+                        <Image Source="{Binding MiniPlayer, Source={StaticResource GlobalIconHolder}}" Width="26"></Image>
                     </Button>
                     <StackPanel Orientation="Horizontal" 
                     HorizontalAlignment="Right" 

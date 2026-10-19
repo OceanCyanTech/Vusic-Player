@@ -24,7 +24,7 @@
             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
                 <Button CornerRadius="12"   Grid.Column="0" Name="btnNewPlaylist" Click="btnNewPlaylist_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </Button>
@@ -38,7 +38,7 @@ AlwaysUseFallback="False"/>
                     </Button.Background>
                     <StackPanel Orientation="Horizontal">
 
-                        <Image Width="20" Source="/Assets/importicon.png"></Image>
+                        <Image Width="20" Source="{Binding Importicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock Margin="5,0" Text="Open Video" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
 
@@ -72,15 +72,7 @@ AlwaysUseFallback="False"/>
           Header="Recommended from your libraries"
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
           IsExpanded="False">
-                <Expander.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Text="Disable Recommended Videos">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                    </MenuFlyout>
-                </Expander.ContextFlyout>
+                
                 <videolibcontrols:RecommendedVideos/>
             </Expander>
             <TextBlock Text="My Playlists" Name="txtDisplay2" Tapped="TextBlock_Tapped_1" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
@@ -88,15 +80,6 @@ AlwaysUseFallback="False"/>
           Header="My Playlists"
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
           IsExpanded="False">
-                <Expander.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Text="Delete all Video Playlists">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                    </MenuFlyout>
-                </Expander.ContextFlyout>
                 <grids:UserPlaylists HorizontalAlignment="Left"/>
             </Expander>
             <TextBlock Name="txtDisplay3" Text="Shows" Tapped="TextBlock_Tapped_2" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
@@ -110,7 +93,7 @@ AlwaysUseFallback="False"/>
                     </Grid.RowDefinitions>
                     <Button Grid.Row="0"  Click="Button_Click">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Image Source="/Assets/addicon.png" Width="15"/>
+                            <Image Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" Width="15"/>
                             <TextBlock Text="Create New Show Model"/>
                         </StackPanel>
                      </Button>

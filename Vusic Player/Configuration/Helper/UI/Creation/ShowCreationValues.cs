@@ -1,20 +1,16 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.UserSettings;
 
 namespace Vusic_Player.Configuration.Helper.UI.Creation
 {
-    public class ShowCreationValues: INotifyPropertyChanged
+    public class ShowCreationValues : INotifyPropertyChanged
     {
         public ShowCreationValues()
         {

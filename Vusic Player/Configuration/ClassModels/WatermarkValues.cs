@@ -1,7 +1,7 @@
-﻿using System;
-using Microsoft.UI.Xaml;
-using Windows.UI.Text;
+﻿using Microsoft.UI.Xaml;
+using System;
 using Vusic_Player.Configuration.Playback;
+using Windows.UI.Text;
 
 namespace Vusic_Player.Configuration.ClassModels
 {

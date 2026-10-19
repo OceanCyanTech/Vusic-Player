@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.\nLicensed under the MIT License. See LICENSE in the project root.-->
 <Page
     x:Class="Vusic_Player.Pages.Views.HomeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -173,8 +174,12 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-
-            <Button Visibility="Collapsed" Content="NAVIGATE PRIVATE" Click="Button_Click"/>
+            <TeachingTip Name="ttEXCEPTION" Title="Exception">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Width="40" Source="{Binding SourceError ,Source={StaticResource GlobalIconHolder}}"/>
+                    <TextBlock Name="txtExceptionError"/>
+                </StackPanel>
+            </TeachingTip>
         </Grid>
     </ScrollViewer>
 

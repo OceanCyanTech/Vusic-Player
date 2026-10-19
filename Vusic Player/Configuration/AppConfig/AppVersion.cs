@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vusic_Player.Configuration.UserSettings;
 
 namespace Vusic_Player.Configuration.AppConfig
@@ -27,7 +24,7 @@ namespace Vusic_Player.Configuration.AppConfig
             counter.Add(counter2);
             await SettingsLoader.SaveSettingsAsync(currentSettings);
             BuildNumber = $"{DateTime.Now.ToString("MMddyy")}.{counter2}";
-          //  Debug.WriteLine(BuildNumber + " hshs");
+            //  Debug.WriteLine(BuildNumber + " hshs");
         }
         public static string BuildNumber = "";
         public static string VersionType = "Development Preview RTM";

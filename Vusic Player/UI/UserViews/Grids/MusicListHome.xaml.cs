@@ -1,17 +1,9 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
@@ -20,8 +12,6 @@ using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Extensions;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -177,7 +167,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                             {
                                 Logger.Log("Error Occured: " + ex.Message, "RecentMusicGridView.PlayRecents", Logger.LogLevelType.Error);
                             }
-                       
+
                             OceanContentDialog.HideDlg();
                             MainWindow.ShowWindow();
                         }
@@ -213,7 +203,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                 {
                     var currentfile = await StorageFile.GetFileFromPathAsync(item.FilePath);
                     var musicprops = await currentfile.Properties.GetMusicPropertiesAsync();
-                    observablecollection.Add(new SongModel { Title = item.FileName, FilePath = item.FilePath, AlbumName = musicprops.Album, Artist = musicprops.Artist,SongDuration=musicprops.Duration });
+                    observablecollection.Add(new SongModel { Title = item.FileName, FilePath = item.FilePath, AlbumName = musicprops.Album, Artist = musicprops.Artist, SongDuration = musicprops.Duration });
                 }
             }
             return observablecollection;
@@ -242,20 +232,11 @@ namespace Vusic_Player.UI.UserViews.Grids
             grdMusicMix.Visibility = Visibility.Collapsed;
         }
         ObservableCollection<FavouritesRecommend> FinalList = new ObservableCollection<FavouritesRecommend>();
-        private void chkSelect_Checked(object sender, RoutedEventArgs e)
-        {
-            grdvFavourites.SelectionMode = chkSelect.IsChecked == true ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Single;
-            selectMoreOptions.Visibility = chkSelect.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private void chckSelectAllMusicMix_Checked(object sender, RoutedEventArgs e)
-        {
-            if (chckSelectAllMusicMix.IsChecked == true) grdvFavourites.SelectAll();
-            else grdvFavourites.SelectedItems.Clear();
-        }
+      
 
 
-       
+
+
 
         private async void grdvFavourites_ItemClick(object sender, ItemClickEventArgs e)
         {

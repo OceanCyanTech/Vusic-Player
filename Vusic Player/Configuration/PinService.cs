@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Windows.Security.Credentials;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Vusic_Player.Configuration
 {
     public static class PinService
     {
-        public static   string IntToString(int[] digits, int length)
+        public static string IntToString(int[] digits, int length)
         {
             var sb = new StringBuilder();
-            for(int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
                 sb.Append(digits[i]);
             }
@@ -86,14 +80,14 @@ namespace Vusic_Player.Configuration
             try
             {
                 var cred = vault.Retrieve("VusicPlayer_AppPin", "OceanCyanMasterPin");
-     cred.RetrievePassword();
+                cred.RetrievePassword();
                 return cred.Password;
             }
             catch
             {
                 return null;
             }
-            }
+        }
         public static bool IsPinEnabled()
         {
             var vault = new PasswordVault();

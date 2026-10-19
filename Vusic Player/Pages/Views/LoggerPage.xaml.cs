@@ -1,24 +1,15 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using Vusic_Player.Configuration.AppConfig;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -132,7 +123,7 @@ namespace Vusic_Player.Pages.Views
         {
             try
             {
-             
+
 
                 var picker = new FileSavePicker();
                 var hwnd = WindowNative.GetWindowHandle(App.MainWindowInstance);
@@ -354,12 +345,12 @@ namespace Vusic_Player.Pages.Views
                 bool textMatch = !string.IsNullOrEmpty(rawQuery) && (
                     (s.Message?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true) ||
                     (s.Source?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true) ||
-                    (s.Level.ToString()?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true) 
+                    (s.Level.ToString()?.Contains(rawQuery, StringComparison.OrdinalIgnoreCase) == true)
                 );
 
-             
 
-                return textMatch ;
+
+                return textMatch;
             })
             .OrderByDescending(s => s.Message?.StartsWith(rawQuery, StringComparison.OrdinalIgnoreCase) == true)
             .ThenBy(s => s.Message);

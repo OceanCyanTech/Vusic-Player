@@ -24,13 +24,13 @@ namespace Vusic_Player.Configuration.AppConfig
 
             if (!isRedirect)
             {
-                    Application.Start((p) =>
-                {
-                    var context = new DispatcherQueueSynchronizationContext(
-                        DispatcherQueue.GetForCurrentThread());
-                    SynchronizationContext.SetSynchronizationContext(context);
-                    _ = new App();
-                });
+                Application.Start((p) =>
+            {
+                var context = new DispatcherQueueSynchronizationContext(
+                    DispatcherQueue.GetForCurrentThread());
+                SynchronizationContext.SetSynchronizationContext(context);
+                _ = new App();
+            });
             }
 
             return 0;
@@ -67,7 +67,7 @@ namespace Vusic_Player.Configuration.AppConfig
                         }
                         else if (audioExtensions.Contains(extension))
                         {
-                         //   MainWindow.ShowWindow();
+                            //   MainWindow.ShowWindow();
                             PlayerService.OpenPath(filePath);
                             return;
                         }
@@ -80,9 +80,9 @@ namespace Vusic_Player.Configuration.AppConfig
                                 App.NavigationFrame.Navigate(typeof(MusicPlayerFull), filePath);
                             }
                         }
-                      
+
                     }
-                  
+
                 }
 
 

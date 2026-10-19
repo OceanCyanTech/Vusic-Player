@@ -1,20 +1,15 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
     public class VideoProgress : INotifyPropertyChanged
     {
         private string _fileName = "";
-        public string FileName 
+        public string FileName
         {
             get => _fileName;
             set { _fileName = value; OnPropertyChanged(); }
@@ -73,7 +68,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public int PlayCount { get; set; } = 0;
         public bool? IsEpisode { get; set; } = false;
         public bool ShowInformationOfOpen { get; set; } = true;
-        
+
         public string ShowAssociatedID { get; set; } = "";
         public int SeasonAssociated { get; set; } = 1;
         [JsonIgnore]

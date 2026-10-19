@@ -1,9 +1,6 @@
-using Flyleaf.FFmpeg;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
@@ -14,20 +11,16 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 
@@ -76,7 +69,7 @@ namespace Vusic_Player.Pages.Views
           e.Action == NotifyCollectionChangedAction.Move)
             {
                 // UpdateUI();
-                
+
                 Debug.WriteLine("Moved");
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 var playl = currentSettings.SavedPlaylists;
@@ -460,7 +453,7 @@ namespace Vusic_Player.Pages.Views
                             if (PlayerService.CurrentPlayingPath == file.Path)
                             {
                                 colorbrush = new SolidColorBrush(Microsoft.UI.Colors.Cyan);
-                           
+
                             }
 
                             string fileExtension = file.FileType.ToLowerInvariant();
@@ -590,7 +583,7 @@ namespace Vusic_Player.Pages.Views
                     infoBarHiddenFiles.IsOpen = false;
                 }
                 bool hasVideo = SongCollection.Any(song =>
-          !string.IsNullOrEmpty(song.FilePath) && File.Exists(song.FilePath)&&
+          !string.IsNullOrEmpty(song.FilePath) && File.Exists(song.FilePath) &&
           Extensions.VideoExtensions.List.Contains(Path.GetExtension(song.FilePath).ToLowerInvariant())
       );
                 if (hasVideo)
@@ -641,7 +634,7 @@ namespace Vusic_Player.Pages.Views
                 currentPlaylist = playlist;
                 Configuration.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
                 Configuration.Helper.FileInfo.RefreshValues += FileInfo_RefreshValues;
-                    txtPlaylistName.Text = playlist.PlaylistName;
+                txtPlaylistName.Text = playlist.PlaylistName;
                 playlistID = playlist.PlaylistId;
                 genreList.Clear();
                 if (playlist.PlaylistGenre != null)
@@ -672,7 +665,7 @@ namespace Vusic_Player.Pages.Views
                 txtItemCount.Text = playlist.PlaylistCount;
                 imgPlaylistCover.Source = new BitmapImage(playlist.Thumbnail);
                 LoadItemsOnly(playlist);
-            //    UpdateUI();
+                //    UpdateUI();
             }
             base.OnNavigatedTo(e);
         }

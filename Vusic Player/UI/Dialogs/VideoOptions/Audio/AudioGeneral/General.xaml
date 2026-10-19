@@ -41,7 +41,7 @@ SelectionChanged="cmbAudioTrack_SelectionChanged">
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <Button Click="btnSearchAudio_Click" ToolTipService.ToolTip="Search Audio Tracks" Name="btnSearchAudio" VerticalAlignment="Stretch" Background="Transparent" BorderBrush="Transparent" Grid.Column="1" Margin="4,0,0,0" Padding="4">
-                    <Image Source="ms-appx:///Assets/searchicon.png" Width="16" Height="16"/>
+                    <Image Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}" Width="16" Height="16"/>
                 </Button>
             </Grid>
             <ToggleButton Checked="tglDisableAudioTrack_Checked" 

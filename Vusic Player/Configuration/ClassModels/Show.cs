@@ -3,11 +3,10 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Documents;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
-    public class Show: INotifyPropertyChanged
+    public class Show : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private string _name = "";
@@ -73,7 +72,7 @@ namespace Vusic_Player.Configuration.ClassModels
             set { if (_creators != value) { _creators = value; OnPropertyChanged(); } }
         }
 
-       
+
         private ObservableCollection<string> _addedSeasons = new();
         public ObservableCollection<string> AddedSeasons
         {

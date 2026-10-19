@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
         <Button Name="btnOpenMedia" Visibility="Visible" VerticalAlignment="Top" Margin="20, 0" CornerRadius="12" ToolTipService.ToolTip="(Ctrl + O) Open and play any video or audio" Click="btnOpenMedia_Click">
             <StackPanel Orientation="Horizontal">
-                <Image Width="20" Source="/Assets/importicon.png"></Image>
+                <Image Width="20" Source="{Binding Importicon, Source={StaticResource GlobalIconHolder}}"></Image>
                 <TextBlock Margin="5,0" Text="Open Media"  Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
             </StackPanel>
             <Button.KeyboardAccelerators>
@@ -52,7 +52,7 @@
             </ScrollViewer>
             <Button Visibility="Collapsed" Name="btnCopyLyric"  Click="Button_Click_3" HorizontalAlignment="Center" Grid.Row="1">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <Image Width="20" Source="{Binding CopyIcon, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Copy Lyric"/>
                 </StackPanel>
             </Button>
@@ -73,7 +73,7 @@
                         </MenuFlyout>
                     </Button.Flyout>
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <Image Width="20" Source="{Binding OpenFile, Source={StaticResource GlobalIconHolder}}"/>
                         <TextBlock Text="Open Lyric File"/>
                     </StackPanel>
                 </Button>

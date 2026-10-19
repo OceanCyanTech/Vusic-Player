@@ -90,7 +90,7 @@
                                 <TextBlock Text="No folders added." Visibility="Collapsed"  Name="txtNofoldersadded" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
                                 <Button CornerRadius="16" VerticalAlignment="Stretch" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                                        <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                                         <TextBlock Text="Add Folder"></TextBlock>
                                     </StackPanel>
                                 </Button>
@@ -132,6 +132,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Vertical" Spacing="30">
                             <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>
@@ -161,7 +163,7 @@
                         <TextBlock Text="Updates" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}"/>
                         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
                             <ProgressRing Name="prgCheckingForUpdates" Visibility="Collapsed"/>
-                            <Image Width="30" Name="imgUpdate" Source="/Assets/success.png"/>
+                            <Image Width="30" Name="imgUpdate" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
                             <TextBlock VerticalAlignment="Center" Name="txtUpdateInfo" Style="{StaticResource BodyLargeStrongTextBlockStyle}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="You are on the latest version of Vusic Player!"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Spacing="20" Grid.Row="5">
@@ -178,6 +180,13 @@
                         <HyperlinkButton Content="View Source on GitHub" Grid.Row="9"/>
                         <HyperlinkButton Content="Documentation and Support" Grid.Row="10"/>
                         <HyperlinkButton Content="Share your feedback to help us improve the app" Grid.Row="11"/>
+                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="12">
+                            <MenuFlyoutSeparator />
+                            <TextBlock Text="Privacy" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="8" Text="Feature and Error Diagnostics help us analyze and improve Vusic Player. No personal information is shared whatsoever. Promise."/>
+                            <CheckBox Name="chkAllowDiagnostics" Content="Allow Sending Feature and Error Diagnostics to OceanCyan Tech."/>
+                            <Button Style="{StaticResource AccentButtonStyle}" Content="Privacy Statement" Name="btnViewPrivacyStatement" Click="btnViewPrivacyStatement_Click"/>
+                        </StackPanel>
                     </Grid>
                     <Grid Name="grdMusicOptions" RowSpacing="30" Visibility="Collapsed">
                         <Grid.RowDefinitions>
@@ -433,6 +442,10 @@
                             <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Maximum Volume allowed." Grid.Row="3"/>
                             <NumberBox SpinButtonPlacementMode="Inline"  Minimum="10" Maximum="300" Name="numMaxVolume" ValueChanged="numMaxVolume_ValueChanged"/>
                             <MenuFlyoutSeparator Grid.Row="6"/>
+                            <TextBlock Text="Maximum Search Results" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Maximum number of Search Results to be displayed." Grid.Row="3"/>
+                            <NumberBox SpinButtonPlacementMode="Inline"  Minimum="3" Maximum="15" Name="numMaxSearchResults" ValueChanged="numMaxSearchResults_ValueChanged"/>
+                            <MenuFlyoutSeparator/>
                         </StackPanel>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Customization" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="1"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="2">
@@ -480,7 +493,7 @@
         </NavigationView>
         <TeachingTip Name="ttInfo">
             <StackPanel Width="600" Orientation="Horizontal" Spacing="10">
-                <Image Source="/Assets/success.png" Name="imgInfo" Width="25"/>
+                <Image Source="{Binding Success, Source={StaticResource GlobalIconHolder}}" Name="imgInfo" Width="25"/>
                 <TextBlock Name="txtInfo"/>
             </StackPanel>
         </TeachingTip>

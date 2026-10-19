@@ -1,22 +1,16 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Vortice.Direct2D1.Effects;
-using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
@@ -345,11 +339,11 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 Debug.WriteLine(item.FilePath + " is going to be removed");
                 VideoProgressList.Remove(item);
-               
+
             }
             foreach (var item in selecteditems)
             {
-               
+
                 var exist = videoprogress.FirstOrDefault(p => p.FilePath == item.FilePath);
                 if (exist != null)
                 {
@@ -409,7 +403,7 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private async void mnftAddToFavCW_Click(object sender, RoutedEventArgs e)
         {
- 
+
             if (ContinuePlaying.videoProgressMain == null) return;
 
             var settings = await SettingsLoader.LoadSettingsAsync();
@@ -640,7 +634,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             var mnftAddtoFav = flyout?.Items
     .OfType<MenuFlyoutItem>()
     .FirstOrDefault(x => x.Name == "mnftAddToFavCW");
-           
+
             if (mnftAddtoFav == null) return;
             if (ContinuePlaying.videoProgressMain == null) return;
 
@@ -712,7 +706,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             stkEnabledEmptyRecents.Visibility = Visibility.Collapsed;
             stkDisabledEmptyRecents.Visibility = Visibility.Visible;
         }
-       public void ShowDisable()
+        public void ShowDisable()
         {
             grdHighlightVideo.Visibility = Visibility.Collapsed;
             VideoProgressList.Clear();
@@ -730,7 +724,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             currentSettings.IsVideoHistoryDisabled = false;
             currentSettings.SavedVideoProgress.Clear();
-                
+
             await SettingsLoader.SaveSettingsAsync(currentSettings);
             ShowEnable();
         }
@@ -775,7 +769,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     {
                         var storagefile = await StorageFile.GetFileFromPathAsync(vdprg.FilePath);
                         var vidprops = await storagefile.Properties.GetVideoPropertiesAsync();
-                        var newsong = new SongModel { Title = vdprg.FileName, FilePath =vdprg.FilePath, IsEpisode = vdprg.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
+                        var newsong = new SongModel { Title = vdprg.FileName, FilePath = vdprg.FilePath, IsEpisode = vdprg.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
                         QueueService.VusicQueue.Add(newsong);
                         QueueService.VusicQueueNext.Add(newsong);
                     }

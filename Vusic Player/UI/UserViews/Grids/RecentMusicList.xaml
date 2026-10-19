@@ -22,16 +22,17 @@
             <StackPanel Orientation="Horizontal" Spacing="20"  >
                 <TextBlock Text="Recents" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
 
-                <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Unchecked"></CheckBox>
-                <HyperlinkButton  Content="View Full History" Click="btnAllRecents_Click"></HyperlinkButton>
+                <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
-                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Unchecked"></CheckBox>
+                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromContinueWatchingSelected_Click"  Name="btnRemoveFromContinueWatchingSelected" >
                         <StackPanel Orientation="Horizontal">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </StackPanel>
                     </Button>
                 </StackPanel>
+                <HyperlinkButton  Content="View Full History" Click="btnAllRecents_Click"></HyperlinkButton>
+
             </StackPanel>
             <Button Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click" CornerRadius="12" >
                 <Button.ContextFlyout>
@@ -48,7 +49,7 @@
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"/>
+                                <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>

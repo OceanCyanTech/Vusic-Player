@@ -1,41 +1,32 @@
 
 using FlyleafLib;
-using FlyleafLib.MediaFramework.MediaDevice;
 using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.VisualBasic.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.DirectoryServices;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Documents;
-using Vortice.XAudio2;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.AudioProperties;
-using Vusic_Player.Configuration.Helper.SubtitlesProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.VideoProperties;
@@ -43,23 +34,14 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
-using Vusic_Player.MediaProperties.AudioProperties;
-using Vusic_Player.MediaProperties.VideoProperties;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral;
-using Vusic_Player.UI.Dialogs.VideoOptions.VideoOverlay;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Devices.Spi;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
-using WinRT.Interop;
 using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 using Orientation = Vusic_Player.MediaProperties.VideoProperties.Orientation;
 
@@ -187,18 +169,18 @@ namespace Vusic_Player.Pages
             GlobalFavourites.Instance.FavouritesChanged += OnGlobalFavouritesChanged;
             PointerTimer.Interval = TimeSpan.FromSeconds(1);
             PointerTimer.Tick += PointerTimer_Tick;
-            LoadSettings(); 
-           // RootGrid.AddHandler(
-           //UIElement.PreviewKeyDownEvent,
-           //new KeyEventHandler(RootGrid_PreviewKeyDown),
-           //handledEventsToo: true
-      
+            LoadSettings();
+            // RootGrid.AddHandler(
+            //UIElement.PreviewKeyDownEvent,
+            //new KeyEventHandler(RootGrid_PreviewKeyDown),
+            //handledEventsToo: true
+
         }
         int pointertimercount = 2;
         private bool _isCursorSuppressed = false;
         private void PointerTimer_Tick(object? sender, object e)
         {
-        
+
             if (pointertimercount > 0)
             {
                 pointertimercount--;

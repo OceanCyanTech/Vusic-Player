@@ -48,7 +48,7 @@
             <StackPanel Margin="0, 20" Orientation="Vertical" Spacing="10">
                 <TextBox Name="txtRenameShow" PlaceholderText="Rename show..."></TextBox>
                 <Button HorizontalAlignment="Stretch" Name="btnOfficialRename" Click="btnOfficialRename_Click">
-                    <Image Source="/Assets/tickicon.png" Width="20"/>
+                    <Image Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 </Button>
             </StackPanel>
         </TeachingTip>
@@ -250,7 +250,7 @@
                         <TextBlock Name="txtSeasonsHead" Text="Seasons" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button Margin="0, 5" VerticalAlignment="Center" CornerRadius="12"   Grid.Column="0" Name="btnAddSeason" Click="btnAddSeason_Click">
                             <StackPanel Orientation="Horizontal">
-                                <Image Width="20" Source="/Assets/addicon.png"></Image>
+                                <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                                 <TextBlock Margin="5, 0" Text="Add Season" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                             </StackPanel>
                         </Button>
@@ -385,7 +385,7 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                                     <TextBlock TextWrapping="Wrap" Text="{Binding Description}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="1"></TextBlock>
                                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="2">
                                         <Button ToolTipService.ToolTip="File Info" Background="Transparent" Grid.Row="3" Padding="0" BorderBrush="Transparent" Click="Button_Click">
-                                            <Image Source="/Assets/infoicon.png" Width="20" ></Image>
+                                            <Image Source="{Binding InfoIcon, Source={StaticResource GlobalIconHolder}}" Width="20" ></Image>
                                         </Button>
                                         <TextBlock Text="{Binding Duration}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="2"></TextBlock>
 

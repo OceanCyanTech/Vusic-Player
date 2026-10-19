@@ -1,15 +1,11 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media.Imaging;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.UserSettings;
 
@@ -44,13 +40,13 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         public static PlaylistCreationValues Instance { get; } = new PlaylistCreationValues();
         private ObservableCollection<PlaylistItem> _playlistsMaster = new ObservableCollection<PlaylistItem>();
 
-   
+
         private string _genre = "";
         private bool _isAppInstanceOcean = true;
-        private List<string> _directory =  new List<string>();
+        private List<string> _directory = new List<string>();
         private string _playlistName = "Playlist";
         private BitmapImage _plThumb = new BitmapImage(new Uri("ms-appx:///Assets/playlistdefaultdark.png"));
-        private string _playlistID  = Guid.NewGuid().ToString();
+        private string _playlistID = Guid.NewGuid().ToString();
         private Uri _thumbnail = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
         private string _thumbnailString = "ms-appx:///Assets/playlistdefaultdark.png";
         private DateTime _creationdate = DateTime.Now;
@@ -95,7 +91,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         }
 
 
-      
+
 
         public string Genre
         {
@@ -104,10 +100,10 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         }
 
         public string PlaylistCount => $"{_mediaSongModels.Count} {(_mediaSongModels.Count == 1 ? "item" : "items")}";
-       
+
         public HashSet<string> MediaPaths
         {
-           
+
             get => _songsPaths;
             set => SetProperty(ref _songsPaths, value);
         }

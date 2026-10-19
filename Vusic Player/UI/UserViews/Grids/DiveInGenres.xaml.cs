@@ -1,23 +1,15 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Pages.Views;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -67,7 +59,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     FilePath = t.FilePath,
                     SongDuration = t.SongDuration // Or TimeSpan if stored on AudioTrackLite
                 }).ToList();
-                string coverPath = "ms-appx:///Assets/musicnoteicon.png";
+                string coverPath = IconHolder.Instance.MusicNoteIcon;
                 int trackCount = songModels.Count;
 
                 genresRecommended.Add(new GenreModel
@@ -78,7 +70,10 @@ namespace Vusic_Player.UI.UserViews.Grids
                     GenreTag = genreName.ToLowerInvariant(),
                     Songs = songModels
                 });
+                
             }
+            txtNoGenresAvailable.Visibility = genresRecommended.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            grdViewGenres.Visibility = genresRecommended.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
         }
         private void grdViewGenres_ItemClick(object sender, ItemClickEventArgs e)
         {

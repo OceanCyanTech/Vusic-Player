@@ -23,9 +23,9 @@
                 <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
                     <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
-                    <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemove_Click"  Name="btnRemove" >
+                    <Button ToolTipService.ToolTip="Remove from Favourites" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemove_Click"  Name="btnRemove" >
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -35,24 +35,24 @@
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"/>
+                                <FontIcon Glyph="&#xE8B1;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"/>
+                                <FontIcon Glyph="&#xE8EE;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"/>
+                                <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>
                 </Button.ContextFlyout>
 
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="20" Source="/Assets/play.png"/>
+                    <Image Width="20" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Play all"/>
                 </StackPanel>
             </Button>
@@ -72,20 +72,23 @@ ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" >
                                 <MenuFlyout>
                                     <MenuFlyoutItem Text="Play" Click="mnftPlay_Click" Name="mnftPlay">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xE8DA;" />
+                                            <FontIcon Glyph="&#xE768;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Add to Queue" Click="mnftAddtoQueue_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Text="Remove from Favourites" Click="mnftRemoveFromFav_Click" Name="mnftRemoveFromFav" Icon="Remove" />
+                                    <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Text="Go to File Location" Click="mnftGoToFileLocation_Click" >
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8DA;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Add to Queue" Click="mnftAddtoQueue_Click">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xE8DA;" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
+                                   
                                     <MenuFlyoutItem Text="View File Info" Click="mnftViewFileInfo_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE946;" />
@@ -94,7 +97,6 @@ ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" >
                                 </MenuFlyout>
                             </Grid.ContextFlyout>
 
-                            <!-- Thumbnail Image -->
                             <Border CornerRadius="6">
                                 <Image Source="{Binding Thumbnail}" 
                        Width="150" 
@@ -103,7 +105,6 @@ ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" >
                        HorizontalAlignment="Center" />
                             </Border>
 
-                            <!-- Text Block with 2-line wrap + ellipsis -->
                             <TextBlock Text="{Binding FileName}" 
                        TextWrapping="Wrap" 
                        MaxLines="2" Grid.Row="1"
@@ -119,7 +120,7 @@ ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" >
         <Grid Name="grdEmptySuggestions" HorizontalAlignment="Center" Grid.Column="0" Visibility="Visible" >
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
-                    <Image Width="90" Source="/Assets/favicon.png"></Image>
+                    <Image Width="90" Source="{Binding FavIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Heart media to show them here!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
             </StackPanel>

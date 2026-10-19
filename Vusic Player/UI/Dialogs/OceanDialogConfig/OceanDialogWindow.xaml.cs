@@ -14,10 +14,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.UserSettings;
-using WinRT.Interop;
-using WinRT;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
+using WinRT;
+using WinRT.Interop;
 
 
 namespace Vusic_Player.UI.Dialogs.OceanDialogConfig

@@ -28,7 +28,7 @@
                 <InfoBar Name="ifbErrorRename"></InfoBar>
                 <TextBox Name="txtRename" PlaceholderText="Rename file..."></TextBox>
                 <Button Name="btnOfficialRename" Click="btnOfficialRename_Click" ToolTipService.ToolTip="Rename">
-                    <Image Source="/Assets/tickicon.png" Width="20"/>
+                    <Image Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 </Button>
             </StackPanel>
         </TeachingTip>
@@ -37,7 +37,7 @@
             <Button Name="tglView" ToolTipService.ToolTip="Toggle View" Content="Text Editor" Click="tglView_Click_1" Style="{StaticResource AccentButtonStyle}"/>
             <Button Name="btnNewSubtitleFile" Click="btnNewSubtitleFile_Click">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="20" Source="/Assets/addicon.png"/>
+                    <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="New Lyric File"/>
                 </StackPanel>
             </Button>

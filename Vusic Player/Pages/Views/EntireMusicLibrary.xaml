@@ -67,7 +67,7 @@
                         </MenuFlyout>
                     </Button.ContextFlyout>
                     <StackPanel Orientation="Horizontal" Spacing="7">
-                        <Image Width="25" Source="/Assets/play.png"></Image>
+                        <Image Width="25" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock Style="{StaticResource BodyLargeTextBlockStyle}" Text="Play all" Margin="0, 4"></TextBlock>
                     </StackPanel>
                 </Button>
@@ -109,7 +109,7 @@
                 <TextBlock Text="No folders added." Visibility="Collapsed"  Name="txtNofoldersadded" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
                 <Button CornerRadius="16" VerticalAlignment="Stretch" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <Image Width="20" Source="{Binding AddFolder, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock Text="Add Folder"></TextBlock>
                     </StackPanel>
                 </Button>
@@ -131,7 +131,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Image Grid.Row="0" Width="70" Source="/Assets/appicon.png"/>
+                <Image Grid.Row="0" Width="70" Source="{Binding MusicNoteIcon, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Text="There are no songs in the specified folders. Trying adding other folders." Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Grid>
             <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoading" Orientation="Horizontal" Spacing="20" Grid.Row="4">
@@ -156,13 +156,13 @@
             </StackPanel>
             <StackPanel Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkEmptyHistory" Spacing="20">
                 <StackPanel Spacing="20" Orientation="Horizontal">
-                    <Image Width="50" Source="/Assets/emptystuffgreen.png"></Image>
+                    <Image Width="50" Source="{Binding History, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="You have no history!" Name="txtEmptyHistory"></TextBlock>
                 </StackPanel>
             </StackPanel>
             <StackPanel Visibility="Collapsed"  Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkDisabledHistory" Spacing="20">
                 <StackPanel Spacing="20" Orientation="Horizontal">
-                    <Image Width="50" Source="/Assets/sourceerror.png"></Image>
+                    <Image Width="50" Source="{Binding SourceError, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Saving to History is disabled." ></TextBlock>
                 </StackPanel>
                 <HyperlinkButton HorizontalAlignment="Center" Visibility="Visible" Content="Enable History" Name="btnEnableHistory" Click="btnEnableHistory_Click" FontSize="24" Margin="0, 0" Padding="0"></HyperlinkButton>
@@ -175,7 +175,7 @@
                     <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromHistory_Click"  Name="btnRemoveFromHistory" >
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -207,16 +207,16 @@
             <TextBlock Name="txtAllPlaylists" Text="All Playlists " Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             <Button Name="btnNewPlaylist" Click="btnNewPlaylist_Click" Grid.Row="1">
                 <StackPanel Orientation="Horizontal">
-                    <Image Width="20" Source="/Assets/addicon.png"></Image>
+                    <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                 </StackPanel>
             </Button>
             <StackPanel Name="stkNoPlaylists" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="2" Orientation="Vertical" Spacing="20">
-                <Image Width="80" Source="/Assets/emptystuffgreen.png"/>
+                <Image Width="80" Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="You have no playlists!"/>
                 <Button HorizontalAlignment="Center" Name="btnCreateNewPlaylist" Click="btnNewPlaylist_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="20" Source="/Assets/addicon.png"></Image>
+                        <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock Margin="5, 0" Text="Create New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </Button>
@@ -235,7 +235,7 @@
             </Grid.RowDefinitions>
             <TextBlock Name="txtArtistsAll" Text="Artists" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             <StackPanel Name="stkNoArtists" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
-                <Image Width="80" Source="/Assets/emptystuffgreen.png"/>
+                <Image Width="80" Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="Songs on this PC have no artist names!"/>
             </StackPanel>
             <controls:GroupedCollectionView x:Name="ArtistsGroupedCollection" 
@@ -252,7 +252,7 @@
             </Grid.RowDefinitions>
             <TextBlock Name="txtAlbumsAll" Text="Albums" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             <StackPanel Name="stkNoAlbums" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
-                <Image Width="80" Source="/Assets/emptystuffgreen.png"/>
+                <Image Width="80" Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="There are no albums!"/>
             </StackPanel>
             <controls:GroupedCollectionView x:Name="AlbumsGroupedCollection" 

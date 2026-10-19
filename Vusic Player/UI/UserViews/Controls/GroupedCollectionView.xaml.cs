@@ -1,45 +1,30 @@
-using Flyleaf.FFmpeg;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Hosting;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.DirectoryServices;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
-using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
-using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Media.Core;
 using Windows.Storage;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static Vusic_Player.UI.UserViews.Controls.ListViewMedia;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 
 
@@ -1462,7 +1447,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             }
 
             //Favourites 
-           
+
         }
 
         private async void mnftPlaySong_Click(object sender, RoutedEventArgs e)
