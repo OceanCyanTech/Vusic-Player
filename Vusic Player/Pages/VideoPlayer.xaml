@@ -374,7 +374,7 @@ CornerRadius="16" >
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
                         <Button Click="btnCloseInformation_Click" Name="btnCloseInformation" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </Button>
                         <TextBlock Grid.Row="1" Text="" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="1" x:Name="txtInformation" Style="{StaticResource TitleTextBlockStyle}" ></TextBlock>
                     </Grid>
@@ -407,7 +407,7 @@ CornerRadius="16" >
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Button Click="btnCloseChapters_Click" Name="btnCloseChapters" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </Button>
                         <TextBlock Grid.Row="1" Text="Video Chapters" Style="{StaticResource TitleTextBlockStyle}"/>
                         <AutoSuggestBox Visibility="Collapsed" Name="asbSearchChapters" PlaceholderText="Search chapters..." QuerySubmitted="asbSearchChapters_QuerySubmitted" QueryIcon="Find" Grid.Row="2" TextChanged="asbSearchChapters_TextChanged"/>
@@ -462,7 +462,7 @@ CornerRadius="16" >
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Button Click="btnCloseStats_Click" Name="btnCloseStats" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </Button>
                         <TextBlock Grid.Row="1" Text="Media Stats" Style="{StaticResource TitleTextBlockStyle}"/>
                         <TabView IsAddTabButtonVisible="False" Grid.Row="2"  Name="tbViewStats">
@@ -721,7 +721,7 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
 
 
                         <Button Click="btnCloseShowInfo_Click" Name="btnCloseShowInfo" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </Button>
                         <StackPanel Grid.Row="2" Orientation="Vertical" Spacing="20">
                             <TextBlock Text="• 0 Seasons" Name="txtShowSeasonCount" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
@@ -785,7 +785,7 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                                             <TextBlock MaxWidth="100"  TextWrapping="Wrap" Text="{Binding Description}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="1"></TextBlock>
                                             <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="2">
                                                 <Button ToolTipService.ToolTip="File Info" Background="Transparent" Name="btnEpisodeFileInfo" Click="btnEpisodeFileInfo_Click"  Grid.Row="3" Padding="0" BorderBrush="Transparent" >
-                                                    <Image Source="/Assets/infoicon.png" Width="15" ></Image>
+                                                    <Image Source="{Binding InfoIcon, Source={StaticResource GlobalIconHolder}}" Width="15" ></Image>
                                                 </Button>
                                                 <TextBlock Text="{Binding Duration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="2"></TextBlock>
 

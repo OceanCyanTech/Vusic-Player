@@ -78,12 +78,12 @@ CornerRadius="16"
                                     <TextBox GotFocus="txtRename_GotFocus" Width="150" Grid.Column="0" 
                              Name="txtRename" PlaceholderText="Rename Genre" />
                                     <Button Background="Transparent" BorderBrush="Transparent" Margin="5, 0" Grid.Column="1" Click="btnRenameGenre_Click" Name="btnRenameGenre" >
-                                        <Image Margin="5, 0" Width="20" Source="/Assets/tickicon.png" />
+                                        <Image Margin="5, 0" Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" />
                                     </Button>
                                 </Grid>
                             </Flyout>
                         </Button.Flyout>
-                        <Image Width="25" Source="/Assets/editicon.png" />
+                        <Image Width="25" Source="{Binding EditIcon, Source={StaticResource GlobalIconHolder}}" />
                     </Button>
 
                     <Button Background="Transparent" BorderBrush="Transparent" Name="btnPlayAll" Click="btnPlayAll_Click" Margin="5"
@@ -96,13 +96,13 @@ CornerRadius="16"
 
                     <ToggleButton Background="Transparent" BorderBrush="Transparent" Name="btnShuffle" Checked="btnShuffle_Checked" Unchecked="btnShuffle_Checked" Margin="5"
                   ToolTipService.ToolTip="Shuffle Genre">
-                        <Image Width="25" Source="/Assets/shuffleicon.png" />
+                        <Image Width="25" Source="{Binding ShuffleIcon, Source={StaticResource GlobalIconHolder}}" />
                     </ToggleButton>
 
                     <Button Name="btnAddSongs" Margin="5" Background="Transparent" BorderBrush="Transparent" 
             ToolTipService.ToolTip="Add songs to this Genre" Click="btnAddSongs_Click">
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="25" Source="/Assets/addicon.png" />
+                            <Image Width="25" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" />
                             <TextBlock Margin="5,2" Text="Add Songs" />
                         </StackPanel>
 

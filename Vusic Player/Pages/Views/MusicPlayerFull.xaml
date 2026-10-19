@@ -261,7 +261,7 @@
             <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="1">
                 <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtLyricHeader"></TextBlock>
                 <Button Visibility="Collapsed" ToolTipService.ToolTip="Close full lyrics" Name="btnCloseFullLyrics" Click="btnCloseFullLyrics_Click" Background="Transparent" BorderBrush="Transparent">
-                    <Image Width="20" Source="/Assets/removeicon.png"/>
+                    <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
             </StackPanel>
             <StackPanel Visibility="Collapsed" Name="stkLyricOptions" Orientation="Horizontal" Spacing="10" Grid.Row="2">
