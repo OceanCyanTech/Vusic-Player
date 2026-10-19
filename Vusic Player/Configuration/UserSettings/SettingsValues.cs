@@ -45,6 +45,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public bool IsSavingWatermarkValues { get; set; } = false;
         public bool Panel1VisibilityHome { get; set; } = true;
         public double SkipAhead { get; set; } = 10;
+        public double MaxVolume { get; set; } = 100;
         public double SkipBack { get; set; } = 10;
         public string Theme { get; set; } = "Ocean";
         public string FontFamily { get; set; } = "Ocean";

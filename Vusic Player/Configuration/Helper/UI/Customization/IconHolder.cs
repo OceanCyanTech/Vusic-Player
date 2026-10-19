@@ -21,6 +21,16 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _info= $"ms-appx:///Assets/Themes/Ocean/infoicon.png";
         private string _skipahead = $"ms-appx:///Assets/Themes/Ocean/skip10ahead.png";
         private string _fontfamily = $"Bahnschrift";
+        private string _previous = "ms-appx:///Assets/Themes/Ocean/previous.png";
+        private string _speed = "ms-appx:///Assets/Themes/Ocean/speedicon.png";
+        private string _miniplayer = "ms-appx:///Assets/Themes/Ocean/miniplayer.png";
+        private string _options = "ms-appx:///Assets/Themes/Ocean/options.png";
+        private string _expandedicon = "ms-appx:///Assets/Themes/Ocean/expandedicon.png";
+        private string _toolsicon = "ms-appx:///Assets/Themes/Ocean/toolsicon.png";
+        private string _findlyricsonline = "ms-appx:///Assets/Themes/Ocean/findlyricsonline.png";
+        private string _favicon = "ms-appx:///Assets/Themes/Ocean/favicon.png";
+        private string _fileinfo = "ms-appx:///Assets/Themes/Ocean/fileinfoicon.png";
+
         private string _openfolder = "ms-appx:///Assets/Themes/Ocean/openfolder.png";
         private string _importicon = "ms-appx:///Assets/Themes/Ocean/importicon.png";
         private string _removeicon = "ms-appx:///Assets/Themes/Ocean/removeicon.png";
@@ -175,6 +185,115 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
             get => _fontfamily;
             set => SetProperty(ref _fontfamily, value);
         }
+        public string Previous
+        {
+            get => _previous;
+            set
+            {
+                if (_previous != value)
+                {
+                    _previous = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Speed
+        {
+            get => _speed;
+            set
+            {
+                if (_speed != value)
+                {
+                    _speed = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string MiniPlayer
+        {
+            get => _miniplayer;
+            set
+            {
+                if (_miniplayer != value)
+                {
+                    _miniplayer = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Options
+        {
+            get => _options;
+            set
+            {
+                if (_options != value)
+                {
+                    _options = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string ExpandedIcon
+        {
+            get => _expandedicon;
+            set
+            {
+                if (_expandedicon != value)
+                {
+                    _expandedicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string ToolsIcon
+        {
+            get => _toolsicon;
+            set
+            {
+                if (_toolsicon != value)
+                {
+                    _toolsicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string FindLyricsOnline
+        {
+            get => _findlyricsonline;
+            set
+            {
+                if (_findlyricsonline != value)
+                {
+                    _findlyricsonline = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string FavIcon
+        {
+            get => _favicon;
+            set
+            {
+                if (_favicon != value)
+                {
+                    _favicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string FileInfo
+        {
+            get => _fileinfo;
+            set
+            {
+                if (_fileinfo != value)
+                {
+                    _fileinfo = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
 
         #region INotifyPropertyChanged Implementation
 

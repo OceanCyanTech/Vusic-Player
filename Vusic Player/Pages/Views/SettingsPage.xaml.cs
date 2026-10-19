@@ -83,6 +83,7 @@ namespace Vusic_Player.Pages.Views
             chkVideoPlaylists.IsChecked = currentSettings.Panel3VisibilityVideo;
             chkVideoShows.IsChecked = currentSettings.Panel4VisibilityVideo;
 
+            numMaxVolume.Value = currentSettings.MaxVolume;
             _isSyncing = true;
             try
             {
@@ -1437,6 +1438,14 @@ namespace Vusic_Player.Pages.Views
 
             string uriString = $"ms-settings:defaultapps?registeredAUMID={Uri.EscapeDataString(aumid)}";
             await Launcher.LaunchUriAsync(new Uri(uriString));
+        }
+
+        private async void numMaxVolume_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.MaxVolume = numMaxVolume.Value; 
+            MediaPlaybackController.Instance.MaximumVolume = numMaxVolume.Value;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
     }
 }

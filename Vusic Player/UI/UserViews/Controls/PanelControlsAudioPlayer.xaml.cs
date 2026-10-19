@@ -152,7 +152,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         public string GetFavToolTip(bool isFav)
         {
-            return isFav ? "Remove from Favorites" : "Add to Favorites";
+            return isFav ? "Remove from Favourites" : "Add to Favourites";
         }
         public MediaPlaybackController media => MediaPlaybackController.Instance;
         private async void btnInfo_Click(object sender, RoutedEventArgs e)

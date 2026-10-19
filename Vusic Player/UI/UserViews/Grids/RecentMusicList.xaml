@@ -28,7 +28,7 @@
                     <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Unchecked"></CheckBox>
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromContinueWatchingSelected_Click"  Name="btnRemoveFromContinueWatchingSelected" >
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="20" Source="/Assets/removeicon.png"></Image>
+                            <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -38,12 +38,12 @@
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"/>
+                                <FontIcon Glyph="&#xE8B1;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"/>
+                                <FontIcon Glyph="&#xE8EE;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
@@ -54,7 +54,7 @@
                     </MenuFlyout>
                 </Button.ContextFlyout>
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="20" Source="/Assets/play.png"/>
+                    <Image Width="20" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Play all"/>
                 </StackPanel>
             </Button>
@@ -64,7 +64,7 @@
         <Grid Name="grdEmptySuggestions" Visibility="Visible" Grid.Column="1">
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
-                    <Image Width="90" Source="/Assets/musicnoteicon.png"></Image>
+                    <Image Width="90" Source="{Binding MusicNoteIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Listen to music to show them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button HorizontalAlignment="Center"  Content="Turn off Recent Music" Name="btnDisableRecents" Click="btnDisableRecents_Click"></Button>
@@ -73,7 +73,7 @@
         <Grid Name="grdDisabledRecents" Visibility="Collapsed" Grid.Column="1">
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
-                    <Image Width="90" Source="/Assets/musicnoteicon.png"></Image>
+                    <Image Width="90" Source="{Binding MusicNoteIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Saving to history has been disabled!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button HorizontalAlignment="Center"  Content="Turn on Saving to History" Name="btnEnableHistory" Click="btnEnableHistory_Click"></Button>

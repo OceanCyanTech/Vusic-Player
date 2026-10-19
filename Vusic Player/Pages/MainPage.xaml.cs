@@ -197,7 +197,7 @@ namespace Vusic_Player.Pages
             string skipBackIcon = currentSettings.SkipBack is 5 or 10 or 15 or 20 or 30
                     ? $"skip{currentSettings.SkipBack}back.png"
                     : "skipbackcustom.png";
-
+            mediacontroller.MaximumVolume = currentSettings.MaxVolume;
             IconsInstance.SkipBack = $"ms-appx:///Assets/Themes/{currentSettings.Theme}/{skipBackIcon}";
             SeekServiceInstance.SkipAhead = currentSettings.SkipAhead;
             SeekServiceInstance.SkipBack = currentSettings.SkipBack;

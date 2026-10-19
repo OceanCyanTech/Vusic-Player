@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -160,6 +161,26 @@ namespace Vusic_Player.Pages.Views
             AllAvailableVideos.Clear();
             await LoadAllFilesAsync();
             stkLoading.Visibility = Visibility.Collapsed;
+        }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+
+            if (e.Parameter is string str && str == "EntireHistory")
+            {
+                ToggleButton[] vidButtons = { btnAllVideos, btnShows, btnHistory };
+                foreach (var btn in vidButtons)
+                {
+                    btn.IsChecked = false;
+                }
+
+                btnHistory.IsChecked = true;
+                grdAllVideos.Visibility = Visibility.Collapsed;
+                grdShows.Visibility = Visibility.Collapsed;
+                grdAllVideoHistory.Visibility = Visibility.Visible;
+                LoadHistory();
+            }
+
+            base.OnNavigatedTo(e);
         }
 
         private async Task LoadAllFilesAsync()
@@ -480,20 +501,23 @@ namespace Vusic_Player.Pages.Views
 
             foreach (var item in recentvideos)
             {
-                Debug.WriteLine("LOADING HISTORY " + item.FilePath);
-                recentVideo.Add(new VideoProgress
+                if (File.Exists(item.FilePath))
                 {
-                    FolderName = new DirectoryInfo(
-                            Path.GetDirectoryName(item.FilePath) ?? string.Empty
-                        ).Name,
-                    FileName = Path.GetFileNameWithoutExtension(item.FilePath),
-                    FilePath = item.FilePath,
-                    HoverText = $"{Path.GetFileNameWithoutExtension(item.FilePath)}" + Environment.NewLine + "Folder: " + new DirectoryInfo(
-                            Path.GetDirectoryName(item.FilePath) ?? string.Empty
-                        ).Name,
-                    LoadingVisibility = Visibility.Visible
+                    Debug.WriteLine("LOADING HISTORY " + item.FilePath);
+                    recentVideo.Add(new VideoProgress
+                    {
+                        FolderName = new DirectoryInfo(
+                                Path.GetDirectoryName(item.FilePath) ?? string.Empty
+                            ).Name,
+                        FileName = Path.GetFileNameWithoutExtension(item.FilePath),
+                        FilePath = item.FilePath,
+                        HoverText = $"{Path.GetFileNameWithoutExtension(item.FilePath)}" + Environment.NewLine + "Folder: " + new DirectoryInfo(
+                                Path.GetDirectoryName(item.FilePath) ?? string.Empty
+                            ).Name,
+                        LoadingVisibility = Visibility.Visible
 
-                });
+                    });
+                }
             }
             foreach (var item in recentVideo)
             {

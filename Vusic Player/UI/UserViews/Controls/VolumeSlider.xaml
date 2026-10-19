@@ -7,8 +7,21 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Border  Grid.Row="2"
+Padding="15"  Margin="0, 10"
+VerticalAlignment="Top" 
+HorizontalAlignment="Center"
+Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" 
+BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+BorderThickness="1" 
+CornerRadius="16"
+                >
+        <Grid ToolTipService.ToolTip="Volume" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="20">
 
-    <Grid>
-
-    </Grid>
+                <TextBlock Text="{x:Bind mediaPlaybackController.VolumeString, Mode=OneWay}" Foreground="{x:Bind mediaPlaybackController.VolumeForeground, Mode=OneWay}"/>
+                <local:OceanSlider Maximum="{x:Bind mediaPlaybackController.MaximumVolume, Mode=OneWay}" Value="100" ValueChanged="OceanSlider_ValueChanged" Width="100" IsTooltipEnabled="False" />
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>

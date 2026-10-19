@@ -715,8 +715,15 @@ namespace Vusic_Player.UI.UserViews.Grids
        public void ShowDisable()
         {
             grdHighlightVideo.Visibility = Visibility.Collapsed;
+            VideoProgressList.Clear();
+            grdRecents.Visibility = Visibility.Collapsed;
             stkEnabledEmptyRecents.Visibility = Visibility.Collapsed;
             stkDisabledEmptyRecents.Visibility = Visibility.Visible;
+        }
+        public void ShowEnable()
+        {
+            stkEnabledEmptyRecents.Visibility = Visibility.Visible;
+            stkDisabledEmptyRecents.Visibility = Visibility.Collapsed;
         }
         private async void btnEnableRecents_Click(object sender, RoutedEventArgs e)
         {
@@ -725,8 +732,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             currentSettings.SavedVideoProgress.Clear();
                 
             await SettingsLoader.SaveSettingsAsync(currentSettings);
-            stkEnabledEmptyRecents.Visibility = Visibility.Visible;
-            stkDisabledEmptyRecents.Visibility = Visibility.Collapsed;
+            ShowEnable();
         }
 
         private async void mnftHideVideoFromContinuePlaying_Click(object sender, RoutedEventArgs e)

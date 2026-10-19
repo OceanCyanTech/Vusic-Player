@@ -132,17 +132,7 @@ namespace Vusic_Player.Pages.Views
                 grdAllMusicHistory.Visibility = Visibility.Visible;
                 LoadHistory();
             }
-            else if (e.Parameter is string str2 && str2 == "Videos")
-            {
-                txtHistoryHeading.Text = "History of videos you've watched on this app";
-                btnAllMusic.Content = "All Videos";
-                btnHistory.Content = "Video History";
-                txtAllMusicHeader.Text = "All videos across your libraries";
-                AllMusicGroupedCollection.SearchPlaceHolderText = "Search for videos...";
-                btnAlbums.Visibility = Visibility.Collapsed;
-                btnArtists.Visibility = Visibility.Collapsed;
-                btnGenres.Visibility = Visibility.Collapsed;
-            }
+          
             base.OnNavigatedTo(e);
         }
         private async void ToggleButton_Checked(object sender, RoutedEventArgs e)

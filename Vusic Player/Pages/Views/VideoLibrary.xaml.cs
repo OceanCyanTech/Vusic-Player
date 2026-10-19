@@ -205,7 +205,7 @@ namespace Vusic_Player.Pages.Views
 
         private void mnftViewFullVideoHistory_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(EntireVideoLibrary), "Videos");
+            Frame.Navigate(typeof(EntireVideoLibrary), "EntireHistory");
         }
 
         private async void mnftDisableRecentVideos_Click(object sender, RoutedEventArgs e)
@@ -217,13 +217,17 @@ namespace Vusic_Player.Pages.Views
                 currentSettings.SavedVideoProgress.Clear();
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
                 mnftDisableRecentVideos.Text = "Enable Recent Videos";
-                ContinuePlay
-
-                    PENDING;
+                ContinuePlay.ShowDisable();
             }
             else
             {
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                currentSettings.IsVideoHistoryDisabled = false;
+                currentSettings.SavedVideoProgress.Clear();
 
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
+                mnftDisableRecentVideos.Text = "Disable Recent Videos";
+                ContinuePlay.ShowEnable();
             }
         }
     }

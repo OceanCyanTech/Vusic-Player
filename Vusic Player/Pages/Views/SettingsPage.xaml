@@ -103,7 +103,7 @@
                                 <ComboBox.Items>
                                     <ComboBoxItem Content="Home Page"/>
                                     <ComboBoxItem Content="Music Library Page"/>
-                                    <ComboBoxItem Content="Video Library Page"/>    
+                                    <ComboBoxItem Content="Video Library Page"/>
                                 </ComboBox.Items>
                             </ComboBox>
                             <Button Content="App Lock" Click="btnAppLock_Click"  Name="btnAppLock" Style="{StaticResource AccentButtonStyle}"/>
@@ -398,45 +398,44 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="General Settings" Style="{StaticResource TitleTextBlockStyle}"/>
-                        <MenuFlyoutSeparator Grid.Row="1"/>
-                        <TextBlock Text="Skip Duration" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
-                        <TextBlock Text="Modify how many seconds the skip forward and backward buttons would jump." Grid.Row="3"/>
-                        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
-                            <TextBlock VerticalAlignment="Center" Text="Backward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                            <ComboBox SelectedIndex="1" Name="cmbSkipBackward" SelectionChanged="cmbSkipBackward_SelectionChanged">
-                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="5 seconds"/>
-                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="10 seconds"/>
-                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="15 seconds"/>
-                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="20 seconds"/>
-                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="30 seconds"/>
-                                <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="Custom"/>
-                            </ComboBox>
-                            <NumberBox ValueChanged="numCustomSkipBack_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipBack"/>
+                        <StackPanel Orientation="Vertical" Spacing="30">
+                            <TextBlock Text="General Settings" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <MenuFlyoutSeparator Grid.Row="1"/>
+                            <TextBlock Text="Skip Duration" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Modify how many seconds the skip forward and backward buttons would jump." Grid.Row="3"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
+                                <TextBlock VerticalAlignment="Center" Text="Backward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ComboBox SelectedIndex="1" Name="cmbSkipBackward" SelectionChanged="cmbSkipBackward_SelectionChanged">
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="5 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="10 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="15 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="20 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="30 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="Custom"/>
+                                </ComboBox>
+                                <NumberBox ValueChanged="numCustomSkipBack_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipBack"/>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal" Spacing="10" Grid.Row="5">
+                                <TextBlock VerticalAlignment="Center" Text="Forward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ComboBox SelectedIndex="1" Name="cmbSkipForward" SelectionChanged="cmbSkipForward_SelectionChanged">
+                                    <ComboBoxItem Content="5 seconds"/>
+                                    <ComboBoxItem Content="10 seconds"/>
+                                    <ComboBoxItem Content="15 seconds"/>
+                                    <ComboBoxItem Content="20 seconds"/>
+                                    <ComboBoxItem Content="30 seconds"/>
+                                    <ComboBoxItem Content="Custom"/>
+                                </ComboBox>
+                                <NumberBox ValueChanged="numCustomSkipAhead_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipForward"/>
+                            </StackPanel>
+                            <MenuFlyoutSeparator Grid.Row="6"/>
+                            <TextBlock Text="Maximum Volume" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Maximum Volume allowed." Grid.Row="3"/>
+                            <NumberBox SpinButtonPlacementMode="Inline"  Minimum="10" Maximum="300" Name="numMaxVolume" ValueChanged="numMaxVolume_ValueChanged"/>
+                            <MenuFlyoutSeparator Grid.Row="6"/>
                         </StackPanel>
-                        <StackPanel  Orientation="Horizontal" Spacing="10" Grid.Row="5">
-                            <TextBlock VerticalAlignment="Center" Text="Forward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                            <ComboBox SelectedIndex="1" Name="cmbSkipForward" SelectionChanged="cmbSkipForward_SelectionChanged">
-                                <ComboBoxItem Content="5 seconds"/>
-                                <ComboBoxItem Content="10 seconds"/>
-                                <ComboBoxItem Content="15 seconds"/>
-                                <ComboBoxItem Content="20 seconds"/>
-                                <ComboBoxItem Content="30 seconds"/>
-                                <ComboBoxItem Content="Custom"/>
-                            </ComboBox>
-                            <NumberBox ValueChanged="numCustomSkipAhead_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipForward"/>
-                        </StackPanel>
-                        <MenuFlyoutSeparator Grid.Row="6"/>
-                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Customization" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="7"/>
-                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="8">
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Customization" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="1"/>
+                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="2">
                             <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="8">
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Change Font"/>
                                 <ComboBox SelectionChanged="cmbFontFamilies_SelectionChanged" Name="cmbFontFamilies">

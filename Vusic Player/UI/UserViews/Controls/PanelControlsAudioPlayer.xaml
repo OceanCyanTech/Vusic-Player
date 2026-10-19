@@ -30,7 +30,7 @@
                     </MenuFlyout>
                 </Button.Flyout>
 
-                <Image Name="imgSpeed" Width="24" Source="/Assets/speedicon.png"/>
+                <Image Name="imgSpeed" Width="26" Source="{Binding Speed, Source={StaticResource GlobalIconHolder}}"/>
             </Button>
             <TeachingTip Name="ttMultiDeviceOutput" IsOpen="False" >
                 <Grid>
@@ -68,13 +68,13 @@
                 </TeachingTip.Content>
             </TeachingTip>
             <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Mini Player"  Name="btnMiniPlayer" IsEnabled="True" Click="btnMiniPlayer_Click">
-                <Image  Width="26" Source="/Assets/miniplayer.png"/>
+                <Image  Width="26" Source="{Binding MiniPlayer, Source={StaticResource GlobalIconHolder}}"/>
             </Button>
             <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="{x:Bind ExpandedViewButtonToolTip, Mode=OneWay}"  Name="btnFullView" IsEnabled="True" Click="btnFullView_Click">
-                <Image  Width="26" Source="/Assets/appicon.png"/>
+                <Image  Width="26" Source="{Binding ExpandedIcon, Source={StaticResource GlobalIconHolder}}"/>
             </Button>
             <Button Visibility="Visible" ToolTipService.ToolTip="Options" Background="Transparent" BorderBrush="Transparent"  Name="btnEffects" Margin="5, 0" Click="btnEffects_Click">
-                <Image  Width="24" Source="/Assets/options.png"/>
+                <Image  Width="24" Source="{Binding Options, Source={StaticResource GlobalIconHolder}}"/>
                 <Button.Flyout>
                     <Flyout>
                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
@@ -83,49 +83,44 @@
                                     <MenuFlyout>
                                         <MenuFlyoutItem Text="Pitch" Click="mnftPitch_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <FontIcon Glyph="&#xE789;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Reverb" Name="mnftReverb" Click="mnftReverb_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <ImageIcon Source="/Assets/reverbfonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="File Format Converter" Name="mnftFormatConverter" Click="mnftFormatConverter_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <ImageIcon Source="/Assets/fileformatconverterfonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem IsEnabled="{x:Bind media.MultiDeviceOutputFeature, Mode=OneWay}"  Text="Multi-Device Output Mixer" Name="mnftMultiDevice" Click="mnftMultiDevice_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <ImageIcon Source="/Assets/multioutputfonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                
                                     </MenuFlyout>
                                 </Button.Flyout>
-                                <Image  Width="26" Source="/Assets/toolsicon.png"/>
+                                <Image  Width="26" Source="{Binding ToolsIcon, Source={StaticResource GlobalIconHolder}}"/>
                             </Button>
                             
                             <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Find Lyrics Online"  Name="btnLyrics" IsEnabled="True" Click="btnLyrics_Click">
-                                <Image  Width="26" Source="/Assets/appicon.png"/>
+                                <Image  Width="26" Source="{Binding FindLyricsOnline, Source={StaticResource GlobalIconHolder}}"/>
                             </Button>
                             <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="{x:Bind GetFavToolTip(media.IsFavourite), Mode=OneWay}"  Name="btnAddtoFavourites" IsEnabled="True" Click="btnAddtoFavourites_Click">
-                                <Image  Width="26" Source="/Assets/favicon.png"/>
+                                <Image  Width="26" Source="{Binding FavIcon, Source={StaticResource GlobalIconHolder}}"/>
                             </Button>
                             <Button Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="File Info"  Name="btnInfo" IsEnabled="True" Click="btnInfo_Click">
-                                <Image  Width="26" Source="/Assets/infoicon.png"/>
+                                <Image  Width="26" Source="{Binding FileInfo, Source={StaticResource GlobalIconHolder}}"/>
                             </Button>
                             <ToggleButton Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Toggle Loop"  Name="btnLoopToggle" Checked="btnLoopToggle_Checked" Unchecked="btnLoopToggle_Checked">
-                                <Image  Width="26" Source="/Assets/infoicon.png"/>
+                                <Image  Width="26" Source="{Binding InfoIcon, Source={StaticResource GlobalIconHolder}}"/>
                             </ToggleButton>
-                            <ToggleButton Visibility="Collapsed" Name="btnFullScreen" ToolTipService.ToolTip="Fyll sren" CornerRadius="10"  HorizontalAlignment="Center" >
-
-                                <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <Image Source="/Assets/appicon.png" Width="26"></Image>
-                                </StackPanel>
-                            </ToggleButton>
+                       
                         </StackPanel>
 
                     </Flyout>

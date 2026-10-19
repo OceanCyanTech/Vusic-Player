@@ -104,7 +104,21 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private static void OnMaximumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (d is OceanSlider control)
+            {
+                double newMax = (double)e.NewValue;
 
+                // 1. Ensure Value does not exceed the new Maximum
+                if (control.Value > newMax)
+                {
+                    control.Value = Math.Max(control.Minimum, newMax);
+                    // control.Value setter/callback will automatically invoke UpdateVisuals()
+                    return;
+                }
+
+                // 2. Recalculate thumb, progress, ticks, and chapter marker positions
+                control.UpdateVisuals();
+            }
         }
         public static readonly DependencyProperty ValueProperty =
     DependencyProperty.Register(

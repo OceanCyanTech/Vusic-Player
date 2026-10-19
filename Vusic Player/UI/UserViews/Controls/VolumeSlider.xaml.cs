@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.Playback;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -20,9 +22,15 @@ namespace Vusic_Player.UI.UserViews.Controls
 {
     public sealed partial class VolumeSlider : UserControl
     {
+        MediaPlaybackController mediaPlaybackController => MediaPlaybackController.Instance;
         public VolumeSlider()
         {
             InitializeComponent();
+        }
+
+        private void OceanSlider_ValueChanged(double obj)
+        {
+            PlayerService.VolumeChange(obj);
         }
     }
 }

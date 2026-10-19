@@ -188,7 +188,7 @@
                     <TeachingTip Name="ttVolume" PreferredPlacement="Center" Title="Volume">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Name="volStackPanel" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
-                                <oceancyan:OceanSlider x:Name="sldVol" IsTooltipEnabled="False" Margin="10, 0" IsEnabled="True" ValueChanged="sldVol_ValueChanged" Maximum="250" Value="100" Width="200">
+                                <oceancyan:OceanSlider x:Name="sldVol" IsTooltipEnabled="False" Margin="10, 0" IsEnabled="True" ValueChanged="sldVol_ValueChanged" Maximum="{x:Bind mediacontroller.MaximumVolume, Mode=OneWay}" Value="100" Width="200">
                                     <ToolTipService.ToolTip>
                                         <ToolTip Visibility="Visible" x:Name="VolumeToolTip" Content="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" />
                                     </ToolTipService.ToolTip>

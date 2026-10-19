@@ -28,7 +28,7 @@
 
             <oceancyan:OceanSlider x:Name= "VolumeSlider" 
                             Minimum="0" 
-                            Maximum="250" 
+                            Maximum="{x:Bind mediacontroller.MaximumVolume, Mode=OneWay}" 
                             Value="{x:Bind mediacontroller.VolumeValue, Mode=TwoWay}" 
                             Margin="5,0"
                             IsTooltipEnabled="False" 
