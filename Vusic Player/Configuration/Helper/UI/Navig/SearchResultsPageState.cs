@@ -3,6 +3,7 @@
     public class SearchResultsPageState
     {
         public static bool alreadyNavigatedtoSearchResultsPage = false;
+        public static bool alreadyNavigatedtoSettingsPage = false;
 
     }
 }

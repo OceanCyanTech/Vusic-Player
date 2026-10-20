@@ -256,5 +256,27 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             QueueService.IsLoopTrue = btnLoopToggle.IsChecked ?? false;
         }
+        private void btnJumpToTime_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var hours = numHour.Value;
+                var mins = numMin.Value;
+                var sec = numSec.Value;
+                var totalms = (hours * 3600000) + (mins * 60000) + (sec * 1000);
+                if (PlayerService.Masterplayer == null) return;
+                PlayerService.Masterplayer.SeekAccurate(((int)totalms));
+            }
+            catch
+            {
+                //
+            }
+
+        }
+
+        private void mnftJumpToTime_Click(object sender, RoutedEventArgs e)
+        {
+            ttJumpToTime.IsOpen = true;
+        }
     }
 }

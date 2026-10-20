@@ -17,7 +17,19 @@ namespace Vusic_Player.Configuration.AppConfig
             return AppWindow.GetFromWindowId(myWndId);
         }
         public static MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
-
+        public static void FullScreenOff()
+        {
+            _appWindow ??= GetAppWindowForCurrentWindow();
+            if (mediacontroller.IsFullScreen)
+            {
+                var targetPresenter = AppWindowPresenterKind.Default;
+                var toolTipText = "Set Full Screen";
+                _appWindow.SetPresenter(targetPresenter);
+                string fullscreentext= "Resized to Normal" ;
+                GeneralInfoService.ShowInfo(fullscreentext);
+                mediacontroller.FullScreenToolTip = toolTipText;
+            }
+        }
         public static void FullScreenToggle()
         {
             _appWindow ??= GetAppWindowForCurrentWindow();

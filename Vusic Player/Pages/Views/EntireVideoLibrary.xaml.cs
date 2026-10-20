@@ -17,6 +17,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -520,7 +521,7 @@ namespace Vusic_Player.Pages.Views
             }
             foreach (var item in recentVideo)
             {
-                var fallbackUri = "ms-appx:///Assets/default.png";
+                var fallbackUri = IconHolder.Instance.DefaultVideo;
                 item.Thumbnail = new BitmapImage(new Uri(fallbackUri));
                 var task = Task.Run(async () =>
                 {

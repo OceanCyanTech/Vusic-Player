@@ -380,7 +380,7 @@
 
                     <MenuFlyoutItem x:Name="mnftMiniPlayer" Text="Mini Player" Click="mnftMiniPlayer_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="&#xE80F;"></FontIcon>
+                            <FontIcon Glyph="&#xEE49;"></FontIcon>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
@@ -390,20 +390,25 @@
                         </ToggleMenuFlyoutItem.Icon>
                     </ToggleMenuFlyoutItem>
                     <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Name="mnftJumpToTime" Text="Jump to Time" Click="mnftJumpToTime_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xEC57;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
                     <MenuFlyoutItem Name="mnftMediaStats" Text="Media Stats" Click="mnftMediaStats_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="d"/>
+                            <FontIcon Glyph="&#xE9D2;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                     <MenuFlyoutSeparator/>
                     <MenuFlyoutItem x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="d"/>
+                            <FontIcon Glyph="&#xE946;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                     <MenuFlyoutItem x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="d"/>
+                            <FontIcon Glyph="&#xE838;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                 </MenuFlyout>

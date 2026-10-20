@@ -1,0 +1,90 @@
+THIRD-PARTY SOFTWARE NOTICES AND ACKNOWLEDGMENTS
+
+Vusic Player incorporates third-party open-source libraries and APIs. 
+OceanCyan Tech gratefully acknowledges the authors and contributors of these 
+projects.
+
+
+1. Flyleaf (FlyleafLib)
+--------------------------------------------------------------------------------
+Copyright (c) Flyleaf Project Contributors
+License: GNU Lesser General Public License v3.0 (LGPLv3)
+Project URL: https://github.com/SuRGeoNix/Flyleaf
+
+Provides media playback engines, rendering, and hardware-accelerated decoding pipelines.
+
+
+2. FFmpeg
+--------------------------------------------------------------------------------
+Copyright (c) FFmpeg Developers
+License: LGPL v2.1+ / GPL v3.0+
+Project URL: https://ffmpeg.org/
+
+Demuxing, audio/video codecs, and multimedia processing pipelines.
+
+
+3. TagLib# (TagLibSharp)
+--------------------------------------------------------------------------------
+Copyright (c) Brian Nickel, Gabriel Burt, and other contributors
+License: GNU Lesser General Public License v2.1 (LGPLv2.1)
+Project URL: https://github.com/mono/taglib-sharp
+
+Reading, parsing, and extracting ID3, Vorbis, and media metadata tags.
+
+
+4. SoX Reverb (libsox / SoX effect DSP)
+--------------------------------------------------------------------------------
+Copyright (c) SoX Contributors
+License: GNU General Public License v2.0+ (GPLv2+) / LGPL
+Project URL: https://sourceforge.net/projects/sox/
+
+Audio digital signal processing and reverb effect algorithms.
+
+
+5. Vortice.Windows (Vortice.XAudio2)
+--------------------------------------------------------------------------------
+Copyright (c) Amer Koleci and Vortice.Windows contributors
+License: MIT License
+Project URL: https://github.com/amerkoleci/Vortice.Windows
+
+Low-latency audio playback, mastering voices, and audio submix routing via XAudio2.
+
+
+6. Windows App SDK / WinUI 3
+--------------------------------------------------------------------------------
+Copyright (c) Microsoft Corporation
+License: MIT License
+Project URL: https://github.com/microsoft/WindowsAppSDK
+
+Modern Windows user interface framework and controls.
+
+
+7. SQLite (Microsoft.Data.Sqlite / sqlite-net)
+--------------------------------------------------------------------------------
+License: Public Domain / MIT License
+Project URL: https://www.sqlite.org/
+
+Local media indexing, track caching, and playlist persistence.
+
+
+8. CommunityToolkit (MVVM / WinUI)
+--------------------------------------------------------------------------------
+Copyright (c) .NET Foundation and Contributors
+License: MIT License
+Project URL: https://github.com/CommunityToolkit/Windows
+
+MVVM architectural primitives, relay commands, and UI helper components.
+
+
+9. DuckDuckGo Image Search / Scraper (gogoduck)
+--------------------------------------------------------------------------------
+License: MIT / Apache 2.0 (Open-source scraper utility)
+Purpose: Fetching online artist artwork and album thumbnails.
+
+
+10. LRCLIB API
+--------------------------------------------------------------------------------
+Author: Tran Duc Nam (t-recx)
+Service: https://lrclib.net/
+Project: Open-source synchronized and plain lyrics provider.
+Purpose: Querying and retrieving synchronized (.lrc) and unsynchronized lyrics.

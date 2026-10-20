@@ -25,7 +25,7 @@
                             </Flyout>
                         </Button.Flyout>
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Image Source="/Assets/reseticon.png" Width="16" Height="16"/>
+                            <Image Source="{Binding Refresh, Source={StaticResource GlobalIconHolder}}" Width="16" Height="16"/>
                             <TextBlock Text="Reset Fields" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -44,7 +44,7 @@
                         </Border>
                         <Button CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnAddPlaylistCover" Click="btnAddPlaylistCover_Click" HorizontalAlignment="Stretch">
                             <StackPanel Orientation="Horizontal" Spacing="8">
-                                <Image Source="/Assets/reseticon.png" Width="16"/>
+                                <Image Source="{Binding AddImageIcon, Source={StaticResource GlobalIconHolder}}" Width="16"/>
                                 <TextBlock Text="Set Cover Art" />
                             </StackPanel>
                         </Button>
@@ -104,32 +104,32 @@ HorizontalAlignment="Right" ToolTipService.ToolTip="Add Videos or Audio"  Corner
                             <MenuFlyout>
                                 <MenuFlyoutItem Text="By Name">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"></FontIcon>
+                                        <FontIcon Glyph="&#xE932;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem Text="By Duration">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"></FontIcon>
+                                        <FontIcon Glyph="&#xE823;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem Text="By Artist">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"></FontIcon>
+                                        <FontIcon Glyph="&#xE77B;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem Text="By Album">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"></FontIcon>
+                                        <FontIcon Glyph="&#xE93C;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem Text="By Date Created">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"></FontIcon>
+                                        <FontIcon Glyph="&#xE787;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem Text="By Size">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"></FontIcon>
+                                        <FontIcon Glyph="&#xE742;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>

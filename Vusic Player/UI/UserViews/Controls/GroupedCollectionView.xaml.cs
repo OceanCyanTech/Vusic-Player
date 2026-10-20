@@ -20,6 +20,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
@@ -1933,7 +1934,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                 }
                 ttEditPlaylist.IsOpen = true;
                 Instance.PlCover = new BitmapImage(playlist.Thumbnail);
-                Instance.Thumbnail = playlist.Thumbnail ?? new Uri("ms - appx:///Assets/playlistdefaultdark.png");
+                Instance.Thumbnail = playlist.Thumbnail ?? new Uri(IconHolder.Instance.PlaylistIcon);
 
                 Instance.PlaylistName = playlist.PlaylistName;
                 Instance.Genre = playlist.PlaylistGenre ?? "";

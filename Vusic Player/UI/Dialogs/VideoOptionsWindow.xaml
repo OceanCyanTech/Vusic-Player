@@ -151,9 +151,9 @@
 
 
                     <StackPanel Name="stkActionButtons" Spacing="10" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0, 0">
-                        <control:OceanButton  Style="{StaticResource OceanShim   }" x:Name="btnPrimary" Click="btnPrimary_Click">
+                        <control:OceanButton  Style="{StaticResource OceanShim}" x:Name="btnPrimary" Click="btnPrimary_Click">
                             <StackPanel Orientation="Horizontal">
-                                <Image Width="20" Name="imgPrimary" Source="/Assets/saveicon.png"></Image>
+                                <Image Width="20" Name="imgPrimary" Source="{Binding SaveIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                                 <TextBlock FontSize="16" Name="txtPrimary" Margin="5, 0" Text="Save"></TextBlock>
                             </StackPanel>
                         </control:OceanButton>

@@ -49,17 +49,17 @@
                         <MenuFlyout>
                             <MenuFlyoutItem Text="Play Shuffled" Name="mnftPlayShuffled" Click="mnftPlayShuffled_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE8B1;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play on Loop" Name="mnftPlayOnLoop" Click="mnftPlayOnLoop_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE8EE;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftPlayOnLoopShuffled" Click="mnftPlayOnLoopShuffled_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -84,17 +84,17 @@
                                     <MenuFlyout >
                                         <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <FontIcon Glyph="&#xE838;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <FontIcon Glyph="&#xE894;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                     </MenuFlyout>

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using Vortice.DirectWrite;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI.Navig;
@@ -56,6 +57,9 @@ namespace Vusic_Player.Pages.Views
                 SearchResultsMain.Add(new MasterSearchModel { Album = Searchresult.Album, Artist = Searchresult.Artist, ImageThumbnail = Searchresult.ImageThumbnail, ResultMain = Searchresult.ResultMain, SubInformation = Searchresult.SubInformation, SearchFilter = Searchresult.SearchFilter, FilePath = Searchresult.FilePath });
             }
             AllSearchResults.ItemsSource = SearchResultsMain;
+
+            grdNoSearchResults.Visibility = SearchResultsMain.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+           AllSearchResults.Visibility = SearchResultsMain.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {

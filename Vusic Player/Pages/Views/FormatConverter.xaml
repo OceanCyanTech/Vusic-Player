@@ -48,49 +48,49 @@
                             <MenuFlyout>
                                 <MenuFlyoutItem Name="mnftPlayOutput" IsEnabled="{Binding CanPlayOutput}" Text="Play Output" Click="mnftPlayOutput_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE768;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem  Text="Add Output to Queue"  IsEnabled="{Binding CanPlayOutput}"   Name="mnftAddOutputToQueue" Click="mnftAddOutputToQueue_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem  Text="Remove" Name="mnftRemoveFile" Click="mnftRemoveFile_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE894;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem  Text="Open File Location" Name="mnftOpenFileLocation" Click="mnftOpenFileLocation_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE838;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem  Text="Open File Location of Reverb Output" IsEnabled="{Binding CanPlayOutput}" Name="mnftOpenFileLocOutput" Click="mnftOpenFileLocOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE838;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator/>
                                 <MenuFlyoutItem  Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE8C8;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem  Text="Copy File Path of Reverb Output" IsEnabled="{Binding CanPlayOutput}" Name="mnftCopyReverbOutputFilePath" Click="mnftCopyReverbOutputFilePath_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE8C8;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator/>
                                 <MenuFlyoutItem  Text="File Info" Name="mnftFileInfo" Click="mnftFileInfo_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE946;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem  Text="File Info of Reverb Output" IsEnabled="{Binding CanPlayOutput}" Name="mnftFileInfoReverbOutput" Click="mnftFileInfoReverbOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE946;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>

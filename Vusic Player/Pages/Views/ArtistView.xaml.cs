@@ -22,6 +22,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -243,7 +244,7 @@ public sealed partial class ArtistView : Page
 
     private async Task<BitmapImage> LoadExistingThumbnailAsync(string albumname)
     {
-        Uri fallbackUri = new Uri("ms-appx:///Assets/defaultalbum.png");
+        Uri fallbackUri = new Uri(IconHolder.Instance.DefaultAlbum);
 
         var currentSettings = await SettingsLoader.LoadSettingsAsync();
 
@@ -402,7 +403,7 @@ public sealed partial class ArtistView : Page
 
             imgArtist.DisplayName = txtArtistName.Text;
 
-            Uri fallbackUri = new Uri("ms-appx:///Assets/defaultartist.png");
+            Uri fallbackUri = new Uri(IconHolder.Instance.DefaultArtist);
 
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
 
@@ -631,7 +632,7 @@ public sealed partial class ArtistView : Page
 
     private async void mnftRemoveImage_Click(object sender, RoutedEventArgs e)
     {
-        imgArtist.ProfilePicture = new BitmapImage(new Uri("ms-appx:///Assets/defaultartist.png"));
+        imgArtist.ProfilePicture = new BitmapImage(new Uri(IconHolder.Instance.DefaultArtist));
         var currentSettings = await SettingsLoader.LoadSettingsAsync();
         var artists = currentSettings.ArtistsList;
         var existingArtist = artists.FirstOrDefault(a => a.Name == txtArtistName.Text);
@@ -1642,7 +1643,7 @@ public sealed partial class ArtistView : Page
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
-        imgAlbumCover.Source = new BitmapImage(new Uri("ms-appx:///Assets/defaultalbum.png"));
+        imgAlbumCover.Source = new BitmapImage(new Uri(IconHolder.Instance.DefaultAlbum));
     }
 
     private void mnftCopyFilePath_Click(object sender, RoutedEventArgs e)

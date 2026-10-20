@@ -103,6 +103,26 @@ namespace Vusic_Player.Pages
                 PlayerService.PlayPause();
                 e.Handled = true;
             }
+            else if (e.Key == Windows.System.VirtualKey.Right)
+            {
+                if (IsTextInputFocused())
+                {
+                    return;
+                }
+
+                PlayerService.SeekAhead();
+                e.Handled = true;
+            }
+            else if (e.Key == Windows.System.VirtualKey.Left)
+            {
+                if (IsTextInputFocused())
+                {
+                    return;
+                }
+
+                PlayerService.SeekBefore();
+                e.Handled = true;
+            }
         }
         private async void InitializeWatermark()
         {
@@ -159,20 +179,6 @@ namespace Vusic_Player.Pages
         {
             PlayerService.SldMain_DragCompleted(sldMain);
         }
-        private void SetGridBackground()
-        {
-            BitmapImage bitmapImage = new BitmapImage(new Uri("ms-appx:///Assets/oceanglow.png"));
-
-            // 2. Create an ImageBrush and set its ImageSource
-            ImageBrush imageBrush = new ImageBrush
-            {
-                ImageSource = bitmapImage,
-                Stretch = Stretch.UniformToFill // Controls how the image scales to fit the grid
-            };
-
-            // 3. Assign the brush to the Grid's Background
-            grdRoot.Background = imageBrush;
-        }
         ShowCreationValues showInstance => ShowCreationValues.Instance;
         PlaylistCreationValues playlistInstance => PlaylistCreationValues.Instance;
         public IconHolder IconsInstance => IconHolder.Instance;
@@ -202,7 +208,7 @@ namespace Vusic_Player.Pages
             foreach (var show in currentSettings.Shows)
             {
                 var seasoncountstring = $"• {show.SeasonCount} {(show.SeasonCount == 1 ? "season" : "seasons")}";
-                newObservableShows.Add(new Show { Poster = show.Poster ?? "ms-appx:///Assets/appicon.png", ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory, ReleaseDate = show.ReleaseDate });
+                newObservableShows.Add(new Show { Poster = show.Poster ?? IconsInstance.DefaultShow, ShowID = show.ShowID, SeasonCountString = seasoncountstring, Name = show.Name, Description = show.Description, Crew = show.Crew, Creators = show.Creators, Tags = show.Tags, Directory = show.Directory, ReleaseDate = show.ReleaseDate });
             }
             foreach (var playlist in currentSettings.SavedPlaylists)
             {
@@ -220,6 +226,44 @@ namespace Vusic_Player.Pages
             MasterSearchIndex.Pages.Add("Entire Video Library");
             MasterSearchIndex.Pages.Add("Log");
             MasterSearchIndex.Pages.Add("Settings");
+
+            MasterSearchIndex.Settings.Add("Skip Duration"); //
+            MasterSearchIndex.Settings.Add("Seek Duration");//
+            MasterSearchIndex.Settings.Add("Maximum Volume");//
+            MasterSearchIndex.Settings.Add("Customization");//
+            MasterSearchIndex.Settings.Add("Theme");//
+            MasterSearchIndex.Settings.Add("Font");//
+            MasterSearchIndex.Settings.Add("Personalization");//
+            MasterSearchIndex.Settings.Add("Skin");//
+            MasterSearchIndex.Settings.Add("Home Page Panels");//
+            MasterSearchIndex.Settings.Add("Music Library Page Panels");//
+            MasterSearchIndex.Settings.Add("Video Library Page Panels");//
+            MasterSearchIndex.Settings.Add("Playlist Settings");//
+            MasterSearchIndex.Settings.Add("Audio Metadata Settings");//
+            MasterSearchIndex.Settings.Add("Artist Settings");//
+            MasterSearchIndex.Settings.Add("Album Settings");//
+            MasterSearchIndex.Settings.Add("Genre Settings");//
+            MasterSearchIndex.Settings.Add("Continue Playing Videos Settings");//
+            MasterSearchIndex.Settings.Add("Shows Settings");//
+            MasterSearchIndex.Settings.Add("Media Database");//
+            MasterSearchIndex.Settings.Add("Folder Permissions");
+            MasterSearchIndex.Settings.Add("Startup Settings");//
+            MasterSearchIndex.Settings.Add("App Lock");//
+            MasterSearchIndex.Settings.Add("Splash Screen");//
+            MasterSearchIndex.Settings.Add("Startup Page");//
+            MasterSearchIndex.Settings.Add("Default App for Formats");//
+            MasterSearchIndex.Settings.Add("Reset App");//
+            MasterSearchIndex.Settings.Add("About App");//
+            MasterSearchIndex.Settings.Add("App License");//
+            MasterSearchIndex.Settings.Add("Updates");//
+            MasterSearchIndex.Settings.Add("Help");//
+            MasterSearchIndex.Settings.Add("Feedback");//
+            MasterSearchIndex.Settings.Add("Suggestions");//
+            MasterSearchIndex.Settings.Add("Privacy");//
+            MasterSearchIndex.Settings.Add("Source Code");//
+            MasterSearchIndex.Settings.Add("Documentation");//
+            MasterSearchIndex.Settings.Add("Keyboard Shortcuts");//
+            MasterSearchIndex.Settings.Add("How to use Vusic Player?");
         }
 
         private async void FrmMain_Navigated(object sender, NavigationEventArgs e)
@@ -390,7 +434,7 @@ namespace Vusic_Player.Pages
             {
                 if (!File.Exists(item.FilePath)) return new ObservableCollection<MasterSearchModel>(); ;
                 var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
-                returnableobservable.Add(new MasterSearchModel { ImageThumbnail = "ms-appx:///Assets/defaultartist.png", ResultMain = item.Title, SubInformation = subinfo });
+                returnableobservable.Add(new MasterSearchModel { ImageThumbnail = IconsInstance.DefaultArtist, ResultMain = item.Title, SubInformation = subinfo });
             }
 
             //if (rawMediaTitleBoolCheck)
@@ -400,7 +444,7 @@ namespace Vusic_Player.Pages
             //    foreach (var item in rawMediaTitle)
             //    {
             //        var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
-            //        returnableobservable.Add(new MasterSearchModel { ImageThumbnail = "ms-appx:///Assets/artistdefault.png", ResultMain = item.Title, SubInformation = subinfo });
+            //        returnableobservable.Add(new MasterSearchModel { ImageThumbnail = IconHolder.Instance.DefaultArtist, ResultMain = item.Title, SubInformation = subinfo });
             //    }
             //}
             return returnableobservable;
@@ -469,7 +513,7 @@ namespace Vusic_Player.Pages
 
         private void txtTotalDuration_Tapped(object sender, TappedRoutedEventArgs e)
         {
-        
+
         }
     }
 }

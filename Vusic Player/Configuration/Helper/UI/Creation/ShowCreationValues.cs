@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.UserSettings;
 
 namespace Vusic_Player.Configuration.Helper.UI.Creation
@@ -42,7 +43,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         private string _genre = "";
         private string _tags = "";
         private string _directory = "";
-        private string _posterpath = "ms-appx:///Assets/appicon.png";
+        private string _posterpath = IconHolder.Instance.DefaultShow;
         private string _showID = "";
         private Visibility _visibilityViewEpisodes = Visibility.Collapsed;
         private DateTimeOffset _releasedate;

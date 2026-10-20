@@ -35,12 +35,12 @@
                             <MenuFlyout>
                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}"  Text="Change Image" Click="btnSetAlbumCover_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="x"></FontIcon>
+                                        <FontIcon Glyph="&#xE91B;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}"  Text="Remove Image" Name="mnftRemoveImage" Click="mnftRemoveImage_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="x"></FontIcon>
+                                        <FontIcon Glyph="&#xE894;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>
@@ -67,7 +67,7 @@
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock Text="&#xE823;" FontFamily="Segoe Fluent Icons" 
 Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0, 3" />
-                    <TextBlock Margin="5, 0" Text="00:00" ToolTipService.ToolTip="Total Runtime of album" 
+                    <TextBlock Margin="5, 0" Text="00:00" ToolTipService.ToolTip="Total Runtime Of Album" 
 Name="txtTotalDuration" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
             </StackPanel>

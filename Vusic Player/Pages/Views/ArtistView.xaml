@@ -178,7 +178,7 @@ Stretch="UniformToFill"/>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock Text="&#xE823;" FontFamily="Segoe Fluent Icons" 
 Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0, 3" />
-                    <TextBlock Margin="5, 0" Text="00:00" ToolTipService.ToolTip="Total Runtime of artist" 
+                    <TextBlock Margin="5, 0" Text="00:00" ToolTipService.ToolTip="Total Runtime of Artist" 
 Name="txtTotalDuration" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
             </StackPanel>
@@ -315,13 +315,13 @@ ToolTipService.ToolTip="Set Artist Cover">
                 <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="10">
                 <Button Click="btnPlayAllMostPlayed_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllMostPlayed" Grid.Row="3" Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <FontIcon Glyph="d"/>
+                            <FontIcon Glyph="&#xE768;"/>
                         <TextBlock Text="Play All"/>
                     </StackPanel>
                     </Button>
                     <Button Click="btnAddtoQueueMostPlayed_Click" ToolTipService.ToolTip="Add all songs in list to Queue" Name="btnAddtoQueueMostPlayed" Grid.Row="3" >
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <FontIcon Glyph="d"/>
+                            <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
                             <TextBlock Text="Add to Queue"/>
                         </StackPanel>
                     </Button>
@@ -341,7 +341,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Visibility="Collapsed" Spacing="10" Name="stkMultiOptionsAlbums">
-                    <Button Name="btnRemoveSelections" Click="btnRemoveSelections_Click" ToolTipService.ToolTip="Remove albums" Margin="0, 10" >
+                    <Button Name="btnRemoveSelections" Click="btnRemoveSelections_Click" ToolTipService.ToolTip="Remove Albums" Margin="0, 10" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                         </StackPanel>
@@ -443,7 +443,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                 <TextBlock  Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtSinglesDuration" Text="• 00:00"></TextBlock>
                 <Button Click="btnPlayAllSingles_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllSingles" Grid.Row="3" Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <FontIcon Glyph="d"/>
+                        <FontIcon Glyph="&#xE768;"/>
                         <TextBlock Text="Play All"/>
                     </StackPanel>
                 </Button>

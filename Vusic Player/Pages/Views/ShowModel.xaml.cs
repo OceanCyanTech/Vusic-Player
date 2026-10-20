@@ -15,6 +15,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
@@ -262,12 +263,12 @@ namespace Vusic_Player.Pages.Views
                                                     catch (Exception bitmapEx)
                                                     {
                                                         Debug.WriteLine($"Bitmap Load Error: {bitmapEx.Message}");
-                                                        targetEpisodeModel.Thumbnail = new BitmapImage(new Uri("ms-appx:///Assets/default.png"));
+                                                        targetEpisodeModel.Thumbnail = new BitmapImage(new Uri(IconHolder.Instance.DefaultVideo));
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    targetEpisodeModel.Thumbnail = new BitmapImage(new Uri("ms-appx:///Assets/default.png"));
+                                                    targetEpisodeModel.Thumbnail = new BitmapImage(new Uri(IconHolder.Instance.DefaultVideo));
                                                 }
                                             });
                                         }

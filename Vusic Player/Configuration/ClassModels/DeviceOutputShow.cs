@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -8,7 +9,7 @@ namespace Vusic_Player.Configuration.ClassModels
     {
         private string _deviceName = "";
         private string _deviceUserName = "";
-        private string _deviceThumbnail = "ms-appx:///Assets/appicon.png";
+        private string _deviceThumbnail = IconHolder.Instance.DeviceIcon;
         private string _deviceID = "";
         private string _deviceVolume = "";
         private double _volume = 100;

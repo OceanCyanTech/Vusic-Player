@@ -29,6 +29,7 @@ using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -2311,10 +2312,36 @@ namespace Vusic_Player.Pages
             {
                 PlayerService.SeekAhead();
             }
-            else if (e.Key == Windows.System.VirtualKey.F)
+            else if (e.Key == Windows.System.VirtualKey.F || e.Key == Windows.System.VirtualKey.F11)
             {
                 mediacontroller.IsFullScreen = !mediacontroller.IsFullScreen;
                 FullScreen.FullScreenToggle();
+            }
+            else if(e.Key == Windows.System.VirtualKey.Control && e.Key == Windows.System.VirtualKey.Up)
+            {
+                var currentvolume = mediacontroller.VolumeValue;
+                var increasedvol = currentvolume + 10;
+                if(increasedvol <= mediacontroller.MaximumVolume)
+                {
+                    PlayerService.VolumeChange(increasedvol);
+                }
+            }
+            else if (e.Key == Windows.System.VirtualKey.Control && e.Key == Windows.System.VirtualKey.Down)
+            {
+                var currentvolume = mediacontroller.VolumeValue;
+                var decreasedvol = currentvolume - 10;
+                if (decreasedvol >=0)
+                {
+                    PlayerService.VolumeChange(decreasedvol);
+                }
+            }
+            else if (e.Key == Windows.System.VirtualKey.Escape)
+            {
+                if (mediacontroller.IsFullScreen)
+                {
+                    FullScreen.FullScreenOff();
+                    mediacontroller.IsFullScreen = false;
+                }
             }
         }
         ObservableCollection<EpisodeModel> EpisodesList = new();
@@ -2477,12 +2504,12 @@ namespace Vusic_Player.Pages
                                             catch (Exception bitmapEx)
                                             {
                                                 Debug.WriteLine($"Bitmap Load Error: {bitmapEx.Message}");
-                                                targetEpisodeModel.Thumbnail = new BitmapImage(new Uri("ms-appx:///Assets/default.png"));
+                                                targetEpisodeModel.Thumbnail = new BitmapImage(new Uri(IconHolder.Instance.DefaultVideo));
                                             }
                                         }
                                         else
                                         {
-                                            targetEpisodeModel.Thumbnail = new BitmapImage(new Uri("ms-appx:///Assets/default.png"));
+                                            targetEpisodeModel.Thumbnail = new BitmapImage(new Uri(IconHolder.Instance.DefaultVideo));
                                         }
                                     });
                                 }
@@ -2752,10 +2779,10 @@ namespace Vusic_Player.Pages
         {
             var Icon = logLevel switch
             {
-                Logger.LogLevelType.Information => "ms-appx:///Assets/infoicon.png",
-                Logger.LogLevelType.Warning => "ms-appx:///Assets/warning.png",
-                Logger.LogLevelType.Error => "ms-appx:///Assets/error.png",
-                Logger.LogLevelType.Success => "ms-appx:///Assets/success.png",
+                Logger.LogLevelType.Information => IconHolder.Instance.InfoIcon,
+                Logger.LogLevelType.Warning =>IconHolder.Instance.WarningIcon,
+                Logger.LogLevelType.Error => IconHolder.Instance.Error,
+                Logger.LogLevelType.Success => IconHolder.Instance.Success,
                 _ => null
             };
             if (PlayerService.Masterplayer == null) return;
@@ -2943,6 +2970,60 @@ namespace Vusic_Player.Pages
         private void FadeInOutStoryboardPanel_Completed(object sender, object e)
         {
             //RootGrid.SetCursorVisibility(false);
+        }
+
+        private void MenuFlyout_Opened(object sender, object e)
+        {
+            if(PlayerService.Masterplayer != null)
+            {
+                if (PlayerService.Masterplayer.IsPlaying)
+                {
+                    fntIconPlay.Glyph = "\uE769";
+                }
+                else
+                {
+                    fntIconPlay.Glyph = "\uE768";
+                }
+            }
+            if (mediacontroller.VolumeValue == 0)
+            {
+                fntIconVolume.Glyph = "\uE74F";
+            }
+            else if (mediacontroller.VolumeValue > 0 && mediacontroller.VolumeValue < 30)
+            {
+                fntIconVolume.Glyph = "\uE993";
+            }
+            else if (mediacontroller.VolumeValue > 30 && mediacontroller.VolumeValue < 70)
+            {
+                fntIconVolume.Glyph = "\uE994";
+            }
+            else
+            {
+                fntIconVolume.Glyph = "\uE995";
+            }
+        }
+
+        private void btnJumpToTime_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var hours = numHour.Value;
+                var mins = numMin.Value;
+                var sec = numSec.Value;
+                var totalms = (hours * 3600000) + (mins * 60000) + (sec * 1000);
+                if (PlayerService.Masterplayer == null) return;
+                PlayerService.Masterplayer.SeekAccurate(((int)totalms));
+            }
+            catch 
+            {
+             //
+            }
+
+        }
+
+        private void videoControls_JumpToTime()
+        {
+            ttJumpToTime.IsOpen = true;
         }
     }
 }

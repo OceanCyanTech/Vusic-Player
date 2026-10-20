@@ -429,7 +429,7 @@ namespace Vusic_Player.Pages.Views
                     if (exitCode == 0)
                     {
                         item.Progress = 100;
-                        item.ImageState = "ms-appx:///Assets/success.png";
+                        item.ImageState = IconHolder.Instance.Success;
                         item.OutputPath = outputpath;
                         ProcessedFiles.Add(item);
                     }

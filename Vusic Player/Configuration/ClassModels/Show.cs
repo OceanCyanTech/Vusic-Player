@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -16,7 +17,7 @@ namespace Vusic_Player.Configuration.ClassModels
             set { if (_name != value) { _name = value; OnPropertyChanged(); } }
         }
 
-        private string _poster = "ms-appx:///Assets/appicon.png";
+        private string _poster = IconHolder.Instance.DefaultShow;
         public string Poster
         {
             get => _poster;

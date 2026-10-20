@@ -62,12 +62,12 @@
                         <MenuFlyout Opened="MenuFlyout_Opened">
                             <MenuFlyoutItem Text="Open From PC" Name="mnftOpenFromPC" Click="mnftOpenFromPC_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xEC4E;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Open Previously Loaded" Name="mnftOpenPrevLyrics" Click="mnftOpenPrevLyrics_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE823;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -79,13 +79,13 @@
                 </Button>
                 <Button Margin="0, 0" Grid.Row="2" IsEnabled="False" Name="btnFullLyrics" Click="Button_Click_1" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <Image Width="20" Source="{Binding ViewFullLyrics, Source={StaticResource GlobalIconHolder}}"/>
                         <TextBlock Text="View Full Lyrics"/>
                     </StackPanel>
                 </Button>
                 <Button Name="btnFindLyricsOnline"  Margin="0, 0" Grid.Row="2"   Click="Button_Click_2" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <Image Width="20" Source="{Binding FindLyricsOnline, Source={StaticResource GlobalIconHolder}}"/>
                         <TextBlock Text="Find Lyrics Online"/>
                     </StackPanel>
                 </Button>
@@ -93,13 +93,13 @@
             <StackPanel HorizontalAlignment="Center"  Visibility="Collapsed" Name="stkLyricFunctions2" Grid.Row="3"  Orientation="Horizontal" Spacing="10">
                 <Button  HorizontalAlignment="Center" Name="btnCustomizeLyricText" Click="btnCustomizeLyricText_Click" >
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <Image Width="20" Source="{Binding Personalize, Source={StaticResource GlobalIconHolder}}"/>
                         <TextBlock Text="Customize Lyric Text"/>
                     </StackPanel>
                 </Button>
                 <Button   HorizontalAlignment="Center" Name="btnLyricEditor" Click="btnLyricEditor_Click">
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Image Width="20" Source="/Assets/appicon.png"/>
+                        <Image Width="20" Source="{Binding EditIcon, Source={StaticResource GlobalIconHolder}}"/>
                         <TextBlock Text="Lyric Editor"/>
                     </StackPanel>
                 </Button>
@@ -173,7 +173,7 @@
 
         <Grid Name="musicPlayerMaster" Grid.Column="1" CornerRadius="20" Margin="20, 30" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.Background>
-                <ImageBrush ImageSource="/Assets/oceancyan.png" Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="{Binding BlurAesthetic, Source={StaticResource GlobalIconHolder}}" Stretch="UniformToFill"/>
             </Grid.Background>
             <Border CornerRadius="20">
                 <Border.Background>

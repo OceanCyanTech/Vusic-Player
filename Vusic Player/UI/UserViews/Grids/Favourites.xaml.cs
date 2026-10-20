@@ -8,13 +8,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
+using Vusic_Player.Pages;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Storage;
 
@@ -79,7 +82,6 @@ namespace Vusic_Player.UI.UserViews.Grids
 
             FinalList.Clear();
 
-            // 3. Add placeholders immediately and dispatch async thumbnail work
             foreach (var path in selectedCandidates)
             {
                 if (!File.Exists(path)) continue;
@@ -87,8 +89,8 @@ namespace Vusic_Player.UI.UserViews.Grids
                 bool isVideo = VideoExtensions.List.Contains(ext);
 
                 string fallbackUri = isVideo
-                    ? "ms-appx:///Assets/videonoteicon.png"
-                    : "ms-appx:///Assets/musicnoteicon.png";
+                    ? IconHolder.Instance.DefaultVideo
+                    : IconHolder.Instance.MusicNoteIcon;
 
                 var favItem = new FavouritesRecommend
                 {
@@ -309,8 +311,23 @@ namespace Vusic_Player.UI.UserViews.Grids
             SongDuration = duration
         }
     };
-
-                    QueueService.PlayMedia(single, false, false);
+                    if (isVideo)
+                    {
+                        if (PlayerService.InVideoPage == false)
+                        {
+                            if (File.Exists(selectedSong.FilePath))
+                                if(App.NavigationFrame != null)
+                                App.NavigationFrame.Navigate(typeof(VideoPlayer), selectedSong.FilePath);
+                        }
+                        else
+                        {
+                            PlayerService.OpenPath(selectedSong.FilePath);
+                        }
+                    }
+                    else
+                    {
+                        QueueService.PlayMedia(single, false, false);
+                    }
                 }
                 else
                 {

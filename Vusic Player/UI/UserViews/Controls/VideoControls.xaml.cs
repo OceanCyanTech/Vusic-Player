@@ -37,6 +37,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         public event Action? MultiDeviceOutput;
         public event Action? VideoChapters;
         public event Action? MediaStats;
+        public event Action? JumpToTime;
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
         public ShowCreationValues showcreation => ShowCreationValues.Instance;
         public Visibility ViewEpisodeVisibility
@@ -877,6 +878,11 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             QueueService.IsLoopTrue = btnLoopToggle.IsChecked ?? false;
 
+        }
+
+        private void mnftJumpToTime_Click(object sender, RoutedEventArgs e)
+        {
+            JumpToTime?.Invoke();
         }
     }
 }

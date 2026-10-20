@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 
 
 namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
@@ -48,7 +49,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 Instance.Directory = folder.Path;
             }
         }
-        string posterpath = "ms-appx:///Assets/appicon.png";
+        string posterpath = IconHolder.Instance.DefaultShow;
         private async void btnUploadShowPoster_Click(object sender, RoutedEventArgs e)
         {
             if (App.OceanDialogInstance == null) return;

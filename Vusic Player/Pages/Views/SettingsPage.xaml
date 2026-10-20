@@ -14,7 +14,7 @@
     <Grid  Margin="30, 30">
         <NavigationView IsBackButtonVisible="Collapsed" PaneDisplayMode="Top" SelectionChanged="nvgNavigationMain_SelectionChanged" IsSettingsVisible="False"  Name="nvgNavigationMain">
             <NavigationView.MenuItems>
-                <NavigationViewItem IsSelected="True"  Name="nvgitPlayback" Content="General"/>
+                <NavigationViewItem Name="nvgitPlayback" Content="General"/>
                 <NavigationViewItem Name="nvgitHomePage" Content="Home Page Options"/>
 
                 <NavigationViewItem Name="nvgitMusicOptions" Content="Music Options"/>
@@ -67,17 +67,17 @@
                                                     <MenuFlyout >
                                                         <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
                                                             <MenuFlyoutItem.Icon>
-                                                                <FontIcon Glyph="d"></FontIcon>
+                                                                <FontIcon Glyph="&#xE838;"></FontIcon>
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
                                                         <MenuFlyoutItem Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
                                                             <MenuFlyoutItem.Icon>
-                                                                <FontIcon Glyph="d"></FontIcon>
+                                                                <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
                                                         <MenuFlyoutItem Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
                                                             <MenuFlyoutItem.Icon>
-                                                                <FontIcon Glyph="d"></FontIcon>
+                                                                <FontIcon Glyph="&#xE894;"></FontIcon>
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
                                                     </MenuFlyout>
@@ -96,7 +96,7 @@
                                 </Button>
                             </controls1:WrapPanel>
                             <MenuFlyoutSeparator/>
-                            <TextBlock Text="Startup" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Text="Startup" Name="txtStartup" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock Text="Configure app startup settings." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
                             <CheckBox Name="chkShowSplash" Content="Show Splash Screen" Checked="chkShowSplash_Checked" Unchecked="chkShowSplash_Checked"/>
                             <ComboBox Header="Page to show when app starts" SelectedIndex="0" Name="cmbStartupPage" SelectionChanged="cmbStartupPage_SelectionChanged">
@@ -136,7 +136,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Vertical" Spacing="30">
-                            <TextBlock Text="About" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock Text="About" Name="txtAbout"  Style="{StaticResource TitleTextBlockStyle}"/>
                             <MenuFlyoutSeparator/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Spacing="15">
@@ -150,7 +150,7 @@
 
                             <Image Margin="0, 30" HorizontalAlignment="Left" Width="300" Source="/Assets/OceanCyan Logo High.png"/>
                             <MenuFlyoutSeparator/>
-                            <TextBlock Text="Open Source Licenses" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Text="Media Engine" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock Text="FlyleafLib" Style="{StaticResource BodyStrongTextBlockStyle}"/>
                             <TextBlock Text="Copyright © SuRGeoNix"/>
                             <TextBlock Text="Licensed under LGPLv3"/>
@@ -175,17 +175,20 @@
                             </StackPanel>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="6"/>
-                        <TextBlock Text="Help" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock Text="Help" Name="txtHelp"  Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
                         <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="8" Text="Vusic Player is an open source project!"/>
-                        <HyperlinkButton Content="View Source on GitHub" Grid.Row="9"/>
-                        <HyperlinkButton Content="Documentation and Support" Grid.Row="10"/>
-                        <HyperlinkButton Content="Share your feedback to help us improve the app" Grid.Row="11"/>
-                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="12">
+                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="9">
+                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Open Source License" Content="Open Source License" Name="btnViewOSLicense" Click="btnViewOSLicense_Click"/>
+                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Third Party Licenses" Content="Third Party Licenses" Name="btnViewThirdPartyLicense" Click="btnViewThirdPartyLicense_Click"/>
+
+                            <HyperlinkButton Content="View Source on GitHub"  Grid.Row="9"/>
+                            <HyperlinkButton Content="Documentation and Support" Grid.Row="10"/>
+                            <HyperlinkButton Content="Share your feedback to help us improve the app" Grid.Row="11"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
                             <MenuFlyoutSeparator />
                             <TextBlock Text="Privacy" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
-                            <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="8" Text="Feature and Error Diagnostics help us analyze and improve Vusic Player. No personal information is shared whatsoever. Promise."/>
-                            <CheckBox Name="chkAllowDiagnostics" Content="Allow Sending Feature and Error Diagnostics to OceanCyan Tech."/>
-                            <Button Style="{StaticResource AccentButtonStyle}" Content="Privacy Statement" Name="btnViewPrivacyStatement" Click="btnViewPrivacyStatement_Click"/>
+                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Privacy Statement" Content="Privacy Statement" Name="btnViewPrivacyStatement" Click="btnViewPrivacyStatement_Click"/>
                         </StackPanel>
                     </Grid>
                     <Grid Name="grdMusicOptions" RowSpacing="30" Visibility="Collapsed">
@@ -408,7 +411,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Vertical" Spacing="30">
+                        <StackPanel Orientation="Vertical" Spacing="30" Name="stkGeneral1">
                             <TextBlock Text="General Settings" Style="{StaticResource TitleTextBlockStyle}"/>
                             <MenuFlyoutSeparator Grid.Row="1"/>
                             <TextBlock Text="Skip Duration" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
@@ -462,7 +465,7 @@
         BorderBrush="Transparent" 
         Grid.Column="5"
         ToolTipService.ToolTip="Find font...">
-                                    <Image Width="20" Source="/Assets/Themes/Ocean/searchicon.png"/>
+                                    <Image Width="20" Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}"/>
                                     <Button.Flyout>
                                         <Flyout x:Name="flyoutSearch">
                                             <AutoSuggestBox x:Name="asbSearchFormats" 
@@ -486,7 +489,23 @@
                                 <TextBlock VerticalAlignment="Center" Text="Changes will be applied when Vusic Player is opened the next time."/>
                                 <Button Style="{StaticResource AccentButtonStyle}" Content="Restart Vusic Player" Click="btnRestartVusicPlayer_Click" Name="btnRestartVusicPlayer"/>
                             </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="30" >
+                                <TextBlock Name="txtChangeTheme" Text="Change Theme" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            </StackPanel>
                         </StackPanel>
+                    </Grid>
+                    <Grid Name="grdRichEditBox" RowSpacing="50" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Button ToolTipService.ToolTip="Go Back" HorizontalAlignment="Left"  Name="btnBack" Click="btnBack_Click">
+                            <Image Width="20" Source="{Binding BackIcon, Source={StaticResource GlobalIconHolder}}"/>
+                        </Button>
+                        <TextBlock HorizontalAlignment="Center" Name="txtStatementHeader" Text="Privacy Statement" Grid.Row="1" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+                        <RichEditBox Name="rchEditBoxStatements" Grid.Row="2" IsReadOnly="True"/>
                     </Grid>
                 </Grid>
             </ScrollViewer>

@@ -13,6 +13,7 @@ using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.FilePickers;
 using Windows.Storage;
@@ -172,7 +173,7 @@ namespace Vusic_Player.Pages.Views
                         if (!Directory.Exists(item.DirectoryPath))
                         {
                             Debug.WriteLine("Item output doesnt exist " + item.OutputPath);
-                            item.ImageState = "ms-appx:///Assets/error.png";
+                            item.ImageState = IconHolder.Instance.Error;
                             item.DirectorySelectionEnabled = true;
                             item.ErrorToolTip = "Output Directory not selected";
                             return;
@@ -264,7 +265,7 @@ namespace Vusic_Player.Pages.Views
                             if (exitCode == 0)
                             {
                                 item.Progress = 100;
-                                item.ImageState = "ms-appx:///Assets/success.png";
+                                item.ImageState = IconHolder.Instance.Success;
                                 item.OutputPath = outputMp3;
                                 Debug.WriteLine(outputMp3 + "  Post Processing");
                                 ProcessedFiles.Add(item);
@@ -278,7 +279,7 @@ namespace Vusic_Player.Pages.Views
                             }
                             else
                             {
-                                item.ImageState = "ms-appx:///Assets/error.png";
+                                item.ImageState = IconHolder.Instance.Error;
                                 System.Diagnostics.Debug.WriteLine($"Failed with code {exitCode}: {errorBuilder}");
                             }
                         });

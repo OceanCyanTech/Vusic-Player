@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -35,6 +36,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         public static ObservableCollection<PlaylistItem> PlaylistsMaster = PlaylistCreationValues.Instance.PlaylistsMaster;
         public static ObservableCollection<Show> ShowsMaster = ShowCreationValues.Instance.ShowsMaster;
         public static ObservableCollection<FolderModel> FoldersOpenedMaster = new ObservableCollection<FolderModel>();
+        public static ObservableCollection<string> Settings = new ObservableCollection<string>();
         public static ObservableCollection<string> Pages = new ObservableCollection<string>();
         public static ObservableCollection<string> Folders = new ObservableCollection<string>();
         static MasterSearchIndex()
@@ -270,7 +272,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         ResultMain = track.Title,
                         FilePath = track.FilePath,
                         SubInformation = isVideo ? "Video" : "Song",
-                        ImageThumbnail = $"ms-appx:///Assets/{(isVideo ? "default" : "musicnoteicon")}.png"
+                        ImageThumbnail = isVideo ? IconHolder.Instance.DefaultVideo : IconHolder.Instance.MusicNoteIcon
                     }, score);
                 }
             }
@@ -308,7 +310,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         ResultMain = album,
                         Album = album,
                         SubInformation = "Album",
-                        ImageThumbnail = $"ms-appx:///Assets/defaultalbum.png"
+                        ImageThumbnail = IconHolder.Instance.DefaultAlbum
                     }, score + 1);
                 }
             }
@@ -343,7 +345,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         ResultMain = show.Name,
                         ShowID = show.ShowID,
                         SubInformation = "Show",
-                        ImageThumbnail = $"ms-appx:///Assets/appicon.png"
+                        ImageThumbnail = IconHolder.Instance.DefaultShow
                     }, score + 2);
                 }
             }
@@ -377,7 +379,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         ResultMain = playlist.PlaylistName,
                         PlaylistID = playlist.PlaylistId,
                         SubInformation = "Playlist",
-                        ImageThumbnail = $"ms-appx:///Assets/playlistdefaultdark.png"
+                        ImageThumbnail = IconHolder.Instance.PlaylistIcon
                     }, score + 3);
                 }
             }
@@ -420,7 +422,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         ResultMain = artist,
                         Artist = artist,
                         SubInformation = "Artist",
-                        ImageThumbnail = $"ms-appx:///Assets/defaultartist.png"
+                        ImageThumbnail = IconHolder.Instance.DefaultArtist
                     }, score + 4);
                 }
             }
@@ -461,7 +463,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                     {
                         ResultMain = genre,
                         SubInformation = "Genre",
-                        ImageThumbnail = $"ms-appx:///Assets/defaultgenre.png"
+                        ImageThumbnail = IconHolder.Instance.GenreIcon
                     }, score);
                 }
             }
@@ -500,7 +502,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                     {
                         ResultMain = page,
                         SubInformation = "Page",
-                        ImageThumbnail = $"ms-appx:///Assets/appicon.png"
+                        ImageThumbnail =IconHolder.Instance.PageIcon
                     }, score + 6);
                 }
             }
@@ -540,11 +542,46 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                         ResultMain = name,
                         SubInformation = "Folder",
                         FolderPath = folder.FolderPath,
-                        ImageThumbnail = $"ms-appx:///Assets/foldericon.png"
+                        ImageThumbnail = IconHolder.Instance.FolderIcon
                     }, score + 6);
                 }
             }
         }
+        private static IEnumerable<(MasterSearchModel, int)> SearchSettings(string rawQuery, string[] tokens)
+        {
+
+            var settings = Settings;
+            foreach (var setting in settings)
+            {
+             
+                int score = 0;
+                if (string.Equals(setting, rawQuery, StringComparison.OrdinalIgnoreCase))
+                {
+                    score = 100;
+                }
+                else if (setting.StartsWith(rawQuery, StringComparison.OrdinalIgnoreCase))
+                {
+                    score = 70;
+                }
+                else if (tokens.Length > 0 && tokens.All(t => setting.Contains(t, StringComparison.OrdinalIgnoreCase)))
+                {
+                    score = 50;
+                }
+
+           
+
+                if (score > 0)
+                {
+                    yield return (new MasterSearchModel
+                    {
+                        ResultMain = setting,
+                        SubInformation = "Setting",
+                        ImageThumbnail = IconHolder.Instance.SettingIcon
+                    }, score + 6);
+                }
+            }
+        }
+
 
         public static async Task<List<MasterSearchModel>> ProcessFindQueryFullAsync(string query)
         {
@@ -582,6 +619,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                 candidates.AddRange(SearchShows(query.Trim(), queryTokens));
                 candidates.AddRange(SearchGenres(query.Trim(), queryTokens));
                 candidates.AddRange(SearchPages(query.Trim(), queryTokens));
+                candidates.AddRange(SearchSettings(query.Trim(), queryTokens));
                 candidates.AddRange(SearchFoldersOpened(query.Trim(), queryTokens));
                 return candidates.OrderByDescending(x => x.Score).Select(x => x.Model).Take((int)MediaPlaybackController.Instance.MaximumSearchResults).ToList();
                 //               //First Result is Direct Match/Starts with (and preferred with most played)
@@ -675,23 +713,23 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                     if (!File.Exists(firstResult.FilePath)) return rankedResults;
                     bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(firstResult.FilePath).ToLowerInvariant());
 
-                    rankedResults.Add(new MasterSearchModel { ResultMain = firstResult.Title, FilePath = firstResult.FilePath, SubInformation = isVideo ? "Video" : "Song", ImageThumbnail = $"ms-appx:///Assets/{(isVideo ? "default" : "musicnoteicon")}.png" });
+                    rankedResults.Add(new MasterSearchModel { ResultMain = firstResult.Title, FilePath = firstResult.FilePath, SubInformation = isVideo ? "Video" : "Song", ImageThumbnail = isVideo ? IconHolder.Instance.DefaultVideo : IconHolder.Instance.MusicNoteIcon });
                 }
                 foreach (var item in nextTwoTitles)
                 {
                     if (!File.Exists(item.FilePath)) continue;
                     bool isVideo = VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant());
 
-                    rankedResults.Add(new MasterSearchModel { ResultMain = item.Title, FilePath = item.FilePath, SubInformation = isVideo ? "Video" : "Song", ImageThumbnail = $"ms-appx:///Assets/{(isVideo ? "default" : "musicnoteicon")}.png" });
+                    rankedResults.Add(new MasterSearchModel { ResultMain = item.Title, FilePath = item.FilePath, SubInformation = isVideo ? "Video" : "Song", ImageThumbnail = isVideo ? IconHolder.Instance.DefaultVideo : IconHolder.Instance.MusicNoteIcon });
                 }
                 if (Artist != null)
                 {
                     Debug.WriteLine("ARTIST NOT NULL " + Artist.Artist + "  " + Artist.Title);
-                    rankedResults.Add(new MasterSearchModel { ResultMain = Artist.Artist, SearchFilter = ClassModels.Filters.Artist, Artist = Artist.Artist, SubInformation = "Artist", ImageThumbnail = $"ms-appx:///Assets/defaultartist.png" });
+                    rankedResults.Add(new MasterSearchModel { ResultMain = Artist.Artist, SearchFilter = ClassModels.Filters.Artist, Artist = Artist.Artist, SubInformation = "Artist", ImageThumbnail = IconHolder.Instance.DefaultArtist });
                 }
                 if (Album != null)
                 {
-                    rankedResults.Add(new MasterSearchModel { ResultMain = Album.AlbumName, SearchFilter = ClassModels.Filters.Album, Album = Album.AlbumName, SubInformation = "Album", ImageThumbnail = $"ms-appx:///Assets/defaultalbum.png" });
+                    rankedResults.Add(new MasterSearchModel { ResultMain = Album.AlbumName, SearchFilter = ClassModels.Filters.Album, Album = Album.AlbumName, SubInformation = "Album", ImageThumbnail = IconHolder.Instance.DefaultAlbum });
                 }
                 return rankedResults;
             });

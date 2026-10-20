@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
@@ -171,6 +173,7 @@ namespace Vusic_Player.Pages.Views
             frmAboutOptions.Visibility = Visibility.Collapsed;
             grdMusicOptions.Visibility = Visibility.Collapsed;
             grdVideoOptions.Visibility = Visibility.Collapsed;
+            grdRichEditBox.Visibility = Visibility.Collapsed;
             lstHiddenVideos.Visibility = Visibility.Collapsed;
             hypBlockedVideos.Content = "View hidden videos";
             if (args.SelectedItemContainer == nvgitHomePage)
@@ -328,7 +331,7 @@ namespace Vusic_Player.Pages.Views
                 Logger.Log(ex.Message, "SettingsPage.DeleteAllPlaylists", Logger.LogLevelType.Error);
                 txtInfo.Text = "An unexpected error occured. See log page for more info.";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Error)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -336,7 +339,7 @@ namespace Vusic_Player.Pages.Views
             {
                 txtInfo.Text = "Successfully deleted all playlists!";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Success)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -357,7 +360,7 @@ namespace Vusic_Player.Pages.Views
                 Logger.Log(ex.Message, "SettingsPage.DeleteAllShows", Logger.LogLevelType.Error);
                 txtInfo.Text = "An unexpected error occured. See log page for more info.";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Error)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -365,7 +368,7 @@ namespace Vusic_Player.Pages.Views
             {
                 txtInfo.Text = "Successfully deleted all shows!";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Success)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -385,7 +388,7 @@ namespace Vusic_Player.Pages.Views
                 Logger.Log(ex.Message, "SettingsPage.DeleteAllVideos", Logger.LogLevelType.Error);
                 txtInfo.Text = "An unexpected error occured. See log page for more info.";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Error)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -393,7 +396,7 @@ namespace Vusic_Player.Pages.Views
             {
                 txtInfo.Text = "Successfully deleted video history!";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Success)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -679,7 +682,7 @@ namespace Vusic_Player.Pages.Views
                     break;
             }
 
-            IconsInstance.SkipBack = $"ms-appx:///Assets/Themes/{IconsInstance.Theme}/{skipBackIcon}";
+            IconsInstance.SkipBack = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/{skipBackIcon}";
             currentSettings.SkipBack = skip;
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
@@ -734,7 +737,7 @@ namespace Vusic_Player.Pages.Views
                     break;
             }
 
-            IconsInstance.SkipAhead = $"ms-appx:///Assets/Themes/{IconsInstance.Theme}/{skipAheadIcon}";
+            IconsInstance.SkipAhead = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/{skipAheadIcon}";
             currentSettings.SkipAhead = skipAhead;
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
@@ -787,7 +790,7 @@ namespace Vusic_Player.Pages.Views
                         break;
                 }
 
-                IconsInstance.SkipBack = $"ms-appx:///Assets/Themes/{IconsInstance.Theme}/{iconName}";
+                IconsInstance.SkipBack = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/{iconName}";
                 currentSettings.SkipBack = skip;
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
@@ -844,7 +847,7 @@ namespace Vusic_Player.Pages.Views
                         break;
                 }
 
-                IconsInstance.SkipAhead = $"ms-appx:///Assets/Themes/{IconsInstance.Theme}/{iconName}";
+                IconsInstance.SkipAhead = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/{iconName}";
                 currentSettings.SkipAhead = skipAhead;
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
@@ -868,7 +871,7 @@ namespace Vusic_Player.Pages.Views
                 Logger.Log(ex.Message, "SettingsPage.DeleteAllArtists", Logger.LogLevelType.Error);
                 txtInfo.Text = "An unexpected error occured. See log page for more info.";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Error)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -876,7 +879,7 @@ namespace Vusic_Player.Pages.Views
             {
                 txtInfo.Text = "Successfully deleted all artist profile pictures!";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Success)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -897,7 +900,7 @@ namespace Vusic_Player.Pages.Views
                 Logger.Log(ex.Message, "SettingsPage.DeleteAllAlbums", Logger.LogLevelType.Error);
                 txtInfo.Text = "An unexpected error occured. See log page for more info.";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Error)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -905,7 +908,7 @@ namespace Vusic_Player.Pages.Views
             {
                 txtInfo.Text = "Successfully deleted all album covers!";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Success)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -926,7 +929,7 @@ namespace Vusic_Player.Pages.Views
                 Logger.Log(ex.Message, "SettingsPage.DeleteAllGenres", Logger.LogLevelType.Error);
                 txtInfo.Text = "An unexpected error occured. See log page for more info.";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Error)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
@@ -934,14 +937,14 @@ namespace Vusic_Player.Pages.Views
             {
                 txtInfo.Text = "Successfully deleted all genre covers!";
                 ttInfo.IsOpen = true;
-                imgInfo.Source = new BitmapImage(new Uri("ms-appx:///Assets/success.png")); ;
+                imgInfo.Source = new BitmapImage(new Uri(IconHolder.Instance.Success)); ;
                 await Task.Delay(2000);
                 ttInfo.IsOpen = false;
             }
         }
         private static readonly HttpClient _httpClient = new HttpClient();
         private const string VersionEndpoint = "https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/version.json";
-
+        
         public async Task<bool> IsUpdateAvailableAsync()
         {
             try
@@ -1449,9 +1452,339 @@ namespace Vusic_Player.Pages.Views
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
-        private void btnViewPrivacyStatement_Click(object sender, RoutedEventArgs e)
+        private async void btnViewPrivacyStatement_Click(object sender, RoutedEventArgs e)
         {
+            frmAboutOptions.Visibility = Visibility.Collapsed;
+            grdRichEditBox.Visibility = Visibility.Visible;
+            var uri = new Uri("ms-appx:///Assets/PrivacyStatement.txt");
+            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
+            string textToSet = await Windows.Storage.FileIO.ReadTextAsync(file);
 
+            rchEditBoxStatements.IsReadOnly = false;
+            rchEditBoxStatements.Document.SetText(Microsoft.UI.Text.TextSetOptions.None, textToSet);
+            rchEditBoxStatements.IsReadOnly = true;
+            txtStatementHeader.Text = "Privacy Statement";
+        }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            frmAboutOptions.Visibility = Visibility.Visible;
+            grdRichEditBox.Visibility = Visibility.Collapsed;
+        }
+
+        private async void btnViewOSLicense_Click(object sender, RoutedEventArgs e)
+        {
+            frmAboutOptions.Visibility = Visibility.Collapsed;
+            grdRichEditBox.Visibility = Visibility.Visible;
+            var uri = new Uri("ms-appx:///Assets/GNULICENSE.license");
+            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
+            string textToSet = await Windows.Storage.FileIO.ReadTextAsync(file);
+
+            rchEditBoxStatements.IsReadOnly = false;
+            rchEditBoxStatements.Document.SetText(Microsoft.UI.Text.TextSetOptions.None, textToSet);
+            rchEditBoxStatements.IsReadOnly = true;
+            txtStatementHeader.Text = "Open Source ";
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter is string setting)
+            {
+                if (setting == "Skip Duration" || setting == "Seek Duration")
+                {
+                    nvgitPlayback.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+
+                        cmbSkipBackward?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Maximum Volume")
+                {
+                    nvgitPlayback.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        numMaxVolume?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Home Page Panels")
+                {
+                    nvgitHomePage.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        chkHomeContinueRecent?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Music Library Page Panels")
+                {
+                    nvgitMusicOptions.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        chkMusicRecent?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Font")
+                {
+                    nvgitPlayback.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        cmbFontFamilies?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Video Library Page Panels")
+                {
+                    nvgitVideoOptions.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        chkVideoContinueRecent?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Playlist Settings")
+                {
+                    nvgitMusicOptions.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnDeleteAllPlaylists?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Show Settings")
+                {
+                    nvgitVideoOptions.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnDeleteAllShows?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Continue Playing Videos Settings")
+                {
+                    nvgitVideoOptions.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnDeleteAllVideoHistory?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Continue Playing Videos Settings")
+                {
+                    nvgitVideoOptions.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnDeleteAllVideoHistory?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "App Lock" || setting == "Splash Screen" || setting == "Startup Page" || setting == "Default App for Formats")
+                {
+                    nvgitAppSettings.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnAppLock?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Startup")
+                {
+                    nvgitAppSettings.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        txtStartup?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "About App")
+                {
+                    nvgitAboutHelp.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        txtAbout?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "App License")
+                {
+                    nvgitAboutHelp.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnViewOSLicense?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Updates")
+                {
+                    nvgitAboutHelp.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnCheckForUpdates?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Help" || setting=="Feedback" || setting == "Suggestions" || setting == "Source Code" || setting == "Documentation")
+                {
+                    nvgitAboutHelp.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        txtHelp?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Privacy")
+                {
+                    nvgitAboutHelp.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnViewPrivacyStatement?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "App Reset")
+                {
+                    nvgitAppSettings.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnResetAppSettings?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Media Database")
+                {
+                    nvgitAppSettings.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnRefreshDatabase?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Audio Metadata Settings" || setting == "Artist Settings" || setting == "Album Settings"|| setting == "Genre Settings")
+                {
+                    nvgitMusicOptions.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnDeleteAllArtists?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Customization" || setting == "Personalization" || setting == "Theme" || setting == "Skin")
+                {
+                    nvgitPlayback.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        txtChangeTheme?.StartBringIntoView(options);
+                    });
+                }
+
+            }
+            else
+            {
+                nvgitPlayback.IsSelected = true;
+            }
+            base.OnNavigatedTo(e);
+        }
+
+        private async void btnViewThirdPartyLicense_Click(object sender, RoutedEventArgs e)
+        {
+            frmAboutOptions.Visibility = Visibility.Collapsed;
+            grdRichEditBox.Visibility = Visibility.Visible;
+            var uri = new Uri("ms-appx:///Assets/ThirdPartyLicenses.license");
+            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(uri);
+            string textToSet = await Windows.Storage.FileIO.ReadTextAsync(file);
+
+            rchEditBoxStatements.IsReadOnly = false;
+            rchEditBoxStatements.Document.SetText(Microsoft.UI.Text.TextSetOptions.None, textToSet);
+            rchEditBoxStatements.IsReadOnly = true;
+            txtStatementHeader.Text = "Third Party Licenses ";
         }
     }
 }

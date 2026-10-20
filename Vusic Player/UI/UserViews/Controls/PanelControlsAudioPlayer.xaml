@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Vertical">
+    <Grid >
         <StackPanel Name="panelControls" CornerRadius="16" Padding="10" Orientation="Horizontal" HorizontalAlignment="Center">
 
             <Button Name="btnSpeed" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Adjust Speed" >
@@ -96,6 +96,11 @@
                                                 <ImageIcon Source="/Assets/fileformatconverterfonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Jump To Time" Name="mnftJumpToTime" Click="mnftJumpToTime_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xEC57;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem IsEnabled="{x:Bind media.MultiDeviceOutputFeature, Mode=OneWay}"  Text="Multi-Device Output Mixer" Name="mnftMultiDevice" Click="mnftMultiDevice_Click">
                                             <MenuFlyoutItem.Icon>
@@ -128,5 +133,24 @@
             </Button>
 
         </StackPanel>
-    </StackPanel>
+        <TeachingTip Name="ttJumpToTime" Title="Jump To Time">
+            <Grid Margin="10, 20"  RowSpacing="30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Vertical" Spacing="20">
+                    <TextBlock Text="HH:"/>
+                    <NumberBox SpinButtonPlacementMode="Inline" Name="numHour" Value="0" Minimum="0"/>
+                    <TextBlock Text="MM:"/>
+                    <NumberBox SpinButtonPlacementMode="Inline" Name="numMin"  Value="0" Minimum="0"/>
+                    <TextBlock Text="SS"/>
+                    <NumberBox SpinButtonPlacementMode="Inline" Name="numSec"  Value="0" Minimum="0"/>
+
+                </StackPanel>
+                <Button Name="btnJumpToTime" Click="btnJumpToTime_Click" Content="Jump" Style="{StaticResource AccentButtonStyle}" Grid.Row="1"/>
+            </Grid>
+        </TeachingTip>
+
+    </Grid>
 </UserControl>

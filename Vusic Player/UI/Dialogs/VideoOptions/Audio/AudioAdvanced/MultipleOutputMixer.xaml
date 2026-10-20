@@ -28,7 +28,7 @@
             <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="10">
                 <TextBlock Text="{x:Bind ItemsSource.Count, Mode=OneWay, Converter={StaticResource DeviceTextConverter}}" Name="txtDevicesHeader" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="2"></TextBlock>
                 <Button Name="btnRefresh" ToolTipService.ToolTip="Refresh" Click="btnRefresh_Click">
-                    <Image Source="/Assets/appicon.png" Width="20"/>
+                    <Image Source="{Binding Refresh, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 </Button>
                 <Button Name="btnSearch" ToolTipService.ToolTip="Find Devices">
                     <Image Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
@@ -58,7 +58,7 @@
                             <TextBlock Text="{Binding DeviceName}" TextTrimming="CharacterEllipsis" Grid.Column ="1"/>
                             <TextBlock Text="{Binding DeviceVolume}" Grid.Column ="2"/>
                             <Button  ToolTipService.ToolTip="Volume" Grid.Column="3" Background="Transparent" BorderBrush="Transparent">
-                                <Image Width="15" Source="/Assets/volume.png"/>
+                                <Image Width="15" Source="{Binding Volume, Source={StaticResource GlobalIconHolder}}"/>
                                 <Button.Flyout>
                                     <Flyout>
                                         <StackPanel Orientation="Vertical" Spacing="10">

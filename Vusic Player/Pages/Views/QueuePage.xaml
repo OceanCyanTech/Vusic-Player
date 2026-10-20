@@ -26,13 +26,13 @@
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Open Media" Click="btnAddtoQueue_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="d"/>
+                            <FontIcon Glyph="&#xE838;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                 </MenuFlyout>
             </Grid.ContextFlyout>
             <Grid.Background>
-                <ImageBrush ImageSource="/Assets/oceancyan.png" Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="{Binding BlurAesthetic, Source={StaticResource GlobalIconHolder}}" Stretch="UniformToFill"/>
             </Grid.Background>
             <Border CornerRadius="20">
                 <Border.Background>
@@ -133,7 +133,7 @@ AlwaysUseFallback="False"/>
                             <MenuFlyout>
                                 <MenuFlyoutItem Text="Add Media" Click="btnAddtoQueue_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"></FontIcon>
+                                        <FontIcon Glyph="&#xE710;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>
@@ -203,7 +203,7 @@ AlwaysUseFallback="False"/>
                                         <MenuFlyout>
                                             <MenuFlyoutItem Text="Shuffle and play all" Name="mnftShuffleandPlayAll">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"></FontIcon>
+                                                    <ImageIcon Source="/Assets/shuffleandplayallfonticon.png"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                         </MenuFlyout>
@@ -212,13 +212,13 @@ AlwaysUseFallback="False"/>
 
                                 <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" IsEnabled="True"  Background="Transparent" Name="tglLoopQueue" Checked="tglLoopQueue_Checked" Unchecked="tglLoopQueue_Checked"
                           ToolTipService.ToolTip="Loop list">
-                                    <Image Width="20" Source="/Assets/StoreLogo.png"/>
+                                    <Image Width="20" Source="{Binding LoopIcon, Source={StaticResource GlobalIconHolder}}"/>
                                 </ToggleButton>
 
                                 <Button  IsEnabled="True"  Background="Transparent" Name="btnClearQueue" Click="btnClearQueue_Click"
                     ToolTipService.ToolTip="Clear Queue">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <Image Width="20" Source="/Assets/StoreLogo.png"/>
+                                        <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"/>
                                         <TextBlock Name="txtClearQueue" Text="Clear queue"/>
                                     </StackPanel>
                                 </Button>
@@ -226,7 +226,7 @@ AlwaysUseFallback="False"/>
                                 <Button  IsEnabled="True"  Background="Transparent" Name="btnSaveQueue" Click="btnSaveQueue_Click"
                     ToolTipService.ToolTip="Save Queue to Playlist">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <Image Width="20" Source="/Assets/saveicon.png"/>
+                                        <Image Width="20" Source="{Binding SaveIcon, Source={StaticResource GlobalIconHolder}}"/>
                                         <TextBlock Text="Save Queue to Playlist"/>
                                     </StackPanel>
                                 </Button>
@@ -247,7 +247,7 @@ AlwaysUseFallback="False"/>
                             <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Checked="btnViewQueue_Checked" Unchecked="btnViewQueue_Checked"  Name="btnViewQueue"
 >
                                 <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <Image Width="20" Source="/Assets/StoreLogo.png"/>
+                                    <Image Width="20" Source="{Binding ViewFullQueue, Source={StaticResource GlobalIconHolder}}"/>
                                     <TextBlock Text="View full queue"/>
                                 </StackPanel>
                             </ToggleButton>
@@ -292,7 +292,7 @@ ToolTipService.ToolTip="Play all from start">
 
                         <StackPanel Visibility="{x:Bind mediacontroller.QueuePageEmptyVisibility, Mode=OneWay}" Orientation="Vertical" Grid.Row="3" Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center" Name="grdEmptyQueue">
                             <StackPanel Spacing="20" Orientation="Horizontal">
-                                <Image Source="/Assets/appicon.png" Width="100"></Image>
+                                <Image Source="{Binding EmptyQueue, Source={StaticResource GlobalIconHolder}}" Width="100"></Image>
                                 <TextBlock Text="Your play queue is empty!" VerticalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                             </StackPanel>
 
@@ -309,7 +309,7 @@ AlwaysUseFallback="False"/>
                                 </Button.KeyboardAccelerators>
                                 <StackPanel  Orientation="Horizontal" Spacing="10">
 
-                                    <Image Width="26" Source="/Assets/appicon.png"></Image>
+                                    <Image Width="26" Source="{Binding Openfolder, Source={StaticResource GlobalIconHolder}}"></Image>
                                     <TextBlock Foreground="White" Text="Open Media" Margin="0, 5">
 
                                     </TextBlock>

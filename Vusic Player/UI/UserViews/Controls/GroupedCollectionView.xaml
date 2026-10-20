@@ -36,14 +36,14 @@
                 </HyperlinkButton>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
-                    <Image ToolTipService.ToolTip="Artist" Width="25" Source="/Assets/defaultartist.png"/>
+                    <Image ToolTipService.ToolTip="Artist" Width="25" Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}"/>
                     <HyperlinkButton Name="hypArtist" ToolTipService.ToolTip="{x:Bind Artist, Mode=OneWay}" Click="hypArtist_Click">
                         <TextBlock Text="{x:Bind Artist, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </HyperlinkButton>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
-                    <Image ToolTipService.ToolTip="Album" Width="25" Source="/Assets/defaultalbum.png"/>
+                    <Image ToolTipService.ToolTip="Album" Width="25" Source="{Binding DefaultAlbum, Source={StaticResource GlobalIconHolder}}"/>
                     <HyperlinkButton ToolTipService.ToolTip="{x:Bind AlbumName, Mode=OneWay}" Name="hypAlbum" Click="hypAlbum_Click">
                         <TextBlock Text="{x:Bind AlbumName, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </HyperlinkButton>
@@ -177,7 +177,7 @@ Foreground="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoColor
                         </Grid>
                     </HyperlinkButton>
                     <StackPanel Visibility="{Binding Data.VisibilityofAudioMeta}" Orientation="Horizontal" Grid.Column="2">
-                        <Image ToolTipService.ToolTip="Artist" Width="25" Source="/Assets/defaultartist.png" ></Image>
+                        <Image ToolTipService.ToolTip="Artist" Width="25" Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}" ></Image>
                         <HyperlinkButton Grid.Column="2" Name="hypArtist" ToolTipService.ToolTip="{Binding Data.Artist}" Click="hypArtist_Click"   Visibility="Visible"  Margin="0, 0">
                             <TextBlock Text="{Binding Data.Artist}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                         </HyperlinkButton>
@@ -188,7 +188,7 @@ Foreground="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoColor
 
                     </StackPanel>
                     <StackPanel Visibility="{Binding Data.VisibilityofAudioMeta}"  Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
-                        <Image ToolTipService.ToolTip="Album" Width="25" Source="/Assets/defaultalbum.png" ></Image>
+                        <Image ToolTipService.ToolTip="Album" Width="25" Source="{Binding DefaultAlbum, Source={StaticResource GlobalIconHolder}}" ></Image>
                         <HyperlinkButton ToolTipService.ToolTip="{Binding Data.AlbumName}" Grid.Column="3" Name="hypAlbum" Click="hypAlbum_Click"   Visibility="Visible"  Margin="0, 0">
                             <TextBlock Text="{Binding Data.AlbumName}"   FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                         </HyperlinkButton>
@@ -232,29 +232,29 @@ BorderThickness="0"
                         <MenuFlyout>
                             <MenuFlyoutItem Text="Open Playlist" Name="mnftOpenPlaylist" Click="mnftOpenPlaylist_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE8A7;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
                             <MenuFlyoutItem Text="Play All" Name="mnftPlayPlaylist" Click="mnftPlayPlaylist_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE768;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Shuffle and Play" Name="mnftShuffleAndPlayPlaylist" Click="mnftShuffleAndPlayPlaylist_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE8B1;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Edit Playlist" Name="mnftEditPlaylist" Click="mnftEditPlaylist_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE70F;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
                             <MenuFlyoutItem Text="Delete Playlist" Name="mnftDeletePlaylist" Click="mnftDeletePlaylist_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE74D;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -273,7 +273,7 @@ BorderThickness="0"
                         <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.PlaylistCount}" Grid.Row="2"/>
                         <Button Name="btnPlayAllPlaylist" Click="btnPlayAllPlaylist_Click" Grid.Row="3" Style="{StaticResource AccentButtonStyle}">
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <FontIcon Glyph="d"/>
+                                <FontIcon Glyph="&#xE768;"/>
                                 <TextBlock Text="Play All"/>
                             </StackPanel>
                         </Button>
@@ -300,32 +300,32 @@ BorderThickness="0"
                         <MenuFlyout>
                             <MenuFlyoutItem  Text="View Artist" Name="mnftViewArtist" Click="mnftViewArtist_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE77B;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play Artist" Name="mnftPlayArtist" Click="mnftPlayArtist_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE768;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play Artist Shuffled" Name="mnftPlayArtistShuffled" Click="mnftPlayArtistShuffled_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE8B1;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play Artist On Loop" Name="mnftPlayArtistLoop" Click="mnftPlayArtistLoop_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE8EE;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play Artist Shuffled and On Loop" Name="mnftPlayArtistLoopandShuffle" Click="mnftPlayArtistLoopandShuffle_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Unlink songs from this artist" Name="mnftUnlinkArtist" Click="mnftUnlinkArtist_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE71B;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -349,7 +349,7 @@ BorderThickness="0"
                             <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.ArtistSongCount}" Grid.Row="1"/>
                             <Button Name="btnPlayAllArtistSongs" Click="btnPlayAllArtistSongs_Click" Grid.Row="2" Style="{StaticResource AccentButtonStyle}">
                                 <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE768;"/>
                                     <TextBlock Text="Play all songs of Artist"/>
                                 </StackPanel>
                             </Button>
@@ -378,32 +378,32 @@ BorderThickness="0"
                         <MenuFlyout>
                             <MenuFlyoutItem  Text="View Album" Name="mnftViewAlbum" Click="mnftViewAlbum_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE93C;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play Album" Name="mnftPlayAlbum" Click="mnftPlayAlbum_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE768;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play Album Shuffled" Name="mnftPlayAlbumShuffled" Click="mnftPlayAlbumShuffled_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE8B1;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play Album On Loop" Name="mnftPlayAlbumLoop" Click="mnftPlayAlbumLoop_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE8EE;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Play Album Shuffled and On Loop" Name="mnftPlayAlbumLoopAndShuffled" Click="mnftPlayAlbumLoopAndShuffled_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Text="Unlink songs from this album" Name="mnftUnlinkAlbum" Click="mnftUnlinkAlbum_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE71B;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -431,7 +431,7 @@ BorderThickness="0"
                             <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumYear}" Grid.Row="3"/>
                             <Button Grid.Row="4" Style="{StaticResource AccentButtonStyle}">
                                 <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE768;"/>
                                     <TextBlock Text="Play Album"/>
                                 </StackPanel>
                             </Button>
@@ -459,25 +459,25 @@ BorderThickness="0"
                         <MenuFlyout>
                             <MenuFlyoutItem Name="mnftOpenShow" Click="mnftOpenShow_Click" Text="Open Show">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"></FontIcon>
+                                    <FontIcon Glyph="&#xE8A7;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
                             <MenuFlyoutItem Name="mnftPlayShow" Click="mnftPlayShow_Click" Text="Play Show">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"></FontIcon>
+                                    <FontIcon Glyph="&#xE768;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
                             <MenuFlyoutItem Name="mnftEditShow" Click="mnftEditShow_Click" Text="Edit Show">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"></FontIcon>
+                                    <FontIcon Glyph="&#xE70F;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
                             <MenuFlyoutItem Name="mnftDeleteShow" Click="mnftDeleteShow_Click" Text="Delete Show">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"></FontIcon>
+                                    <FontIcon Glyph="&#xE74D;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -505,7 +505,7 @@ BorderThickness="0"
                             <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.Description}" Grid.Row="3"/>
                             <Button Grid.Row="4" Style="{StaticResource AccentButtonStyle}">
                                 <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xE768;"/>
                                     <TextBlock Text="Play Album"/>
                                 </StackPanel>
                             </Button>

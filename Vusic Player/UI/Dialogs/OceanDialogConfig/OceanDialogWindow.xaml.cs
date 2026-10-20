@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using WinRT;
@@ -211,7 +212,7 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             if (!string.IsNullOrEmpty(iconName))
             {
                 img.Source = new BitmapImage(
-                    new Uri($"ms-appx:///Assets/{iconName}.png")
+                    new Uri($"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/{iconName}.png")
                 );
             }
             else

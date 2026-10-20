@@ -1,0 +1,38 @@
+PRIVACY POLICY FOR VUSIC PLAYER
+
+Last Updated: 20 October 2026
+
+Vusic Player is a fully open-source desktop media player developed by OceanCyan Tech. We believe privacy is a fundamental right. Vusic Player is designed from the ground up to operate entirely locally on your device without tracking, surveillance, or background data harvesting.
+
+
+1. LOCAL-ONLY MEDIA PROCESSING
+All playback operations and media library metadata—including filenames, track titles, artist details, album artwork, directory paths, and playback durations—are parsed and stored strictly on your local machine. This data is never collected, logged remotely, or transmitted to any external server.
+
+
+2. ZERO BACKGROUND TELEMETRY & ANALYTICS
+Vusic Player does not collect telemetry, usage metrics, or user activity logs:
+• No Feature Tracking: We do not track which features, DSP audio effects, or playback options you use.
+• No User Profiles: We do not create user profiles, fingerprint devices, or generate persistent advertising/device identifiers.
+• No Background Dialing: The application never sends background heartbeat pings or analytical reports to OceanCyan Tech or any third party.
+
+
+3. NETWORK CONNECTIONS & OPTIONAL SERVICES
+Vusic Player makes outgoing network requests only when explicitly triggered by features you choose to use:
+• Online Metadata & Lyrics: If enabled, network requests are made strictly to retrieve album art or synchronized lyrics from external third-party services (such as LRCLIB or DuckDuckGo Image Search). These requests contain only the search query (e.g., song title and artist) necessary to fetch the requested resource.
+• No Personal Association: These third-party services operate under their respective privacy policies, and no personal user identification is attached to these queries.
+
+
+4. LOCAL DIAGNOSTICS & ERROR LOGS
+To assist with troubleshooting:
+• Any application diagnostic messages or error traces are saved solely to your local storage.
+• No automatic crash reporting takes place. Diagnostic logs never leave your device unless you manually copy or export them to submit alongside a public GitHub issue report.
+
+
+5. OPEN SOURCE & VERIFIABLE
+Vusic Player is free and open-source software. Our complete codebase—including all networking, audio, and media pipelines—is publicly verifiable on GitHub. You are free to inspect the source code, verify our network behavior, or build the application independently from source.
+
+
+6. CONTACT & REPOSITORY
+For questions, bug reports, or code audits regarding our privacy practices:
+• Repository: https://github.com/OceanCyanTech/Vusic-Player
+• Contact Email: oceancyantech@gmail.com

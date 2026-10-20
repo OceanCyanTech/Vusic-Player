@@ -16,6 +16,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -413,7 +414,7 @@ namespace Vusic_Player.Pages.Views
 
         private async void mnftRemoveIcon_Click(object sender, RoutedEventArgs e)
         {
-            imgGenreCover.Source = new BitmapImage(new Uri("ms-appx:///Assets/defaultgenre.png"));
+            imgGenreCover.Source = new BitmapImage(new Uri(IconHolder.Instance.GenreIcon));
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var genres = currentSettings.GenresList;
             var existingGenre = genres.FirstOrDefault(a => a.GenreName == txtGenreTitle.Text);

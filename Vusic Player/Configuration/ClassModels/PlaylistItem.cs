@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
@@ -15,7 +16,7 @@ namespace Vusic_Player.Configuration.ClassModels
         private int _seasonNumber = 1;
         private int _seasonIndex = 0;
         private string _playlistNowPlaying = "";
-        private string _thumbnailString = "ms-appx:///Assets/playlistdefaultdark.png";
+        private string _thumbnailString = IconHolder.Instance.PlaylistIcon;
         private Uri? _thumbnail;
         private bool _isPlaylistVideo = false;
         private string? _playlistGenre = "";

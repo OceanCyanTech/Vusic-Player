@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.FilePickers;
 
@@ -136,7 +137,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 });
 
                 // 4. Load Album Cover / Settings (background read)
-                Uri fallbackUri = new Uri("ms-appx:///Assets/defaultalbum.png");
+                Uri fallbackUri = new Uri(IconHolder.Instance.DefaultAlbum);
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
 
                 var existingAlbum = currentSettings.AlbumsList?
@@ -362,7 +363,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
             }
 
-            imgAlbumCover.Source = new BitmapImage(new Uri("ms-appx:///Assets/defaultalbum.png"));
+            imgAlbumCover.Source = new BitmapImage(new Uri(IconHolder.Instance.DefaultAlbum));
         }
 
         private void btnFindOnline_Click(object sender, RoutedEventArgs e)

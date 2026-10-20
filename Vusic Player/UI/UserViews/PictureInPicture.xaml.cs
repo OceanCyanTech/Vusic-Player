@@ -15,6 +15,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -220,7 +221,7 @@ namespace Vusic_Player.UI.UserViews
         public async Task<BitmapImage> GetFileThumbnailAsync(string path)
         {
             // Define your fallback asset
-            Uri fallbackUri = new Uri("ms-appx:///Assets/default.png");
+            Uri fallbackUri = new Uri(IconHolder.Instance.DefaultVideo);
 
             try
             {
@@ -454,6 +455,37 @@ namespace Vusic_Player.UI.UserViews
         private void mnftVolume_Click(object sender, RoutedEventArgs e)
         {
             ttVolume.IsOpen = true;
+        }
+
+        private void MenuFlyout_Opened(object sender, object e)
+        {
+            if (PlayerService.Masterplayer != null)
+            {
+                if (PlayerService.Masterplayer.IsPlaying)
+                {
+                    fntIconPlay.Glyph = "\uE769";
+                }
+                else
+                {
+                    fntIconPlay.Glyph = "\uE768";
+                }
+            }
+            if (mediacontroller.VolumeValue == 0)
+            {
+                fntIconVolume.Glyph = "\uE74F";
+            }
+            else if (mediacontroller.VolumeValue > 0 && mediacontroller.VolumeValue < 30)
+            {
+                fntIconVolume.Glyph = "\uE993";
+            }
+            else if (mediacontroller.VolumeValue > 30 && mediacontroller.VolumeValue < 70)
+            {
+                fntIconVolume.Glyph = "\uE994";
+            }
+            else
+            {
+                fntIconVolume.Glyph = "\uE995";
+            }
         }
     }
 }

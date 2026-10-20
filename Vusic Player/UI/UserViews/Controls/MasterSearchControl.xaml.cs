@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -13,6 +16,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Helper.UI.Navig;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Extensions;
@@ -48,6 +52,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 e.Handled = true;
+                Debug.WriteLine("entersir");
                 if (currentIndex >= 0 && currentIndex < totalItems)
                 {
                     if (lstViewSearchOptions.Items[currentIndex] is MasterSearchModel selected)
@@ -138,8 +143,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                 if (File.Exists(item.FilePath))
                 {
                     var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
-                    var imgicon = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "musicnoteicon" : "default";
-                    returnableobservable.Add(new MasterSearchModel { ImageThumbnail = $"ms-appx:///Assets/{imgicon}.png", ResultMain = item.Title, SubInformation = subinfo, FilePath = item.FilePath });
+                    var imgicon = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "musicnoteicon" : "defaultvideo";
+                    returnableobservable.Add(new MasterSearchModel { ImageThumbnail = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/{imgicon}.png", ResultMain = item.Title, SubInformation = subinfo, FilePath = item.FilePath });
                 }
             }
 
@@ -150,7 +155,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             //    foreach (var item in rawMediaTitle)
             //    {
             //        var subinfo = (VideoExtensions.List.Contains(Path.GetExtension(item.FilePath).ToLowerInvariant()) == false) ? "Song" : "Video";
-            //        returnableobservable.Add(new MasterSearchModel { ImageThumbnail = "ms-appx:///Assets/artistdefault.png", ResultMain = item.Title, SubInformation = subinfo });
+            //        returnableobservable.Add(new MasterSearchModel { ImageThumbnail = IconHolder.Instance.DefaultArtist, ResultMain = item.Title, SubInformation = subinfo });
             //    }
             //}
             return returnableobservable;
@@ -293,6 +298,80 @@ namespace Vusic_Player.UI.UserViews.Controls
                         App.NavigationFrame.Navigate(typeof(FolderView), new FolderModel { FolderName = Path.GetFileName(selected.FolderPath), FolderPath = selected.FolderPath });
                     }
                 }
+                else if (selected.SubInformation == "Page")
+                {
+                    if (selected.ResultMain == "Home")
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            App.NavigationFrame.Navigate(typeof(HomeView));
+                        }
+                    }
+                    else if (selected.ResultMain == "Music Library")
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            App.NavigationFrame.Navigate(typeof(MusicLibrary));
+                        }
+                    }
+                    else if (selected.ResultMain == "Video Library")
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            App.NavigationFrame.Navigate(typeof(VideoLibrary));
+                        }
+                    }
+                    else if (selected.ResultMain == "Entire Music Library")
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            App.NavigationFrame.Navigate(typeof(EntireMusicLibrary));
+                        }
+                    }
+                    else if (selected.ResultMain == "Entire Video Library")
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            App.NavigationFrame.Navigate(typeof(MusicLibrary));
+                        }
+                    }
+                    else if (selected.ResultMain == "Queue")
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            App.NavigationFrame.Navigate(typeof(QueuePage));
+                        }
+                    }
+                    else if (selected.ResultMain == "Log")
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            App.NavigationFrame.Navigate(typeof(LoggerPage));
+                        }
+                    }
+                    else if (selected.ResultMain == "Settings")
+                    {
+                        if (App.NavigationFrame != null)
+                        {
+                            App.NavigationFrame.Navigate(typeof(SettingsPage));
+                        }
+                    }
+                }
+                else if(selected.SubInformation == "Setting")
+                {
+                    if (App.NavigationFrame != null)
+                    {
+                        if(SearchResultsPageState.alreadyNavigatedtoSettingsPage == true)
+                        {
+                            PENDING
+                        }
+                        else
+                        {
+                            SearchResultsPageState.alreadyNavigatedtoSettingsPage = true;
+                            App.NavigationFrame.Navigate(typeof(SettingsPage), selected.ResultMain);
+                        }
+                    }
+                }
             }
         }
 
@@ -304,7 +383,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                 // Just return so default textbox input handling processes the space character
                 return;
             }
-            if (lstViewSearchOptions.Items.Count == 0 || lstViewSearchOptions.Visibility != Visibility.Visible) return;
+           
+          
 
             if (e.Key == Windows.System.VirtualKey.Down)
             {

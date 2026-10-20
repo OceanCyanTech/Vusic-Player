@@ -21,7 +21,7 @@
                     <AutoSuggestBox CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" QueryIcon="Find" Width="250"  Name="txtArtistToFind" PlaceholderText="Artist name...."></AutoSuggestBox>
                     <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent"  Name="btnFindOnline" Click="btnFindOnline_Click">
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="20" Source="/Assets/searchicon.png" />
+                            <Image Width="20" Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}" />
                             <TextBlock Name="txtFindOnlineButton" Margin="5,2" Text="Find" />
                         </StackPanel>
                     </Button>
@@ -72,7 +72,7 @@
                 </GridView>
                 <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent"   Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="25" Source="/Assets/addimgicon.png" />
+                        <Image Width="25" Source="{Binding ArtistPictureLocal, Source={StaticResource GlobalIconHolder}}" />
                         <TextBlock Margin="5,2" Text="Find on Disk instead" />
                     </StackPanel>
                 </Button>

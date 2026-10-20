@@ -75,7 +75,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
                         <TextBlock  Text="About" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button ToolTipService.ToolTip="Edit" Click="Button_Click_2"  Background="Transparent">
-                            <FontIcon Glyph="d"></FontIcon>
+                            <FontIcon Glyph="&#xE70F;"></FontIcon>
                         </Button>
                     </StackPanel>
                     <StackPanel Name="stkReleaseDate" Orientation="Horizontal" Spacing="5" Grid.Row="1">
@@ -103,7 +103,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
                         <TextBlock  Text="Description" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button Name="btnEdit" Click="btnEdit_Click" Background="Transparent">
-                            <FontIcon Glyph="d"></FontIcon>
+                            <FontIcon Glyph="&#xE70F;"></FontIcon>
                         </Button>
                     </StackPanel>
                     <TextBlock IsTextSelectionEnabled="True" TextWrapping="Wrap" Name="txtDescription" Grid.Row="1"></TextBlock>
@@ -119,7 +119,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
                         <TextBlock Text="Creators" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button  Click="btnEditCreators_Click" Name="btnEditCreators" Background="Transparent">
-                            <FontIcon Glyph="d"></FontIcon>
+                            <FontIcon Glyph="&#xE70F;"></FontIcon>
                         </Button>
                     </StackPanel>
                     <GridView  Name="grdViewCreators" Grid.Row="1" SelectionMode="None" HorizontalAlignment="Stretch">
@@ -207,7 +207,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
                         <TextBlock Text="Crew" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button Name="btnEditCrew"  Click="btnEditCrew_Click" Background="Transparent">
-                            <FontIcon Glyph="d"></FontIcon>
+                            <FontIcon Glyph="&#xE70F;"></FontIcon>
                         </Button>
                     </StackPanel>
                     <GridView Name="grdViewCast" Grid.Row="1" SelectionMode="None" HorizontalAlignment="Stretch">
@@ -282,12 +282,12 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                                             <MenuFlyout Opened="MenuFlyout_Opened">
                                                 <MenuFlyoutItem Name="mnftOpenSeason" Click="mnftOpenSeason_Click" Text="Open Season">
                                                     <MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="d"></FontIcon>
+                                                        <FontIcon Glyph="&#xE8A7;"></FontIcon>
                                                     </MenuFlyoutItem.Icon>
                                                 </MenuFlyoutItem>
                                                 <MenuFlyoutItem Name="mnftUnlinkSeason" Click="mnftUnlinkSeason_Click" Text="Unlink Season">
                                                     <MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="d"></FontIcon>
+                                                        <FontIcon Glyph="&#xE71B;"></FontIcon>
                                                     </MenuFlyoutItem.Icon>
                                                 </MenuFlyoutItem>
                                             </MenuFlyout>
@@ -323,13 +323,13 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="10">
                     <Button CornerRadius="12" Style="{StaticResource AccentButtonStyle}" Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click">
                         <StackPanel Orientation="Horizontal" Spacing="5">
-                            <FontIcon Margin="0, -4" Glyph="d"></FontIcon>
+                            <FontIcon Margin="0, -4" Glyph="&#xE768;"></FontIcon>
                             <TextBlock Margin="0, 3" Text="Play All"></TextBlock>
                         </StackPanel>
                     </Button>
                     <Button CornerRadius="12" Grid.Row="1" Name="btnAddtoQueue" Click="btnAddtoQueue_Click">
                         <StackPanel Orientation="Horizontal" Spacing="5">
-                            <FontIcon Margin="0, -4" Glyph="d"></FontIcon>
+                            <ImageIcon Margin="0, -4" Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
                             <TextBlock Margin="0, 3" Text="Add to Queue"></TextBlock>
                         </StackPanel>
                     </Button>
@@ -350,17 +350,17 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                                         <MenuFlyout>
                                             <MenuFlyoutItem Text="Play" Click="MenuFlyoutItem_Click_1">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"></FontIcon>
+                                                    <FontIcon Glyph="&#xE768;"></FontIcon>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutItem Text="File Info" Click="MenuFlyoutItem_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"></FontIcon>
+                                                    <FontIcon Glyph="&#xE946;"></FontIcon>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutItem Text="Edit Description" Click="MenuFlyoutItem_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"></FontIcon>
+                                                    <FontIcon Glyph="&#xE70F;"></FontIcon>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                         </MenuFlyout>
@@ -375,7 +375,7 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                                     <Viewbox MaxWidth="200" HorizontalAlignment="Left">
                                         <StackPanel Orientation="Horizontal" Grid.Row="0" Spacing="20">
                                             <Button Click="Button_Click_1" ToolTipService.ToolTip="Play" CornerRadius="60" Width="40" Height="40" Style="{StaticResource AccentButtonStyle}">
-                                                <FontIcon Glyph="d"></FontIcon>
+                                                <FontIcon Glyph="&#xE768;"></FontIcon>
                                             </Button>
 
                                             <TextBlock ToolTipService.ToolTip="{Binding EpisodeName}"  Style="{StaticResource TitleTextBlockStyle}" Text="{Binding EpisodeName}"></TextBlock>

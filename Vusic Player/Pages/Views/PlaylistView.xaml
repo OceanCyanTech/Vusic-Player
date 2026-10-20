@@ -21,7 +21,7 @@
             <TextBlock Text="Playlist has been deleted." Grid.Row="1" Name="txtPlaylistDeleted" Style="{StaticResource TitleTextBlockStyle}"/>
             <Button Name="btnGoToHome" Click="btnGoToHome_Click" HorizontalAlignment="Center" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="2">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Source="/Assets/appicon.png" Width="30"></Image>
+                    <Image Source="{Binding Home, Source={StaticResource GlobalIconHolder}}" Width="30"></Image>
                     <TextBlock Text="Go to Home" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
             </Button>
@@ -171,7 +171,7 @@ CornerRadius="16"
                         </ToggleButton>
                         <ToggleButton CornerRadius="12" Name="btnLoop"  Checked="btnLoop_Checked" Unchecked="btnLoop_Checked"  Margin="5" Background="Transparent" BorderBrush="Transparent"
          ToolTipService.ToolTip="Loop playlist">
-                            <Image Width="25" Source="/Assets/appicon.png" />
+                            <Image Width="25" Source="{Binding LoopIcon, Source={StaticResource GlobalIconHolder}}" />
                         </ToggleButton>
 
                         <Button CornerRadius="12" Name="btnAddSongs2" Margin="5" Background="Transparent" BorderBrush="Transparent"

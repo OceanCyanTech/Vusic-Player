@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Helper.VideoProperties;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -141,7 +142,7 @@ namespace Vusic_Player.Configuration.Helper
             if (File.Exists(FilePath))
             {
                 filepathmaster = FilePath;
-                media.AlbumArt = new BitmapImage(new Uri("ms-appx:///Assets/appicon.png"));
+                media.AlbumArt = new BitmapImage(new Uri(IconHolder.Instance.DefaultAlbum));
                 if (App.MainWindowInstance == null) return;
 
                 var storagefile = await StorageFile.GetFileFromPathAsync(FilePath);
@@ -195,7 +196,7 @@ namespace Vusic_Player.Configuration.Helper
                         catch (Exception ex)
                         {
                             Debug.WriteLine($"Failed to load album art: {ex.Message}");
-                            image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                            image.UriSource = new Uri(IconHolder.Instance.DefaultAlbum);
                         }
                     }
                     else
@@ -569,7 +570,7 @@ namespace Vusic_Player.Configuration.Helper
         public static async void LoadFileInfo(string FilePath, XamlRoot Xamlroot)
         {
             filepathmaster = FilePath;
-            media.AlbumArt = new BitmapImage(new Uri("ms-appx:///Assets/appicon.png"));
+            media.AlbumArt = new BitmapImage(new Uri(IconHolder.Instance.DefaultAlbum));
             if (App.MainWindowInstance == null) return;
             //Handle file not exist
             if (File.Exists(FilePath))
@@ -746,7 +747,7 @@ namespace Vusic_Player.Configuration.Helper
                         catch (Exception ex)
                         {
                             Debug.WriteLine($"Failed to load album art: {ex.Message}");
-                            image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
+                            image.UriSource = new Uri(IconHolder.Instance.DefaultAlbum);
                         }
                     }
                     else

@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
@@ -397,7 +398,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 Debug.WriteLine($"Image load failed: {e.ErrorMessage}");
 
                 // Option: Set a local fallback image so it's not just a gray box
-                img.Source = new BitmapImage(new Uri("ms-appx:///Assets/error.png"));
+                img.Source = new BitmapImage(new Uri(IconHolder.Instance.Error));
             }
         }
     }

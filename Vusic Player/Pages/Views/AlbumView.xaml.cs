@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
+#region Namespaces
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -17,15 +20,26 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+#endregion
 
+/*  OCEANCYAN TECH HEADER
+ VUSIC PLAYER - VERSION v1.0.0.0
+© OCEANCYAN TECH 2026
+
+PAGE - ALBUMVIEW
+BUILD 211026
+ */
 namespace Vusic_Player.Pages.Views;
 
 public sealed partial class AlbumView : Page
 {
+    #region Fields
+    #endregion
     public ObservableCollection<SongModel> FoundSongs { get; set; } = new ObservableCollection<SongModel>();
     HashSet<string> uniqueArtists = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     private bool _isRenaming = false;
@@ -317,7 +331,7 @@ public sealed partial class AlbumView : Page
             {
                 var existingArtist = currentSettings.ArtistsList?
                     .FirstOrDefault(a => a.Name == group.Key);
-                string thumbnail = "ms-appx:///Assets/defaultartist.png";
+                string thumbnail = IconHolder.Instance.DefaultArtist;
 
                 if (existingArtist != null && existingArtist.Thumbnail is string str)
                 {
@@ -333,7 +347,7 @@ public sealed partial class AlbumView : Page
     {
         if (_activeAlbum != null)
         {
-            Uri fallbackUri = new Uri("ms-appx:///Assets/defaultalbum.png");
+            Uri fallbackUri = new Uri(IconHolder.Instance.DefaultAlbum);
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var existing = currentSettings.AlbumsList?
                 .FirstOrDefault(a => a.Name == _activeAlbum.Name);
@@ -611,7 +625,7 @@ public sealed partial class AlbumView : Page
 
     private async void mnftRemoveImage_Click(object sender, RoutedEventArgs e)
     {
-        imgAlbumCover.Source = new BitmapImage(new Uri("ms-appx:///Assets/defaultalbum.png"));
+        imgAlbumCover.Source = new BitmapImage(new Uri(IconHolder.Instance.DefaultAlbum));
         var currentSettings = await SettingsLoader.LoadSettingsAsync();
         var list = currentSettings.AlbumsList;
         var existing = list.FirstOrDefault(a => a.Name == txtAlbumName.Text);

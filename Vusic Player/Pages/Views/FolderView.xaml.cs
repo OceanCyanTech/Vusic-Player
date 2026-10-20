@@ -22,6 +22,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -83,7 +84,7 @@ namespace Vusic_Player.Pages.Views
                     MainItems.Add(new FileItem
                     {
                         Path = sub.Path,
-                        Thumbnail = new BitmapImage(new Uri("ms-appx:///Assets/foldericon.png")),
+                        Thumbnail = new BitmapImage(new Uri(IconHolder.Instance.FolderIcon)),
                         Name = Path.GetFileName(sub.Path),
                         OpenContext = "Open Folder",
                         OpenContextGlyph = "\uE838",
@@ -494,11 +495,6 @@ namespace Vusic_Player.Pages.Views
                 txtRenameFiles.Text = "";
             }
         }
-
-        private void btnMoveFiles_Click(object sender, RoutedEventArgs e)
-        {
-            ttMoveFiles.IsOpen = true;
-        }
         ObservableCollection<PlaylistItem> playlistsaddto = new();
         private async void btnAddToPlaylist_Click(object sender, RoutedEventArgs e)
         {
@@ -892,10 +888,10 @@ namespace Vusic_Player.Pages.Views
         {
             if (currentFolder == null) return;
             CopyToClipboard.CopyStringToClipboard(currentFolder.FolderPath);
-            imgCopyButton.Source = new BitmapImage(new Uri("ms-appx:///Assets/tickicon.png"));
+            imgCopyButton.Source = new BitmapImage(new Uri(IconHolder.Instance.TickIcon));
             await Task.Delay(2000);
             //CHANGE ICON
-            imgCopyButton.Source = new BitmapImage(new Uri("ms-appx:///Assets/appicon.png"));
+            imgCopyButton.Source = new BitmapImage(new Uri(IconHolder.Instance.CopyIcon));
 
         }
         ObservableCollection<FileItem> searchresults = new();

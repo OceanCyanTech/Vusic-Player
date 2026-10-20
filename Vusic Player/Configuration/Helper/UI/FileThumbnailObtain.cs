@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 
@@ -15,7 +16,7 @@ namespace Vusic_Player.Configuration.Helper.UI
         {
             // Define your fallback URI
             Debug.WriteLine("Get video frame async called");
-            Uri fallbackUri = new Uri("ms-appx:///Assets/default.png");
+            Uri fallbackUri = new Uri(IconHolder.Instance.DefaultVideo);
 
             try
             {
@@ -76,7 +77,7 @@ Exception thrown at 0x00007FFF62D8187A (KernelBase.dll) in Vusic Player.exe: Win
              */
             Debug.WriteLine("extract vid thumbnail basic async called: " + FILEpath);
 
-            var fallbackUri = "ms-appx:///Assets/default.png";
+            var fallbackUri = IconHolder.Instance.DefaultVideo;
 
             if (string.IsNullOrEmpty(FILEpath) || !File.Exists(FILEpath))
                 return fallbackUri;
@@ -209,7 +210,7 @@ Exception thrown at 0x00007FFF62D8187A (KernelBase.dll) in Vusic Player.exe: Win
             Debug.WriteLine("get file thumbnail basic async called");
 
             // Define your fallback asset
-            Uri fallbackUri = new Uri("ms-appx:///Assets/default.png");
+            Uri fallbackUri = new Uri(IconHolder.Instance.PlaylistIcon);
 
             try
             {

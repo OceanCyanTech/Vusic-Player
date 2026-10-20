@@ -163,13 +163,13 @@
 
                                     <MenuFlyoutItem Text="Rename" Name="mnftRename" Click="mnftRename_Click">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"/>
+                                            <FontIcon Glyph="&#xE8AC;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
 
                                     <MenuFlyoutItem Text="{Binding FileInfoContext}" Name="mnftFileInfo" Click="mnftFileInfo_Click">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"/>
+                                            <FontIcon Glyph="&#xE946;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSubItem Text="Add to Playlist"  x:Name="mnftAddtoPlaylist" >
@@ -189,7 +189,7 @@ Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}
                                     <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Text="Delete" Name="mnftDelete" Click="mnftDelete_Click">
                                         <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="d"/>
+                                            <FontIcon Glyph="&#xE74D;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                 </MenuFlyout>

@@ -14,6 +14,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.Converters;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.FilePickers;
 using Windows.Storage;
 
@@ -150,7 +151,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
 
         public void ClearStuff()
         {
-            Uri defaultPath = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
+            Uri defaultPath = new Uri(IconHolder.Instance.PlaylistIcon);
             imgPlaylistCov.Source = new BitmapImage(defaultPath);
             txtEditGenre.Text = "";
             AllSongs.Clear();
@@ -173,7 +174,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
         private void PlaylistCreation_CreationCall()
         {
             string playlistID = Guid.NewGuid().ToString("N");
-            Uri defaultPath = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
+            Uri defaultPath = new Uri(IconHolder.Instance.PlaylistIcon);
 
 
             if (playlistcoverpath != "")
@@ -182,7 +183,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             }
             else
             {
-                Uri darkIcon = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
+                Uri darkIcon = new Uri(IconHolder.Instance.PlaylistIcon);
 
                 // Set your initial default (e.g., based on current theme)
                 defaultPath = darkIcon;
@@ -227,7 +228,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                     songpaths.Add(item.FilePath);
                 }
             }
-            Uri defaultPath = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
+            Uri defaultPath = new Uri(IconHolder.Instance.PlaylistIcon);
 
 
             if (playlistcoverpath != "")
@@ -236,7 +237,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             }
             else
             {
-                Uri darkIcon = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
+                Uri darkIcon = new Uri(IconHolder.Instance.PlaylistIcon);
 
                 // Set your initial default (e.g., based on current theme)
                 defaultPath = darkIcon;
@@ -297,7 +298,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             {
                 AllSongs.Clear();
             }
-            imgPlaylistCov.Source = new BitmapImage(new Uri("ms-appx:///Assets/playlistdefaultdark.png"));
+            imgPlaylistCov.Source = new BitmapImage(new Uri(IconHolder.Instance.PlaylistIcon));
             CoverOptions.Visibility = Visibility.Collapsed;
             btnAddPlaylistCover.IsEnabled = true;
             UpdateUI();
@@ -345,7 +346,7 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
             playlistcoverpath = "";
             CoverOptions.Visibility = Visibility.Collapsed;
             btnAddPlaylistCover.IsEnabled = true;
-            imgPlaylistCov.Source = new BitmapImage(new Uri("ms-appx:///Assets/playlistdefaultdark.png"));
+            imgPlaylistCov.Source = new BitmapImage(new Uri(IconHolder.Instance.PlaylistIcon));
         }
 
         private void txtEditPlaylistName_GotFocus(object sender, RoutedEventArgs e)

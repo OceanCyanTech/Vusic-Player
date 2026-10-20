@@ -68,7 +68,7 @@ CornerRadius="16"
                     <MenuFlyout>
                         <MenuFlyoutItem  Text="Add Files" Name="mnftAddFiles" Click="btnAddAudioFiles_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"/>
+                                <FontIcon Glyph="&#xE710;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>
@@ -128,63 +128,63 @@ Click="btnExportDirectory_Click"/>
                                         <MenuFlyout>
                                             <MenuFlyoutItem  Text="Play Original" Name="mnftPlayOriginal" Click="mnftPlayOriginal_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE768;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutItem Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Play Pitch Change Output" Name="mnftPlayOutput" Click="mnftPlayOutput_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE768;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator Visibility="{Binding VisibilityOfCompletedFileLocation}"/>
                                             <MenuFlyoutItem Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Add Pitch Change Output to Queue" Name="mnftAddToQueueOutput" Click="mnftAddToQueueOutput_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
                                             <MenuFlyoutItem  Text="Remove" Name="mnftRemoveAudioFile" Click="mnftRemoveAudioFile_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE894;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
                                             <MenuFlyoutItem  Text="Change Export Directory" Name="mnftChangeExportDir" Click="mnftChangeExportDir_Click"  IsEnabled="{Binding DirectorySelectionEnabled}" Visibility="{Binding IndividualDirectorySel}">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE8DE;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 
                                             <MenuFlyoutItem  Text="Open File Location" Name="mnftOpenFileLocation" Click="mnftOpenFileLocation_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE838;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutItem  Text="Open File Location of Pitch Change Output" Name="mnftOpenFileLocOutput" Click="mnftOpenFileLocOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE838;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
                                             <MenuFlyoutItem  Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE8C8;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutItem  Text="Copy File Path of Pitch Change Output" Name="mnftCopyReverbOutputFilePath" Click="mnftCopyReverbOutputFilePath_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE8C8;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
                                             <MenuFlyoutItem  Text="File Info" Name="mnftFileInfo" Click="mnftFileInfo_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE946;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutItem  Text="File Info of Pitch Change Output" Name="mnftFileInfoReverbOutput" Click="mnftFileInfoReverbOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                                 <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="d"/>
+                                                    <FontIcon Glyph="&#xE946;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                         </MenuFlyout>

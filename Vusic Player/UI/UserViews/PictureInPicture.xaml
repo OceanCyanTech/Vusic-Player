@@ -56,66 +56,66 @@
                     </StackPanel>
                     <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" BorderBrush="Transparent"   Background="Transparent" Name="btnOptions" CornerRadius="16" ToolTipService.ToolTip="Restore" >
                         <Button.Flyout>
-                            <MenuFlyout>
+                            <MenuFlyout Opened="MenuFlyout_Opened">
                                 <MenuFlyoutItem x:Name="mnftOpenVideo" Text="Open Another Media" Click="mnftOpenVideo_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE838;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
                                 <MenuFlyoutItem x:Name="mnftVolume" Text="Volume" Click="mnftVolume_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Name="fntIconVolume" Glyph="&#xE767;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE946;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE838;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
 
                                 <MenuFlyoutItem x:Name="mnftPrevious" Text="Previous" Click="mnftPrevious_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE892;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
                                 <MenuFlyoutItem x:Name="mnftSkipBack" Text="Skip back 10 secs" Click="mnftSkipBack_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <ImageIcon Source="{Binding SkipBack, Source= {StaticResource GlobalIconHolder}}"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
                                 <MenuFlyoutItem x:Name="mnftPlay" Text="{x:Bind mediacontroller.PlayPauseToolTip, Mode=OneWay}" Click="mnftPlay_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Name="fntIconPlay" Glyph="&#xE768;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
                                 <MenuFlyoutItem x:Name="mnftSkipForward" Text="Skip Forward 10 secs" Click="mnftSkipForward_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <ImageIcon Source="{Binding SkipAhead, Source= {StaticResource GlobalIconHolder}}"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
                                 <MenuFlyoutItem x:Name="mnftNext" Text="Next" Click="mnftNext_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE893;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem x:Name="mnftRestore" Text="Restore" Click="btnRestore_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"/>
+                                        <FontIcon Glyph="&#xE944;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>

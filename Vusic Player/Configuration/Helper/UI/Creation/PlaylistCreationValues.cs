@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.UserSettings;
 
 namespace Vusic_Player.Configuration.Helper.UI.Creation
@@ -45,10 +46,10 @@ namespace Vusic_Player.Configuration.Helper.UI.Creation
         private bool _isAppInstanceOcean = true;
         private List<string> _directory = new List<string>();
         private string _playlistName = "Playlist";
-        private BitmapImage _plThumb = new BitmapImage(new Uri("ms-appx:///Assets/playlistdefaultdark.png"));
+        private BitmapImage _plThumb = new BitmapImage(new Uri(IconHolder.Instance.PlaylistIcon));
         private string _playlistID = Guid.NewGuid().ToString();
-        private Uri _thumbnail = new Uri("ms-appx:///Assets/playlistdefaultdark.png");
-        private string _thumbnailString = "ms-appx:///Assets/playlistdefaultdark.png";
+        private Uri _thumbnail = new Uri(IconHolder.Instance.PlaylistIcon);
+        private string _thumbnailString = IconHolder.Instance.PlaylistIcon;
         private DateTime _creationdate = DateTime.Now;
         private HashSet<string> _songsPaths = new();
         private ObservableCollection<SongModel> _mediaSongModels = new();

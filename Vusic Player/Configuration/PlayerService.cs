@@ -17,6 +17,7 @@ using System.Windows.Input;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
@@ -450,7 +451,7 @@ namespace Vusic_Player.Configuration
             }
             App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
             {
-                var bitm = new BitmapImage(new Uri("ms-appx:///Assets/pause.png"));
+                var bitm = new BitmapImage(new Uri(IconHolder.Instance.Pause));
                 UIController.PlayPauseToolTip = "Pause";
                 UIController.Thumbnail = bitm;
                 maintimer?.Start();
@@ -592,7 +593,7 @@ namespace Vusic_Player.Configuration
 
             App.MainWindowInstance?.DispatcherQueue.TryEnqueue(async () =>
             {
-                var bitm = new BitmapImage(new Uri("ms-appx:///Assets/play.png"));
+                var bitm = new BitmapImage(new Uri(IconHolder.Instance.Play));
                 UIController.PlayPauseToolTip = "Play";
 
                 UIController.Thumbnail = bitm;
@@ -637,7 +638,7 @@ namespace Vusic_Player.Configuration
                     PlayCalled?.Invoke();
                     App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
                     {
-                        var bitm = new BitmapImage(new Uri("ms-appx:///Assets/pause.png"));
+                        var bitm = new BitmapImage(new Uri(IconHolder.Instance.Pause));
                         UIController.PlayPauseToolTip = "Pause";
                         UIController.Thumbnail = bitm;
                         maintimer?.Start();
@@ -692,7 +693,7 @@ namespace Vusic_Player.Configuration
             PlayCalled?.Invoke();
             App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
             {
-                var bitm = new BitmapImage(new Uri("ms-appx:///Assets/pause.png"));
+                var bitm = new BitmapImage(new Uri(IconHolder.Instance.Pause));
                 UIController.PlayPauseToolTip = "Pause";
                 UIController.Thumbnail = bitm;
                 maintimer?.Start();
@@ -792,7 +793,7 @@ namespace Vusic_Player.Configuration
 
                     App.MainWindowInstance?.DispatcherQueue.TryEnqueue(async () =>
                     {
-                        var bitm = new BitmapImage(new Uri("ms-appx:///Assets/play.png"));
+                        var bitm = new BitmapImage(new Uri(IconHolder.Instance.Play));
 
                         UIController.CurrentPosition = 0;
                         UIController.PlayPauseToolTip = "Play";

@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Vusic_Player.Configuration.AppConfig;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -43,10 +44,10 @@ namespace Vusic_Player.Pages.Views
                     Level = log.Level,
                     Icon = log.Level switch
                     {
-                        Logger.LogLevelType.Information => "ms-appx:///Assets/infoicon.png",
-                        Logger.LogLevelType.Warning => "ms-appx:///Assets/warning.png",
-                        Logger.LogLevelType.Error => "ms-appx:///Assets/error.png",
-                        Logger.LogLevelType.Success => "ms-appx:///Assets/success.png",
+                        Logger.LogLevelType.Information => IconHolder.Instance.InfoIcon,
+                        Logger.LogLevelType.Warning => IconHolder.Instance.WarningIcon,
+                        Logger.LogLevelType.Error => IconHolder.Instance.Error,
+                        Logger.LogLevelType.Success => IconHolder.Instance.Success,
                         _ => null
                     }
                 };

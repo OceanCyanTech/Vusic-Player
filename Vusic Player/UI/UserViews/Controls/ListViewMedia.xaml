@@ -161,37 +161,37 @@ ToolTipService.ToolTip="Sort items">
                     <MenuFlyout>
                         <RadioMenuFlyoutItem Name="mnftSortName" Text="Sort by Name" Click="mnftSortName_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <ImageIcon Source="/Assets/sortbynamefonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem Name="mnftSortDuration" Text="Sort by Duration" Click="mnftSortDuration_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <ImageIcon Source="/Assets/sortbydurationfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem Name="mnftSortbyArtist" Text="Sort by Artist Name" Click="mnftSortbyArtist_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <ImageIcon Source="/Assets/sortbyartistfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem Name="mnftSortbyAlbum" Text="Sort by Album Name" Click="mnftSortbyAlbum_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <ImageIcon Source="/Assets/sortbyalbumfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem Name="mnftSortbyDateMod" Text="Sort by Date Modified" Click="mnftSortbyDateMod_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <ImageIcon Source="/Assets/sortbydatemodifiedfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem Name="mnftSortbyDateCreated" Text="Sort by Date Created" Click="mnftSortbyDateCreated_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <ImageIcon Source="/Assets/sortbydatecreatedfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem Name="mnftSortbyMediaType" Text="Sort by Media Type" Click="mnftSortbyMediaType_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <ImageIcon Source="/Assets/sortbymediatypefonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                     
@@ -227,12 +227,12 @@ ToolTipService.ToolTip="Sort items">
                 </Button>
                 <Button Name="btnAddtoPlaylistMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Add selected items to a playlist" Margin="0, 10" Click="btnAddtoPlaylistMass_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        <Image Source="{Binding AddToPlaylistMass, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                 </Button>
                 <Button Name="btnAddtoQueueMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Add selected items to Queue" Margin="0, 10" Click="btnAddtoQueueMass_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/openfolder.png" Width="20"></Image>
+                        <Image Source="{Binding AddToQueueMass, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                 </Button>
 
@@ -260,19 +260,19 @@ ToolTipService.ToolTip="View Mode">
                     <MenuFlyout>
                         <RadioMenuFlyoutItem Name="mnftViewList" IsChecked="True" Text="List" Click="mnftViewList_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <FontIcon Glyph="&#xEA37;"></FontIcon>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem Name="mnftViewIcons" Text="Thumbnails Grid" Click="mnftViewIcons_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"></FontIcon>
+                                <FontIcon Glyph="&#xF0E2;"></FontIcon>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
 
                     </MenuFlyout>
                 </Button.Flyout>
                 <StackPanel Orientation="Horizontal">
-                    <Image Width="25" Source="/Assets/appicon.png" />
+                    <Image Width="25" Source="{Binding ModeIcon, Source={StaticResource GlobalIconHolder}}" />
                 </StackPanel>
             </Button>
 

@@ -27,22 +27,22 @@
                     <MenuFlyout>
                         <MenuFlyoutSubItem Name="mnftChangeCover" Text="Change Cover">
                             <MenuFlyoutSubItem.Icon>
-                                <FontIcon Glyph="d"/>
+                                <FontIcon Glyph="&#xE91B;"/>
                             </MenuFlyoutSubItem.Icon>
                             <MenuFlyoutItem Name="mnftChangeLocal" Text="Find Cover on Disk" Click="btnFindGenreProfileLocal_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xEC4E;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem Name="mnftChangeOnline" Text="Find Cover Online" Click="btnFindGenreProfileOnline_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="d"/>
+                                    <FontIcon Glyph="&#xF6FA;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyoutSubItem>
                         <MenuFlyoutItem Name="mnftRemoveIcon" Text="Remove Cover" Click="mnftRemoveIcon_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="d"/>
+                                <FontIcon Glyph="&#xE894;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>
@@ -89,7 +89,7 @@ CornerRadius="16"
                     <Button Background="Transparent" BorderBrush="Transparent" Name="btnPlayAll" Click="btnPlayAll_Click" Margin="5"
             ToolTipService.ToolTip="Play all songs of genre">
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="25" Source="/Assets/play.png" />
+                            <Image Width="25" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}" />
                             <TextBlock Margin="5,2" Text="Play all" />
                         </StackPanel>
                     </Button>
@@ -114,13 +114,13 @@ ToolTipService.ToolTip="Set Genre Cover">
                                 <StackPanel Orientation="Vertical" Spacing="5">
                                     <Button Name="btnFindGenreProfileOnline" Click="btnFindGenreProfileOnline_Click">
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Width="25" Source="/Assets/addimgicon.png" />
+                                            <Image Width="25" Source="{Binding GenreOnline, Source={StaticResource GlobalIconHolder}}" />
                                             <TextBlock Margin="5,2" Text="Find genre picture online" />
                                         </StackPanel>
                                     </Button>
                                     <Button Name="btnFindGenreProfileLocal" Click="btnFindGenreProfileLocal_Click" >
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Width="25" Source="/Assets/addimgicon.png" />
+                                            <Image Width="25" Source="{Binding GenreLocal, Source={StaticResource GlobalIconHolder}}" />
                                             <TextBlock Margin="5,2" Text="Find genre cover on disk" />
                                         </StackPanel>
                                     </Button>
@@ -128,7 +128,7 @@ ToolTipService.ToolTip="Set Genre Cover">
                             </Flyout>
                         </Button.Flyout>
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="25" Source="/Assets/addimgicon.png" />
+                            <Image Width="25" Source="{Binding AddImageIcon, Source={StaticResource GlobalIconHolder}}" />
                             
                         </StackPanel>
                     </Button>

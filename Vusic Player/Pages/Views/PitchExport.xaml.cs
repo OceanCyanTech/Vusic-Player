@@ -11,6 +11,7 @@ using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.FilePickers;
 using Windows.Storage;
@@ -292,7 +293,7 @@ namespace Vusic_Player.Pages.Views
                         Debug.WriteLine($"Input file does not exist: {item.FilePath}");
                         dispatcherQueue.TryEnqueue(() =>
                         {
-                            item.ImageState = "ms-appx:///Assets/error.png";
+                            item.ImageState = IconHolder.Instance.Error;
                             item.ErrorToolTip = "Input file does not exist on disk.";
                         });
                         return;
@@ -305,7 +306,7 @@ namespace Vusic_Player.Pages.Views
                     {
                         dispatcherQueue.TryEnqueue(() =>
                         {
-                            item.ImageState = "ms-appx:///Assets/error.png";
+                            item.ImageState = IconHolder.Instance.Error;
                             item.ErrorToolTip = "Output directory does not exist.";
                         });
                         return;
@@ -318,7 +319,7 @@ namespace Vusic_Player.Pages.Views
                         {
                             dispatcherQueue.TryEnqueue(() =>
                             {
-                                item.ImageState = "ms-appx:///Assets/error.png";
+                                item.ImageState = IconHolder.Instance.Error;
                                 item.DirectorySelectionEnabled = true;
                                 item.ErrorToolTip = "Output directory not selected or does not exist.";
                             });
@@ -405,7 +406,7 @@ namespace Vusic_Player.Pages.Views
                             if (exitCode == 0)
                             {
                                 item.Progress = 100;
-                                item.ImageState = "ms-appx:///Assets/success.png";
+                                item.ImageState = IconHolder.Instance.Success;
                                 item.OutputPath = outputMp3;
                                 item.ErrorToolTip = "Completed successfully";
                                 Debug.WriteLine(outputMp3 + "  Post Processing");
@@ -422,7 +423,7 @@ namespace Vusic_Player.Pages.Views
                             else
                             {
                                 item.Progress = 0;
-                                item.ImageState = "ms-appx:///Assets/error.png";
+                                item.ImageState = IconHolder.Instance.Error;
                                 item.DirectorySelectionEnabled = true;
 
                                 // Extract the relevant error line(s) for the tooltip

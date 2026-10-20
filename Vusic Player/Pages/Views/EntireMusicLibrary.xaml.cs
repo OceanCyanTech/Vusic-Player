@@ -18,6 +18,7 @@ using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
@@ -364,7 +365,7 @@ namespace Vusic_Player.Pages.Views
                 var artists = currentSettings.ArtistsList;
                 foreach (var artist in artistSongCounts)
                 {
-                    string fallbackUri = "ms-appx:///Assets/defaultartist.png";
+                    string fallbackUri = IconHolder.Instance.DefaultArtist;
 
                     var existartist = artists.FirstOrDefault(p => p.Name == artist.ArtistName);
                     if (existartist != null)
@@ -437,7 +438,7 @@ namespace Vusic_Player.Pages.Views
                 var albums = currentSettings.AlbumsList;
                 foreach (var artist in albumsSongCounts)
                 {
-                    string fallbackUri = "ms-appx:///Assets/defaultalbum.png";
+                    string fallbackUri = IconHolder.Instance.DefaultAlbum;
 
                     var existalbum = albums.FirstOrDefault(p => p.Name == artist.AlbumName);
                     if (existalbum != null)
@@ -464,11 +465,11 @@ namespace Vusic_Player.Pages.Views
                 // 1. Define your presets and add them to your collection first
                 var genrePresets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 {
-    { "Rock", "ms-appx:///Assets/Genres/appicon.png" },
-    { "Pop", "ms-appx:///Assets/Genres/appicon.png" },
-    { "Jazz", "ms-appx:///Assets/Genres/appicon.png" },
-    { "Classical", "ms-appx:///Assets/Genres/appicon.png" },
-    { "Hip-Hop", "ms-appx:///Assets/Genres/appicon.png" }
+    { "Rock", "ms-appx:///Assets/Genres/rock.png" },
+    { "Pop", "ms-appx:///Assets/Genres/pop.png" },
+    { "Jazz", "ms-appx:///Assets/Genres/jazz.png" },
+    { "Classical", "ms-appx:///Assets/Genres/classical.png" },
+    { "Hip-Hop", "ms-appx:///Assets/Genres/hiphop.png" }
 };
 
 

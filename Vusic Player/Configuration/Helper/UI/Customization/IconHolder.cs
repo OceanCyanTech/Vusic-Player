@@ -9,67 +9,98 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
     public class IconHolder : INotifyPropertyChanged
     {
         private string _theme = "Ocean";
-        private string _backgroundblur = "ms-appx:///Assets/Themes/Ocean/backgroundblur.png";
-        private string _sourceerror = "ms-appx:///Assets/Themes/Ocean/sourceerror.png";
+        private string _backgroundblur = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/backgroundblur.png";
+        private string _sourceerror = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/sourceerror.png";
+        private string _deviceIcon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/deviceicon.png";
+        private string _settingIcon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/settingicon.png";
+        private string _recordicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/recordicon.png";
+        private string _backicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/backicon.png";
+        private string _genreonline = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/genreonline.png";
+        private string _genrelocal = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/genrelocal.png";
+        private string _pageicon = "ms-appx:///Assets/Themes/Ocean/pageicon.png";
+        private string _pause = "ms-appx:///Assets/Themes/Ocean/pause.png";
 
-        private string _skipback = "ms-appx:///Assets/Themes/Ocean/skip10back.png";
-        private string _next = $"ms-appx:///Assets/Themes/Ocean/next.png";
-        private string _refresh = $"ms-appx:///Assets/Themes/Ocean/refresh.png";
-        private string _error = $"ms-appx:///Assets/Themes/Ocean/error.png";
-        private string _success = $"ms-appx:///Assets/Themes/Ocean/success.png";
-        private string _info = $"ms-appx:///Assets/Themes/Ocean/infoicon.png";
-        private string _skipahead = $"ms-appx:///Assets/Themes/Ocean/skip10ahead.png";
+        private string _viewfulllyrics = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/viewfulllyrics.png";
+        private string _personalize = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/personalize.png";
+        private string _bluraesthetic = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/bluraesthetic.png";
+        private string _home = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/home.png";
+        private string _loopicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/loopicon.png";
+        private string _saveicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/saveicon.png";
+        private string _viewfullqueue = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/viewfullqueue.png";
+        private string _emptyqueue = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/emptyqueue.png";
+        private string _filtericon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/filtericon.png";
+        private string _volume = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/volume.png";
+        private string _saveasicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/saveasicon.png";
+        private string _chevronup = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/chevronup.png";
+        private string _chevrondown = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/chevrondown.png";
+        private string _subtitlesicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/subtitlesicon.png";
+        private string _addtoplaylistmass = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/addtoplaylistmass.png";
+        private string _addtoqueuemass = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/addtoqueuemass.png";
+        private string _modeicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/modeicon.png";
+        private string _lyricicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/lyricicon.png";
+        private string _albumpictureonline = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/albumpictureonline.png";
+        private string _albumpicturelocal = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/albumpicturelocal.png";
+        private string _deletealbum = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/deletealbum.png";
+
+        private string _skipback = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/skip10back.png";
+        private string _next = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/next.png";
+        private string _refresh = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/refresh.png";
+        private string _error = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/error.png";
+        private string _success = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/success.png";
+        private string _info = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/infoicon.png";
+        private string _skipahead = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/skip10ahead.png";
         private string _fontfamily = $"Bahnschrift";
-        private string _previous = "ms-appx:///Assets/Themes/Ocean/previous.png";
-        private string _speed = "ms-appx:///Assets/Themes/Ocean/speedicon.png";
-        private string _miniplayer = "ms-appx:///Assets/Themes/Ocean/miniplayer.png";
-        private string _play = "ms-appx:///Assets/Themes/Ocean/play.png";
-        private string _options = "ms-appx:///Assets/Themes/Ocean/options.png";
-        private string _expandedicon = "ms-appx:///Assets/Themes/Ocean/expandedicon.png";
-        private string _toolsicon = "ms-appx:///Assets/Themes/Ocean/toolsicon.png";
-        private string _findlyricsonline = "ms-appx:///Assets/Themes/Ocean/findlyricsonline.png";
-        private string _favicon = "ms-appx:///Assets/Themes/Ocean/favicon.png";
-        private string _fileinfo = "ms-appx:///Assets/Themes/Ocean/fileinfoicon.png";
-        private string _openfile = "ms-appx:///Assets/Themes/Ocean/openfileicon.png";
-        private string _musicsuggestions = "ms-appx:///Assets/Themes/Ocean/musicsuggestions.png";
-        private string _addicon = "ms-appx:///Assets/Themes/Ocean/addicon.png";
-        private string _playlisticon = "ms-appx:///Assets/Themes/Ocean/playlisticon.png";
-        private string _musicnoteicon = "ms-appx:///Assets/Themes/Ocean/musicnoteicon.png";
-        private string _defaultshow = "ms-appx:///Assets/Themes/Ocean/defaultshow.png";
+        private string _previous = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/previous.png";
+        private string _speed = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/speedicon.png";
+        private string _miniplayer = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/miniplayer.png";
+        private string _play = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/play.png";
+        private string _options = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/options.png";
+        private string _expandedicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/expandedicon.png";
+        private string _toolsicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/toolsicon.png";
+        private string _findlyricsonline = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/findlyricsonline.png";
+        private string _favicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/favicon.png";
+        private string _fileinfo = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/fileinfoicon.png";
+        private string _openfile = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/openfileicon.png";
+        private string _musicsuggestions = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/musicsuggestions.png";
+        private string _addicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/addicon.png";
+        private string _playlisticon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/playlisticon.png";
+        private string _musicnoteicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/musicnoteicon.png";
+        private string _defaultshow = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/defaultshow.png";
 
-        private string _openfolder = "ms-appx:///Assets/Themes/Ocean/openfolder.png";
-        private string _importicon = "ms-appx:///Assets/Themes/Ocean/importicon.png";
-        private string _removeicon = "ms-appx:///Assets/Themes/Ocean/removeicon.png";
-        private string _foldericon = "ms-appx:///Assets/Themes/Ocean/foldericon.png";
-        private string _sampleimage = "ms-appx:///Assets/Themes/Ocean/sampleimage.png";
-        private string _tickicon = "ms-appx:///Assets/Themes/Ocean/tickicon.png";
-        private string _defaultvideo = "ms-appx:///Assets/Themes/Ocean/defaultvideo.png";
-        private string _renameicon = "ms-appx:///Assets/Themes/Ocean/renameicon.png";
-        private string _shuffleicon = "ms-appx:///Assets/Themes/Ocean/shuffleicon.png";
-        private string _addimageicon = "ms-appx:///Assets/Themes/Ocean/addimgicon.png";
-        private string _refreshimageicon = "ms-appx:///Assets/Themes/Ocean/refreshimg.png";
-        private string _defaultalbum = "ms-appx:///Assets/Themes/Ocean/defaultalbum.png";
-        private string _removeimage = "ms-appx:///Assets/Themes/Ocean/removeimg.png";
-        private string _defaultartist = "ms-appx:///Assets/Themes/Ocean/defaultartist.png";
-        private string _editicon = "ms-appx:///Assets/Themes/Ocean/editicon.png";
-        private string _artistpictureonline = "ms-appx:///Assets/Themes/Ocean/artistpictureonline.png";
-        private string _artistpicturelocal = "ms-appx:///Assets/Themes/Ocean/artistpicturelocal.png";
-        private string _selectall = "ms-appx:///Assets/Themes/Ocean/selectall.png";
-        private string _addfolder = "ms-appx:///Assets/Themes/Ocean/addfolder.png";
-        private string _history = "ms-appx:///Assets/Themes/Ocean/history.png";
-        private string _emptystuffleaves = "ms-appx:///Assets/Themes/Ocean/emptystuffleaves.png";
-        private string _addtoqueue = "ms-appx:///Assets/Themes/Ocean/addtoqueue.png";
-        private string _missingicon = "ms-appx:///Assets/Themes/Ocean/missingicon.png";
-        private string _openfolderlocation = "ms-appx:///Assets/Themes/Ocean/openfolderlocation.png";
-        private string _copyicon = "ms-appx:///Assets/Themes/Ocean/copyicon.png";
-        private string _sorticon = "ms-appx:///Assets/Themes/Ocean/sorticon.png";
-        private string _addtoplaylist = "ms-appx:///Assets/Themes/Ocean/addtoplaylist.png";
-        private string _deleteicon = "ms-appx:///Assets/Themes/Ocean/deleteicon.png";
-        private string _editalbummass = "ms-appx:///Assets/Themes/Ocean/editalbummass.png";
-        private string _editartistmass = "ms-appx:///Assets/Themes/Ocean/editartistmass.png";
-        private string _fileicon = "ms-appx:///Assets/Themes/Ocean/fileicon.png";
-        private string _searchicon = "ms-appx:///Assets/Themes/Ocean/searchicon.png";
-        private string _genreicon = "ms-appx:///Assets/Themes/Ocean/genreicon.png";
+        private string _openfolder = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/openfolder.png";
+        private string _importicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/importicon.png";
+        private string _removeicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/removeicon.png";
+        private string _foldericon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/foldericon.png";
+        private string _sampleimage = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/sampleimage.png";
+        private string _tickicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/tickicon.png";
+        private string _defaultvideo = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/defaultvideo.png";
+        private string _renameicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/renameicon.png";
+        private string _shuffleicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/shuffleicon.png";
+        private string _addimageicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/addimgicon.png";
+        private string _refreshimageicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/refreshimg.png";
+        private string _defaultalbum = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/defaultalbum.png";
+        private string _removeimage = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/removeimg.png";
+        private string _defaultartist = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/defaultartist.png";
+        private string _editicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/editicon.png";
+        private string _artistpictureonline = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/artistpictureonline.png";
+        private string _artistpicturelocal = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/artistpicturelocal.png";
+        private string _selectall = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/selectall.png";
+        private string _addfolder = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/addfolder.png";
+        private string _history = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/history.png";
+        private string _emptystuffleaves = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/emptystuffleaves.png";
+        private string _addtoqueue = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/addtoqueue.png";
+        private string _missingicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/missingicon.png";
+        private string _openfolderlocation = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/openfolderlocation.png";
+        private string _copyicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/copyicon.png";
+        private string _sorticon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/sorticon.png";
+        private string _warningicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/warning.png";
+        private string _addtoplaylist = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/addtoplaylist.png";
+        private string _deleteicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/deleteicon.png";
+        private string _editalbummass = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/editalbummass.png";
+        private string _editartistmass = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/editartistmass.png";
+        private string _fileicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/fileicon.png";
+        private string _searchicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/searchicon.png";
+        private string _genreicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/genreicon.png";
 
 
 
@@ -82,6 +113,30 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
                 if (_sampleimage != value)
                 {
                     _sampleimage = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string SettingIcon
+        {
+            get => _settingIcon;
+            set
+            {
+                if (_settingIcon != value)
+                {
+                    _settingIcon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string WarningIcon
+        {
+            get => _warningicon;
+            set
+            {
+                if (_warningicon != value)
+                {
+                    _warningicon = value;
                     OnPropertyChanged();
                 }
             }
@@ -110,6 +165,344 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
                 }
             }
         }
+        public string RecordIcon
+        {
+            get => _recordicon;
+            set
+            {
+                if (_recordicon != value)
+                {
+                    _recordicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string BackIcon
+        {
+            get => _backicon;
+            set
+            {
+                if (_backicon != value)
+                {
+                    _backicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string DeviceIcon
+        {
+            get => _deviceIcon;
+            set
+            {
+                if (_deviceIcon != value)
+                {
+                    _deviceIcon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string GenreOnline
+        {
+            get => _genreonline;
+            set
+            {
+                if (_genreonline != value)
+                {
+                    _genreonline = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string GenreLocal
+        {
+            get => _genrelocal;
+            set
+            {
+                if (_genrelocal != value)
+                {
+                    _genrelocal = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string ViewFullLyrics
+        {
+            get => _viewfulllyrics;
+            set
+            {
+                if (_viewfulllyrics != value)
+                {
+                    _viewfulllyrics = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Personalize
+        {
+            get => _personalize;
+            set
+            {
+                if (_personalize != value)
+                {
+                    _personalize = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string BlurAesthetic
+        {
+            get => _bluraesthetic;
+            set
+            {
+                if (_bluraesthetic != value)
+                {
+                    _bluraesthetic = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Home
+        {
+            get => _home;
+            set
+            {
+                if (_home != value)
+                {
+                    _home = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string LoopIcon
+        {
+            get => _loopicon;
+            set
+            {
+                if (_loopicon != value)
+                {
+                    _loopicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string SaveIcon
+        {
+            get => _saveicon;
+            set
+            {
+                if (_saveicon != value)
+                {
+                    _saveicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string ViewFullQueue
+        {
+            get => _viewfullqueue;
+            set
+            {
+                if (_viewfullqueue != value)
+                {
+                    _viewfullqueue = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string EmptyQueue
+        {
+            get => _emptyqueue;
+            set
+            {
+                if (_emptyqueue != value)
+                {
+                    _emptyqueue = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string FilterIcon
+        {
+            get => _filtericon;
+            set
+            {
+                if (_filtericon != value)
+                {
+                    _filtericon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Volume
+        {
+            get => _volume;
+            set
+            {
+                if (_volume != value)
+                {
+                    _volume = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string SaveAsIcon
+        {
+            get => _saveasicon;
+            set
+            {
+                if (_saveasicon != value)
+                {
+                    _saveasicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string ChevronUp
+        {
+            get => _chevronup;
+            set
+            {
+                if (_chevronup != value)
+                {
+                    _chevronup = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string PageIcon
+        {
+            get => _pageicon;
+            set
+            {
+                if (_pageicon != value)
+                {
+                    _pageicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Pause
+        {
+            get => _pause;
+            set
+            {
+                if (_pause != value)
+                {
+                    _pause = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string ChevronDown
+        {
+            get => _chevrondown;
+            set
+            {
+                if (_chevrondown != value)
+                {
+                    _chevrondown = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string SubtitlesIcon
+        {
+            get => _subtitlesicon;
+            set
+            {
+                if (_subtitlesicon != value)
+                {
+                    _subtitlesicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string AddToPlaylistMass
+        {
+            get => _addtoplaylistmass;
+            set
+            {
+                if (_addtoplaylistmass != value)
+                {
+                    _addtoplaylistmass = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string AddToQueueMass
+        {
+            get => _addtoqueuemass;
+            set
+            {
+                if (_addtoqueuemass != value)
+                {
+                    _addtoqueuemass = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string ModeIcon
+        {
+            get => _modeicon;
+            set
+            {
+                if (_modeicon != value)
+                {
+                    _modeicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string LyricIcon
+        {
+            get => _lyricicon;
+            set
+            {
+                if (_lyricicon != value)
+                {
+                    _lyricicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string AlbumPictureOnline
+        {
+            get => _albumpictureonline;
+            set
+            {
+                if (_albumpictureonline != value)
+                {
+                    _albumpictureonline = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string AlbumPictureLocal
+        {
+            get => _albumpicturelocal;
+            set
+            {
+                if (_albumpicturelocal != value)
+                {
+                    _albumpicturelocal = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string DeleteAlbum
+        {
+            get => _deletealbum;
+            set
+            {
+                if (_deletealbum != value)
+                {
+                    _deletealbum = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public string OpenFolderLocation
         {
             get => _openfolderlocation;

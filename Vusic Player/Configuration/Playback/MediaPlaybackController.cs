@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 
 namespace Vusic_Player.Configuration.Playback
 {
@@ -89,7 +90,7 @@ namespace Vusic_Player.Configuration.Playback
         private Visibility _videometadatavisibilityfileinfo = Visibility.Collapsed;
         private Visibility textdisplay = Visibility.Visible;
         private Brush _volumeForeground = new SolidColorBrush(Colors.White);
-        private ImageSource _thumbnail = new BitmapImage(new Uri("ms-appx:///Assets/play.png"));
+        private ImageSource _thumbnail = new BitmapImage(new Uri(IconHolder.Instance.Play));
         private ImageSource _thumbnail2 = new BitmapImage(new Uri("ms-appx:///Assets/appicon.png"));
 
         #region Properties

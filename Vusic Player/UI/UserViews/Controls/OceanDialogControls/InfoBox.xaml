@@ -347,12 +347,12 @@ Background="Transparent"
                             <MenuFlyout>
                                 <MenuFlyoutItem Text="Open File Location" Name="mnftOpenFileLoc" Click="mnftOpenFileLoc_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"></FontIcon>
+                                        <FontIcon Glyph="&#xE838;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem Text="Copy Path" Name="mnftCopyPath" Click="mnftCopyPath_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="d"></FontIcon>
+                                        <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>

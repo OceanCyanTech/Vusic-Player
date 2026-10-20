@@ -43,7 +43,7 @@
             </Button>
             <Button Name="btnLoadSubtitleFile" Click="btnLoadSubtitleFile_Click">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <Image Width="20" Source="{Binding OpenFile, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Load Lyric File"/>
                 </StackPanel>
             </Button>
@@ -53,13 +53,13 @@
                     <KeyboardAccelerator Modifiers="Control" Key="S"/>
                 </Button.KeyboardAccelerators>
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <Image Width="20" Source="{Binding SaveIcon, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Save File"/>
                 </StackPanel>
             </Button>
             <Button Name="btnSaveAsFile"  IsEnabled="False"   Click="btnSaveAsFile_Click">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Width="20" Source="/Assets/appicon.png"/>
+                    <Image Width="20" Source="{Binding SaveAsIcon, Source={StaticResource GlobalIconHolder}}"/>
                     <TextBlock Text="Save As"/>
                 </StackPanel>
             </Button>
@@ -70,17 +70,17 @@
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="d"/>
+                            <FontIcon Glyph="&#xE8C8;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Rename File" Name="mnftRenameSubtitle" Click="mnftRenameSubtitle_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="d"/>
+                            <FontIcon Glyph="&#xE8AC;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Open File Location" Name="mnftOpenFileLoc" Click="mnftOpenFileLoc_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="d"/>
+                            <FontIcon Glyph="&#xED25;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                 </MenuFlyout>
@@ -109,13 +109,13 @@
                 <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="3">
                     <Button Name="btnInsertBelow" Click="btnInsertBelow_Click">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Image Width="20" Source="/Assets/appicon.png"/>
+                            <Image Width="20" Source="{Binding ChevronDown, Source={StaticResource GlobalIconHolder}}"/>
                             <TextBlock Text="Insert New Lyric Cue Below"/>
                         </StackPanel>
                     </Button>
                     <Button Name="btnInsertAbove" Click="btnInsertAbove_Click">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Image Width="20" Source="/Assets/appicon.png"/>
+                            <Image Width="20" Source="{Binding ChevronUp, Source={StaticResource GlobalIconHolder}}"/>
                             <TextBlock Text="Insert New Lyric Cue Above"/>
                         </StackPanel>
                     </Button>
@@ -175,33 +175,33 @@
                                     <MenuFlyout>
                                         <MenuFlyoutItem Text="Edit Lyric" Name="mnftEditSubtitle" Click="mnftEditSubtitle_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"/>
+                                                <FontIcon Glyph="&#xE70F;"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Copy Lyric" Name="mnftCopySubtitle" Click="mnftCopySubtitle_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"/>
+                                                <FontIcon Glyph="&#xE8C8;"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Copy Lyric with Timestamps" Name="mnftCopySubtitlewithTimestamps" Click="mnftCopySubtitlewithTimestamps_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"/>
+                                                <ImageIcon Source="/Assets/copylyricwithtimestampsfonticon .png"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Remove Lyric" Name="mnftRemoveSubtitle" Click="mnftRemoveSubtitle_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"/>
+                                                <FontIcon Glyph="&#xE894;"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem Text="Insert Lyric Above" Name="mnftInsertSubtitleAbove" Click="mnftInsertSubtitleAbove_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"/>
+                                                <FontIcon Glyph="&#xE70E;"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Insert Lyric Below" Name="mnftInsertSubtitleBelow" Click="mnftInsertSubtitleBelow_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="d"/>
+                                                <FontIcon Glyph="&#xE70D;"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
@@ -223,20 +223,20 @@
                 </ListView>
                 <StackPanel HorizontalAlignment="Center" Name="stkNoSubtitles" VerticalAlignment="Center" Orientation="Vertical" Spacing="30" Grid.Row="3">
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Image Source="/Assets/appicon.png" Width="30"/>
+                        <Image Source="{Binding LyricIcon, Source={StaticResource GlobalIconHolder}}" Width="30"/>
                         <TextBlock Text="There are no Lyrics to display!" Style="{StaticResource SubtitleTextBlockStyle}"/>
                     </StackPanel>
                     <TextBlock HorizontalAlignment="Center" Text="Import an existing Lyric file or create a new one."/>
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10">
                         <Button Name="btnNewSubtitleFile2" Click="btnNewSubtitleFile_Click">
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <Image Width="20" Source="/Assets/addicon.png"/>
+                                <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"/>
                                 <TextBlock Text="New Lyric File"/>
                             </StackPanel>
                         </Button>
                         <Button Name="btnLoadSubtitleFile2" Click="btnLoadSubtitleFile_Click">
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <Image Width="20" Source="/Assets/appicon.png"/>
+                                <Image Width="20" Source="{Binding OpenFile, Source={StaticResource GlobalIconHolder}}"/>
                                 <TextBlock Text="Load Lyric File"/>
                             </StackPanel>
                         </Button>
@@ -269,28 +269,28 @@ CornerRadius="16"
                 >
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Button Name="btnUndo" Click="btnUndo_Click"  ToolTipService.ToolTip="Undo" BorderBrush="Transparent" Background="Transparent">
-                        <FontIcon Glyph="d"/>
+                        <FontIcon Glyph="&#xE7A7;"/>
                     </Button>
                     <Button Name="btnRedo" Click="btnRedo_Click" ToolTipService.ToolTip="Redo" BorderBrush="Transparent" Background="Transparent">
-                        <FontIcon Glyph="d"/>
+                        <FontIcon Glyph="&#xE7A6;"/>
                     </Button>
                     <Button Name="btnCut" Click="btnCut_Click"  ToolTipService.ToolTip="Cut" BorderBrush="Transparent" Background="Transparent">
-                        <FontIcon Glyph="d"/>
+                        <FontIcon Glyph="&#xE8C6;"/>
                     </Button>
                     <Button Name="btnCopy" Click="btnCopy_Click" ToolTipService.ToolTip="Copy" BorderBrush="Transparent" Background="Transparent">
-                        <FontIcon Glyph="d"/>
+                        <FontIcon Glyph="&#xE8C8;"/>
                     </Button>
                     <Button Name="btnPaste" Click="btnPaste_Click" ToolTipService.ToolTip="Paste" BorderBrush="Transparent" Background="Transparent">
-                        <FontIcon Glyph="d"/>
+                        <FontIcon Glyph="&#xE77F;"/>
                     </Button>
                     <Button Name="btnSelectAll" Click="btnSelectAll_Click" ToolTipService.ToolTip="Select All" BorderBrush="Transparent" Background="Transparent">
-                        <FontIcon Glyph="d"/>
+                        <FontIcon Glyph="&#xE8B3;"/>
                     </Button>
                     <Button Name="btnDelete" Click="btnDelete_Click" ToolTipService.ToolTip="Delete" BorderBrush="Transparent" Background="Transparent">
-                        <FontIcon Glyph="d"/>
+                        <FontIcon Glyph="&#xE74D;"/>
                     </Button>
                     <Button Name="btnFind" Click="btnFind_Click" ToolTipService.ToolTip="Find" BorderBrush="Transparent" Background="Transparent">
-                        <FontIcon Glyph="d"/>
+                        <FontIcon Glyph="&#xE721;"/>
                     </Button>
                 </StackPanel>
             </Border>
@@ -355,7 +355,7 @@ CornerRadius="16"
                       ToolTipService.ToolTip="Match Case" 
                       BorderBrush="Transparent" 
                       Background="Transparent">
-                            <FontIcon Glyph="d"/>
+                            <FontIcon Glyph="&#xE8E9;"/>
                         </ToggleButton>
 
                     </StackPanel>
