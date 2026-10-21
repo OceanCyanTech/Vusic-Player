@@ -51,7 +51,7 @@
                         <Button Content="Re-scan Database" Name="btnRefreshDatabase" Click="btnRefreshDatabase_Click" Grid.Row="8"/>
                         <MenuFlyoutSeparator Grid.Row="9"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
-                            <TextBlock Text="Folder Permissions" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Name="txtFolderPermissions" Text="Folder Permissions" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock Text="Toggle or add folders that Vusic Player is allowed to read and display in the Library Pages." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
                             <controls1:WrapPanel VerticalAlignment="Stretch" MaxHeight="95" Orientation="Horizontal" Grid.Row="1" Margin="0, 20" >
                                 <GridView SelectionMode="None" VerticalAlignment="Stretch" Name="grdViewFolders" Grid.Row="1">
@@ -189,6 +189,10 @@
                             <MenuFlyoutSeparator />
                             <TextBlock Text="Privacy" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
                             <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Privacy Statement" Content="Privacy Statement" Name="btnViewPrivacyStatement" Click="btnViewPrivacyStatement_Click"/>
+                            <MenuFlyoutSeparator />
+                            <TextBlock Text="Keyboard Shortcuts" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View All Keyboard Shortcuts" Content="Keyboard Shortcut Guide" Name="btnViewKS" Click="btnViewKS_Click"/>
+
                         </StackPanel>
                     </Grid>
                     <Grid Name="grdMusicOptions" RowSpacing="30" Visibility="Collapsed">

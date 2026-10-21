@@ -14,6 +14,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Keyboard Shortcuts that can be used in Vusic Player." Style="{StaticResource BodyStrongTextBlockStyle}"/>
-        
+        <Image Source="/Assets/Themes/Ocean/keyboardshortcutguide.png" Grid.Row="1" Width="100" />
     </Grid>
 </UserControl>

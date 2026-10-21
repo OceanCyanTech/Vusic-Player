@@ -443,6 +443,7 @@ namespace Vusic_Player.Configuration
                 keyConfig.Remove(Key.Left);
                 keyConfig.Remove(Key.Space);
                 keyConfig.Remove(Key.Right);
+                keyConfig.Remove(Key.M);
 
                 keyConfig.Remove(Key.Left, ctrl: true);
                 keyConfig.Remove(Key.Right, ctrl: true);

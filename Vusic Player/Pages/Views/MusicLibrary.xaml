@@ -35,6 +35,9 @@ TintOpacity="00"
 FallbackColor="Black" 
 AlwaysUseFallback="False"/>
                     </Button.Background>
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="O"/>
+                    </Button.KeyboardAccelerators>
                     <StackPanel Orientation="Horizontal">
 
                         <Image Width="20" Source="{Binding Importicon, Source={StaticResource GlobalIconHolder}}"></Image>

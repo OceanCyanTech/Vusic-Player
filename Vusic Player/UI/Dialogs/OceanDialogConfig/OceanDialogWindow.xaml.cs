@@ -232,6 +232,7 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             ShowMod.Visibility = Visibility.Collapsed;
             LyricOnline.Visibility = Visibility.Collapsed;
             AppLock.Visibility = Visibility.Collapsed;
+            KeyboardShortcutGuide.Visibility = Visibility.Collapsed;
             if (contentType == ContentType.PlaylistCreation || contentType == ContentType.PlaylistEdit)
             {
                 PlaylistCreation.Visibility = Visibility.Visible;
@@ -309,6 +310,11 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
                 AppLock.ShowDashboard();
                 AppLock.ClearAll();
             }
+            else if (contentType == ContentType.KeyboardShortcuts)
+            {
+
+                KeyboardShortcutGuide.Visibility = Visibility.Visible;
+            }
             cnt = contentType;
             SetImage(imgPrimary, pbi);
             SetImage(imgSecondary, sbi);
@@ -365,7 +371,8 @@ namespace Vusic_Player.UI.Dialogs.OceanDialogConfig
             ShowModel,
             LyricSearchOnline,
 
-            AppLock
+            AppLock,
+            KeyboardShortcuts
         }
         public static OceanDialogWindow ShowDialog(string Title, bool secondaryvisible, ContentType contentType, OceanContentDialogDefault dlg, string CloseButtonTex, string primarybuttex, string secondarybuttontex, int Width, int Height, OceanContentDialogType DialogType, Window wind, string Primarybtnicon, string Secondarybtnicon, string Closebtnicon, ObservableCollection<SongModel> existingitems, string SuggestedPlaylistName, string mssgtext, string mssgimage, string artist, string AlbumDetails, PlaylistItem playlist, bool isPlaylistEdit, bool isAudioPlaylist)
         {

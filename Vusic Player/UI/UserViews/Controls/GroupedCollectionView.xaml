@@ -538,6 +538,7 @@ BorderThickness="0"
 
                         </Grid.ColumnDefinitions>
                         <Image Width="20"  Source="{Binding Data.ImageThumbnail}" Grid.Column="0"/>
+                        <Button Grid.Column="1" Name="btnSearchResult" Click="btnSearchResult_Click">
                         <Grid Grid.Column="1" ColumnSpacing="20">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
@@ -548,7 +549,7 @@ BorderThickness="0"
                             <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.SubInformation}" Grid.Column="1"/>
                          
                         </Grid>
-
+                        </Button>
                     </Grid>
                 </Button>
             </Grid>

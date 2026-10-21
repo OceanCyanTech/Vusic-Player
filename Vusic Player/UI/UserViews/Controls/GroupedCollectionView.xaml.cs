@@ -2084,6 +2084,20 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
 
         }
+
+        private void btnSearchResult_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is Button btn && btn.DataContext is GroupedCollectionModelSearchResult searchResult && searchResult.Data is MasterSearchModel search)
+            {
+                if(search.SubInformation == "Artist")
+                {
+                    if(App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(ArtistView), search.ResultMain);
+                    }
+                }
+            }
+        }
     }
 }
 

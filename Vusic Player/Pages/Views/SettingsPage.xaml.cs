@@ -1686,6 +1686,32 @@ namespace Vusic_Player.Pages.Views
                         btnCheckForUpdates?.StartBringIntoView(options);
                     });
                 }
+                else if (setting == "Folder Permissions")
+                {
+                    nvgitAppSettings.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        txtFolderPermissions?.StartBringIntoView(options);
+                    });
+                }
+                else if (setting == "Keyboard Shortcuts")
+                {
+                    nvgitAboutHelp.IsSelected = true;
+                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        var options = new BringIntoViewOptions
+                        {
+                            VerticalAlignmentRatio = 0.0, // Force to the top
+                            AnimationDesired = true
+                        };
+                        btnViewKS?.StartBringIntoView(options);
+                    });
+                }
                 else if (setting == "Help" || setting=="Feedback" || setting == "Suggestions" || setting == "Source Code" || setting == "Documentation")
                 {
                     nvgitAboutHelp.IsSelected = true;
@@ -1785,6 +1811,12 @@ namespace Vusic_Player.Pages.Views
             rchEditBoxStatements.Document.SetText(Microsoft.UI.Text.TextSetOptions.None, textToSet);
             rchEditBoxStatements.IsReadOnly = true;
             txtStatementHeader.Text = "Third Party Licenses ";
+        }
+
+        private void btnViewKS_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Keyboard Shortcuts Guide", "", "", "Close", OceanDialogWindow.ContentType.KeyboardShortcuts, OceanContentDialogDefault.Close, XamlRoot, 600, 600, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "");
         }
     }
 }

@@ -126,7 +126,14 @@
         <controls:CursorDisappearGrid.KeyboardAccelerators>
             <KeyboardAccelerator Key="Space" Invoked="Spacebar_Invoked" />
             <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_Invoked"/>
-
+            <KeyboardAccelerator Key="H" x:Name="HKey" Invoked="HKey_Invoked"/>
+            <KeyboardAccelerator Key="G" x:Name="GKey" Invoked="GKey_Invoked"   />
+            <KeyboardAccelerator 
+            Key="T" 
+            Modifiers="Control" 
+            ScopeOwner="{x:Bind RootGrid}"
+            x:Name="ctrltinvoked" 
+            Invoked="ctrltinvoked_Invoked"/>
         </controls:CursorDisappearGrid.KeyboardAccelerators>
         <Grid Name="SplashGrid" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ChildrenTransitions>
@@ -199,7 +206,7 @@
 
                     <MenuFlyoutItem x:Name="mnftSkipForward" Text="Skip Forward 10 secs" Click="mnftSkipForward_Click">
                         <MenuFlyoutItem.Icon>
-                            <ImageIcon Source="{Binding SkipForward, Source= {StaticResource GlobalIconHolder}}"/>
+                            <ImageIcon Source="{Binding SkipAhead, Source= {StaticResource GlobalIconHolder}}"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 

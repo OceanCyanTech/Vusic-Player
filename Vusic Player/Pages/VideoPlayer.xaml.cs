@@ -1,7 +1,10 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
 
 using FlyleafLib;
 using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
@@ -43,6 +46,8 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
+using Windows.System;
+using Windows.UI.Core;
 using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 using Orientation = Vusic_Player.MediaProperties.VideoProperties.Orientation;
 
@@ -176,6 +181,32 @@ namespace Vusic_Player.Pages
             //new KeyEventHandler(RootGrid_PreviewKeyDown),
             //handledEventsToo: true
 
+            RootGrid.AddHandler(
+                UIElement.KeyDownEvent,
+                new KeyEventHandler((sender, keyArgs) =>
+                {
+                    var ctrlState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Control);
+                    bool isCtrlDown = ctrlState.HasFlag(CoreVirtualKeyStates.Down);
+
+                    if (isCtrlDown && keyArgs.Key == VirtualKey.T)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Ctrl+T caught via AddHandler!");
+                        ttJumpToTime.IsOpen = true;
+                        keyArgs.Handled = true;
+                    }
+                    else if(isCtrlDown && keyArgs.Key == VirtualKey.I)
+                    {
+                        if (App.MainWindowInstance is MainWindow wind)
+                        {
+                            if (PlayerService.CurrentPlayingPath != null && File.Exists(PlayerService.CurrentPlayingPath))
+                            {
+                                wind.ShowFileInfo(PlayerService.CurrentPlayingPath);
+                            }
+                        }
+                    }
+                }),
+                true // handledEventsToo = true
+            );
         }
         int pointertimercount = 2;
         private bool _isCursorSuppressed = false;
@@ -2330,23 +2361,23 @@ namespace Vusic_Player.Pages
                 mediacontroller.IsFullScreen = !mediacontroller.IsFullScreen;
                 FullScreen.FullScreenToggle();
             }
-            else if(e.Key == Windows.System.VirtualKey.M)
-            {
-                if (mediacontroller.IsMuted == false)
-                {
-                    mediacontroller.IsMuted = true;
-                    mediacontroller.OldVolume = mediacontroller.VolumeValue;
-                    PlayerService.VolumeChange(0);
-                    ShowInformation("Muted");
-                }
-                else
-                {
-                    mediacontroller.IsMuted = false;
-                    PlayerService.VolumeChange(mediacontroller.OldVolume);
-                    ShowInformation("Unmuted");
-                }
+            //else if (e.Key == Windows.System.VirtualKey.M)
+            //{
+            //    if (mediacontroller.IsMuted == false)
+            //    {
+            //        mediacontroller.IsMuted = true;
+            //        mediacontroller.OldVolume = mediacontroller.VolumeValue;
+            //        PlayerService.VolumeChange(0);
+            //        ShowInformation("Muted");
+            //    }
+            //    else
+            //    {
+            //        mediacontroller.IsMuted = false;
+            //        PlayerService.VolumeChange(mediacontroller.OldVolume);
+            //        ShowInformation("Unmuted");
+            //    }
 
-            }
+            //}
             else if (e.Key == Windows.System.VirtualKey.Up)
             {
                 var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
@@ -2389,19 +2420,19 @@ namespace Vusic_Player.Pages
                     ShowInformation($"Volume: {newVolume}");
                 }
             }
-            else if (e.Key == Windows.System.VirtualKey.T)
-            {
-                var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
-                bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
+            //else if (e.Key == Windows.System.VirtualKey.T)
+            //{
+            //    var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+            //    bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
 
-                if (isCtrlDown)
-                {
-                    e.Handled = true;
+            //    if (isCtrlDown)
+            //    {
+            //        e.Handled = true;
 
-                    Debug.WriteLine("YESSS CTRL T");
-                    ttJumpToTime.IsOpen = true;
-                }
-            }
+            //        Debug.WriteLine("YESSS CTRL T");
+            //        ttJumpToTime.IsOpen = true;
+            //    }
+            //}
 
             else if (e.Key == Windows.System.VirtualKey.Escape)
             {
@@ -2848,7 +2879,7 @@ namespace Vusic_Player.Pages
             var Icon = logLevel switch
             {
                 Logger.LogLevelType.Information => IconHolder.Instance.InfoIcon,
-                Logger.LogLevelType.Warning =>IconHolder.Instance.WarningIcon,
+                Logger.LogLevelType.Warning => IconHolder.Instance.WarningIcon,
                 Logger.LogLevelType.Error => IconHolder.Instance.Error,
                 Logger.LogLevelType.Success => IconHolder.Instance.Success,
                 _ => null
@@ -3042,7 +3073,7 @@ namespace Vusic_Player.Pages
 
         private void MenuFlyout_Opened(object sender, object e)
         {
-            if(PlayerService.Masterplayer != null)
+            if (PlayerService.Masterplayer != null)
             {
                 if (PlayerService.Masterplayer.IsPlaying)
                 {
@@ -3082,9 +3113,9 @@ namespace Vusic_Player.Pages
                 if (PlayerService.Masterplayer == null) return;
                 PlayerService.Masterplayer.SeekAccurate(((int)totalms));
             }
-            catch 
+            catch
             {
-             //
+                //
             }
 
         }
@@ -3115,6 +3146,23 @@ namespace Vusic_Player.Pages
                 PlayerService.VolumeChange(mediacontroller.OldVolume);
                 ShowInformation("Unmuted");
             }
+        }
+
+        private void ctrltinvoked_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+
+        }
+
+        private void HKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            Configuration.Helper.SubtitlesProperties.Delay.Apply("-100");
+            ShowInformation("Subtitle Delay -100 ms");
+        }
+
+        private void GKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            Configuration.Helper.SubtitlesProperties.Delay.Apply("100");
+            ShowInformation("Subtitle Delay +100 ms");
         }
     }
 }

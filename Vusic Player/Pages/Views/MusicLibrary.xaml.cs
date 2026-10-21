@@ -126,7 +126,7 @@ namespace Vusic_Player.Pages.Views
         private async void btnOpenMusic_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
-            var media = await MediaPicker.PickSingle(App.MainWindowInstance, "Open Media");
+            var media = await MediaPicker.PickSingle(App.MainWindowInstance, "Open Music");
             if (media != null)
             {
                 bool isAudio = AudioExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);

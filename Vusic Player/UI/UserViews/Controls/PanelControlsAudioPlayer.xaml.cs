@@ -47,7 +47,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         private void JumpToTime_Called()
         {
-            ttJumpToTime.IsOpen = false;
+            ttJumpToTime.IsOpen = true;
         }
 
         private void PitchControl_PitchExpanded()

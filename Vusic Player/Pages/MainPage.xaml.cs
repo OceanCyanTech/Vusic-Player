@@ -1,3 +1,4 @@
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -14,14 +15,19 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
+using Vusic_Player.FilePickers;
 using Vusic_Player.Pages.Views;
+using Windows.System;
+using Windows.UI.Core;
 using Page = Microsoft.UI.Xaml.Controls.Page;
 using TextBox = Microsoft.UI.Xaml.Controls.TextBox;
 
@@ -48,8 +54,106 @@ namespace Vusic_Player.Pages
             _originalHeader = nvgMain.Header;
             InitializeFav();
             InitializeWatermark();
+            grdRoot.AddHandler(
+              UIElement.KeyDownEvent,
+              new KeyEventHandler((sender, keyArgs) =>
+              {
+                  var ctrlState = InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+                  bool isCtrlDown = ctrlState.HasFlag(CoreVirtualKeyStates.Down);
+
+                  if (isCtrlDown && keyArgs.Key == Windows.System.VirtualKey.T)
+                  {
+                      System.Diagnostics.Debug.WriteLine("Ctrl+T caught via AddHandler!");
+                      PlayerService.CallJumpToTime();
+                      keyArgs.Handled = true;
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.I)
+                  {
+                      if (App.MainWindowInstance is MainWindow wind)
+                      {
+                          if (PlayerService.CurrentPlayingPath != null && File.Exists(PlayerService.CurrentPlayingPath))
+                          {
+                              wind.ShowFileInfo(PlayerService.CurrentPlayingPath);
+                          }
+                      }
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.O)
+                  {
+                      OpenMedia();
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.Number1)
+                  {
+                      nvgitHome.IsSelected = true;
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.Number2)
+                  {
+                      nvgitMusic.IsSelected = true;
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.Number3)
+                  {
+                      nvgitVideo.IsSelected = true;
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.Number4)
+                  {
+                      nvgitQueue.IsSelected = true;
+                  }
+              }),
+              true // handledEventsToo = true
+          );
+        }
+        private async void OpenMedia()
+        {
+            try
+            {
+                if (App.MainWindowInstance == null) return;
+                var media = await MediaPicker.PickSingle(App.MainWindowInstance, "Open Media");
+                if (media != null)
+                {
+                    bool isAudio = AudioExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                    bool isVideo = VideoExtensions.List.Contains(media.FileType, StringComparer.OrdinalIgnoreCase);
+                    if (isAudio)
+                    {
+                        if (File.Exists(media.Path))
+                        {
+                            ObservableCollection<SongModel> single = new();
+                            string Title = Path.GetFileNameWithoutExtension(media.Path);
+
+                            single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
+                            QueueService.PlayMedia(single, false, false);
+                        }
+                    }
+                    else if (isVideo)
+                    {
+                        if (PlayerService.InVideoPage == false)
+                        {
+                            if (File.Exists(media.Path))
+                                Frame.Navigate(typeof(VideoPlayer), media.Path);
+                        }
+                        else
+                        {
+                            PlayerService.OpenPath(media.Path);
+                        }
+                    }
+                    else
+                    {
+                        ShowException("Error", "Cannot Open file of Invalid Format");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "MAINPAGE.OPENMEDIAKEYBOARDSHORTCUT", Logger.LogLevelType.Error);
+            }
 
         }
+        private void ShowException(string title, string Message)
+        {
+            ttEXCEPTION.Title = title;
+            txtExceptionError.Text = Message;
+            ttEXCEPTION.IsOpen = true;
+        }
+
         private async void CheckforStartupPage()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
@@ -159,18 +263,18 @@ namespace Vusic_Player.Pages
 
                 }
             }
-            else if (e.Key == Windows.System.VirtualKey.T)
-            {
-                var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
-                bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
+            //else if (e.Key == Windows.System.VirtualKey.T)
+            //{
+            //    var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+            //    bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
 
-                if (isCtrlDown)
-                {
-                    e.Handled = true; // Prevents UI focus movement or scrolling down
+            //    if (isCtrlDown)
+            //    {
+            //        e.Handled = true; // Prevents UI focus movement or scrolling down
 
-                    PlayerService.CallJumpToTime();
-                }
-            }
+            //        PlayerService.CallJumpToTime();
+            //    }
+            //}
 
             else if (e.Key == Windows.System.VirtualKey.Down)
             {
@@ -316,7 +420,7 @@ namespace Vusic_Player.Pages
             MasterSearchIndex.Settings.Add("Continue Playing Videos Settings");//
             MasterSearchIndex.Settings.Add("Shows Settings");//
             MasterSearchIndex.Settings.Add("Media Database");//
-            MasterSearchIndex.Settings.Add("Folder Permissions");
+            MasterSearchIndex.Settings.Add("Folder Permissions");//
             MasterSearchIndex.Settings.Add("Startup Settings");//
             MasterSearchIndex.Settings.Add("App Lock");//
             MasterSearchIndex.Settings.Add("Splash Screen");//
@@ -332,7 +436,7 @@ namespace Vusic_Player.Pages
             MasterSearchIndex.Settings.Add("Privacy");//
             MasterSearchIndex.Settings.Add("Source Code");//
             MasterSearchIndex.Settings.Add("Documentation");//
-            MasterSearchIndex.Settings.Add("Keyboard Shortcuts");//
+            MasterSearchIndex.Settings.Add("Keyboard Shortcuts");
             MasterSearchIndex.Settings.Add("How to use Vusic Player?");
         }
 
