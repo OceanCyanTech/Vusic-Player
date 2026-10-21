@@ -14,6 +14,7 @@
             <Grid Name="grdRoot" Visibility="Visible" PreviewKeyDown="ControlRoot_PreviewKeyDown" KeyboardAcceleratorPlacementMode="Hidden" >
                 <Grid.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Space" Invoked="Spacebar_Invoked"/>
+                    <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_Invoked"/>
                 </Grid.KeyboardAccelerators>
                 <Grid.Background>
                     <ImageBrush x:Name="imgSourceBackground" ImageSource="{Binding BackgroundBlur, Source={StaticResource GlobalIconHolder}}"

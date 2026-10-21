@@ -123,6 +123,76 @@ namespace Vusic_Player.Pages
                 PlayerService.SeekBefore();
                 e.Handled = true;
             }
+            else if (e.Key == Windows.System.VirtualKey.M)
+            {
+                if (mediacontroller.IsMuted == false)
+                {
+                    mediacontroller.IsMuted = true;
+                    mediacontroller.OldVolume = mediacontroller.VolumeValue;
+                    PlayerService.VolumeChange(0);
+                   
+                }
+                else
+                {
+                    mediacontroller.IsMuted = false;
+                    PlayerService.VolumeChange(mediacontroller.OldVolume);
+                }
+
+            }
+            else if (e.Key == Windows.System.VirtualKey.Up)
+            {
+                var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+                bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
+
+                if (isCtrlDown)
+                {
+                    e.Handled = true; // Prevents UI focus or scrolling from capturing Up Arrow
+
+                    var currentVolume = mediacontroller.VolumeValue;
+                    var newVolume = Math.Min(currentVolume + 10, mediacontroller.MaximumVolume);
+
+                    if (newVolume != currentVolume)
+                    {
+                        PlayerService.VolumeChange(newVolume);
+                        Debug.WriteLine($"Volume Up +: {newVolume}");
+                    }
+
+                }
+            }
+            else if (e.Key == Windows.System.VirtualKey.T)
+            {
+                var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+                bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
+
+                if (isCtrlDown)
+                {
+                    e.Handled = true; // Prevents UI focus movement or scrolling down
+
+                    PlayerService.CallJumpToTime();
+                }
+            }
+
+            else if (e.Key == Windows.System.VirtualKey.Down)
+            {
+                var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+                bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
+
+                if (isCtrlDown)
+                {
+                    e.Handled = true; // Prevents UI focus movement or scrolling down
+
+                    var currentVolume = mediacontroller.VolumeValue;
+                    var newVolume = Math.Max(currentVolume - 10, 0);
+
+                    if (newVolume != currentVolume)
+                    {
+                        PlayerService.VolumeChange(newVolume);
+                        Debug.WriteLine($"Volume Down -: {newVolume}");
+                    }
+
+                }
+            }
+
         }
         private async void InitializeWatermark()
         {
@@ -514,6 +584,28 @@ namespace Vusic_Player.Pages
         private void txtTotalDuration_Tapped(object sender, TappedRoutedEventArgs e)
         {
 
+        }
+
+        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (IsTextInputFocused())
+            {
+                return; // Let user type space into the text box
+            }
+
+            if (mediacontroller.IsMuted == false)
+            {
+                mediacontroller.IsMuted = true;
+                mediacontroller.OldVolume = mediacontroller.VolumeValue;
+                PlayerService.VolumeChange(0);
+
+            }
+            else
+            {
+                mediacontroller.IsMuted = false;
+                PlayerService.VolumeChange(mediacontroller.OldVolume);
+            }
+            args.Handled = true;
         }
     }
 }

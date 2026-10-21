@@ -38,11 +38,16 @@ namespace Vusic_Player.UI.UserViews.Controls
             pitchControl.PitchExpanded += PitchControl_PitchExpanded;
             audioReverbControl.ReverbExpand -= AudioReverbControl_ReverbExpand;
             audioReverbControl.ReverbExpand += AudioReverbControl_ReverbExpand;
+            PlayerService.JumpToTimeCalled += JumpToTime_Called;
         }
 
         private void AudioReverbControl_ReverbExpand()
         {
             ttReverb.IsOpen = false;
+        }
+        private void JumpToTime_Called()
+        {
+            ttJumpToTime.IsOpen = false;
         }
 
         private void PitchControl_PitchExpanded()

@@ -83,6 +83,17 @@
                 <LinearDoubleKeyFrame KeyTime="0:0:4.0" Value="0.0" />
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
+        <Storyboard x:Name="FadeInOutCommands">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="txtCommands"
+                            Storyboard.TargetProperty="Opacity">
+                <LinearDoubleKeyFrame KeyTime="0:0:0.5" Value="1.0" />
+
+                <LinearDoubleKeyFrame KeyTime="0:0:3.5" Value="1.0" />
+
+                <LinearDoubleKeyFrame KeyTime="0:0:4.0" Value="0.0" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
         <Storyboard x:Name="FadeInOutStoryboardPanel" Completed="FadeInOutStoryboardPanel_Completed">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="grdRootPlayback"
                             Storyboard.TargetProperty="Opacity">
@@ -114,8 +125,8 @@
     <controls:CursorDisappearGrid x:Name="RootGrid" PreviewKeyDown="MainGrid_PreviewKeyDown" KeyboardAcceleratorPlacementMode="Hidden">
         <controls:CursorDisappearGrid.KeyboardAccelerators>
             <KeyboardAccelerator Key="Space" Invoked="Spacebar_Invoked" />
-            
-            
+            <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_Invoked"/>
+
         </controls:CursorDisappearGrid.KeyboardAccelerators>
         <Grid Name="SplashGrid" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ChildrenTransitions>
@@ -825,7 +836,8 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                 </StackPanel>
 
             </TeachingTip>
-            <TextBlock Grid.Row="0" Margin="10, 0"  VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" Opacity="0" x:Name="txtSeek" Style="{StaticResource DisplayTextBlockStyle}" ></TextBlock>
+            <TextBlock Grid.Row="0" Margin="10, 0"  VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" Opacity="0" x:Name="txtSeek" Style="{StaticResource DisplayTextBlockStyle}" />
+            <TextBlock Grid.Row="0" Margin="10, 0"  VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" Opacity="0" x:Name="txtCommands" Style="{StaticResource DisplayTextBlockStyle}" />
 
             <Grid Grid.Row="0" Name="grdPlayback" Visibility="Visible" Opacity="1">
                 <Grid.RowDefinitions>

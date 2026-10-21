@@ -363,7 +363,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     {
                         if(SearchResultsPageState.alreadyNavigatedtoSettingsPage == true)
                         {
-                            PENDING
+                            //PENDING
                         }
                         else
                         {

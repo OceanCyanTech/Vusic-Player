@@ -97,6 +97,8 @@
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml" />
     <None Remove="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml" />
+    <None Remove="UI\Experience\FirstLaunchExperience.xaml" />
+    <None Remove="UI\Experience\Pages\WelcomePage.xaml" />
     <None Remove="UI\UserViews\Authentication\AppAuthVerify.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewAllRecentVideos.xaml" />
     <None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
@@ -748,6 +750,16 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\UserViews\Controls\KeyboardShortcutsGuide.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Experience\FirstLaunchExperience.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Experience\Pages\WelcomePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

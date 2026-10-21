@@ -835,6 +835,18 @@ namespace Vusic_Player.Pages
                 });
             };
         }
+        private void InitiateCommandTextText()
+        {
+            Configuration.Helper.UI.SeekInfoService.OnSeekRequest += (text, isForward) =>
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    txtSeek.Text = text;
+                    txtSeek.HorizontalAlignment = isForward ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+                    FadeInOutSeek.Begin();
+                });
+            };
+        }
         private void PlayerService_ErrorCalled()
         {
             if (App.MainWindowInstance == null) return;
@@ -2293,7 +2305,8 @@ namespace Vusic_Player.Pages
             }
 
         }
-
+        double currentvolume = 10;
+        bool ismuted = false;
         private void MainGrid_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Space)
@@ -2317,24 +2330,79 @@ namespace Vusic_Player.Pages
                 mediacontroller.IsFullScreen = !mediacontroller.IsFullScreen;
                 FullScreen.FullScreenToggle();
             }
-            else if(e.Key == Windows.System.VirtualKey.Control && e.Key == Windows.System.VirtualKey.Up)
+            else if(e.Key == Windows.System.VirtualKey.M)
             {
-                var currentvolume = mediacontroller.VolumeValue;
-                var increasedvol = currentvolume + 10;
-                if(increasedvol <= mediacontroller.MaximumVolume)
+                if (mediacontroller.IsMuted == false)
                 {
-                    PlayerService.VolumeChange(increasedvol);
+                    mediacontroller.IsMuted = true;
+                    mediacontroller.OldVolume = mediacontroller.VolumeValue;
+                    PlayerService.VolumeChange(0);
+                    ShowInformation("Muted");
+                }
+                else
+                {
+                    mediacontroller.IsMuted = false;
+                    PlayerService.VolumeChange(mediacontroller.OldVolume);
+                    ShowInformation("Unmuted");
+                }
+
+            }
+            else if (e.Key == Windows.System.VirtualKey.Up)
+            {
+                var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+                bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
+
+                if (isCtrlDown)
+                {
+                    e.Handled = true; // Prevents UI focus or scrolling from capturing Up Arrow
+
+                    var currentVolume = mediacontroller.VolumeValue;
+                    var newVolume = Math.Min(currentVolume + 10, mediacontroller.MaximumVolume);
+
+                    if (newVolume != currentVolume)
+                    {
+                        PlayerService.VolumeChange(newVolume);
+                        Debug.WriteLine($"Volume Up +: {newVolume}");
+                    }
+
+                    ShowInformation($"Volume: {newVolume}");
                 }
             }
-            else if (e.Key == Windows.System.VirtualKey.Control && e.Key == Windows.System.VirtualKey.Down)
+            else if (e.Key == Windows.System.VirtualKey.Down)
             {
-                var currentvolume = mediacontroller.VolumeValue;
-                var decreasedvol = currentvolume - 10;
-                if (decreasedvol >=0)
+                var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+                bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
+
+                if (isCtrlDown)
                 {
-                    PlayerService.VolumeChange(decreasedvol);
+                    e.Handled = true; // Prevents UI focus movement or scrolling down
+
+                    var currentVolume = mediacontroller.VolumeValue;
+                    var newVolume = Math.Max(currentVolume - 10, 0);
+
+                    if (newVolume != currentVolume)
+                    {
+                        PlayerService.VolumeChange(newVolume);
+                        Debug.WriteLine($"Volume Down -: {newVolume}");
+                    }
+
+                    ShowInformation($"Volume: {newVolume}");
                 }
             }
+            else if (e.Key == Windows.System.VirtualKey.T)
+            {
+                var ctrlState = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+                bool isCtrlDown = (ctrlState & Windows.UI.Core.CoreVirtualKeyStates.Down) == Windows.UI.Core.CoreVirtualKeyStates.Down;
+
+                if (isCtrlDown)
+                {
+                    e.Handled = true;
+
+                    Debug.WriteLine("YESSS CTRL T");
+                    ttJumpToTime.IsOpen = true;
+                }
+            }
+
             else if (e.Key == Windows.System.VirtualKey.Escape)
             {
                 if (mediacontroller.IsFullScreen)
@@ -3024,6 +3092,29 @@ namespace Vusic_Player.Pages
         private void videoControls_JumpToTime()
         {
             ttJumpToTime.IsOpen = true;
+        }
+
+        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (FocusManager.GetFocusedElement(this.Content.XamlRoot) is TextBox ||
+                FocusManager.GetFocusedElement(this.Content.XamlRoot) is RichEditBox)
+            {
+                return;
+            }
+
+            if (mediacontroller.IsMuted == false)
+            {
+                mediacontroller.IsMuted = true;
+                mediacontroller.OldVolume = mediacontroller.VolumeValue;
+                PlayerService.VolumeChange(0);
+                ShowInformation("Muted");
+            }
+            else
+            {
+                mediacontroller.IsMuted = false;
+                PlayerService.VolumeChange(mediacontroller.OldVolume);
+                ShowInformation("Unmuted");
+            }
         }
     }
 }

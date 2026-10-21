@@ -61,6 +61,7 @@ namespace Vusic_Player.Configuration.Playback
         private bool isTotalDurationTapped = false;
         private double _totalDuration;
         private double _totalDurationTemp;
+        private double _oldvolume;
         private string _songName = "Nothing playing";
         private string _lrcTrackPath = "";
         private string itemscount = "• 0 items";
@@ -74,6 +75,7 @@ namespace Vusic_Player.Configuration.Playback
         private double _volumeValue = 100;
         private bool _isReversePlayback = false;
         private bool _isFullScreen = false;
+        private bool _ismuted = false;
         private bool _isPIP = false;
         private double _zoomValue = 100;
         private double _speedValue = 1;
@@ -106,6 +108,17 @@ namespace Vusic_Player.Configuration.Playback
                 }
             }
         }
+        public double OldVolume
+        {
+            get => _oldvolume;
+            set
+            {
+                if (SetProperty(ref _oldvolume, value))
+                {
+                    OnPropertyChanged(nameof(OldVolume));
+                }
+            }
+        }
         public bool IsTotalDurationTapped
         {
             get => isTotalDurationTapped;
@@ -114,6 +127,17 @@ namespace Vusic_Player.Configuration.Playback
                 if (SetProperty(ref isTotalDurationTapped, value))
                 {
                     OnPropertyChanged(nameof(IsTotalDurationTapped));
+                }
+            }
+        }
+        public bool IsMuted
+        {
+            get => _ismuted;
+            set
+            {
+                if (SetProperty(ref _ismuted, value))
+                {
+                    OnPropertyChanged(nameof(IsMuted));
                 }
             }
         }

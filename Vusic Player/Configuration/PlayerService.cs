@@ -482,6 +482,11 @@ namespace Vusic_Player.Configuration
                 _multiAudioEngine.MuteDevice(deviceID);
             }
         }
+        public static void CallJumpToTime()
+        {
+            JumpToTimeCalled?.Invoke();
+        }
+        public  static event Action? JumpToTimeCalled;
         public static void UnmuteDev(string deviceID)
         {
 
