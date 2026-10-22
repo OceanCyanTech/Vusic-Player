@@ -26,6 +26,8 @@ using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
 using Vusic_Player.Pages.Views;
+using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Vusic_Player.UI.UserViews;
 using Windows.System;
 using Windows.UI.Core;
 using Page = Microsoft.UI.Xaml.Controls.Page;
@@ -56,11 +58,15 @@ namespace Vusic_Player.Pages
             InitializeWatermark();
             grdRoot.AddHandler(
               UIElement.KeyDownEvent,
-              new KeyEventHandler((sender, keyArgs) =>
+              new KeyEventHandler(async (sender, keyArgs) =>
               {
                   var ctrlState = InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
                   bool isCtrlDown = ctrlState.HasFlag(CoreVirtualKeyStates.Down);
+                  var altState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Menu);
 
+                  var shiftState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift);
+                  bool isShiftDown = shiftState.HasFlag(CoreVirtualKeyStates.Down);
+                  bool isAltDown = altState.HasFlag(CoreVirtualKeyStates.Down);
                   if (isCtrlDown && keyArgs.Key == Windows.System.VirtualKey.T)
                   {
                       System.Diagnostics.Debug.WriteLine("Ctrl+T caught via AddHandler!");
@@ -81,6 +87,43 @@ namespace Vusic_Player.Pages
                   {
                       OpenMedia();
                   }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.P)
+                  {
+                      CreatePlaylist();
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.F)
+                  {
+                      if (App.NavigationFrame.Content is not VideoPlayer)
+                      {
+                          OpenFolder();
+                      }
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.H)
+                  {
+                      if (Uri.TryCreate("https://oceancyantech.github.io/Vusic-Player/feedback.html", UriKind.Absolute, out Uri? uri))
+                      {
+                          await Launcher.LaunchUriAsync(uri);
+                      }
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.R)
+                  {
+                      if (PlayerService.Masterplayer != null) { PlayerService.Masterplayer.Seek(0); }
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.L)
+                  {
+                      if (PlayerService.Masterplayer != null && PlayerService.CurrentPlayingPath != null)
+                      {
+                          OpenFileLocation.PathSelect(PlayerService.CurrentPlayingPath);
+                      }
+                  }
+                  else if (isShiftDown && keyArgs.Key == VirtualKey.M)
+                  {
+                      if (PlayerService.Masterplayer == null) return;
+                      if (PlayerService.CurrentPlayingPath == "") return;
+                      PictureInPicture pictureinPicture = new PictureInPicture();
+                      pictureinPicture.Activate();
+                      MainWindow.HideWindow();
+                  }
                   else if (isCtrlDown && keyArgs.Key == VirtualKey.Number1)
                   {
                       nvgitHome.IsSelected = true;
@@ -88,6 +131,38 @@ namespace Vusic_Player.Pages
                   else if (isCtrlDown && keyArgs.Key == VirtualKey.Number2)
                   {
                       nvgitMusic.IsSelected = true;
+                  }
+                  else if (isAltDown && keyArgs.Key == VirtualKey.S)
+                  {
+                      panelControlAudioPlayer.OpenSpeed();
+                  }
+                  else if (isAltDown && keyArgs.Key == VirtualKey.Left)
+                  {
+                      if (App.NavigationFrame != null)
+                      {
+                          if (App.NavigationFrame.CanGoBack)
+                          {
+                              App.NavigationFrame.GoBack();
+                          }
+                      }
+                  }
+                  else if (isAltDown && keyArgs.Key == VirtualKey.P)
+                  {
+                      panelControlAudioPlayer.OpenPitch();
+                  }
+                  else if (isAltDown && keyArgs.Key == VirtualKey.R)
+                  {
+                      if (App.NavigationFrame.Content is not VideoPlayer)
+                      {
+                          panelControlAudioPlayer.OpenReverb();
+                      }
+                  }
+                  else if (isAltDown && keyArgs.Key == VirtualKey.M)
+                  {
+                      if (App.NavigationFrame.Content is not VideoPlayer)
+                      {
+                          panelControlAudioPlayer.OpenMultiDeviceOutput();
+                      }
                   }
                   else if (isCtrlDown && keyArgs.Key == VirtualKey.Number3)
                   {
@@ -98,8 +173,71 @@ namespace Vusic_Player.Pages
                       nvgitQueue.IsSelected = true;
                   }
               }),
-              true // handledEventsToo = true
+             handledEventsToo: false
           );
+        }
+        bool iscreating = false;
+        private async void CreatePlaylist()
+        {
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);
+            OceanContentDialog.PrimaryRequested += (async () =>
+            {
+                if (iscreating) return;
+                try
+                {
+                    iscreating = true;
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                    string baseName = PlaylistCreationValues.Instance.PlaylistName.Trim();
+
+                    if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
+
+                    string finalName = baseName;
+                    int counter = 1;
+                    while (currentSettings.SavedPlaylists.Any(p =>
+                        string.Equals(p.PlaylistName, finalName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        finalName = $"{baseName} ({counter++})";
+                    }
+                    var newplaylist = new PlaylistItem { PlaylistName = finalName, PlaylistGenre = PlaylistCreationValues.Instance.Genre, plthumb = PlaylistCreationValues.Instance.PlCover, PlaylistId = PlaylistCreationValues.Instance.PlaylistID, DateCreation = PlaylistCreationValues.Instance.CreationDate, SongsPaths = new HashSet<string>(PlaylistCreationValues.Instance.MediaPaths), Thumbnail = PlaylistCreationValues.Instance.Thumbnail };
+                    Debug.WriteLine(newplaylist.PlaylistName);
+                    PlaylistCreationValues.Instance.PlaylistsMaster.Add(newplaylist);
+
+                    currentSettings.SavedPlaylists.Add(newplaylist);
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    OceanContentDialog.HideDlg();
+                    MainWindow.ShowWindow();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("An unexpected error occured: " + ex.Message, "PlaylistCreate.MusicLibPage", Logger.LogLevelType.Error);
+                }
+                finally
+                {
+                    iscreating = false;
+                }
+            });
+
+        }
+        private async void OpenFolder()
+        {
+            try
+            {
+                if (App.MainWindowInstance == null) return;
+                var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Open Folder", Windows.Storage.Pickers.PickerLocationId.Downloads);
+                if (folder != null)
+                {
+                    if (App.NavigationFrame != null)
+                    {
+                        App.NavigationFrame.Navigate(typeof(FolderView), new FolderModel { FolderName = Path.GetFileName(folder.Path), FolderPath = folder.Path });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowException("Error", $"An unexpected error occured. See log page for more details.");
+                Logger.Log(ex.Message, "HOMEVIEW.OPENFOLDER", Logger.LogLevelType.Error);
+            }
         }
         private async void OpenMedia()
         {
@@ -234,7 +372,7 @@ namespace Vusic_Player.Pages
                     mediacontroller.IsMuted = true;
                     mediacontroller.OldVolume = mediacontroller.VolumeValue;
                     PlayerService.VolumeChange(0);
-                   
+
                 }
                 else
                 {
@@ -442,6 +580,7 @@ namespace Vusic_Player.Pages
 
         private async void FrmMain_Navigated(object sender, NavigationEventArgs e)
         {
+            nvgMain.IsBackEnabled = frmMain.CanGoBack;
             nvgMain.AlwaysShowHeader = true;
             txtHeader.Text = "";
             nvgMain.IsPaneVisible = true;
@@ -452,16 +591,8 @@ namespace Vusic_Player.Pages
             MusicPlayerMaster.Visibility = Visibility.Visible;
             InitializeSettings();
             //    SetGridBackground();
-            if (e.SourcePageType == typeof(HomeView))
-            {
-                txtHeader.Text = "Home";
-            }
-            else if (e.SourcePageType == typeof(MusicLibrary))
-                txtHeader.Text = "Music Library";
-
-            else if (e.SourcePageType == typeof(VideoLibrary))
-                txtHeader.Text = "Video Library";
-            else if (e.SourcePageType == typeof(EntireMusicLibrary))
+        
+             if (e.SourcePageType == typeof(EntireMusicLibrary))
             {
                 txtHeader.Text = "Music Library";
             }
@@ -478,14 +609,30 @@ namespace Vusic_Player.Pages
                 txtHeader.Text = "";
                 nvgMain.SelectedItem = null;
             }
+            else if (e.SourcePageType == typeof(HomeView))
+            {
+                nvgMain.SelectedItem = nvgitHome;
+                txtHeader.Text = "Home";
+            }
+            else if (e.SourcePageType == typeof(MusicLibrary))
+            {
+                nvgMain.SelectedItem = nvgitMusic;
+                txtHeader.Text = "Music Library";
+            }
+            else if (e.SourcePageType == typeof(VideoLibrary))
+            {
+                nvgMain.SelectedItem = nvgitVideo;
+                txtHeader.Text = "Video Library";
+            }
             else if (e.SourcePageType == typeof(QueuePage))
             {
+                nvgMain.SelectedItem = nvgitQueue;
+                txtHeader.Text = "";
+
                 MusicPlayerMaster.Visibility = Visibility.Collapsed;
                 ColumnMaster.MinWidth = 0;
                 ColumnMaster.Width = new GridLength(0);
                 grdsplittr.Visibility = Visibility.Collapsed;
-                txtHeader.Text = "";
-
             }
             else if (e.SourcePageType == typeof(MusicPlayerFull))
             {
@@ -509,7 +656,10 @@ namespace Vusic_Player.Pages
                 ColumnMaster.Width = GridLength.Auto;
             }
             else if (e.SourcePageType == typeof(SettingsPage))
-                txtHeader.Text = "App Settings";
+            {
+                nvgMain.SelectedItem = nvgMain.SettingsItem;
+                txtHeader.Text = "Settings";
+            }
             else if (e.SourcePageType == typeof(LoggerPage))
                 txtHeader.Text = "App Logs";
 
@@ -689,7 +839,22 @@ namespace Vusic_Player.Pages
         {
 
         }
-
+        private void PKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (IsTextInputFocused())
+            {
+                return; // Let user type space into the text box
+            }
+            QueueService.PlayPrevious();
+        }
+        private void NKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (IsTextInputFocused())
+            {
+                return; // Let user type space into the text box
+            }
+            QueueService.PlayNext();
+        }
         private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (IsTextInputFocused())

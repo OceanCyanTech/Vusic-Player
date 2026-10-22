@@ -189,7 +189,6 @@ namespace Vusic_Player.Pages.Views
         {
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Create New Playlist", "Create", "", "Cancel", OceanDialogWindow.ContentType.PlaylistCreation, OceanContentDialogDefault.Primary, XamlRoot, 600, 760, OceanContentDialogType.Elevated, App.MainWindowInstance, "addicon", "", "", new System.Collections.ObjectModel.ObservableCollection<SongModel>(), "Playlist", "", "", "", "", new PlaylistItem(), false, false);
-            Debug.WriteLine("BTNNEWPLAYLIST");
             OceanContentDialog.PrimaryRequested += (async () =>
             {
                 if (iscreating) return;

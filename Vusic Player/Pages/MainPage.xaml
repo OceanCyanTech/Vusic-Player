@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:controls="using:CommunityToolkit.WinUI.Controls" xmlns:playback_views="using:Vusic_Player.UI.UserViews.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:controls="using:CommunityToolkit.WinUI.Controls" xmlns:playback_views="using:Vusic_Player.UI.UserViews.Controls" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral"
     mc:Ignorable="d">
 
     <Grid>
@@ -15,6 +15,8 @@
                 <Grid.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Space" Invoked="Spacebar_Invoked"/>
                     <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_Invoked"/>
+                    <KeyboardAccelerator Key="N" x:Name="NKey" Invoked="NKey_Invoked"   />
+                    <KeyboardAccelerator Key="P" x:Name="PKey" Invoked="PKey_Invoked"   />
                 </Grid.KeyboardAccelerators>
                 <Grid.Background>
                     <ImageBrush x:Name="imgSourceBackground" ImageSource="{Binding BackgroundBlur, Source={StaticResource GlobalIconHolder}}"
@@ -116,6 +118,15 @@ Stretch="UniformToFill"/>
                 </Border>
             </Grid>
         </Frame>
+        <TeachingTip Name="ttSpeedControl" >
+            <videogeneral:PlaybackSpeed/>
+        </TeachingTip>
+        <TeachingTip Name="ttPitchControl">
+            <audiogeneral:Pitch/>
+        </TeachingTip>
+        <TeachingTip Name="ttReverbControl">
+            <audiogeneral:Pitch/>
+        </TeachingTip>
         <TeachingTip Name="ttEXCEPTION" Title="Exception">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Width="40" Source="{Binding SourceError ,Source={StaticResource GlobalIconHolder}}"/>

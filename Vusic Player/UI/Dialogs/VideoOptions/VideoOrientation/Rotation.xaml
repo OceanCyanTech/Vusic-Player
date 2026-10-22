@@ -7,7 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:oceancyan="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
-
+    <UserControl.Resources>
+        <local:RotationAngleConverter x:Key="RotationAngleConverter" />
+    </UserControl.Resources>
     <StackPanel Orientation="Vertical" Spacing="10">
         <StackPanel Spacing="12" Name="stkRotation">
             <TextBlock Text="Video Rotation" Style="{StaticResource BodyStrongTextBlockStyle}"/>
@@ -34,7 +36,7 @@
                 <Ellipse Width="16" Height="16" Fill="Cyan"/>
 
                 <TextBlock x:Name="txtRotationValue" 
-                       Text="0°" 
+                     Text="{Binding RotationAngle, Converter={StaticResource RotationAngleConverter}}"
                        HorizontalAlignment="Center" VerticalAlignment="Center" 
                        Margin="0,80,0,0" FontWeight="Bold"/>
             </Grid>
@@ -42,7 +44,7 @@
             <oceancyan:OceanSlider IsTooltipEnabled="False" x:Name="sldRotation" Width="200"
                                HorizontalAlignment="Center"
                                Minimum="0" Maximum="360" 
-                               ValueChanged="sldRotation_ValueChanged" />
+                               ValueChanged="sldRotation_ValueChanged"  Value="{x:Bind RotationAngle, Mode=OneWay}"/>
 
             <Button Margin="0, 10" Style="{StaticResource AccentButtonStyle}" 
                 Content="Reset Rotation" Name="btnResetRotation" 

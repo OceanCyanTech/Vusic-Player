@@ -30,6 +30,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.AudioProperties;
+using Vusic_Player.Configuration.Helper.SubtitlesProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.UI.Customization;
@@ -38,10 +39,12 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
+using Vusic_Player.MediaProperties.VideoProperties;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media;
 using Windows.Media.Playback;
@@ -50,6 +53,7 @@ using Windows.System;
 using Windows.UI.Core;
 using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 using Orientation = Vusic_Player.MediaProperties.VideoProperties.Orientation;
+using Stream = Vusic_Player.Configuration.Helper.SubtitlesProperties.Stream;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -181,12 +185,24 @@ namespace Vusic_Player.Pages
             //new KeyEventHandler(RootGrid_PreviewKeyDown),
             //handledEventsToo: true
 
-            RootGrid.AddHandler(
-                UIElement.KeyDownEvent,
-                new KeyEventHandler((sender, keyArgs) =>
+                RootGrid.AddHandler(
+                    UIElement.KeyDownEvent,
+                    new KeyEventHandler((sender, keyArgs) =>
                 {
+                    if (keyArgs.Handled)
+                        return;
+
+                    // 2. Ignore Windows automatic repeat while holding the key down
+                    if (keyArgs.KeyStatus.WasKeyDown)
+                        return;
                     var ctrlState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Control);
                     bool isCtrlDown = ctrlState.HasFlag(CoreVirtualKeyStates.Down);
+
+                    var shiftState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift);
+                    bool isShiftDown = shiftState.HasFlag(CoreVirtualKeyStates.Down);
+
+                    var altState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Menu);
+                    bool isAltDown = altState.HasFlag(CoreVirtualKeyStates.Down);
 
                     if (isCtrlDown && keyArgs.Key == VirtualKey.T)
                     {
@@ -194,7 +210,65 @@ namespace Vusic_Player.Pages
                         ttJumpToTime.IsOpen = true;
                         keyArgs.Handled = true;
                     }
-                    else if(isCtrlDown && keyArgs.Key == VirtualKey.I)
+                    else if (isAltDown && keyArgs.Key == VirtualKey.V)
+                    {
+                        ttVolume.IsOpen = true;
+                    }
+                    else if (isAltDown && !isCtrlDown && !isShiftDown)
+                    {
+                        int targetIndex = -1;
+
+                        // Check top-row number keys (Number1 to Number9)
+                        if (keyArgs.Key >= VirtualKey.Number1 && keyArgs.Key <= VirtualKey.Number9)
+                        {
+                            targetIndex = (int)keyArgs.Key - (int)VirtualKey.Number1;
+                        }
+                        // Check numpad keys (NumberPad1 to NumberPad9)
+                        else if (keyArgs.Key >= VirtualKey.NumberPad1 && keyArgs.Key <= VirtualKey.NumberPad9)
+                        {
+                            targetIndex = (int)keyArgs.Key - (int)VirtualKey.NumberPad1;
+                        }
+
+                        if (targetIndex >= 0)
+                        {
+                            var streams = PlayerService.Masterplayer?.Subtitles.Streams;
+
+                            if (streams != null && targetIndex < streams.Count)
+                            {
+                                var targetStream = streams[targetIndex];
+                                Stream.Set(targetStream);
+                                ShowInformation($"Subtitle: {targetStream.Title ?? $"Track {targetIndex + 1}"}");
+                            }
+
+                            keyArgs.Handled = true;
+                        }
+                    }
+
+                    else if (isAltDown && keyArgs.Key == VirtualKey.M)
+                    {
+                        grdInfo.Visibility = Visibility.Collapsed;
+                        grdInfo.Opacity = 0;
+                        grdShowInfo.Visibility = Visibility.Collapsed;
+                        grdShowInfo.Opacity = 0;
+                        grdMediaStats.Visibility = Visibility.Collapsed;
+                        grdMediaStats.Opacity = 0;
+                        grdVideoChapters.Visibility = Visibility.Collapsed;
+                        grdVideoChapters.Opacity = 0;
+                        grdMultipleOutput.Visibility = Visibility.Visible;
+                        grdMultipleOutput.Opacity = 0;
+                        FadeInStoryboardMultipleOutput.Begin();
+                        multiOutputMixer.ItemsSource = AudioDevices;
+                        foreach (var device in Engine.Audio.Devices)
+                        {
+                            bool isDefault = (device.Name?.Contains("Default", StringComparison.OrdinalIgnoreCase) ?? false);
+                            if (!isDefault)
+                            {
+                                var volume = PlayerService.GetVolumeOfDevice(device.Id);
+                                AudioDevices.Add(new DeviceOutputShow { DeviceID = device.Id, DeviceName = device.Name ?? "Unknown Device", DeviceVolume = $"{volume * 100.0f}%", Volume = volume * 100.0f });
+                            }
+                        }
+                    }
+                    else if (isCtrlDown && keyArgs.Key == VirtualKey.I)
                     {
                         if (App.MainWindowInstance is MainWindow wind)
                         {
@@ -204,9 +278,60 @@ namespace Vusic_Player.Pages
                             }
                         }
                     }
+                    else if (isCtrlDown && isShiftDown && keyArgs.Key == VirtualKey.E)
+                    {
+                        keyArgs.Handled = true;
+                        SubtitleEditorWindow.ShowDialog();
+                    }
+                    else if (isCtrlDown && isShiftDown && keyArgs.Key == VirtualKey.O)
+                    {
+                        keyArgs.Handled = true;
+                        videoControls.LoadSubtitleFile();
+                    }
+                    else if (isShiftDown && keyArgs.Key == VirtualKey.S)
+                    {
+                        TakeSnap();
+                    }
+                    else if (isShiftDown && keyArgs.Key == VirtualKey.R)
+                    {
+                        if (PlayerService.Masterplayer != null)
+                        {
+                            if (PlayerService.Masterplayer.IsRecording)
+                            {
+                                Screen.StopRecordRequest();
+                            }
+                            else
+                            {
+                                Screen.Record(Screen.RecordDirect);
+                            }
+                        }
+                    }
+                    else if (isCtrlDown && (keyArgs.Key == VirtualKey.Add || (int)keyArgs.Key == 0xBB))
+                    {
+                        keyArgs.Handled = true;
+                        if (PlayerService.Masterplayer != null)
+                        {
+                            ZoomService.Set(PlayerService.Masterplayer.Config.Video.Zoom + 10);
+                        }
+                    }
+                    else if (isCtrlDown && (keyArgs.Key == VirtualKey.Add || (int)keyArgs.Key == 0xBD))
+                    {
+                        keyArgs.Handled = true;
+                        if (PlayerService.Masterplayer != null)
+                        {
+                            ZoomService.Set(PlayerService.Masterplayer.Config.Video.Zoom - 10);
+                        }
+                    }
                 }),
-                true // handledEventsToo = true
+              handledEventsToo: false
             );
+        }
+        
+        private async void TakeSnap()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var snapshotpath = currentSettings.SnapshotPath;
+            Screen.TakeSnapshot(snapshotpath, currentSettings.IsTimeStampEnabledOnSnapshot, currentSettings.IsPositionEnabledOnSnapshot);
         }
         int pointertimercount = 2;
         private bool _isCursorSuppressed = false;
@@ -3163,6 +3288,88 @@ namespace Vusic_Player.Pages
         {
             Configuration.Helper.SubtitlesProperties.Delay.Apply("100");
             ShowInformation("Subtitle Delay +100 ms");
+        }
+
+        private void JKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            Vusic_Player.MediaProperties.AudioProperties.Delay.Apply("-100");
+            ShowInformation("Audio Delay -100 ms");
+        }
+
+        private void KKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            Vusic_Player.MediaProperties.AudioProperties.Delay.Apply("100");
+            ShowInformation("Audio Delay +100 ms");
+        }
+
+        private void NKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            QueueService.PlayNext();
+        }
+
+        private void AKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+
+            if (ttAspectRatio.IsOpen == true)
+            {
+                ttAspectRatio.IsOpen = false;
+            }
+            else
+            {
+                ttAspectRatio.IsOpen = true;
+            }
+            args.Handled = true;
+        }
+
+        private void ZKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if(ttZoom.IsOpen == true)
+            {
+                ttZoom.IsOpen = false;
+            }
+            else
+            {
+                ttZoom.IsOpen = true;
+            }
+            args.Handled = true;
+        }
+
+        private void RKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            args.Handled = true; // Prevents double-firing
+
+            if (PlayerService.Masterplayer == null) return;
+
+            // Increment and wrap cleanly around 360°
+            double newAngle = (Orientation.Instance.AngleRotation + 10) % 360;
+            Orientation.Instance.AngleRotation = newAngle;
+
+            // Apply player rotation only on exact 90-degree steps
+            if (newAngle == 0 || newAngle == 90 || newAngle == 180 || newAngle == 270)
+            {
+                PlayerService.Masterplayer.Config.Video.Rotation = (uint)newAngle;
+            }
+            else
+            {
+                PlayerService.Masterplayer.Config.Video.Rotation = 0;
+            }
+
+            ShowInformation($"Rotated by {newAngle}°");
+        }
+
+        private void CKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            mediacontroller.ChaptersEnabled = !(mediacontroller.ChaptersEnabled);
+        }
+
+        private void SKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            videoControls_MediaStats();
+        }
+
+        private void PKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            QueueService.PlayPrevious();
         }
     }
 }

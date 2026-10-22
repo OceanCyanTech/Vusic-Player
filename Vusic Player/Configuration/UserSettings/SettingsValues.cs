@@ -48,6 +48,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public double MaxSearchResults { get; set; } = 6;
         public double SkipBack { get; set; } = 10;
         public string Theme { get; set; } = "Ocean";
+        public string SnapshotPath { get; set; } = "";
         public string FontFamily { get; set; } = "Ocean";
         public bool Panel2VisibilityHome { get; set; } = true;
         public bool Panel3VisibilityHome { get; set; } = true;
@@ -62,6 +63,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public bool Panel4VisibilityVideo { get; set; } = true;
         public bool IsShowingWatermarkValues { get; set; } = true;
         public bool IsTimeStampEnabledOnSnapshot { get; set; } = false;
+        public bool IsPositionEnabledOnSnapshot { get; set; } = false;
         public int ArtistView_selectorbarindex { get; set; } = 0;
         public bool IncludeSubDirMusLib { get; set; } = true;
         public string FolderPathSnapshot { get; set; } = "";

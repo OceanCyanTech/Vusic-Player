@@ -1,7 +1,9 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using System;
+using System.Globalization;
 using Vusic_Player.Configuration;
 using Orientation = Vusic_Player.MediaProperties.VideoProperties.Orientation;
 
@@ -10,6 +12,28 @@ using Orientation = Vusic_Player.MediaProperties.VideoProperties.Orientation;
 
 namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoOrientation
 {
+    public class RotationAngleConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is double or float or decimal or int)
+            {
+                var culture = string.IsNullOrEmpty(language)
+                    ? CultureInfo.InvariantCulture
+                    : new CultureInfo(language);
+
+                return string.Format(culture, "{0:0.00}°", value);
+            }
+
+            return "0.00°";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public sealed partial class Rotation : UserControl
     {
         public Rotation()
@@ -90,7 +114,7 @@ DependencyProperty.Register("RotationAngle", typeof(double), typeof(MainWindow),
             }
             // Manual update to ensure the needle moves immediately
             NeedleRotation.Angle = RotationAngle;
-            txtRotationValue.Text = $"{RotationAngle}°";
+           // txtRotationValue.Text = $"{RotationAngle}°";
             sldRotation.Value = RotationAngle;
         }
         bool isDraggingRot = false;
@@ -108,7 +132,7 @@ DependencyProperty.Register("RotationAngle", typeof(double), typeof(MainWindow),
         private void UpdateManualRotation(double angle)
         {
             RotationAngle = angle;
-            txtRotationValue.Text = $"{RotationAngle.ToString("0.00")}°";
+       //     txtRotationValue.Text = $"{RotationAngle.ToString("0.00")}°";
             if (PlayerService.Masterplayer != null)
             {
                 if (RotationAngle == 0 || RotationAngle == 90 || RotationAngle == 180 || RotationAngle == 270)

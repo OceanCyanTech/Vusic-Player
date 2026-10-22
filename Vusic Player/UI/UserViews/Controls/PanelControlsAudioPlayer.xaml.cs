@@ -134,7 +134,25 @@ namespace Vusic_Player.UI.UserViews.Controls
             }
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
-
+        public void OpenPitch()
+        {
+            ttPitch.IsOpen = true;
+        }
+        public void OpenMultiDeviceOutput()
+        {
+            if (media.MultiDeviceOutputFeature)
+            {
+                ttMultiDeviceOutput.IsOpen = true;
+            }
+        }
+        public void OpenReverb()
+        {
+            ttReverb.IsOpen = true;
+        }
+        public void OpenSpeed()
+        {
+            ttSpeedCustom.IsOpen = true;
+        }
         private void mnftPitch_Click(object sender, RoutedEventArgs e)
         {
             ttPitch.IsOpen = true;

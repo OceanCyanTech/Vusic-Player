@@ -268,84 +268,102 @@ public sealed partial class ArtistView : Page
 
         return new BitmapImage(fallbackUri);
     }
-    private async void LoadAlbums()
+    private readonly SemaphoreSlim _loadLock = new SemaphoreSlim(1, 1);
+
+    private async Task LoadAlbums()
     {
-        AlbumsList.Clear();
-        albumCollection.Clear();
-        var groupedAlbums = FoundSongs
-         .Where(song => song.AlbumName != null && !string.IsNullOrEmpty(song.AlbumName))
-         .GroupBy(song => song.AlbumName)
-         .Select(group =>
-         {
+        // Prevent overlapping executions if triggered multiple times
+        if (!await _loadLock.WaitAsync(0))
+            return;
 
-             // 1. Extract years directly from the file tags
-             var years = group
-                 .Select(song =>
-                 {
-                     try
-                     {
-                         // Assuming your song model has a Path or FilePath property
-                         using (var file = TagLib.File.Create(song.FilePath))
-                         {
-                             return (int)file.Tag.Year; // Returns 0 if not set
-                         }
-                     }
-                     catch
-                     {
-                         return 0; // Fallback for unreadable files
-                     }
-                 })
-                 .Where(year => year > 0)
-                 .ToList();
-
-             int finalYear = 0;
-
-             if (years.Any())
-             {
-                 var yearGroups = years.GroupBy(y => y).OrderByDescending(g => g.Count()).ToList();
-                 bool isAllVaried = yearGroups.All(g => g.Count() == yearGroups.First().Count());
-                 finalYear = isAllVaried ? years.First() : yearGroups.First().Key;
-             }
-
-             return new
-             {
-                 AlbumName = group.Key,
-                 SongCount = group.Count(),
-                 CalculatedYear = finalYear,
-                 Artists = string.Join(", ", group
-                     .Select(song => song.Artist)
-                     .Where(name => !string.IsNullOrEmpty(name))
-                     .Distinct()
-                     .OrderBy(name => name)),
-                 Songs = group.ToList()
-             };
-         })
-         .OrderBy(result => result.AlbumName)
-         .ToList();
-        foreach (var albumGroup in groupedAlbums)
+        try
         {
-            var songs = albumGroup.Songs;
-            int countsongs = songs.Count;
-            string countsong = $"{countsongs} {(countsongs == 1 ? "item" : "items")}";
+            // 1. Deduplicate source songs by file path (case-insensitive)
+            var distinctSongs = FoundSongs
+                .Where(song => !string.IsNullOrWhiteSpace(song?.AlbumName) && !string.IsNullOrWhiteSpace(song?.FilePath))
+                .DistinctBy(song => song.FilePath.Trim(), StringComparer.OrdinalIgnoreCase)
+                .ToList();
 
-            BitmapImage img = await LoadExistingThumbnailAsync(albumGroup.AlbumName ?? "Unknown Album");
+            // 2. Group albums with case-insensitive and trimmed names
+            var groupedAlbums = distinctSongs
+                .GroupBy(song => song.AlbumName.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Select(group =>
+                {
+                    var years = group
+                        .Select(song =>
+                        {
+                            try
+                            {
+                                using var file = TagLib.File.Create(song.FilePath);
+                                return (int)file.Tag.Year;
+                            }
+                            catch
+                            {
+                                return 0;
+                            }
+                        })
+                        .Where(year => year > 0)
+                        .ToList();
 
-            albumCollection.Add(new ArtistDiscAlbumModel
+                    int finalYear = 0;
+                    if (years.Count > 0)
+                    {
+                        var yearGroups = years.GroupBy(y => y).OrderByDescending(g => g.Count()).ToList();
+                        bool isAllVaried = yearGroups.All(g => g.Count() == yearGroups[0].Count());
+                        finalYear = isAllVaried ? years[0] : yearGroups[0].Key;
+                    }
+
+                    return new
+                    {
+                        // Preserve the display casing from the first entry in the group
+                        AlbumName = group.First().AlbumName.Trim(),
+                        CalculatedYear = finalYear,
+                        Songs = group.ToList()
+                    };
+                })
+                .OrderBy(result => result.AlbumName, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            // 3. Pre-load thumbnails asynchronously before clearing the bound UI collection
+            var newAlbums = new List<ArtistDiscAlbumModel>();
+
+            foreach (var albumGroup in groupedAlbums)
             {
-                AlbumName = albumGroup.AlbumName ?? "Unknown Album",
-                AlbumCount = countsong,
-                AlbumCoverThumbnail = img,
-                AlbumYear = albumGroup.CalculatedYear.ToString(),
-                Songs = songs
-            });
+                int countsongs = albumGroup.Songs.Count;
+                string countsong = $"{countsongs} {(countsongs == 1 ? "item" : "items")}";
+
+                BitmapImage img = await LoadExistingThumbnailAsync(albumGroup.AlbumName);
+
+                newAlbums.Add(new ArtistDiscAlbumModel
+                {
+                    AlbumName = albumGroup.AlbumName,
+                    AlbumCount = countsong,
+                    AlbumCoverThumbnail = img,
+                    AlbumYear = albumGroup.CalculatedYear > 0 ? albumGroup.CalculatedYear.ToString() : string.Empty,
+                    Songs = albumGroup.Songs
+                });
+            }
+
+            // 4. Reset and populate collection on UI thread atomically
+            AlbumsList.Clear();
+            albumCollection.Clear();
+
+            foreach (var album in newAlbums)
+            {
+                albumCollection.Add(album);
+            }
+
+            grdViewAlbums.ItemsSource = albumCollection;
+
+            bool hasItems = albumCollection.Count > 0;
+            txtEmptyAlbums.Visibility = hasItems ? Visibility.Collapsed : Visibility.Visible;
+            grdViewAlbums.Visibility = hasItems ? Visibility.Visible : Visibility.Collapsed;
+            txtAlbumCount.Text = $"• {albumCollection.Count} {(albumCollection.Count == 1 ? "Album" : "Albums")}";
         }
-        grdViewAlbums.ItemsSource = albumCollection;
-
-        txtEmptyAlbums.Visibility = albumCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-        grdViewAlbums.Visibility = albumCollection.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
-        txtAlbumCount.Text = "• " + $"{albumCollection.Count} {(albumCollection.Count == 1 ? "Album" : "Albums")}";
-
-
+        finally
+        {
+            _loadLock.Release();
+        }
     }
     private async void LoadSelectorBarSelectionSettings()
     {

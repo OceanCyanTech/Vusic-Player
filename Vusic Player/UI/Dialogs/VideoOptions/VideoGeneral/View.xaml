@@ -26,9 +26,9 @@
                ValueChanged="sldZoom_ValueChanged" 
                IsTooltipEnabled="False" 
                Minimum="25" 
-               Maximum="300" 
+               Maximum="300"  
                Value="{x:Bind mediacontroller.ZoomValue, Mode=TwoWay}" 
-               Width="200"
+               Width="150"
                VerticalAlignment="Center"/>
 
                     <TextBlock x:Name="txtZoomDisplay" 

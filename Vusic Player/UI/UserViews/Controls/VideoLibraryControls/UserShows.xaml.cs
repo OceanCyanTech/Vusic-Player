@@ -413,7 +413,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
         private async void mnftEditShow_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is Show show)
-            {
+            { 
                 ttEditShow.IsOpen = true;
                 imgShowPoster.Source = new BitmapImage(new Uri(show.Poster));
                 txtShowName.Text = show.Name;

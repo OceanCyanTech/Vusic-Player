@@ -181,9 +181,9 @@
                             <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Open Source License" Content="Open Source License" Name="btnViewOSLicense" Click="btnViewOSLicense_Click"/>
                             <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Third Party Licenses" Content="Third Party Licenses" Name="btnViewThirdPartyLicense" Click="btnViewThirdPartyLicense_Click"/>
 
-                            <HyperlinkButton Content="View Source on GitHub"  Grid.Row="9"/>
+                            <HyperlinkButton Content="View Source on GitHub" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player"  Grid.Row="9"/>
                             <HyperlinkButton Content="Documentation and Support" Grid.Row="10"/>
-                            <HyperlinkButton Content="Share your feedback to help us improve the app" Grid.Row="11"/>
+                            <HyperlinkButton Content="Share your feedback to help us improve the app" NavigateUri="https://oceancyantech.github.io/Vusic-Player/feedback.html" Grid.Row="11"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
                             <MenuFlyoutSeparator />

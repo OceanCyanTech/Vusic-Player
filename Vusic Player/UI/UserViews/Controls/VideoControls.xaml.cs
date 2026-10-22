@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
+
 using FlyleafLib;
 using FlyleafLib.MediaFramework.MediaStream;
 using Microsoft.UI;
@@ -226,6 +229,10 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private async void mnftLoadSub_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            LoadSubtitleFile();
+        }
+        public async void LoadSubtitleFile()
+        {
             if (App.MainWindowInstance == null) return;
             var file = await SubtitlePicker.PickSingle(App.MainWindowInstance, "Choose subtitle file");
 
@@ -275,8 +282,8 @@ namespace Vusic_Player.UI.UserViews.Controls
 
                 }
             }
-        }
 
+        }
         private void mnftSubtitleEditor_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             SubtitleEditorWindow.ShowDialog();

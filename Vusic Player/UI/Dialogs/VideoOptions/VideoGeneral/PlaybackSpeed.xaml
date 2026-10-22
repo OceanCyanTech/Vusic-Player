@@ -12,10 +12,10 @@
         <StackPanel Name="stkPlaybackSpeed" Spacing="12">
             <TextBlock Text="Playback Settings" Style="{StaticResource BodyStrongTextBlockStyle}"/>
 
-            <StackPanel  Spacing="4">
+            <StackPanel  Spacing="20">
                 <TextBlock Text="Playback Speed" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                <StackPanel Orientation="Horizontal" Spacing="12">
-                    <local1:OceanSlider x:Name="sldSpeed" Margin="10, 0"
+                <StackPanel Orientation="Vertical" Spacing="12">
+                    <local1:OceanSlider x:Name="sldSpeed" HorizontalAlignment="Left" Margin="0, 0"
            Width="{x:Bind SliderWidth, Mode=OneWay}" 
            Minimum="0.25" 
            Maximum="8.0" 

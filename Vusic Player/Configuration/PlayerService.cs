@@ -444,11 +444,11 @@ namespace Vusic_Player.Configuration
                 keyConfig.Remove(Key.Space);
                 keyConfig.Remove(Key.Right);
                 keyConfig.Remove(Key.M);
-
+   
                 keyConfig.Remove(Key.Left, ctrl: true);
                 keyConfig.Remove(Key.Right, ctrl: true);
                 keyConfig.Remove(Key.Left, shift: true);
-                keyConfig.Remove(Key.Right, shift: true);
+                keyConfig.Remove(Key.Right, shift: true); keyConfig.RemoveAll();
             }
             App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
             {

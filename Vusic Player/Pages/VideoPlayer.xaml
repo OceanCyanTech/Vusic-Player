@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:winui="using:FlyleafLib.Controls.WinUI" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:playbackviews="using:Vusic_Player.UI.UserViews.Controls" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced" xmlns:controls="using:Vusic_Player.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:winui="using:FlyleafLib.Controls.WinUI" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:playbackviews="using:Vusic_Player.UI.UserViews.Controls" xmlns:converters="using:Vusic_Player.Configuration.Helper.Converters" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced" xmlns:controls="using:Vusic_Player.UI.Controls" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral" xmlns:videoaspectratio="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoAspectRatio"
     mc:Ignorable="d">
     <Page.Resources>
         <!--<converter:DoubleToFormatConverter x:Key="FormatConverter"/>
@@ -128,6 +128,15 @@
             <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_Invoked"/>
             <KeyboardAccelerator Key="H" x:Name="HKey" Invoked="HKey_Invoked"/>
             <KeyboardAccelerator Key="G" x:Name="GKey" Invoked="GKey_Invoked"   />
+            <KeyboardAccelerator Key="J" x:Name="JKey" Invoked="JKey_Invoked"   />
+            <KeyboardAccelerator Key="K" x:Name="KKey" Invoked="KKey_Invoked"   />
+            <KeyboardAccelerator Key="N" x:Name="NKey" Invoked="NKey_Invoked"   />
+            <KeyboardAccelerator Key="P" x:Name="PKey" Invoked="PKey_Invoked"   />
+            <KeyboardAccelerator Key="A" x:Name="AKey" Invoked="AKey_Invoked"   />
+            <KeyboardAccelerator Key="Z" x:Name="ZKey" Invoked="ZKey_Invoked"   />
+            <KeyboardAccelerator Key="R" x:Name="RKey" Invoked="RKey_Invoked"   />
+            <KeyboardAccelerator Key="C" x:Name="CKey" Invoked="CKey_Invoked"   />
+            <KeyboardAccelerator Key="S" x:Name="SKey" Invoked="SKey_Invoked"   />
             <KeyboardAccelerator 
             Key="T" 
             Modifiers="Control" 
@@ -970,6 +979,13 @@ BorderThickness="0"
                 </StackPanel>
                 <Button Name="btnJumpToTime" Click="btnJumpToTime_Click" Content="Jump" Style="{StaticResource AccentButtonStyle}" Grid.Row="1"/>
             </Grid>
+        </TeachingTip>
+   
+        <TeachingTip Name="ttZoom" IsOpen="False">
+            <videogeneral:View />
+        </TeachingTip>
+        <TeachingTip Name="ttAspectRatio" IsOpen="False">
+            <videoaspectratio:AspectRatioCustom/>
         </TeachingTip>
     </controls:CursorDisappearGrid>
 
