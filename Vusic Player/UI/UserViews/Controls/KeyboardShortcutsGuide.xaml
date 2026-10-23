@@ -12,8 +12,24 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Keyboard Shortcuts that can be used in Vusic Player." Style="{StaticResource BodyStrongTextBlockStyle}"/>
-        <Image Source="/Assets/Themes/Ocean/keyboardshortcutguide.png" Grid.Row="1" Width="100" />
+        <NavigationView PaneDisplayMode="Top" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" SelectionChanged="selBarKeyboardShortcuts_SelectionChanged_1" Name="selBarKeyboardShortcuts" Grid.Row="1">
+            <NavigationView.MenuItems>
+                <NavigationViewItem    IsSelected="True" Name="selBar1" Content="Playback"/>
+                <NavigationViewItem    Name="selBar2" Content="Tools"/>
+                <NavigationViewItem     Name="selBar3" Content="Quick Shortcuts"/>
+            </NavigationView.MenuItems>
+
+
+        </NavigationView>
+        <ScrollViewer Grid.Row="2">
+            <Grid>
+                <Image Name="imgKeyboardShortcut1"  Source="/Assets/keyboardshortcut1.png" Grid.Row="2"/>
+                <Image Name="imgKeyboardShortcut2" Source="/Assets/keyboardshortcut2.png" Grid.Row="2"/>
+                <Image Name="imgKeyboardShortcut3" Source="/Assets/keyboardshortcut3.png" Grid.Row="2"/>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

@@ -24,4 +24,31 @@ public sealed partial class KeyboardShortcutsGuide : UserControl
     {
         InitializeComponent();
     }
+
+    private void selBarKeyboardShortcuts_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
+    {
+    
+    }
+
+    private void selBarKeyboardShortcuts_SelectionChanged_1(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    {
+        if (args.SelectedItemContainer == null) return;
+        imgKeyboardShortcut1.Visibility = Visibility.Collapsed;
+        imgKeyboardShortcut2.Visibility = Visibility.Collapsed;
+        imgKeyboardShortcut3.Visibility = Visibility.Collapsed;
+        if (args.SelectedItemContainer == selBar1)
+        {
+            imgKeyboardShortcut1.Visibility = Visibility.Visible;
+        }
+        else if (args.SelectedItemContainer == selBar2)
+        {
+            imgKeyboardShortcut2.Visibility = Visibility.Visible;
+
+        }
+        else if (args.SelectedItemContainer == selBar3)
+        {
+            imgKeyboardShortcut3.Visibility = Visibility.Visible;
+
+        }
+    }
 }

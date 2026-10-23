@@ -126,11 +126,13 @@ namespace Vusic_Player.Pages
                   }
                   else if (isCtrlDown && keyArgs.Key == VirtualKey.Number1)
                   {
-                      nvgitHome.IsSelected = true;
+                      if (App.NavigationFrame.Content is not VideoPlayer)
+                          nvgitHome.IsSelected = true;
                   }
                   else if (isCtrlDown && keyArgs.Key == VirtualKey.Number2)
                   {
-                      nvgitMusic.IsSelected = true;
+                      if (App.NavigationFrame.Content is not VideoPlayer)
+                          nvgitMusic.IsSelected = true;
                   }
                   else if (isAltDown && keyArgs.Key == VirtualKey.S)
                   {
@@ -166,11 +168,13 @@ namespace Vusic_Player.Pages
                   }
                   else if (isCtrlDown && keyArgs.Key == VirtualKey.Number3)
                   {
-                      nvgitVideo.IsSelected = true;
+                      if (App.NavigationFrame.Content is not VideoPlayer)
+                          nvgitVideo.IsSelected = true;
                   }
                   else if (isCtrlDown && keyArgs.Key == VirtualKey.Number4)
                   {
-                      nvgitQueue.IsSelected = true;
+                      if (App.NavigationFrame.Content is not VideoPlayer)
+                          nvgitQueue.IsSelected = true;
                   }
               }),
              handledEventsToo: false

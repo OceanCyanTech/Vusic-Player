@@ -5,10 +5,88 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
+    <Grid RowSpacing="30">
+        <Grid.RowDefinitions>
 
-    <Grid>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <CheckBox Content="Vertical Mode" Name="chkVerticalMode" Grid.Row="0"/>
+        <Grid Grid.Row="1"
+      RowSpacing="12"
+      ColumnSpacing="20"
+      HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
+            <!-- 31 Hz -->
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="31 Hz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="0" Grid.Column="1" x:Name="gain31" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 63 Hz -->
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="63 Hz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="1" Grid.Column="1" x:Name="gain63" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 125 Hz -->
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="125 Hz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="2" Grid.Column="1" x:Name="gain125" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 150 Hz -->
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="150 Hz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="3" Grid.Column="1" x:Name="gain150" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 250 Hz -->
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="250 Hz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="4" Grid.Column="1" x:Name="gain250" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 500 Hz -->
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="500 Hz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="5" Grid.Column="1" x:Name="gain500" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 1 kHz -->
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="1 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="6" Grid.Column="1" x:Name="gain1000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 2 kHz -->
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="2 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="7" Grid.Column="1" x:Name="gain2000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 4 kHz -->
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="4 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="8" Grid.Column="1" x:Name="gain4000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 8 kHz -->
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="8 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="9" Grid.Column="1" x:Name="gain8000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- 16 kHz -->
+            <TextBlock Grid.Row="10" Grid.Column="0" Text="16 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider Grid.Row="10" Grid.Column="1" x:Name="gain16000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+
+            <!-- Apply Button -->
+            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" 
+            Content="Apply" Click="Button_Click" 
+            HorizontalAlignment="Stretch" Margin="0,16,0,0"/>
+        </Grid>
     </Grid>
 </UserControl>

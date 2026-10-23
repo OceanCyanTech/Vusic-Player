@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:controls="using:CommunityToolkit.WinUI.Controls" xmlns:playback_views="using:Vusic_Player.UI.UserViews.Controls" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:controls="using:CommunityToolkit.WinUI.Controls" xmlns:playback_views="using:Vusic_Player.UI.UserViews.Controls" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral" xmlns:audioequalizer="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer"
     mc:Ignorable="d">
 
     <Grid>
@@ -132,6 +132,9 @@ Stretch="UniformToFill"/>
                 <Image Width="40" Source="{Binding SourceError ,Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock Name="txtExceptionError"/>
             </StackPanel>
+        </TeachingTip>
+        <TeachingTip IsOpen="True">
+            <audioequalizer:Equalizer/>
         </TeachingTip>
     </Grid>
 </Page>

@@ -1701,6 +1701,7 @@ namespace Vusic_Player.Pages.Views
                 }
                 else if (setting == "Keyboard Shortcuts")
                 {
+                    Debug.WriteLine("Keyboard shortcuts called");
                     nvgitAboutHelp.IsSelected = true;
                     DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
                     {
@@ -1816,7 +1817,7 @@ namespace Vusic_Player.Pages.Views
         private void btnViewKS_Click(object sender, RoutedEventArgs e)
         {
             if (App.MainWindowInstance == null) return;
-            OceanContentDialog.Show("Keyboard Shortcuts Guide", "", "", "Close", OceanDialogWindow.ContentType.KeyboardShortcuts, OceanContentDialogDefault.Close, XamlRoot, 600, 600, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "");
+            OceanContentDialog.Show("Keyboard Shortcuts Guide", "", "", "Close", OceanDialogWindow.ContentType.KeyboardShortcuts, OceanContentDialogDefault.Close, XamlRoot, 600, 900, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "");
         }
     }
 }
