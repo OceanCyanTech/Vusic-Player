@@ -891,5 +891,11 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             JumpToTime?.Invoke();
         }
+
+        private void mnftAudioEqualizer_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.MainWindowInstance == null) { return; }
+            var dlg = VideoOptionsWindow.ShowWindow(VideoOptionsWindow.OptionType.VideoOptions, VideoOptionsWindow.Video.AspectRatio, 1, 1, 13);
+        }
     }
 }

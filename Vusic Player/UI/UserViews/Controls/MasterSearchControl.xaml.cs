@@ -361,13 +361,16 @@ namespace Vusic_Player.UI.UserViews.Controls
                 {
                     if (App.NavigationFrame != null)
                     {
-                        if(SearchResultsPageState.alreadyNavigatedtoSettingsPage == true)
+                        if(SearchResultsPageState.Instance.alreadyNavigatedtoSettingsPage == true)
                         {
-                            //PENDING
+                          if(App.NavigationFrame.Content is SettingsPage settingsPage)
+                            {
+                                settingsPage.SettingsPageNavigate(selected.ResultMain);
+                            }
                         }
                         else
                         {
-                            SearchResultsPageState.alreadyNavigatedtoSettingsPage = true;
+                            SearchResultsPageState.Instance.alreadyNavigatedtoSettingsPage = true;
                             App.NavigationFrame.Navigate(typeof(SettingsPage), selected.ResultMain);
                         }
                     }
@@ -404,10 +407,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                 e.Handled = true;
                 if (App.NavigationFrame != null)
                 {
-                    if (SearchResultsPageState.alreadyNavigatedtoSearchResultsPage == false)
+                    if (SearchResultsPageState.Instance.alreadyNavigatedtoSearchResultsPage == false)
                     {
                         App.NavigationFrame.Navigate(typeof(SearchResults), asbSearchOptions.Text);
-                        SearchResultsPageState.alreadyNavigatedtoSearchResultsPage = true;
+                        SearchResultsPageState.Instance.alreadyNavigatedtoSearchResultsPage = true;
                     }
                     else
                     {

@@ -64,7 +64,7 @@
                             <media:BackdropBlurBrush Opacity="1" Amount="10.0" x:Name="BackdropBlur"/>
                         </Border.Background>
 
-                        <TextBlock Text="Continue Playing" Margin="20, 10" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Continue Playing" Margin="20, 10" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                     </Border>
 
                     <Border VerticalAlignment="Bottom" Height="90" CornerRadius="12">
@@ -76,7 +76,7 @@
             </Border>
             <StackPanel VerticalAlignment="Bottom" Padding="20"  Spacing="16">
                 <Viewbox MaxHeight="50" MaxWidth="450" HorizontalAlignment="Left" Stretch="Uniform">
-                        <TextBlock TextTrimming="CharacterEllipsis" MaxWidth="450" MaxLines="2" TextWrapping="Wrap"  Name="txtFileName" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  TextTrimming="CharacterEllipsis" MaxWidth="450" MaxLines="2" TextWrapping="Wrap"  Name="txtFileName" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
                 </Viewbox>
                 <vusic_player:OceanSlider IsThumbVisible="Collapsed" Value="0" x:Name="prgHighlight"></vusic_player:OceanSlider>
                 <Grid>
@@ -93,7 +93,7 @@
                         </Button.Resources>
                         <StackPanel Orientation="Horizontal" Spacing="8" Padding="12,0">
                             <FontIcon Foreground="Black" Glyph="&#xE768;" />
-                            <TextBlock Foreground="Black" Text="Resume" FontWeight="SemiBold"/>
+                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Foreground="Black" Text="Resume" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
 
@@ -101,63 +101,63 @@
                         <Button ToolTipService.ToolTip="Add to Queue" Background="#44FFFFFF" Foreground="White" CornerRadius="8" Height="44">
                             <StackPanel Orientation="Horizontal" Spacing="8" Padding="12,0">
                                 <FontIcon Glyph="&#xE710;" />
-                                <TextBlock Text="Add to Queue"/>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Add to Queue"/>
                             </StackPanel>
                         </Button>
                         <TeachingTip Target="{x:Bind btnOptions}" IsOpen="False" Name="ttCopiedToClipboard">
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <Image Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" Width="25"></Image>
-                                <TextBlock Text="Copied File Path to Clipboard"></TextBlock>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Copied File Path to Clipboard"></TextBlock>
                             </StackPanel>
                         </TeachingTip>
                         <Button ToolTipService.ToolTip="Options" Name="btnOptions" Background="#44FFFFFF" Foreground="White" CornerRadius="8" Width="44" Height="44">
                             <FontIcon Glyph="&#xE712;" />
                             <Button.Flyout>
                                 <MenuFlyout Opened="MenuFlyout_Opened">
-                                    <MenuFlyoutItem Name="mnftStartPreviousCW" Click="btnResume_Click" Text="Resume from Previous Playback">
+                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftStartPreviousCW" Click="btnResume_Click" Text="Resume from Previous Playback">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE823;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Name="mnftStartFirstCW" Click="mnftStartFirstCW_Click" Text="Play from Start">
+                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftStartFirstCW" Click="mnftStartFirstCW_Click" Text="Play from Start">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE768;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem Name="mnftRemoveCW" Click="mnftRemoveCW_Click" Text="Remove from Continue Playing">
+                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftRemoveCW" Click="mnftRemoveCW_Click" Text="Remove from Continue Playing">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE894;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem Name="mnftAddToQueueCW" Click="mnftAddToQueueCW_Click" Text="Add to Queue">
+                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftAddToQueueCW" Click="mnftAddToQueueCW_Click" Text="Add to Queue">
                                         <MenuFlyoutItem.Icon>
                                             <ImageIcon Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Name="mnftAddToFavCW" Click="mnftAddToFavCW_Click" Text="Add to Favourites">
+                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftAddToFavCW" Click="mnftAddToFavCW_Click" Text="Add to Favourites">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Name="fnticonFav" Glyph="&#xEB51;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Name="mnftFileInfoCW" Click="mnftFileInfoCW_Click" Text= "File Info">
+                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftFileInfoCW" Click="mnftFileInfoCW_Click" Text= "File Info">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE946;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Name="mnftOpenFileLocCW" Click="mnftOpenFileLocCW_Click" Text= "Open file location">
+                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftOpenFileLocCW" Click="mnftOpenFileLocCW_Click" Text= "Open file location">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE838;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Name="mnftCopyFilePathCW" Click="mnftCopyFilePathCW_Click" Text="Copy File Path">
+                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftCopyFilePathCW" Click="mnftCopyFilePathCW_Click" Text="Copy File Path">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem Name="mnftHideVideoFromContinuePlayingCW" Click="mnftHideVideoFromContinuePlaying_Click" Text="Hide Video From Continue Playing">
+                                 <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftHideVideoFromContinuePlayingCW" Click="mnftHideVideoFromContinuePlaying_Click" Text="Hide Video From Continue Playing">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xED1A;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
@@ -177,10 +177,10 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="20">
 
-                <TextBlock Text="Recents" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
-                <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Unchecked"></CheckBox>
+                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Recents" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"  Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Unchecked"></CheckBox>
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
-                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Unchecked"></CheckBox>
+                    <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"  Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Unchecked"></CheckBox>
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromContinueWatchingSelected_Click"  Name="btnRemoveFromContinueWatchingSelected" >
                         <StackPanel Orientation="Horizontal">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
@@ -210,51 +210,51 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
                             <Grid Width="200" Height="100" VerticalAlignment="Top">
                                 <Grid.ContextFlyout>
                                     <MenuFlyout Opened="MenuFlyout_Opened_1">
-                                        <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Resume from Previous playback" Click="mnftStartPreviousRec_Click">
+                                     <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftStartPreviousRec" Text="Resume from Previous playback" Click="mnftStartPreviousRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE823;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftStartFirstRec" Text="Play from Start" Click="mnftStartFirstRec_Click">
+                                     <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftStartFirstRec" Text="Play from Start" Click="mnftStartFirstRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE768;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Name="mnftRemoveRec" Text="Remove from Continue Playing" Click="mnftRemoveRec_Click">
+                                     <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftRemoveRec" Text="Remove from Continue Playing" Click="mnftRemoveRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE894;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem Name="mnftAddToQueue" Text="Add to Queue" Click="mnftAddToQueue_Click">
+                                     <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftAddToQueue" Text="Add to Queue" Click="mnftAddToQueue_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <ImageIcon Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">
+                                     <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEB51;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Name="mnftFileInfoRec" Text= "File Info" Click="mnftFileInfoRec_Click">
+                                     <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftFileInfoRec" Text= "File Info" Click="mnftFileInfoRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE946;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftOpenFileLocRec" Text= "Open file location" Click="mnftOpenFileLocRec_Click">
+                                     <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftOpenFileLocRec" Text= "Open file location" Click="mnftOpenFileLocRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE838;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftCopyFilePathRec" Text="Copy File Path" Click="mnftCopyFilePathRec_Click">
+                                     <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftCopyFilePathRec" Text="Copy File Path" Click="mnftCopyFilePathRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Name="mnftHideVideoFromContinuePlayingRecents" Click="mnftHideVideoFromContinuePlayingRecents_Click" Text="Hide Video From Continue Playing Recents">
+                                     <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftHideVideoFromContinuePlayingRecents" Click="mnftHideVideoFromContinuePlayingRecents_Click" Text="Hide Video From Continue Playing Recents">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xED1A;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
@@ -267,7 +267,7 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
                                 <vusic_player:OceanSlider VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="-5, 0" x:Name="prgContinuePlaying" Maximum="{Binding TotalDuration}" Value="{Binding CurrentDuration}" Width="200" IsEnabled="False" IsThumbVisible="Collapsed"></vusic_player:OceanSlider>
 
                             </Grid>
-                            <TextBlock Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Height="60" Width="200" TextWrapping="Wrap" />
+                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Height="60" Width="200" TextWrapping="Wrap" />
                         </StackPanel>
                     </DataTemplate>
                 </GridView.ItemTemplate>
@@ -278,14 +278,14 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
             <StackPanel Name="stkEnabledEmptyRecents"  Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Start watching videos to see them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" TextWrapping="Wrap" Text="Start watching videos to see them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button HorizontalAlignment="Center"  Content="Disable Recents" Name="btnDisableRecents" Click="btnDisableRecents_Click"></Button>
             </StackPanel>
             <StackPanel Name="stkDisabledEmptyRecents" Visibility="Collapsed"  Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Saving to Recents has been disabled." Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" TextWrapping="Wrap" Text="Saving to Recents has been disabled." Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button HorizontalAlignment="Center"  Content="Enable Recents" Name="btnEnableRecents" Click="btnEnableRecents_Click"></Button>
             </StackPanel>

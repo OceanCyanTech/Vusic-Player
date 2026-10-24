@@ -696,12 +696,16 @@ DependencyProperty.Register(
 
         private void lstViewSearchOptions_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            Debug.WriteLine("CLICKED");
             popupSearch.IsOpen = false;
 
             var selected = e.ClickedItem as SettingSearchResult;
+            Debug.WriteLine(selected.Name);
             if (selected != null)
+            {
                 ListViewSelected(selected);
+                Debug.WriteLine("YES ! VERIFIED");
+            }
         }
 
         private void lstViewSearchOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)

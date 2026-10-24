@@ -301,5 +301,11 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             ttJumpToTime.IsOpen = true;
         }
+
+        private void mnftEqualizer_Click(object sender, RoutedEventArgs e)
+        {
+            popUpEqualizer.IsOpen = true;
+        }
+
     }
 }

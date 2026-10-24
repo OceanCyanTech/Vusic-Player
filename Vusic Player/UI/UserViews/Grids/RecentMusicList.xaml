@@ -20,11 +20,11 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="20"  >
-                <TextBlock Text="Recents" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Recents" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
 
-                <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
-                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
+                    <CheckBox  FontFamily="{StaticResource GlobalFontHolder}" Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromContinueWatchingSelected_Click"  Name="btnRemoveFromContinueWatchingSelected" >
                         <StackPanel Orientation="Horizontal">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
@@ -37,17 +37,17 @@
             <Button Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click" CornerRadius="12" >
                 <Button.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8B1;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8EE;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
                             <MenuFlyoutItem.Icon>
                                 <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                             </MenuFlyoutItem.Icon>
@@ -56,7 +56,7 @@
                 </Button.ContextFlyout>
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="20" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"/>
-                    <TextBlock Text="Play all"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play all"/>
                 </StackPanel>
             </Button>
             <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="2" x:Name="grdvRecents"></controls:GridViewRecentMusic>
@@ -66,7 +66,7 @@
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="{Binding MusicNoteIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Listen to music to show them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" TextWrapping="Wrap" Text="Listen to music to show them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button HorizontalAlignment="Center"  Content="Turn off Recent Music" Name="btnDisableRecents" Click="btnDisableRecents_Click"></Button>
             </StackPanel>
@@ -75,7 +75,7 @@
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="{Binding MusicNoteIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Saving to history has been disabled!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" TextWrapping="Wrap" Text="Saving to history has been disabled!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button HorizontalAlignment="Center"  Content="Turn on Saving to History" Name="btnEnableHistory" Click="btnEnableHistory_Click"></Button>
             </StackPanel>

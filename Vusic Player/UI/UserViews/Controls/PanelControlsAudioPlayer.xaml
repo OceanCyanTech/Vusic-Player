@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.UserViews.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral" xmlns:audioequalizer="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer"
     mc:Ignorable="d">
 
     <Grid >
@@ -86,6 +86,11 @@
                                                 <FontIcon Glyph="&#xE789;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Equalizer" Name="mnftEqualizer" Click="mnftEqualizer_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE9E9;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Reverb" Name="mnftReverb" Click="mnftReverb_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <ImageIcon Source="/Assets/reverbfonticon.png"></ImageIcon>
@@ -149,6 +154,21 @@
 
                 </StackPanel>
                 <Button Name="btnJumpToTime" Click="btnJumpToTime_Click" Content="Jump" Style="{StaticResource AccentButtonStyle}" Grid.Row="1"/>
+            </Grid>
+        </TeachingTip>
+        <TeachingTip Title="Equalizer"  Name="popUpEqualizer" >
+            <TeachingTip.Resources>
+                <!-- Overrides WinUI's internal max width constraint for the popup surface -->
+                <x:Double x:Key="TeachingTipContentMaxWidth">1200</x:Double>
+                <x:Double x:Key="TeachingTipMaxWidth">1200</x:Double>
+            </TeachingTip.Resources>
+            <Grid CornerRadius="12" Padding="20, 20" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+        
+                <audioequalizer:Equalizer Grid.Row="1"/>
             </Grid>
         </TeachingTip>
 

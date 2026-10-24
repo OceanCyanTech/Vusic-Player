@@ -133,8 +133,6 @@ Stretch="UniformToFill"/>
                 <TextBlock Name="txtExceptionError"/>
             </StackPanel>
         </TeachingTip>
-        <TeachingTip IsOpen="True">
-            <audioequalizer:Equalizer/>
-        </TeachingTip>
+    
     </Grid>
 </Page>

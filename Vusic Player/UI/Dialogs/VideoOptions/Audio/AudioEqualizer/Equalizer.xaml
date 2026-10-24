@@ -7,6 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <local:GainDisplayConverter x:Key="GainDisplayConverter"/>
+    </UserControl.Resources>
     <Grid RowSpacing="30">
         <Grid.RowDefinitions>
 
@@ -15,18 +18,17 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <CheckBox Content="Vertical Mode" Name="chkVerticalMode" Grid.Row="0"/>
-        <Grid Grid.Row="1"
-      RowSpacing="12"
-      ColumnSpacing="20"
-      HorizontalAlignment="Center">
+        <CheckBox Checked="chkVerticalMode_Checked" Unchecked="chkVerticalMode_Checked" Content="Vertical Mode" Name="chkVerticalMode" Grid.Row="0"/>
+        <Grid Grid.Row="1" Visibility="Visible" RowSpacing="12" ColumnSpacing="16" Name="grdHorizontalSliders" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
+                <!-- Frequency Label -->
                 <ColumnDefinition Width="Auto"/>
+                <!-- Slider -->
                 <ColumnDefinition Width="Auto"/>
+                <!-- Value Label -->
+                <ColumnDefinition Width="60"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -41,52 +43,201 @@
 
             <!-- 31 Hz -->
             <TextBlock Grid.Row="0" Grid.Column="0" Text="31 Hz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="0" Grid.Column="1" x:Name="gain31" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <controls:OceanSlider x:Name="gain31" Grid.Row="0" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock  Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain31.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
 
             <!-- 63 Hz -->
             <TextBlock Grid.Row="1" Grid.Column="0" Text="63 Hz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="1" Grid.Column="1" x:Name="gain63" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <controls:OceanSlider x:Name="gain63" Grid.Row="1" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain63.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
 
             <!-- 125 Hz -->
             <TextBlock Grid.Row="2" Grid.Column="0" Text="125 Hz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="2" Grid.Column="1" x:Name="gain125" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
-
-            <!-- 150 Hz -->
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="150 Hz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="3" Grid.Column="1" x:Name="gain150" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <controls:OceanSlider x:Name="gain125" Grid.Row="2" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain125.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
 
             <!-- 250 Hz -->
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="250 Hz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="4" Grid.Column="1" x:Name="gain250" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="250 Hz" VerticalAlignment="Center"/>
+            <controls:OceanSlider x:Name="gain250" Grid.Row="3" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain250.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
 
             <!-- 500 Hz -->
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="500 Hz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="5" Grid.Column="1" x:Name="gain500" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="500 Hz" VerticalAlignment="Center"/>
+            <controls:OceanSlider x:Name="gain500" Grid.Row="4" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="4" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain500.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
 
             <!-- 1 kHz -->
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="1 kHz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="6" Grid.Column="1" x:Name="gain1000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="1 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider x:Name="gain1000" Grid.Row="5" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="5" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain1000.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
 
             <!-- 2 kHz -->
-            <TextBlock Grid.Row="7" Grid.Column="0" Text="2 kHz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="7" Grid.Column="1" x:Name="gain2000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="2 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider x:Name="gain2000" Grid.Row="6" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain2000.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
 
             <!-- 4 kHz -->
-            <TextBlock Grid.Row="8" Grid.Column="0" Text="4 kHz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="8" Grid.Column="1" x:Name="gain4000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="4 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider x:Name="gain4000" Grid.Row="7" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="7" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain4000.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
 
             <!-- 8 kHz -->
-            <TextBlock Grid.Row="9" Grid.Column="0" Text="8 kHz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="9" Grid.Column="1" x:Name="gain8000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="8 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider x:Name="gain8000" Grid.Row="8" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="8" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain8000.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
 
             <!-- 16 kHz -->
-            <TextBlock Grid.Row="10" Grid.Column="0" Text="16 kHz" VerticalAlignment="Center"/>
-            <controls:OceanSlider Grid.Row="10" Grid.Column="1" x:Name="gain16000" Width="120" Maximum="12" Minimum="-12" IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
-
-            <!-- Apply Button -->
-            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" 
-            Content="Apply" Click="Button_Click" 
-            HorizontalAlignment="Stretch" Margin="0,16,0,0"/>
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="16 kHz" VerticalAlignment="Center"/>
+            <controls:OceanSlider x:Name="gain16000" Grid.Row="9" Grid.Column="1" Width="120" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" TickFrequency="6"
+                          IsTooltipEnabled="False" ValueChanged="gainCommon_ValueChanged"/>
+            <TextBlock Grid.Row="9" Grid.Column="2" VerticalAlignment="Center"
+               Text="{x:Bind gain16000.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
         </Grid>
+        <Grid Visibility="Collapsed" 
+      Grid.Row="1" 
+      RowSpacing="16" 
+      ColumnSpacing="8" 
+      Name="grdVerticalSliders" 
+      HorizontalAlignment="Stretch">
+
+            <!-- 2 tiers of sliders: Row 0-2 (Lower Bands), Row 3 (Spacer), Row 4-6 (Upper Bands) -->
+            <Grid.RowDefinitions>
+                <!-- Top Half (31 Hz - 500 Hz) -->
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <!-- Divider spacing between tiers -->
+                <RowDefinition Height="12"/>
+                <!-- Bottom Half (1 kHz - 16 kHz) -->
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- 5 equal columns -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ==================== TIER 1: 31 Hz - 500 Hz ==================== -->
+
+            <!-- 31 Hz -->
+            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain31Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider Width="100" Height="120" x:Name="gain31Vertical" Grid.Row="1" Grid.Column="0" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="31 Hz" HorizontalAlignment="Center" FontSize="11"/>
+
+            <!-- 63 Hz -->
+            <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain63Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider Width="100" Height="120" x:Name="gain63Vertical" Grid.Row="1" Grid.Column="1" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="63 Hz" HorizontalAlignment="Center" FontSize="11"/>
+
+            <!-- 125 Hz -->
+            <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain125Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider   Width="100" Height="120" x:Name="gain125Vertical" Grid.Row="1" Grid.Column="2" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="125 Hz" HorizontalAlignment="Center" FontSize="11"/>
+
+            <!-- 250 Hz -->
+            <TextBlock Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain250Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider Height="120" Width="100" x:Name="gain250Vertical" Grid.Row="1" Grid.Column="3" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="3" Text="250 Hz" HorizontalAlignment="Center" FontSize="11"/>
+
+            <!-- 500 Hz -->
+            <TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain500Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider  Height="120" Width="100" x:Name="gain500Vertical" Grid.Row="1" Grid.Column="4" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="4" Text="500 Hz" HorizontalAlignment="Center" FontSize="11"/>
+
+            <!-- Optional Divider Line between rows -->
+            <Rectangle Grid.Row="3" Grid.ColumnSpan="5" Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" VerticalAlignment="Center" Margin="8,0"/>
+
+            <!-- ==================== TIER 2: 1 kHz - 16 kHz ==================== -->
+
+            <!-- 1 kHz -->
+            <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain1000Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider Width="100" Height="120" x:Name="gain1000Vertical" Grid.Row="5" Grid.Column="0" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="1 kHz" HorizontalAlignment="Center" FontSize="11"/>
+
+            <!-- 2 kHz -->
+            <TextBlock Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain2000Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider Width="100" Height="120" x:Name="gain2000Vertical" Grid.Row="5" Grid.Column="1" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="2 kHz" HorizontalAlignment="Center" FontSize="11"/>
+
+            <!-- 4 kHz -->
+            <TextBlock Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain4000Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider Width="100" Height="120" x:Name="gain4000Vertical" Grid.Row="5" Grid.Column="2" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="6" Grid.Column="2" Text="4 kHz" HorizontalAlignment="Center" FontSize="11"/>
+
+            <!-- 8 kHz -->
+            <TextBlock Grid.Row="4" Grid.Column="3" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain8000Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider Width="100" Height="120" x:Name="gain8000Vertical" Grid.Row="5" Grid.Column="3" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="6" Grid.Column="3" Text="8 kHz" HorizontalAlignment="Center" FontSize="11"/>
+
+            <!-- 16 kHz -->
+            <TextBlock Grid.Row="4" Grid.Column="4" HorizontalAlignment="Center" FontSize="11"
+               Text="{x:Bind gain16000Vertical.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
+            <controls:OceanSlider Width="100" Height="120" x:Name="gain16000Vertical" Grid.Row="5" Grid.Column="4" Minimum="-12" Maximum="12"
+                          TicksEnabled="True" IsSnapToTickEnabled="True" Orientation="Vertical" TickFrequency="6"
+                          IsTooltipEnabled="False" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="6" Grid.Column="4" Text="16 kHz" HorizontalAlignment="Center" FontSize="11"/>
+        </Grid>
+        <Button HorizontalAlignment="Center" Name="btnApply" Content="Apply" Click="btnApply_Click" Grid.Row="2" Style="{StaticResource AccentButtonStyle}"/>
     </Grid>
 </UserControl>

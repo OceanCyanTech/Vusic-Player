@@ -2476,16 +2476,20 @@ namespace Vusic_Player.UI.UserViews.Controls
                 {
                     if (App.NavigationFrame != null)
                     {
-                        if (SearchResultsPageState.alreadyNavigatedtoSettingsPage == true)
+                        if (SearchResultsPageState.Instance.alreadyNavigatedtoSettingsPage == true)
                         {
-                            //PENDING
+                            if (App.NavigationFrame.Content is SettingsPage settingsPage)
+                            {
+                                settingsPage.SettingsPageNavigate(search.ResultMain);
+                            }
                         }
                         else
                         {
-                            SearchResultsPageState.alreadyNavigatedtoSettingsPage = true;
+                            SearchResultsPageState.Instance.alreadyNavigatedtoSettingsPage = true;
                             App.NavigationFrame.Navigate(typeof(SettingsPage), search.ResultMain);
                         }
-                    }
+                    
+                }
                 }
 
 

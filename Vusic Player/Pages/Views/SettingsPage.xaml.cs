@@ -28,6 +28,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 
@@ -1485,313 +1486,316 @@ namespace Vusic_Player.Pages.Views
             rchEditBoxStatements.IsReadOnly = true;
             txtStatementHeader.Text = "Open Source ";
         }
+       public void SettingsPageNavigate(string setting)
+        {
+            if (setting == "Skip Duration" || setting == "Seek Duration")
+            {
+                nvgitPlayback.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
 
+                    cmbSkipBackward?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Maximum Volume")
+            {
+                nvgitPlayback.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    numMaxVolume?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Home Page Panels")
+            {
+                nvgitHomePage.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    chkHomeContinueRecent?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Music Library Page Panels")
+            {
+                nvgitMusicOptions.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    chkMusicRecent?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Font")
+            {
+                nvgitPlayback.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    cmbFontFamilies?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Video Library Page Panels")
+            {
+                nvgitVideoOptions.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    chkVideoContinueRecent?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Playlist Settings")
+            {
+                nvgitMusicOptions.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnDeleteAllPlaylists?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Show Settings")
+            {
+                nvgitVideoOptions.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnDeleteAllShows?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Continue Playing Videos Settings")
+            {
+                nvgitVideoOptions.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnDeleteAllVideoHistory?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Continue Playing Videos Settings")
+            {
+                nvgitVideoOptions.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnDeleteAllVideoHistory?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "App Lock" || setting == "Splash Screen" || setting == "Startup Page" || setting == "Default App for Formats")
+            {
+                nvgitAppSettings.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnAppLock?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Startup")
+            {
+                nvgitAppSettings.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    txtStartup?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "About App")
+            {
+                nvgitAboutHelp.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    txtAbout?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "App License")
+            {
+                nvgitAboutHelp.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnViewOSLicense?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Updates")
+            {
+                nvgitAboutHelp.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnCheckForUpdates?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Folder Permissions")
+            {
+                nvgitAppSettings.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    txtFolderPermissions?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Keyboard Shortcuts")
+            {
+                Debug.WriteLine("Keyboard shortcuts called");
+                nvgitAboutHelp.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnViewKS?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Help" || setting == "Feedback" || setting == "Suggestions" || setting == "Source Code" || setting == "Documentation")
+            {
+                nvgitAboutHelp.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    txtHelp?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Privacy")
+            {
+                nvgitAboutHelp.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnViewPrivacyStatement?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "App Reset")
+            {
+                nvgitAppSettings.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnResetAppSettings?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Media Database")
+            {
+                nvgitAppSettings.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnRefreshDatabase?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Audio Metadata Settings" || setting == "Artist Settings" || setting == "Album Settings" || setting == "Genre Settings")
+            {
+                nvgitMusicOptions.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    btnDeleteAllArtists?.StartBringIntoView(options);
+                });
+            }
+            else if (setting == "Customization" || setting == "Personalization" || setting == "Theme" || setting == "Skin")
+            {
+                nvgitPlayback.IsSelected = true;
+                DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                {
+                    var options = new BringIntoViewOptions
+                    {
+                        VerticalAlignmentRatio = 0.0, // Force to the top
+                        AnimationDesired = true
+                    };
+                    txtChangeTheme?.StartBringIntoView(options);
+                });
+            }
+
+        }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e.Parameter is string setting)
             {
-                if (setting == "Skip Duration" || setting == "Seek Duration")
-                {
-                    nvgitPlayback.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-
-                        cmbSkipBackward?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Maximum Volume")
-                {
-                    nvgitPlayback.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        numMaxVolume?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Home Page Panels")
-                {
-                    nvgitHomePage.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        chkHomeContinueRecent?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Music Library Page Panels")
-                {
-                    nvgitMusicOptions.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        chkMusicRecent?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Font")
-                {
-                    nvgitPlayback.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        cmbFontFamilies?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Video Library Page Panels")
-                {
-                    nvgitVideoOptions.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        chkVideoContinueRecent?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Playlist Settings")
-                {
-                    nvgitMusicOptions.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnDeleteAllPlaylists?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Show Settings")
-                {
-                    nvgitVideoOptions.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnDeleteAllShows?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Continue Playing Videos Settings")
-                {
-                    nvgitVideoOptions.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnDeleteAllVideoHistory?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Continue Playing Videos Settings")
-                {
-                    nvgitVideoOptions.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnDeleteAllVideoHistory?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "App Lock" || setting == "Splash Screen" || setting == "Startup Page" || setting == "Default App for Formats")
-                {
-                    nvgitAppSettings.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnAppLock?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Startup")
-                {
-                    nvgitAppSettings.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        txtStartup?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "About App")
-                {
-                    nvgitAboutHelp.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        txtAbout?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "App License")
-                {
-                    nvgitAboutHelp.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnViewOSLicense?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Updates")
-                {
-                    nvgitAboutHelp.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnCheckForUpdates?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Folder Permissions")
-                {
-                    nvgitAppSettings.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        txtFolderPermissions?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Keyboard Shortcuts")
-                {
-                    Debug.WriteLine("Keyboard shortcuts called");
-                    nvgitAboutHelp.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnViewKS?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Help" || setting=="Feedback" || setting == "Suggestions" || setting == "Source Code" || setting == "Documentation")
-                {
-                    nvgitAboutHelp.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        txtHelp?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Privacy")
-                {
-                    nvgitAboutHelp.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnViewPrivacyStatement?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "App Reset")
-                {
-                    nvgitAppSettings.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnResetAppSettings?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Media Database")
-                {
-                    nvgitAppSettings.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnRefreshDatabase?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Audio Metadata Settings" || setting == "Artist Settings" || setting == "Album Settings"|| setting == "Genre Settings")
-                {
-                    nvgitMusicOptions.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        btnDeleteAllArtists?.StartBringIntoView(options);
-                    });
-                }
-                else if (setting == "Customization" || setting == "Personalization" || setting == "Theme" || setting == "Skin")
-                {
-                    nvgitPlayback.IsSelected = true;
-                    DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
-                    {
-                        var options = new BringIntoViewOptions
-                        {
-                            VerticalAlignmentRatio = 0.0, // Force to the top
-                            AnimationDesired = true
-                        };
-                        txtChangeTheme?.StartBringIntoView(options);
-                    });
-                }
-
+                SettingsPageNavigate(setting);
             }
             else
             {

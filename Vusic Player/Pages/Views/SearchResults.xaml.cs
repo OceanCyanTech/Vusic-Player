@@ -40,7 +40,7 @@ namespace Vusic_Player.Pages.Views
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            SearchResultsPageState.alreadyNavigatedtoSearchResultsPage = false;
+            SearchResultsPageState.Instance.alreadyNavigatedtoSearchResultsPage = false;
             base.OnNavigatedFrom(e);
         }
         public ObservableCollection<MasterSearchModel> SearchResultsMain = new ObservableCollection<MasterSearchModel>();
