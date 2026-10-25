@@ -14,15 +14,15 @@
             <StackPanel Spacing="8" Name="stkMain">
                 <Image Name="albumArt" Width="200" ToolTipService.ToolTip="Album Art" Source="{x:Bind media.AlbumArt}"></Image>
                 <Button Content="Change Media Art" HorizontalAlignment="Center" Name="btnChangeAlbumArt" Click="btnChangeAlbumArt_Click" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"></Button>
-                <TextBlock Text="File Name" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                <TextBox 
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="File Name" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                <TextBox  FontFamily="{StaticResource GlobalFontHolder}" 
                     Text="{x:Bind media.FileName, Mode=TwoWay}"
                     CornerRadius="12"
                 Background="Transparent"
                     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
                     BorderThickness="1"/>
-                <TextBlock Text="File Size" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                <TextBlock 
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="File Size" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   
         Text="{x:Bind media.FileSize, Mode=OneWay}"
        IsTextSelectionEnabled="True"
         />
@@ -44,24 +44,24 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
-                        <TextBlock Text="Title" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Title" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.Title, Mode=TwoWay}" 
                      PlaceholderText="Enter song title..."
-                     CornerRadius="12" 
+                     CornerRadius="12"  FontFamily="{StaticResource GlobalFontHolder}" 
                      Background="Transparent"
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
                      BorderThickness="1"/>
                     </StackPanel>
 
                     <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="0" Grid.Column="1" Spacing="4">
-                        <TextBlock Text="Artist" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Artist" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.ArtistNameInfo, Mode=TwoWay}" 
                      PlaceholderText="Enter artist name..."
-                     CornerRadius="12" 
+                     CornerRadius="12"  FontFamily="{StaticResource GlobalFontHolder}" 
                      Background="Transparent"
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
                      BorderThickness="1"/>
@@ -69,24 +69,24 @@
 
 
                     <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="1" Grid.Column="0" Spacing="4">
-                        <TextBlock Text="Album" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Album" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.AlbumNameInfo , Mode=TwoWay}" 
                      PlaceholderText="Enter album title..."
-                     CornerRadius="12" 
+                     CornerRadius="12"  FontFamily="{StaticResource GlobalFontHolder}" 
                      Background="Transparent"
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
                      BorderThickness="1"/>
                     </StackPanel>
 
                     <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo , Mode=OneWay}" Grid.Row="1" Grid.Column="1" Spacing="4">
-                        <TextBlock Text="Contributing Artists" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Contributing Artists" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.ContributingArtists, Mode=TwoWay}" 
                      PlaceholderText="List featured artists..."
-                     CornerRadius="12" 
+                     CornerRadius="12"  FontFamily="{StaticResource GlobalFontHolder}" 
                      Background="Transparent"
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
                      BorderThickness="1"/>
@@ -94,11 +94,11 @@
 
 
                     <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo , Mode=OneWay}" Grid.Row="2" Grid.Column="0" Spacing="4">
-                        <TextBlock Text="Track" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Track" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.TrackNumber, Mode=TwoWay}"
-                     PlaceholderText="Track number..."
+                     PlaceholderText="Track number..." FontFamily="{StaticResource GlobalFontHolder}" 
                      CornerRadius="12" 
                      Background="Transparent"
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
@@ -106,25 +106,25 @@
                     </StackPanel>
 
                     <StackPanel Grid.Row="2" Grid.Column="1" Spacing="4">
-                        <TextBlock Text="Genre" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Genre" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.Genre, Mode=TwoWay}"
                      PlaceholderText="Enter genre..."
                      CornerRadius="12" 
-                     Background="Transparent"
+                     Background="Transparent" FontFamily="{StaticResource GlobalFontHolder}" 
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
                      BorderThickness="1"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="3" Grid.Column="0" Spacing="4">
-                        <TextBlock Text="Year" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Year" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.Year, Mode=TwoWay}"
                      PlaceholderText="Release year..."
                      CornerRadius="12" 
-                     Background="Transparent"
+                     Background="Transparent" FontFamily="{StaticResource GlobalFontHolder}" 
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
                      BorderThickness="1"/>
                     </StackPanel>
@@ -141,24 +141,24 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
-                        <TextBlock Text="Title" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Title" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.Title, Mode=TwoWay}" 
                      PlaceholderText="Enter song title..."
                      CornerRadius="12" 
-                     Background="Transparent"
+                     Background="Transparent" FontFamily="{StaticResource GlobalFontHolder}" 
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
                      BorderThickness="1"/>
                     </StackPanel>
 
                     <StackPanel Visibility="{x:Bind media.VideoMetadataVisibilityFileInfo}" Grid.Row="0" Grid.Column="1" Spacing="4">
-                        <TextBlock Text="Codec" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Codec" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.Codec, Mode=OneWay}" 
                      IsReadOnly="True"
-                     CornerRadius="12" 
+                     CornerRadius="12"  FontFamily="{StaticResource GlobalFontHolder}" 
                                  
                      Background="Transparent"
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
@@ -166,7 +166,7 @@
                     </StackPanel>
 
                     <StackPanel Visibility="{x:Bind media.VideoMetadataVisibilityFileInfo}" Grid.Row="1" Grid.Column="0" Spacing="4">
-                        <TextBlock  Text="Frame Rate" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Frame Rate" 
      Style="{ThemeResource CaptionTextBlockStyle}" 
      Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.FrameRate , Mode=OneWay}" 
@@ -177,7 +177,7 @@
    BorderThickness="1"/>
                     </StackPanel>
                     <StackPanel Visibility="{x:Bind media.VideoMetadataVisibilityFileInfo}" Grid.Row="1" Grid.Column="1" Spacing="4">
-                        <TextBlock Text="Display Resolution" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Display Resolution" 
    Style="{ThemeResource CaptionTextBlockStyle}" 
    Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.DisplayResolution, Mode=OneWay}" 
@@ -190,7 +190,7 @@
 
 
                     <StackPanel Grid.Row="2" Grid.Column="1" Spacing="4">
-                        <TextBlock Text="Genre" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Genre" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.Genre, Mode=TwoWay}"
@@ -202,7 +202,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Row="2" Grid.Column="0" Spacing="4">
-                        <TextBlock Text="Year" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Year" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.Year, Mode=TwoWay}"
@@ -225,7 +225,7 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo , Mode=OneWay}" Grid.Row="0" Grid.Column="0" Spacing="4">
-                        <TextBlock Text="Composers" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Composers" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.Composers, Mode=TwoWay}"
@@ -237,12 +237,12 @@
                     </StackPanel>
 
                     <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo , Mode=OneWay}" Grid.Row="0" Grid.Column="1" Spacing="4">
-                        <TextBlock Text="Conductors" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Conductors" 
                        Style="{ThemeResource CaptionTextBlockStyle}" 
                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <TextBox Text="{x:Bind media.Conductors, Mode=TwoWay}"
                      PlaceholderText="Conductors..."
-                     CornerRadius="12" 
+                     CornerRadius="12"  FontFamily="{StaticResource GlobalFontHolder}" 
                      Background="Transparent"
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
                      BorderThickness="1"/>
@@ -264,33 +264,33 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Grid.Column="0">
-                    <TextBlock Text="Duration" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBlock Text="{x:Bind media.Duration, Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Duration" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.Duration, Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
                 </StackPanel>
 
                 <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="0" Grid.Column="1">
-                    <TextBlock Text="Bitrate" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBlock Text="{x:Bind media.Bitrate , Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Bitrate" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.Bitrate , Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
                 </StackPanel>
 
                 <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="0" Grid.Column="2">
-                    <TextBlock Text="Sample Rate" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBlock Text="{x:Bind media.SampleRate , Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Sample Rate" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.SampleRate , Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
                 </StackPanel>
 
                 <StackPanel Visibility="{x:Bind media.AudioMetadataVisibilityFileInfo, Mode=OneWay}" Grid.Row="1" Grid.Column="0">
-                    <TextBlock Text="Channels" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBlock Text="{x:Bind media.Channels, Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Channels" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.Channels, Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="1">
-                    <TextBlock Text="File Type" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBlock Text="{x:Bind media.FileType, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="File Type" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.FileType, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="2">
-                    <TextBlock Text="Speed" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBlock Text="{x:Bind media.Speed, Mode=OneWay}" IsTextSelectionEnabled="True"   Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Speed" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.Speed, Mode=OneWay}" IsTextSelectionEnabled="True"   Style="{ThemeResource BodyTextBlockStyle}"/>
                 </StackPanel>
             </Grid>
             <Grid Visibility="{x:Bind media.VideoMetadataVisibilityFileInfo, Mode=OneWay}" RowSpacing="16" ColumnSpacing="12">
@@ -304,20 +304,20 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Grid.Column="0">
-                    <TextBlock Text="Duration" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBlock Text="{x:Bind media.Duration, Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Duration" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.Duration, Mode=OneWay}" IsTextSelectionEnabled="True" Style="{ThemeResource BodyTextBlockStyle}"/>
                 </StackPanel>
 
           
 
                 <StackPanel Grid.Row="0" Grid.Column="1">
-                    <TextBlock Text="File Type" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBlock Text="{x:Bind media.FileType, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="File Type" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.FileType, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="0" Grid.Column="2">
-                    <TextBlock Text="Speed" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBlock Text="{x:Bind media.Speed, Mode=OneWay}" IsTextSelectionEnabled="True"   Style="{ThemeResource BodyTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Speed" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.Speed, Mode=OneWay}" IsTextSelectionEnabled="True"   Style="{ThemeResource BodyTextBlockStyle}"/>
                 </StackPanel>
             </Grid>
 
@@ -325,32 +325,32 @@
 
             <StackPanel Spacing="16">
                 <StackPanel Spacing="4" Visibility="Collapsed">
-                    <TextBlock Text="Rating" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Rating" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                     <RatingControl Value="{x:Bind media.Rating}"/>
                 </StackPanel>
 
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Comments" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Comments" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                     <TextBox     CornerRadius="12"
-Background="Transparent"
+Background="Transparent" FontFamily="{StaticResource GlobalFontHolder}" 
     BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
     BorderThickness="1" AcceptsReturn="True" MinHeight="60" TextWrapping="Wrap" Text="{x:Bind media.Comments, Mode=TwoWay}"/>
                 </StackPanel>
 
                 <StackPanel Spacing="4">
                     <TeachingTip Name="ttFilePath" Target="{x:Bind hypFilePath}" IsOpen="False">
-                        <TextBlock Text="Copied file path ✔️"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Copied file path ✔️"></TextBlock>
                     </TeachingTip>
-                    <TextBlock Text="File Path" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                    <HyperlinkButton Name="hypFilePath" ToolTipService.ToolTip="{x:Bind media.FilePath, Mode=OneWay}"  Content="{x:Bind media.FilePath, Mode=OneWay}"  Click="HyperlinkButton_Click">
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="File Path" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                    <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Name="hypFilePath" ToolTipService.ToolTip="{x:Bind media.FilePath, Mode=OneWay}"  Content="{x:Bind media.FilePath, Mode=OneWay}"  Click="HyperlinkButton_Click">
                         <HyperlinkButton.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Text="Open File Location" Name="mnftOpenFileLoc" Click="mnftOpenFileLoc_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open File Location" Name="mnftOpenFileLoc" Click="mnftOpenFileLoc_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE838;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Copy Path" Name="mnftCopyPath" Click="mnftCopyPath_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Copy Path" Name="mnftCopyPath" Click="mnftCopyPath_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
@@ -366,12 +366,12 @@ Background="Transparent"
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="4">
-                        <TextBlock Text="Created on" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                        <TextBlock Text="{x:Bind media.DateCreated, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Created on" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind media.DateCreated, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Spacing="4">
-                        <TextBlock Text="Last Modified" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
-                        <TextBlock  Text="{x:Bind media.DateModified, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Last Modified" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="{x:Bind media.DateModified, Mode=OneWay}" IsTextSelectionEnabled="True"  Style="{ThemeResource BodyTextBlockStyle}"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>

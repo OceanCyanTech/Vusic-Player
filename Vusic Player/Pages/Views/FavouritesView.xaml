@@ -18,24 +18,24 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="{x:Bind FavouritesItemsCol.Count, Mode=OneWay, Converter={StaticResource CountToFavConv}}" Name="txtFavouritesCount"></TextBlock>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind FavouritesItemsCol.Count, Mode=OneWay, Converter={StaticResource CountToFavConv}}" Name="txtFavouritesCount"></TextBlock>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="10">
         <Button Background="Transparent" Name="btnPlayAll" Click="btnPlayAll_Click">
             <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="20" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock Text="Play All"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play All"/>
             </StackPanel>
             </Button>
             <Button Background="Transparent" Name="btnAddtoQueue" Click="btnAddtoQueue_Click">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="20" Source="{Binding AddToQueue, Source={StaticResource GlobalIconHolder}}"/>
-                    <TextBlock Text="Add to Queue"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add to Queue"/>
                 </StackPanel>
             </Button>
             <Button Background="Transparent" Name="btnAddItemsToFav" Click="btnAddItemsToFav_Click">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"/>
-                    <TextBlock Text="Add new items to Favourites"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add new items to Favourites"/>
                 </StackPanel>
             </Button>
         </StackPanel>
@@ -43,7 +43,7 @@
         <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock Text="Added selected item(s) to Queue"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Added selected item(s) to Queue"/>
             </StackPanel>
         </TeachingTip>
     </Grid>

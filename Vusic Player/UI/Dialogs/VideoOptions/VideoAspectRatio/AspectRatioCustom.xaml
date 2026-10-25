@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical" Spacing="10">
-        <TextBlock Text="Custom Ratio" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Custom Ratio" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
 
         <Grid ColumnSpacing="8" Name="grdcustomAspectRatio">
             <Grid.ColumnDefinitions>
@@ -18,34 +18,34 @@
 
             <StackPanel  Spacing="8">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <NumberBox x:Name="numARWidth" 
+                    <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numARWidth" 
                Header="Width" 
                Value="{x:Bind AspectValues.Width, Mode=OneWay}" 
                SpinButtonPlacementMode="Compact" 
                ValueChanged="numARWidth_ValueChanged"/>
 
-                    <TextBlock Text=":" 
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text=":" 
                VerticalAlignment="Bottom" 
                Margin="0,0,0,8" 
                Style="{StaticResource BodyStrongTextBlockStyle}"/>
 
-                    <NumberBox x:Name="numARHeight" 
+                    <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numARHeight" 
                Header="Height" 
      Value="{x:Bind AspectValues.Height, Mode=OneWay}" 
                SpinButtonPlacementMode="Compact" 
                ValueChanged="numARHeight_ValueChanged"/>
                 </StackPanel>
-                <CheckBox Visibility="Collapsed" x:Name="LockRatioCheckBox" Checked="LockRatioCheckBox_Checked" Unchecked="LockRatioCheckBox_Unchecked"
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Visibility="Collapsed" x:Name="LockRatioCheckBox" Checked="LockRatioCheckBox_Checked" Unchecked="LockRatioCheckBox_Unchecked"
               Content="Lock Aspect Ratio" 
               IsChecked="False" 
               VerticalAlignment="Bottom" 
               Margin="8,0,0,4"/>
-                <CheckBox Visibility="Collapsed" x:Name="RoundToIntegersCheckBox" 
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Visibility="Collapsed" x:Name="RoundToIntegersCheckBox" 
 Content="Round off to nearest whole number" Checked="RoundToIntegersCheckBox_Checked" Unchecked="RoundToIntegersCheckBox_Unchecked"
 IsChecked="False" 
 VerticalAlignment="Bottom" 
 Margin="8,0,0,4"/>
-                <Button Content="Set Ratio" Name="btnSetCustomRatio" Margin="0, 5" VerticalAlignment="Bottom" Style="{StaticResource AccentButtonStyle}" Click="btnSetCustomRatio_Click"></Button>
+                <Button FontFamily="{StaticResource GlobalFontHolder}"    Content="Set Ratio" Name="btnSetCustomRatio" Margin="0, 5" VerticalAlignment="Bottom" Style="{StaticResource AccentButtonStyle}" Click="btnSetCustomRatio_Click"></Button>
             </StackPanel>
         </Grid>
     </StackPanel>

@@ -60,15 +60,15 @@
                HorizontalAlignment="Center" 
                TextWrapping="Wrap" />
                 <StackPanel Margin="0, 20" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="• Album" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <TextBlock Margin="10, 0" Text="• 0 items" Name="txtSongCount" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <TextBlock Margin="0, 0" Text="• Artists involved" Name="txtArtistsInvolved" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="• Album" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Margin="10, 0" Text="• 0 items" Name="txtSongCount" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Margin="0, 0" Text="• Artists involved" Name="txtArtistsInvolved" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock Text="&#xE823;" FontFamily="Segoe Fluent Icons" 
 Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0, 3" />
                     <TextBlock Margin="5, 0" Text="00:00" ToolTipService.ToolTip="Total Runtime Of Album" 
-Name="txtTotalDuration" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+Name="txtTotalDuration" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource GlobalFontHolder}"/>
                 </StackPanel>
             </StackPanel>
             <Border 
@@ -87,7 +87,7 @@ CornerRadius="16"
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 
-                    <Button Name="btnRename" Background="Transparent" BorderBrush="Transparent" Margin="5" ToolTipService.ToolTip="Rename Album" Click="btnRename_Click">
+                    <Button FontFamily="{StaticResource GlobalFontHolder}" Name="btnRename" Background="Transparent" BorderBrush="Transparent" Margin="5" ToolTipService.ToolTip="Rename Album" Click="btnRename_Click">
                         <Button.Flyout>
                             <Flyout x:Name="flyoutRename">
                                 <Grid>
@@ -95,7 +95,7 @@ CornerRadius="16"
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBox GotFocus="txtRename_GotFocus" Width="150" Grid.Column="0" 
+                                    <TextBox FontFamily="{StaticResource GlobalFontHolder}" GotFocus="txtRename_GotFocus" Width="150" Grid.Column="0" 
                              Name="txtRename" PlaceholderText="Rename album" />
                                     <Button Background="Transparent" BorderBrush="Transparent" Margin="5, 0" Grid.Column="1" Click="btnRenameAlbum_Click" Name="btnRenameAlbum" >
                                         <Image Margin="5, 0" Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" />
@@ -110,7 +110,7 @@ CornerRadius="16"
             ToolTipService.ToolTip="Play all songs of Album">
                         <StackPanel Orientation="Horizontal">
                             <Image Width="25" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}" />
-                            <TextBlock Margin="5,2" Text="Play all" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Margin="5,2" Text="Play all" />
                         </StackPanel>
                     </Button>
 
@@ -123,7 +123,7 @@ CornerRadius="16"
             ToolTipService.ToolTip="Add songs to this Album">
                         <StackPanel Orientation="Horizontal">
                             <Image Width="25" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" />
-                            <TextBlock Margin="5,2" Text="Add Songs" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Margin="5,2" Text="Add Songs" />
                         </StackPanel>
                     </Button>
                     <Button Name="btnSetAlbumCover" Background="Transparent" BorderBrush="Transparent" Margin="5"
@@ -134,13 +134,13 @@ ToolTipService.ToolTip="Set Album Cover">
                                     <Button Name="btnFindAlbumCoverOnline" Click="btnFindAlbumCoverOnline_Click">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Width="25" Source="{Binding AddImageIcon, Source={StaticResource GlobalIconHolder}}" />
-                                            <TextBlock Margin="5,2" Text="Find artist picture online" />
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Margin="5,2" Text="Find artist picture online" />
                                         </StackPanel>
                                     </Button>
                                     <Button Name="btnFindAlbumCoverLocal" Click="btnSetAlbumCover_Click" >
                                         <StackPanel Orientation="Horizontal">
                                             <Image Width="25" Source="{Binding AddImageIcon, Source={StaticResource GlobalIconHolder}}" />
-                                            <TextBlock Margin="5,2" Text="Find artist picture on disk" />
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Margin="5,2" Text="Find artist picture on disk" />
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -148,7 +148,7 @@ ToolTipService.ToolTip="Set Album Cover">
                         </Button.Flyout>
                         <StackPanel Orientation="Horizontal">
                             <Image Width="25" Source="{Binding AddImageIcon, Source={StaticResource GlobalIconHolder}}" />
-                            <TextBlock Margin="5,2" Text="Set Album Cover" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Margin="5,2" Text="Set Album Cover" />
                         </StackPanel>
                     </Button>
                 </ItemsControl>
@@ -157,7 +157,7 @@ ToolTipService.ToolTip="Set Album Cover">
             <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
-                    <TextBlock Text="Added item(s) to Queue"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Added item(s) to Queue"/>
                 </StackPanel>
             </TeachingTip>
             <TeachingTip x:Name="UpdateResultTip"
@@ -175,8 +175,8 @@ ToolTipService.ToolTip="Set Album Cover">
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Album Artists" Name="txtArtistsHeader"/>
-                <TextBlock Grid.Row="1" Text="No artists found for this album." Style="{StaticResource BodyLargeTextBlockStyle}" Name="txtNoArtists" Visibility="Collapsed" HorizontalAlignment="Center" Margin="0, 20"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Style="{StaticResource SubtitleTextBlockStyle}" Text="Album Artists" Name="txtArtistsHeader"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Grid.Row="1" Text="No artists found for this album." Style="{StaticResource BodyLargeTextBlockStyle}" Name="txtNoArtists" Visibility="Collapsed" HorizontalAlignment="Center" Margin="0, 20"/>
                 <GridView Name="grdViewArtists" Grid.Row="1" SelectionMode="None" HorizontalAlignment="Stretch">
                     <GridView.ItemContainerStyle>
                         <Style TargetType="GridViewItem">
@@ -198,7 +198,7 @@ ToolTipService.ToolTip="Set Album Cover">
                                 <PersonPicture Width="60" Grid.Column="0" Name="ppArtist" Tapped="ppArtist_Tapped"  ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
                                 <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                                     <HyperlinkButton Padding="0" ToolTipService.ToolTip="{Binding ArtistName}" Click="HyperlinkButton_Click" Margin="0, 0, 0, 5" Foreground="{StaticResource TextFillColorSecondaryBrush}">
-                                        <TextBlock Text="{Binding ArtistName}"  Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding ArtistName}"  Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                                     </HyperlinkButton>
                                 </StackPanel>
                             </Grid>
@@ -214,13 +214,13 @@ ToolTipService.ToolTip="Set Album Cover">
                 </Grid.RowDefinitions>
                 <InfoBar Name="FileStatusInfoBar" IsOpen="False"></InfoBar>
                 <StackPanel Orientation="Horizontal" Grid.Row="1">
-                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Album Contents" Name="txtAlbumHeader"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Style="{StaticResource SubtitleTextBlockStyle}" Text="Album Contents" Name="txtAlbumHeader"></TextBlock>
                     <Button Margin="20, 0" BorderBrush="Transparent" Background="Transparent" Name="btnRefresh" Click="btnRefresh_Click" ToolTipService.ToolTip="Refresh Album">
                         <FontIcon Glyph="&#xE72C;" FontSize="16"></FontIcon>
                     </Button>
                 </StackPanel>
                 <controls:ListViewMedia Margin="0, 20" Grid.Row="2" x:Name="lstViewMain" MediaSource="Album"/>
-                <TextBlock Text="No songs in this album!" Grid.Row="2" Style="{StaticResource BodyLargeTextBlockStyle}" Name="txtNoSongs" Visibility="Collapsed" HorizontalAlignment="Center" Margin="0, 20"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="No songs in this album!" Grid.Row="2" Style="{StaticResource BodyLargeTextBlockStyle}" Name="txtNoSongs" Visibility="Collapsed" HorizontalAlignment="Center" Margin="0, 20"></TextBlock>
             </Grid>
         </Grid>
     </Grid>

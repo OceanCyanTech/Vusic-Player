@@ -19,8 +19,8 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Image Name="imgMissingInfo" Width="130" Source="{Binding MissingIcon, Source={StaticResource GlobalIconHolder}}" Grid.Row="0"/>
-            <TextBlock  HorizontalAlignment="Center" Name="txtMissingInfo" Grid.Row="1" Style="{StaticResource TitleTextBlockStyle}" Text="The requested directory is missing or inaccessible!"/>
-            <Button Content="Go to Home Page" Grid.Row="2" HorizontalAlignment="Center" Click="Button_Click"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" Name="txtMissingInfo" Grid.Row="1" Style="{StaticResource TitleTextBlockStyle}" Text="The requested directory is missing or inaccessible!"/>
+            <Button  FontFamily="{StaticResource GlobalFontHolder}"  Content="Go to Home Page" Grid.Row="2" HorizontalAlignment="Center" Click="Button_Click"/>
         </Grid>
         <Grid Name="rootGrid" RowSpacing="20" Margin="20, 20">
             <Grid.RowDefinitions>
@@ -39,7 +39,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Name="txtFolderName" IsTextSelectionEnabled="True" MaxWidth="800" TextTrimming="CharacterEllipsis" MaxLines="2" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Name="txtFolderName" IsTextSelectionEnabled="True" MaxWidth="800" TextTrimming="CharacterEllipsis" MaxLines="2" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                 <Button IsEnabled="False" Name="btnRenameFolder" Click="btnRenameFolder_Click" ToolTipService.ToolTip="Rename Folder" Grid.Column="1">
                     <Image Width="20" Source="{Binding RenameIcon, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
@@ -53,20 +53,20 @@
             <BreadcrumbBar ItemClicked="brdcrumBarMain_ItemClicked" Name="brdcrumBarMain" Grid.Row="1" >
                 <BreadcrumbBar.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="{Binding FolderName}">
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="{Binding FolderName}">
                             <TextBlock.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Copy Location"/>
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Copy Location"/>
                                 </MenuFlyout>
                             </TextBlock.ContextFlyout>
                         </TextBlock>
                     </DataTemplate>
                 </BreadcrumbBar.ItemTemplate>
             </BreadcrumbBar>
-            <TeachingTip Name="ttRenameFolder" Title="Rename Folder">
+            <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttRenameFolder" Title="Rename Folder">
                 <StackPanel Orientation="Vertical" Spacing="20" Margin="0,10">
                     <InfoBar IsClosable="False" Name="ifbRenameInfo" IsOpen="False"/>
-                    <TextBox Name="txtRenameFolder" PlaceholderText="Rename folder..."/>
+                    <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtRenameFolder" PlaceholderText="Rename folder..."/>
                     <Button HorizontalAlignment="Stretch" Name="btnConfirmRename" Click="btnConfirmRename_Click">
                         <Image Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}"/>
                     </Button>
@@ -76,11 +76,11 @@
                 <Button Name="btnSort" ToolTipService.ToolTip="Sort Media" Click="btnPlay_Click" Visibility="Visible" >
                     <Button.Flyout>
                         <MenuFlyout>
-                            <RadioMenuFlyoutItem Click="MenuFlyoutItem_Click" Text="Sort by Name"/>
-                            <RadioMenuFlyoutItem Text="Sort by Date Created" Name="mnftSortByDateCreation" Click="mnftSortByDateCreation_Click"/>
-                            <RadioMenuFlyoutItem Text="Sort by Date Modified" Name="mnftSortByDateModified" Click="mnftSortByDateModified_Click"/>
-                            <RadioMenuFlyoutItem Text="Sort by Size" Name="mnftSortBySize" Click="mnftSortBySize_Click"/>
-                            <RadioMenuFlyoutItem Text="Sort by Extension" Name="mnftByExtension" Click="mnftByExtension_Click"/>
+                            <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Click="MenuFlyoutItem_Click" Text="Sort by Name"/>
+                            <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Sort by Date Created" Name="mnftSortByDateCreation" Click="mnftSortByDateCreation_Click"/>
+                            <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Sort by Date Modified" Name="mnftSortByDateModified" Click="mnftSortByDateModified_Click"/>
+                            <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Sort by Size" Name="mnftSortBySize" Click="mnftSortBySize_Click"/>
+                            <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Sort by Extension" Name="mnftByExtension" Click="mnftByExtension_Click"/>
                         </MenuFlyout>
                     </Button.Flyout>
                     <Image Width="20" Source="{Binding SortIcon, Source={StaticResource GlobalIconHolder}}"/>
@@ -106,10 +106,10 @@
                     <Image Width="20" Source="{Binding DefaultShow, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
             </StackPanel>
-            <AutoSuggestBox QueryIcon="Find" TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" PlaceholderText="Search..." Grid.Row="3"></AutoSuggestBox>
+            <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}"  QueryIcon="Find" TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" PlaceholderText="Search..." Grid.Row="3"></AutoSuggestBox>
             <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="4">
-                <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="• Folder"></TextBlock>
-                <CheckBox Name="chckSelect" Grid.Row="4" Content="Select" Checked="chckSelect_Checked" Unchecked="chckSelect_Checked"></CheckBox>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="• Folder"></TextBlock>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Name="chckSelect" Grid.Row="4" Content="Select" Checked="chckSelect_Checked" Unchecked="chckSelect_Checked"></CheckBox>
                 <Button Name="btnSelectAll" ToolTipService.ToolTip="Select All" Margin="0, 10" Click="btnSelectAll_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding SelectAll, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
@@ -155,19 +155,19 @@
                         <Grid  ToolTipService.ToolTip="{Binding FileHoverInfo}">
                             <Grid.ContextFlyout>
                                 <MenuFlyout Opened="MenuFlyout_Opened">
-                                    <MenuFlyoutItem Text="{Binding OpenContext}" Name="mnftPlay" Click="mnftPlay_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding OpenContext}" Name="mnftPlay" Click="mnftPlay_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="{Binding OpenContextGlyph}"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
 
-                                    <MenuFlyoutItem Text="Rename" Name="mnftRename" Click="mnftRename_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Rename" Name="mnftRename" Click="mnftRename_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8AC;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
 
-                                    <MenuFlyoutItem Text="{Binding FileInfoContext}" Name="mnftFileInfo" Click="mnftFileInfo_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding FileInfoContext}" Name="mnftFileInfo" Click="mnftFileInfo_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE946;"/>
                                         </MenuFlyoutItem.Icon>
@@ -177,7 +177,7 @@
                                             <FontIcon Glyph="&#xECC8;"></FontIcon>
                                         </MenuFlyoutSubItem.Icon>
                                     </MenuFlyoutSubItem>
-                                    <MenuFlyoutItem Text="{Binding IsFavourite, Converter={StaticResource FavToolTipConverter}}" Tag="Favo"  x:Name="mnftAddToFavourites" Click="mnftAddToFavourites_Click"  Visibility="{Binding VisibilityOfFileProperties}">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding IsFavourite, Converter={StaticResource FavToolTipConverter}}" Tag="Favo"  x:Name="mnftAddToFavourites" Click="mnftAddToFavourites_Click"  Visibility="{Binding VisibilityOfFileProperties}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Name="OutlineHeart" 
 Glyph="{Binding IsFavourite, Converter={StaticResource FavoritetoGlyphConv}, Mode=OneWay}" 
@@ -187,7 +187,7 @@ Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}
 
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem Text="Delete" Name="mnftDelete" Click="mnftDelete_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Delete" Name="mnftDelete" Click="mnftDelete_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE74D;"/>
                                         </MenuFlyoutItem.Icon>
@@ -204,7 +204,7 @@ Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}
                             <Image Stretch="Uniform" Width="180" Source="{Binding Thumbnail}"/>
 
                             <HyperlinkButton Foreground="White" Click="hypItemName_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
-                                <TextBlock Width="170" TextWrapping="Wrap" Text="{Binding Name}"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Width="170" TextWrapping="Wrap" Text="{Binding Name}"/>
                             </HyperlinkButton>
                             <Button HorizontalAlignment="Right" Grid.Row="2" ToolTipService.ToolTip="{Binding FavString}" Padding="3" Margin="0, 0" Visibility="{Binding VisibilityOfFileProperties}" x:Name="btnFavourite" 
 Click="btnFavourite_Click"
@@ -224,8 +224,8 @@ BorderThickness="0"
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-            <TeachingTip Name="ttAddedToPlaylist" Title="Added to Playlist" IsOpen="False">
-                <HyperlinkButton Name="hypPlaylistAdded" Click="hypPlaylistAdded_Click"></HyperlinkButton>
+            <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttAddedToPlaylist" Title="Added to Playlist" IsOpen="False">
+                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Name="hypPlaylistAdded" Click="hypPlaylistAdded_Click"></HyperlinkButton>
             </TeachingTip>
 
             <ProgressRing IsIndeterminate="True" Grid.Row="5" Name="prgLoading" Visibility="Collapsed"/>
@@ -235,29 +235,29 @@ BorderThickness="0"
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Image  Width="90" Source="{Binding FileIcon, Source={StaticResource GlobalIconHolder}}" Grid.Row="0"/>
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Grid.Row="1" Text="No folders or media files in this directory!"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Grid.Row="1" Text="No folders or media files in this directory!"/>
             </Grid>
 
             <Frame Name="frmNoSearchResults" Grid.Row="5" Visibility="Collapsed"/>
-            <TextBlock Grid.Row="6" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtFolderInfo"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Grid.Row="6" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtFolderInfo"/>
             <TeachingTip PreferredPlacement="Auto" Name="ttRenameFiles" Title="Rename selected">
                 <StackPanel Orientation="Vertical" Spacing="20" Margin="0,10">
-                    <InfoBar IsClosable="False" Name="ifbRenameFiles" IsOpen="False"/>
-                    <TextBox Name="txtRenameFiles" PlaceholderText="Rename..."/>
+                    <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  IsClosable="False" Name="ifbRenameFiles" IsOpen="False"/>
+                    <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtRenameFiles" PlaceholderText="Rename..."/>
                     <Button HorizontalAlignment="Stretch" Name="btnConfirmRenameFiles" Click="btnConfirmRenameFiles_Click">
                         <Image Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}"/>
                     </Button>
                     <RadioButtons>
-                        <RadioButton Name="rdIncludeNumberAtStart" Content="Include Number at Start"/>
+                        <RadioButton FontFamily="{StaticResource GlobalFontHolder}"  Name="rdIncludeNumberAtStart" Content="Include Number at Start"/>
 
-                        <RadioButton IsChecked="True" Name="rdIncludeNumberAtEnd" Content="Include Number at End"/>
+                        <RadioButton FontFamily="{StaticResource GlobalFontHolder}"  IsChecked="True" Name="rdIncludeNumberAtEnd" Content="Include Number at End"/>
                     </RadioButtons>
                 </StackPanel>
             </TeachingTip>
             <TeachingTip PreferredPlacement="Auto" Name="ttRenameFileSingle" Title="Rename">
                 <StackPanel Orientation="Vertical" Spacing="20" Margin="0,10">
-                    <InfoBar Name="ifbRenameFile" IsClosable="False" IsOpen="False"/>
-                    <TextBox Name="txtRenameFile" PlaceholderText="Rename..."/>
+                    <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  Name="ifbRenameFile" IsClosable="False" IsOpen="False"/>
+                    <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtRenameFile" PlaceholderText="Rename..."/>
                     <Button HorizontalAlignment="Stretch" Name="btnConfirmRenameFile" Click="btnConfirmRenameFile_Click">
                         <Image Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}"/>
                     </Button>
@@ -265,7 +265,7 @@ BorderThickness="0"
                 </StackPanel>
             </TeachingTip>
 
-            <TeachingTip Name="ttMoveFiles" PreferredPlacement="Bottom" Title="Move selected">
+            <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttMoveFiles" PreferredPlacement="Bottom" Title="Move selected">
                 <Grid RowSpacing="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -279,7 +279,7 @@ BorderThickness="0"
                                 <TreeViewItem>
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <FontIcon Glyph="&#xED41;" FontFamily="Segoe MDL2 Assets" Foreground="Gold"/>
-                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding Name}"/>
                                     </StackPanel>
                                 </TreeViewItem>
                             </DataTemplate>
@@ -293,19 +293,19 @@ BorderThickness="0"
             </TeachingTip>
             <ContentDialog PrimaryButtonText="Skip" SecondaryButtonText="Try Again" PrimaryButtonClick="ttInaccessibleFiles_PrimaryButtonClick"  SecondaryButtonClick="ttInaccessibleFiles_SecondaryButtonClick" Name="ttInaccessibleFiles" Title="File In Use">
                 <StackPanel Margin="0, 10" Orientation="Vertical" Spacing="10">
-                    <InfoBar Name="ifbFileInUse" IsClosable="False"/>
+                    <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  Name="ifbFileInUse" IsClosable="False"/>
 
-                    <CheckBox Name="chckSkipForAllFiles" Content="Skip for all"></CheckBox>
+                    <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Name="chckSkipForAllFiles" Content="Skip for all"></CheckBox>
 
                 </StackPanel>
             </ContentDialog>
             <TeachingTip Name="ttDeletedFiles" Title="Delete">
                 <StackPanel Margin="0, 10" Orientation="Vertical" Spacing="10">
-                    <InfoBar IsClosable="False" Name="ifbDeleteFiles"/>
-                    <Button Name="btnOpenRecycleBin" Content="Open Recycle Bin" Click="btnOpenRecycleBin_Click"></Button>
+                    <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  IsClosable="False" Name="ifbDeleteFiles"/>
+                    <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnOpenRecycleBin" Content="Open Recycle Bin" Click="btnOpenRecycleBin_Click"></Button>
                 </StackPanel>
             </TeachingTip>
-            <TeachingTip Name="ttAddtoPlaylist" PreferredPlacement="Bottom" Title="Add to Playlist">
+            <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttAddtoPlaylist" PreferredPlacement="Bottom" Title="Add to Playlist">
                 <Grid RowSpacing="10" Margin="0, 10">
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
@@ -313,18 +313,18 @@ BorderThickness="0"
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <InfoBar Name="ifbPlaylistAddTo" Grid.Row="0"/>
+                    <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  Name="ifbPlaylistAddTo" Grid.Row="0"/>
                     <ListView SelectionMode="Multiple" Name="lstAddToPlaylists" Grid.Row="1">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding PlaylistName}"></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding PlaylistName}"></TextBlock>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                     <MenuFlyoutSeparator Grid.Row="2"/>
                     <StackPanel Orientation="Horizontal" Spacing="5" Grid.Row="3">
-                        <Button Content="New Playlist" Name="btnNewPlaylist" Click="btnNewPlaylist_Click"/>
-                        <Button Content="Add" Name="btnAddToPlaylists" Click="btnAddToPlaylists_Click" Style="{StaticResource AccentButtonStyle}"></Button>
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"  Content="New Playlist" Name="btnNewPlaylist" Click="btnNewPlaylist_Click"/>
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"  Content="Add" Name="btnAddToPlaylists" Click="btnAddToPlaylists_Click" Style="{StaticResource AccentButtonStyle}"></Button>
                     </StackPanel>
                 </Grid>
             </TeachingTip>

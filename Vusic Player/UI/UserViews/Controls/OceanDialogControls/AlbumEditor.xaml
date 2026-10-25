@@ -26,27 +26,27 @@
             </Button>
             <StackPanel Visibility="Collapsed" Background="#FF442726" Padding="10, 0" CornerRadius="12" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10" Margin="10, 0" Grid.Column="1" Grid.Row="0" Name="InfoBar">
                 <Image Width="20" Source="{Binding Error, Source={StaticResource GlobalIconHolder}}" Name="infoBarIcon"></Image>
-                <TextBlock Name="txtError" Text="Error" VerticalAlignment="Center"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Name="txtError" Text="Error" VerticalAlignment="Center"></TextBlock>
                 <Button Background="Transparent" BorderBrush="Transparent" Click="Button_Click">
                     <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                 </Button>
             </StackPanel>
 
             <Button Visibility="Collapsed" Grid.Column="2" Grid.Row="0" ToolTipService.ToolTip="Back" VerticalAlignment="Top" HorizontalAlignment="Right" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnSetImage" Click="btnSetImage_Click">
-                <TextBlock Text="Set Image" ></TextBlock>
+                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="Set Image" ></TextBlock>
             </Button>
         </Grid>
         <local:OnlineArtistPicture Grid.Row="2" x:Name="SearchOnline" Visibility="Collapsed"/>
         <Grid Grid.Row="2" VerticalAlignment="Center" Visibility="Collapsed" HorizontalAlignment="Center" Name="grdRemovedAlbumInfo" >
             <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
             <Image Grid.Row="0" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}" Width="60"></Image>
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0, 20" HorizontalAlignment="Center" Grid.Row="1" Text="Successfully removed Album Name from the items."></TextBlock>
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0, 20" HorizontalAlignment="Center" Grid.Row="2" Text="You can close this dialog."></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource SubtitleTextBlockStyle}" Margin="0, 20" HorizontalAlignment="Center" Grid.Row="1" Text="Successfully removed Album Name from the items."></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource SubtitleTextBlockStyle}" Margin="0, 20" HorizontalAlignment="Center" Grid.Row="2" Text="You can close this dialog."></TextBlock>
             <Button HorizontalAlignment="Center" Click="btnUndo_Click" Name="btnUndo" Grid.Row="3" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Content="Undo"></Button>
         </Grid>
         <Grid Name="rootGrid" Grid.Row="2" Visibility="Visible">
@@ -60,7 +60,7 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Album Contents" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Album Contents" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 <controls:ListViewMedia MediaSource="AlbumEditor" AllowRearranging="False" x:Name="listviewItems" Margin="0, 10" Grid.Row="1" Grid.Column="0"></controls:ListViewMedia>
             </Grid>
             <TeachingTip Title="Finding files across your libraries" Name="ttProgress" >
@@ -78,7 +78,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Spacing="5">
-                    <TextBlock Text="Details" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,10"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Details" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,10"/>
                     <Button Margin="20, 0" Background="Transparent" BorderBrush="Transparent"  Name="btnRefresh" Click="btnRefresh_Click" ToolTipService.ToolTip="Refresh Album">
                         <FontIcon Glyph="&#xE72C;" FontSize="16"></FontIcon>
                     </Button>
@@ -100,7 +100,7 @@ Stretch="UniformToFill"/>
                     <Button  Click="btnRemoveImage_Click" Opacity="0" PointerEntered="btnRemoveImage_PointerEntered" PointerExited="btnRemoveImage_PointerExited" Name="btnRemoveImage" CornerRadius="12" HorizontalAlignment="Center"  Background="#99000000" >
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Image Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}" Width="16" Height="16"/>
-                            <TextBlock Text="Remove" VerticalAlignment="Center"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Remove" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <StackPanel Grid.Column="1" Margin="20,0" Spacing="8" VerticalAlignment="Top">
@@ -109,7 +109,7 @@ Stretch="UniformToFill"/>
                      Text="Album Name" 
                      FontSize="20"
                      FontWeight="SemiBold"
-                     CornerRadius="12" 
+                     CornerRadius="12"  FontFamily="{StaticResource GlobalFontHolder}"   
                      BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" 
                      Background="Transparent"
                      HorizontalAlignment="Left"
@@ -117,17 +117,17 @@ Stretch="UniformToFill"/>
                             <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="btnRename_Click" Name="btnRename" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" >
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <Image Source="{Binding RenameIcon, Source={StaticResource GlobalIconHolder}}" Width="16" Height="16"/>
-                                    <TextBlock Text="Rename" VerticalAlignment="Center"/>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Rename" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
 
-                        <TextBlock Name="txtCount" Text="• 15 items" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Name="txtDuration" Text="• 55:07" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Name="txtCount" Text="• 15 items" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Name="txtDuration" Text="• 55:07" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
                         <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,5,0,0">
                             <Image Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}" Width="32" Height="32"/>
-                            <TextBlock Name="txtArtistsInvolved" 
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Name="txtArtistsInvolved" 
                            Text="• Artists"  IsTextSelectionEnabled="True"
                            VerticalAlignment="Center" 
                            Style="{StaticResource BodyTextBlockStyle}" 
@@ -148,7 +148,7 @@ Stretch="UniformToFill"/>
                     <Button Name="btnFindOnline" Click="btnFindOnline_Click" HorizontalAlignment="Stretch" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" >
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Image Source="{Binding AlbumPictureOnline, Source={StaticResource GlobalIconHolder}}" Width="16" Height="16"/>
-                            <TextBlock Text="Find Album Cover Online" VerticalAlignment="Center"/>
+                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="Find Album Cover Online" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -157,9 +157,9 @@ Stretch="UniformToFill"/>
                         <Button.Flyout>
                             <Flyout x:Name="flyoutConfirm">
                                 <StackPanel Orientation="Vertical" Spacing="10">
-                                    <TextBlock TextWrapping="Wrap" Text="Are you sure you want to remove the album name"></TextBlock>
-                                    <TextBlock Margin="0, -5" TextWrapping="Wrap" Text="from all its contents."></TextBlock>
-                                    <Button Margin="0, 10" Content="Confirm" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnConfirmRemoveAlbum" Click="btnConfirmRemoveAlbum_Click"></Button>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    TextWrapping="Wrap" Text="Are you sure you want to remove the album name"></TextBlock>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Margin="0, -5" TextWrapping="Wrap" Text="from all its contents."></TextBlock>
+                                    <Button  FontFamily="{StaticResource GlobalFontHolder}"   Margin="0, 10" Content="Confirm" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnConfirmRemoveAlbum" Click="btnConfirmRemoveAlbum_Click"></Button>
                                 </StackPanel>
                             </Flyout>
                         </Button.Flyout>
@@ -173,7 +173,7 @@ Stretch="UniformToFill"/>
                         </Button.Resources>
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Image Source="{Binding DeleteAlbum, Source={StaticResource GlobalIconHolder}}" Width="16" Height="16"/>
-                            <TextBlock Text="Delete Album and its contents"/>
+                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="Delete Album and its contents"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>

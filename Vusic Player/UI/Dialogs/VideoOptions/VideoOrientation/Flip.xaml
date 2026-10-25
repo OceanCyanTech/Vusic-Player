@@ -9,10 +9,10 @@
     mc:Ignorable="d">
 
     <StackPanel Name="stkFlip" Spacing="12">
-        <TextBlock Text="Mirroring" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Mirroring" Style="{StaticResource BodyStrongTextBlockStyle}"/>
         <StackPanel Orientation="Horizontal" Spacing="10">
-            <ToggleButton Name="btnFlipHorizontal" Content="Flip Horizontal" Checked="btnFlipHorizontal_Checked" Unchecked="btnFlipHorizontal_Unchecked" Padding="12,8"/>
-            <ToggleButton Name="btnFlipVertical" Content="Flip Vertical" Checked="btnFlipVertical_Checked" Unchecked="btnFlipVertical_Unchecked" Padding="12,8"/>
+            <ToggleButton  FontFamily="{StaticResource GlobalFontHolder}"   Name="btnFlipHorizontal" Content="Flip Horizontal" Checked="btnFlipHorizontal_Checked" Unchecked="btnFlipHorizontal_Unchecked" Padding="12,8"/>
+            <ToggleButton  FontFamily="{StaticResource GlobalFontHolder}"   Name="btnFlipVertical" Content="Flip Vertical" Checked="btnFlipVertical_Checked" Unchecked="btnFlipVertical_Unchecked" Padding="12,8"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

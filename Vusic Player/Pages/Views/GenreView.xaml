@@ -29,18 +29,18 @@
                             <MenuFlyoutSubItem.Icon>
                                 <FontIcon Glyph="&#xE91B;"/>
                             </MenuFlyoutSubItem.Icon>
-                            <MenuFlyoutItem Name="mnftChangeLocal" Text="Find Cover on Disk" Click="btnFindGenreProfileLocal_Click">
+                            <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftChangeLocal" Text="Find Cover on Disk" Click="btnFindGenreProfileLocal_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEC4E;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Name="mnftChangeOnline" Text="Find Cover Online" Click="btnFindGenreProfileOnline_Click">
+                            <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftChangeOnline" Text="Find Cover Online" Click="btnFindGenreProfileOnline_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xF6FA;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyoutSubItem>
-                        <MenuFlyoutItem Name="mnftRemoveIcon" Text="Remove Cover" Click="mnftRemoveIcon_Click">
+                        <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftRemoveIcon" Text="Remove Cover" Click="mnftRemoveIcon_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE894;"/>
                             </MenuFlyoutItem.Icon>
@@ -48,9 +48,9 @@
                     </MenuFlyout>
                 </Image.ContextFlyout>
             </Image>
-            <TextBlock IsTextSelectionEnabled="True" HorizontalAlignment="Center" Grid.Row="1" Name="txtGenreTitle" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Genre"/>
-            <TextBlock HorizontalAlignment="Center" Grid.Row="2" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtSongCount"  Text="• 0 items"/>
-            <TextBlock HorizontalAlignment="Center" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtDuration"  Text="• 00:00"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   IsTextSelectionEnabled="True" HorizontalAlignment="Center" Grid.Row="1" Name="txtGenreTitle" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Genre"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   HorizontalAlignment="Center" Grid.Row="2" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtSongCount"  Text="• 0 items"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   HorizontalAlignment="Center" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Name="txtDuration"  Text="• 00:00"/>
             <Border 
 Padding="10,0" 
 VerticalAlignment="Top" 
@@ -76,7 +76,7 @@ CornerRadius="16"
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox GotFocus="txtRename_GotFocus" Width="150" Grid.Column="0" 
-                             Name="txtRename" PlaceholderText="Rename Genre" />
+                             Name="txtRename" PlaceholderText="Rename Genre"  FontFamily="{StaticResource GlobalFontHolder}"  />
                                     <Button Background="Transparent" BorderBrush="Transparent" Margin="5, 0" Grid.Column="1" Click="btnRenameGenre_Click" Name="btnRenameGenre" >
                                         <Image Margin="5, 0" Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" />
                                     </Button>
@@ -90,7 +90,7 @@ CornerRadius="16"
             ToolTipService.ToolTip="Play all songs of genre">
                         <StackPanel Orientation="Horizontal">
                             <Image Width="25" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}" />
-                            <TextBlock Margin="5,2" Text="Play all" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5,2" Text="Play all" />
                         </StackPanel>
                     </Button>
 
@@ -103,7 +103,7 @@ CornerRadius="16"
             ToolTipService.ToolTip="Add songs to this Genre" Click="btnAddSongs_Click">
                         <StackPanel Orientation="Horizontal">
                             <Image Width="25" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" />
-                            <TextBlock Margin="5,2" Text="Add Songs" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5,2" Text="Add Songs" />
                         </StackPanel>
 
                     </Button>
@@ -115,13 +115,13 @@ ToolTipService.ToolTip="Set Genre Cover">
                                     <Button Name="btnFindGenreProfileOnline" Click="btnFindGenreProfileOnline_Click">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Width="25" Source="{Binding GenreOnline, Source={StaticResource GlobalIconHolder}}" />
-                                            <TextBlock Margin="5,2" Text="Find genre picture online" />
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5,2" Text="Find genre picture online" />
                                         </StackPanel>
                                     </Button>
                                     <Button Name="btnFindGenreProfileLocal" Click="btnFindGenreProfileLocal_Click" >
                                         <StackPanel Orientation="Horizontal">
                                             <Image Width="25" Source="{Binding GenreLocal, Source={StaticResource GlobalIconHolder}}" />
-                                            <TextBlock Margin="5,2" Text="Find genre cover on disk" />
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5,2" Text="Find genre cover on disk" />
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -134,11 +134,11 @@ ToolTipService.ToolTip="Set Genre Cover">
                     </Button>
                 </ItemsControl>
             </Border>
-            <Button Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="5" Margin="0, 20" HorizontalAlignment="Center" Content="Add Genre to Queue" Click="btnAddtoQueue_Click"></Button>
-            <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
+            <Button  FontFamily="{StaticResource GlobalFontHolder}"   Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="5" Margin="0, 20" HorizontalAlignment="Center" Content="Add Genre to Queue" Click="btnAddtoQueue_Click"></Button>
+            <TeachingTip  FontFamily="{StaticResource GlobalFontHolder}"   Name="ttAddedtoQueue" IsOpen="False">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
-                    <TextBlock Text="Added selected item(s) to Queue"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Added selected item(s) to Queue"/>
                 </StackPanel>
             </TeachingTip>
         </Grid>
@@ -148,9 +148,9 @@ ToolTipService.ToolTip="Set Genre Cover">
                 <RowDefinition />
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Content" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Content" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"/>
             <controls:ListViewMedia MediaSource="Genre" Grid.Row="1" x:Name="lstViewMediaGenreSongs" Visibility="Collapsed"/>
-            <TextBlock Text="No Songs in this Genre!" Name="txtNoSongs" Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="No Songs in this Genre!" Name="txtNoSongs" Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
         </Grid>
     </Grid>
 </Page>

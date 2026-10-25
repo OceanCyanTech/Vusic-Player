@@ -9,8 +9,8 @@
     mc:Ignorable="d">
 
     <StackPanel Spacing="16">
-        <TextBlock Text="Aspect Ratio" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-        <Button Style="{StaticResource AccentButtonStyle}" Name="btnDefaultRatio" Content="Default Ratio" Click="btnDefaultRatio_Click" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Aspect Ratio" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+        <Button FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource AccentButtonStyle}" Name="btnDefaultRatio" Content="Default Ratio" Click="btnDefaultRatio_Click" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
 
         <ItemsControl x:Name="RatioGrid">
             <ItemsControl.ItemsPanel>
@@ -19,12 +19,12 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 
-            <Button Name="tglPresetAR1" Content="1:1" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            <Button Name="tglPresetAR2" Content="4:3" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            <Button Name="tglPresetAR3" Content="16:9" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            <Button Name="tglPresetAR4" Content="21:9" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Name="tglPresetAR1" Content="1:1" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Name="tglPresetAR2" Content="4:3" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Name="tglPresetAR3" Content="16:9" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Name="tglPresetAR4" Content="21:9" Click="Preset_Click" Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </ItemsControl>
-        <TextBlock Text="{x:Bind AspectValues.AspectDisplay, Mode=OneWay}" Margin="10" ToolTipService.ToolTip="{x:Bind SetAspectRatioDisplay.Text}" Style="{StaticResource SubtitleTextBlockStyle}" Name="SetAspectRatioDisplay"></TextBlock>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="{x:Bind AspectValues.AspectDisplay, Mode=OneWay}" Margin="10" ToolTipService.ToolTip="{x:Bind SetAspectRatioDisplay.Text}" Style="{StaticResource SubtitleTextBlockStyle}" Name="SetAspectRatioDisplay"></TextBlock>
 
         <MenuFlyoutSeparator />
     </StackPanel>

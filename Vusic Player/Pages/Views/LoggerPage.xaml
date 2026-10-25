@@ -20,13 +20,13 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <AutoSuggestBox QueryIcon="Find" VerticalAlignment="Center" PlaceholderText="Find log entries..." TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
+            <AutoSuggestBox  FontFamily="{StaticResource GlobalFontHolder}"   QueryIcon="Find" VerticalAlignment="Center" PlaceholderText="Find log entries..." TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
             <StackPanel Orientation="Horizontal"
                  HorizontalAlignment="Right"
                  Margin="10" Grid.Column="1">
-                <Button Content="Export Log" Style="{StaticResource AccentButtonStyle}"
+                <Button  FontFamily="{StaticResource GlobalFontHolder}"   Content="Export Log" Style="{StaticResource AccentButtonStyle}"
                  Click="Button_Click_1"/>
-                <Button Content="Refresh Log" Margin="10, 0" Style="{StaticResource AccentButtonStyle}"
+                <Button  FontFamily="{StaticResource GlobalFontHolder}"   Content="Refresh Log" Margin="10, 0" Style="{StaticResource AccentButtonStyle}"
          Click="Button_Click_2"/>
             </StackPanel>
         </Grid>
@@ -41,7 +41,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <TextBlock Text="No log information available!" Name="txtNoLogs" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 20" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="No log information available!" Name="txtNoLogs" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 20" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                     <Grid Grid.Row="1" Margin="10, 0" ColumnSpacing="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -51,10 +51,10 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Filter Logs: " VerticalAlignment="Center"/>
-                        <CheckBox Grid.Column="1" Content="Error" Name="chckShowErrors" IsChecked="True" Checked="chckShowErrors_Checked" Unchecked="chckShowErrors_Checked"/>
-                        <CheckBox Grid.Column="2" Content="Successful" Name="chckShowSuccess" IsChecked="True" Checked="chckShowSuccess_Checked" Unchecked="chckShowSuccess_Checked"/>
-                        <CheckBox Grid.Column="3" Content="Information" Name="chckShowInformation" IsChecked="True" Checked="chckShowInformation_Checked" Unchecked="chckShowInformation_Checked"/>
-                        <CheckBox Grid.Column="4" Content="Warning" Name="chckShowWarning" IsChecked="True" Checked="chckShowWarning_Checked" Unchecked="chckShowWarning_Checked"/>
+                <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"   Grid.Column="1" Content="Error" Name="chckShowErrors" IsChecked="True" Checked="chckShowErrors_Checked" Unchecked="chckShowErrors_Checked"/>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"   Grid.Column="2" Content="Successful" Name="chckShowSuccess" IsChecked="True" Checked="chckShowSuccess_Checked" Unchecked="chckShowSuccess_Checked"/>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"   Grid.Column="3" Content="Information" Name="chckShowInformation" IsChecked="True" Checked="chckShowInformation_Checked" Unchecked="chckShowInformation_Checked"/>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"   Grid.Column="4" Content="Warning" Name="chckShowWarning" IsChecked="True" Checked="chckShowWarning_Checked" Unchecked="chckShowWarning_Checked"/>
                     </Grid>
                     <Grid Margin="0, 0" Background="{ThemeResource SystemControlBackgroundAltHighBrush}" Padding="30, 0" Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -75,25 +75,25 @@
                         <Button Click="Button_Click_3" Grid.Column="1" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent">
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <FontIcon Name="fntIconDirectionLevel" />
-                                <TextBlock Text="Level" />
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="Level" />
                             </StackPanel>
                         </Button>
                         <Button Click="Button_Click_4" Grid.Column="2" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent">
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <FontIcon Name="fntIconDirectionTimeStamp" Glyph="&#xE70E;"/>
-                                <TextBlock Text="Timestamp" />
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Timestamp" />
                             </StackPanel>
                         </Button>
                         <Button Click="Button_Click_5" Grid.Column="3" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent">
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <FontIcon Name="fntIconDirectionSource" />
-                                <TextBlock Text="Source" />
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Source" />
                             </StackPanel>
                         </Button>
                         <Button Click="Button_Click_6" Grid.Column="4" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent">
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <FontIcon Name="fntIconDirectionMessage" />
-                                <TextBlock Text="Message" />
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Message" />
                             </StackPanel>
                         </Button>
 
@@ -115,20 +115,20 @@
                                        Width="16"
                                        Height="16"
                                        Margin="0,0,10,0"/>
-                                    <TextBlock Text="{Binding Level}"
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{Binding Level}"
                                            FontWeight="Bold"
                                            Margin="0,0,10,0" Grid.Column="1"/>
-                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Text="{Binding Timestamp}"
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Text="{Binding Timestamp}"
                                            Margin="0,0,10,0" Grid.Column="2"/>
-                                    <TextBlock ToolTipService.ToolTip="{Binding Source}" IsTextSelectionEnabled="True" Text="{Binding Source}" Grid.Column="3"/>
-                                    <TextBlock Grid.Column="4"  IsTextSelectionEnabled="True" Margin="10,0,0,0" Text="{Binding Message}" ToolTipService.ToolTip="{Binding Message}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   ToolTipService.ToolTip="{Binding Source}" IsTextSelectionEnabled="True" Text="{Binding Source}" Grid.Column="3"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Grid.Column="4"  IsTextSelectionEnabled="True" Margin="10,0,0,0" Text="{Binding Message}" ToolTipService.ToolTip="{Binding Message}"/>
 
                                     <Button Grid.Column="5" Background="Transparent" BorderBrush="Transparent" Margin="10,0,0,0"
                                         Click="Button_Click" ToolTipService.ToolTip="Copy Log">
                                         <FontIcon Glyph="&#xE8C8;" />
                                         <Button.Flyout>
                                             <Flyout >
-                                                <TextBlock Text="Copied ✔️"></TextBlock>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Copied ✔️"></TextBlock>
                                             </Flyout>
                                         </Button.Flyout>
                                     </Button>

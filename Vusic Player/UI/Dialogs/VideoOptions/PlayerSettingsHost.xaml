@@ -23,7 +23,7 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <Grid HorizontalAlignment="Stretch">
-                <TextBox Grid.Row="0" Name="asbSearchOptions" PlaceholderText="Search for options..." PreviewKeyDown="asbSearchOptions_PreviewKeyDown"
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"    Grid.Row="0" Name="asbSearchOptions" PlaceholderText="Search for options..." PreviewKeyDown="asbSearchOptions_PreviewKeyDown"
 TextChanged="asbSearchOptions_TextChanged_1"/>
                 <Button x:Name="btnSearchQuery"
             Click="btnSearchQuery_Click"
@@ -43,8 +43,8 @@ TextChanged="asbSearchOptions_TextChanged_1"/>
                 <Grid.ChildrenTransitions>
                     <EntranceThemeTransition FromVerticalOffset="30"></EntranceThemeTransition>
                 </Grid.ChildrenTransitions>
-                <TabView Grid.Row="1" IsAddTabButtonVisible="False" HorizontalAlignment="Stretch" Name="tbViewOptions" Visibility="Visible">
-                    <TabViewItem IsClosable="False" Header="Video Options" Name="tbviVideoOptions">
+                <TabView FontFamily="{StaticResource GlobalFontHolder}"    Grid.Row="1" IsAddTabButtonVisible="False" HorizontalAlignment="Stretch" Name="tbViewOptions" Visibility="Visible">
+                    <TabViewItem FontFamily="{StaticResource GlobalFontHolder}"    IsClosable="False" Header="Video Options" Name="tbviVideoOptions">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"></RowDefinition>
@@ -52,15 +52,15 @@ TextChanged="asbSearchOptions_TextChanged_1"/>
                                 <RowDefinition></RowDefinition>
                             </Grid.RowDefinitions>
                             <StackPanel Orientation="Vertical" Margin="0, 30" Spacing="10" Grid.Row="0">
-                                <TextBlock Text="Video Settings" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold"/>
-                                <TextBlock Text="Configure how you see video on your screen." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Video Settings" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Configure how you see video on your screen." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
                             </StackPanel>
                             <SelectorBar Grid.Row="1" Name="voSelectorBar" HorizontalAlignment="Center" SelectionChanged="voSelectorBar_SelectionChanged">
-                                <SelectorBarItem Text="General" Name="sbiGeneral" IsSelected="True"></SelectorBarItem>
-                                <SelectorBarItem Text="Filters" Name="sbiFilters"></SelectorBarItem>
-                                <SelectorBarItem Text="Orientation" Name="sbiOrientation"></SelectorBarItem>
-                                <SelectorBarItem Text="Aspect Ratio" Name="sbiAspectRatio"></SelectorBarItem>
-                                <SelectorBarItem Text="Watermark" Name="sbiWaterMark"></SelectorBarItem>
+                                <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="General" Name="sbiGeneral" IsSelected="True"></SelectorBarItem>
+                                <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Filters" Name="sbiFilters"></SelectorBarItem>
+                                <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Orientation" Name="sbiOrientation"></SelectorBarItem>
+                                <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Aspect Ratio" Name="sbiAspectRatio"></SelectorBarItem>
+                                <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Watermark" Name="sbiWaterMark"></SelectorBarItem>
                             </SelectorBar>
                             <ScrollViewer Grid.Row="2" Margin="0, 30">
                                 <Grid>
@@ -79,47 +79,6 @@ TextChanged="asbSearchOptions_TextChanged_1"/>
                                         <ScrollViewer >
                                             <StackPanel  Spacing="20">
                                                 <videogeneral:VideoStream x:Name="ctlVideoStream"></videogeneral:VideoStream>
-                                                <!--<StackPanel Spacing="8" Margin="0,0,0,10" Name="stkVideoDevices">
-                                        <TextBlock Text="Video Device" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-
-                                        <local:SearchControl Margin="0, 10" 
-             CloseSearch="srchDevice_CloseSearch" 
-             SearchPlaceHolderText="Search video devices..."  
-             NoSearchResultsDisplayString="No video device found!" 
-             MaxHeight="200" Width="300" 
-             HorizontalAlignment="Left" 
-             Visibility="Collapsed" 
-             ItemSelected="srchDevice_ItemSelected" 
-             x:Name="srchDevice">
-                                        </local:SearchControl>
-
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <ComboBox Name="cmbVideoDevice" 
-      VerticalAlignment="Stretch"
-      HorizontalAlignment="Stretch" 
-      PlaceholderText="Select Video Device" 
-      SelectionChanged="cmbVideoDevice_SelectionChanged"/>
-
-                                            <Button ToolTipService.ToolTip="Search Video Devices" 
-    Name="btnSearchDevice" 
-    VerticalAlignment="Stretch" 
-    Click="btnSearchDevice_Click" 
-    Background="Transparent" 
-    BorderBrush="Transparent" 
-    Grid.Column="1" 
-    Margin="4,0,0,0" 
-    Padding="4">
-                                                <Image Source="ms-appx:///Assets/searchicon.png" Width="16" Height="16"/>
-                                            </Button>
-                                        </Grid>
-
-
-                                    </StackPanel>-->
                                                 <videogeneral:PlaybackSpeed x:Name="ctlPlaybackSpeed" />
                                                 <videogeneral:View x:Name="ctlViewSettings" />
                                                 <videogeneral:Snapshot x:Name="ctlSnapshotSettings" />
@@ -181,7 +140,7 @@ TextChanged="asbSearchOptions_TextChanged_1"/>
                             </ScrollViewer>
                         </Grid>
                     </TabViewItem>
-                    <TabViewItem IsClosable="False" Name="tbviAudio" Header="Audio Options">
+                    <TabViewItem FontFamily="{StaticResource GlobalFontHolder}"    IsClosable="False" Name="tbviAudio" Header="Audio Options">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -189,15 +148,15 @@ TextChanged="asbSearchOptions_TextChanged_1"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="0" Margin="0, 30">
-                                <TextBlock Text="Audio Settings" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold"/>
-                                <TextBlock Text="Configure how you hear audio on your device." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Audio Settings" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Configure how you hear audio on your device." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
                             </StackPanel>
                             <SelectorBar Grid.Row="1" Name="selBarAudioOptions"
 HorizontalAlignment="Center"
 Margin="0,12,0,0"
 SelectionChanged="selBarAudioOptions_SelectionChanged">
-                                <SelectorBarItem x:Name="GeneralTab" Text="General" IsSelected="True" />
-                                <SelectorBarItem Visibility="Visible" x:Name="EqualizerTab" Text="Equalizer" />
+                                <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="GeneralTab" Text="General" IsSelected="True" />
+                                <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Visible" x:Name="EqualizerTab" Text="Equalizer" />
                             </SelectorBar>
 
                             <ScrollView Grid.Row="2" ContentOrientation="Vertical" Padding="20,0,20,20">
@@ -241,7 +200,7 @@ SelectionChanged="selBarAudioOptions_SelectionChanged">
                             </ScrollView>
                         </Grid>
                     </TabViewItem>
-                    <TabViewItem IsClosable="False" Name="tbvitSubtitle" Header="Subtitle Options">
+                    <TabViewItem FontFamily="{StaticResource GlobalFontHolder}"    IsClosable="False" Name="tbvitSubtitle" Header="Subtitle Options">
                         <Grid Margin="0, 0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -249,14 +208,14 @@ SelectionChanged="selBarAudioOptions_SelectionChanged">
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <SelectorBar HorizontalAlignment="Center" Grid.Row="1" Name="voSelectorBarSubtitles" SelectionChanged="voSelectorBarSubtitles_SelectionChanged">
-                                <SelectorBarItem Text="Tracks" IsSelected="True" Name="selBarTracksSub"></SelectorBarItem>
-                                <SelectorBarItem Text="Customize" Name="selBarCustomizeSub">
+                                <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Tracks" IsSelected="True" Name="selBarTracksSub"></SelectorBarItem>
+                                <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Customize" Name="selBarCustomizeSub">
 
                                 </SelectorBarItem>
                             </SelectorBar>
                             <StackPanel Spacing="4" Grid.Row="0" Margin="0, 30">
-                                <TextBlock Text="Subtitle Settings" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold"/>
-                                <TextBlock Text="Configure how subtitles appear on screen." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Subtitle Settings" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Configure how subtitles appear on screen." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
                             </StackPanel>
                             <ScrollViewer Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Margin="0,20" VerticalScrollBarVisibility="Auto">
                                 <Grid >
@@ -305,7 +264,7 @@ AlwaysUseFallback="False"/>
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Text="{Binding Name}" 
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Name}" 
                            VerticalAlignment="Center"
                            TextTrimming="CharacterEllipsis"/>
 
@@ -323,7 +282,7 @@ AlwaysUseFallback="False"/>
                     <EntranceThemeTransition FromVerticalOffset="30"></EntranceThemeTransition>
                 </StackPanel.ChildrenTransitions>
                 <Image Width="50" Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                <TextBlock Text="Hmm... we couldn't find that. Try something else!" VerticalAlignment="Center" TextWrapping="Wrap" Style="{StaticResource SubtitleTextBlockStyle}" ></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Hmm... we couldn't find that. Try something else!" VerticalAlignment="Center" TextWrapping="Wrap" Style="{StaticResource SubtitleTextBlockStyle}" ></TextBlock>
             </StackPanel>
         </Grid>
     </Grid>

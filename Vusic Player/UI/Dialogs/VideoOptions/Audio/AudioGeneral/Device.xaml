@@ -10,7 +10,7 @@
 
     <StackPanel Orientation="Vertical" Spacing="10">
         <StackPanel Name="stkAudioDevice" Spacing="8" Margin="0,0,0,10" Grid.Row="2">
-            <TextBlock Text="Audio Device" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="Audio Device" Style="{StaticResource BodyStrongTextBlockStyle}"/>
             <oceancyan:SearchControl Margin="0, 10" 
                          CloseSearch="srchAudioDevice_CloseSearch" 
                          SearchPlaceHolderText="Search audio devices..."  
@@ -27,7 +27,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox Name="cmbAudioDevice"
+                <ComboBox FontFamily="{StaticResource GlobalFontHolder}"    Name="cmbAudioDevice"
                   VerticalAlignment="Stretch"
                   HorizontalAlignment="Stretch" 
                           ItemsSource="{x:Bind ViewModel.Devices}"
@@ -38,7 +38,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Spacing="12">
                                 <FontIcon Glyph="&#xE7F5;" FontSize="16" Foreground="Cyan" />
-                                <TextBlock Text="{Binding Name}" />
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>

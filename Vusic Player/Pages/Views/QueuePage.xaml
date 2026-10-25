@@ -18,13 +18,13 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Text="Now Playing" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Grid.Row="0"></TextBlock>
+            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Now Playing" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Grid.Row="0"></TextBlock>
             <vusic:PanelControlsAudioPlayer Grid.Row="1" ExpandedViewButtonToolTip="Expanded View"/>
         </Grid>-->
         <Grid Name="musicPlayerMaster" Grid.Column="0" CornerRadius="20" Margin="20, 30" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="Open Media" Click="btnAddtoQueue_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open Media" Click="btnAddtoQueue_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE838;"/>
                         </MenuFlyoutItem.Icon>
@@ -54,7 +54,7 @@
                     </Grid.RowDefinitions>
 
                     <Image HorizontalAlignment="Center" Width="150" Grid.Row="0" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}"></Image>
-                    <TextBlock Margin="0,0,0,0" TextWrapping="NoWrap" HorizontalAlignment="Center" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="1"></TextBlock>
+                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Margin="0,0,0,0" TextWrapping="NoWrap" HorizontalAlignment="Center" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="1"></TextBlock>
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -63,14 +63,14 @@
                         </Grid.ColumnDefinitions>
                         <HyperlinkButton Click="txtArtist_Click" Name="txtArtist" ToolTipService.ToolTip="Artist" HorizontalAlignment="Left" FontSize="15" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
                             <StackPanel Orientation="Horizontal" Spacing="3">
-                                <TextBlock Text="• "></TextBlock>
-                                <TextBlock Name="txtArtistDisplay" Text="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}"></TextBlock>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="• "></TextBlock>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtArtistDisplay" Text="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}"></TextBlock>
                             </StackPanel>
                         </HyperlinkButton>
                         <HyperlinkButton Click="txtAlbum_Click" ToolTipService.ToolTip="Album" Name="txtAlbum" Grid.Column="1" HorizontalAlignment="Right" FontSize="15" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
                             <StackPanel Orientation="Horizontal" Spacing="3">
-                                <TextBlock Text="• "></TextBlock>
-                                <TextBlock Name="txtAlbumDisplay" Text="{x:Bind mediacontroller.AlbumDisplayName, Mode=OneWay}"></TextBlock>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="• "></TextBlock>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtAlbumDisplay" Text="{x:Bind mediacontroller.AlbumDisplayName, Mode=OneWay}"></TextBlock>
                             </StackPanel>
                         </HyperlinkButton>
                     </Grid>
@@ -82,8 +82,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="18" Opacity="0.8"/>
-                        <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="18" Opacity="0.8"/>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="18" Opacity="0.8"/>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="18" Opacity="0.8"/>
                     </Grid>
 
                     <Grid Width="300" Grid.Row="5" Margin="0, 0" Padding="15" CornerRadius="16">
@@ -131,7 +131,7 @@ AlwaysUseFallback="False"/>
                     <Grid>
                         <Grid.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Text="Add Media" Click="btnAddtoQueue_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Media" Click="btnAddtoQueue_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE710;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
@@ -153,11 +153,11 @@ AlwaysUseFallback="False"/>
                                 <ColumnDefinition Width="300"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Orientation="Horizontal" Grid.Column="0">
-                                <TextBlock Text="Queue" 
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Queue" 
                    Style="{StaticResource TitleTextBlockStyle}"/>
-                                <TextBlock Margin="10,10" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Playlist will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Margin="10,10" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Playlist will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                             </StackPanel>
-                            <AutoSuggestBox QuerySubmitted="asbFindQueue_QuerySubmitted"  IsEnabled="True" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"  Grid.Column="1" Name="asbFindQueue" TextChanged="asbFindQueue_TextChanged"
+                            <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}"   QuerySubmitted="asbFindQueue_QuerySubmitted"  IsEnabled="True" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"  Grid.Column="1" Name="asbFindQueue" TextChanged="asbFindQueue_TextChanged"
                         QueryIcon="Find"
                         PlaceholderText="Find in queue..."
                         HorizontalAlignment="Stretch" Height="35" Width="300"/>
@@ -173,12 +173,12 @@ AlwaysUseFallback="False"/>
 
                             <!-- Queue information -->
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <TextBlock Text="{x:Bind mediacontroller.ItemsCount, Mode=OneWay}"
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind mediacontroller.ItemsCount, Mode=OneWay}"
                        Name="txtCount"
                        Style="{StaticResource BaseTextBlockStyle}"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
-                                <TextBlock Text="{x:Bind mediacontroller.TotalQueueRuntime, Mode=OneWay}"
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind mediacontroller.TotalQueueRuntime, Mode=OneWay}"
                        Name="txtTotalDurQueue"
                        ToolTipService.ToolTip="Runtime Duration of queue"
                        Style="{StaticResource BaseTextBlockStyle}"
@@ -201,7 +201,7 @@ AlwaysUseFallback="False"/>
                                     <Image Width="20" Source="{Binding ShuffleIcon, Source={StaticResource GlobalIconHolder}}"/>
                                     <ToggleButton.ContextFlyout>
                                         <MenuFlyout>
-                                            <MenuFlyoutItem Text="Shuffle and play all" Name="mnftShuffleandPlayAll">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Shuffle and play all" Name="mnftShuffleandPlayAll">
                                                 <MenuFlyoutItem.Icon>
                                                     <ImageIcon Source="/Assets/shuffleandplayallfonticon.png"/>
                                                 </MenuFlyoutItem.Icon>
@@ -219,7 +219,7 @@ AlwaysUseFallback="False"/>
                     ToolTipService.ToolTip="Clear Queue">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"/>
-                                        <TextBlock Name="txtClearQueue" Text="Clear queue"/>
+                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtClearQueue" Text="Clear queue"/>
                                     </StackPanel>
                                 </Button>
 
@@ -227,7 +227,7 @@ AlwaysUseFallback="False"/>
                     ToolTipService.ToolTip="Save Queue to Playlist">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <Image Width="20" Source="{Binding SaveIcon, Source={StaticResource GlobalIconHolder}}"/>
-                                        <TextBlock Text="Save Queue to Playlist"/>
+                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Save Queue to Playlist"/>
                                     </StackPanel>
                                 </Button>
 
@@ -237,7 +237,7 @@ AlwaysUseFallback="False"/>
 
                         <!-- SECTION LABEL -->
                         <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="10">
-                            <TextBlock 
+                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  
                Text="Up Next"
                Margin="30,0,0,10"
                FontSize="18" Name="txtUpNext"
@@ -248,7 +248,7 @@ AlwaysUseFallback="False"/>
 >
                                 <StackPanel Orientation="Horizontal" Spacing="5">
                                     <Image Width="20" Source="{Binding ViewFullQueue, Source={StaticResource GlobalIconHolder}}"/>
-                                    <TextBlock Text="View full queue"/>
+                                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="View full queue"/>
                                 </StackPanel>
                             </ToggleButton>
                             <Button IsEnabled="True" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnAddtoQueue" Click="btnAddtoQueue_Click"
@@ -267,9 +267,9 @@ ToolTipService.ToolTip="Play all from start">
                         <ScrollView VerticalAlignment="Stretch" Margin="10, 0" Name="ListPanel"  Grid.Row="4">
                             <StackPanel  Orientation="Vertical">
 
-                                <InfoBar IsOpen="False" Severity="Warning" Name="iBMissingFiles" Title="Missing files">
+                                <InfoBar FontFamily="{StaticResource GlobalFontHolder}"   IsOpen="False" Severity="Warning" Name="iBMissingFiles" Title="Missing files">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock x:Name="infoBarMessage" Text="Some files could not be located." Margin="0,0,8,0"/>
+                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  x:Name="infoBarMessage" Text="Some files could not be located." Margin="0,0,8,0"/>
                                         <Button Content="Relocate" Name="btnRelocate" Click="btnRelocate_Click"/>
                                     </StackPanel>
                                 </InfoBar>
@@ -293,7 +293,7 @@ ToolTipService.ToolTip="Play all from start">
                         <StackPanel Visibility="{x:Bind mediacontroller.QueuePageEmptyVisibility, Mode=OneWay}" Orientation="Vertical" Grid.Row="3" Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center" Name="grdEmptyQueue">
                             <StackPanel Spacing="20" Orientation="Horizontal">
                                 <Image Source="{Binding EmptyQueue, Source={StaticResource GlobalIconHolder}}" Width="100"></Image>
-                                <TextBlock Text="Your play queue is empty!" VerticalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Your play queue is empty!" VerticalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                             </StackPanel>
 
                             <Button CornerRadius="10" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Center" Click="btnAddtoQueue_Click" Name="btnOpenMediaFile">
@@ -310,7 +310,7 @@ AlwaysUseFallback="False"/>
                                 <StackPanel  Orientation="Horizontal" Spacing="10">
 
                                     <Image Width="26" Source="{Binding Openfolder, Source={StaticResource GlobalIconHolder}}"></Image>
-                                    <TextBlock Foreground="White" Text="Open Media" Margin="0, 5">
+                                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Foreground="White" Text="Open Media" Margin="0, 5">
 
                                     </TextBlock>
                                 </StackPanel>
@@ -320,7 +320,7 @@ AlwaysUseFallback="False"/>
                 </ScrollViewer>
             </Grid>
         </Grid>
-        <TeachingTip  Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" >
+        <TeachingTip  FontFamily="{StaticResource GlobalFontHolder}"   Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" >
             <TeachingTip.Resources>
                 <x:Double x:Key="TeachingTipMinWidth">800</x:Double>
                 <x:Double x:Key="TeachingTipMaxWidth">600</x:Double>
@@ -336,8 +336,8 @@ AlwaysUseFallback="False"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button Name="btnSavePlaylistEdited" Content="Save Playlist" Style="{StaticResource AccentButtonStyle}"/>
-                    <Button Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
+                    <Button  FontFamily="{StaticResource GlobalFontHolder}"  Name="btnSavePlaylistEdited" Content="Save Playlist" Style="{StaticResource AccentButtonStyle}"/>
+                    <Button FontFamily="{StaticResource GlobalFontHolder}"   Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
                 </Grid>
             </Grid>
         </TeachingTip>

@@ -14,10 +14,10 @@
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Spacing="10">
         <StackPanel Spacing="12" Name="stkZoom">
-            <TextBlock Text="View" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="View" Style="{StaticResource BodyStrongTextBlockStyle}"/>
 
             <StackPanel Spacing="4">
-                <TextBlock Text="Zoom Level (%)" 
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Zoom Level (%)" 
    Style="{StaticResource CaptionTextBlockStyle}" 
    Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
 
@@ -31,13 +31,13 @@
                Width="150"
                VerticalAlignment="Center"/>
 
-                    <TextBlock x:Name="txtZoomDisplay" 
+                    <TextBlock x:Name="txtZoomDisplay"  FontFamily="{StaticResource GlobalFontHolder}"   
        Text="{x:Bind sldZoom.Value, Converter={StaticResource RoundedPercentConverter}, Mode=OneWay}" 
        Margin="10,0" 
        VerticalAlignment="Center" 
        Width="50"/>
 
-                    <Button Content="Reset" 
+                    <Button Content="Reset"  FontFamily="{StaticResource GlobalFontHolder}"   
     Click="btnResetZoom_Click" 
     VerticalAlignment="Center"
     Padding="8,4" Margin="0, 0"/>
@@ -46,22 +46,22 @@
 
             <StackPanel Spacing="10" Margin="0,8,0,0">
                 <StackPanel Orientation="Horizontal" Spacing="20">
-                    <CheckBox Name="chkGlow" 
+                    <CheckBox Name="chkGlow"  FontFamily="{StaticResource GlobalFontHolder}"   
   Content="Enable Glow Effect"  IsChecked="True"
   />
-                    <ToggleButton Content="More Options" Name="tglMoreGlowOptions" Checked="tglMoreGlowOptions_Checked" Unchecked="tglMoreGlowOptions_Unchecked"></ToggleButton>
+                    <ToggleButton FontFamily="{StaticResource GlobalFontHolder}"    Content="More Options" Name="tglMoreGlowOptions" Checked="tglMoreGlowOptions_Checked" Unchecked="tglMoreGlowOptions_Unchecked"></ToggleButton>
                 </StackPanel>
 
                 <StackPanel x:Name="GlowSettingsPanel" Visibility="Collapsed" Spacing="15" Margin="0,0,0,0">
 
-                    <TextBlock Text="Glow Customization" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Glow Customization" Style="{StaticResource BodyStrongTextBlockStyle}"/>
 
                     <StackPanel Spacing="4" HorizontalAlignment="Left">
-                        <TextBlock Text="Glow Color" Style="{StaticResource BodyTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Glow Color" Style="{StaticResource BodyTextBlockStyle}"/>
                         <Button Name="btnChooseGlowColor" >
                             <StackPanel Orientation="Horizontal" Spacing="12">
                                 <Rectangle Name="rctColorGlow" Width="40" Height="18" Fill="White" Stroke="Gray" StrokeThickness="1" RadiusX="2" RadiusY="2"/>
-                                <TextBlock Text="Choose Color" VerticalAlignment="Center"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Choose Color" VerticalAlignment="Center"/>
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout>
@@ -77,13 +77,13 @@
                     </StackPanel>
                     <ToggleSwitch Visibility="Collapsed" Name="switchRGB"  Toggled="switchRGB_Toggled"
           Header="RGB Rainbow Mode" 
-          OnContent="Active" 
+          OnContent="Active"  FontFamily="{StaticResource GlobalFontHolder}"   
           OffContent="Inactive"
        />
 
                     <ToggleSwitch Name="switchMoving" 
           Header="Animated Glow"  Toggled="switchMoving_Toggled"
-          OnContent="Running" 
+          OnContent="Running"  FontFamily="{StaticResource GlobalFontHolder}"   
           OffContent="Stopped"
          />
                     <StackPanel>
@@ -97,7 +97,7 @@
  ValueChanged="speedSlider_ValueChanged"
     Value="1.0" 
     Width="200"/>
-                            <TextBlock Text="{x:Bind FormatSpeed(speedSlider.Value),Mode=OneWay}" Name="txtAnimationSpeed" Margin="0, 5"></TextBlock>
+                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind FormatSpeed(speedSlider.Value),Mode=OneWay}" Name="txtAnimationSpeed" Margin="0, 5"></TextBlock>
                         </StackPanel>
                     </StackPanel>
 

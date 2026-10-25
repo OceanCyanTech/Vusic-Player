@@ -25,41 +25,41 @@
             <Image Width="200" Name="imgShowPoster" Grid.Row="0" Source="{Binding DefaultShow, Source={StaticResource GlobalIconHolder}}"></Image>
             <Button Name="btnUploadShowPoster" Content="Upload Poster for Show" Click="btnUploadShowPoster_Click" Grid.Row="1" HorizontalAlignment="Center"></Button>
             <StackPanel Orientation="Vertical" Grid.Row="2" Spacing="10">
-                <TextBlock  Text="Name of Show or Collection of Videos" ></TextBlock>
-                <TextBox Text="{x:Bind Instance.ShowName, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtShowName"  FontSize="16" PlaceholderText="Enter name..." Grid.Row="2"></TextBox>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Name of Show or Collection of Videos" ></TextBlock>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind Instance.ShowName, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtShowName"  FontSize="16" PlaceholderText="Enter name..." Grid.Row="2"></TextBox>
 
             </StackPanel>
             <StackPanel Orientation="Vertical" Grid.Row="3" Spacing="10">
-                <TextBlock Text="Description of Show" ></TextBlock>
-                <TextBox Text="{x:Bind Instance.Description, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtDescription"  FontSize="16" PlaceholderText="Description is optional..." Grid.Row="2"></TextBox>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Description of Show" ></TextBlock>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind Instance.Description, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtDescription"  FontSize="16" PlaceholderText="Description is optional..." Grid.Row="2"></TextBox>
 
             </StackPanel>
             <StackPanel Orientation="Vertical" Grid.Row="4" Spacing="10">
-                <TextBlock Text="Release Date (optional)" ></TextBlock>
-                <DatePicker Date="{x:Bind Instance.ReleaseDate, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="dtRelease" FontSize="16" Grid.Row="2"></DatePicker>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Release Date (optional)" ></TextBlock>
+                <DatePicker FontFamily="{StaticResource GlobalFontHolder}"  Date="{x:Bind Instance.ReleaseDate, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="dtRelease" FontSize="16" Grid.Row="2"></DatePicker>
 
             </StackPanel>
             <StackPanel Orientation="Vertical" Grid.Row="5" Spacing="10">
-                <TextBlock Text="Creators (optional)" ></TextBlock>
-                <TextBox Text="{x:Bind Instance.Creators, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtCreators" FontSize="16" PlaceholderText="Enter names of creators..." Grid.Row="2"></TextBox>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Creators (optional)" ></TextBlock>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind Instance.Creators, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtCreators" FontSize="16" PlaceholderText="Enter names of creators..." Grid.Row="2"></TextBox>
 
             </StackPanel>
             <StackPanel Orientation="Vertical" Grid.Row="6" Spacing="10">
-                <TextBlock Text="Cast and Crew (optional)" ></TextBlock>
-                <TextBox Text="{x:Bind Instance.Cast, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtCast"  FontSize="16" PlaceholderText="Enter names of cast or crew separated by commas..." Grid.Row="2"></TextBox>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Cast and Crew (optional)" ></TextBlock>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind Instance.Cast, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtCast"  FontSize="16" PlaceholderText="Enter names of cast or crew separated by commas..." Grid.Row="2"></TextBox>
 
             </StackPanel>
             <StackPanel Orientation="Vertical" Grid.Row="7" Spacing="10">
-                <TextBlock Text="Add Folder" ></TextBlock>
-                <TextBlock Text="Seasons and Episodes might be automatically detected" ></TextBlock>
-                <TextBlock Text="if in the correct format" ></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Folder" ></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Seasons and Episodes might be automatically detected" ></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="if in the correct format" ></TextBlock>
                 <StackPanel Spacing="12">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Folder Location" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Folder Location" 
 Style="{StaticResource CaptionTextBlockStyle}" 
 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <Grid Width="280" HorizontalAlignment="Left">
-                            <TextBox Name="txtFolderPath" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Browse..."/>
+                            <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtFolderPath" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Browse..."/>
                             <Button ToolTipService.ToolTip="Browse" Style="{StaticResource AccentButtonStyle}" BorderBrush="Transparent" 
  VerticalAlignment="Stretch" HorizontalAlignment="Right" Name="btnBrowseDirectory" 
  Content="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" 
@@ -69,13 +69,13 @@ Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Grid.Row="8" Spacing="10">
-                <TextBlock Text="Tags (optional)" ></TextBlock>
-                <TextBox Text="{x:Bind Instance.Tags, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtTags" FontSize="16" PlaceholderText="Search tags..." Grid.Row="2"></TextBox>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Tags (optional)" ></TextBlock>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind Instance.Tags, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtTags" FontSize="16" PlaceholderText="Search tags..." Grid.Row="2"></TextBox>
 
             </StackPanel>
             <StackPanel Orientation="Vertical" Grid.Row="9" Spacing="10">
-                <TextBlock Text="Genre (optional)" ></TextBlock>
-                <TextBox Text="{x:Bind Instance.Genre, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtGenre"  FontSize="16" PlaceholderText="Drama, comedy, horror..." Grid.Row="2"></TextBox>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Genre (optional)" ></TextBlock>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind Instance.Genre, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" Name="txtGenre"  FontSize="16" PlaceholderText="Drama, comedy, horror..." Grid.Row="2"></TextBox>
 
             </StackPanel>
         </Grid>

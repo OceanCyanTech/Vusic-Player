@@ -22,8 +22,8 @@
                         </Border.Shadow>
                         <Border.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Text="Edit Show Name" Name="mnftEditShowName" Click="mnftEditShowName_Click"/>
-                                <MenuFlyoutItem Text="Change Show Poster" Name="mnftEditPoster" Click="mnftEditPoster_Click"  />
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Edit Show Name" Name="mnftEditShowName" Click="mnftEditShowName_Click"/>
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Change Show Poster" Name="mnftEditPoster" Click="mnftEditPoster_Click"  />
                             </MenuFlyout>
                         </Border.ContextFlyout>
                         <Grid>
@@ -34,7 +34,7 @@
                                     <media:BackdropBlurBrush Opacity="1" Amount="120.0" x:Name="BackdropBlur"/>
                                 </Border.Background>
 
-                                <TextBlock Foreground="White" Width="1000" Name="txtShowName" FontSize="140" TextWrapping="Wrap" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Foreground="White" Width="1000" Name="txtShowName" FontSize="140" TextWrapping="Wrap" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                             </Border>
                         </Grid>
                     </Border>
@@ -46,7 +46,7 @@
         </Grid>
         <TeachingTip Title="Rename Show" IsOpen="False" Name="ttRename">
             <StackPanel Margin="0, 20" Orientation="Vertical" Spacing="10">
-                <TextBox Name="txtRenameShow" PlaceholderText="Rename show..."></TextBox>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtRenameShow" PlaceholderText="Rename show..."></TextBox>
                 <Button HorizontalAlignment="Stretch" Name="btnOfficialRename" Click="btnOfficialRename_Click">
                     <Image Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 </Button>
@@ -73,25 +73,25 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
-                        <TextBlock  Text="About" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="About" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button ToolTipService.ToolTip="Edit" Click="Button_Click_2"  Background="Transparent">
                             <FontIcon Glyph="&#xE70F;"></FontIcon>
                         </Button>
                     </StackPanel>
                     <StackPanel Name="stkReleaseDate" Orientation="Horizontal" Spacing="5" Grid.Row="1">
-                        <TextBlock Text="• Release Date:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
-                        <DatePicker Visibility="Collapsed" Name="dtPickerReleaseDate"></DatePicker>
-                        <TextBlock Visibility="Visible" IsTextSelectionEnabled="True" Name="txtReleaseDate"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="• Release Date:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        <DatePicker   FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Collapsed" Name="dtPickerReleaseDate"></DatePicker>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Visible" IsTextSelectionEnabled="True" Name="txtReleaseDate"></TextBlock>
                     </StackPanel>
                     <StackPanel Name="stkGenre" Orientation="Horizontal" Spacing="5" Grid.Row="2">
-                        <TextBlock Text="• Genre:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
-                        <TextBox AcceptsReturn="True" TextWrapping="Wrap" Name="txtGenreEdit" Visibility="Collapsed"></TextBox>
-                        <TextBlock IsTextSelectionEnabled="True" Name="txtGenre"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="• Genre:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        <TextBox FontFamily="{StaticResource GlobalFontHolder}"  AcceptsReturn="True" TextWrapping="Wrap" Name="txtGenreEdit" Visibility="Collapsed"></TextBox>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Name="txtGenre"></TextBlock>
                     </StackPanel>
                     <StackPanel Name="stkTags" Orientation="Horizontal" Spacing="5" Grid.Row="3">
-                        <TextBlock Text="• Tags:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
-                        <TextBox AcceptsReturn="True" TextWrapping="Wrap" Name="txtTagsEdit" Visibility="Collapsed"></TextBox>
-                        <TextBlock IsTextSelectionEnabled="True" Name="txtTags"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="• Tags:" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        <TextBox FontFamily="{StaticResource GlobalFontHolder}"  AcceptsReturn="True" TextWrapping="Wrap" Name="txtTagsEdit" Visibility="Collapsed"></TextBox>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Name="txtTags"></TextBlock>
                     </StackPanel>
                 </Grid>
                 <MenuFlyoutSeparator Grid.Row="1"/>
@@ -101,13 +101,13 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
-                        <TextBlock  Text="Description" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="Description" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button Name="btnEdit" Click="btnEdit_Click" Background="Transparent">
                             <FontIcon Glyph="&#xE70F;"></FontIcon>
                         </Button>
                     </StackPanel>
-                    <TextBlock IsTextSelectionEnabled="True" TextWrapping="Wrap" Name="txtDescription" Grid.Row="1"></TextBlock>
-                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" Name="txtEditableDescription" Visibility="Collapsed" Grid.Row="1"></TextBox>
+                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" TextWrapping="Wrap" Name="txtDescription" Grid.Row="1"></TextBlock>
+                    <TextBox FontFamily="{StaticResource GlobalFontHolder}"  AcceptsReturn="True" TextWrapping="Wrap" Name="txtEditableDescription" Visibility="Collapsed" Grid.Row="1"></TextBox>
                 </Grid>
                 <MenuFlyoutSeparator Grid.Row="3"/>
 
@@ -117,7 +117,7 @@
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
-                        <TextBlock Text="Creators" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Creators" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button  Click="btnEditCreators_Click" Name="btnEditCreators" Background="Transparent">
                             <FontIcon Glyph="&#xE70F;"></FontIcon>
                         </Button>
@@ -143,7 +143,7 @@
                                     <PersonPicture Width="30" Grid.Column="0" Name="ppArtist" ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
                                     <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                                         <HyperlinkButton Padding="0" ToolTipService.ToolTip="{Binding ArtistName}"  Margin="0, 0, 0, 5" Foreground="{StaticResource TextFillColorSecondaryBrush}">
-                                            <TextBlock Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                                         </HyperlinkButton>
                                     </StackPanel>
                                 </Grid>
@@ -162,14 +162,14 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" Grid.Row="0" Spacing="5">
-                            <TextBox Name="txtAddCrewMember" PlaceholderText="Enter name..."/>
-                            <Button Content="Add" Name="btnAddtoListName"  Click="btnAddToListName_Click"/>
-                            <Button Content="Sort"  Click="Button_Click_5">
+                            <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtAddCrewMember" PlaceholderText="Enter name..."/>
+                            <Button  FontFamily="{StaticResource GlobalFontHolder}"   Content="Add" Name="btnAddtoListName"  Click="btnAddToListName_Click"/>
+                            <Button   FontFamily="{StaticResource GlobalFontHolder}"  Content="Sort"  Click="Button_Click_5">
 
                             </Button>
 
                         </StackPanel>
-                        <Button Content="Remove" Name="btnRemoveName" Click="btnRemoveName_Click" Grid.Row="1" Visibility="Collapsed"></Button>
+                        <Button  FontFamily="{StaticResource GlobalFontHolder}"   Content="Remove" Name="btnRemoveName" Click="btnRemoveName_Click" Grid.Row="1" Visibility="Collapsed"></Button>
                         <ListView CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionMode="Multiple" SelectionChanged="lstViewNamesCrew_SelectionChanged" Grid.Row="2" Name="lstViewNamesCrew">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
@@ -177,13 +177,13 @@
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
 
-                                                <MenuFlyoutItem Text="Delete" 
+                                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Delete" 
                                         Icon="Delete" 
                                         Click="MenuFlyoutItem_Click_3" 
                                         Foreground="Red" />
                                             </MenuFlyout>
                                         </Grid.ContextFlyout>
-                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Name}"/>
 
                                     </Grid>
                                 </DataTemplate>
@@ -205,7 +205,7 @@
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="0">
-                        <TextBlock Text="Crew" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Crew" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button Name="btnEditCrew"  Click="btnEditCrew_Click" Background="Transparent">
                             <FontIcon Glyph="&#xE70F;"></FontIcon>
                         </Button>
@@ -231,7 +231,7 @@
                                     <PersonPicture Width="30" Grid.Column="0" Name="ppArtist"  ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
                                     <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                                         <HyperlinkButton Padding="0" ToolTipService.ToolTip="{Binding ArtistName}"  Margin="0, 0, 0, 5" Foreground="{StaticResource TextFillColorSecondaryBrush}">
-                                            <TextBlock Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                                         </HyperlinkButton>
                                     </StackPanel>
                                 </Grid>
@@ -247,16 +247,16 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Spacing="20" Grid.Row="0">
-                        <TextBlock Name="txtSeasonsHead" Text="Seasons" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtSeasonsHead" Text="Seasons" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                         <Button Margin="0, 5" VerticalAlignment="Center" CornerRadius="12"   Grid.Column="0" Name="btnAddSeason" Click="btnAddSeason_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                                <TextBlock Margin="5, 0" Text="Add Season" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Margin="5, 0" Text="Add Season" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                             </StackPanel>
                         </Button>
-                        <HyperlinkButton Content="View Unlinked Seasons" Name="hypViewUnlinkedSeasons" Click="hypViewUnlinkedSeasons_Click"/>
+                        <HyperlinkButton  FontFamily="{StaticResource GlobalFontHolder}"   Content="View Unlinked Seasons" Name="hypViewUnlinkedSeasons" Click="hypViewUnlinkedSeasons_Click"/>
                     </StackPanel>
-                    <TextBlock Name="txtSeasonCount" Text="• 0 Seasons (Loading)" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtSeasonCount" Text="• 0 Seasons (Loading)" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                     <GridView  Grid.Row="2" Visibility="Visible"  VerticalAlignment="Stretch"
  x:Name="grdViewSeasons" SelectionMode="Single" IsItemClickEnabled="True" CanDragItems="True" AllowDrop="True" CanReorderItems="True"
 ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
@@ -280,12 +280,12 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                                     <StackPanel  VerticalAlignment="Stretch" Orientation="Vertical" Margin="10, 15">
                                         <StackPanel.ContextFlyout>
                                             <MenuFlyout Opened="MenuFlyout_Opened">
-                                                <MenuFlyoutItem Name="mnftOpenSeason" Click="mnftOpenSeason_Click" Text="Open Season">
+                                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftOpenSeason" Click="mnftOpenSeason_Click" Text="Open Season">
                                                     <MenuFlyoutItem.Icon>
                                                         <FontIcon Glyph="&#xE8A7;"></FontIcon>
                                                     </MenuFlyoutItem.Icon>
                                                 </MenuFlyoutItem>
-                                                <MenuFlyoutItem Name="mnftUnlinkSeason" Click="mnftUnlinkSeason_Click" Text="Unlink Season">
+                                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftUnlinkSeason" Click="mnftUnlinkSeason_Click" Text="Unlink Season">
                                                     <MenuFlyoutItem.Icon>
                                                         <FontIcon Glyph="&#xE71B;"></FontIcon>
                                                     </MenuFlyoutItem.Icon>
@@ -294,8 +294,8 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                                         </StackPanel.ContextFlyout>
 
 
-                                        <TextBlock Text="{Binding PlaylistName}" Style="{StaticResource SubtitleTextBlockStyle}" Visibility="Visible" TextWrapping="Wrap" />
-                                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding PlaylistCount}" Visibility="Visible" TextWrapping="Wrap" />
+                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding PlaylistName}" Style="{StaticResource SubtitleTextBlockStyle}" Visibility="Visible" TextWrapping="Wrap" />
+                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding PlaylistCount}" Visibility="Visible" TextWrapping="Wrap" />
                                     </StackPanel>
                                 </StackPanel>
                             </DataTemplate>
@@ -316,21 +316,21 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
 
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Vertical" Grid.Row="0" Spacing="20">
-                    <TextBlock Name="txtSeasonHeader" Text="Season 1" Style="{StaticResource TitleLargeTextBlockStyle}" Grid.Row="0"></TextBlock>
+                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtSeasonHeader" Text="Season 1" Style="{StaticResource TitleLargeTextBlockStyle}" Grid.Row="0"></TextBlock>
 
-                    <TextBlock Name="txtEpisodeCount" Text="Loading episodes..." Style="{StaticResource BodyLargeTextBlockStyle}" ></TextBlock>
+                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtEpisodeCount" Text="Loading episodes..." Style="{StaticResource BodyLargeTextBlockStyle}" ></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="10">
                     <Button CornerRadius="12" Style="{StaticResource AccentButtonStyle}" Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click">
                         <StackPanel Orientation="Horizontal" Spacing="5">
                             <FontIcon Margin="0, -4" Glyph="&#xE768;"></FontIcon>
-                            <TextBlock Margin="0, 3" Text="Play All"></TextBlock>
+                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Margin="0, 3" Text="Play All"></TextBlock>
                         </StackPanel>
                     </Button>
                     <Button CornerRadius="12" Grid.Row="1" Name="btnAddtoQueue" Click="btnAddtoQueue_Click">
                         <StackPanel Orientation="Horizontal" Spacing="5">
                             <ImageIcon Margin="0, -4" Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
-                            <TextBlock Margin="0, 3" Text="Add to Queue"></TextBlock>
+                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Margin="0, 3" Text="Add to Queue"></TextBlock>
                         </StackPanel>
                     </Button>
                     <Button ToolTipService.ToolTip="File Location" Name="btnOpenFileLocation" Click="btnOpenFileLocation_Click">
@@ -348,17 +348,17 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                                 <Grid Grid.Column="0" RowSpacing="10">
                                     <Grid.ContextFlyout>
                                         <MenuFlyout>
-                                            <MenuFlyoutItem Text="Play" Click="MenuFlyoutItem_Click_1">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play" Click="MenuFlyoutItem_Click_1">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE768;"></FontIcon>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem Text="File Info" Click="MenuFlyoutItem_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="File Info" Click="MenuFlyoutItem_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE946;"></FontIcon>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem Text="Edit Description" Click="MenuFlyoutItem_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Edit Description" Click="MenuFlyoutItem_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE70F;"></FontIcon>
                                                 </MenuFlyoutItem.Icon>
@@ -378,16 +378,16 @@ ItemClick="grdViewSeasons_ItemClick"  Margin="0, 20" >
                                                 <FontIcon Glyph="&#xE768;"></FontIcon>
                                             </Button>
 
-                                            <TextBlock ToolTipService.ToolTip="{Binding EpisodeName}"  Style="{StaticResource TitleTextBlockStyle}" Text="{Binding EpisodeName}"></TextBlock>
+                                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  ToolTipService.ToolTip="{Binding EpisodeName}"  Style="{StaticResource TitleTextBlockStyle}" Text="{Binding EpisodeName}"></TextBlock>
 
                                         </StackPanel>
                                     </Viewbox>
-                                    <TextBlock TextWrapping="Wrap" Text="{Binding Description}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="1"></TextBlock>
+                                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  TextWrapping="Wrap" Text="{Binding Description}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="1"></TextBlock>
                                     <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="2">
                                         <Button ToolTipService.ToolTip="File Info" Background="Transparent" Grid.Row="3" Padding="0" BorderBrush="Transparent" Click="Button_Click">
                                             <Image Source="{Binding InfoIcon, Source={StaticResource GlobalIconHolder}}" Width="20" ></Image>
                                         </Button>
-                                        <TextBlock Text="{Binding Duration}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="2"></TextBlock>
+                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Duration}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="2"></TextBlock>
 
                                     </StackPanel>
 

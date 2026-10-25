@@ -10,10 +10,10 @@
 
     <StackPanel Orientation="Vertical" Spacing="10">
         <StackPanel Name="stkPlaybackSpeed" Spacing="12">
-            <TextBlock Text="Playback Settings" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Playback Settings" Style="{StaticResource BodyStrongTextBlockStyle}"/>
 
             <StackPanel  Spacing="20">
-                <TextBlock Text="Playback Speed" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="Playback Speed" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                 <StackPanel Orientation="Vertical" Spacing="12">
                     <local1:OceanSlider x:Name="sldSpeed" HorizontalAlignment="Left" Margin="0, 0"
            Width="{x:Bind SliderWidth, Mode=OneWay}" 
@@ -24,7 +24,7 @@
            ValueChanged="sldSpeed_ValueChanged"/>
 
                     <NumberBox x:Name="numSpeed" 
-   
+    FontFamily="{StaticResource GlobalFontHolder}"   
    Value="{x:Bind mediacontroller.SpeedValue, Mode=TwoWay}" 
    Minimum="0.25" 
    Maximum="9.0" 
@@ -33,14 +33,14 @@
    SpinButtonPlacementMode="Inline"
    ValueChanged="numSpeed_ValueChanged"/>
 
-                    <TextBlock x:Name="txtSpeedDisplay" 
+                    <TextBlock x:Name="txtSpeedDisplay"  FontFamily="{StaticResource GlobalFontHolder}"   
 Text="{x:Bind FormatSpeed(sldSpeed.Value), Mode=OneWay}"
                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                 </StackPanel>
             </StackPanel>
-            <Button Content="Default Speed" Name="btnDefaultSpeed" Click="btnDefaultSpeed_Click"></Button>
-            <ToggleSwitch Visibility="{x:Bind mediacontroller.AudioProperties, Mode=OneWay}"  Name="tsReverse" Header="Reverse Playback" IsOn="{x:Bind mediacontroller.IsReversePlayback, Mode=TwoWay}" Toggled="tsReverse_Toggled" />
-            <ToggleSwitch Toggled="tsLoop_Toggled" Name="tsLoop" Header="Loop Media" IsOn="False" />
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Content="Default Speed" Name="btnDefaultSpeed" Click="btnDefaultSpeed_Click"></Button>
+            <ToggleSwitch FontFamily="{StaticResource GlobalFontHolder}"    Visibility="{x:Bind mediacontroller.AudioProperties, Mode=OneWay}"  Name="tsReverse" Header="Reverse Playback" IsOn="{x:Bind mediacontroller.IsReversePlayback, Mode=TwoWay}" Toggled="tsReverse_Toggled" />
+            <ToggleSwitch FontFamily="{StaticResource GlobalFontHolder}"    Toggled="tsLoop_Toggled" Name="tsLoop" Header="Loop Media" IsOn="False" />
         </StackPanel>
 
         <Rectangle Height="1" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>

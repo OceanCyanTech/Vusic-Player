@@ -30,8 +30,8 @@
         <subtitle:SubtitleEditorUI x:Name="subeditor" Grid.Row="1"/>
         <controls:LyricEditorUI x:Name="lyreditor" Grid.Row ="1"/>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="10,10" Spacing="10" HorizontalAlignment="Right">
-        <Button Style="{StaticResource AccentButtonStyle}" Content="Save and Close" Click="btnSaveandClose_Click" Name="btnSaveandClose" Grid.Row="2" HorizontalAlignment="Right"/>
-        <Button Content="Cancel Changes and Close" Click="btnCancelandClose_Click" Name="btnCancelandClose" Grid.Row="2"  HorizontalAlignment="Right"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource AccentButtonStyle}" Content="Save and Close" Click="btnSaveandClose_Click" Name="btnSaveandClose" Grid.Row="2" HorizontalAlignment="Right"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Content="Cancel Changes and Close" Click="btnCancelandClose_Click" Name="btnCancelandClose" Grid.Row="2"  HorizontalAlignment="Right"/>
         </StackPanel>
     </Grid>
 </Window>

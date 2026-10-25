@@ -25,7 +25,7 @@
                 <Button CornerRadius="12"   Grid.Column="0" Name="btnNewPlaylist" Click="btnNewPlaylist_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                        <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </Button>
                 <Button   BorderThickness="1" BorderBrush="Transparent" HorizontalAlignment="Left" CornerRadius="12"   Margin="0, 0" Name="btnOpenVideo" Click="btnOpenVideo_Click">
@@ -42,7 +42,7 @@ AlwaysUseFallback="False"/>
                     <StackPanel Orientation="Horizontal">
 
                         <Image Width="20" Source="{Binding Importicon, Source={StaticResource GlobalIconHolder}}"></Image>
-                        <TextBlock Margin="5,0" Text="Open Video" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5,0" Text="Open Video" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
 
                 </Button>
@@ -52,16 +52,16 @@ AlwaysUseFallback="False"/>
             </StackPanel>
             <Expander Grid.Row="1" 
           Header="Recently Played"
-          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" FontFamily="{StaticResource GlobalFontHolder}"   
           IsExpanded="True"  Expanding="Expander_Expanding" Name="expRecents">
                 <Expander.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="View Full Video History" Name="mnftViewFullVideoHistory" Click="mnftViewFullVideoHistory_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"    Text="View Full Video History" Name="mnftViewFullVideoHistory" Click="mnftViewFullVideoHistory_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE81C;"></FontIcon>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Disable Recent Videos" Name="mnftDisableRecentVideos" Click="mnftDisableRecentVideos_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"    Text="Disable Recent Videos" Name="mnftDisableRecentVideos" Click="mnftDisableRecentVideos_Click">
                             <MenuFlyoutItem.Icon>
                                 <ImageIcon Source="/Assets/disablehistoryfonticon.png"></ImageIcon>
                             </MenuFlyoutItem.Icon>
@@ -70,23 +70,23 @@ AlwaysUseFallback="False"/>
                 </Expander.ContextFlyout>
                 <grids:ContinuePlayingRecentsVideo x:Name="ContinuePlay"/>
             </Expander>
-            <TextBlock Name="txtDisplay1"  Text="Recommended" Tapped="TextBlock_Tapped" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
-            <Expander Grid.Row="3"  Expanding="Expander_Expanding" Name="expRecommended"
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtDisplay1"  Text="Recommended" Tapped="TextBlock_Tapped" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
+            <Expander  FontFamily="{StaticResource GlobalFontHolder}"   Grid.Row="3"  Expanding="Expander_Expanding" Name="expRecommended"
           Header="Recommended from your libraries"
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
           IsExpanded="False">
                 
                 <videolibcontrols:RecommendedVideos/>
             </Expander>
-            <TextBlock Text="My Playlists" Name="txtDisplay2" Tapped="TextBlock_Tapped_1" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
-            <Expander Grid.Row="5"  Expanding="Expander_Expanding" Name="expVideoPlaylists"
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="My Playlists" Name="txtDisplay2" Tapped="TextBlock_Tapped_1" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
+            <Expander  FontFamily="{StaticResource GlobalFontHolder}"   Grid.Row="5"  Expanding="Expander_Expanding" Name="expVideoPlaylists"
           Header="My Playlists"
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
           IsExpanded="False">
                 <grids:UserPlaylists HorizontalAlignment="Left"/>
             </Expander>
-            <TextBlock Name="txtDisplay3" Text="Shows" Tapped="TextBlock_Tapped_2" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
-            <Expander Grid.Row="7" Expanding="Expander_Expanding" Name="expShows"  Header="My Shows"
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtDisplay3" Text="Shows" Tapped="TextBlock_Tapped_2" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
+            <Expander  FontFamily="{StaticResource GlobalFontHolder}"   Grid.Row="7" Expanding="Expander_Expanding" Name="expShows"  Header="My Shows"
  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
  IsExpanded="False">
                 <Grid RowSpacing="5">
@@ -97,7 +97,7 @@ AlwaysUseFallback="False"/>
                     <Button Grid.Row="0"  Click="Button_Click">
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <Image Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" Width="15"/>
-                            <TextBlock Text="Create New Show Model"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Create New Show Model"/>
                         </StackPanel>
                      </Button>
                     <videolibcontrols:UserShows HorizontalAlignment="Left" Grid.Row="1"></videolibcontrols:UserShows>

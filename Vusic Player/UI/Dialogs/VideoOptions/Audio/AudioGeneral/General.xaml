@@ -10,7 +10,7 @@
 
     <StackPanel Orientation="Vertical" Spacing="10">
         <StackPanel Name="stkAudioStream" Spacing="8" Margin="0,0,0,10" Grid.Row="0">
-            <TextBlock Text="Audio Stream" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Audio Stream" Style="{StaticResource BodyStrongTextBlockStyle}"/>
             <oceancyan:SearchControl Margin="0, 10" CloseSearch="srchAudio_CloseSearch" SearchPlaceHolderText="Search audio streams..."  NoSearchResultsDisplayString="No audio stream found based on your search!" MaxHeight="200" Width="320" HorizontalAlignment="Left" Visibility="Collapsed" ItemSelected="srchAudio_ItemSelected" x:Name="srchAudio">
 
             </oceancyan:SearchControl>
@@ -20,7 +20,7 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <ComboBox Name="cmbAudioTrack"  VerticalAlignment="Stretch"
-HorizontalAlignment="Stretch" 
+HorizontalAlignment="Stretch"  FontFamily="{StaticResource GlobalFontHolder}"   
 PlaceholderText="Select Audio Track"  ItemsSource="{x:Bind ViewModel.AudStreams, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.CurrentStream, Mode=TwoWay}"
 
 SelectionChanged="cmbAudioTrack_SelectionChanged">
@@ -29,7 +29,7 @@ SelectionChanged="cmbAudioTrack_SelectionChanged">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon Glyph="&#xE8D6;" FontSize="16" Foreground="Cyan"/>
 
-                                <TextBlock VerticalAlignment="Center">
+                                <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}"   >
        <Run Text="Stream"/>
        <Run Text="{x:Bind StreamIndex}"/>
        <Run Text="["/>
@@ -46,7 +46,7 @@ SelectionChanged="cmbAudioTrack_SelectionChanged">
             </Grid>
             <ToggleButton Checked="tglDisableAudioTrack_Checked" 
 Unchecked="tglDisableAudioTrack_Unchecked" Name="tglDisableAudioTrack"
-Content="Disable Audio" 
+Content="Disable Audio"  FontFamily="{StaticResource GlobalFontHolder}"   
 HorizontalAlignment="Left"/>
         </StackPanel>
         <Rectangle Height="1" Grid.Row="1" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>

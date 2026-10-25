@@ -19,15 +19,15 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Audio Reverb" Style="{StaticResource TitleTextBlockStyle}"/>
-        <TextBlock Text="Apply reverb to one or more audio files" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Audio Reverb" Style="{StaticResource TitleTextBlockStyle}"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Apply reverb to one or more audio files" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         <Button Name="btnAddAudioFiles" Click="btnAddAudioFiles_Click" Grid.Row="2">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
-                <TextBlock Text="Add Audio Files"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Audio Files"/>
             </StackPanel>
         </Button>
-        <TextBlock Text="{x:Bind AddedFiles.Count, Converter={StaticResource CountToAudioFilesConv}, Mode=OneWay}" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind AddedFiles.Count, Converter={StaticResource CountToAudioFilesConv}, Mode=OneWay}" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         <Grid Grid.Row="4" ColumnSpacing="100">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -48,15 +48,15 @@ CornerRadius="16"
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Reverb Options" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                    <ComboBox SelectionChanged="cmbReverb_SelectionChanged" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"  Header="Style" SelectedIndex="2" Grid.Row="1" Name="cmbReverb">
-                        <ComboBoxItem Content="Small Room"/>
-                        <ComboBoxItem Content="Large Hall"/>
-                        <ComboBoxItem Content="Cathedral (Recommended)"/>
-                        <ComboBoxItem Content="Normal"/>
-                        <ComboBoxItem Content="Cave"/>
-                        <ComboBoxItem Content="Bathroom"/>
-                        <ComboBoxItem Content="Ethereal"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Reverb Options" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <ComboBox FontFamily="{StaticResource GlobalFontHolder}"   SelectionChanged="cmbReverb_SelectionChanged" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"  Header="Style" SelectedIndex="2" Grid.Row="1" Name="cmbReverb">
+                        <ComboBoxItem  FontFamily="{StaticResource GlobalFontHolder}"   Content="Small Room"/>
+                        <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"   Content="Large Hall"/>
+                        <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"   Content="Cathedral (Recommended)"/>
+                        <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"   Content="Normal"/>
+                        <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"   Content="Cave"/>
+                        <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"   Content="Bathroom"/>
+                        <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"   Content="Ethereal"/>
                     </ComboBox>
                     <ScrollViewer Grid.Row="2">
                         <Grid Visibility="Visible" Name="grdMoreOptions"  Grid.Row="2" RowSpacing="10">
@@ -72,12 +72,12 @@ CornerRadius="16"
                                     <ColumnDefinition></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <NumberBox x:Name="numReverberance" Minimum="0" Maximum="100" Value="80" SpinButtonPlacementMode="Compact" Header="Reverberance %" Grid.Row="0" Grid.Column="0"></NumberBox>
-                                <NumberBox x:Name="numHfDamping" Minimum="0" Maximum="100" Value="40" SpinButtonPlacementMode="Compact" Header="HF Damping %" Grid.Row="0" Grid.Column="1"></NumberBox>
-                                <NumberBox x:Name="numRoomScale" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact" Header="Room Scale %" Grid.Row="1" Grid.Column="0"></NumberBox>
-                                <NumberBox x:Name="numStereoDepth" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact" Header="Stereo Depth %" Grid.Row="1" Grid.Column="1"></NumberBox>
-                                <NumberBox x:Name="numPreDelay" Minimum="0" Maximum="500" Value="20" SpinButtonPlacementMode="Compact" Header="Pre-Delay (ms)" Grid.Row="2" Grid.Column="0"></NumberBox>
-                                <NumberBox x:Name="numWetGain" Minimum="-10" Maximum="10" Value="3" SpinButtonPlacementMode="Compact" Header="Wet Gain (dB)" Grid.Row="2" Grid.Column="1"></NumberBox>
+                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   x:Name="numReverberance" Minimum="0" Maximum="100" Value="80" SpinButtonPlacementMode="Compact" Header="Reverberance %" Grid.Row="0" Grid.Column="0"></NumberBox>
+                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   x:Name="numHfDamping" Minimum="0" Maximum="100" Value="40" SpinButtonPlacementMode="Compact" Header="HF Damping %" Grid.Row="0" Grid.Column="1"></NumberBox>
+                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   x:Name="numRoomScale" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact" Header="Room Scale %" Grid.Row="1" Grid.Column="0"></NumberBox>
+                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   x:Name="numStereoDepth" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact" Header="Stereo Depth %" Grid.Row="1" Grid.Column="1"></NumberBox>
+                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   x:Name="numPreDelay" Minimum="0" Maximum="500" Value="20" SpinButtonPlacementMode="Compact" Header="Pre-Delay (ms)" Grid.Row="2" Grid.Column="0"></NumberBox>
+                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   x:Name="numWetGain" Minimum="-10" Maximum="10" Value="3" SpinButtonPlacementMode="Compact" Header="Wet Gain (dB)" Grid.Row="2" Grid.Column="1"></NumberBox>
                             </Grid>
                         </Grid>
                     </ScrollViewer>
@@ -94,7 +94,7 @@ CornerRadius="16"
                 >
                 <Border.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem  Text="Add Files" Name="mnftAddFiles" Click="btnAddAudioFiles_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Add Files" Name="mnftAddFiles" Click="btnAddAudioFiles_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE710;"/>
                             </MenuFlyoutItem.Icon>
@@ -107,7 +107,7 @@ CornerRadius="16"
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Audio Files" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Audio Files" Style="{StaticResource SubtitleTextBlockStyle}"/>
                     <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="1">
                         <Grid RowSpacing="20">
                         <Grid.RowDefinitions>
@@ -115,19 +115,19 @@ CornerRadius="16"
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock VerticalAlignment="Center" Text="{x:Bind ProcessedFiles.Count, Mode=OneWay, Converter={StaticResource CountToAudioFilesProcessedConv}}" Grid.Row="0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Text="{x:Bind ProcessedFiles.Count, Mode=OneWay, Converter={StaticResource CountToAudioFilesProcessedConv}}" Grid.Row="0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         <Button HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb" Name="btnApplyReverb" Click="btnApplyReverb_Click"/>
                             <StackPanel Visibility="Collapsed" Orientation="Horizontal" Name="stkOutputActions" Grid.Row="2" Spacing="10">
                                 <Button Name="btnPlayAllOutput" Click="btnPlayAllOutput_Click">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
                                         <Image Width="20" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"/>
-                                        <TextBlock Text="Play All Reverb Output"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play All Reverb Output"/>
                                     </StackPanel>
                                 </Button>
                                 <Button Name="btnAddtoQueueAllOutput" Click="btnAddtoQueueAllOutput_Click">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
                                         <Image Width="20" Source="{Binding AddToQueue, Source={StaticResource GlobalIconHolder}}"/>
-                                        <TextBlock Text="Add to Queue all Reverb Output"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add to Queue all Reverb Output"/>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -138,13 +138,13 @@ CornerRadius="16"
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Export Directory"/>
-                            <TextBox Grid.Row="1"  Name="txtOutputDirectory" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Default Music Folder"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Export Directory"/>
+                            <TextBox  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1"  Name="txtOutputDirectory" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Default Music Folder"/>
                             <Button Grid.Row="1" Background="Transparent" BorderBrush="Transparent" 
 VerticalAlignment="Stretch" HorizontalAlignment="Right" Name="btnExportDirectory" 
 Content="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" 
 Click="btnExportDirectory_Click"/>
-                            <CheckBox Checked="chkCustomDirectories_Checked" Unchecked="chkCustomDirectories_Checked" Grid.Row="2" Name="chkCustomDirectories" Content="Custom Directories for individual audio files"/>
+                            <CheckBox FontFamily="{StaticResource GlobalFontHolder}"   Checked="chkCustomDirectories_Checked" Unchecked="chkCustomDirectories_Checked" Grid.Row="2" Name="chkCustomDirectories" Content="Custom Directories for individual audio files"/>
 
                         </Grid>
                     </StackPanel>
@@ -154,63 +154,63 @@ Click="btnExportDirectory_Click"/>
                                 <Grid ToolTipService.ToolTip="{Binding FilePath}" ColumnSpacing="20">
                                     <Grid.ContextFlyout>
                                         <MenuFlyout>
-                                            <MenuFlyoutItem  Text="Play Original" Name="mnftPlayOriginal" Click="mnftPlayOriginal_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Play Original" Name="mnftPlayOriginal" Click="mnftPlayOriginal_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE768;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Play Reverb Output" Name="mnftPlayOutput" Click="mnftPlayOutput_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Play Reverb Output" Name="mnftPlayOutput" Click="mnftPlayOutput_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE768;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator Visibility="{Binding VisibilityOfCompletedFileLocation}"/>
-                                            <MenuFlyoutItem Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Add Reverb Output to Queue" Name="mnftAddToQueueOutput" Click="mnftAddToQueueOutput_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Add Reverb Output to Queue" Name="mnftAddToQueueOutput" Click="mnftAddToQueueOutput_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
-                                            <MenuFlyoutItem  Text="Remove" Name="mnftRemoveAudioFile" Click="mnftRemoveAudioFile_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Remove" Name="mnftRemoveAudioFile" Click="mnftRemoveAudioFile_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE894;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
-                                            <MenuFlyoutItem  Text="Change Export Directory" Name="mnftChangeExportDir" Click="mnftChangeExportDir_Click"  IsEnabled="{Binding DirectorySelectionEnabled}" Visibility="{Binding IndividualDirectorySel}">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Change Export Directory" Name="mnftChangeExportDir" Click="mnftChangeExportDir_Click"  IsEnabled="{Binding DirectorySelectionEnabled}" Visibility="{Binding IndividualDirectorySel}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8F7;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                          
-                                            <MenuFlyoutItem  Text="Open File Location" Name="mnftOpenFileLocation" Click="mnftOpenFileLocation_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Open File Location" Name="mnftOpenFileLocation" Click="mnftOpenFileLocation_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8DA;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem  Text="Open File Location of Reverb Output" Name="mnftOpenFileLocOutput" Click="mnftOpenFileLocOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Open File Location of Reverb Output" Name="mnftOpenFileLocOutput" Click="mnftOpenFileLocOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8DA;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
-                                            <MenuFlyoutItem  Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem  Text="Copy File Path of Reverb Output" Name="mnftCopyReverbOutputFilePath" Click="mnftCopyReverbOutputFilePath_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Copy File Path of Reverb Output" Name="mnftCopyReverbOutputFilePath" Click="mnftCopyReverbOutputFilePath_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
-                                            <MenuFlyoutItem  Text="File Info" Name="mnftFileInfo" Click="mnftFileInfo_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="File Info" Name="mnftFileInfo" Click="mnftFileInfo_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE946;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem  Text="File Info of Reverb Output" Name="mnftFileInfoReverbOutput" Click="mnftFileInfoReverbOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="File Info of Reverb Output" Name="mnftFileInfoReverbOutput" Click="mnftFileInfoReverbOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE946;"/>
                                                 </MenuFlyoutItem.Icon>
@@ -227,7 +227,7 @@ Click="btnExportDirectory_Click"/>
                                     </Grid.ColumnDefinitions>
 
                                     <FontIcon Glyph="{Binding Glyph}" FontSize="14"/>
-                                    <TextBlock Text="{Binding Title}" Grid.Column="1"/>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Title}" Grid.Column="1"/>
                                     <Button IsEnabled="{Binding DirectorySelectionEnabled}"  ToolTipService.ToolTip="{Binding DirectoryPath}" FontFamily="{StaticResource SymbolThemeFontFamily}"  Visibility="{Binding IndividualDirectorySel}" Grid.Column="2" Content="&#xE8B7;" Name="btnSelectIndividualDir" Click="btnSelectIndividualDir_Click">
                                         
                                     </Button>

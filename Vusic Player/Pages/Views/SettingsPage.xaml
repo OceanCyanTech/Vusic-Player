@@ -40,19 +40,19 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="App Configuration" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="App Configuration" Style="{StaticResource TitleTextBlockStyle}"/>
                         <MenuFlyoutSeparator Grid.Row="1"/>
-                        <TextBlock Text="App Log" Grid.Row="2" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="View events that are recorded when Vusic Player performs informative/successful actions or unexpectedly crashes due to bugs" Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="App Log" Grid.Row="2" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="View events that are recorded when Vusic Player performs informative/successful actions or unexpectedly crashes due to bugs" Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
                         <Button Name="btnViewLog" Grid.Row="4" Content="View App Log" Style="{StaticResource AccentButtonStyle}" Click="btnViewLog_Click"/>
                         <MenuFlyoutSeparator Grid.Row="5"/>
-                        <TextBlock Text="Media Database" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Re-scan the media database. The media database will be cleared and rescaned fresh." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="7"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Media Database" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Re-scan the media database. The media database will be cleared and rescaned fresh." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="7"/>
                         <Button Content="Re-scan Database" Name="btnRefreshDatabase" Click="btnRefreshDatabase_Click" Grid.Row="8"/>
                         <MenuFlyoutSeparator Grid.Row="9"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
-                            <TextBlock Name="txtFolderPermissions" Text="Folder Permissions" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                            <TextBlock Text="Toggle or add folders that Vusic Player is allowed to read and display in the Library Pages." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtFolderPermissions" Text="Folder Permissions" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Toggle or add folders that Vusic Player is allowed to read and display in the Library Pages." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
                             <controls1:WrapPanel VerticalAlignment="Stretch" MaxHeight="95" Orientation="Horizontal" Grid.Row="1" Margin="0, 20" >
                                 <GridView SelectionMode="None" VerticalAlignment="Stretch" Name="grdViewFolders" Grid.Row="1">
                                     <GridView.ItemsPanel>
@@ -65,17 +65,17 @@
                                             <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16"  Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
                                                 <ToggleButton.ContextFlyout>
                                                     <MenuFlyout >
-                                                        <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
+                                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
                                                             <MenuFlyoutItem.Icon>
                                                                 <FontIcon Glyph="&#xE838;"></FontIcon>
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
-                                                        <MenuFlyoutItem Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
+                                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
                                                             <MenuFlyoutItem.Icon>
                                                                 <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                                             </MenuFlyoutItem.Icon>
                                                         </MenuFlyoutItem>
-                                                        <MenuFlyoutItem Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
+                                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
                                                             <MenuFlyoutItem.Icon>
                                                                 <FontIcon Glyph="&#xE894;"></FontIcon>
                                                             </MenuFlyoutItem.Icon>
@@ -87,33 +87,33 @@
                                         </DataTemplate>
                                     </GridView.ItemTemplate>
                                 </GridView>
-                                <TextBlock Text="No folders added." Visibility="Collapsed"  Name="txtNofoldersadded" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="No folders added." Visibility="Collapsed"  Name="txtNofoldersadded" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
                                 <Button CornerRadius="16" VerticalAlignment="Stretch" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                                        <TextBlock Text="Add Folder"></TextBlock>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Folder"></TextBlock>
                                     </StackPanel>
                                 </Button>
                             </controls1:WrapPanel>
                             <MenuFlyoutSeparator/>
-                            <TextBlock Text="Startup" Name="txtStartup" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                            <TextBlock Text="Configure app startup settings." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Startup" Name="txtStartup" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Configure app startup settings." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
                             <CheckBox Name="chkShowSplash" Content="Show Splash Screen" Checked="chkShowSplash_Checked" Unchecked="chkShowSplash_Checked"/>
-                            <ComboBox Header="Page to show when app starts" SelectedIndex="0" Name="cmbStartupPage" SelectionChanged="cmbStartupPage_SelectionChanged">
+                            <ComboBox FontFamily="{StaticResource GlobalFontHolder}"  Header="Page to show when app starts" SelectedIndex="0" Name="cmbStartupPage" SelectionChanged="cmbStartupPage_SelectionChanged">
                                 <ComboBox.Items>
-                                    <ComboBoxItem Content="Home Page"/>
-                                    <ComboBoxItem Content="Music Library Page"/>
-                                    <ComboBoxItem Content="Video Library Page"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Home Page"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Music Library Page"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Video Library Page"/>
                                 </ComboBox.Items>
                             </ComboBox>
                             <Button Content="App Lock" Click="btnAppLock_Click"  Name="btnAppLock" Style="{StaticResource AccentButtonStyle}"/>
                             <MenuFlyoutSeparator/>
-                            <TextBlock Text="Default App" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                            <TextBlock Text="Make Vusic Player the default media player app for various media formats." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Default App" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Make Vusic Player the default media player app for various media formats." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
                             <Button Content="Open Settings" Click="btnOpenSettings_Click"  Name="btnOpenSettings" Style="{StaticResource AccentButtonStyle}"/>
 
                             <MenuFlyoutSeparator/>
-                            <TextBlock Text="App Reset" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="App Reset" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <Button Content="Reset All Vusic Player Settings" Click="btnResetAppSettings_Click"  Name="btnResetAppSettings" Style="{StaticResource AccentButtonStyle}"/>
 
                         </StackPanel>
@@ -136,38 +136,38 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Vertical" Spacing="30">
-                            <TextBlock Text="About" Name="txtAbout"  Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="About" Name="txtAbout"  Style="{StaticResource TitleTextBlockStyle}"/>
                             <MenuFlyoutSeparator/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Spacing="15">
                             <StackPanel Orientation="Horizontal" Spacing="20">
                                 <Image VerticalAlignment="Center" Width="50" Source="/Assets/appicon.png"></Image>
-                                <TextBlock IsTextSelectionEnabled="True" VerticalAlignment="Center" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Vusic Player"></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" VerticalAlignment="Center" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Vusic Player"></TextBlock>
                             </StackPanel>
-                            <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.0.0"></TextBlock>
-                            <TextBlock IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="Preview (RTM)"></TextBlock>
-                            <TextBlock IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech 2026" Name="txtCompanyCopyright"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.0.0"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="Preview (RTM)"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech 2026" Name="txtCompanyCopyright"></TextBlock>
 
                             <Image Margin="0, 30" HorizontalAlignment="Left" Width="300" Source="/Assets/OceanCyan Logo High.png"/>
                             <MenuFlyoutSeparator/>
-                            <TextBlock Text="Media Engine" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                            <TextBlock Text="FlyleafLib" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                            <TextBlock Text="Copyright © SuRGeoNix"/>
-                            <TextBlock Text="Licensed under LGPLv3"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Media Engine" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="FlyleafLib" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Copyright © SuRGeoNix"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Licensed under LGPLv3"/>
                             <StackPanel Orientation="Horizontal"  Spacing="10">
-                                <TextBlock Text="Source: " VerticalAlignment="Top"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Source: " VerticalAlignment="Top"/>
                                 <HyperlinkButton NavigateUri="https://github.com/SuRGeoNix/Flyleaf" VerticalAlignment="Top" Padding="0" Content="Github Code"/>
                             </StackPanel>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="2"/>
-                        <TextBlock Text="Updates" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Updates" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}"/>
                         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
                             <ProgressRing Name="prgCheckingForUpdates" Visibility="Collapsed"/>
                             <Image Width="30" Name="imgUpdate" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
-                            <TextBlock VerticalAlignment="Center" Name="txtUpdateInfo" Style="{StaticResource BodyLargeStrongTextBlockStyle}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="You are on the latest version of Vusic Player!"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Name="txtUpdateInfo" Style="{StaticResource BodyLargeStrongTextBlockStyle}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="You are on the latest version of Vusic Player!"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Spacing="20" Grid.Row="5">
-                            <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" Text="The Microsoft Store handles updates automatically. But if you want to double-check right now, you can trigger a manual check below."/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" Text="The Microsoft Store handles updates automatically. But if you want to double-check right now, you can trigger a manual check below."/>
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <Button Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" Style="{StaticResource AccentButtonStyle}" Content="Check For Updates"/>
                                 <Button Name="btnOpenStore" Click="btnOpenStore_Click"  Content="Open Microsoft Store to Update" Visibility="Collapsed"/>
@@ -175,8 +175,8 @@
                             </StackPanel>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="6"/>
-                        <TextBlock Text="Help" Name="txtHelp"  Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
-                        <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="8" Text="Vusic Player is an open source project!"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Help" Name="txtHelp"  Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="8" Text="Vusic Player is an open source project!"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="9">
                             <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Open Source License" Content="Open Source License" Name="btnViewOSLicense" Click="btnViewOSLicense_Click"/>
                             <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Third Party Licenses" Content="Third Party Licenses" Name="btnViewThirdPartyLicense" Click="btnViewThirdPartyLicense_Click"/>
@@ -187,10 +187,10 @@
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
                             <MenuFlyoutSeparator />
-                            <TextBlock Text="Privacy" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Privacy" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
                             <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Privacy Statement" Content="Privacy Statement" Name="btnViewPrivacyStatement" Click="btnViewPrivacyStatement_Click"/>
                             <MenuFlyoutSeparator />
-                            <TextBlock Text="Keyboard Shortcuts" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Keyboard Shortcuts" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
                             <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View All Keyboard Shortcuts" Content="Keyboard Shortcut Guide" Name="btnViewKS" Click="btnViewKS_Click"/>
 
                         </StackPanel>
@@ -211,32 +211,32 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Music Options" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Music Options" Style="{StaticResource TitleTextBlockStyle}"/>
                         <MenuFlyoutSeparator Grid.Row="1"/>
-                        <TextBlock Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
-                        <TextBlock Text="Permanently delete all playlists you've created." Grid.Row="3"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Permanently delete all playlists you've created." Grid.Row="3"/>
                         <Button Grid.Row="4"  Content="Delete all Playlists">
                             <Button.Flyout>
                                 <Flyout>
                                     <StackPanel Orientation="Vertical" Spacing="10">
-                                        <TextBlock Text="Are you sure you want to delete all playlists created?"/>
-                                        <TextBlock Text="This cannot be undone"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all playlists created?"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
                                         <Button Content="Confirm Delete" Name="btnDeleteAllPlaylists" Click="btnDeleteAllPlaylists_Click" Style="{StaticResource AccentButtonStyle}" />
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
                         <MenuFlyoutSeparator Grid.Row="5"/>
-                        <TextBlock Text="Audio Metadata" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="6"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Audio Metadata" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="6"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="7">
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <TextBlock Text="Clear artist profile pictures saved in Vusic Player." Grid.Row="7"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Clear artist profile pictures saved in Vusic Player." Grid.Row="7"/>
                                 <Button Grid.Row="4"  Content="Delete all Artist Profile Pictures">
                                     <Button.Flyout>
                                         <Flyout>
                                             <StackPanel Orientation="Vertical" Spacing="10">
-                                                <TextBlock Text="Are you sure you want to delete all artist profile pictures saved?"/>
-                                                <TextBlock Text="This cannot be undone"/>
+                                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all artist profile pictures saved?"/>
+                                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
                                                 <Button Content="Confirm Delete" Name="btnDeleteAllArtists" Click="btnDeleteAllArtists_Click" Style="{StaticResource AccentButtonStyle}" />
                                             </StackPanel>
                                         </Flyout>
@@ -245,13 +245,13 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <TextBlock Text="Clear album covers saved in Vusic Player." Grid.Row="7"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Clear album covers saved in Vusic Player." Grid.Row="7"/>
                                 <Button Grid.Row="4"  Content="Delete all Album Covers">
                                     <Button.Flyout>
                                         <Flyout>
                                             <StackPanel Orientation="Vertical" Spacing="10">
-                                                <TextBlock Text="Are you sure you want to delete all album covers saved?"/>
-                                                <TextBlock Text="This cannot be undone"/>
+                                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all album covers saved?"/>
+                                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
                                                 <Button Content="Confirm Delete" Name="btnDeleteAllAlbums" Click="btnDeleteAllAlbums_Click" Style="{StaticResource AccentButtonStyle}" />
                                             </StackPanel>
                                         </Flyout>
@@ -260,13 +260,13 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <TextBlock Text="Clear genre covers saved in Vusic Player." Grid.Row="7"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Clear genre covers saved in Vusic Player." Grid.Row="7"/>
                                 <Button Grid.Row="4"  Content="Delete all Genre Covers">
                                     <Button.Flyout>
                                         <Flyout>
                                             <StackPanel Orientation="Vertical" Spacing="10">
-                                                <TextBlock Text="Are you sure you want to delete all genre covers saved?"/>
-                                                <TextBlock Text="This cannot be undone"/>
+                                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all genre covers saved?"/>
+                                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
                                                 <Button Content="Confirm Delete" Name="btnDeleteAllGenres" Click="btnDeleteAllGenres_Click" Style="{StaticResource AccentButtonStyle}" />
                                             </StackPanel>
                                         </Flyout>
@@ -275,8 +275,8 @@
                             </StackPanel>
                             <MenuFlyoutSeparator/>
                         </StackPanel>
-                        <TextBlock Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="8"/>
-                        <TextBlock Text="Hide or show panels in the music library page." Grid.Row="9"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="8"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Hide or show panels in the music library page." Grid.Row="9"/>
                         <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="10">
                             <CheckBox x:Name="chkMusicRecent" Content="Recent Music" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
                             <CheckBox x:Name="chkMusicPlaylists" Content="Playlists" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
@@ -302,21 +302,21 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Video Options" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Video Options" Style="{StaticResource TitleTextBlockStyle}"/>
 
 
                         <MenuFlyoutSeparator Grid.Row="1"/>
-                        <TextBlock Text="Continue Playing" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Continue Playing" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="3">
                             <CheckBox Checked="chkSaveHistory_Checked" Unchecked="chkSaveHistory_Checked" Content="Save videos to history" Name="chkSaveHistory"/>
 
-                            <TextBlock Text="Delete all history of videos you've viewed on Vusic Player." Grid.Row="3"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Delete all history of videos you've viewed on Vusic Player." Grid.Row="3"/>
                             <Button Grid.Row="4"  Content="Delete all Video History">
                                 <Button.Flyout>
                                     <Flyout>
                                         <StackPanel Orientation="Vertical" Spacing="10">
-                                            <TextBlock Text="Are you sure you want to delete all video history?"/>
-                                            <TextBlock Text="This cannot be undone"/>
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all video history?"/>
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
                                             <Button Content="Confirm Delete" Name="btnDeleteAllVideoHistory" Click="btnDeleteAllVideoHistory_Click" Style="{StaticResource AccentButtonStyle}" />
                                         </StackPanel>
                                     </Flyout>
@@ -337,26 +337,26 @@
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{Binding FilePath}"/>
+                                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding FilePath}"/>
                                                 <Button Grid.Column="1" Background="Transparent"  Content="Remove from hidden list" Name="btnRemoveVideoFromHiddenList" Click="btnRemoveVideoFromHiddenList_Click"/>
                                             </Grid>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                 </ListView>
-                                <TextBlock Text="There are no hidden videos!" Grid.Row="1"
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="There are no hidden videos!" Grid.Row="1"
            Visibility="{x:Bind GetEmptyVisibility(HiddenVideos.Count), Mode=OneWay}" />
                             </Grid>
                             <MenuFlyoutSeparator />
 
                         </StackPanel>
-                        <TextBlock Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="4"/>
-                        <TextBlock Text="Permanently delete all playlists you've created." Grid.Row="5"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Playlists" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="4"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Permanently delete all playlists you've created." Grid.Row="5"/>
                         <Button Grid.Row="6"  Content="Delete all Playlists">
                             <Button.Flyout>
                                 <Flyout>
                                     <StackPanel Orientation="Vertical" Spacing="10">
-                                        <TextBlock Text="Are you sure you want to delete all playlists created?"/>
-                                        <TextBlock Text="This cannot be undone"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all playlists created?"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
                                         <Button Content="Confirm Delete" Click="btnDeleteAllPlaylists_Click" Style="{StaticResource AccentButtonStyle}" />
                                     </StackPanel>
                                 </Flyout>
@@ -364,22 +364,22 @@
                         </Button>
 
                         <MenuFlyoutSeparator Grid.Row="7"/>
-                        <TextBlock Text="Shows" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="8"/>
-                        <TextBlock Text="Permanently delete all shows you've created." Grid.Row="9"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Shows" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="8"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Permanently delete all shows you've created." Grid.Row="9"/>
                         <Button Grid.Row="10"  Content="Delete all Shows">
                             <Button.Flyout>
                                 <Flyout>
                                     <StackPanel Orientation="Vertical" Spacing="10">
-                                        <TextBlock Text="Are you sure you want to delete all shows created?"/>
-                                        <TextBlock Text="This cannot be undone"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all shows created?"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
                                         <Button Content="Confirm Delete" Name="btnDeleteAllShows" Click="btnDeleteAllShows_Click" Style="{StaticResource AccentButtonStyle}" />
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
                         <MenuFlyoutSeparator Grid.Row="11"/>
-                        <TextBlock Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="12"/>
-                        <TextBlock Text="Hide or show panels in the video library page." Grid.Row="13"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="12"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Hide or show panels in the video library page." Grid.Row="13"/>
                         <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="14">
                             <CheckBox x:Name="chkVideoContinueRecent" Content="Continue Playing and Recent Videos" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
                             <CheckBox x:Name="chkVideoRecommended" Content="Recommended Videos" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
@@ -398,10 +398,10 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Home Page Options" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Home Page Options" Style="{StaticResource TitleTextBlockStyle}"/>
                         <MenuFlyoutSeparator Grid.Row="1"/>
-                        <TextBlock Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
-                        <TextBlock Text="Hide or show panels in the home page." Grid.Row="3"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Hide or show panels in the home page." Grid.Row="3"/>
                         <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="4">
                             <CheckBox x:Name="chkHomeContinueRecent" Content="Continue Playing and Recent Videos" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
                             <CheckBox x:Name="chkHomeRecentMusic" Content="Recent Music" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
@@ -416,52 +416,52 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Vertical" Spacing="30" Name="stkGeneral1">
-                            <TextBlock Text="General Settings" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="General Settings" Style="{StaticResource TitleTextBlockStyle}"/>
                             <MenuFlyoutSeparator Grid.Row="1"/>
-                            <TextBlock Text="Skip Duration" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
-                            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Modify how many seconds the skip forward and backward buttons would jump." Grid.Row="3"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Skip Duration" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyStrongTextBlockStyle}" Text="Modify how many seconds the skip forward and backward buttons would jump." Grid.Row="3"/>
                             <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
-                                <TextBlock VerticalAlignment="Center" Text="Backward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                                <ComboBox SelectedIndex="1" Name="cmbSkipBackward" SelectionChanged="cmbSkipBackward_SelectionChanged">
-                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="5 seconds"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Text="Backward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ComboBox FontFamily="{StaticResource GlobalFontHolder}"  SelectedIndex="1" Name="cmbSkipBackward" SelectionChanged="cmbSkipBackward_SelectionChanged">
+                                    <ComboBoxItem   FontFamily="{StaticResource GlobalFontHolder}" Content="5 seconds"/>
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="10 seconds"/>
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="15 seconds"/>
-                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="20 seconds"/>
+                                    <ComboBoxItem  FontFamily="{StaticResource GlobalFontHolder}" Content="20 seconds"/>
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="30 seconds"/>
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="Custom"/>
                                 </ComboBox>
-                                <NumberBox ValueChanged="numCustomSkipBack_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipBack"/>
+                                <NumberBox  FontFamily="{StaticResource GlobalFontHolder}"   ValueChanged="numCustomSkipBack_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipBack"/>
                             </StackPanel>
                             <StackPanel  Orientation="Horizontal" Spacing="10" Grid.Row="5">
-                                <TextBlock VerticalAlignment="Center" Text="Forward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                                <ComboBox SelectedIndex="1" Name="cmbSkipForward" SelectionChanged="cmbSkipForward_SelectionChanged">
-                                    <ComboBoxItem Content="5 seconds"/>
-                                    <ComboBoxItem Content="10 seconds"/>
-                                    <ComboBoxItem Content="15 seconds"/>
-                                    <ComboBoxItem Content="20 seconds"/>
-                                    <ComboBoxItem Content="30 seconds"/>
-                                    <ComboBoxItem Content="Custom"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Text="Forward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ComboBox FontFamily="{StaticResource GlobalFontHolder}"  SelectedIndex="1" Name="cmbSkipForward" SelectionChanged="cmbSkipForward_SelectionChanged">
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="5 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="10 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="15 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="20 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="30 seconds"/>
+                                    <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Custom"/>
                                 </ComboBox>
-                                <NumberBox ValueChanged="numCustomSkipAhead_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipForward"/>
+                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   ValueChanged="numCustomSkipAhead_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipForward"/>
                             </StackPanel>
                             <MenuFlyoutSeparator Grid.Row="6"/>
-                            <TextBlock Text="Maximum Volume" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
-                            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Maximum Volume allowed." Grid.Row="3"/>
-                            <NumberBox SpinButtonPlacementMode="Inline"  Minimum="10" Maximum="300" Name="numMaxVolume" ValueChanged="numMaxVolume_ValueChanged"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Maximum Volume" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyStrongTextBlockStyle}" Text="Maximum Volume allowed." Grid.Row="3"/>
+                            <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   SpinButtonPlacementMode="Inline"  Minimum="10" Maximum="300" Name="numMaxVolume" ValueChanged="numMaxVolume_ValueChanged"/>
                             <MenuFlyoutSeparator Grid.Row="6"/>
-                            <TextBlock Text="Maximum Search Results" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
-                            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Maximum number of Search Results to be displayed." Grid.Row="3"/>
-                            <NumberBox SpinButtonPlacementMode="Inline"  Minimum="3" Maximum="15" Name="numMaxSearchResults" ValueChanged="numMaxSearchResults_ValueChanged"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Maximum Search Results" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyStrongTextBlockStyle}" Text="Maximum number of Search Results to be displayed." Grid.Row="3"/>
+                            <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   SpinButtonPlacementMode="Inline"  Minimum="3" Maximum="15" Name="numMaxSearchResults" ValueChanged="numMaxSearchResults_ValueChanged"/>
                             <MenuFlyoutSeparator/>
                         </StackPanel>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Customization" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="1"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="2">
                             <StackPanel Orientation="Horizontal" Spacing="30" Grid.Row="8">
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Change Font"/>
-                                <ComboBox SelectionChanged="cmbFontFamilies_SelectionChanged" Name="cmbFontFamilies">
+                                <ComboBox FontFamily="{StaticResource GlobalFontHolder}"  SelectionChanged="cmbFontFamilies_SelectionChanged" Name="cmbFontFamilies">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding FontName}" FontFamily="{Binding FontFam}"/>
+                                            <TextBlock   Text="{Binding FontName}" FontFamily="{Binding FontFam}"/>
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
@@ -490,11 +490,11 @@
                                 </Button>
                             </StackPanel>
                             <StackPanel Name="stkRestartApp" Visibility="Collapsed" Orientation="Horizontal" Spacing="30" Grid.Row="8">
-                                <TextBlock VerticalAlignment="Center" Text="Changes will be applied when Vusic Player is opened the next time."/>
-                                <Button Style="{StaticResource AccentButtonStyle}" Content="Restart Vusic Player" Click="btnRestartVusicPlayer_Click" Name="btnRestartVusicPlayer"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Text="Changes will be applied when Vusic Player is opened the next time."/>
+                                <Button FontFamily="{StaticResource GlobalFontHolder}"   Style="{StaticResource AccentButtonStyle}" Content="Restart Vusic Player" Click="btnRestartVusicPlayer_Click" Name="btnRestartVusicPlayer"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Spacing="30" >
-                                <TextBlock Name="txtChangeTheme" Text="Change Theme" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtChangeTheme" Text="Change Theme" Style="{StaticResource BodyStrongTextBlockStyle}"/>
 
                             </StackPanel>
                         </StackPanel>
@@ -508,8 +508,8 @@
                         <Button ToolTipService.ToolTip="Go Back" HorizontalAlignment="Left"  Name="btnBack" Click="btnBack_Click">
                             <Image Width="20" Source="{Binding BackIcon, Source={StaticResource GlobalIconHolder}}"/>
                         </Button>
-                        <TextBlock HorizontalAlignment="Center" Name="txtStatementHeader" Text="Privacy Statement" Grid.Row="1" Style="{StaticResource TitleLargeTextBlockStyle}"/>
-                        <RichEditBox Name="rchEditBoxStatements" Grid.Row="2" IsReadOnly="True"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" Name="txtStatementHeader" Text="Privacy Statement" Grid.Row="1" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+                        <RichEditBox FontFamily="{StaticResource GlobalFontHolder}"   Name="rchEditBoxStatements" Grid.Row="2" IsReadOnly="True"/>
                     </Grid>
                 </Grid>
             </ScrollViewer>
@@ -517,7 +517,7 @@
         <TeachingTip Name="ttInfo">
             <StackPanel Width="600" Orientation="Horizontal" Spacing="10">
                 <Image Source="{Binding Success, Source={StaticResource GlobalIconHolder}}" Name="imgInfo" Width="25"/>
-                <TextBlock Name="txtInfo"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtInfo"/>
             </StackPanel>
         </TeachingTip>
     </Grid>

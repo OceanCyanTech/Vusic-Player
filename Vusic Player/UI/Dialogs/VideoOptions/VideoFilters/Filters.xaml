@@ -12,10 +12,10 @@
         <converters:PercentStringConverter x:Key="PercentConverter"></converters:PercentStringConverter>
     </UserControl.Resources>
     <StackPanel Name="stkFilters" Spacing="24" Margin="10, 0">
-        <Button Style="{StaticResource AccentButtonStyle}" Content="Reset All Filters" Name="btnResetAll" Click="btnResetAll_Click" />
+        <Button FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource AccentButtonStyle}" Content="Reset All Filters" Name="btnResetAll" Click="btnResetAll_Click" />
 
         <StackPanel Spacing="8">
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Brightness" FontWeight="SemiBold"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource BaseTextBlockStyle}" Text="Brightness" FontWeight="SemiBold"/>
             <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="12">
                 <oceancyan:OceanSlider HorizontalAlignment="Stretch" x:Name="sldBrightness" 
                                    TickFrequency="18" TicksEnabled="True" IsSnapToTickEnabled="True"
@@ -24,14 +24,14 @@
                                    IsTooltipEnabled="False"
                                    ValueChanged="sldBrightness_ValueChanged"/>
 
-                <NumberBox x:Name="numBrightness" Value="0" Minimum="-180" Maximum="180" 
+                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numBrightness" Value="0" Minimum="-180" Maximum="180" 
                        SpinButtonPlacementMode="Inline"
                        ValueChanged="numBrightness_ValueChanged"/>
 
-                <TextBlock x:Name="txtBrightnessPercentage" VerticalAlignment="Center" Text="0%" 
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    x:Name="txtBrightnessPercentage" VerticalAlignment="Center" Text="0%" 
                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
             </StackPanel>
-            <Button x:Name="btnResetBrightness" Content="Reset to Default" HorizontalAlignment="Left" Click="btnResetBrightness_Click"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    x:Name="btnResetBrightness" Content="Reset to Default" HorizontalAlignment="Left" Click="btnResetBrightness_Click"/>
         </StackPanel>
 
         <StackPanel Spacing="20">
@@ -43,49 +43,49 @@
                                        Minimum="-180" Maximum="180" Value="0" 
                                        IsTooltipEnabled="False" 
                                        ValueChanged="sldHue_ValueChanged"/>
-                    <NumberBox x:Name="numHue" Value="0" Minimum="-180" Maximum="180" 
+                    <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numHue" Value="0" Minimum="-180" Maximum="180" 
                            SpinButtonPlacementMode="Inline" 
                            ValueChanged="numHue_ValueChanged"/>
-                    <TextBlock x:Name="txtHueDisplay" VerticalAlignment="Center" Text="0%" 
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    x:Name="txtHueDisplay" VerticalAlignment="Center" Text="0%" 
                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                 </StackPanel>
                 <Button Content="Reset Hue" HorizontalAlignment="Left" Click="btnResetHue_Click"/>
             </StackPanel>
 
             <StackPanel Spacing="8">
-                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Contrast" FontWeight="SemiBold"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource BaseTextBlockStyle}" Text="Contrast" FontWeight="SemiBold"/>
                 <StackPanel Orientation="Horizontal" Spacing="12">
                     <oceancyan:OceanSlider x:Name="sldContrast" Width="200" 
                                        TickFrequency="18" TicksEnabled="True" IsSnapToTickEnabled="True" 
                                        Minimum="-100" Maximum="100" Value="0" 
                                        IsTooltipEnabled="False" 
                                        ValueChanged="sldContrast_ValueChanged"/>
-                    <NumberBox x:Name="numContrast" Value="0" Minimum="-100" Maximum="100" 
+                    <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numContrast" Value="0" Minimum="-100" Maximum="100" 
                            SpinButtonPlacementMode="Inline" 
                            ValueChanged="numContrast_ValueChanged"/>
-                    <TextBlock x:Name="txtContrastDisplay" VerticalAlignment="Center" 
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    x:Name="txtContrastDisplay" VerticalAlignment="Center" 
                            Text="{x:Bind sldContrast.Value, Converter={StaticResource PercentConverter}, Mode=OneWay}" 
                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                 </StackPanel>
-                <Button Content="Reset Contrast" HorizontalAlignment="Left" Click="btnResetContrast_Click"/>
+                <Button FontFamily="{StaticResource GlobalFontHolder}"    Content="Reset Contrast" HorizontalAlignment="Left" Click="btnResetContrast_Click"/>
             </StackPanel>
         </StackPanel>
 
         <StackPanel Spacing="8">
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Saturation" FontWeight="SemiBold"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource BaseTextBlockStyle}" Text="Saturation" FontWeight="SemiBold"/>
             <StackPanel Orientation="Horizontal" Spacing="12">
                 <oceancyan:OceanSlider x:Name="sldSaturation" Width="200" 
                                    TickFrequency="18" TicksEnabled="True" IsSnapToTickEnabled="True" 
                                    Minimum="-100" Maximum="100" Value="0" 
                                    IsTooltipEnabled="False"
                                    ValueChanged="sldSaturation_ValueChanged"/>
-                <NumberBox x:Name="numSaturation" Value="0" Minimum="-100" Maximum="100" 
+                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numSaturation" Value="0" Minimum="-100" Maximum="100" 
                        SpinButtonPlacementMode="Inline" 
                        ValueChanged="numSaturation_ValueChanged"/>
-                <TextBlock x:Name="txtSaturationDisplay" VerticalAlignment="Center" Text="0%" 
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    x:Name="txtSaturationDisplay" VerticalAlignment="Center" Text="0%" 
                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
             </StackPanel>
-            <Button Content="Reset Saturation" HorizontalAlignment="Left" Click="btnResetSaturation_Click"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Content="Reset Saturation" HorizontalAlignment="Left" Click="btnResetSaturation_Click"/>
         </StackPanel>
     </StackPanel>
 

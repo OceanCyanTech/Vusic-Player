@@ -24,7 +24,7 @@
                 <Button CornerRadius="12"   Grid.Column="0" Name="btnNewPlaylist" Click="btnNewPlaylist_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                        <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </Button>
                 <Button   BorderThickness="1" BorderBrush="Transparent" HorizontalAlignment="Left" CornerRadius="12"   Margin="0, 0" Name="btnOpenMusic" Click="btnOpenMusic_Click">
@@ -41,13 +41,13 @@ AlwaysUseFallback="False"/>
                     <StackPanel Orientation="Horizontal">
 
                         <Image Width="20" Source="{Binding Importicon, Source={StaticResource GlobalIconHolder}}"></Image>
-                        <TextBlock Margin="5,0" Text="Open Music" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5,0" Text="Open Music" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
 
                 </Button>
 
 
-                <HyperlinkButton Content="View Entire Library" Click="hypViewEntireLib_Click" FontSize="16"  Grid.Row="0"></HyperlinkButton>
+                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"   Content="View Entire Library" Click="hypViewEntireLib_Click" FontSize="16"  Grid.Row="0"></HyperlinkButton>
             </StackPanel>
             <Expander Grid.Row="1" 
           Header="Recently Played"
@@ -55,12 +55,12 @@ AlwaysUseFallback="False"/>
           IsExpanded="True" Name="expRecent" Expanding="expRecent_Expanding">
                 <Expander.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="View Full Music History" Name="mnftViewFullMusicHistory" Click="mnftViewFullMusicHistory_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="View Full Music History" Name="mnftViewFullMusicHistory" Click="mnftViewFullMusicHistory_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE81C;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Disable Recent Music" Name="mnftDisableRecentMusic" Click="mnftDisableRecentMusic_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Disable Recent Music" Name="mnftDisableRecentMusic" Click="mnftDisableRecentMusic_Click">
                             <MenuFlyoutItem.Icon>
                                 <ImageIcon Source="/Assets/disablehistoryfonticon.png"/>
                             </MenuFlyoutItem.Icon>
@@ -69,11 +69,11 @@ AlwaysUseFallback="False"/>
                 </Expander.ContextFlyout>
                 <grids:RecentMusicList x:Name="recentMusicList"/>
             </Expander>
-            <TextBlock Name="txtDisplay1"  Tapped="TextBlock_Tapped" Text="My Playlists" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtDisplay1"  Tapped="TextBlock_Tapped" Text="My Playlists" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
 
             <Expander Grid.Row="3"  
           Header="View My Playlists"
-          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Name="expPlaylists" Expanding="expRecent_Expanding">
+          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Name="expPlaylists" FontFamily="{StaticResource GlobalFontHolder}"   Expanding="expRecent_Expanding">
                 <Expander.Resources>
                     <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
@@ -89,16 +89,16 @@ AlwaysUseFallback="False"/>
                     <Button Grid.Row="0"  Click="btnCreateNewPlaylist_Click" Name="btnCreateNewPlaylist">
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <Image Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" Width="15"/>
-                            <TextBlock Text="Create New Playlist"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Create New Playlist"/>
                         </StackPanel>
                     </Button>
                     <grids:UserPlaylists x:Name="userplaylists" HorizontalAlignment="Left" Grid.Row="1"/>
                     
                 </Grid>
             </Expander>
-            <TextBlock Name="txtDisplay2" Tapped="TextBlock_Tapped_1" Text="Instant Playlists for you" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtDisplay2" Tapped="TextBlock_Tapped_1" Text="Instant Playlists for you" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
 
-            <Expander Grid.Row="5" 
+            <Expander Grid.Row="5"  FontFamily="{StaticResource GlobalFontHolder}"  
           Header="Recommendations" HorizontalContentAlignment="Stretch"
           HorizontalAlignment="Stretch" Name="expRecommend" Expanding="expRecent_Expanding">
                 <Expander.Resources>
@@ -112,10 +112,10 @@ AlwaysUseFallback="False"/>
 
             </Expander>
 
-            <TextBlock Name="txtDisplay3" Tapped="TextBlock_Tapped_2" Text="Dive into the mood" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtDisplay3" Tapped="TextBlock_Tapped_2" Text="Dive into the mood" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
 
             <Expander Grid.Row="7"  Background="Transparent"
-          Header="Explore Genres"
+          Header="Explore Genres" FontFamily="{StaticResource GlobalFontHolder}"  
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Name="expGenres" Expanding="expRecent_Expanding">
                 <Expander.Resources>
                     <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />

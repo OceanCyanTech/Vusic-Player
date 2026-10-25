@@ -26,7 +26,7 @@
                         </Button.Flyout>
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Image Source="{Binding Refresh, Source={StaticResource GlobalIconHolder}}" Width="16" Height="16"/>
-                            <TextBlock Text="Reset Fields" VerticalAlignment="Center"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Reset Fields" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </Grid>
@@ -45,7 +45,7 @@
                         <Button CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnAddPlaylistCover" Click="btnAddPlaylistCover_Click" HorizontalAlignment="Stretch">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <Image Source="{Binding AddImageIcon, Source={StaticResource GlobalIconHolder}}" Width="16"/>
-                                <TextBlock Text="Set Cover Art" />
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Set Cover Art" />
                             </StackPanel>
                         </Button>
                         <Grid Name="CoverOptions" Visibility="Collapsed" ColumnSpacing="0" >
@@ -66,20 +66,20 @@
                         </Grid>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Spacing="20" VerticalAlignment="Top">
-                        <TextBox CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="txtEditPlaylistName" 
+                        <TextBox  FontFamily="{StaticResource GlobalFontHolder}"  CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="txtEditPlaylistName" 
                              Header="Playlist Name" 
                              PlaceholderText="Give your playlist a title" 
                              Text="{x:Bind Instance.PlaylistName, Mode=TwoWay}" 
                              GotFocus="txtEditPlaylistName_GotFocus"/>
 
-                        <TextBox  CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="txtEditGenre" 
+                        <TextBox  FontFamily="{StaticResource GlobalFontHolder}"  CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="txtEditGenre" 
                              Header="Genre" 
                              PlaceholderText="e.g. Rock, Lo-Fi, Workout" Text="{x:Bind Instance.Genre, Mode=TwoWay}"/>
                     </StackPanel>
 
                 </Grid>
                 <Grid>
-                    <TextBlock Name="txtAddedSongs" Text="Added Media" 
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtAddedSongs" Text="Added Media" 
    Style="{StaticResource SubtitleTextBlockStyle}" 
    FontWeight="SemiBold" VerticalAlignment="Center"/>
 
@@ -88,46 +88,46 @@
 HorizontalAlignment="Right" ToolTipService.ToolTip="Add Videos or Audio"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" >
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Image Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" Width="16"/>
-                            <TextBlock Text="Add Media"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Media"/>
                         </StackPanel>
                     </Button>
                 </Grid>
 
-                <AutoSuggestBox  CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Name="asbSearchSongs" TextChanged="asbSearchSongs_TextChanged" QuerySubmitted="asbSearchSongs_QuerySubmitted"  QueryIcon="Find" PlaceholderText="Find media that you added..."></AutoSuggestBox>
+                <AutoSuggestBox  FontFamily="{StaticResource GlobalFontHolder}"  CornerRadius="12" Background="Transparent" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Name="asbSearchSongs" TextChanged="asbSearchSongs_TextChanged" QuerySubmitted="asbSearchSongs_QuerySubmitted"  QueryIcon="Find" PlaceholderText="Find media that you added..."></AutoSuggestBox>
                 <StackPanel Orientation="Horizontal">
                     <Button  CornerRadius="12"  BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Name="btnSortItemsInPlaylistDialog">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Image Source="{Binding SortIcon, Source={StaticResource GlobalIconHolder}}" Width="16"/>
-                            <TextBlock Text="Sort items"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Sort items"/>
                         </StackPanel>
                         <Button.Flyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Text="By Name">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="By Name">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE932;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="By Duration">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="By Duration">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE823;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="By Artist">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="By Artist">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE77B;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="By Album">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="By Album">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE93C;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="By Date Created">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="By Date Created">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE787;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="By Size">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="By Size">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE742;"></FontIcon>
                                     </MenuFlyoutItem.Icon>
@@ -136,7 +136,7 @@ HorizontalAlignment="Right" ToolTipService.ToolTip="Add Videos or Audio"  Corner
                         </Button.Flyout>
                     </Button>
                 </StackPanel>
-                <TextBlock Visibility="{x:Bind Instance.MediaSongModels.Count, Converter={StaticResource CountToEmpty}, Mode=OneWay}" Name="txtNullAddedSongs" Text="No media has been added yet!" 
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Visibility="{x:Bind Instance.MediaSongModels.Count, Converter={StaticResource CountToEmpty}, Mode=OneWay}" Name="txtNullAddedSongs" Text="No media has been added yet!" 
                     FontStyle="Italic" 
                        HorizontalAlignment="Center" Margin="0,40"
                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
@@ -157,7 +157,7 @@ HorizontalAlignment="Right" ToolTipService.ToolTip="Add Videos or Audio"  Corner
                             <Grid Padding="12,8" ColumnSpacing="16" Background="Transparent">
                                 <Grid.ContextFlyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem Text="Remove Item" Click="mnftRemoveSongFromPlaylistCreation_Click" Name="mnftRemoveSongFromPlaylistCreation" Icon="Delete"/>
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Remove Item" Click="mnftRemoveSongFromPlaylistCreation_Click" Name="mnftRemoveSongFromPlaylistCreation" Icon="Delete"/>
                                     </MenuFlyout>
                                 </Grid.ContextFlyout>
 
@@ -171,11 +171,11 @@ HorizontalAlignment="Right" ToolTipService.ToolTip="Add Videos or Audio"  Corner
                                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                                        Grid.Column="0" VerticalAlignment="Center"/>
 
-                                <TextBlock ToolTipService.ToolTip="{Binding Title}" Text="{Binding Title}" Grid.Column="1" 
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  ToolTipService.ToolTip="{Binding Title}" Text="{Binding Title}" Grid.Column="1" 
                                        VerticalAlignment="Center" FontWeight="SemiBold" 
                                        TextTrimming="CharacterEllipsis"/>
 
-                                <TextBlock Text="{Binding FormattedDuration}" Grid.Column="2" 
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding FormattedDuration}" Grid.Column="2" 
                                        VerticalAlignment="Center" 
                                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                             </Grid>

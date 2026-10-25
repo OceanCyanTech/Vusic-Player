@@ -143,7 +143,7 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" Name="txtTitle" Text="Options" HorizontalAlignment="Left" Grid.Row="0"></TextBlock>
+                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" Name="txtTitle" Text="Options" HorizontalAlignment="Left" Grid.Row="0"></TextBlock>
                     <Grid Margin="0, 10" Name="Contents" Grid.Row="1">
                         <videoplayersettings:PlayerSettingsHost x:Name="playersettings"/>
                     </Grid>
@@ -154,20 +154,19 @@
                         <control:OceanButton  Style="{StaticResource OceanShim}" x:Name="btnPrimary" Click="btnPrimary_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="20" Name="imgPrimary" Source="{Binding SaveIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                                <TextBlock FontSize="16" Name="txtPrimary" Margin="5, 0" Text="Save"></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    FontSize="16" Name="txtPrimary" Margin="5, 0" Text="Save"></TextBlock>
                             </StackPanel>
                         </control:OceanButton>
 
                         <control:OceanButton  CornerRadius="8"  x:Name="btnClose" Click="btnClose_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="20" Name="imgClose" Visibility="Collapsed"></Image>
-                                <TextBlock FontSize="16" Name="txtClose" Text="Cancel" Margin="5, 0"></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    FontSize="16" Name="txtClose" Text="Cancel" Margin="5, 0"></TextBlock>
                             </StackPanel>
                         </control:OceanButton>
                     </StackPanel>
                 </Grid>
             </Grid>
-            <Button Name="ChangeDialogSize" Content="Changee" Visibility="Collapsed" Click="ChangeDialogSize_Click"></Button>
         </Grid>
     </Grid>
 

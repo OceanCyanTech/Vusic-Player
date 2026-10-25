@@ -14,6 +14,6 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Image Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}" Width="80"/>
-        <TextBlock Text="Hmm... We couldn't find what you were looking for!" Grid.Column="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
+        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"   Text="Hmm... We couldn't find what you were looking for!" Grid.Column="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
     </Grid>
 </Page>

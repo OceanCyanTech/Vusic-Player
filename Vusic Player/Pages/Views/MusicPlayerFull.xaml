@@ -16,7 +16,7 @@
         <Button Name="btnOpenMedia" Visibility="Visible" VerticalAlignment="Top" Margin="20, 0" CornerRadius="12" ToolTipService.ToolTip="(Ctrl + O) Open and play any video or audio" Click="btnOpenMedia_Click">
             <StackPanel Orientation="Horizontal">
                 <Image Width="20" Source="{Binding Importicon, Source={StaticResource GlobalIconHolder}}"></Image>
-                <TextBlock Margin="5,0" Text="Open Media"  Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="5,0" Text="Open Media"  Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
             </StackPanel>
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Modifiers="Control" Key="O"></KeyboardAccelerator>
@@ -41,7 +41,7 @@
                       MaxHeight="180" 
                       MaxWidth="450"
                       Margin="0,0,0,20">
-                <TextBlock Name="txtLyricRealTime" 
+                <TextBlock   Name="txtLyricRealTime" 
                        Style="{StaticResource TitleLargeTextBlockStyle}" 
                        HorizontalAlignment="Center" 
                        VerticalAlignment="Center"
@@ -53,19 +53,19 @@
             <Button Visibility="Collapsed" Name="btnCopyLyric"  Click="Button_Click_3" HorizontalAlignment="Center" Grid.Row="1">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="20" Source="{Binding CopyIcon, Source={StaticResource GlobalIconHolder}}"/>
-                    <TextBlock Text="Copy Lyric"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Copy Lyric"/>
                 </StackPanel>
             </Button>
             <StackPanel HorizontalAlignment="Center" Visibility="Collapsed" Name="stkLyricFunctions" Grid.Row="2" Orientation="Horizontal" Spacing="10">
                 <Button Grid.Row="1"  HorizontalAlignment="Center">
                     <Button.Flyout>
                         <MenuFlyout Opened="MenuFlyout_Opened">
-                            <MenuFlyoutItem Text="Open From PC" Name="mnftOpenFromPC" Click="mnftOpenFromPC_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open From PC" Name="mnftOpenFromPC" Click="mnftOpenFromPC_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEC4E;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Open Previously Loaded" Name="mnftOpenPrevLyrics" Click="mnftOpenPrevLyrics_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open Previously Loaded" Name="mnftOpenPrevLyrics" Click="mnftOpenPrevLyrics_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE823;"/>
                                 </MenuFlyoutItem.Icon>
@@ -74,19 +74,19 @@
                     </Button.Flyout>
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Width="20" Source="{Binding OpenFile, Source={StaticResource GlobalIconHolder}}"/>
-                        <TextBlock Text="Open Lyric File"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Open Lyric File"/>
                     </StackPanel>
                 </Button>
                 <Button Margin="0, 0" Grid.Row="2" IsEnabled="False" Name="btnFullLyrics" Click="Button_Click_1" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Image Width="20" Source="{Binding ViewFullLyrics, Source={StaticResource GlobalIconHolder}}"/>
-                        <TextBlock Text="View Full Lyrics"/>
+                        <Image Width="20" Source="{Binding ViewFullLyrics, Source={StaticResource GlobalIconHolder}}"/> 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="View Full Lyrics"/>
                     </StackPanel>
                 </Button>
                 <Button Name="btnFindLyricsOnline"  Margin="0, 0" Grid.Row="2"   Click="Button_Click_2" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Width="20" Source="{Binding FindLyricsOnline, Source={StaticResource GlobalIconHolder}}"/>
-                        <TextBlock Text="Find Lyrics Online"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Find Lyrics Online"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -94,27 +94,27 @@
                 <Button  HorizontalAlignment="Center" Name="btnCustomizeLyricText" Click="btnCustomizeLyricText_Click" >
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Width="20" Source="{Binding Personalize, Source={StaticResource GlobalIconHolder}}"/>
-                        <TextBlock Text="Customize Lyric Text"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Customize Lyric Text"/>
                     </StackPanel>
                 </Button>
                 <Button   HorizontalAlignment="Center" Name="btnLyricEditor" Click="btnLyricEditor_Click">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <Image Width="20" Source="{Binding EditIcon, Source={StaticResource GlobalIconHolder}}"/>
-                        <TextBlock Text="Lyric Editor"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Lyric Editor"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
             <TeachingTip x:Name="FontSettingsTip"
-                 
+                  FontFamily="{StaticResource GlobalFontHolder}"  
                  Title="Text Formatting Options"
                 PreferredPlacement="Auto"
                          >
                 <TeachingTip.Content>
                     <StackPanel Margin="0, 30" Spacing="12" Width="280">
-                        <Button Content="Reset to default" HorizontalAlignment="Left" Style="{StaticResource AccentButtonStyle}" Name="btnResetToDefault" Click="btnResetToDefault_Click"/>
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"   Content="Reset to default" HorizontalAlignment="Left" Style="{StaticResource AccentButtonStyle}" Name="btnResetToDefault" Click="btnResetToDefault_Click"/>
                         <StackPanel Spacing="4">
-                            <TextBlock Text="Font Family" Style="{ThemeResource CaptionTextBlockStyle}"/>
-                            <ComboBox SelectionChanged="FontFamilyCombo_SelectionChanged" x:Name="FontFamilyCombo" HorizontalAlignment="Stretch" MaxDropDownHeight="200">
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Font Family" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <ComboBox  FontFamily="{StaticResource GlobalFontHolder}"   SelectionChanged="FontFamilyCombo_SelectionChanged" x:Name="FontFamilyCombo" HorizontalAlignment="Stretch" MaxDropDownHeight="200">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate x:DataType="x:String">
                                         <TextBlock Text="{x:Bind}" FontFamily="{x:Bind}"/>
@@ -124,14 +124,14 @@
                         </StackPanel>
 
                         <StackPanel Spacing="4">
-                            <TextBlock Text="Font Size" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Font Size" Style="{ThemeResource CaptionTextBlockStyle}"/>
                             <Grid >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <ComboBox x:Name="FontSizeCombo" 
-                                  Grid.Column="0" 
+                                  Grid.Column="0"  FontFamily="{StaticResource GlobalFontHolder}"  
                                   Margin="0,0,4,0"
                                   HorizontalAlignment="Stretch"
                                   SelectionChanged="FontSizeCombo_SelectionChanged">
@@ -148,7 +148,7 @@
                                 <NumberBox x:Name="FontSizeNumber" 
                                    Grid.Column="1" 
                                    Margin="4,0,0,0"
-                                   Value="36" 
+                                   Value="36"  FontFamily="{StaticResource GlobalFontHolder}"  
                                    Minimum="1" 
                                    Maximum="120"
                                    SpinButtonPlacementMode="Compact" 
@@ -157,11 +157,11 @@
                         </StackPanel>
 
                         <StackPanel Spacing="4">
-                            <TextBlock Text="Font Color" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Font Color" Style="{ThemeResource CaptionTextBlockStyle}"/>
                             <ColorPicker x:Name="FontColorPicker" 
                                  IsColorSliderVisible="True" 
                                  IsColorChannelTextInputVisible="False"
-                                 IsHexInputVisible="True"
+                                 IsHexInputVisible="True" FontFamily="{StaticResource GlobalFontHolder}"  
                                          ColorChanged="FontColorPicker_ColorChanged"
                                  IsAlphaEnabled="False" />
                         </StackPanel>
@@ -195,7 +195,7 @@
                     </Grid.RowDefinitions>
 
                     <Image HorizontalAlignment="Center" Width="150" Grid.Row="0" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}"></Image>
-                    <TextBlock Margin="0,0,0,0" TextWrapping="NoWrap" HorizontalAlignment="Center" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="1"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="0,0,0,0" TextWrapping="NoWrap" HorizontalAlignment="Center" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="1"></TextBlock>
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -204,14 +204,14 @@
                         </Grid.ColumnDefinitions>
                         <HyperlinkButton Click="txtArtist_Click" Name="txtArtist" ToolTipService.ToolTip="Artist" HorizontalAlignment="Left" FontSize="15" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
                             <StackPanel Orientation="Horizontal" Spacing="3">
-                                <TextBlock Text="• "></TextBlock>
-                                <TextBlock Name="txtArtistDisplay" Text="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}"></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="• "></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtArtistDisplay" Text="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}"></TextBlock>
                             </StackPanel>
                         </HyperlinkButton>
                         <HyperlinkButton Click="txtAlbum_Click" ToolTipService.ToolTip="Album" Name="txtAlbum" Grid.Column="1" HorizontalAlignment="Right" FontSize="15" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
                             <StackPanel Orientation="Horizontal" Spacing="3">
-                                <TextBlock Text="• "></TextBlock>
-                                <TextBlock Name="txtAlbumDisplay" Text="{x:Bind mediacontroller.AlbumDisplayName, Mode=OneWay}"></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="• "></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtAlbumDisplay" Text="{x:Bind mediacontroller.AlbumDisplayName, Mode=OneWay}"></TextBlock>
                             </StackPanel>
                         </HyperlinkButton>
                     </Grid>
@@ -223,8 +223,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="18" Opacity="0.8"/>
-                        <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="18" Opacity="0.8"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="0" HorizontalAlignment="Left" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="18" Opacity="0.8"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="18" Opacity="0.8"/>
                     </Grid>
 
                     <Grid Width="300" Grid.Row="5" Margin="0, 0" Padding="15" CornerRadius="16">
@@ -259,26 +259,26 @@
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="1">
-                <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtLyricHeader"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtLyricHeader"></TextBlock>
                 <Button Visibility="Collapsed" ToolTipService.ToolTip="Close full lyrics" Name="btnCloseFullLyrics" Click="btnCloseFullLyrics_Click" Background="Transparent" BorderBrush="Transparent">
                     <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"/>
                 </Button>
             </StackPanel>
             <StackPanel Visibility="Collapsed" Name="stkLyricOptions" Orientation="Horizontal" Spacing="10" Grid.Row="2">
-                <Button  Content="Save Lyrics to File" Click="btnSaveSelectedLyricsToFile_Click" Name="btnSaveSelectedLyricsToFile" >
+                <Button  FontFamily="{StaticResource GlobalFontHolder}"   Content="Save Lyrics to File" Click="btnSaveSelectedLyricsToFile_Click" Name="btnSaveSelectedLyricsToFile" >
                 </Button>
-                <Button  Name="btnCopyLyrics" Click="btnCopyLyrics_Click" Content="Copy Lyrics"/>
+                <Button  FontFamily="{StaticResource GlobalFontHolder}"   Name="btnCopyLyrics" Click="btnCopyLyrics_Click" Content="Copy Lyrics"/>
             </StackPanel>
             <ScrollViewer Grid.Row="3">
                 <RichTextBlock Name="txtLyricsFull" 
-                  FontSize="48"
+                  FontSize="48" 
                    HorizontalAlignment="Center" 
                    TextAlignment="Center"
                    TextWrapping="Wrap"/>
             </ScrollViewer>
         </Grid>
-        <TeachingTip Name="ttJustSaved">
-            <HyperlinkButton Name="hypPathSaved" Click="hypPathSaved_Click"/>
+        <TeachingTip  FontFamily="{StaticResource GlobalFontHolder}"   Name="ttJustSaved">
+            <HyperlinkButton  FontFamily="{StaticResource GlobalFontHolder}"   Name="hypPathSaved" Click="hypPathSaved_Click"/>
         </TeachingTip>
 
     </Grid>

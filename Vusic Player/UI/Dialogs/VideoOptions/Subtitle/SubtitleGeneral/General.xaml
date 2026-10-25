@@ -38,13 +38,13 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel x:Name="stkSubtitleStream" Grid.Row="0" Grid.ColumnSpan="2" Spacing="8" Margin="0,0,0,10">
-                    <TextBlock Text="Subtitle Stream" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Subtitle Stream" Style="{StaticResource BodyStrongTextBlockStyle}"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox x:Name="cmbEmbeddedSubTracks" 
+                        <ComboBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="cmbEmbeddedSubTracks" 
                               PlaceholderText="Select Subtitle Track" ItemsSource="{x:Bind ViewModel.SubStreams, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.CurrentStream, Mode=TwoWay}"
                               HorizontalAlignment="Stretch" 
                               SelectionChanged="cmbEmbeddedSubTracks_SelectionChanged">
@@ -53,7 +53,7 @@
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <FontIcon Glyph="&#xED1E;" FontSize="16" Foreground="Cyan"/>
 
-                                        <TextBlock VerticalAlignment="Center">
+                                        <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}"   >
 <Run Text="Stream"/>
 <Run Text="{x:Bind StreamIndex}"/>
 <Run Text="["/>
@@ -72,7 +72,7 @@
                             <Image Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}" Width="16" Height="16"/>
                         </Button>
                     </Grid>
-                    <ToggleButton x:Name="tglDisableSubtitles" 
+                    <ToggleButton x:Name="tglDisableSubtitles"  FontFamily="{StaticResource GlobalFontHolder}"   
                               Content="Disable Subtitles" 
                               Checked="tglDisableSubtitles_Checked" 
                               Unchecked="tglDisableSubtitles_Unchecked" 
@@ -83,12 +83,12 @@
                        Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>
 
                 <StackPanel x:Name="stkSubtitleExternal" Grid.Row="2" Grid.ColumnSpan="2" Spacing="12">
-                    <TextBox x:Name="txtExternalSubPath" Header="External Subtitle File" 
+                    <TextBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="txtExternalSubPath" Header="External Subtitle File" 
                          PlaceholderText="C:\Users\Video\subtitles.srt" IsReadOnly="True"/>
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button x:Name="btnBrowseExternalSubtitles" Content="Browse..." 
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"    x:Name="btnBrowseExternalSubtitles" Content="Browse..." 
                             Click="btnBrowseExternalSubtitles_Click_1" />
-                        <Button x:Name="btnSubtitleEditor" Content="Subtitle Editor" 
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"    x:Name="btnSubtitleEditor" Content="Subtitle Editor" 
                             Click="btnSubtitleEditor_Click" />
                     </StackPanel>
                 </StackPanel>
@@ -98,16 +98,16 @@
                             <Grid>
                                 <Grid.ContextFlyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem Text="Open File Location" Name="mnftOpenFileLocationExtSub" Click="mnftOpenFileLocationExtSub_Click"></MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="Remove from List" Name="mnftRemoveFromListExtSub" Click="mnftRemoveFromListExtSub_Click"></MenuFlyoutItem>
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"    Text="Open File Location" Name="mnftOpenFileLocationExtSub" Click="mnftOpenFileLocationExtSub_Click"></MenuFlyoutItem>
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"    Text="Remove from List" Name="mnftRemoveFromListExtSub" Click="mnftRemoveFromListExtSub_Click"></MenuFlyoutItem>
                                     </MenuFlyout>
                                 </Grid.ContextFlyout>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Name}" Grid.Column="0"></TextBlock>
-                                <HyperlinkButton Content="{Binding Path}" Click="HyperlinkButton_Click" Grid.Column="1"></HyperlinkButton>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="{Binding Name}" Grid.Column="0"></TextBlock>
+                                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"    Content="{Binding Path}" Click="HyperlinkButton_Click" Grid.Column="1"></HyperlinkButton>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

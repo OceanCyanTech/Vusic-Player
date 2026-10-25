@@ -22,12 +22,12 @@
                 <ColumnDefinition  Width="Auto"></ColumnDefinition>
                 <ColumnDefinition  Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <ToggleButton  IsChecked="True" CornerRadius="16" Click="ToggleButton_Checked" Name="btnAllMusic" FontSize="26" Padding="15" Content="All Music" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0"></ToggleButton>
-            <ToggleButton Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnPlaylists" FontSize="26" Padding="15" Content="Playlists" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="1"></ToggleButton>
-            <ToggleButton CornerRadius="16" Click="ToggleButton_Checked" Name="btnArtists" FontSize="26" Padding="15" Content="Artists" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="2"></ToggleButton>
-            <ToggleButton  Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnAlbums" FontSize="26" Padding="15" Content="Albums" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="3"></ToggleButton>
-            <ToggleButton CornerRadius="16" Click="ToggleButton_Checked" Name="btnGenres" FontSize="26" Padding="15" Content="Genres" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="4"></ToggleButton>
-            <ToggleButton  Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnHistory" FontSize="26" Padding="15" Content="Music History" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="5"></ToggleButton>
+            <ToggleButton FontFamily="{StaticResource GlobalFontHolder}"   IsChecked="True" CornerRadius="16" Click="ToggleButton_Checked" Name="btnAllMusic" FontSize="26" Padding="15" Content="All Music" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0"></ToggleButton>
+            <ToggleButton FontFamily="{StaticResource GlobalFontHolder}"  Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnPlaylists" FontSize="26" Padding="15" Content="Playlists" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="1"></ToggleButton>
+            <ToggleButton FontFamily="{StaticResource GlobalFontHolder}"  CornerRadius="16" Click="ToggleButton_Checked" Name="btnArtists" FontSize="26" Padding="15" Content="Artists" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="2"></ToggleButton>
+            <ToggleButton FontFamily="{StaticResource GlobalFontHolder}"   Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnAlbums" FontSize="26" Padding="15" Content="Albums" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="3"></ToggleButton>
+            <ToggleButton FontFamily="{StaticResource GlobalFontHolder}"  CornerRadius="16" Click="ToggleButton_Checked" Name="btnGenres" FontSize="26" Padding="15" Content="Genres" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="4"></ToggleButton>
+            <ToggleButton FontFamily="{StaticResource GlobalFontHolder}"   Margin="10, 0" CornerRadius="16" Click="ToggleButton_Checked" Name="btnHistory" FontSize="26" Padding="15" Content="Music History" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="5"></ToggleButton>
         </Grid>
 
         <Grid Name="grdAllMusic" Margin="20, 30" Grid.Row="1" RowSpacing="20">
@@ -45,21 +45,21 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition ></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock Name="txtAllMusicHeader" Text="All music across your libraries" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtAllMusicHeader" Text="All music across your libraries" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                 <Button Name="btnPlayAllMusic" Click="btnPlayAllMusic_Click" Margin="40, 0" Grid.Column="1" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" HorizontalAlignment="Center">
                     <Button.ContextFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Text="Play Shuffled" Name="mnftPlayShuffled" Click="mnftPlayShuffled_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play Shuffled" Name="mnftPlayShuffled" Click="mnftPlayShuffled_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8B1;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play on Loop" Name="mnftPlayOnLoop" Click="mnftPlayOnLoop_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play on Loop" Name="mnftPlayOnLoop" Click="mnftPlayOnLoop_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8EE;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftPlayOnLoopShuffled" Click="mnftPlayOnLoopShuffled_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play on Loop and Shuffled" Name="mnftPlayOnLoopShuffled" Click="mnftPlayOnLoopShuffled_Click">
                                 <MenuFlyoutItem.Icon>
                                     <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
@@ -68,7 +68,7 @@
                     </Button.ContextFlyout>
                     <StackPanel Orientation="Horizontal" Spacing="7">
                         <Image Width="25" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"></Image>
-                        <TextBlock Style="{StaticResource BodyLargeTextBlockStyle}" Text="Play all" Margin="0, 4"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyLargeTextBlockStyle}" Text="Play all" Margin="0, 4"></TextBlock>
                     </StackPanel>
                 </Button>
             </Grid>
@@ -81,20 +81,20 @@
                     </GridView.ItemsPanel>
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Click="btnAll_Click" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+                            <ToggleButton FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16" Click="btnAll_Click" Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
                                 <ToggleButton.ContextFlyout>
                                     <MenuFlyout >
-                                        <MenuFlyoutItem Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE838;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE894;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
@@ -106,16 +106,16 @@
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-                <TextBlock Text="No folders added." Visibility="Collapsed"  Name="txtNofoldersadded" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="No folders added." Visibility="Collapsed"  Name="txtNofoldersadded" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
                 <Button CornerRadius="16" VerticalAlignment="Stretch" Click="btnAddFolders_Click" Name="btnAddFolders" FontSize="16" Padding="10" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Column="4">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Image Width="20" Source="{Binding AddFolder, Source={StaticResource GlobalIconHolder}}"></Image>
-                        <TextBlock Text="Add Folder"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Folder"></TextBlock>
                     </StackPanel>
                 </Button>
             </controls1:WrapPanel>
-            <CheckBox Name="chkIncludeSubDirectories" IsChecked="True" Checked="chkIncludeSubDirectories_Checked" Unchecked="chkIncludeSubDirectories_Checked" Content="Include files from sub directories" Grid.Row="2"></CheckBox>
-            <TextBlock Margin="0, 0" Name="txtMusicCount" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="• 0 items" Grid.Row="3"/>
+            <CheckBox FontFamily="{StaticResource GlobalFontHolder}" Name="chkIncludeSubDirectories" IsChecked="True" Checked="chkIncludeSubDirectories_Checked" Unchecked="chkIncludeSubDirectories_Checked" Content="Include files from sub directories" Grid.Row="2"></CheckBox>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="0, 0" Name="txtMusicCount" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="• 0 items" Grid.Row="3"/>
 
             <Border  Grid.Row="4" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="24">
 
@@ -132,11 +132,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Image Grid.Row="0" Width="70" Source="{Binding MusicNoteIcon, Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock Text="There are no songs in the specified folders. Trying adding other folders." Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="There are no songs in the specified folders. Trying adding other folders." Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Grid>
             <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoading" Orientation="Horizontal" Spacing="20" Grid.Row="4">
                 <ProgressRing IsIndeterminate="True"/>
-                <TextBlock Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
             </StackPanel>
 
         </Grid>
@@ -147,32 +147,32 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Name="txtHistoryHeading" Text="History of music you've listened to on this app" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtHistoryHeading" Text="History of music you've listened to on this app" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"></TextBlock>
             <StackPanel Orientation="Horizontal" Spacing="20" Grid.Row="1" Margin="0, 30">
-                <Button Content="Play All" Name="btnPlayAll"  Click="btnPlayAll_Click"></Button>
-                <Button Content="Clear History" Name="btnClearHistory" Click="btnClearHistory_Click"></Button>
-                <Button Content="Disable Saving to History" Name="btnDisableHistory" Click="btnDisableHistory_Click"></Button>
-                <AutoSuggestBox Width="250" CornerRadius="12" Name="asbRecents" HorizontalAlignment="Right" PlaceholderText="Search..." TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" QueryIcon="Find" Grid.Row="1"></AutoSuggestBox>
+                <Button FontFamily="{StaticResource GlobalFontHolder}" Content="Play All" Name="btnPlayAll"  Click="btnPlayAll_Click"></Button>
+                <Button FontFamily="{StaticResource GlobalFontHolder}" Content="Clear History" Name="btnClearHistory" Click="btnClearHistory_Click"></Button>
+                <Button FontFamily="{StaticResource GlobalFontHolder}" Content="Disable Saving to History" Name="btnDisableHistory" Click="btnDisableHistory_Click"></Button>
+                <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}" Width="250" CornerRadius="12" Name="asbRecents" HorizontalAlignment="Right" PlaceholderText="Search..." TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" QueryIcon="Find" Grid.Row="1"></AutoSuggestBox>
             </StackPanel>
             <StackPanel Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkEmptyHistory" Spacing="20">
                 <StackPanel Spacing="20" Orientation="Horizontal">
                     <Image Width="50" Source="{Binding History, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="You have no history!" Name="txtEmptyHistory"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleTextBlockStyle}" Text="You have no history!" Name="txtEmptyHistory"></TextBlock>
                 </StackPanel>
             </StackPanel>
             <StackPanel Visibility="Collapsed"  Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkDisabledHistory" Spacing="20">
                 <StackPanel Spacing="20" Orientation="Horizontal">
                     <Image Width="50" Source="{Binding SourceError, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Saving to History is disabled." ></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleTextBlockStyle}" Text="Saving to History is disabled." ></TextBlock>
                 </StackPanel>
-                <HyperlinkButton HorizontalAlignment="Center" Visibility="Visible" Content="Enable History" Name="btnEnableHistory" Click="btnEnableHistory_Click" FontSize="24" Margin="0, 0" Padding="0"></HyperlinkButton>
+                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}" HorizontalAlignment="Center" Visibility="Visible" Content="Enable History" Name="btnEnableHistory" Click="btnEnableHistory_Click" FontSize="24" Margin="0, 0" Padding="0"></HyperlinkButton>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="20">
 
-                <CheckBox Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}" Content="Select" Grid.Row="1" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
 
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
-                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
+                    <CheckBox FontFamily="{StaticResource GlobalFontHolder}" Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromHistory_Click"  Name="btnRemoveFromHistory" >
                         <StackPanel Orientation="Horizontal">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
@@ -184,7 +184,7 @@
             <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="3" x:Name="grdViewAllRecentMusic"></controls:GridViewRecentMusic>
             <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoadingAll" Orientation="Horizontal" Spacing="20" Grid.Row="3">
                 <ProgressRing IsIndeterminate="True"/>
-                <TextBlock Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
             </StackPanel>
             <Grid  Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -204,20 +204,20 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock Name="txtAllPlaylists" Text="All Playlists " Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtAllPlaylists" Text="All Playlists " Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             <Button Name="btnNewPlaylist" Click="btnNewPlaylist_Click" Grid.Row="1">
                 <StackPanel Orientation="Horizontal">
                     <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                 </StackPanel>
             </Button>
             <StackPanel Name="stkNoPlaylists" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="2" Orientation="Vertical" Spacing="20">
                 <Image Width="80" Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="You have no playlists!"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="You have no playlists!"/>
                 <Button HorizontalAlignment="Center" Name="btnCreateNewPlaylist" Click="btnNewPlaylist_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                        <TextBlock Margin="5, 0" Text="Create New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="5, 0" Text="Create New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -233,10 +233,10 @@
                 <RowDefinition />
 
             </Grid.RowDefinitions>
-            <TextBlock Name="txtArtistsAll" Text="Artists" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtArtistsAll" Text="Artists" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             <StackPanel Name="stkNoArtists" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
                 <Image Width="80" Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="Songs on this PC have no artist names!"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="Songs on this PC have no artist names!"/>
             </StackPanel>
             <controls:GroupedCollectionView x:Name="ArtistsGroupedCollection" 
              Grid.Row="1" 
@@ -250,10 +250,10 @@
                 <RowDefinition />
 
             </Grid.RowDefinitions>
-            <TextBlock Name="txtAlbumsAll" Text="Albums" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtAlbumsAll" Text="Albums" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             <StackPanel Name="stkNoAlbums" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
                 <Image Width="80" Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="There are no albums!"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="There are no albums!"/>
             </StackPanel>
             <controls:GroupedCollectionView x:Name="AlbumsGroupedCollection" 
     Grid.Row="1"  albumcollectionchanged="AlbumsGroupedCollection_albumcollectionchanged"
@@ -268,8 +268,8 @@
                 <RowDefinition Height="Auto"/>
 
             </Grid.RowDefinitions>
-            <TextBlock Name="txtGenresAll" Text="Genres" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
-            <AutoSuggestBox TextChanged="asbSearchGenres_TextChanged" QuerySubmitted="asbSearchGenres_QuerySubmitted" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" QueryIcon="Find" Name="asbSearchGenres" PlaceholderText="Search genres..." Grid.Row="1"></AutoSuggestBox>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtGenresAll" Text="Genres" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}" TextChanged="asbSearchGenres_TextChanged" QuerySubmitted="asbSearchGenres_QuerySubmitted" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" QueryIcon="Find" Name="asbSearchGenres" PlaceholderText="Search genres..." Grid.Row="1"></AutoSuggestBox>
             <GridView Name="grdViewGenres" Margin="0, 20" Grid.Row="2" ItemClick="grdViewGenres_ItemClick" IsItemClickEnabled="True">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -282,32 +282,32 @@
                         <Grid RowSpacing="10">
                             <Grid.ContextFlyout>
                                 <MenuFlyout Opened="MenuFlyout_Opened">
-                                    <MenuFlyoutItem Text="Open Genre" Name="mnftOpenGenre" Click="mnftOpenGenre_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Open Genre" Name="mnftOpenGenre" Click="mnftOpenGenre_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8A7;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Play" Name="mnftPlayGenre" Click="mnftPlayGenre_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play" Name="mnftPlayGenre" Click="mnftPlayGenre_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE768;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Play Shuffled" Name="mnftPlayGenreShuffled" Click="mnftPlayGenreShuffled_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play Shuffled" Name="mnftPlayGenreShuffled" Click="mnftPlayGenreShuffled_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8B1;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Play on Loop" Name="mnftPlayGenreLoop" Click="mnftPlayGenreLoop_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play on Loop" Name="mnftPlayGenreLoop" Click="mnftPlayGenreLoop_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8EE;"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Play Shuffled and on Loop" Name="mnftPlayGenreLoopShuffle" Click="mnftPlayGenreLoopShuffle_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play Shuffled and on Loop" Name="mnftPlayGenreLoopShuffle" Click="mnftPlayGenreLoopShuffle_Click">
                                         <MenuFlyoutItem.Icon>
                                             <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Remove Genre" Name="mnftRemoveGenre" Click="mnftRemoveGenre_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Remove Genre" Name="mnftRemoveGenre" Click="mnftRemoveGenre_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE894;"/>
                                         </MenuFlyoutItem.Icon>
@@ -320,8 +320,8 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Image Width="50" Source="{Binding GenreCover}"/>
-                            <TextBlock Text="{Binding GenreName}" Grid.Row="1"/>
-                            <TextBlock Text="{Binding GenreCount}" Grid.Row="2"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding GenreName}" Grid.Row="1"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding GenreCount}" Grid.Row="2"/>
                         </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>

@@ -22,11 +22,11 @@
                 <RowDefinition Height="*"/>
 
             </Grid.RowDefinitions>
-            <TextBlock Text="Multi-Device Output" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
-            <Button Style="{StaticResource AccentButtonStyle}" Name="btnOutputModeUI" Click="btnOutputModeUI_Click" Content="List Mode"  Grid.Row="1"></Button>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Multi-Device Output" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource AccentButtonStyle}" Name="btnOutputModeUI" Click="btnOutputModeUI_Click" Content="List Mode"  Grid.Row="1"></Button>
             <MenuFlyoutSeparator Grid.Row="2"/>
             <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="10">
-                <TextBlock Text="{x:Bind ItemsSource.Count, Mode=OneWay, Converter={StaticResource DeviceTextConverter}}" Name="txtDevicesHeader" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="2"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind ItemsSource.Count, Mode=OneWay, Converter={StaticResource DeviceTextConverter}}" Name="txtDevicesHeader" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="2"></TextBlock>
                 <Button Name="btnRefresh" ToolTipService.ToolTip="Refresh" Click="btnRefresh_Click">
                     <Image Source="{Binding Refresh, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 </Button>
@@ -34,7 +34,7 @@
                     <Image Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                     <Button.Flyout>
                         <Flyout>
-                            <AutoSuggestBox Name="asbSearchDevices" PlaceholderText="Find Devices..." QueryIcon="Find" TextChanged="asbSearchDevices_TextChanged" QuerySubmitted="asbSearchDevices_QuerySubmitted"/>
+                            <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}"    Name="asbSearchDevices" PlaceholderText="Find Devices..." QueryIcon="Find" TextChanged="asbSearchDevices_TextChanged" QuerySubmitted="asbSearchDevices_QuerySubmitted"/>
                         </Flyout>
                     </Button.Flyout>
                 </Button>
@@ -55,26 +55,26 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="{Binding DeviceThumbnail}" Width ="20"/>
-                            <TextBlock Text="{Binding DeviceName}" TextTrimming="CharacterEllipsis" Grid.Column ="1"/>
-                            <TextBlock Text="{Binding DeviceVolume}" Grid.Column ="2"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding DeviceName}" TextTrimming="CharacterEllipsis" Grid.Column ="1"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding DeviceVolume}" Grid.Column ="2"/>
                             <Button  ToolTipService.ToolTip="Volume" Grid.Column="3" Background="Transparent" BorderBrush="Transparent">
                                 <Image Width="15" Source="{Binding Volume, Source={StaticResource GlobalIconHolder}}"/>
                                 <Button.Flyout>
                                     <Flyout>
                                         <StackPanel Orientation="Vertical" Spacing="10">
-                                            <TextBlock Text="Volume"/>
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Volume"/>
                                             <Grid Margin="5,0" ColumnSpacing="10">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <NumberBox Value="{Binding Volume, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    Value="{Binding Volume, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
            Maximum="200" 
            Minimum="0" 
            PreviewKeyDown="NumberBox_PreviewKeyDown" />
-                                                <TextBlock VerticalAlignment="Center" Text="{Binding DeviceVolume}" Grid.Column="1"/>
+                                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Text="{Binding DeviceVolume}" Grid.Column="1"/>
                                             </Grid>
-                                            <Button Style="{StaticResource AccentButtonStyle}" Content="Set Volume" Name="btnSetVolume" Click="btnSetVolume_Click"></Button>
+                                            <Button FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource AccentButtonStyle}" Content="Set Volume" Name="btnSetVolume" Click="btnSetVolume_Click"></Button>
                                         </StackPanel>
                                     </Flyout>
                                 </Button.Flyout>
@@ -89,7 +89,7 @@
                         <Grid Name="grdMixers" Margin="0, 10" RowSpacing="20">
                             <Grid.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Mute Device" Name="mnftMuteDevice" Click="mnftMuteDevice_Click"/>
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"    Text="Mute Device" Name="mnftMuteDevice" Click="mnftMuteDevice_Click"/>
                                 </MenuFlyout>
                             </Grid.ContextFlyout>
                             <Grid.RowDefinitions>
@@ -97,13 +97,13 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="{Binding DeviceName}" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding DeviceName}" Style="{StaticResource BaseTextBlockStyle}"/>
                             <Grid Grid.Row="1" ColumnSpacing="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding DeviceVolume}"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding DeviceVolume}"/>
                                 <controls:OceanSlider VerticalAlignment="Center" Width="90" Minimum="0" Maximum="200" IsTooltipEnabled="False"  Grid.Column="1" Value="{Binding Volume}" ValueChangedWithSender="OceanSlider_ValueChangedWithSender" />
                             </Grid>
                             <MenuFlyoutSeparator Grid.Row="2"/>
@@ -126,7 +126,7 @@
 
             <TeachingTip Name="ttRenameDevice" IsOpen="False">
                 <StackPanel Orientation="Vertical" Spacing="10">
-                    <TextBox Name="txtRenameDevice" PlaceholderText="Rename device..."/>
+                    <TextBox FontFamily="{StaticResource GlobalFontHolder}"    Name="txtRenameDevice" PlaceholderText="Rename device..."/>
                     <Button Name="btnRenameDevice">
                         <Image Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}"/>
                     </Button>

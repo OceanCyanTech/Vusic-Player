@@ -22,17 +22,17 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="File Format Converter" Style="{StaticResource TitleTextBlockStyle}"/>
-        <TextBlock Text="Convert between various formats. Audio to Video is not possible." Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="File Format Converter" Style="{StaticResource TitleTextBlockStyle}"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Convert between various formats. Audio to Video is not possible." Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         <Button Name="btnAddAudioFiles" Click="btnAddAudioFiles_Click" Grid.Row="2">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
-                <TextBlock Text="Add Media Files"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Media Files"/>
             </StackPanel>
         </Button>
-        <TextBlock Text="{x:Bind AddedFiles.Count, Converter={StaticResource CountToAudioFilesConv}, Mode=OneWay}" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-        <TextBlock Text="{x:Bind ProcessedFiles.Count, Converter={StaticResource CountToAudioFilesProcessedConv}, Mode=OneWay}" Grid.Row="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-        <Button Name="btnConvertAll" Click="btnConvertAll_Click" Content="Convert All" Style="{StaticResource AccentButtonStyle}" Grid.Row="5"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind AddedFiles.Count, Converter={StaticResource CountToAudioFilesConv}, Mode=OneWay}" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind ProcessedFiles.Count, Converter={StaticResource CountToAudioFilesProcessedConv}, Mode=OneWay}" Grid.Row="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnConvertAll" Click="btnConvertAll_Click" Content="Convert All" Style="{StaticResource AccentButtonStyle}" Grid.Row="5"/>
         <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -46,49 +46,49 @@
                     <Grid ColumnSpacing="30" ToolTipService.ToolTip="{Binding FilePath}">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Name="mnftPlayOutput" IsEnabled="{Binding CanPlayOutput}" Text="Play Output" Click="mnftPlayOutput_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Name="mnftPlayOutput" IsEnabled="{Binding CanPlayOutput}" Text="Play Output" Click="mnftPlayOutput_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE768;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem  Text="Add Output to Queue"  IsEnabled="{Binding CanPlayOutput}"   Name="mnftAddOutputToQueue" Click="mnftAddOutputToQueue_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Output to Queue"  IsEnabled="{Binding CanPlayOutput}"   Name="mnftAddOutputToQueue" Click="mnftAddOutputToQueue_Click">
                                     <MenuFlyoutItem.Icon>
                                         <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem  Text="Remove" Name="mnftRemoveFile" Click="mnftRemoveFile_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Remove" Name="mnftRemoveFile" Click="mnftRemoveFile_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE894;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem  Text="Open File Location" Name="mnftOpenFileLocation" Click="mnftOpenFileLocation_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open File Location" Name="mnftOpenFileLocation" Click="mnftOpenFileLocation_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE838;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem  Text="Open File Location of Reverb Output" IsEnabled="{Binding CanPlayOutput}" Name="mnftOpenFileLocOutput" Click="mnftOpenFileLocOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open File Location of Reverb Output" IsEnabled="{Binding CanPlayOutput}" Name="mnftOpenFileLocOutput" Click="mnftOpenFileLocOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE838;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator/>
-                                <MenuFlyoutItem  Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Copy File Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem  Text="Copy File Path of Reverb Output" IsEnabled="{Binding CanPlayOutput}" Name="mnftCopyReverbOutputFilePath" Click="mnftCopyReverbOutputFilePath_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Copy File Path of Reverb Output" IsEnabled="{Binding CanPlayOutput}" Name="mnftCopyReverbOutputFilePath" Click="mnftCopyReverbOutputFilePath_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator/>
-                                <MenuFlyoutItem  Text="File Info" Name="mnftFileInfo" Click="mnftFileInfo_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="File Info" Name="mnftFileInfo" Click="mnftFileInfo_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE946;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem  Text="File Info of Reverb Output" IsEnabled="{Binding CanPlayOutput}" Name="mnftFileInfoReverbOutput" Click="mnftFileInfoReverbOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="File Info of Reverb Output" IsEnabled="{Binding CanPlayOutput}" Name="mnftFileInfoReverbOutput" Click="mnftFileInfoReverbOutput_Click"  Visibility="{Binding VisibilityOfCompletedFileLocation}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE946;"/>
                                     </MenuFlyoutItem.Icon>
@@ -108,12 +108,12 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <FontIcon FontSize="14" Glyph="{Binding Glyph}"/>
-                        <TextBlock Text="{Binding FileName}" Grid.Column="1"/>
-                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding FormattedDuration}" Grid.Column="2"/>
-                        <TextBlock Text="{Binding FromFormat}" Grid.Column="3"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding FileName}" Grid.Column="1"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding FormattedDuration}" Grid.Column="2"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding FromFormat}" Grid.Column="3"/>
                         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Column="4">
                         <ComboBox x:Name="cmbToFormat"
-          Grid.Column="4" 
+          Grid.Column="4"  FontFamily="{StaticResource GlobalFontHolder}" 
           ItemsSource="{Binding AudioExtensionsList}"
           SelectedItem="{Binding ToFormat, Mode=TwoWay}"
           SelectionChanged="cmbToFormat_SelectionChanged"/>
@@ -126,7 +126,7 @@
                             <Button.Flyout>
                                 <Flyout x:Name="flyoutSearch">
                                     <AutoSuggestBox x:Name="asbSearchFormats" 
-                            Width="200"
+                            Width="200"  FontFamily="{StaticResource GlobalFontHolder}" 
                             PlaceholderText="Find formats..." 
                             QueryIcon="Find"
                             TextChanged="asbSearchFormats_TextChanged" 
@@ -136,7 +136,7 @@
                             </Button.Flyout>
                         </Button>
                         </StackPanel>
-                        <Button  Name="btnConvert" IsEnabled="{Binding IsEnabled}" Click="btnConvert_Click" Content="Convert" Style="{StaticResource AccentButtonStyle}" Grid.Column="5"/>
+                        <Button  FontFamily="{StaticResource GlobalFontHolder}"   Name="btnConvert" IsEnabled="{Binding IsEnabled}" Click="btnConvert_Click" Content="Convert" Style="{StaticResource AccentButtonStyle}" Grid.Column="5"/>
                         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Column="6">
                             <Image ToolTipService.ToolTip="{Binding Info}" Width="20" Source="{Binding ImageState}"/>
                             <ProgressBar Grid.Column="6" Value="{Binding Progress}" Width="100" Maximum="100"/>

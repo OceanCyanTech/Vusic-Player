@@ -17,17 +17,17 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <ComboBox SelectionChanged="cmbReverb_SelectionChanged" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"  Header="Style" SelectedIndex="2" Grid.Row="0" Name="cmbReverb">
-            <ComboBoxItem Content="Small Room"/>
-            <ComboBoxItem Content="Large Hall"/>
-            <ComboBoxItem Content="Cathedral (Recommended)"/>
-            <ComboBoxItem Content="Normal"/>
-            <ComboBoxItem Content="Cave"/>
-            <ComboBoxItem Content="Bathroom"/>
-            <ComboBoxItem Content="Ethereal"/>
+        <ComboBox FontFamily="{StaticResource GlobalFontHolder}"  SelectionChanged="cmbReverb_SelectionChanged" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"  Header="Style" SelectedIndex="2" Grid.Row="0" Name="cmbReverb">
+            <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Small Room"/>
+            <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Large Hall"/>
+            <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Cathedral (Recommended)"/>
+            <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Normal"/>
+            <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Cave"/>
+            <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Bathroom"/>
+            <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Ethereal"/>
         </ComboBox>
         <StackPanel Grid.Row="1" Spacing="10">
-            <TextBlock Name="txtApplyReverbProgress" Text="" Visibility="Collapsed"></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtApplyReverbProgress" Text="" Visibility="Collapsed"></TextBlock>
             <ProgressBar Visibility="Collapsed" Name="prgApplyingReverb" Grid.Row="1" Value="20" IsIndeterminate="False"></ProgressBar>
         </StackPanel>
         <Grid Grid.Row="2">
@@ -35,11 +35,11 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <CheckBox Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Content="Show More Options" Grid.Column="0"></CheckBox>
-            <Button HorizontalAlignment="Right" Content="Apply Reverb" Name="btnApply" Click="btnApply_Click" Style="{StaticResource AccentButtonStyle}" Grid.Column="1"></Button>
+            <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Content="Show More Options" Grid.Column="0"></CheckBox>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    HorizontalAlignment="Right" Content="Apply Reverb" Name="btnApply" Click="btnApply_Click" Style="{StaticResource AccentButtonStyle}" Grid.Column="1"></Button>
         </Grid>
         <MenuFlyoutSeparator Grid.Row="3" Name="mnfs1" Visibility="Collapsed"/>
-        <TextBlock Visibility="Collapsed" Text="More Options" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Name="txtMore" Grid.Row="4"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Collapsed" Text="More Options" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Name="txtMore" Grid.Row="4"/>
         <Grid Visibility="Collapsed" Name="grdMoreOptions"  Grid.Row="5" RowSpacing="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -48,21 +48,21 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Name="btnApplyMultiple" Click="btnApplyMultiple_Click" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb to Multiple Files"/>
-            <TextBox Header="File Name" Name="txtFileName" Grid.Row="1" TextChanged="txtFileName_TextChanged" Visibility="Collapsed" PlaceholderText="Enter file name...."></TextBox>
-            <TextBlock Text="Enter File Name!" Grid.Row="2" Visibility="Collapsed" Foreground="Red" Name="txtEnterFileNameWarning"></TextBlock>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Name="btnApplyMultiple" Click="btnApplyMultiple_Click" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb to Multiple Files"/>
+            <TextBox FontFamily="{StaticResource GlobalFontHolder}"    Header="File Name" Name="txtFileName" Grid.Row="1" TextChanged="txtFileName_TextChanged" Visibility="Collapsed" PlaceholderText="Enter file name...."></TextBox>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Enter File Name!" Grid.Row="2" Visibility="Collapsed" Foreground="Red" Name="txtEnterFileNameWarning"></TextBlock>
             <Grid Grid.Row="3" ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <ComboBox SelectionChanged="cmbOutput_SelectionChanged" SelectedIndex="0" Name="cmbOutput" Header="Output" Grid.Column="0">
+                <ComboBox FontFamily="{StaticResource GlobalFontHolder}"  SelectionChanged="cmbOutput_SelectionChanged" SelectedIndex="0" Name="cmbOutput" Header="Output" Grid.Column="0">
                     <ComboBox.Items>
-                        <ComboBoxItem  Content="Memory Stream" ToolTipService.ToolTip="Create reverb output in RAM (Quicker)"/>
-                        <ComboBoxItem Content="Temporary File on Disk" ToolTipService.ToolTip="Create output as temporary file on Disk (Saves RAM)"/>
+                        <ComboBoxItem  FontFamily="{StaticResource GlobalFontHolder}"  Content="Memory Stream" ToolTipService.ToolTip="Create reverb output in RAM (Quicker)"/>
+                        <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Temporary File on Disk" ToolTipService.ToolTip="Create output as temporary file on Disk (Saves RAM)"/>
                     </ComboBox.Items>
                 </ComboBox>
-                <CheckBox Name="chckExporttoFile" Content="Export to File" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Checked_1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" ToolTipService.ToolTip="When Apply Reverb is clicked, you can choose to export the output to your PC and play"></CheckBox>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Name="chckExporttoFile" Content="Export to File" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Checked_1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" ToolTipService.ToolTip="When Apply Reverb is clicked, you can choose to export the output to your PC and play"></CheckBox>
             </Grid>
             <Grid Grid.Row="4" RowSpacing="10" ColumnSpacing="20">
                 <Grid.RowDefinitions>
@@ -74,12 +74,12 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <NumberBox x:Name="numReverberance" Minimum="0" Maximum="100" Value="80" SpinButtonPlacementMode="Compact" Header="Reverberance %" Grid.Row="0" Grid.Column="0"></NumberBox>
-                <NumberBox x:Name="numHfDamping" Minimum="0" Maximum="100" Value="40" SpinButtonPlacementMode="Compact" Header="HF Damping %" Grid.Row="0" Grid.Column="1"></NumberBox>
-                <NumberBox x:Name="numRoomScale" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact" Header="Room Scale %" Grid.Row="1" Grid.Column="0"></NumberBox>
-                <NumberBox x:Name="numStereoDepth" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact" Header="Stereo Depth %" Grid.Row="1" Grid.Column="1"></NumberBox>
-                <NumberBox x:Name="numPreDelay" Minimum="0" Maximum="500" Value="20" SpinButtonPlacementMode="Compact" Header="Pre-Delay (ms)" Grid.Row="2" Grid.Column="0"></NumberBox>
-                <NumberBox x:Name="numWetGain" Minimum="-10" Maximum="10" Value="3" SpinButtonPlacementMode="Compact" Header="Wet Gain (dB)" Grid.Row="2" Grid.Column="1"></NumberBox>
+                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numReverberance" Minimum="0" Maximum="100" Value="80" SpinButtonPlacementMode="Compact" Header="Reverberance %" Grid.Row="0" Grid.Column="0"></NumberBox>
+                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numHfDamping" Minimum="0" Maximum="100" Value="40" SpinButtonPlacementMode="Compact" Header="HF Damping %" Grid.Row="0" Grid.Column="1"></NumberBox>
+                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numRoomScale" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact" Header="Room Scale %" Grid.Row="1" Grid.Column="0"></NumberBox>
+                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numStereoDepth" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact" Header="Stereo Depth %" Grid.Row="1" Grid.Column="1"></NumberBox>
+                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numPreDelay" Minimum="0" Maximum="500" Value="20" SpinButtonPlacementMode="Compact" Header="Pre-Delay (ms)" Grid.Row="2" Grid.Column="0"></NumberBox>
+                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    x:Name="numWetGain" Minimum="-10" Maximum="10" Value="3" SpinButtonPlacementMode="Compact" Header="Wet Gain (dB)" Grid.Row="2" Grid.Column="1"></NumberBox>
             </Grid>
         </Grid>
     </Grid>

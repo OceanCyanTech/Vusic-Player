@@ -10,7 +10,7 @@
 
     <StackPanel Orientation="Vertical" Spacing="10">
         <StackPanel Name="stkAudioDelay" Spacing="8" Grid.Row="4">
-            <TextBlock Text="Audio Delay (ms)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Audio Delay (ms)" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
             <Grid ColumnSpacing="8" Name="grdAudioDelay">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -19,9 +19,9 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <RepeatButton Grid.Column="0" Content="-" Width="40" Click="rptbtnDecreaseAudioDel_Click" Name="rptbtnDecreaseAudioDel"/>
-                <NumberBox Name="numAudioDelay" ValueChanged="numAudioDelay_ValueChanged" Grid.Column="1" Value="{x:Bind Delayvalue.DelayValue, Mode=TwoWay}" SpinButtonPlacementMode="Inline" SmallChange="10"/>
+                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    Name="numAudioDelay" ValueChanged="numAudioDelay_ValueChanged" Grid.Column="1" Value="{x:Bind Delayvalue.DelayValue, Mode=TwoWay}" SpinButtonPlacementMode="Inline" SmallChange="10"/>
                 <RepeatButton Grid.Column="2" Content="+" Width="40" Click="rptbtnIncreaseAudioDel_Click" Name="rptbtnIncreaseAudioDel"/>
-                <Button Grid.Column="3" Content="Reset" Name="btnAudioDelayReset" Click="btnAudioDelayReset_Click"/>
+                <Button FontFamily="{StaticResource GlobalFontHolder}"    Grid.Column="3" Content="Reset" Name="btnAudioDelayReset" Click="btnAudioDelayReset_Click"/>
             </Grid>
         </StackPanel>
         <Rectangle Height="1" Grid.Row="5" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>

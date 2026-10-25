@@ -18,11 +18,11 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <Image Source="{Binding Success, Source={StaticResource GlobalIconHolder}}" Width="90" Grid.Row="0"></Image>
-            <TextBlock Text="Playlist has been deleted." Grid.Row="1" Name="txtPlaylistDeleted" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Playlist has been deleted." Grid.Row="1" Name="txtPlaylistDeleted" Style="{StaticResource TitleTextBlockStyle}"/>
             <Button Name="btnGoToHome" Click="btnGoToHome_Click" HorizontalAlignment="Center" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="2">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Source="{Binding Home, Source={StaticResource GlobalIconHolder}}" Width="30"></Image>
-                    <TextBlock Text="Go to Home" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Go to Home" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
             </Button>
         </Grid>
@@ -31,15 +31,15 @@
                 <ColumnDefinition Width="Auto" MaxWidth="400"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TeachingTip Title="Rename Playlist"  IsOpen="False" Name="ttRename">
+            <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"   Title="Rename Playlist"  IsOpen="False" Name="ttRename">
                 <StackPanel Margin="0, 20" Orientation="Vertical" Spacing="10">
-                    <TextBox Name="txtRenamePlaylist" PlaceholderText="Rename Playlist..."></TextBox>
+                    <TextBox FontFamily="{StaticResource GlobalFontHolder}"   Name="txtRenamePlaylist" PlaceholderText="Rename Playlist..."></TextBox>
                     <Button HorizontalAlignment="Stretch" Name="btnOfficialRename" Click="btnOfficialRename_Click">
                         <Image Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                     </Button>
                 </StackPanel>
             </TeachingTip>
-            <TeachingTip  Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" >
+            <TeachingTip  FontFamily="{StaticResource GlobalFontHolder}"   Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" >
                 <TeachingTip.Resources>
                     <x:Double x:Key="TeachingTipMinWidth">800</x:Double>
                     <x:Double x:Key="TeachingTipMaxWidth">600</x:Double>
@@ -55,8 +55,8 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Button Name="btnSavePlaylistEdited" Content="Save" Style="{StaticResource AccentButtonStyle}"/>
-                        <Button Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"   Name="btnSavePlaylistEdited" Content="Save" Style="{StaticResource AccentButtonStyle}"/>
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"   Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
                     </Grid>
                 </Grid>
             </TeachingTip>
@@ -77,7 +77,7 @@
                         </Border.Shadow>
                         <Border.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Text="Change Cover" Click="mnftChangeCover_Click" Name="mnftChangeCover"></MenuFlyoutItem>
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Change Cover" Click="mnftChangeCover_Click" Name="mnftChangeCover"></MenuFlyoutItem>
                             </MenuFlyout>
                         </Border.ContextFlyout>
                         <Image x:Name="imgPlaylistCover" Tapped="imgPlaylistCover_Tapped"  Source="/Assets/appicon.png"  Stretch="UniformToFill"/>
@@ -85,12 +85,12 @@
                 </Viewbox>
 
                 <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center">
-                    <TextBlock Text="{x:Bind currentPlaylist.PlaylistName, Mode=OneWay}" Name="txtPlaylistName" 
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind currentPlaylist.PlaylistName, Mode=OneWay}" Name="txtPlaylistName" 
                    Style="{StaticResource TitleTextBlockStyle}" 
                    HorizontalAlignment="Center" 
                    TextWrapping="Wrap" />
                     <StackPanel Margin="0, 5" Orientation="Horizontal">
-                        <TextBlock Margin="0, 10" Name="txtGenreCov"  Text="Genre" Foreground="{ThemeResource TextFillColorSecondaryBrush}" ></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="0, 10" Name="txtGenreCov"  Text="Genre" Foreground="{ThemeResource TextFillColorSecondaryBrush}" ></TextBlock>
                         <GridView VerticalAlignment="Center" Margin="10, 0" SelectionMode="None" Name="grdViewGenres">
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -100,25 +100,22 @@
                             <GridView.ItemTemplate>
                                 <DataTemplate>
                                     <Button    HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding GenreTag}"  CornerRadius="12" Name="btnGenre" Click="btnGenre_Click"  Content="{Binding GenreTag}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Grid.Column="0">
-                                        <Button.ContextFlyout>
-                                            <MenuFlyout >
-                                            </MenuFlyout>
-                                        </Button.ContextFlyout>
+                                 
                                     </Button>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
                         </GridView>
                     </StackPanel>
                     <TextBlock Visibility="Collapsed" Text="Playlist Genre" Margin="0, 5" 
-                   Style="{StaticResource SubtitleTextBlockStyle}" 
+                   Style="{StaticResource SubtitleTextBlockStyle}"  FontFamily="{StaticResource GlobalFontHolder}"  
                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
                    HorizontalAlignment="Center" />
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Name="txtPlaylist" Text="• Playlist" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Name="txtPlaylist" Text="• Playlist" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  FontFamily="{StaticResource GlobalFontHolder}"  />
                         <TextBlock Text="&#xEC92;" FontFamily="Segoe Fluent Icons" 
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="25, 3" />
-                        <TextBlock Margin="-20, 0" Text="7 October 2008" ToolTipService.ToolTip="Created on" 
+                        <TextBlock Margin="-20, 0" Text="7 October 2008" ToolTipService.ToolTip="Created on"  FontFamily="{StaticResource GlobalFontHolder}"  
                        Name="txtDateCreation" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
                     </StackPanel>
@@ -126,7 +123,7 @@
 
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="{x:Bind SongCollection.Count, Converter={StaticResource CountToItem}, Mode=OneWay}" Margin="0, 2" Name="txtItemCount" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="{x:Bind SongCollection.Count, Converter={StaticResource CountToItem}, Mode=OneWay}" Margin="0, 2" Name="txtItemCount" 
                    Style="{StaticResource CaptionTextBlockStyle}" 
                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
                    HorizontalAlignment="Center" />
@@ -161,7 +158,7 @@ CornerRadius="16"
                 ToolTipService.ToolTip="Play all songs in Playlist">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="25" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}" />
-                                <TextBlock Margin="5,2" Text="Play all" />
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5,2" Text="Play all" />
                             </StackPanel>
                         </Button>
 
@@ -178,30 +175,30 @@ CornerRadius="16"
                 ToolTipService.ToolTip="Add songs to this playlist" Click="btnAdd_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="25" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" />
-                                <TextBlock Margin="5,2" Text="Add Songs" />
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5,2" Text="Add Songs" />
                             </StackPanel>
                         </Button>
                         <Button CornerRadius="12" Name="btnDeletePlaylist" Click="btnDeletePlaylist_Click" Margin="5" ToolTipService.ToolTip="Delete Playlist" Background="Transparent" BorderBrush="Transparent">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="25" Source="{Binding DeleteIcon, Source={StaticResource GlobalIconHolder}}" />
-                                <TextBlock Margin="5,2 " Text="Delete playlist" />
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5,2 " Text="Delete playlist" />
                             </StackPanel>
                         </Button>
                     </ItemsControl>
                 </Border>
                 <ContentDialog Title="Are you sure you want to delete this playlist?" Content="This cannot be undone!" Name="dlgDeleteConfirmPlaylist" PrimaryButtonText="Delete" DefaultButton="Primary" CloseButtonText="Cancel" PrimaryButtonClick="dlgDeleteConfirmPlaylist_PrimaryButtonClick"></ContentDialog>
 
-                <Button Name="btnEditPlaylistInfo" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="3" Margin="0, 20" HorizontalAlignment="Center" Content="Edit Playlist Info" Click="btnEditPlaylistInfo_Click"></Button>
-                <Button Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="4" Margin="0, 20" HorizontalAlignment="Center" Content="Add Playlist to Queue" Click="btnAddtoQueue_Click"></Button>
+                <Button FontFamily="{StaticResource GlobalFontHolder}"   Name="btnEditPlaylistInfo" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="3" Margin="0, 20" HorizontalAlignment="Center" Content="Edit Playlist Info" Click="btnEditPlaylistInfo_Click"></Button>
+                <Button FontFamily="{StaticResource GlobalFontHolder}"   Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="4" Margin="0, 20" HorizontalAlignment="Center" Content="Add Playlist to Queue" Click="btnAddtoQueue_Click"></Button>
             </Grid>
 
             <StackPanel Orientation="Horizontal" Name="stkLoading" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20" Grid.Column="1">
                 <ProgressRing Width="40" Height="40"/>
-                <TextBlock Text="Loading..." Style="{StaticResource TitleTextBlockStyle}"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Loading..." Style="{StaticResource TitleTextBlockStyle}"/>
             </StackPanel>
             <StackPanel Visibility="Collapsed" VerticalAlignment="Center" Orientation="Vertical" Grid.Column="1" Name="panelEmptyplaylists">
                 <Image Source="{Binding PlaylistIcon, Source={StaticResource GlobalIconHolder}}" Width="100"></Image>
-                <TextBlock Margin="0, 40" HorizontalAlignment="Center" Name="txtEmptyPlaylist" Text="You have no songs in this playlist" VerticalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="0, 40" HorizontalAlignment="Center" Name="txtEmptyPlaylist" Text="You have no songs in this playlist" VerticalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                 <Button Name="btnAdd" HorizontalAlignment="Center" Click="btnAdd_Click" Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon FontFamily="Segoe Fluent Icons" 
@@ -209,22 +206,22 @@ CornerRadius="16"
                   FontSize="16"
                   VerticalAlignment="Center"/>
 
-                        <TextBlock Name="btnTextAddSongs" Text="Add Songs" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="btnTextAddSongs" Text="Add Songs" 
                    Margin="8,0,0,0" 
                    VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
-            <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
+            <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"   Name="ttAddedtoQueue" IsOpen="False">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
-                    <TextBlock Text="Added selected item(s) to Queue"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Added selected item(s) to Queue"/>
                 </StackPanel>
             </TeachingTip>
             <InfoBar x:Name="infoBarHiddenFiles"
 IsOpen="False" Grid.Column="1"
 Severity="Error"
-                     
+                      FontFamily="{StaticResource GlobalFontHolder}"  
 Message="Hidden files cannot be shown"
 IsClosable="True"
 Margin="0,0,0,10" />
@@ -238,13 +235,13 @@ Margin="0,0,0,10" />
                     </Grid.RowDefinitions>
                     <InfoBar Grid.Row="0" IsOpen="False" Severity="Warning" Name="iBMissingFiles" Title="Missing files">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="infoBarMessage" Text="Some files could not be located." Margin="0,0,8,0"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   x:Name="infoBarMessage" Text="Some files could not be located." Margin="0,0,8,0"/>
                             <Button Content="Relocate" Click="Button_Click"/>
                         </StackPanel>
                     </InfoBar>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 20">
-                        <TextBlock Name="txtPlaylistContentHeader" Style="{StaticResource SubtitleTextBlockStyle}" Text="Playlist Content"></TextBlock>
-                        <TextBlock Margin="10,5" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Playlist will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtPlaylistContentHeader" Style="{StaticResource SubtitleTextBlockStyle}" Text="Playlist Content"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="10,5" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Playlist will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                     </StackPanel>
 
                     <vusic:ListViewMedia Grid.Row="2" VisiblityofViewButton="Visible" ItemsSource="{x:Bind SongCollection, Mode=OneWay}" x:Name="lstViewUnified"></vusic:ListViewMedia>

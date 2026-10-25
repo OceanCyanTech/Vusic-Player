@@ -130,7 +130,7 @@ Stretch="UniformToFill"/>
         <TeachingTip Name="ttEXCEPTION" Title="Exception">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Width="40" Source="{Binding SourceError ,Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock Name="txtExceptionError"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Name="txtExceptionError"/>
             </StackPanel>
         </TeachingTip>
     

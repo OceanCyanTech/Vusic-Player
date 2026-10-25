@@ -156,26 +156,26 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Name="txtSplash" Text="No video is playing right now!" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtSplash" Text="No video is playing right now!" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
 
             <Button Margin="0, 50" Name="btnOpenVidSplash" Click="btnOpenVidSplash_Click" Grid.Row="1" HorizontalAlignment="Center" Style="{StaticResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="20" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock Text="Open Video"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Open Video"></TextBlock>
                 </StackPanel>
             </Button>
-            <Button Name="btnSettings" Content="Settings" Click="btnSettings_Click" Grid.Row="2" HorizontalAlignment="Center"></Button>
+            <Button Name="btnSettings" FontFamily="{StaticResource GlobalFontHolder}"    Content="Settings" Click="btnSettings_Click" Grid.Row="2" HorizontalAlignment="Center"></Button>
         </Grid>
         <Grid Name="MainGrid"  Visibility="Visible" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PointerMoved="MainGrid_PointerMoved" PointerEntered="MainGrid_PointerEntered">
             <Grid.ContextFlyout>
                 <MenuFlyout Opened="MenuFlyout_Opened">
-                    <MenuFlyoutItem x:Name="mnftOpenVideo" Text="Open Another Media" Click="mnftOpenVideo_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftOpenVideo" Text="Open Another Media" Click="mnftOpenVideo_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Name="fntIconVolume"  Glyph="&#xE8E5;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftVolume" Text="Volume" Click="mnftVolume_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftVolume" Text="Volume" Click="mnftVolume_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE767;"/>
                         </MenuFlyoutItem.Icon>
@@ -183,43 +183,43 @@
 
 
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE946;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE8DA;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                     <MenuFlyoutSeparator />
 
-                    <MenuFlyoutItem x:Name="mnftPrevious" Text="Previous" Click="mnftPrevious_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftPrevious" Text="Previous" Click="mnftPrevious_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE892;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftSkipBack" Text="Skip back 10 secs" Click="mnftSkipBack_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSkipBack" Text="Skip back 10 secs" Click="mnftSkipBack_Click">
                         <MenuFlyoutItem.Icon>
                             <ImageIcon Source="{Binding SkipBack, Source= {StaticResource GlobalIconHolder}}"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftPlay" Text="{x:Bind mediacontroller.PlayPauseToolTip, Mode=OneWay}" Click="mnftPlay_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftPlay" Text="{x:Bind mediacontroller.PlayPauseToolTip, Mode=OneWay}" Click="mnftPlay_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Name="fntIconPlay"  Glyph="&#xE768;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftSkipForward" Text="Skip Forward 10 secs" Click="mnftSkipForward_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSkipForward" Text="Skip Forward 10 secs" Click="mnftSkipForward_Click">
                         <MenuFlyoutItem.Icon>
                             <ImageIcon Source="{Binding SkipAhead, Source= {StaticResource GlobalIconHolder}}"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftNext" Text="Next" Click="mnftNext_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftNext" Text="Next" Click="mnftNext_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE893;"/>
                         </MenuFlyoutItem.Icon>
@@ -233,19 +233,19 @@
                         </ToggleMenuFlyoutItem.Icon>
                     </ToggleMenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftSubtitleOptions" Text="Subtitle Options" Click="mnftSubtitleOptions_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSubtitleOptions" Text="Subtitle Options" Click="mnftSubtitleOptions_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xED1E;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftVideoOptions" Text="Video Options" Click="mnftVideoOptions_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftVideoOptions" Text="Video Options" Click="mnftVideoOptions_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE714;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftAudioOptions" Text="Audio Options" Click="mnftAudioOptions_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftAudioOptions" Text="Audio Options" Click="mnftAudioOptions_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE8D6;"/>
                         </MenuFlyoutItem.Icon>
@@ -253,7 +253,7 @@
 
                     <MenuFlyoutSeparator />
 
-                    <MenuFlyoutItem x:Name="mnftHome" Text="Home" Click="mnftHome_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftHome" Text="Home" Click="mnftHome_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE80F;"/>
                         </MenuFlyoutItem.Icon>
@@ -272,7 +272,7 @@
             </winui:FlyleafHost>
             <Grid Name="grdWatermarkValues" Visibility="{x:Bind watermarkFontValues.OverallVisibility, Mode=OneWay}">
                 <!-- Label 1 -->
-                <TextBlock x:Name="txtLabel1" Text="" Margin="40, 40"
+                <TextBlock  x:Name="txtLabel1" Text="" Margin="40, 40"
            HorizontalAlignment="{x:Bind watermarkFontValues.Label1HorizontalAlignment, Mode=OneWay}"
            VerticalAlignment="{x:Bind watermarkFontValues.Label1VerticalAlignment, Mode=OneWay}"
            FontFamily="{x:Bind watermarkFontValues.Label1FontFamily, Mode=OneWay}"
@@ -283,7 +283,7 @@
            Foreground="{x:Bind watermarkFontValues.Label1FontColor, Mode=OneWay}"/>
 
                 <!-- Label 2 -->
-                <TextBlock x:Name="txtLabel2" Text="" Margin="40, 40"
+                <TextBlock  x:Name="txtLabel2" Text="" Margin="40, 40"
            HorizontalAlignment="{x:Bind watermarkFontValues.Label2HorizontalAlignment, Mode=OneWay}"
            VerticalAlignment="{x:Bind watermarkFontValues.Label2VerticalAlignment, Mode=OneWay}"
            FontFamily="{x:Bind watermarkFontValues.Label2FontFamily, Mode=OneWay}"
@@ -305,7 +305,7 @@
            Foreground="{x:Bind watermarkFontValues.Label3FontColor, Mode=OneWay}"/>
 
                 <!-- Label 4 -->
-                <TextBlock x:Name="txtLabel4" Text="" Margin="40, 40"
+                <TextBlock   x:Name="txtLabel4" Text="" Margin="40, 40"
            HorizontalAlignment="{x:Bind watermarkFontValues.Label4HorizontalAlignment, Mode=OneWay}"
            VerticalAlignment="{x:Bind watermarkFontValues.Label4VerticalAlignment, Mode=OneWay}"
            FontFamily="{x:Bind watermarkFontValues.Label4FontFamily, Mode=OneWay}"
@@ -316,7 +316,7 @@
            Foreground="{x:Bind watermarkFontValues.Label4FontColor, Mode=OneWay}"/>
 
                 <!-- Label 5 -->
-                <TextBlock x:Name="txtLabel5" Text="" Margin="40, 40"
+                <TextBlock   x:Name="txtLabel5" Text="" Margin="40, 40"
            HorizontalAlignment="{x:Bind watermarkFontValues.Label5HorizontalAlignment, Mode=OneWay}"
            VerticalAlignment="{x:Bind watermarkFontValues.Label5VerticalAlignment, Mode=OneWay}"
            FontFamily="{x:Bind watermarkFontValues.Label5FontFamily, Mode=OneWay}"
@@ -327,7 +327,7 @@
            Foreground="{x:Bind watermarkFontValues.Label5FontColor, Mode=OneWay}"/>
 
                 <!-- Label 6 -->
-                <TextBlock x:Name="txtLabel6" Text="" Margin="40, 40"
+                <TextBlock   x:Name="txtLabel6" Text="" Margin="40, 40"
            HorizontalAlignment="{x:Bind watermarkFontValues.Label6HorizontalAlignment, Mode=OneWay}"
            VerticalAlignment="{x:Bind watermarkFontValues.Label6VerticalAlignment, Mode=OneWay}"
            FontFamily="{x:Bind watermarkFontValues.Label6FontFamily, Mode=OneWay}"
@@ -349,7 +349,7 @@
            Foreground="{x:Bind watermarkFontValues.Label7FontColor, Mode=OneWay}"/>
 
                 <!-- Label 8 -->
-                <TextBlock x:Name="txtLabel8" Text="" Margin="40, 40"
+                <TextBlock  x:Name="txtLabel8" Text="" Margin="40, 40"
            HorizontalAlignment="{x:Bind watermarkFontValues.Label8HorizontalAlignment, Mode=OneWay}"
            VerticalAlignment="{x:Bind watermarkFontValues.Label8VerticalAlignment, Mode=OneWay}"
            FontFamily="{x:Bind watermarkFontValues.Label8FontFamily, Mode=OneWay}"
@@ -373,9 +373,9 @@
             <StackPanel Name="stkRecording" Visibility="Collapsed" Orientation="Horizontal" Spacing="5" VerticalAlignment="Top" Margin="10, 10">
                 <Image Width="15" Source="{Binding RecordIcon, Source={StaticResource GlobalIconHolder}}"></Image>
 
-                <TextBlock Text="SCREEN RECORDING" Margin="0, 10" FontWeight="Bold" Style="{StaticResource BodyTextBlockStyle}" Foreground="Crimson"></TextBlock>
-                <TextBlock Text="00:00:00" Margin="0, 10" Name="txtRecordingTimeFrame"></TextBlock>
-                <Button Content="Stop Recording" Margin="10, 0" Style="{StaticResource AccentButtonStyle}" Name="btnStopRecording" Click="btnStopRecording_Click"></Button>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="SCREEN RECORDING" Margin="0, 10" FontWeight="Bold" Style="{StaticResource BodyTextBlockStyle}" Foreground="Crimson"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="00:00:00" Margin="0, 10" Name="txtRecordingTimeFrame"></TextBlock>
+                <Button FontFamily="{StaticResource GlobalFontHolder}"    Content="Stop Recording" Margin="10, 0" Style="{StaticResource AccentButtonStyle}" Name="btnStopRecording" Click="btnStopRecording_Click"></Button>
             </StackPanel>
             <Rectangle x:Name="RecFrame"  Visibility="Collapsed" Stroke="Cyan"  StrokeThickness="2"  RadiusX="8" RadiusY="8"
 StrokeDashArray="3,1.5"
@@ -403,7 +403,7 @@ CornerRadius="16" >
                         <Button Click="btnCloseInformation_Click" Name="btnCloseInformation" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </Button>
-                        <TextBlock Grid.Row="1" Text="" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="1" x:Name="txtInformation" Style="{StaticResource TitleTextBlockStyle}" ></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1" Text="" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="1" x:Name="txtInformation" Style="{StaticResource TitleTextBlockStyle}" ></TextBlock>
                     </Grid>
                 </Border>
 
@@ -436,17 +436,17 @@ CornerRadius="16" >
                         <Button Click="btnCloseChapters_Click" Name="btnCloseChapters" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </Button>
-                        <TextBlock Grid.Row="1" Text="Video Chapters" Style="{StaticResource TitleTextBlockStyle}"/>
-                        <AutoSuggestBox Visibility="Collapsed" Name="asbSearchChapters" PlaceholderText="Search chapters..." QuerySubmitted="asbSearchChapters_QuerySubmitted" QueryIcon="Find" Grid.Row="2" TextChanged="asbSearchChapters_TextChanged"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1" Text="Video Chapters" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}"    Visibility="Collapsed" Name="asbSearchChapters" PlaceholderText="Search chapters..." QuerySubmitted="asbSearchChapters_QuerySubmitted" QueryIcon="Find" Grid.Row="2" TextChanged="asbSearchChapters_TextChanged"/>
                         <Grid Grid.Row="3" Name="grdChapterHeaders" ColumnSpacing="20">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Style="{StaticResource BodyStrongTextBlockStyle}" Text="Title"/>
-                            <TextBlock Grid.Column="1" Style="{StaticResource BodyStrongTextBlockStyle}"  Text="Start Time"/>
-                            <TextBlock Grid.Column="2" Style="{StaticResource BodyStrongTextBlockStyle}"  Text="End Time"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="0" Style="{StaticResource BodyStrongTextBlockStyle}" Text="Title"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" Style="{StaticResource BodyStrongTextBlockStyle}"  Text="Start Time"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="2" Style="{StaticResource BodyStrongTextBlockStyle}"  Text="End Time"/>
                         </Grid>
                         <ListView IsItemClickEnabled="True" Name="lstViewVideoChapters" Grid.Row="4" ItemClick="lstViewVideoChapters_ItemClick">
                             <ListView.ItemTemplate>
@@ -457,9 +457,9 @@ CornerRadius="16" >
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding ChapterTitle}"/>
-                                        <TextBlock Grid.Column="1" Text="{Binding StartTimeStr}"/>
-                                        <TextBlock Grid.Column="2" Text="{Binding EndTimeStr}"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="0" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding ChapterTitle}"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" Text="{Binding StartTimeStr}"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="2" Text="{Binding EndTimeStr}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -470,7 +470,7 @@ CornerRadius="16" >
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Image Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}" Width="20"/>
-                            <TextBlock Grid.Column="1" Text="No chapters found based on your search query!"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" Text="No chapters found based on your search query!"></TextBlock>
                         </Grid>
                     </Grid>
                 </Border>
@@ -491,7 +491,7 @@ CornerRadius="16" >
                         <Button Click="btnCloseStats_Click" Name="btnCloseStats" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </Button>
-                        <TextBlock Grid.Row="1" Text="Media Stats" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1" Text="Media Stats" Style="{StaticResource TitleTextBlockStyle}"/>
                         <TabView IsAddTabButtonVisible="False" Grid.Row="2"  Name="tbViewStats">
                             <TabView.TabItems>
                                 <TabViewItem Background="Transparent" Header="Video" IsClosable="False">
@@ -522,7 +522,7 @@ CornerRadius="16" >
                                         </Grid.RowDefinitions>
 
                                         <!-- Headers -->
-                                        <TextBlock Text="Parameters" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Parameters" 
                Grid.Row="0" Grid.Column="0" 
                Style="{StaticResource SubtitleTextBlockStyle}"/>
                                         <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
@@ -531,7 +531,7 @@ CornerRadius="16" >
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock Text="Corresponding Value" 
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Corresponding Value" 
                    Grid.Column="0" 
                    VerticalAlignment="Center"
                    Style="{StaticResource SubtitleTextBlockStyle}"/>
@@ -552,31 +552,31 @@ CornerRadius="16" >
                                         <MenuFlyoutSeparator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,4,0,8"/>
 
                                         <!-- Pipeline Metrics -->
-                                        <TextBlock Text="Frames Decoded" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Frames Decoded" 
                Grid.Row="2" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0" 
                Grid.Row="2" Grid.Column="1" 
                Name="txtDecodedFrames" IsTextSelectionEnabled="True"/>
 
-                                        <TextBlock Text="Frames Displayed" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Frames Displayed" 
                Grid.Row="3" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0" 
                Grid.Row="3" Grid.Column="1" 
                Name="txtFramesDisplayed" IsTextSelectionEnabled="True"/>
 
-                                        <TextBlock Text="Frames Dropped" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Frames Dropped" 
                Grid.Row="4" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0" 
                Grid.Row="4" Grid.Column="1" 
                Name="txtFramesDropped" IsTextSelectionEnabled="True"/>
 
-                                        <TextBlock Text="Frames Delayed" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Frames Delayed" 
                Grid.Row="5" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0" 
                Grid.Row="5" Grid.Column="1" 
                Name="txtFramesDelayed" IsTextSelectionEnabled="True"/>
 
@@ -584,17 +584,17 @@ CornerRadius="16" >
                                         <MenuFlyoutSeparator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,8"/>
 
                                         <!-- Timing & Stream Info -->
-                                        <TextBlock Text="Encoded FPS" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Encoded FPS" 
                Grid.Row="7" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0.000 fps" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0.000 fps" 
                Grid.Row="7" Grid.Column="1" 
                Name="txtEncodedFPS" IsTextSelectionEnabled="True"/>
 
-                                        <TextBlock Text="A/V Offset" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="A/V Offset" 
                Grid.Row="8" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0.0 ms" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0.0 ms" 
                Grid.Row="8" Grid.Column="1" 
                Name="txtAVOffset" IsTextSelectionEnabled="True"/>
                                     </Grid>
@@ -625,7 +625,7 @@ CornerRadius="16" >
                                         </Grid.RowDefinitions>
 
                                         <!-- Headers -->
-                                        <TextBlock Text="Parameters" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Parameters" 
                Grid.Row="0" Grid.Column="0" 
                Style="{StaticResource SubtitleTextBlockStyle}"/>
                                         <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
@@ -634,7 +634,7 @@ CornerRadius="16" >
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock Text="Corresponding Value" 
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Corresponding Value" 
                    Grid.Column="0" 
                    VerticalAlignment="Center"
                    Style="{StaticResource SubtitleTextBlockStyle}"/>
@@ -656,24 +656,24 @@ CornerRadius="16" >
                                         <MenuFlyoutSeparator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,4,0,8"/>
 
                                         <!-- Pipeline Metrics -->
-                                        <TextBlock Text="Decoded" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Decoded" 
                Grid.Row="2" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0" 
                Grid.Row="2" Grid.Column="1" 
                Name="txtDecodedAudio" IsTextSelectionEnabled="True"/>
 
-                                        <TextBlock Text="Played" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Played" 
                Grid.Row="3" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0" 
                Grid.Row="3" Grid.Column="1" 
                Name="txtAudioPlayed" IsTextSelectionEnabled="True"/>
 
-                                        <TextBlock Text="Dropped" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Dropped" 
                Grid.Row="4" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0" 
                Grid.Row="4" Grid.Column="1" 
                Name="txtFramesDroppedAudio" IsTextSelectionEnabled="True"/>
 
@@ -683,24 +683,24 @@ CornerRadius="16" >
                                         <MenuFlyoutSeparator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,8"/>
 
                                         <!-- Timing & Stream Info -->
-                                        <TextBlock Text="Device Delay" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Device Delay" 
                Grid.Row="7" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0" 
                Grid.Row="7" Grid.Column="1" 
                Name="txtDeviceDelay" IsTextSelectionEnabled="True"/>
 
-                                        <TextBlock Text="Output Device" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Output Device" 
                Grid.Row="8" Grid.Column="0" 
                Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="null" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="null" 
                Grid.Row="8" Grid.Column="1" 
                Name="txtDeviceOutput" IsTextSelectionEnabled="True"/>
 
-                                        <TextBlock Text="Buffer Duration" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Buffer Duration" 
 Grid.Row="9" Grid.Column="0" 
 Style="{StaticResource BodyStrongTextBlockStyle}" IsTextSelectionEnabled="True"/>
-                                        <TextBlock Text="0" 
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="0" 
 Grid.Row="9" Grid.Column="1" 
 Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                                     </Grid>
@@ -717,7 +717,7 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <Image Source="{Binding Icon}" Width="20"/>
-                                        <TextBlock Grid.Column="1" IsTextSelectionEnabled="True" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding Message}"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" IsTextSelectionEnabled="True" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding Message}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -744,30 +744,30 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                             <RowDefinition MaxHeight="300" />
 
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Title" Name="txtShowTitle" Grid.Row="1" Style="{StaticResource TitleLargeTextBlockStyle}"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Title" Name="txtShowTitle" Grid.Row="1" Style="{StaticResource TitleLargeTextBlockStyle}"></TextBlock>
 
 
                         <Button Click="btnCloseShowInfo_Click" Name="btnCloseShowInfo" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Close" Grid.Row="0">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
                         </Button>
                         <StackPanel Grid.Row="2" Orientation="Vertical" Spacing="20">
-                            <TextBlock Text="• 0 Seasons" Name="txtShowSeasonCount" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
-                            <TextBlock Text="• Released on " Name="txtShowReleaseDate" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="• 0 Seasons" Name="txtShowSeasonCount" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="• Released on " Name="txtShowReleaseDate" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
 
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="3"/>
-                        <TextBlock Text="Episodes" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Episodes" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                         <SelectorBar SelectionChanged="selbarSeasons_SelectionChanged" Name="selbarSeasons" Grid.Row="5">
 
                         </SelectorBar>
-                        <TextBlock Name="txtSeasonEpisodeCount" Text="Loading episodes..." Grid.Row="6" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtSeasonEpisodeCount" Text="Loading episodes..." Grid.Row="6" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                         <Grid Visibility="Collapsed" HorizontalAlignment="Center" Grid.Row="7" Name="grdNoEpisodes" RowSpacing="20">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Image Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}" Width="30" Grid.Row="0"></Image>
-                            <TextBlock Text="No episodes in this season!" Name="txtNoEpisodes" Grid.Row="1"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="No episodes in this season!" Name="txtNoEpisodes" Grid.Row="1"></TextBlock>
                         </Grid>
                         <ListView IsItemClickEnabled="True" ItemClick="lstViewEpisodes_ItemClick" Name="lstViewEpisodes" Grid.Row="7">
                             <ListView.ItemTemplate>
@@ -780,12 +780,12 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                                         <Grid Grid.Column="0" RowSpacing="10">
                                             <Grid.ContextFlyout>
                                                 <MenuFlyout>
-                                                    <MenuFlyoutItem Text="Play" Name="mnftPlayEpisode" Click="mnftPlayEpisode_Click">
+                                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play" Name="mnftPlayEpisode" Click="mnftPlayEpisode_Click">
                                                         <MenuFlyoutItem.Icon>
                                                             <FontIcon Glyph="&#xE768;"></FontIcon>
                                                         </MenuFlyoutItem.Icon>
                                                     </MenuFlyoutItem>
-                                                    <MenuFlyoutItem Text="File Info" Name="mnftFileInfoEpisode" Click="mnftFileInfoEpisode_Click">
+                                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="File Info" Name="mnftFileInfoEpisode" Click="mnftFileInfoEpisode_Click">
                                                         <MenuFlyoutItem.Icon>
                                                             <FontIcon Glyph="&#xE946;"></FontIcon>
                                                         </MenuFlyoutItem.Icon>
@@ -805,16 +805,16 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                                                         <FontIcon Glyph="&#xE768;"></FontIcon>
                                                     </Button>
 
-                                                    <TextBlock ToolTipService.ToolTip="{Binding EpisodeName}"  Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding EpisodeName}"></TextBlock>
+                                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  ToolTipService.ToolTip="{Binding EpisodeName}"  Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding EpisodeName}"></TextBlock>
 
                                                 </StackPanel>
                                             </Viewbox>
-                                            <TextBlock MaxWidth="100"  TextWrapping="Wrap" Text="{Binding Description}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="1"></TextBlock>
+                                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  MaxWidth="100"  TextWrapping="Wrap" Text="{Binding Description}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="1"></TextBlock>
                                             <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="2">
                                                 <Button ToolTipService.ToolTip="File Info" Background="Transparent" Name="btnEpisodeFileInfo" Click="btnEpisodeFileInfo_Click"  Grid.Row="3" Padding="0" BorderBrush="Transparent" >
                                                     <Image Source="{Binding InfoIcon, Source={StaticResource GlobalIconHolder}}" Width="15" ></Image>
                                                 </Button>
-                                                <TextBlock Text="{Binding Duration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="2"></TextBlock>
+                                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Duration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Row="2"></TextBlock>
 
                                             </StackPanel>
 
@@ -845,22 +845,22 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                             </ToolTipService.ToolTip>
                         </playbackviews:OceanSlider>
                         <StackPanel Margin="0, 10" Orientation="Horizontal" >
-                            <TextBlock FontSize="12" Foreground="White" Name="txtVolumepercent" />
-                            <TextBlock FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="White" Name="txtVolumepercent" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
 
             </TeachingTip>
-            <TextBlock Grid.Row="0" Margin="10, 0"  VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" Opacity="0" x:Name="txtSeek" Style="{StaticResource DisplayTextBlockStyle}" />
-            <TextBlock Grid.Row="0" Margin="10, 0"  VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" Opacity="0" x:Name="txtCommands" Style="{StaticResource DisplayTextBlockStyle}" />
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="0" Margin="10, 0"  VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" Opacity="0" x:Name="txtSeek" Style="{StaticResource DisplayTextBlockStyle}" />
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="0" Margin="10, 0"  VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" Opacity="0" x:Name="txtCommands" Style="{StaticResource DisplayTextBlockStyle}" />
 
             <Grid Grid.Row="0" Name="grdPlayback" Visibility="Visible" Opacity="1">
                 <Grid.RowDefinitions>
                     <RowDefinition ></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock MaxLines="3" Grid.Row="0" Margin="0, 10" VerticalAlignment="Bottom" HorizontalAlignment="Center"  Opacity="1" x:Name="txtSubtitle" Style="{StaticResource TitleTextBlockStyle}" ></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  MaxLines="3" Grid.Row="0" Margin="0, 10" VerticalAlignment="Bottom" HorizontalAlignment="Center"  Opacity="1" x:Name="txtSubtitle" Style="{StaticResource TitleTextBlockStyle}" ></TextBlock>
 
                 <Grid Grid.Row="1" Name="grdRootPlayback" VerticalAlignment="Bottom">
                     <Grid.ColumnDefinitions>
@@ -950,7 +950,7 @@ BorderThickness="0"
                         </Border>
 
                     </Grid>
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20, 0" Name="txtPinFileName" TextWrapping="Wrap"  Text="{x:Bind mediacontroller.MediaDisplayName,Mode=OneWay}"  Visibility="Collapsed" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20, 0" Name="txtPinFileName" TextWrapping="Wrap"  Text="{x:Bind mediacontroller.MediaDisplayName,Mode=OneWay}"  Visibility="Collapsed" Style="{StaticResource BodyLargeStrongTextBlockStyle}"></TextBlock>
                     <Button Grid.Column="2" Visibility="Collapsed" Margin="20, 0" Background="Transparent" Padding="2" ToolTipService.ToolTip="Unpin this panel" HorizontalAlignment="Right" Name="btnPin2" Click="btnPin_Click" >
                         <FontIcon FontSize="25" Glyph="&#xE718;" Name="fntPin2"></FontIcon>
                     </Button>
@@ -969,22 +969,22 @@ BorderThickness="0"
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Vertical" Spacing="20">
-                    <TextBlock Text="HH:"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="HH:"/>
                     <NumberBox SpinButtonPlacementMode="Inline" Name="numHour" Value="0" Minimum="0"/>
-                    <TextBlock Text="MM:"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="MM:"/>
                     <NumberBox SpinButtonPlacementMode="Inline" Name="numMin"  Value="0" Minimum="0"/>
-                    <TextBlock Text="SS"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="SS"/>
                     <NumberBox SpinButtonPlacementMode="Inline" Name="numSec"  Value="0" Minimum="0"/>
                    
                 </StackPanel>
                 <Button Name="btnJumpToTime" Click="btnJumpToTime_Click" Content="Jump" Style="{StaticResource AccentButtonStyle}" Grid.Row="1"/>
             </Grid>
         </TeachingTip>
-   
-        <TeachingTip Name="ttZoom" IsOpen="False">
+
+        <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"    Name="ttZoom" IsOpen="False">
             <videogeneral:View />
         </TeachingTip>
-        <TeachingTip Name="ttAspectRatio" IsOpen="False">
+        <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"    Name="ttAspectRatio" IsOpen="False">
             <videoaspectratio:AspectRatioCustom/>
         </TeachingTip>
     </controls:CursorDisappearGrid>

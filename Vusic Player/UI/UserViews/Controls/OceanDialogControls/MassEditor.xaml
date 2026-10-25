@@ -21,7 +21,7 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock  Name="txtTitle" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="0"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtTitle" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="0"></TextBlock>
                 <Grid Grid.Row="1" RowSpacing="10">
 
                     <Grid.RowDefinitions>
@@ -35,16 +35,16 @@
                         <RowDefinition  Height="Auto"></RowDefinition>
                         <RowDefinition Height="170"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <InfoBar IsOpen="False" Name="ifbInformation" Severity="Success" Grid.Row="0"></InfoBar>
-                    <TextBlock Text="0 items selected" Name="txtItemCount" Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
-                    <TextBox PlaceholderText="Type an album name..." CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Header="Album Name" Name="txtAlbum" Grid.Row="2"></TextBox>
-                    <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="3" Content="Set" Name="btnSetAlbum" Click="btnSetAlbum_Click" HorizontalAlignment="Stretch"></Button>
-                    <TextBox CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" PlaceholderText="Type artist names..." Header="Artist Name" Name="txtArtist" Grid.Row="4"></TextBox>
-                    <Button Name="btnSetArtist" Click="btnSetArtist_Click" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="5" Content="Set" HorizontalAlignment="Stretch"></Button>
+                    <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  IsOpen="False" Name="ifbInformation" Severity="Success" Grid.Row="0"></InfoBar>
+                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}" Text="0 items selected" Name="txtItemCount" Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <TextBox FontFamily="{StaticResource GlobalFontHolder}"  PlaceholderText="Type an album name..." CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Header="Album Name" Name="txtAlbum" Grid.Row="2"></TextBox>
+                    <Button  FontFamily="{StaticResource GlobalFontHolder}" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="3" Content="Set" Name="btnSetAlbum" Click="btnSetAlbum_Click" HorizontalAlignment="Stretch"></Button>
+                    <TextBox FontFamily="{StaticResource GlobalFontHolder}"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" PlaceholderText="Type artist names..." Header="Artist Name" Name="txtArtist" Grid.Row="4"></TextBox>
+                    <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnSetArtist" Click="btnSetArtist_Click" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="5" Content="Set" HorizontalAlignment="Stretch"></Button>
 
-                    <ListView SelectionMode="Multiple" Grid.Row="8" Name="lstViewPlaylists" Header="Add to Selected Playlists"></ListView>
+                    <ListView  FontFamily="{StaticResource GlobalFontHolder}" SelectionMode="Multiple" Grid.Row="8" Name="lstViewPlaylists" Header="Add to Selected Playlists"></ListView>
                     <Rectangle  Height="1" Fill="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="6"></Rectangle>
-                    <Button Name="btnAddtoPlaylist" Click="btnAddtoPlaylist_Click" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="7" Content="Add to Playlist" HorizontalAlignment="Stretch"></Button>
+                    <Button  FontFamily="{StaticResource GlobalFontHolder}" Name="btnAddtoPlaylist" Click="btnAddtoPlaylist_Click" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="7" Content="Add to Playlist" HorizontalAlignment="Stretch"></Button>
 
                 </Grid>
 

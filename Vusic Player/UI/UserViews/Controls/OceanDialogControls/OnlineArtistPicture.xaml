@@ -13,22 +13,22 @@
             <StackPanel  Orientation="Vertical" Spacing="15">
                 <InfoBar Name="ifbNoInternet" IsOpen="False">
                     <StackPanel Orientation="Vertical" Spacing="5">
-                        <TextBlock Name="ifbMessage"></TextBlock>
+                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="ifbMessage"></TextBlock>
                         <Button Margin="0, 7"  Name="ifbActionButton"></Button>
                     </StackPanel>
                 </InfoBar>
                 <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
-                    <AutoSuggestBox CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" QueryIcon="Find" Width="250"  Name="txtArtistToFind" PlaceholderText="Artist name...."></AutoSuggestBox>
+                    <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" QueryIcon="Find" Width="250"  Name="txtArtistToFind" PlaceholderText="Artist name...."></AutoSuggestBox>
                     <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent"  Name="btnFindOnline" Click="btnFindOnline_Click">
                         <StackPanel Orientation="Horizontal">
                             <Image Width="20" Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}" />
-                            <TextBlock Name="txtFindOnlineButton" Margin="5,2" Text="Find" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtFindOnlineButton" Margin="5,2" Text="Find" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent"  IsEnabled="False" Name="btnShowMoreResults" Visibility="Visible" Content="Show more results" Click="btnShowMoreResults_Click"></Button>
+                <Button FontFamily="{StaticResource GlobalFontHolder}"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent"  IsEnabled="False" Name="btnShowMoreResults" Visibility="Visible" Content="Show more results" Click="btnShowMoreResults_Click"></Button>
                 <ProgressBar Name="prgWaitOnline" IsIndeterminate="True" Visibility="Collapsed" Width="100"></ProgressBar>
-                <TextBlock Name="txtWaitOnline" Text="Finding online..." Visibility="Collapsed"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtWaitOnline" Text="Finding online..." Visibility="Collapsed"></TextBlock>
 
                 <GridView x:Name="ImageGrid"
                   IsItemClickEnabled="True" Width="400"
@@ -52,12 +52,12 @@
                                Source="{Binding}" ImageFailed="Image_ImageFailed">
                                     <Image.ContextFlyout>
                                         <MenuFlyout>
-                                            <MenuFlyoutItem Text="Set Image" Click="MenuFlyoutItem_Click">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Set Image" Click="MenuFlyoutItem_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8DA;"></FontIcon>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem Text="Download Image" Visibility="Collapsed" Click="MenuFlyoutItem_Click_1">
+                                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Download Image" Visibility="Collapsed" Click="MenuFlyoutItem_Click_1">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8DA;"></FontIcon>
                                                 </MenuFlyoutItem.Icon>
@@ -73,7 +73,7 @@
                 <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent"   Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="25" Source="{Binding ArtistPictureLocal, Source={StaticResource GlobalIconHolder}}" />
-                        <TextBlock Margin="5,2" Text="Find on Disk instead" />
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="5,2" Text="Find on Disk instead" />
                     </StackPanel>
                 </Button>
             </StackPanel>

@@ -10,15 +10,15 @@
 
     <StackPanel Orientation="Vertical" Spacing="10">
         <StackPanel Spacing="12" Name="stkSnapshot">
-            <TextBlock Text="Snapshot" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Snapshot" Style="{StaticResource BodyStrongTextBlockStyle}"/>
 
             <StackPanel Spacing="12">
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Save Location" 
+                    <TextBlock Text="Save Location"  FontFamily="{StaticResource GlobalFontHolder}"   
        Style="{StaticResource CaptionTextBlockStyle}" 
        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                     <Grid Width="280" HorizontalAlignment="Left">
-                        <TextBox TextChanged="txtSnapshotPath_TextChanged" Name="txtSnapshotPath" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Default Pictures Folder"/>
+                        <TextBox FontFamily="{StaticResource GlobalFontHolder}"    TextChanged="txtSnapshotPath_TextChanged" Name="txtSnapshotPath" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Default Pictures Folder"/>
                         <Button Background="Transparent" BorderBrush="Transparent" 
         VerticalAlignment="Stretch" HorizontalAlignment="Right" Name="btnSnapshotDirectory" 
         Content="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" 
@@ -27,21 +27,21 @@
                 </StackPanel>
 
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Capture Options" 
+                    <TextBlock Text="Capture Options"  FontFamily="{StaticResource GlobalFontHolder}"   
        Style="{StaticResource CaptionTextBlockStyle}" 
        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
 
-                    <CheckBox Name="chkIncludePosition" Checked="chkIncludePosition_Checked" Unchecked="chkIncludePosition_Unchecked" Content="Include media position" />
-                    <CheckBox Name="chkIncludeTimestamp" Checked="chkIncludeTimestamp_Checked" Unchecked="chkIncludeTimestamp_Unchecked" Content="Include current date/time" />
+                    <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Name="chkIncludePosition" Checked="chkIncludePosition_Checked" Unchecked="chkIncludePosition_Unchecked" Content="Include media position" />
+                    <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Name="chkIncludeTimestamp" Checked="chkIncludeTimestamp_Checked" Unchecked="chkIncludeTimestamp_Unchecked" Content="Include current date/time" />
                 </StackPanel>
 
-                <Button Name="btnSnapshot" 
+                <Button Name="btnSnapshot"  FontFamily="{StaticResource GlobalFontHolder}"   
 Style="{StaticResource AccentButtonStyle}" 
 HorizontalAlignment="Stretch" 
 Click="btnSnapshot_Click">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xE722;" />
-                        <TextBlock Text="Capture Frame"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Capture Frame"/>
                     </StackPanel>
                 </Button>
             </StackPanel>

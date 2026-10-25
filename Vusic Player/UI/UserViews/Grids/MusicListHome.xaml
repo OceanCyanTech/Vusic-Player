@@ -19,17 +19,17 @@
             <Button Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click" CornerRadius="12" >
                 <Button.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8B1;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8EE;"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
                             <MenuFlyoutItem.Icon>
                                 <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                             </MenuFlyoutItem.Icon>
@@ -39,7 +39,7 @@
 
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <Image Width="20" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}"/>
-                    <TextBlock Text="Play all"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Play all"/>
                 </StackPanel>
             </Button>
             <GridView Grid.Row="2" Visibility="Visible"  VerticalAlignment="Stretch"
@@ -56,24 +56,24 @@ ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" >
                             </Grid.RowDefinitions>
                             <Grid.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Play" Click="mnftPlay_Click" Name="mnftPlay">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play" Click="mnftPlay_Click" Name="mnftPlay">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE768;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Add to Queue" Click="mnftAddtoQueue_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Add to Queue" Click="mnftAddtoQueue_Click">
                                         <MenuFlyoutItem.Icon>
                                             <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem Text="Go to File Location" Click="mnftGoToFileLocation_Click" >
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Go to File Location" Click="mnftGoToFileLocation_Click" >
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8DA;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                    
-                                    <MenuFlyoutItem Text="View File Info" Click="mnftViewFileInfo_Click">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="View File Info" Click="mnftViewFileInfo_Click">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE946;" />
                                         </MenuFlyoutItem.Icon>
@@ -91,7 +91,7 @@ ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" >
                             </Border>
 
                             <!-- Text Block with 2-line wrap + ellipsis -->
-                            <TextBlock Text="{Binding FileName}" 
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding FileName}" 
                        TextWrapping="Wrap" 
                        MaxLines="2" Grid.Row="1"
                        TextTrimming="CharacterEllipsis"
@@ -106,7 +106,7 @@ ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" >
             <StackPanel Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
                     <Image Width="90" Source="{Binding MusicSuggestions, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="No Music Suggestions Available!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}" HorizontalAlignment="Center" TextWrapping="Wrap" Text="No Music Suggestions Available!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
             </StackPanel>
         </Grid>
