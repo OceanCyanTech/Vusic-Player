@@ -23,9 +23,9 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Image Width="50" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="There are no videos to index!" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Grid.Column="1" Text="There are no videos to index!" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Grid>
-            <Button Grid.Row="1" HorizontalAlignment="Center" Content="Disable Recommendations" Name="btnDisableRecommendations" Click="btnDisableRecommendations_Click"/>
+            <Button  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1" HorizontalAlignment="Center" Content="Disable Recommendations" Name="btnDisableRecommendations" Click="btnDisableRecommendations_Click"/>
         </Grid>
         <Grid HorizontalAlignment="Center" Name="grdDisabledVideosRecommended" RowSpacing="30" ColumnSpacing="10" Visibility="Collapsed">
             <Grid.RowDefinitions>
@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
                 <Image Width="50" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"/>
-            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Recommendations are disabled!" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" VerticalAlignment="Center" Text="Recommendations are disabled!" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Grid>
             <Button Grid.Row="1" HorizontalAlignment="Center" Content="Enable Recommendations" Name="btnEnableRecommendations" Click="btnEnableRecommendations_Click"/>
         </Grid>
@@ -50,24 +50,24 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="20">
 
-                <TextBlock Text="Recommendations" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Recommendations" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                 <Button Background="Transparent" BorderBrush="Transparent" Click="btnRefreshRecommendations_Click" Name="btnRefreshRecommendations" ToolTipService.ToolTip="Refresh Recommendations">
                     <Image Source="{Binding Refresh, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 </Button>
                 <Button Background="Transparent" BorderBrush="Transparent" Click="btnPlayAll_Click" Name="btnPlayAll" ToolTipService.ToolTip="Play All">
                     <Button.ContextFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Shuffled" Name="mnftShufflePlay" Click="mnftShufflePlay_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8B1;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play on Loop" Name="mnftLoopPlay" Click="mnftLoopPlay_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8EE;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
                                 <MenuFlyoutItem.Icon>
                                     <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
@@ -77,9 +77,9 @@
 
                     <Image Source="{Binding Play, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 </Button>
-                <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
-                    <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
+                    <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Checked"></CheckBox>
                     <Button ToolTipService.ToolTip="Do not recommended selected videos" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnDoNotRecommend_Click"  Name="btnDoNotRecommend" >
                         <StackPanel Orientation="Horizontal">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
@@ -110,44 +110,44 @@ ItemClick="grdvRecents_ItemClick"  Margin="0, 0" ScrollViewer.HorizontalScrollMo
                             <Grid Width="200" Height="100" VerticalAlignment="Top">
                                 <Grid.ContextFlyout>
                                     <MenuFlyout Opened="MenuFlyout_Opened">
-                                        <MenuFlyoutItem Name="mnftStartPreviousRec" Text="Play from previous playback if any" Click="mnftStartPreviousRec_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftStartPreviousRec" Text="Play from previous playback if any" Click="mnftStartPreviousRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE81C;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftStartFirstRec" Text="Play from start" Click="mnftStartFirstRec_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftStartFirstRec" Text="Play from start" Click="mnftStartFirstRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE768;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Name="mnftRemoveRec" Text="Never show in Recommendations" Click="mnftRemoveRec_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftRemoveRec" Text="Never show in Recommendations" Click="mnftRemoveRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE894;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftAddtoQueue" Text="Add to Queue" Click="mnftAddtoQueue_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftAddtoQueue" Text="Add to Queue" Click="mnftAddtoQueue_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEB51;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Name="mnftFileInfoRec" Text= "File Info" Click="mnftFileInfoRec_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftFileInfoRec" Text= "File Info" Click="mnftFileInfoRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE946;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftOpenFileLocRec" Text= "Open file location" Click="mnftOpenFileLocRec_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftOpenFileLocRec" Text= "Open file location" Click="mnftOpenFileLocRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE838;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem Name="mnftCopyFilePathRec" Text="Copy File Path" Click="mnftCopyFilePathRec_Click">
+                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftCopyFilePathRec" Text="Copy File Path" Click="mnftCopyFilePathRec_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
@@ -159,7 +159,7 @@ ItemClick="grdvRecents_ItemClick"  Margin="0, 0" ScrollViewer.HorizontalScrollMo
 
 
                             </Grid>
-                            <TextBlock Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Height="60" Width="200" TextWrapping="Wrap" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Height="60" Width="200" TextWrapping="Wrap" />
                         </StackPanel>
                     </DataTemplate>
                 </GridView.ItemTemplate>

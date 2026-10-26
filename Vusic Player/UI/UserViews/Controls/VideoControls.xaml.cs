@@ -438,7 +438,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void mnftTakeSnapshot_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            Screen.TakeSnapshot(Screen.SnapshotDirect, Screen.IsTimeStampIncluded, Screen.IsPositionIncluded);
+            Screen.TakeSnapshot(Screen.Instance.SnapshotDirect, Screen.Instance.IsTimeStampIncluded, Screen.Instance.IsPositionIncluded);
         }
 
 

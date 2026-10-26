@@ -13,7 +13,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBox Loaded="asbSearchOptions_Loaded" Grid.Row="0" Name="asbSearchOptions" PlaceholderText="Search for media across your library..." PreviewKeyDown="asbSearchOptions_PreviewKeyDown"
+        <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Loaded="asbSearchOptions_Loaded" Grid.Row="0" Name="asbSearchOptions" PlaceholderText="Search for media across your library..." PreviewKeyDown="asbSearchOptions_PreviewKeyDown"
 TextChanged="asbSearchOptions_TextChanged" GotFocus="asbSearchOptions_GotFocus" LostFocus="asbSearchOptions_LostFocus"/>
         <Button x:Name="btnSearchQuery"
             Click="btnSearchQuery_Click"
@@ -47,10 +47,10 @@ AlwaysUseFallback="False"/>
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Image Source="{Binding ImageThumbnail}" Width="20"/>
-                                <TextBlock Text="{Binding ResultMain}" Grid.Column="1"
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding ResultMain}" Grid.Column="1"
                            VerticalAlignment="Center"
                            TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Text="{Binding SubInformation}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="2"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding SubInformation}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="2"/>
 
 
                             </Grid>

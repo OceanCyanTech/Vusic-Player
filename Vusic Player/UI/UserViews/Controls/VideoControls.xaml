@@ -35,16 +35,16 @@
                 <Button.Flyout>
                     <Flyout>
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="Volume"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Volume"></TextBlock>
                             <StackPanel Name="volStackPanel" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
                                 <local:OceanSlider x:Name="sldVol" IsTooltipEnabled="False" Margin="10, 0" IsEnabled="True" ValueChanged="sldVol_ValueChanged" Maximum="{x:Bind mediacontroller.MaximumVolume, Mode=OneWay}" Value="100" Width="70">
                                     <ToolTipService.ToolTip>
-                                        <ToolTip Visibility="Visible" x:Name="VolumeToolTip" Content="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" />
+                                        <ToolTip FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Visible" x:Name="VolumeToolTip" Content="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" />
                                     </ToolTipService.ToolTip>
                                 </local:OceanSlider>
                                 <StackPanel Margin="0, 10" Orientation="Horizontal" >
-                                    <TextBlock FontSize="12" Foreground="White" Name="txtVolumepercent" />
-                                    <TextBlock FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="White" Name="txtVolumepercent" />
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>
@@ -67,21 +67,21 @@
             <FontIcon Glyph="&#xED1E;" Foreground="White" FontSize="14"/>
             <Button.Flyout>
                 <MenuFlyout  x:Name="SubtitleMenu" Opened="SubtitleMenu_Opened">
-                    <MenuFlyoutSubItem x:Name="mnftLoadSub" Text="External Subtitles..." >
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftLoadSub" Text="External Subtitles..." >
                         <MenuFlyoutSubItem.Icon>
                             <FontIcon Glyph="&#xED25;" />
                         </MenuFlyoutSubItem.Icon>
-                        <MenuFlyoutItem x:Name="mnftLoadExternalSubtitles" Text="Load External File" Icon="Find" Click="mnftLoadSub_Click" />
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftLoadExternalSubtitles" Text="Load External File" Icon="Find" Click="mnftLoadSub_Click" />
 
                     </MenuFlyoutSubItem>
 
-                    <MenuFlyoutItem x:Name="mnftSubtitleEditor" Text="Subtitle Editor" Click="mnftSubtitleEditor_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSubtitleEditor" Text="Subtitle Editor" Click="mnftSubtitleEditor_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE70F;" />
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftCustomizeSub" Text="Customize Subtitle View" Click="mnftCustomizeSub_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftCustomizeSub" Text="Customize Subtitle View" Click="mnftCustomizeSub_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE790;" />
                         </MenuFlyoutItem.Icon>
@@ -89,53 +89,53 @@
 
                     <MenuFlyoutSeparator/>
 
-                    <MenuFlyoutSubItem x:Name="submnExistingTracks" Text="Existing Tracks">
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnExistingTracks" Text="Existing Tracks">
                         <MenuFlyoutSubItem.Icon>
                             <FontIcon Glyph="&#xE8D2;" />
                         </MenuFlyoutSubItem.Icon>
-                        <MenuFlyoutItem x:Name="mnftSearchSubtitles" Text="Search" Icon="Find" Click="mnftSearchSubtitles_Click" />
-                        <MenuFlyoutItem Visibility="Collapsed" x:Name="mnftSearchSubtitlesOnline" Text="Search Online..." Click="mnftSearchSubtitlesOnline_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSearchSubtitles" Text="Search" Icon="Find" Click="mnftSearchSubtitles_Click" />
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Collapsed" x:Name="mnftSearchSubtitlesOnline" Text="Search Online..." Click="mnftSearchSubtitlesOnline_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE774;"></FontIcon>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <RadioMenuFlyoutItem x:Name="mnftDisableSubs" Text="None (Disable)" Click="mnftDisableSubs_Click" IsChecked="True"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftDisableSubs" Text="None (Disable)" Click="mnftDisableSubs_Click" IsChecked="True"/>
                         <MenuFlyoutSeparator/>
                     </MenuFlyoutSubItem>
 
                     <MenuFlyoutSeparator/>
 
-                    <MenuFlyoutSubItem x:Name="submnSubDelay" Text="Subtitle Delay">
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnSubDelay" Text="Subtitle Delay">
                         <MenuFlyoutSubItem.Icon>
                             <FontIcon Glyph="&#xE121;" />
                         </MenuFlyoutSubItem.Icon>
-                        <RadioMenuFlyoutItem Text="-5.0s" Tag="-5000" Click="mnftSubDelayOption_Click"/>
-                        <RadioMenuFlyoutItem Text="-2.0s" Tag="-2000" Click="mnftSubDelayOption_Click"/>
-                        <RadioMenuFlyoutItem Text="-1.0s" Tag="-1000" Click="mnftSubDelayOption_Click"/>
-                        <RadioMenuFlyoutItem Text="-500ms" Tag="-500" Click="mnftSubDelayOption_Click"/>
-                        <RadioMenuFlyoutItem Text="0ms" Tag="0" IsChecked="True" Click="mnftSubDelayOption_Click"/>
-                        <RadioMenuFlyoutItem Text="+500ms" Tag="500" Click="mnftSubDelayOption_Click"/>
-                        <RadioMenuFlyoutItem Text="+1.0s" Tag="1000" Click="mnftSubDelayOption_Click"/>
-                        <RadioMenuFlyoutItem Text="+2.0s" Tag="2000" Click="mnftSubDelayOption_Click"/>
-                        <RadioMenuFlyoutItem Text="+5.0s" Tag="5000" Click="mnftSubDelayOption_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="-5.0s" Tag="-5000" Click="mnftSubDelayOption_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="-2.0s" Tag="-2000" Click="mnftSubDelayOption_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="-1.0s" Tag="-1000" Click="mnftSubDelayOption_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="-500ms" Tag="-500" Click="mnftSubDelayOption_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="0ms" Tag="0" IsChecked="True" Click="mnftSubDelayOption_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="+500ms" Tag="500" Click="mnftSubDelayOption_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="+1.0s" Tag="1000" Click="mnftSubDelayOption_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="+2.0s" Tag="2000" Click="mnftSubDelayOption_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="+5.0s" Tag="5000" Click="mnftSubDelayOption_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="mnftCustomSubDelay" Text="Custom Delay..." Click="mnftCustomSubDelay_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftCustomSubDelay" Text="Custom Delay..." Click="mnftCustomSubDelay_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE121;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyoutSubItem>
 
-                    <MenuFlyoutSubItem x:Name="submnSubSize" Text="Text Size">
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnSubSize" Text="Text Size">
                         <MenuFlyoutSubItem.Icon>
                             <FontIcon Glyph="&#xE8E9;" />
                         </MenuFlyoutSubItem.Icon>
-                        <RadioMenuFlyoutItem Text="Small (Caption)" Tag="CaptionTextBlockStyle:12" Click="SubtitleStyle_Click"/>
-                        <RadioMenuFlyoutItem Text="Normal (Body)" Tag="BodyTextBlockStyle:16" IsChecked="True" Click="SubtitleStyle_Click"/>
-                        <RadioMenuFlyoutItem Text="Large (Subtitle)" Tag="SubtitleTextBlockStyle:24" Click="SubtitleStyle_Click"/>
-                        <RadioMenuFlyoutItem Text="Extra Large (Title)" Tag="TitleTextBlockStyle:32" Click="SubtitleStyle_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Small (Caption)" Tag="CaptionTextBlockStyle:12" Click="SubtitleStyle_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Normal (Body)" Tag="BodyTextBlockStyle:16" IsChecked="True" Click="SubtitleStyle_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Large (Subtitle)" Tag="SubtitleTextBlockStyle:24" Click="SubtitleStyle_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Extra Large (Title)" Tag="TitleTextBlockStyle:32" Click="SubtitleStyle_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="mnftCustomizeSize" Text="Customize..." Icon="Edit" Click="mnftCustomizeSub_Click"/>
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftCustomizeSize" Text="Customize..." Icon="Edit" Click="mnftCustomizeSub_Click"/>
                     </MenuFlyoutSubItem>
                 </MenuFlyout>
             </Button.Flyout>
@@ -147,13 +147,13 @@
             <FontIcon Glyph="&#xE714;" Foreground="White" FontSize="14"/>
             <Button.Flyout>
                 <MenuFlyout x:Name="VideoMenu" Opened="VideoMenu_Opened">
-                    <RadioMenuFlyoutItem x:Name="mnftFullScreen" Text="Full Screen" Click="mnftFullScreen_Click">
+                    <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftFullScreen" Text="Full Screen" Click="mnftFullScreen_Click">
                         <RadioMenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE740;" />
                         </RadioMenuFlyoutItem.Icon>
                     </RadioMenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftTakeSnapshot" Text="Take Snapshot" Click="mnftTakeSnapshot_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftTakeSnapshot" Text="Take Snapshot" Click="mnftTakeSnapshot_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xEB9F;" />
                         </MenuFlyoutItem.Icon>
@@ -167,18 +167,18 @@
 
                     <MenuFlyoutSeparator/>
 
-                    <MenuFlyoutSubItem x:Name="submnSpeed" Text="Speed">
-                        <RadioMenuFlyoutItem Text="0.25x" Tag="0.25" Click="mnftSpeed_Click"/>
-                        <RadioMenuFlyoutItem Text="0.5x" Tag="0.5" Click="mnftSpeed_Click"/>
-                        <RadioMenuFlyoutItem Text="0.75x" Tag="0.75" Click="mnftSpeed_Click"/>
-                        <RadioMenuFlyoutItem Text="1.0x" Tag="1.0" IsChecked="True" Click="mnftSpeed_Click"/>
-                        <RadioMenuFlyoutItem Text="1.25x" Tag="1.25" Click="mnftSpeed_Click"/>
-                        <RadioMenuFlyoutItem Text="1.5x" Tag="1.5" Click="mnftSpeed_Click"/>
-                        <RadioMenuFlyoutItem Text="2.0x" Tag="2.0" Click="mnftSpeed_Click"/>
-                        <RadioMenuFlyoutItem Text="4.0x" Tag="4.0" Click="mnftSpeed_Click"/>
-                        <RadioMenuFlyoutItem Text="8.0x" Tag="8.0" Click="mnftSpeed_Click"/>
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnSpeed" Text="Speed">
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="0.25x" Tag="0.25" Click="mnftSpeed_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="0.5x" Tag="0.5" Click="mnftSpeed_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="0.75x" Tag="0.75" Click="mnftSpeed_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="1.0x" Tag="1.0" IsChecked="True" Click="mnftSpeed_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="1.25x" Tag="1.25" Click="mnftSpeed_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="1.5x" Tag="1.5" Click="mnftSpeed_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="2.0x" Tag="2.0" Click="mnftSpeed_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="4.0x" Tag="4.0" Click="mnftSpeed_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="8.0x" Tag="8.0" Click="mnftSpeed_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="mnftCustomSpeed" Text="Custom Speed..." Click="mnftCustomSpeed_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftCustomSpeed" Text="Custom Speed..." Click="mnftCustomSpeed_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xEC58;" />
                             </MenuFlyoutItem.Icon>
@@ -190,40 +190,40 @@
                         </ToggleMenuFlyoutItem.Icon>
                     </ToggleMenuFlyoutItem>
                     <ToggleMenuFlyoutItem x:Name="mnftShowChapterMarks" Text="Show Chapter Marks" Click="mnftShowChapterMarks_Click"></ToggleMenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftChapters" Text="Chapters" Click="mnftChapters_Click"></MenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftWatermarkOptions" Text="Watermark Options" Click="mnftWatermarkOptions_Click"/>
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftChapters" Text="Chapters" Click="mnftChapters_Click"></MenuFlyoutItem>
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftWatermarkOptions" Text="Watermark Options" Click="mnftWatermarkOptions_Click"/>
 
                     <MenuFlyoutSeparator/>
 
-                    <MenuFlyoutSubItem x:Name="submnVideoZoom" Text="Zoom">
-                        <RadioMenuFlyoutItem Text="25%" Tag="25" Click="mnftZoomItem_Click"/>
-                        <RadioMenuFlyoutItem Text="50%" Tag="50" Click="mnftZoomItem_Click"/>
-                        <RadioMenuFlyoutItem Text="75%" Tag="75" Click="mnftZoomItem_Click"/>
-                        <RadioMenuFlyoutItem Text="100%" Tag="100" IsChecked="True" Click="mnftZoomItem_Click"/>
-                        <RadioMenuFlyoutItem Text="125%" Tag="125" Click="mnftZoomItem_Click"/>
-                        <RadioMenuFlyoutItem Text="150%" Tag="150" Click="mnftZoomItem_Click"/>
-                        <RadioMenuFlyoutItem Text="200%" Tag="200" Click="mnftZoomItem_Click"/>
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnVideoZoom" Text="Zoom">
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="25%" Tag="25" Click="mnftZoomItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="50%" Tag="50" Click="mnftZoomItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="75%" Tag="75" Click="mnftZoomItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="100%" Tag="100" IsChecked="True" Click="mnftZoomItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="125%" Tag="125" Click="mnftZoomItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="150%" Tag="150" Click="mnftZoomItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="200%" Tag="200" Click="mnftZoomItem_Click"/>
                         <MenuFlyoutSeparator/>
-                        <RadioMenuFlyoutItem Text="Fit to Window" Tag="fit" Click="mnftZoomItem_Click"/>
-                        <RadioMenuFlyoutItem Text="Fill Window (Crop)" Tag="fill" Click="mnftZoomItem_Click"/>
-                        <RadioMenuFlyoutItem Text="Original Size" Tag="original" Click="mnftZoomItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Fit to Window" Tag="fit" Click="mnftZoomItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Fill Window (Crop)" Tag="fill" Click="mnftZoomItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Original Size" Tag="original" Click="mnftZoomItem_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="mnftCustomZoom" Text="Custom Zoom..." Click="mnftCustomZoom_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftCustomZoom" Text="Custom Zoom..." Click="mnftCustomZoom_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE71E;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyoutSubItem>
 
-                    <MenuFlyoutSubItem x:Name="submnAspectRatio" Text="Aspect Ratio">
-                        <RadioMenuFlyoutItem Text="Default" IsChecked="True" Tag="default" Click="mnftAspectRatioItem_Click"/>
-                        <RadioMenuFlyoutItem Text="16:9" Tag="1.777" Click="mnftAspectRatioItem_Click"/>
-                        <RadioMenuFlyoutItem Text="4:3" Tag="1.333" Click="mnftAspectRatioItem_Click"/>
-                        <RadioMenuFlyoutItem Text="1:1" Tag="1.0" Click="mnftAspectRatioItem_Click"/>
-                        <RadioMenuFlyoutItem Text="21:9" Tag="2.333" Click="mnftAspectRatioItem_Click"/>
-                        <RadioMenuFlyoutItem Text="2.35:1" Tag="2.35" Click="mnftAspectRatioItem_Click"/>
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnAspectRatio" Text="Aspect Ratio">
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Default" IsChecked="True" Tag="default" Click="mnftAspectRatioItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="16:9" Tag="1.777" Click="mnftAspectRatioItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="4:3" Tag="1.333" Click="mnftAspectRatioItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="1:1" Tag="1.0" Click="mnftAspectRatioItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="21:9" Tag="2.333" Click="mnftAspectRatioItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="2.35:1" Tag="2.35" Click="mnftAspectRatioItem_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="mnftCustomAspectRatio" Text="Custom Ratio..." Click="mnftCustomAspectRatio_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftCustomAspectRatio" Text="Custom Ratio..." Click="mnftCustomAspectRatio_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE7B2;" />
                             </MenuFlyoutItem.Icon>
@@ -232,31 +232,31 @@
 
                     <MenuFlyoutSeparator/>
 
-                    <MenuFlyoutSubItem x:Name="submnVideoTracks" Text="Video Tracks">
-                        <MenuFlyoutItem x:Name="mnftSearchVideoTracks" Click="mnftSearchVideoTracks_Click" Text="View Detailed" Icon="Find"/>
-                        <RadioMenuFlyoutItem x:Name="mnftDisableVideoTracks" Text="Disable" Click="mnftDisableVideoTracks_Click">
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnVideoTracks" Text="Video Tracks">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSearchVideoTracks" Click="mnftSearchVideoTracks_Click" Text="View Detailed" Icon="Find"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftDisableVideoTracks" Text="Disable" Click="mnftDisableVideoTracks_Click">
                             <RadioMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE947;"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
-                        <RadioMenuFlyoutItem Visibility="Collapsed" x:Name="mnftExternalVideoTracks" Text="External" Click="mnftExternalVideoTracks_Click">
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Collapsed" x:Name="mnftExternalVideoTracks" Text="External" Click="mnftExternalVideoTracks_Click">
                             <RadioMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xED25;"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                     </MenuFlyoutSubItem>
 
-                    <MenuFlyoutItem x:Name="mnftSnapshotDirectory" Text="Snapshot Settings" Click="mnftSnapshotDirectory_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSnapshotDirectory" Text="Snapshot Settings" Click="mnftSnapshotDirectory_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE8B7;" />
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftRecordDirectory" Text="Record Settings" Click="mnftRecordDirectory_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftRecordDirectory" Text="Record Settings" Click="mnftRecordDirectory_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE8B7;" />
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftVideoOptions" Text="Video Options" Click="mnftVideoOptions_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftVideoOptions" Text="Video Options" Click="mnftVideoOptions_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE713;" />
                         </MenuFlyoutItem.Icon>
@@ -271,26 +271,26 @@
             <FontIcon Glyph="&#xE8D6;" Foreground="White" FontSize="14"/>
             <Button.Flyout>
                 <MenuFlyout x:Name="AudioMenu" Opened="AudioMenu_Opened">
-                    <MenuFlyoutSubItem x:Name="mnftAudioDevice" Text="Audio Device" >
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftAudioDevice" Text="Audio Device" >
                         <MenuFlyoutSubItem.Icon>
                             <FontIcon Glyph="&#xE7F5;" />
                         </MenuFlyoutSubItem.Icon>
                     </MenuFlyoutSubItem>
 
-                    <MenuFlyoutSubItem x:Name="submnVolume" Text="Volume">
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnVolume" Text="Volume">
                         <MenuFlyoutSubItem.Icon>
                             <FontIcon Glyph="&#xE995;" />
                         </MenuFlyoutSubItem.Icon>
-                        <RadioMenuFlyoutItem Text="200%" Tag="200" Click="mnftVolumeItem_Click"/>
-                        <RadioMenuFlyoutItem Text="150%" Tag="150" Click="mnftVolumeItem_Click"/>
-                        <RadioMenuFlyoutItem Text="125%" Tag="125" Click="mnftVolumeItem_Click"/>
-                        <RadioMenuFlyoutItem Text="100%" Tag="100" IsChecked="True" Click="mnftVolumeItem_Click"/>
-                        <RadioMenuFlyoutItem Text="75%"  Tag="75"  Click="mnftVolumeItem_Click"/>
-                        <RadioMenuFlyoutItem Text="50%"  Tag="50"  Click="mnftVolumeItem_Click"/>
-                        <RadioMenuFlyoutItem Text="25%"  Tag="25"  Click="mnftVolumeItem_Click"/>
-                        <RadioMenuFlyoutItem Text="Mute" Tag="0"   Click="mnftVolumeItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="200%" Tag="200" Click="mnftVolumeItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="150%" Tag="150" Click="mnftVolumeItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="125%" Tag="125" Click="mnftVolumeItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="100%" Tag="100" IsChecked="True" Click="mnftVolumeItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="75%"  Tag="75"  Click="mnftVolumeItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="50%"  Tag="50"  Click="mnftVolumeItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="25%"  Tag="25"  Click="mnftVolumeItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Mute" Tag="0"   Click="mnftVolumeItem_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="mnftCustomVolume" Text="Custom Volume..." Click="mnftCustomVolume_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftCustomVolume" Text="Custom Volume..." Click="mnftCustomVolume_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE767;" />
                             </MenuFlyoutItem.Icon>
@@ -299,14 +299,14 @@
 
                     <MenuFlyoutSeparator/>
 
-                    <MenuFlyoutSubItem x:Name="submnAudioTracks" Text="Audio Tracks">
-                        <MenuFlyoutItem x:Name="mnftSearchAudioTracks" Click="mnftSearchAudioTracks_Click" Text="View Detailed" Icon="Find"/>
-                        <RadioMenuFlyoutItem x:Name="mnftDisableAudioTracks" Text="Disable" Click="mnftDisableAudioTracks_Click">
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnAudioTracks" Text="Audio Tracks">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSearchAudioTracks" Click="mnftSearchAudioTracks_Click" Text="View Detailed" Icon="Find"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftDisableAudioTracks" Text="Disable" Click="mnftDisableAudioTracks_Click">
                             <RadioMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE947;"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
-                        <RadioMenuFlyoutItem Visibility="Collapsed" x:Name="mnftExternalAudioTracks" Text="External" Click="mnftExternalAudioTracks_Click">
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Collapsed" x:Name="mnftExternalAudioTracks" Text="External" Click="mnftExternalAudioTracks_Click">
                             <RadioMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xED25;"/>
                             </RadioMenuFlyoutItem.Icon>
@@ -315,38 +315,38 @@
 
                     <MenuFlyoutSeparator/>
 
-                    <MenuFlyoutSubItem x:Name="submnAudioDelay" Text="Audio Delay">
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnAudioDelay" Text="Audio Delay">
                         <MenuFlyoutSubItem.Icon>
                             <FontIcon Glyph="&#xE121;" />
                         </MenuFlyoutSubItem.Icon>
-                        <MenuFlyoutItem Text="+1.0s" Tag="1000" Click="mnftAudioDelay_Click"/>
-                        <MenuFlyoutItem Text="+500ms" Tag="500" Click="mnftAudioDelay_Click"/>
-                        <MenuFlyoutItem Text="+200ms" Tag="200" Click="mnftAudioDelay_Click"/>
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="+1.0s" Tag="1000" Click="mnftAudioDelay_Click"/>
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="+500ms" Tag="500" Click="mnftAudioDelay_Click"/>
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="+200ms" Tag="200" Click="mnftAudioDelay_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="Reset to 0ms" Tag="reset" Click="mnftAudioDelay_Click"/>
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Reset to 0ms" Tag="reset" Click="mnftAudioDelay_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="-200ms" Tag="-200" Click="mnftAudioDelay_Click"/>
-                        <MenuFlyoutItem Text="-500ms" Tag="-500" Click="mnftAudioDelay_Click"/>
-                        <MenuFlyoutItem Text="-1.0s" Tag="-1000" Click="mnftAudioDelay_Click"/>
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="-200ms" Tag="-200" Click="mnftAudioDelay_Click"/>
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="-500ms" Tag="-500" Click="mnftAudioDelay_Click"/>
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="-1.0s" Tag="-1000" Click="mnftAudioDelay_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="mnftCustomAudioDelay" Text="Custom Delay..." Click="mnftCustomAudioDelay_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftCustomAudioDelay" Text="Custom Delay..." Click="mnftCustomAudioDelay_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE121;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyoutSubItem>
 
-                    <MenuFlyoutSubItem x:Name="submnAudioPitch" Text="Audio Pitch">
-                        <RadioMenuFlyoutItem Text="0.5x" Tag="0.5" Click="mnftPitchItem_Click"/>
-                        <RadioMenuFlyoutItem Text="0.75x" Tag="0.75" Click="mnftPitchItem_Click"/>
-                        <RadioMenuFlyoutItem Text="0.9x" Tag="0.9" Click="mnftPitchItem_Click"/>
-                        <RadioMenuFlyoutItem Text="1.0x" Tag="1.0" IsChecked="True" Click="mnftPitchItem_Click"/>
-                        <RadioMenuFlyoutItem Text="1.1x" Tag="1.1" Click="mnftPitchItem_Click"/>
-                        <RadioMenuFlyoutItem Text="1.25x" Tag="1.25" Click="mnftPitchItem_Click"/>
-                        <RadioMenuFlyoutItem Text="1.5x" Tag="1.5" Click="mnftPitchItem_Click"/>
-                        <RadioMenuFlyoutItem Text="2.0x" Tag="2.0" Click="mnftPitchItem_Click"/>
+                    <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="submnAudioPitch" Text="Audio Pitch">
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="0.5x" Tag="0.5" Click="mnftPitchItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="0.75x" Tag="0.75" Click="mnftPitchItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="0.9x" Tag="0.9" Click="mnftPitchItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="1.0x" Tag="1.0" IsChecked="True" Click="mnftPitchItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="1.1x" Tag="1.1" Click="mnftPitchItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="1.25x" Tag="1.25" Click="mnftPitchItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="1.5x" Tag="1.5" Click="mnftPitchItem_Click"/>
+                        <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="2.0x" Tag="2.0" Click="mnftPitchItem_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="mnftCustomAudioPitch" Text="Custom Pitch..." Click="mnftCustomAudioPitch_Click">
+                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftCustomAudioPitch" Text="Custom Pitch..." Click="mnftCustomAudioPitch_Click">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xEC45;" />
                             </MenuFlyoutItem.Icon>
@@ -354,35 +354,35 @@
                     </MenuFlyoutSubItem>
 
                     <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem x:Name="mnftAudioEqualizer" Text="Open Equalizer Control" Click="mnftAudioEqualizer_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftAudioEqualizer" Text="Open Equalizer Control" Click="mnftAudioEqualizer_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE9E9;" />
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftAudioOptions" Text="Audio Options" Click="mnftAudioOptions_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftAudioOptions" Text="Audio Options" Click="mnftAudioOptions_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE713;" />
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftMultiDeviceOutput" Text="Multiple Audio Output Mixer" Click="mnftMultiDeviceOutput_Click"/>
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftMultiDeviceOutput" Text="Multiple Audio Output Mixer" Click="mnftMultiDeviceOutput_Click"/>
                 </MenuFlyout>
             </Button.Flyout>
         </Button>
         <Button Name="btnOptions" Grid.Column="7" Margin="0, 0" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="More Options">
             <Button.Flyout>
                 <MenuFlyout x:Name="OptionsMenu">
-                    <MenuFlyoutItem x:Name="mnftHome" Text="Home" Click="mnftHome_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftHome" Text="Home" Click="mnftHome_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE80F;"></FontIcon>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftViewEpisodes" Visibility="{x:Bind showcreation.VisibilityOfViewEpisodes, Mode=OneWay}" Text="View Episodes"  Click="mnftViewEpisodes_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftViewEpisodes" Visibility="{x:Bind showcreation.VisibilityOfViewEpisodes, Mode=OneWay}" Text="View Episodes"  Click="mnftViewEpisodes_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE80F;"></FontIcon>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <MenuFlyoutItem x:Name="mnftMiniPlayer" Text="Mini Player" Click="mnftMiniPlayer_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftMiniPlayer" Text="Mini Player" Click="mnftMiniPlayer_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xEE49;"></FontIcon>
                         </MenuFlyoutItem.Icon>
@@ -394,23 +394,23 @@
                         </ToggleMenuFlyoutItem.Icon>
                     </ToggleMenuFlyoutItem>
                     <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem Name="mnftJumpToTime" Text="Jump to Time" Click="mnftJumpToTime_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftJumpToTime" Text="Jump to Time" Click="mnftJumpToTime_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xEC57;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem Name="mnftMediaStats" Text="Media Stats" Click="mnftMediaStats_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftMediaStats" Text="Media Stats" Click="mnftMediaStats_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE9D2;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                     <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE946;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
+                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE838;"/>
                         </MenuFlyoutItem.Icon>

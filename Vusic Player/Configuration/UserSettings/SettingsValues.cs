@@ -49,6 +49,8 @@ namespace Vusic_Player.Configuration.UserSettings
         public double SkipBack { get; set; } = 10;
         public string Theme { get; set; } = "Ocean";
         public string SnapshotPath { get; set; } = "";
+        public ObservableCollection<EqualizerPreset> EqPresets = new ObservableCollection<EqualizerPreset>();
+        public string RecordPath { get; set; } = "";
         public string FontFamily { get; set; } = "Ocean";
         public bool Panel2VisibilityHome { get; set; } = true;
         public bool Panel3VisibilityHome { get; set; } = true;

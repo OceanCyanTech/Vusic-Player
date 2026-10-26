@@ -25,12 +25,12 @@
                 </Grid.ColumnDefinitions>
 
                 <HyperlinkButton Padding="0" Name="btnGlyph" MinHeight="0" MinWidth="0" Width="35" Grid.Column="0" Click="btnGlyph_Click">
-                    <TextBlock Text="{x:Bind Glyph, Mode=OneWay}" Foreground="{x:Bind TitleColor, Mode=OneWay}" FontFamily="Segoe Fluent Icons"/>
+                    <TextBlock   Text="{x:Bind Glyph, Mode=OneWay}" Foreground="{x:Bind TitleColor, Mode=OneWay}" FontFamily="Segoe Fluent Icons"/>
                 </HyperlinkButton>
 
                 <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle">
                     <Grid>
-                        <TextBlock Text="{x:Bind Title, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Title, Mode=OneWay}" Foreground="{x:Bind TitleColor, Mode=OneWay}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind Title, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind Title, Mode=OneWay}" Foreground="{x:Bind TitleColor, Mode=OneWay}"/>
                         <Border Height="2" Background="Cyan" VerticalAlignment="Center" Margin="0,2,0,0" CornerRadius="4" Visibility="{x:Bind VisibilityOfStrikeThrough, Mode=OneWay}" />
                     </Grid>
                 </HyperlinkButton>
@@ -38,18 +38,18 @@
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                     <Image ToolTipService.ToolTip="Artist" Width="25" Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}"/>
                     <HyperlinkButton Name="hypArtist" ToolTipService.ToolTip="{x:Bind Artist, Mode=OneWay}" Click="hypArtist_Click">
-                        <TextBlock Text="{x:Bind Artist, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind Artist, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </HyperlinkButton>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
                     <Image ToolTipService.ToolTip="Album" Width="25" Source="{Binding DefaultAlbum, Source={StaticResource GlobalIconHolder}}"/>
                     <HyperlinkButton ToolTipService.ToolTip="{x:Bind AlbumName, Mode=OneWay}" Name="hypAlbum" Click="hypAlbum_Click">
-                        <TextBlock Text="{x:Bind AlbumName, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind AlbumName, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </HyperlinkButton>
                 </StackPanel>
 
-                <TextBlock ToolTipService.ToolTip="{x:Bind FormattedDuration, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{x:Bind FormattedDuration, Mode=OneWay}" TextWrapping="Wrap" Margin="0, 20"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  ToolTipService.ToolTip="{x:Bind FormattedDuration, Mode=OneWay}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{x:Bind FormattedDuration, Mode=OneWay}" TextWrapping="Wrap" Margin="0, 20"/>
                 <Button ToolTipService.ToolTip="{x:Bind FavString, Mode=OneWay}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" 
 Click="btnFavourite_Click"
 Background="Transparent" 
@@ -84,45 +84,45 @@ BorderThickness="0"
                 <Grid Grid.Column="1"  Margin="0, 5" VerticalAlignment="Stretch" Background="Transparent" HorizontalAlignment="Stretch">
                     <Grid.ContextFlyout>
                         <MenuFlyout Opened="mnftContext_Opened"  x:Name="mnftContext">
-                            <MenuFlyoutItem Text="{Binding Data.Title}"  IsEnabled="False" Name="txtHeaderContext"></MenuFlyoutItem>
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Data.Title}"  IsEnabled="False" Name="txtHeaderContext"></MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
 
 
-                            <MenuFlyoutItem Click="mnftPlaySong_Click" Text="Play"  Name="mnftPlaySong" Icon="Play"></MenuFlyoutItem>
-                            <MenuFlyoutItem Click="mnftPlaySongNext_Click" Text="Play Next"  Name="mnftPlaySongNext"  Icon="Play"></MenuFlyoutItem>
-                            <MenuFlyoutItem Click="mnftAddtoQueue_Click" Text="Add to Play Queue"    Name="mnftAddtoQueue"  >
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Click="mnftPlaySong_Click" Text="Play"  Name="mnftPlaySong" Icon="Play"></MenuFlyoutItem>
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Click="mnftPlaySongNext_Click" Text="Play Next"  Name="mnftPlaySongNext"  Icon="Play"></MenuFlyoutItem>
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Click="mnftAddtoQueue_Click" Text="Add to Play Queue"    Name="mnftAddtoQueue"  >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE81E;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Click="mnftGoToArtist_Click" Text="Go to artist" Visibility="{Binding Data.VisibilityofAudioMeta}"  Name="mnftGoToArtist" >
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Click="mnftGoToArtist_Click" Text="Go to artist" Visibility="{Binding Data.VisibilityofAudioMeta}"  Name="mnftGoToArtist" >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE77B;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Click="mnftGoToAlbum_Click" Text="Go to album" Visibility="{Binding Data.VisibilityofAudioMeta}" Name="mnftGoToAlbum" >
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Click="mnftGoToAlbum_Click" Text="Go to album" Visibility="{Binding Data.VisibilityofAudioMeta}" Name="mnftGoToAlbum" >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE93C;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Click="mnftSongDetails_Click" Text="File Details"  Name="mnftSongDetails">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Click="mnftSongDetails_Click" Text="File Details"  Name="mnftSongDetails">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE946;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Click="mnftSongDetails_Click" Text="Edit info"  Name="mnftEditInfo" >
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Click="mnftSongDetails_Click" Text="Edit info"  Name="mnftEditInfo" >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE70F;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutSubItem Text="Add to Playlist"  x:Name="mnftAddtoPlaylist" >
+                            <MenuFlyoutSubItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Add to Playlist"  x:Name="mnftAddtoPlaylist" >
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xECC8;"></FontIcon>
                                 </MenuFlyoutSubItem.Icon>
                             </MenuFlyoutSubItem>
-                            <MenuFlyoutItem Text="{Binding Data.FavString}" Tag="Favo"  x:Name="mnftAddToFavourites" Click="mnftAddToFavourites_Click" >
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Data.FavString}" Tag="Favo"  x:Name="mnftAddToFavourites" Click="mnftAddToFavourites_Click" >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Name="OutlineHeart" 
 Glyph="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoGlyphConv}, Mode=OneWay}" 
@@ -134,19 +134,19 @@ Foreground="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoColor
 
 
                             <MenuFlyoutSeparator Visibility="Collapsed"></MenuFlyoutSeparator>
-                            <MenuFlyoutItem Visibility="Collapsed" Text="Tools"  Name="mnftTools" >
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Collapsed" Text="Tools"  Name="mnftTools" >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE713;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Rename File" Name="mnftRenameFile"  Click="mnftSongDetails_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Rename File" Name="mnftRenameFile"  Click="mnftSongDetails_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE74B;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Text="Delete File"   Name="mnftDeleteFile" Click="mnftDeleteFile_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Delete File"   Name="mnftDeleteFile" Click="mnftDeleteFile_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE74B;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
@@ -163,11 +163,11 @@ Foreground="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoColor
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <HyperlinkButton ToolTipService.ToolTip="{Binding Data.FilePath}" Padding="0" Name="btnGlyph" MinHeight="0" MinWidth="0" Margin="0, 0" Width="35" Grid.Column="0"  Click="btnGlyph_Click" Visibility="Visible" BorderThickness="0" >
-                        <TextBlock Text="{Binding Data.Glyph}" Foreground="{Binding Data.TitleColor}"  FontFamily="Segoe Fluent Icons"></TextBlock>
+                        <TextBlock  Text="{Binding Data.Glyph}" Foreground="{Binding Data.TitleColor}"  FontFamily="Segoe Fluent Icons"></TextBlock>
                     </HyperlinkButton>
                     <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle"   Visibility="Visible"  Margin="0, 0">
                         <Grid>
-                            <TextBlock Text="{Binding Data.Title}"    ToolTipService.ToolTip="{Binding Data.Title}" Foreground="{Binding Data.TitleColor, Mode=OneWay}"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Data.Title}"    ToolTipService.ToolTip="{Binding Data.Title}" Foreground="{Binding Data.TitleColor, Mode=OneWay}"></TextBlock>
                             <Border Height="2" 
             Background="Cyan" 
             VerticalAlignment="Center" 
@@ -179,21 +179,21 @@ Foreground="{Binding Data.IsFavourite, Converter={StaticResource FavoritetoColor
                     <StackPanel Visibility="{Binding Data.VisibilityofAudioMeta}" Orientation="Horizontal" Grid.Column="2">
                         <Image ToolTipService.ToolTip="Artist" Width="25" Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}" ></Image>
                         <HyperlinkButton Grid.Column="2" Name="hypArtist" ToolTipService.ToolTip="{Binding Data.Artist}" Click="hypArtist_Click"   Visibility="Visible"  Margin="0, 0">
-                            <TextBlock Text="{Binding Data.Artist}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Data.Artist}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                         </HyperlinkButton>
                     </StackPanel>
                     <StackPanel Visibility="{Binding Data.VisibilityofVideoInfo}"  Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
 
-                        <TextBlock VerticalAlignment="Center" Text="{Binding Data.FileTypeName}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Text="{Binding Data.FileTypeName}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
 
                     </StackPanel>
                     <StackPanel Visibility="{Binding Data.VisibilityofAudioMeta}"  Orientation="Horizontal" Grid.Column="3" Margin="10, 0">
                         <Image ToolTipService.ToolTip="Album" Width="25" Source="{Binding DefaultAlbum, Source={StaticResource GlobalIconHolder}}" ></Image>
                         <HyperlinkButton ToolTipService.ToolTip="{Binding Data.AlbumName}" Grid.Column="3" Name="hypAlbum" Click="hypAlbum_Click"   Visibility="Visible"  Margin="0, 0">
-                            <TextBlock Text="{Binding Data.AlbumName}"   FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Data.AlbumName}"   FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                         </HyperlinkButton>
                     </StackPanel>
-                    <TextBlock ToolTipService.ToolTip="{Binding Data.FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{Binding Data.FormattedDuration}" Visibility="Visible" TextWrapping="Wrap" Margin="0, 20"/>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  ToolTipService.ToolTip="{Binding Data.FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{Binding Data.FormattedDuration}" Visibility="Visible" TextWrapping="Wrap" Margin="0, 20"/>
                     <Button ToolTipService.ToolTip="{Binding Data.FavString}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" 
 Click="btnFavourite_Click"
 Background="Transparent" 
@@ -224,35 +224,35 @@ BorderThickness="0"
                     <Rectangle Fill="Cyan" Width="2"/>
                     <Border Background="#1A1A1A" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="4"
          Visibility="{x:Bind IsGroupStart, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <Button x:Name="TimelineHeaderBtn" Content="{x:Bind Letter}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" FontSize="16" Click="Button_Click_2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"  x:Name="TimelineHeaderBtn" Content="{x:Bind Letter}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" FontSize="16" Click="Button_Click_2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
                     </Border>
                 </Grid>
                 <HyperlinkButton Click="hypPlaylistClick_Click" Name="hypPlaylistClick" Grid.Column="1">
                     <HyperlinkButton.ContextFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Text="Open Playlist" Name="mnftOpenPlaylist" Click="mnftOpenPlaylist_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open Playlist" Name="mnftOpenPlaylist" Click="mnftOpenPlaylist_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8A7;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Play All" Name="mnftPlayPlaylist" Click="mnftPlayPlaylist_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play All" Name="mnftPlayPlaylist" Click="mnftPlayPlaylist_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE768;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Shuffle and Play" Name="mnftShuffleAndPlayPlaylist" Click="mnftShuffleAndPlayPlaylist_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Shuffle and Play" Name="mnftShuffleAndPlayPlaylist" Click="mnftShuffleAndPlayPlaylist_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8B1;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Edit Playlist" Name="mnftEditPlaylist" Click="mnftEditPlaylist_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Edit Playlist" Name="mnftEditPlaylist" Click="mnftEditPlaylist_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE70F;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Delete Playlist" Name="mnftDeletePlaylist" Click="mnftDeletePlaylist_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Delete Playlist" Name="mnftDeletePlaylist" Click="mnftDeletePlaylist_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE74D;"/>
                                 </MenuFlyoutItem.Icon>
@@ -269,12 +269,12 @@ BorderThickness="0"
 
                         </Grid.RowDefinitions>
                         <Image Width="90" HorizontalAlignment="Left" Source="{Binding Data.Thumbnail}" Grid.Row="0"/>
-                        <TextBlock   Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.PlaylistName}" Grid.Row="1"/>
-                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.PlaylistCount}" Grid.Row="2"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.PlaylistName}" Grid.Row="1"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.PlaylistCount}" Grid.Row="2"/>
                         <Button Name="btnPlayAllPlaylist" Click="btnPlayAllPlaylist_Click" Grid.Row="3" Style="{StaticResource AccentButtonStyle}">
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <FontIcon Glyph="&#xE768;"/>
-                                <TextBlock Text="Play All"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play All"/>
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -298,32 +298,32 @@ BorderThickness="0"
                 <HyperlinkButton Click="HyperlinkButton_Click" Grid.Column="1">
                     <HyperlinkButton.ContextFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem  Text="View Artist" Name="mnftViewArtist" Click="mnftViewArtist_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="View Artist" Name="mnftViewArtist" Click="mnftViewArtist_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE77B;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play Artist" Name="mnftPlayArtist" Click="mnftPlayArtist_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Artist" Name="mnftPlayArtist" Click="mnftPlayArtist_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE768;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play Artist Shuffled" Name="mnftPlayArtistShuffled" Click="mnftPlayArtistShuffled_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Artist Shuffled" Name="mnftPlayArtistShuffled" Click="mnftPlayArtistShuffled_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8B1;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play Artist On Loop" Name="mnftPlayArtistLoop" Click="mnftPlayArtistLoop_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Artist On Loop" Name="mnftPlayArtistLoop" Click="mnftPlayArtistLoop_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8EE;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play Artist Shuffled and On Loop" Name="mnftPlayArtistLoopandShuffle" Click="mnftPlayArtistLoopandShuffle_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Artist Shuffled and On Loop" Name="mnftPlayArtistLoopandShuffle" Click="mnftPlayArtistLoopandShuffle_Click">
                                 <MenuFlyoutItem.Icon>
                                     <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Unlink songs from this artist" Name="mnftUnlinkArtist" Click="mnftUnlinkArtist_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Unlink songs from this artist" Name="mnftUnlinkArtist" Click="mnftUnlinkArtist_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE71B;"/>
                                 </MenuFlyoutItem.Icon>
@@ -345,12 +345,12 @@ BorderThickness="0"
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock   Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.ArtistName}" Grid.Row="0"/>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.ArtistSongCount}" Grid.Row="1"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.ArtistName}" Grid.Row="0"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.ArtistSongCount}" Grid.Row="1"/>
                             <Button Name="btnPlayAllArtistSongs" Click="btnPlayAllArtistSongs_Click" Grid.Row="2" Style="{StaticResource AccentButtonStyle}">
                                 <StackPanel Orientation="Horizontal" Spacing="10">
                                     <FontIcon Glyph="&#xE768;"/>
-                                    <TextBlock Text="Play all songs of Artist"/>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play all songs of Artist"/>
                                 </StackPanel>
                             </Button>
                         </Grid>
@@ -376,32 +376,32 @@ BorderThickness="0"
                 <HyperlinkButton Click="HyperlinkButton_Click_1" Grid.Column="1">
                     <HyperlinkButton.ContextFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem  Text="View Album" Name="mnftViewAlbum" Click="mnftViewAlbum_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="View Album" Name="mnftViewAlbum" Click="mnftViewAlbum_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE93C;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play Album" Name="mnftPlayAlbum" Click="mnftPlayAlbum_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Album" Name="mnftPlayAlbum" Click="mnftPlayAlbum_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE768;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play Album Shuffled" Name="mnftPlayAlbumShuffled" Click="mnftPlayAlbumShuffled_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Album Shuffled" Name="mnftPlayAlbumShuffled" Click="mnftPlayAlbumShuffled_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8B1;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play Album On Loop" Name="mnftPlayAlbumLoop" Click="mnftPlayAlbumLoop_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Album On Loop" Name="mnftPlayAlbumLoop" Click="mnftPlayAlbumLoop_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8EE;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Play Album Shuffled and On Loop" Name="mnftPlayAlbumLoopAndShuffled" Click="mnftPlayAlbumLoopAndShuffled_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Album Shuffled and On Loop" Name="mnftPlayAlbumLoopAndShuffled" Click="mnftPlayAlbumLoopAndShuffled_Click">
                                 <MenuFlyoutItem.Icon>
                                     <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Unlink songs from this album" Name="mnftUnlinkAlbum" Click="mnftUnlinkAlbum_Click">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Unlink songs from this album" Name="mnftUnlinkAlbum" Click="mnftUnlinkAlbum_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE71B;"/>
                                 </MenuFlyoutItem.Icon>
@@ -425,14 +425,14 @@ BorderThickness="0"
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock   Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.AlbumName}" Grid.Row="0"/>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumCount}" Grid.Row="1"/>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumArtists}" Grid.Row="2"/>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumYear}" Grid.Row="3"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.AlbumName}" Grid.Row="0"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumCount}" Grid.Row="1"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumArtists}" Grid.Row="2"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.AlbumYear}" Grid.Row="3"/>
                             <Button Grid.Row="4" Style="{StaticResource AccentButtonStyle}">
                                 <StackPanel Orientation="Horizontal" Spacing="10">
                                     <FontIcon Glyph="&#xE768;"/>
-                                    <TextBlock Text="Play Album"/>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Album"/>
                                 </StackPanel>
                             </Button>
                         </Grid>
@@ -454,28 +454,28 @@ BorderThickness="0"
                         <Button x:Name="TimelineHeaderBtn" Content="{x:Bind Letter}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" FontSize="16" Click="Button_Click_2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
                     </Border>
                 </Grid>
-                <HyperlinkButton Click="hyperlinkShow_Click" Name="hyperlinkShow" Grid.Column="1">
+                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Click="hyperlinkShow_Click" Name="hyperlinkShow" Grid.Column="1">
                     <HyperlinkButton.ContextFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Name="mnftOpenShow" Click="mnftOpenShow_Click" Text="Open Show">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftOpenShow" Click="mnftOpenShow_Click" Text="Open Show">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8A7;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Name="mnftPlayShow" Click="mnftPlayShow_Click" Text="Play Show">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftPlayShow" Click="mnftPlayShow_Click" Text="Play Show">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE768;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Name="mnftEditShow" Click="mnftEditShow_Click" Text="Edit Show">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftEditShow" Click="mnftEditShow_Click" Text="Edit Show">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE70F;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Name="mnftDeleteShow" Click="mnftDeleteShow_Click" Text="Delete Show">
+                            <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftDeleteShow" Click="mnftDeleteShow_Click" Text="Delete Show">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE74D;"></FontIcon>
                                 </MenuFlyoutItem.Icon>
@@ -499,14 +499,14 @@ BorderThickness="0"
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock   Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.Name}" Grid.Row="0"/>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.ReleaseDateString}" Grid.Row="1"/>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.SeasonCountString}" Grid.Row="2"/>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.Description}" Grid.Row="3"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource BodyLargeTextBlockStyle}" Text="{Binding Data.Name}" Grid.Row="0"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.ReleaseDateString}" Grid.Row="1"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.SeasonCountString}" Grid.Row="2"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.Description}" Grid.Row="3"/>
                             <Button Grid.Row="4" Style="{StaticResource AccentButtonStyle}">
                                 <StackPanel Orientation="Horizontal" Spacing="10">
                                     <FontIcon Glyph="&#xE768;"/>
-                                    <TextBlock Text="Play Album"/>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Album"/>
                                 </StackPanel>
                             </Button>
                         </Grid>
@@ -545,8 +545,8 @@ BorderThickness="0"
                                 <ColumnDefinition />
                                 
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Data.ResultMain}" Grid.Column="0"/>
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.SubInformation}" Grid.Column="1"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Data.ResultMain}" Grid.Column="0"/>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Data.SubInformation}" Grid.Column="1"/>
                          
                         </Grid>
                         </Grid>
@@ -562,7 +562,7 @@ BorderThickness="0"
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <AutoSuggestBox TextChanged="asbSearch_TextChanged" Visibility="{x:Bind SearchboxVisibility, Mode=OneWay}"  QuerySubmitted="asbSearch_QuerySubmitted" Name="asbSearch" PlaceholderText="{x:Bind SearchPlaceHolderText, Mode=OneWay}" QueryIcon="Find" Margin="10, 0" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"></AutoSuggestBox>
+        <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}"  TextChanged="asbSearch_TextChanged" Visibility="{x:Bind SearchboxVisibility, Mode=OneWay}"  QuerySubmitted="asbSearch_QuerySubmitted" Name="asbSearch" PlaceholderText="{x:Bind SearchPlaceHolderText, Mode=OneWay}" QueryIcon="Find" Margin="10, 0" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"></AutoSuggestBox>
         <ListView Grid.Row="1" x:Name="MainTimelineList"></ListView>
         <Grid  Grid.Row="1"  Margin="0, 20"    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
             <Grid.RowDefinitions>
@@ -577,7 +577,7 @@ BorderThickness="0"
         </Grid>
 
         <TeachingTip x:Name="MapTip"
-            IsOpen="False"
+            IsOpen="False" FontFamily="{StaticResource GlobalFontHolder}" 
              IsLightDismissEnabled="True">
             <TeachingTip.Content>
                 <GridView x:Name="MapGridView" 
@@ -589,14 +589,14 @@ BorderThickness="0"
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Border Background="#1A1A1A" Width="44" Height="44" CornerRadius="4">
-                                <TextBlock Text="{Binding Letter}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Letter}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
                             </Border>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
             </TeachingTip.Content>
         </TeachingTip>
-        <TeachingTip  Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" >
+        <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"   Title="Edit Playlist" HorizontalContentAlignment="Stretch" Name="ttEditPlaylist" >
             <TeachingTip.Resources>
                 <x:Double x:Key="TeachingTipMinWidth">800</x:Double>
                 <x:Double x:Key="TeachingTipMaxWidth">600</x:Double>
@@ -612,12 +612,12 @@ BorderThickness="0"
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button Name="btnSavePlaylistEdited" Content="Save" Style="{StaticResource AccentButtonStyle}"/>
-                    <Button Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
+                    <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnSavePlaylistEdited" Content="Save" Style="{StaticResource AccentButtonStyle}"/>
+                    <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
                 </Grid>
             </Grid>
         </TeachingTip>
-        <TeachingTip Title="Edit Show" Name="ttEditShow" >
+        <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Title="Edit Show" Name="ttEditShow" >
             <Grid RowSpacing="10" Margin="0, 10">
                 <Grid.RowDefinitions>
                     <RowDefinition MaxHeight="200"/>
@@ -639,42 +639,42 @@ BorderThickness="0"
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Image Width="200" Name="imgShowPoster" Grid.Row="0" Source="{Binding DefaultShow, Source={StaticResource GlobalIconHolder}}"></Image>
-                        <Button Name="btnUploadShowPoster" Content="Edit Poster for Show" Click="btnUploadShowPoster_Click" Grid.Row="1" HorizontalAlignment="Center"></Button>
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnUploadShowPoster" Content="Edit Poster for Show" Click="btnUploadShowPoster_Click" Grid.Row="1" HorizontalAlignment="Center"></Button>
                         <StackPanel Orientation="Vertical" Grid.Row="2" Spacing="10">
-                            <TextBlock  Text="Name of Show or Collection of Videos" ></TextBlock>
-                            <TextBox Name="txtShowName"  FontSize="16" PlaceholderText="Enter Name..." Grid.Row="2"></TextBox>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Name of Show or Collection of Videos" ></TextBlock>
+                            <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtShowName"  FontSize="16" PlaceholderText="Enter Name..." Grid.Row="2"></TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="3" Spacing="10">
-                            <TextBlock Text="Description of Show" ></TextBlock>
-                            <TextBox Name="txtDescription"  FontSize="16" PlaceholderText="Description is optional..." Grid.Row="2"></TextBox>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Description of Show" ></TextBlock>
+                            <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtDescription"  FontSize="16" PlaceholderText="Description is optional..." Grid.Row="2"></TextBox>
 
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="4" Spacing="10">
-                            <TextBlock Text="Release Date (optional)" ></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Release Date (optional)" ></TextBlock>
                             <DatePicker Name="dtRelease" FontSize="16" Grid.Row="2"></DatePicker>
 
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="5" Spacing="10">
-                            <TextBlock Text="Creators (optional)" ></TextBlock>
-                            <TextBox Name="txtCreators" FontSize="16" PlaceholderText="Enter names of creators..." Grid.Row="2"></TextBox>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Creators (optional)" ></TextBlock>
+                            <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtCreators" FontSize="16" PlaceholderText="Enter names of creators..." Grid.Row="2"></TextBox>
 
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="6" Spacing="10">
-                            <TextBlock Text="Cast and Crew (optional)" ></TextBlock>
-                            <TextBox Name="txtCast"  FontSize="16" PlaceholderText="Enter names of cast or crew separated by commas..." Grid.Row="2"></TextBox>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Cast and Crew (optional)" ></TextBlock>
+                            <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtCast"  FontSize="16" PlaceholderText="Enter names of cast or crew separated by commas..." Grid.Row="2"></TextBox>
 
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="7" Spacing="10">
-                            <TextBlock Text="Add Folder" ></TextBlock>
-                            <TextBlock Text="Seasons and Episodes might be automatically detected" ></TextBlock>
-                            <TextBlock Text="if in the correct format" ></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Folder" ></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Seasons and Episodes might be automatically detected" ></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="if in the correct format" ></TextBlock>
                             <StackPanel Spacing="12">
                                 <StackPanel Spacing="4">
-                                    <TextBlock Text="Folder Location" 
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Folder Location" 
 Style="{StaticResource CaptionTextBlockStyle}" 
 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                                     <Grid Width="280" HorizontalAlignment="Left">
-                                        <TextBox Name="txtFolderPath" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Browse..."/>
+                                        <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtFolderPath" ToolTipService.ToolTip="Click the folder icon to change directory" IsReadOnly="True" PlaceholderText="Browse..."/>
                                         <Button ToolTipService.ToolTip="Browse" Style="{StaticResource AccentButtonStyle}" BorderBrush="Transparent" 
  VerticalAlignment="Stretch" HorizontalAlignment="Right" Name="btnBrowseDirectory" 
  Content="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" 
@@ -684,13 +684,13 @@ Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="8" Spacing="10">
-                            <TextBlock Text="Tags (optional)" ></TextBlock>
-                            <TextBox Name="txtTags" FontSize="16" PlaceholderText="Search tags..." Grid.Row="2"></TextBox>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Tags (optional)" ></TextBlock>
+                            <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtTags" FontSize="16" PlaceholderText="Search tags..." Grid.Row="2"></TextBox>
 
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="9" Spacing="10">
-                            <TextBlock Text="Genre (optional)" ></TextBlock>
-                            <TextBox Name="txtGenre"  FontSize="16" PlaceholderText="Drama, comedy, horror..." Grid.Row="2"></TextBox>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Genre (optional)" ></TextBlock>
+                            <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtGenre"  FontSize="16" PlaceholderText="Drama, comedy, horror..." Grid.Row="2"></TextBox>
 
                         </StackPanel>
 
@@ -701,40 +701,40 @@ Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button Name="btnSaveShowEdited" Content="Save" Style="{StaticResource AccentButtonStyle}"/>
-                    <Button Name="btnCancelEditShow" Click="btnCancelEditShow_Click" Content="Cancel" Grid.Column="1"/>
+                    <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnSaveShowEdited" Content="Save" Style="{StaticResource AccentButtonStyle}"/>
+                    <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnCancelEditShow" Click="btnCancelEditShow_Click" Content="Cancel" Grid.Column="1"/>
                 </Grid>
             </Grid>
 
         </TeachingTip>
-        <TeachingTip Name="ttLoadingShow" >
+        <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttLoadingShow" >
             <Grid Name="grdLoadingShow" HorizontalAlignment="Center" ColumnSpacing="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <ProgressRing Grid.Column="0" IsIndeterminate="True" Width="30" Height="30"/>
-                <TextBlock Grid.Column="1" Text="Loading Episodes..." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" Text="Loading Episodes..." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
             </Grid>
         </TeachingTip>
 
-        <TeachingTip IsOpen="False" Name="ttError">
-            <TextBlock Name="txtError"></TextBlock>
+        <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  IsOpen="False" Name="ttError">
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtError"></TextBlock>
         </TeachingTip>
         <TeachingTip Name="ttAddedToPlaylist" Title="Added to Playlist" IsOpen="False">
-            <HyperlinkButton Name="hypPlaylistAdded" Click="hypPlaylistAdded_Click"></HyperlinkButton>
+            <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Name="hypPlaylistAdded" Click="hypPlaylistAdded_Click"></HyperlinkButton>
         </TeachingTip>
-        <TeachingTip Name="ttDeletedFiles" Title="Delete">
+        <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttDeletedFiles" Title="Delete">
             <StackPanel Margin="0, 10" Orientation="Vertical" Spacing="10">
-                <InfoBar IsClosable="False" Name="ifbDeleteFiles"/>
-                <Button Name="btnOpenRecycleBin" Content="Open Recycle Bin" Click="btnOpenRecycleBin_Click"></Button>
+                <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  IsClosable="False" Name="ifbDeleteFiles"/>
+                <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnOpenRecycleBin" Content="Open Recycle Bin" Click="btnOpenRecycleBin_Click"></Button>
             </StackPanel>
         </TeachingTip>
         <ContentDialog PrimaryButtonText="Skip" SecondaryButtonText="Try Again" PrimaryButtonClick="ttInaccessibleFiles_PrimaryButtonClick"  SecondaryButtonClick="ttInaccessibleFiles_SecondaryButtonClick" Name="ttInaccessibleFiles" Title="File In Use">
             <StackPanel Margin="0, 10" Orientation="Vertical" Spacing="10">
-                <InfoBar Name="ifbFileInUse" IsClosable="False"/>
+                <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  Name="ifbFileInUse" IsClosable="False"/>
 
-                <CheckBox Name="chckSkipForAllFiles" Content="Skip for all"></CheckBox>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Name="chckSkipForAllFiles" Content="Skip for all"></CheckBox>
 
             </StackPanel>
         </ContentDialog>
@@ -745,9 +745,9 @@ Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Name="txtItemsCountAddtoPl"  Text="0 items selected" Grid.Row="0"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtItemsCountAddtoPl"  Text="0 items selected" Grid.Row="0"></TextBlock>
                 <ListView SelectionChanged="lstViewPlaylists_SelectionChanged" SelectionMode="Multiple" Grid.Row="1" Name="lstViewPlaylists" Header="Add to Selected Playlists"></ListView>
-                <Button IsEnabled="False" Name="btnAddFinalPlaylists" Click="btnAddFinalPlaylists_Click" Style="{StaticResource AccentButtonStyle}" Content="Add" Grid.Row="2"></Button>
+                <Button FontFamily="{StaticResource GlobalFontHolder}"  IsEnabled="False" Name="btnAddFinalPlaylists" Click="btnAddFinalPlaylists_Click" Style="{StaticResource AccentButtonStyle}" Content="Add" Grid.Row="2"></Button>
             </Grid>
         </TeachingTip>
 

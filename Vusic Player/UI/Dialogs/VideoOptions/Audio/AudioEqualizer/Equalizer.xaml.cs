@@ -1,7 +1,13 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using System;
+using System.Collections.ObjectModel;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.MediaProperties.AudioProperties;
 
 
@@ -29,15 +35,21 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer
         {
             InitializeComponent();
         }
-
+        ObservableCollection<EqualizerPreset> presets = new ObservableCollection<EqualizerPreset>();
+        private async void LoadPresets()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var presetseq = currentSettings.EqPresets;
+            presets = new ObservableCollection<EqualizerPreset>(presetseq);
+        }
         private void OceanSlider_ValueChanged(double obj)
         {
-  
+
         }
 
         private void Button_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-        
+
         }
 
         private void gainCommon_ValueChanged(double obj)
@@ -78,7 +90,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer
                 gain4000Vertical.Value = gain4000.Value;
                 gain8000Vertical.Value = gain8000.Value;
                 gain16000Vertical.Value = gain16000.Value;
-            }   
+            }
             finally
             {
                 _isSyncing = false;
@@ -110,7 +122,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer
         }
         private void chkVerticalMode_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            if(chkVerticalMode.IsChecked == true)
+            if (chkVerticalMode.IsChecked == true)
             {
                 grdHorizontalSliders.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
                 grdVerticalSliders.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
@@ -122,6 +134,53 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer
                 grdVerticalSliders.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
                 SyncVerticalToHorizontal();
             }
+        }
+
+        private void btnSavePreset_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            ttPresetName.IsOpen = true;
+        }
+
+        private async void btnCreatePreset_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (txtPresetName.Text == "") return;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if (chkVerticalMode.IsChecked == true)
+            {
+                currentSettings.EqPresets.Add(new EqualizerPreset
+                {
+                    PresetName = txtPresetName.Text,
+                    Gain31 = gain31Vertical.Value,
+                    Gain63 = gain63Vertical.Value,
+                    Gain125 = gain125Vertical.Value,
+                    Gain250 = gain250Vertical.Value,
+                    Gain500 = gain500Vertical.Value,
+                    Gain1000 = gain1000Vertical.Value,
+                    Gain2000 = gain2000Vertical.Value,
+                    Gain4000 = gain4000Vertical.Value,
+                    Gain8000 = gain8000Vertical.Value,
+                    Gain16000 = gain16000Vertical.Value
+                });
+            }
+            else
+            {
+                currentSettings.EqPresets.Add(new EqualizerPreset
+                {
+                    PresetName = txtPresetName.Text,
+                    Gain31 = gain31.Value,
+                    Gain63 = gain63.Value,
+                    Gain125 = gain125.Value,
+                    Gain250 = gain250.Value,
+                    Gain500 = gain500.Value,
+                    Gain1000 = gain1000.Value,
+                    Gain2000 = gain2000.Value,
+                    Gain4000 = gain4000.Value,
+                    Gain8000 = gain8000.Value,
+                    Gain16000 = gain16000.Value
+                }
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            ttPresetName.IsOpen = false;
         }
     }
 }

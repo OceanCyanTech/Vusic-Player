@@ -23,7 +23,7 @@
                 </winui:FlyleafHost.RenderTransform>
             </winui:FlyleafHost>
             <Image Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}" Width="220" Name="imgCover" Grid.Row="0" Visibility="Collapsed"/>
-            <TextBlock VerticalAlignment="Bottom" Visibility="Collapsed" Name="txtTitle" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="20, 20"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Bottom" Visibility="Collapsed" Name="txtTitle" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="20, 20"/>
             <oceancyan:OceanSlider x:Name="sldMain" DragStarted="sldMain_DragStarted" DragCompleted="sldMain_DragCompleted" Grid.Row="1" Value="{x:Bind mediacontroller.CurrentPosition, Mode=TwoWay}" Maximum="{x:Bind mediacontroller.TotalDuration, Mode=TwoWay}" IsThumbVisible="Collapsed" VerticalAlignment="Bottom"></oceancyan:OceanSlider>
             <Grid x:Name="CustomTitleBar" 
           Background="Transparent" 
@@ -57,63 +57,63 @@
                     <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" BorderBrush="Transparent"   Background="Transparent" Name="btnOptions" CornerRadius="16" ToolTipService.ToolTip="Restore" >
                         <Button.Flyout>
                             <MenuFlyout Opened="MenuFlyout_Opened">
-                                <MenuFlyoutItem x:Name="mnftOpenVideo" Text="Open Another Media" Click="mnftOpenVideo_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftOpenVideo" Text="Open Another Media" Click="mnftOpenVideo_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE838;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Name="mnftVolume" Text="Volume" Click="mnftVolume_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftVolume" Text="Volume" Click="mnftVolume_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Name="fntIconVolume" Glyph="&#xE767;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
                                 <MenuFlyoutSeparator />
-                                <MenuFlyoutItem x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftFileInfo" Text="File Info" Click="mnftFileInfo_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE946;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftOpenFileLocation" Text="Open File Location" Click="mnftOpenFileLocation_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE838;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
 
-                                <MenuFlyoutItem x:Name="mnftPrevious" Text="Previous" Click="mnftPrevious_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftPrevious" Text="Previous" Click="mnftPrevious_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE892;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Name="mnftSkipBack" Text="Skip back 10 secs" Click="mnftSkipBack_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSkipBack" Text="Skip back 10 secs" Click="mnftSkipBack_Click">
                                     <MenuFlyoutItem.Icon>
                                         <ImageIcon Source="{Binding SkipBack, Source= {StaticResource GlobalIconHolder}}"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Name="mnftPlay" Text="{x:Bind mediacontroller.PlayPauseToolTip, Mode=OneWay}" Click="mnftPlay_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftPlay" Text="{x:Bind mediacontroller.PlayPauseToolTip, Mode=OneWay}" Click="mnftPlay_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Name="fntIconPlay" Glyph="&#xE768;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Name="mnftSkipForward" Text="Skip Forward 10 secs" Click="mnftSkipForward_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSkipForward" Text="Skip Forward 10 secs" Click="mnftSkipForward_Click">
                                     <MenuFlyoutItem.Icon>
                                         <ImageIcon Source="{Binding SkipAhead, Source= {StaticResource GlobalIconHolder}}"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Name="mnftNext" Text="Next" Click="mnftNext_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftNext" Text="Next" Click="mnftNext_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE893;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
                                 <MenuFlyoutSeparator />
-                                <MenuFlyoutItem x:Name="mnftRestore" Text="Restore" Click="btnRestore_Click">
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftRestore" Text="Restore" Click="btnRestore_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE944;"/>
                                     </MenuFlyoutItem.Icon>
@@ -185,7 +185,7 @@
                             </Button.Template>
                         </Button>
                     </StackPanel>
-                    <TeachingTip Name="ttVolume" PreferredPlacement="Center" Title="Volume">
+                    <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttVolume" PreferredPlacement="Center" Title="Volume">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Name="volStackPanel" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
                                 <oceancyan:OceanSlider x:Name="sldVol" IsTooltipEnabled="False" Margin="10, 0" IsEnabled="True" ValueChanged="sldVol_ValueChanged" Maximum="{x:Bind mediacontroller.MaximumVolume, Mode=OneWay}" Value="100" Width="200">
@@ -194,8 +194,8 @@
                                     </ToolTipService.ToolTip>
                                 </oceancyan:OceanSlider>
                                 <StackPanel Margin="0, 10" Orientation="Horizontal" >
-                                    <TextBlock FontSize="12" Foreground="White" Name="txtVolumepercent" />
-                                    <TextBlock FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="White" Name="txtVolumepercent" />
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>

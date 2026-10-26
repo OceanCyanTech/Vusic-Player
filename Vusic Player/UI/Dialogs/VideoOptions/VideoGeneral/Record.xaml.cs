@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.Helper.VideoProperties;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.FilePickers;
 using Windows.Storage.Pickers;
 
@@ -14,6 +15,14 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
         public Record()
         {
             InitializeComponent();
+            LoadSettings();
+        }
+        private async void LoadSettings()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            txtRecordPath.Text = currentSettings.RecordPath;
+            ToolTipService.SetToolTip(btnRecord, txtRecordPath.Text);
+            Screen.Instance.RecordDirect = txtRecordPath.Text;
         }
         #region Recording Settings Events
 
@@ -26,6 +35,11 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
                 if (folder != null)
                 {
                     txtRecordPath.Text = folder.Path;
+                    ToolTipService.SetToolTip(btnRecord, txtRecordPath.Text);
+                    var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
+                    currentSettings.RecordPath = folder.Path;
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
                 }
             }
         }
@@ -36,11 +50,11 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
             {
                 if (PlayerService.Masterplayer.IsRecording)
                 {
-                    Screen.StopRecordRequest();
+                    Screen.Instance.StopRecordRequest();
                 }
                 else
                 {
-                    Screen.Record(txtRecordPath.Text);
+                    Screen.Instance.Record(txtRecordPath.Text);
                 }
             }
         }
@@ -48,7 +62,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
 
         private void txtRecordPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Screen.RecordDirect = txtRecordPath.Text;
+            Screen.Instance.RecordDirect = txtRecordPath.Text;
         }
     }
 

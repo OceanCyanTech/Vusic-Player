@@ -14,16 +14,16 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Spacing="20">
-            <TextBlock Text="Instant Playlists" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"/>
-            <CheckBox Content="Select" Grid.Row="1" Visibility="Collapsed" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}" Text="Instant Playlists" Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Content="Select" Grid.Row="1" Visibility="Collapsed" Margin="0, 0" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
             <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
-                <CheckBox Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAll" Visibility="Visible" Checked="chckSelectAll_Checked" Unchecked="chckSelectAll_Checked"></CheckBox>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAll" Visibility="Visible" Checked="chckSelectAll_Checked" Unchecked="chckSelectAll_Checked"></CheckBox>
             </StackPanel>
         </StackPanel>
         <Button Name="btnRefreshPlaylists" Click="btnRefreshPlaylists_Click" Grid.Row="1">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Width="20" Source="{Binding Refresh, Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock Text="Refresh Playlists"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Refresh Playlists"/>
             </StackPanel>
         </Button>
         <GridView Grid.Row="2" Visibility="Visible"  VerticalAlignment="Stretch"  ItemsSource="{x:Bind instantPlaylists, Mode=OneWay}"
@@ -40,28 +40,28 @@ ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" >
                         <StackPanel  VerticalAlignment="Stretch">
                             <StackPanel.ContextFlyout>
                                 <MenuFlyout >
-                                    <MenuFlyoutItem Name="mnftOpenPlaylist" Click="mnftOpenPlaylist_Click" Text="Open Playlist">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftOpenPlaylist" Click="mnftOpenPlaylist_Click" Text="Open Playlist">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8A7;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem Name="mnftPlayAll" Click="mnftPlayAll_Click" Text="Play all">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftPlayAll" Click="mnftPlayAll_Click" Text="Play all">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE768;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Name="mnftAddtoQueue" Click="mnftAddtoQueue_Click" Text="Add to Queue">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftAddtoQueue" Click="mnftAddtoQueue_Click" Text="Add to Queue">
                                         <MenuFlyoutItem.Icon>
                                             <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Name="mnftShufflePlay" Click="mnftShufflePlay_Click" Text="Shuffle and Play">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftShufflePlay" Click="mnftShufflePlay_Click" Text="Shuffle and Play">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8B1;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Name="mnftSavePlaylist" Click="mnftSavePlaylist_Click" Text="Save Playlist">
+                                    <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftSavePlaylist" Click="mnftSavePlaylist_Click" Text="Save Playlist">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE74E;"></FontIcon>
                                         </MenuFlyoutItem.Icon>
@@ -72,18 +72,18 @@ ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" >
 
                             <Image Source="{Binding Thumbnail}" Width="150" Height="100" Stretch="UniformToFill"/>
 
-                            <TextBlock Text="{Binding PlaylistName}" Visibility="Visible" TextWrapping="Wrap" />
-                            <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding PlaylistCount}" Visibility="Visible" TextWrapping="Wrap" />
-                            <TextBlock Text="{Binding PlaylistNowPlaying}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Visibility="Visible" TextWrapping="Wrap" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding PlaylistName}" Visibility="Visible" TextWrapping="Wrap" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding PlaylistCount}" Visibility="Visible" TextWrapping="Wrap" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding PlaylistNowPlaying}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" Visibility="Visible" TextWrapping="Wrap" />
                         </StackPanel>
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <TeachingTip Name="ttPlaylistSaved" >
+        <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttPlaylistSaved" >
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock Text="Instant Playlist saved!"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Instant Playlist saved!"/>
             </StackPanel>
         </TeachingTip>
     </Grid>

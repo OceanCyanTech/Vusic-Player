@@ -36,9 +36,9 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="0">
-            <TextBlock Text="Search" Style="{StaticResource BaseTextBlockStyle}"></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Search" Style="{StaticResource BaseTextBlockStyle}"></TextBlock>
             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
-                <AutoSuggestBox PreviewKeyDown="asbSearch_PreviewKeyDown" QuerySubmitted="asbSearch_QuerySubmitted" Width="200" Name="asbSearch" TextChanged="asbSearch_TextChanged"  PlaceholderText="{x:Bind SearchPlaceHolderText, Mode=OneWay}" QueryIcon="Find" Grid.Row="0">
+                <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}"  PreviewKeyDown="asbSearch_PreviewKeyDown" QuerySubmitted="asbSearch_QuerySubmitted" Width="200" Name="asbSearch" TextChanged="asbSearch_TextChanged"  PlaceholderText="{x:Bind SearchPlaceHolderText, Mode=OneWay}" QueryIcon="Find" Grid.Row="0">
                 </AutoSuggestBox>
                 <Button Name="btnCloseSubtitleSearch" Click="btnCloseSubtitleSearch_Click" ToolTipService.ToolTip="Close Search" Background="Transparent" BorderBrush="Transparent">
                     <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>
@@ -57,7 +57,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="{Binding ResultString}" 
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding ResultString}" 
                            VerticalAlignment="Center"
                            TextTrimming="CharacterEllipsis"/>
 
@@ -69,7 +69,7 @@
         </ListView>
         <StackPanel Margin="0, 10" Grid.Row="1" Orientation="Horizontal" Name="stkNoSearchResultsFound" Visibility="Collapsed" Spacing="5">
             <Image Width="20" Source="{Binding SearchIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-            <TextBlock Text="{x:Bind NoSearchResultsDisplayString, Mode=OneWay}"></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind NoSearchResultsDisplayString, Mode=OneWay}"></TextBlock>
         </StackPanel>
     </Grid>
 </UserControl>

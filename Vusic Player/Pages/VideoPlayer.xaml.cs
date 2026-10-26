@@ -298,11 +298,11 @@ namespace Vusic_Player.Pages
                         {
                             if (PlayerService.Masterplayer.IsRecording)
                             {
-                                Screen.StopRecordRequest();
+                                Screen.Instance.StopRecordRequest();
                             }
                             else
                             {
-                                Screen.Record(Screen.RecordDirect);
+                                Screen.Instance.Record(Screen.Instance.RecordDirect);
                             }
                         }
                     }
@@ -331,7 +331,7 @@ namespace Vusic_Player.Pages
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var snapshotpath = currentSettings.SnapshotPath;
-            Screen.TakeSnapshot(snapshotpath, currentSettings.IsTimeStampEnabledOnSnapshot, currentSettings.IsPositionEnabledOnSnapshot);
+            Screen.Instance.TakeSnapshot(snapshotpath, currentSettings.IsTimeStampEnabledOnSnapshot, currentSettings.IsPositionEnabledOnSnapshot);
         }
         int pointertimercount = 2;
         private bool _isCursorSuppressed = false;
@@ -1099,7 +1099,7 @@ namespace Vusic_Player.Pages
             RecordTimer?.Stop();
             stkRecording.Visibility = Visibility.Collapsed;
             RecFrame.Visibility = Visibility.Collapsed;
-            Screen.StopRecord();
+            Screen.Instance.StopRecord();
             videoControls.StopRecording();
         }
 

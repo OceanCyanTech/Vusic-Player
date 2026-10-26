@@ -14,12 +14,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Keyboard Shortcuts that can be used in Vusic Player." Style="{StaticResource BodyStrongTextBlockStyle}"/>
+        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Keyboard Shortcuts that can be used in Vusic Player." Style="{StaticResource BodyStrongTextBlockStyle}"/>
         <NavigationView PaneDisplayMode="Top" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" SelectionChanged="selBarKeyboardShortcuts_SelectionChanged_1" Name="selBarKeyboardShortcuts" Grid.Row="1">
             <NavigationView.MenuItems>
-                <NavigationViewItem    IsSelected="True" Name="selBar1" Content="Playback"/>
-                <NavigationViewItem    Name="selBar2" Content="Tools"/>
-                <NavigationViewItem     Name="selBar3" Content="Quick Shortcuts"/>
+                <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"     IsSelected="True" Name="selBar1" Content="Playback"/>
+                <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"     Name="selBar2" Content="Tools"/>
+                <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"      Name="selBar3" Content="Quick Shortcuts"/>
             </NavigationView.MenuItems>
 
 

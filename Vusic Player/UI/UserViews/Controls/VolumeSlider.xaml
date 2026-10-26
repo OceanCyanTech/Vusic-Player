@@ -19,7 +19,7 @@ CornerRadius="16"
         <Grid ToolTipService.ToolTip="Volume" HorizontalAlignment="Center">
             <StackPanel Orientation="Horizontal" Spacing="20">
 
-                <TextBlock Text="{x:Bind mediaPlaybackController.VolumeString, Mode=OneWay}" Foreground="{x:Bind mediaPlaybackController.VolumeForeground, Mode=OneWay}"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind mediaPlaybackController.VolumeString, Mode=OneWay}" Foreground="{x:Bind mediaPlaybackController.VolumeForeground, Mode=OneWay}"/>
                 <local:OceanSlider Maximum="{x:Bind mediaPlaybackController.MaximumVolume, Mode=OneWay}" Value="100" ValueChanged="OceanSlider_ValueChanged" Width="100" IsTooltipEnabled="False" />
             </StackPanel>
         </Grid>

@@ -13,16 +13,16 @@
 HorizontalAlignment="Stretch" 
 Margin="0,7,0,10"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Spacing="200">
-            <TextBlock Text="{x:Bind mediacontroller.MediaDisplayName,Mode=OneWay}" Visibility="{x:Bind mediacontroller.DisplayTextVisibility, Mode=OneWay}" Margin="0, 0, 0, 10" Foreground="White" Style="{StaticResource BodyStrongTextBlockStyle}" Name="txtFileName"></TextBlock>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind mediacontroller.MediaDisplayName,Mode=OneWay}" Visibility="{x:Bind mediacontroller.DisplayTextVisibility, Mode=OneWay}" Margin="0, 0, 0, 10" Foreground="White" Style="{StaticResource BodyStrongTextBlockStyle}" Name="txtFileName"></TextBlock>
         </StackPanel>
         <Grid x:Name="grdTexts" Margin="5,0,5, 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="11" Opacity="0.8"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{x:Bind mediacontroller.RunningDurationString, Mode=OneWay}" Name="txtRunningDuration" FontSize="11" Opacity="0.8"/>
 
-            <TextBlock Grid.Column="1" HorizontalAlignment="Right" Foreground="White" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="11" Opacity="0.8"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" HorizontalAlignment="Right" Foreground="White" Text="{x:Bind mediacontroller.TotalDurationString, Mode=OneWay}" Name="txtTotalDuration" FontSize="11" Opacity="0.8"/>
         </Grid>
 
     </StackPanel>

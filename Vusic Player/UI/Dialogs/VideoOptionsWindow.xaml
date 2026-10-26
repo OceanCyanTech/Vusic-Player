@@ -153,12 +153,12 @@
                     <StackPanel Name="stkActionButtons" Spacing="10" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0, 0">
                         <control:OceanButton  Style="{StaticResource OceanShim}" x:Name="btnPrimary" Click="btnPrimary_Click">
                             <StackPanel Orientation="Horizontal">
-                                <Image Width="20" Name="imgPrimary" Source="{Binding SaveIcon, Source={StaticResource GlobalIconHolder}}"></Image>
-                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    FontSize="16" Name="txtPrimary" Margin="5, 0" Text="Save"></TextBlock>
+                                <Image Width="20" Name="imgPrimary" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}"></Image>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    FontSize="16" Name="txtPrimary" Margin="5, 0" Text="OK"></TextBlock>
                             </StackPanel>
                         </control:OceanButton>
 
-                        <control:OceanButton  CornerRadius="8"  x:Name="btnClose" Click="btnClose_Click">
+                        <control:OceanButton Visibility="Collapsed"  CornerRadius="8"  x:Name="btnClose" Click="btnClose_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="20" Name="imgClose" Visibility="Collapsed"></Image>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    FontSize="16" Name="txtClose" Text="Cancel" Margin="5, 0"></TextBlock>

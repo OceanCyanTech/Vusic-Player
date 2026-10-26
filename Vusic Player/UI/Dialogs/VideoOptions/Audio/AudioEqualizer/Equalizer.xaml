@@ -17,9 +17,20 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"    Checked="chkVerticalMode_Checked" Unchecked="chkVerticalMode_Checked" Content="Vertical Mode" Name="chkVerticalMode" Grid.Row="0"/>
-        <Grid Grid.Row="1" Visibility="Visible" RowSpacing="12" ColumnSpacing="16" Name="grdHorizontalSliders" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="1" HorizontalAlignment="Center">
+            <TextBlock Text="Presets" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <ComboBox Name="cmbPresets" ItemsSource="{x:Bind presets, Mode=OneWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding PresetName}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        <Grid Grid.Row="2" Visibility="Visible" RowSpacing="12" ColumnSpacing="16" Name="grdHorizontalSliders" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <!-- Frequency Label -->
                 <ColumnDefinition Width="Auto"/>
@@ -122,7 +133,7 @@
                Text="{x:Bind gain16000.Value, Mode=OneWay, Converter={StaticResource GainDisplayConverter}}"/>
         </Grid>
         <Grid Visibility="Collapsed" 
-      Grid.Row="1" 
+      Grid.Row="2" 
       RowSpacing="16" 
       ColumnSpacing="8" 
       Name="grdVerticalSliders" 
@@ -238,6 +249,17 @@
                           IsTooltipEnabled="False" HorizontalAlignment="Center"/>
             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="6" Grid.Column="4" Text="16 kHz" HorizontalAlignment="Center" FontSize="11"/>
         </Grid>
-        <Button HorizontalAlignment="Center" Name="btnApply" Content="Apply" Click="btnApply_Click" Grid.Row="2" Style="{StaticResource AccentButtonStyle}"/>
+        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="3" HorizontalAlignment="Center">
+            <Button  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" Name="btnApply" Content="Apply" Click="btnApply_Click" Grid.Row="2" Style="{StaticResource AccentButtonStyle}"/>
+            <Button Content="Save Preset" Name="btnSavePreset" Click="btnSavePreset_Click" FontFamily="{StaticResource GlobalFontHolder}" />
+        </StackPanel>
+        <TeachingTip Name="ttPresetName">
+            <StackPanel Orientation="Vertical" Spacing="10">
+                <TextBox PlaceholderText="Enter preset name..." Name="txtPresetName"/>
+                <Button Style="{StaticResource AccentButtonStyle}" Name="btnCreatePreset" Click="btnCreatePreset_Click" ToolTipService.ToolTip="Create Preset">
+                    <Image Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" Width="25"/>
+                </Button>
+            </StackPanel>
+        </TeachingTip>
     </Grid>
 </UserControl>
