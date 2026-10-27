@@ -23,6 +23,8 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _viewfulllyrics = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/viewfulllyrics.png";
         private string _personalize = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/personalize.png";
         private string _bluraesthetic = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/bluraesthetic.png";
+        private string _chevronleft = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/chevronleft.png";
+        private string _chevronright = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/chevronright.png";
         private string _home = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/home.png";
         private string _loopicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/loopicon.png";
         private string _saveicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/saveicon.png";
@@ -317,6 +319,29 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
                 if (_emptyqueue != value)
                 {
                     _emptyqueue = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string ChevronRight
+        {
+            get => _chevronright;
+            set
+            {
+                if (_chevronright != value)
+                {
+                    _chevronright = value;
+                    OnPropertyChanged();
+                }
+            }
+        public string ChevronLeft
+        {
+            get => _chevronleft;
+            set
+            {
+                if (_chevronleft != value)
+                {
+                    _chevronleft = value;
                     OnPropertyChanged();
                 }
             }

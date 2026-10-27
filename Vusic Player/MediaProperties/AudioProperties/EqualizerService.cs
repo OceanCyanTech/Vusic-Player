@@ -12,10 +12,17 @@ using SharpDX.XAudio2.Fx;
 using SharpDX.XAudio2;
 using SharpDX.XAPO.Fx;
 using Vusic_Player.Configuration;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Vusic_Player.Configuration.ClassModels;
+using System.Runtime.CompilerServices;
 namespace Vusic_Player.MediaProperties.AudioProperties
 {
-    public class EqualizerService
+    public class EqualizerService : INotifyPropertyChanged
     {
+        public static EqualizerService instance = new EqualizerService();
+        private ObservableCollection<EqualizerPreset> _eqpresetsglobal = new ObservableCollection<EqualizerPreset>();
+
         public static void Create(double[]eqgains)
         {
             if (PlayerService.Masterplayer == null) return;
@@ -26,5 +33,26 @@ namespace Vusic_Player.MediaProperties.AudioProperties
 
 
         }
+        public ObservableCollection<EqualizerPreset> EqPresetsGlobal
+        {
+            get => _eqpresetsglobal;
+            set
+            {
+                if (_eqpresetsglobal != value)
+                {
+                    _eqpresetsglobal = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        #region INotifyImplementation
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        }
+        #endregion
+
     }
 }

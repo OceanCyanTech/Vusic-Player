@@ -35,12 +35,12 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer
         {
             InitializeComponent();
         }
-        ObservableCollection<EqualizerPreset> presets = new ObservableCollection<EqualizerPreset>();
+        EqualizerService inst => EqualizerService.instance;
         private async void LoadPresets()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var presetseq = currentSettings.EqPresets;
-            presets = new ObservableCollection<EqualizerPreset>(presetseq);
+            EqualizerService.instance.EqPresetsGlobal = new ObservableCollection<EqualizerPreset>(presetseq);
         }
         private void OceanSlider_ValueChanged(double obj)
         {
@@ -161,6 +161,20 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer
                     Gain8000 = gain8000Vertical.Value,
                     Gain16000 = gain16000Vertical.Value
                 });
+                EqualizerService.instance.EqPresetsGlobal.Add(new EqualizerPreset
+                {
+                    PresetName = txtPresetName.Text,
+                    Gain31 = gain31Vertical.Value,
+                    Gain63 = gain63Vertical.Value,
+                    Gain125 = gain125Vertical.Value,
+                    Gain250 = gain250Vertical.Value,
+                    Gain500 = gain500Vertical.Value,
+                    Gain1000 = gain1000Vertical.Value,
+                    Gain2000 = gain2000Vertical.Value,
+                    Gain4000 = gain4000Vertical.Value,
+                    Gain8000 = gain8000Vertical.Value,
+                    Gain16000 = gain16000Vertical.Value
+                });
             }
             else
             {
@@ -177,7 +191,20 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer
                     Gain4000 = gain4000.Value,
                     Gain8000 = gain8000.Value,
                     Gain16000 = gain16000.Value
-                }
+                }); EqualizerService.instance.EqPresetsGlobal.Add(new EqualizerPreset
+                {
+                    PresetName = txtPresetName.Text,
+                    Gain31 = gain31.Value,
+                    Gain63 = gain63.Value,
+                    Gain125 = gain125.Value,
+                    Gain250 = gain250.Value,
+                    Gain500 = gain500.Value,
+                    Gain1000 = gain1000.Value,
+                    Gain2000 = gain2000.Value,
+                    Gain4000 = gain4000.Value,
+                    Gain8000 = gain8000.Value,
+                    Gain16000 = gain16000.Value
+                });
             }
             await SettingsLoader.SaveSettingsAsync(currentSettings);
             ttPresetName.IsOpen = false;

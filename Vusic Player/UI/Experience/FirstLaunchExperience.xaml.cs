@@ -30,5 +30,15 @@ namespace Vusic_Player.UI.Experience
         {
             InitializeComponent();
         }
+
+        private void btnGoBack_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnGoForward_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

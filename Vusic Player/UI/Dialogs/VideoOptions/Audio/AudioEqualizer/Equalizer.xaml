@@ -22,7 +22,7 @@
         <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"    Checked="chkVerticalMode_Checked" Unchecked="chkVerticalMode_Checked" Content="Vertical Mode" Name="chkVerticalMode" Grid.Row="0"/>
         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="1" HorizontalAlignment="Center">
             <TextBlock Text="Presets" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-            <ComboBox Name="cmbPresets" ItemsSource="{x:Bind presets, Mode=OneWay}">
+            <ComboBox Name="cmbPresets" ItemsSource="{x:Bind inst.EqPresetsGlobal, Mode=OneWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding PresetName}"/>

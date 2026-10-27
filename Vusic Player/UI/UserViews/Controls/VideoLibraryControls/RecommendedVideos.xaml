@@ -159,7 +159,7 @@ ItemClick="grdvRecents_ItemClick"  Margin="0, 0" ScrollViewer.HorizontalScrollMo
 
 
                             </Grid>
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Height="60" Width="200" TextWrapping="Wrap" />
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"     Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" Margin="0, 3" Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Height="60" Width="200" TextWrapping="Wrap" />
                         </StackPanel>
                     </DataTemplate>
                 </GridView.ItemTemplate>
