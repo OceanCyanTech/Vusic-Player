@@ -334,6 +334,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
                     OnPropertyChanged();
                 }
             }
+        }
         public string ChevronLeft
         {
             get => _chevronleft;

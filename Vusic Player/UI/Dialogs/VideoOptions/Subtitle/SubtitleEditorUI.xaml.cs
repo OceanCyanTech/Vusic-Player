@@ -59,7 +59,21 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
                 ComboBoxSelection(0);
             }
             PlayerService.SeekCompleted += PlayerService_SeekCompleted;
+            Subtitles.CollectionChanged += Subtitles_CollectionChanged;
         }
+
+        private void Subtitles_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (Subtitles.Count > 0)
+            {
+                stkNoSubtitles.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                stkNoSubtitles.Visibility = Visibility.Visible;
+            }
+        }
+
         public void ChangetoLyricEditor()
         {
             txtSubtitleEditorHeader.Text = "Lyrics Editor";
@@ -140,6 +154,9 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
 
                 Subtitles.Insert(index, newSubtitle);
                 lstViewSubtitles.SelectedIndex = index;
+                txtTranscript.Text = "";
+                txtStartTime.Text = newSubtitle.StartString;
+                txtEndTime.Text = newSubtitle.EndString;
                 txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened) + "*";
                 ToolTipService.SetToolTip(txtFileName, "Pending Changes to be saved");
             }
@@ -167,6 +184,9 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
                 string format = startTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
                 string endFormat = endTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
                 var newSubtitle = new SubtitleCueModel { StartTime = startTime, EndTime = endTime, StartString = startTime.ToString(format), EndString = endTime.ToString(endFormat) };
+                txtTranscript.Text = "";
+                txtStartTime.Text = newSubtitle.StartString;
+                txtEndTime.Text = newSubtitle.EndString;
                 Subtitles.Insert(index + 1, newSubtitle);
                 lstViewSubtitles.SelectedIndex = index + 1;
 
@@ -378,6 +398,10 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Subtitle
             FilePathOpened = "";
             txtTextEditor.Text = "";
             chkFromVideo.IsChecked = false;
+            btnSaveFile.IsEnabled = true;
+            btnSaveAsFile.IsEnabled = true;
+            btnInsertAbove.IsEnabled = true;
+            btnInsertBelow.IsEnabled = true;
 
         }
 
@@ -606,6 +630,9 @@ allowedFormats,
                     subtitle.StartTime = parsedTime;
                     string format = parsedTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
                     subtitle.StartString = parsedTime.ToString(format);
+                   
+                        var difference = subtitle.EndTime - subtitle.StartTime;
+                        subDifference.Value = difference.TotalSeconds;
                 }
             }
 
@@ -641,6 +668,8 @@ allowedFormats,
                     subtitle.EndTime = parsedTime;
                     string format = parsedTime.TotalHours >= 1 ? @"hh\:mm\:ss\.fff" : @"mm\:ss\.fff";
                     subtitle.EndString = parsedTime.ToString(format);
+                    var difference = subtitle.EndTime - subtitle.StartTime;
+                    subDifference.Value = difference.TotalSeconds;
                 }
             }
         }
@@ -987,6 +1016,11 @@ allowedFormats,
             if (PlayerService.Masterplayer != null)
             {
                 txtStartTime.Text = (TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime)).ToString(@"hh\:mm\:ss\.fff");
+                if (lstViewSubtitles.SelectedItem is SubtitleCueModel currentCue)
+                {
+                    var difference = currentCue.EndTime - currentCue.StartTime;
+                    subDifference.Value = difference.TotalSeconds;
+                }
             }
         }
         private static string GetFFmpegPath()
@@ -1009,6 +1043,11 @@ allowedFormats,
             if (PlayerService.Masterplayer != null)
             {
                 txtEndTime.Text = (TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime)).ToString(@"hh\:mm\:ss\.fff");
+                if (lstViewSubtitles.SelectedItem is SubtitleCueModel currentCue)
+                {
+                    var difference = currentCue.EndTime - currentCue.StartTime;
+                    subDifference.Value = difference.TotalSeconds;
+                }
             }
         }
 
@@ -1016,6 +1055,21 @@ allowedFormats,
         {
             cmbEmbeddedSubTracks.Visibility = chkFromVideo.IsChecked ?? false ? Visibility.Visible : Visibility.Collapsed;
 
+        }
+
+        private void lstViewSubtitles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstViewSubtitles.SelectedItem is SubtitleCueModel subtitle)
+            {
+                txtTranscript.Text = subtitle.Text;
+                txtFileName.Text = Path.GetFileNameWithoutExtension(FilePathOpened);
+                ToolTipService.SetToolTip(txtFileName, FilePathOpened);
+
+                var difference = subtitle.EndTime - subtitle.StartTime;
+                subDifference.Value = difference.TotalSeconds;
+                txtStartTime.Text = subtitle.StartString;
+                txtEndTime.Text = subtitle.EndString;
+            }
         }
     }
 }

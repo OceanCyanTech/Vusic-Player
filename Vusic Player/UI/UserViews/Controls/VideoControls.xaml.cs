@@ -438,7 +438,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void mnftTakeSnapshot_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            Screen.TakeSnapshot(Screen.Instance.SnapshotDirect, Screen.Instance.IsTimeStampIncluded, Screen.Instance.IsPositionIncluded);
+            Screen.Instance.TakeSnapshot(Screen.Instance.SnapshotDirect, Screen.Instance.IsTimeStampIncluded, Screen.Instance.IsPositionIncluded);
         }
 
 
@@ -448,11 +448,11 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 if (PlayerService.Masterplayer.IsRecording)
                 {
-                    Screen.StopRecordRequest();
+                    Screen.Instance.StopRecordRequest();
                 }
                 else
                 {
-                    Screen.Record(Screen.RecordDirect);
+                    Screen.Instance.Record(Screen.Instance.RecordDirect);
                 }
             }
         }

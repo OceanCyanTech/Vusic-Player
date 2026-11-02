@@ -128,7 +128,7 @@
                                 <Image  Width="26" Source="{Binding FileInfo, Source={StaticResource GlobalIconHolder}}"/>
                             </Button>
                             <ToggleButton Visibility="Visible" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Toggle Loop"  Name="btnLoopToggle" Checked="btnLoopToggle_Checked" Unchecked="btnLoopToggle_Checked">
-                                <Image  Width="26" Source="{Binding InfoIcon, Source={StaticResource GlobalIconHolder}}"/>
+                                <Image  Width="26" Source="{Binding LoopIcon, Source={StaticResource GlobalIconHolder}}"/>
                             </ToggleButton>
                        
                         </StackPanel>

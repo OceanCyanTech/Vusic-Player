@@ -495,7 +495,20 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Spacing="30" >
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtChangeTheme" Text="Change Theme" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="30">
+                                <Button Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                    <StackPanel Orientation="Vertical" Spacing="20">
+                                        <Image Width="40"/>
+                                        <TextBlock Text="Ocean" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                    <StackPanel Orientation="Vertical" Spacing="20">
+                                        <Image Width="40"/>
+                                        <TextBlock Text="Neon" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
                         </StackPanel>
                     </Grid>

@@ -10,6 +10,7 @@ using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views;
+using Vusic_Player.UI.Experience;
 using Windows.ApplicationModel.Activation;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
@@ -94,6 +95,8 @@ namespace Vusic_Player
             }
             DatabaseService.InitializeDatabase();
             MainWindow.ShowWindow();
+            FirstLaunchExperience wind = new FirstLaunchExperience();
+            wind.Activate();
         }
     }
 }

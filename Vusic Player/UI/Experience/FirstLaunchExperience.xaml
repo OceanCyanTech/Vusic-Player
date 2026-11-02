@@ -10,22 +10,25 @@
     Title="FirstLaunchExperience">
 
     <Window.SystemBackdrop>
-        <MicaBackdrop />
+        <DesktopAcrylicBackdrop />
     </Window.SystemBackdrop>
-    <Grid>
+    <Grid Margin="40, 40">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-    <Frame Grid.Row="0">
+        <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtHeader"/>
+        <Frame Grid.Row="1" Name="frmMain">
 
         </Frame>
-        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="1">
-            <Button Name="btnGoBack" ToolTipService.ToolTip="Go Back" Click="btnGoBack_Click">
-                <Image Width="25" Source="{Binding ChevronLeft , Source={StaticResource GlobalIconHolder}}"/>
+        <Button Name="btnAccept" Click="btnAccept_Click" Visibility="Collapsed" Content="Accept" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" HorizontalAlignment="Right"/>
+        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="2">
+            <Button IsEnabled="False" Name="btnGoBack" ToolTipService.ToolTip="Go Back" Click="btnGoBack_Click">
+                <Image Width="20" Source="{Binding ChevronLeft , Source={StaticResource GlobalIconHolder}}"/>
             </Button>
             <Button Name="btnGoForward" ToolTipService.ToolTip="Go Forward" Click="btnGoForward_Click">
-                <Image Width="25" Source="{Binding ChevronRight , Source={StaticResource GlobalIconHolder}}"/>
+                <Image Width="20" Source="{Binding ChevronRight , Source={StaticResource GlobalIconHolder}}"/>
             </Button>
         </StackPanel>
     </Grid>

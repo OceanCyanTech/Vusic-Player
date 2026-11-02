@@ -122,19 +122,19 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Subtitle Cue" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                <TextBox FontFamily="{StaticResource GlobalFontHolder}"   TextChanged="txtTranscript_TextChanged" Name="txtTranscript" Grid.Row="1" PlaceholderText="Select a subtitle cue in the list to load it here..."/>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"   TextChanged="txtTranscript_TextChanged" AcceptsReturn="True" Name="txtTranscript" Grid.Row="1" PlaceholderText="Select a subtitle cue in the list to load it here..."/>
                 <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="10" Grid.Row="2">
                     <Button HorizontalAlignment="Stretch" Name="btnRemoveSubtitle" Click="btnRemoveSubtitle_Click" Content="Remove Subtitle" Grid.Row="2"/>
 
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="3">
-                    <Button Name="btnInsertBelow" Click="btnInsertBelow_Click">
+                    <Button Name="btnInsertBelow" IsEnabled="False" Click="btnInsertBelow_Click">
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <Image Width="20" Source="{Binding ChevronDown, Source={StaticResource GlobalIconHolder}}"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Insert New Subtitle Cue Below"/>
                         </StackPanel>
                     </Button>
-                    <Button Name="btnInsertAbove" Click="btnInsertAbove_Click">
+                    <Button Name="btnInsertAbove" IsEnabled="False" Click="btnInsertAbove_Click">
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <Image Width="20" Source="{Binding ChevronUp, Source={StaticResource GlobalIconHolder}}"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Insert New Subtitle Cue Above"/>
@@ -188,7 +188,7 @@
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}"  Text="Start Time" Grid.Column="2"/>
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}"  Text="End Time" Grid.Column="3"/>
                 </Grid>
-                <ListView ItemClick="lstViewSubtitles_ItemClick" IsItemClickEnabled="True"   Name="lstViewSubtitles" ItemsSource="{x:Bind Subtitles, Mode=OneWay}" Grid.Row="3">
+                <ListView SelectionChanged="lstViewSubtitles_SelectionChanged" ItemClick="lstViewSubtitles_ItemClick" IsItemClickEnabled="True"   Name="lstViewSubtitles" ItemsSource="{x:Bind Subtitles, Mode=OneWay}" Grid.Row="3">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid ColumnSpacing="30" Margin="0, 12">
