@@ -486,7 +486,7 @@
                                     <Image Width="20" Source="{x:Bind IconsInstance.Refresh, Mode=OneWay}"/>
                                 </Button>
                                 <Button Background="Transparent" Name="btnResetFont" ToolTipService.ToolTip="Reset Font" Click="btnResetFont_Click">
-                                    <Image Width="20" Source="{x:Bind IconsInstance.Refresh, Mode=OneWay}"/>
+                                    <Image Width="20" Source="{x:Bind IconsInstance.ResetIcon, Mode=OneWay}"/>
                                 </Button>
                             </StackPanel>
                             <StackPanel Name="stkRestartApp" Visibility="Collapsed" Orientation="Horizontal" Spacing="30" Grid.Row="8">
@@ -500,13 +500,19 @@
                                 <Button Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                                     <StackPanel Orientation="Vertical" Spacing="20">
                                         <Image Width="40"/>
-                                        <TextBlock Text="Ocean" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Ocean" Style="{StaticResource BodyStrongTextBlockStyle}"/>
                                     </StackPanel>
                                 </Button>
                                 <Button Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                                     <StackPanel Orientation="Vertical" Spacing="20">
                                         <Image Width="40"/>
-                                        <TextBlock Text="Neon" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Neon" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                    <StackPanel Orientation="Vertical" Spacing="20">
+                                        <Image Width="40"/>
+                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Space" Style="{StaticResource BodyStrongTextBlockStyle}"/>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>

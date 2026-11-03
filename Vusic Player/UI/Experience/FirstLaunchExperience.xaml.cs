@@ -49,7 +49,7 @@ namespace Vusic_Player.UI.Experience
             else if (currentindex == 2)
             {
                 frmMain.Navigate(typeof(WhatIsVusicPlayerPage));
-                txtHeader.Text = "What is Vusic Player?";
+                txtHeader.Text = "Welcome to Vusic Player";
             }
             else if (currentindex == 3)
             {
@@ -86,7 +86,7 @@ namespace Vusic_Player.UI.Experience
 
         private void btnAccept_Click(object sender, RoutedEventArgs e)
         {
-            currentindex += 1;
+            currentindex += 1;  
             txtHeader.Text = "Your Privacy is OceanCyan's Priority";
 
             frmMain.Navigate(typeof(PrivacyAgreement));

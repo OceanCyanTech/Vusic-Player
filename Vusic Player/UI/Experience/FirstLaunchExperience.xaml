@@ -12,18 +12,18 @@
     <Window.SystemBackdrop>
         <DesktopAcrylicBackdrop />
     </Window.SystemBackdrop>
-    <Grid Margin="40, 40">
+    <Grid Margin="40, 40,0,30" RowSpacing="30">
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition />
         </Grid.RowDefinitions>
         <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" Name="txtHeader"/>
         <Frame Grid.Row="1" Name="frmMain">
 
         </Frame>
         <Button Name="btnAccept" Click="btnAccept_Click" Visibility="Collapsed" Content="Accept" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" HorizontalAlignment="Right"/>
-        <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="2">
+        <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="10" Grid.Row="2">
             <Button IsEnabled="False" Name="btnGoBack" ToolTipService.ToolTip="Go Back" Click="btnGoBack_Click">
                 <Image Width="20" Source="{Binding ChevronLeft , Source={StaticResource GlobalIconHolder}}"/>
             </Button>

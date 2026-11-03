@@ -87,6 +87,7 @@ namespace Vusic_Player.UI.Dialogs
             this.ExtendsContentIntoTitleBar = true;
             TrySetAcrylicBackdrop(true);
             DisableCloseButton();
+            this.AppWindow.Closing += AppWindow_Closing;
             var hwnd = WindowNative.GetWindowHandle(this);
             var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
             var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);

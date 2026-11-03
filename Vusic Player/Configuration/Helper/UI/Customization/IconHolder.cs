@@ -15,6 +15,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _settingIcon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/settingicon.png";
         private string _recordicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/recordicon.png";
         private string _backicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/backicon.png";
+        private string _reseticon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/reseticon.png";
         private string _genreonline = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/genreonline.png";
         private string _genrelocal = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/genrelocal.png";
         private string _pageicon = "ms-appx:///Assets/Themes/Ocean/pageicon.png";
@@ -163,6 +164,18 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
                 if (_missingicon != value)
                 {
                     _missingicon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string ResetIcon
+        {
+            get => _reseticon;
+            set
+            {
+                if (_reseticon != value)
+                {
+                    _reseticon = value;
                     OnPropertyChanged();
                 }
             }

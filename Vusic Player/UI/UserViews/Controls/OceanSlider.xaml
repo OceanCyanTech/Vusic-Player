@@ -64,11 +64,14 @@
 
         <Border x:Name="Progress"
                 Height="6"
-                Background="Cyan"
                 CornerRadius="4"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
-                Width="0"/>
+                Width="0" Margin="0,0,0,0">
+            <Border.Background>
+                <ImageBrush Stretch="UniformToFill" ImageSource="/Assets/Themes/NeonGlow/SliderProgress.png"/>
+            </Border.Background>
+        </Border>
 
         <Canvas x:Name="InputLayer"
                 Background="Transparent"
@@ -86,10 +89,12 @@
             <Ellipse x:Name="Thumb"
                      Width="16" 
                      Height="16"
-                     Fill="Cyan"
-                     Stroke="DarkSlateGray"
                      StrokeThickness="3"
-                     Canvas.Top="8"/>
+                     Canvas.Top="8">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="/Assets/Themes/NeonGlow/SliderThumb.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
         </Canvas>
     </Grid>
 
