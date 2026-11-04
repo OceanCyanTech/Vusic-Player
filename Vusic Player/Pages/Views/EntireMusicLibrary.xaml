@@ -165,7 +165,7 @@
                     <Image Width="50" Source="{Binding SourceError, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleTextBlockStyle}" Text="Saving to History is disabled." ></TextBlock>
                 </StackPanel>
-                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}" HorizontalAlignment="Center" Visibility="Visible" Content="Enable History" Name="btnEnableHistory" Click="btnEnableHistory_Click" FontSize="24" Margin="0, 0" Padding="0"></HyperlinkButton>
+                <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"  FontFamily="{StaticResource GlobalFontHolder}" HorizontalAlignment="Center" Visibility="Visible" Content="Enable History" Name="btnEnableHistory" Click="btnEnableHistory_Click" FontSize="24" Margin="0, 0" Padding="0"></HyperlinkButton>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="20">
 

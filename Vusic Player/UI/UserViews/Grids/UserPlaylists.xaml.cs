@@ -228,6 +228,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                 }
                 ttEditPlaylist.IsOpen = true;
                 Instance.PlCover = new BitmapImage(playlist.Thumbnail);
+                Debug.WriteLine("HAHAHA: " + IconHolder.Instance.PlaylistIcon);
                 Instance.Thumbnail = playlist.Thumbnail ?? new Uri(IconHolder.Instance.PlaylistIcon);
 
                 Instance.PlaylistName = playlist.PlaylistName;

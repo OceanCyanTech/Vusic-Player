@@ -56,6 +56,10 @@ TextChanged="asbSearchOptions_TextChanged_1"/>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Configure how you see video on your screen." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{StaticResource ApplicationForegroundThemeBrush}"/>
                             </StackPanel>
                             <SelectorBar Grid.Row="1" Name="voSelectorBar" HorizontalAlignment="Center" SelectionChanged="voSelectorBar_SelectionChanged">
+                                <SelectorBar.Resources>
+                                    <SolidColorBrush x:Key="SelectorBarItemPillFill" 
+  Color="{StaticResource GlobalAccentColor}"/>
+                                </SelectorBar.Resources>
                                 <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="General" Name="sbiGeneral" IsSelected="True"></SelectorBarItem>
                                 <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Filters" Name="sbiFilters"></SelectorBarItem>
                                 <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Orientation" Name="sbiOrientation"></SelectorBarItem>
@@ -155,6 +159,10 @@ TextChanged="asbSearchOptions_TextChanged_1"/>
 HorizontalAlignment="Center"
 Margin="0,12,0,0"
 SelectionChanged="selBarAudioOptions_SelectionChanged">
+                                <SelectorBar.Resources>
+                                    <SolidColorBrush x:Key="SelectorBarItemPillFill" 
+  Color="{StaticResource GlobalAccentColor}"/>
+                                </SelectorBar.Resources>
                                 <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="GeneralTab" Text="General" IsSelected="True" />
                                 <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Visible" x:Name="EqualizerTab" Text="Equalizer" />
                             </SelectorBar>
@@ -208,6 +216,10 @@ SelectionChanged="selBarAudioOptions_SelectionChanged">
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <SelectorBar HorizontalAlignment="Center" Grid.Row="1" Name="voSelectorBarSubtitles" SelectionChanged="voSelectorBarSubtitles_SelectionChanged">
+                                <SelectorBar.Resources>
+                                    <SolidColorBrush x:Key="SelectorBarItemPillFill" 
+  Color="{StaticResource GlobalAccentColor}"/>
+                                </SelectorBar.Resources>
                                 <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Tracks" IsSelected="True" Name="selBarTracksSub"></SelectorBarItem>
                                 <SelectorBarItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Customize" Name="selBarCustomizeSub">
 

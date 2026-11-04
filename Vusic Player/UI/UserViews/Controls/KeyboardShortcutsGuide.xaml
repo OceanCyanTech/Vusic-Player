@@ -16,6 +16,13 @@
         </Grid.RowDefinitions>
         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Keyboard Shortcuts that can be used in Vusic Player." Style="{StaticResource BodyStrongTextBlockStyle}"/>
         <NavigationView PaneDisplayMode="Top" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" SelectionChanged="selBarKeyboardShortcuts_SelectionChanged_1" Name="selBarKeyboardShortcuts" Grid.Row="1">
+            <NavigationView.Resources>
+                <!-- The default selection indicator bar color -->
+                <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" 
+  Color="{StaticResource GlobalAccentColor}"/>
+
+
+            </NavigationView.Resources>
             <NavigationView.MenuItems>
                 <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"     IsSelected="True" Name="selBar1" Content="Playback"/>
                 <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"     Name="selBar2" Content="Tools"/>

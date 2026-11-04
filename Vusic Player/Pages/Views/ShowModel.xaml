@@ -143,7 +143,7 @@
                                     <PersonPicture Width="30" Grid.Column="0" Name="ppArtist" ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
                                     <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                                         <HyperlinkButton Padding="0" ToolTipService.ToolTip="{Binding ArtistName}"  Margin="0, 0, 0, 5" Foreground="{StaticResource TextFillColorSecondaryBrush}">
-                                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                                            <TextBlock Foreground="{StaticResource GlobalAccentColor}"    FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                                         </HyperlinkButton>
                                     </StackPanel>
                                 </Grid>
@@ -231,7 +231,7 @@
                                     <PersonPicture Width="30" Grid.Column="0" Name="ppArtist"  ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
                                     <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                                         <HyperlinkButton Padding="0" ToolTipService.ToolTip="{Binding ArtistName}"  Margin="0, 0, 0, 5" Foreground="{StaticResource TextFillColorSecondaryBrush}">
-                                            <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                                            <TextBlock Foreground="{StaticResource GlobalAccentColor}"    FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding ArtistName}"  Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                                         </HyperlinkButton>
                                     </StackPanel>
                                 </Grid>
@@ -254,7 +254,7 @@
                                 <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Margin="5, 0" Text="Add Season" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                             </StackPanel>
                         </Button>
-                        <HyperlinkButton  FontFamily="{StaticResource GlobalFontHolder}"   Content="View Unlinked Seasons" Name="hypViewUnlinkedSeasons" Click="hypViewUnlinkedSeasons_Click"/>
+                        <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"    FontFamily="{StaticResource GlobalFontHolder}"   Content="View Unlinked Seasons" Name="hypViewUnlinkedSeasons" Click="hypViewUnlinkedSeasons_Click"/>
                     </StackPanel>
                     <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtSeasonCount" Text="• 0 Seasons (Loading)" Grid.Row="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                     <GridView  Grid.Row="2" Visibility="Visible"  VerticalAlignment="Stretch"

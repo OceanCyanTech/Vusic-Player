@@ -203,8 +203,8 @@ Foreground="{Binding IsFavourite, Converter={StaticResource FavoritetoColorConv}
 
                             <Image Stretch="Uniform" Width="180" Source="{Binding Thumbnail}"/>
 
-                            <HyperlinkButton Foreground="White" Click="hypItemName_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
-                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Width="170" TextWrapping="Wrap" Text="{Binding Name}"/>
+                            <HyperlinkButton Click="hypItemName_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
+                                <TextBlock Foreground="{StaticResource GlobalAccentColor}"   FontFamily="{StaticResource GlobalFontHolder}" Width="170" TextWrapping="Wrap" Text="{Binding Name}"/>
                             </HyperlinkButton>
                             <Button HorizontalAlignment="Right" Grid.Row="2" ToolTipService.ToolTip="{Binding FavString}" Padding="3" Margin="0, 0" Visibility="{Binding VisibilityOfFileProperties}" x:Name="btnFavourite" 
 Click="btnFavourite_Click"
@@ -225,7 +225,7 @@ BorderThickness="0"
                 </GridView.ItemTemplate>
             </GridView>
             <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttAddedToPlaylist" Title="Added to Playlist" IsOpen="False">
-                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Name="hypPlaylistAdded" Click="hypPlaylistAdded_Click"></HyperlinkButton>
+                <HyperlinkButton  Foreground="{StaticResource GlobalAccentColor}" FontFamily="{StaticResource GlobalFontHolder}"  Name="hypPlaylistAdded" Click="hypPlaylistAdded_Click"></HyperlinkButton>
             </TeachingTip>
 
             <ProgressRing IsIndeterminate="True" Grid.Row="5" Name="prgLoading" Visibility="Collapsed"/>

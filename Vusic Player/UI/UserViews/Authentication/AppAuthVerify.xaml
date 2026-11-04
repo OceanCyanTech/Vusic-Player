@@ -55,7 +55,7 @@
             <TextBox  Visibility="Collapsed" Name="txtNum5" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
             <TextBox  Visibility="Collapsed" Name="txtNum6" Padding="25, 0"  IsReadOnly="True" CornerRadius="36" Height="70" Width="70" FontSize="48" />
         </StackPanel>
-        <HyperlinkButton Content="Forgot Pin." Name="hypForgotPin" Click="hypForgotPin_Click" HorizontalAlignment="Center" Grid.Row="3"/>
+            <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Forgot Pin." Name="hypForgotPin" Click="hypForgotPin_Click" HorizontalAlignment="Center" Grid.Row="3"/>
     </Grid>
     </Grid>
 </UserControl>

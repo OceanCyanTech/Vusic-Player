@@ -17,6 +17,24 @@ namespace Vusic_Player.Configuration.Playback
         {
             QueueService.VusicQueueNext.CollectionChanged -= VusicQueueNext_CollectionChanged;
             QueueService.VusicQueueNext.CollectionChanged += VusicQueueNext_CollectionChanged;
+            IconHolder.Instance.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(IconHolder.Play) || e.PropertyName == "GlobalTheme")
+                {
+                    UpdatePlayPauseIcon();
+                }
+            };
+
+            UpdatePlayPauseIcon();
+        }
+
+        public void UpdatePlayPauseIcon()
+        {
+            //if (PlayerService.Masterplayer == null) return;
+            //// Re-construct the BitmapImage with the updated theme URI
+            //// (Assuming you check whether you're currently playing or paused)
+            //string iconUri = PlayerService.Masterplayer.IsPlaying ? IconHolder.Instance.Pause : IconHolder.Instance.Play;
+            //Thumbnail = new BitmapImage(new Uri(iconUri));
         }
 
         private void VusicQueueNext_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -92,7 +110,6 @@ namespace Vusic_Player.Configuration.Playback
         private Visibility _videometadatavisibilityfileinfo = Visibility.Collapsed;
         private Visibility textdisplay = Visibility.Visible;
         private Brush _volumeForeground = new SolidColorBrush(Colors.White);
-        private ImageSource _thumbnail = new BitmapImage(new Uri(IconHolder.Instance.Play));
         private ImageSource _thumbnail2 = new BitmapImage(new Uri("ms-appx:///Assets/appicon.png"));
 
         #region Properties
@@ -739,7 +756,8 @@ namespace Vusic_Player.Configuration.Playback
             set => SetProperty(ref _volumeForeground, value);
         }
 
-        public ImageSource Thumbnail
+        private string _thumbnail = IconHolder.Instance.Play;
+        public string Thumbnail
         {
             get => _thumbnail;
             set => SetProperty(ref _thumbnail, value);

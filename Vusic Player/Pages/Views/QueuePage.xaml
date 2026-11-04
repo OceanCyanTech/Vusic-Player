@@ -63,14 +63,14 @@
                         </Grid.ColumnDefinitions>
                         <HyperlinkButton Click="txtArtist_Click" Name="txtArtist" ToolTipService.ToolTip="Artist" HorizontalAlignment="Left" FontSize="15" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
                             <StackPanel Orientation="Horizontal" Spacing="3">
-                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="• "></TextBlock>
-                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtArtistDisplay" Text="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}"></TextBlock>
+                                <TextBlock  Foreground="{StaticResource GlobalAccentColor}"   FontFamily="{StaticResource GlobalFontHolder}"  Text="• "></TextBlock>
+                                <TextBlock Foreground="{StaticResource GlobalAccentColor}"    FontFamily="{StaticResource GlobalFontHolder}"  Name="txtArtistDisplay" Text="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}"></TextBlock>
                             </StackPanel>
                         </HyperlinkButton>
                         <HyperlinkButton Click="txtAlbum_Click" ToolTipService.ToolTip="Album" Name="txtAlbum" Grid.Column="1" HorizontalAlignment="Right" FontSize="15" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
                             <StackPanel Orientation="Horizontal" Spacing="3">
-                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="• "></TextBlock>
-                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtAlbumDisplay" Text="{x:Bind mediacontroller.AlbumDisplayName, Mode=OneWay}"></TextBlock>
+                                <TextBlock Foreground="{StaticResource GlobalAccentColor}"    FontFamily="{StaticResource GlobalFontHolder}"  Text="• "></TextBlock>
+                                <TextBlock Foreground="{StaticResource GlobalAccentColor}"    FontFamily="{StaticResource GlobalFontHolder}"  Name="txtAlbumDisplay" Text="{x:Bind mediacontroller.AlbumDisplayName, Mode=OneWay}"></TextBlock>
                             </StackPanel>
                         </HyperlinkButton>
                     </Grid>

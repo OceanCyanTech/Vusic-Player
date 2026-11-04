@@ -722,7 +722,7 @@ Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtError"></TextBlock>
         </TeachingTip>
         <TeachingTip Name="ttAddedToPlaylist" Title="Added to Playlist" IsOpen="False">
-            <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Name="hypPlaylistAdded" Click="hypPlaylistAdded_Click"></HyperlinkButton>
+            <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   FontFamily="{StaticResource GlobalFontHolder}"  Name="hypPlaylistAdded" Click="hypPlaylistAdded_Click"></HyperlinkButton>
         </TeachingTip>
         <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttDeletedFiles" Title="Delete">
             <StackPanel Margin="0, 10" Orientation="Vertical" Spacing="10">

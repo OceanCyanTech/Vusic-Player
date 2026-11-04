@@ -13,6 +13,13 @@
     </Page.Resources>
     <Grid  Margin="30, 30">
         <NavigationView IsBackButtonVisible="Collapsed" PaneDisplayMode="Top" SelectionChanged="nvgNavigationMain_SelectionChanged" IsSettingsVisible="False"  Name="nvgNavigationMain">
+            <NavigationView.Resources>
+                <!-- The default selection indicator bar color -->
+                <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" 
+  Color="{StaticResource GlobalAccentColor}"/>
+
+
+            </NavigationView.Resources>
             <NavigationView.MenuItems>
                 <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"   Name="nvgitPlayback" Content="General"/>
                 <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"   Name="nvgitHomePage" Content="Home Page Options"/>
@@ -156,7 +163,7 @@
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Licensed under LGPLv3"/>
                             <StackPanel Orientation="Horizontal"  Spacing="10">
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Source: " VerticalAlignment="Top"/>
-                                <HyperlinkButton NavigateUri="https://github.com/SuRGeoNix/Flyleaf" VerticalAlignment="Top" Padding="0" Content="Github Code"/>
+                                <HyperlinkButton  Foreground="{StaticResource GlobalAccentColor}"  NavigateUri="https://github.com/SuRGeoNix/Flyleaf" VerticalAlignment="Top" Padding="0" Content="Github Code"/>
                             </StackPanel>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="2"/>
@@ -171,7 +178,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <Button Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" Style="{StaticResource AccentButtonStyle}" Content="Check For Updates"/>
                                 <Button Name="btnOpenStore" Click="btnOpenStore_Click"  Content="Open Microsoft Store to Update" Visibility="Collapsed"/>
-                                <HyperlinkButton Name="hypWhatsNew" NavigateUri="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/NewVersionReleasenotes.md" Content="See what's new!" Visibility="Collapsed"/>
+                                <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Name="hypWhatsNew" NavigateUri="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/NewVersionReleasenotes.md" Content="See what's new!" Visibility="Collapsed"/>
                             </StackPanel>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="6"/>
@@ -181,9 +188,9 @@
                             <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Open Source License" Content="Open Source License" Name="btnViewOSLicense" Click="btnViewOSLicense_Click"/>
                             <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Third Party Licenses" Content="Third Party Licenses" Name="btnViewThirdPartyLicense" Click="btnViewThirdPartyLicense_Click"/>
 
-                            <HyperlinkButton Content="View Source on GitHub" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player"  Grid.Row="9"/>
-                            <HyperlinkButton Content="Documentation and Support" NavigateUri="https://oceancyantech.github.io/Vusic-Player/documentation.html" Grid.Row="10"/>
-                            <HyperlinkButton Content="Share your feedback to help us improve the app" NavigateUri="https://oceancyantech.github.io/Vusic-Player/feedback.html" Grid.Row="11"/>
+                            <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="View Source on GitHub" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player"  Grid.Row="9"/>
+                            <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Documentation and Support" NavigateUri="https://oceancyantech.github.io/Vusic-Player/documentation.html" Grid.Row="10"/>
+                            <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Share your feedback to help us improve the app" NavigateUri="https://oceancyantech.github.io/Vusic-Player/feedback.html" Grid.Row="11"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
                             <MenuFlyoutSeparator />
@@ -322,7 +329,7 @@
                                     </Flyout>
                                 </Button.Flyout>
                             </Button>
-                            <HyperlinkButton Content="View hidden videos" Name="hypBlockedVideos" Click="hypBlockedVideos_Click" Grid.Row="3"/>
+                            <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="View hidden videos" Name="hypBlockedVideos" Click="hypBlockedVideos_Click" Grid.Row="3"/>
                             <Grid RowSpacing="15" Name="grdHiddenVideos" Visibility="Collapsed">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
@@ -483,10 +490,10 @@
                                     </Button.Flyout>
                                 </Button>
                                 <Button Background="Transparent" Name="btnRefreshFonts" ToolTipService.ToolTip="Refresh Fonts" Click="btnRefreshFonts_Click">
-                                    <Image Width="20" Source="{x:Bind IconsInstance.Refresh, Mode=OneWay}"/>
+                                    <Image Width="20" Source="{Binding Refresh, Source={StaticResource GlobalIconHolder}}"/>
                                 </Button>
                                 <Button Background="Transparent" Name="btnResetFont" ToolTipService.ToolTip="Reset Font" Click="btnResetFont_Click">
-                                    <Image Width="20" Source="{x:Bind IconsInstance.ResetIcon, Mode=OneWay}"/>
+                                    <Image Width="20" Source="{Binding ResetIcon, Source={StaticResource GlobalIconHolder}}"/>
                                 </Button>
                             </StackPanel>
                             <StackPanel Name="stkRestartApp" Visibility="Collapsed" Orientation="Horizontal" Spacing="30" Grid.Row="8">
@@ -497,7 +504,7 @@
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtChangeTheme" Text="Change Theme" Style="{StaticResource TitleTextBlockStyle}"/>
                             </StackPanel>
                             <StackPanel  Spacing="30">
-                                <ToggleButton Name="tglOcean" Unchecked="tglOcean_Checked" Checked="tglOcean_Checked" Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                <ToggleButton Unchecked="tgl_Unchecked" Name="tglOcean"  Checked="tglOcean_Checked" Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                                     <ToggleButton.Resources>
                                         <!-- Background when Checked (Idle) -->
                                         <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="#00E5FF"/>
@@ -523,7 +530,7 @@
                                         <TextBlock VerticalAlignment="Center" Text="Ocean" Style="{StaticResource TitleTextBlockStyle}"/>
                                     </StackPanel>
                                 </ToggleButton>
-                                <ToggleButton Name="tglNeon" Checked="tglNeon_Checked" Unchecked="tglNeon_Checked" Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                <ToggleButton Unchecked="tgl_Unchecked" Name="tglNeon" Checked="tglNeon_Checked" Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                                     <ToggleButton.Resources>
                                         <!-- Background when Checked (Idle) -->
                                         <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="#00FF2B"/>
@@ -547,10 +554,10 @@
 
                                     <StackPanel Orientation="Horizontal" Spacing="20">
                                         <Image Source="/Assets/neonpreview.png" Width="490"/>
-                                        <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}" Text="Neon" Style="{StaticResource TitleTextBlockStyle}"/>
+                                        <TextBlock VerticalAlignment="Center" FontFamily="/Assets/Themes/NeonGlow/themefont.ttf#Beon" Text="Neon" Style="{StaticResource TitleTextBlockStyle}"/>
                                     </StackPanel>
                                 </ToggleButton>
-                                <ToggleButton Name="tglSpace" Checked="tglSpace_Checked" Unchecked="tglSpace_Checked" Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                <ToggleButton Unchecked="tgl_Unchecked" Name="tglSpace" Checked="tglSpace_Checked" Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                                     <ToggleButton.Resources>
                                         <!-- Background when Checked (Idle) -->
                                         <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="#E6E6E6"/>
@@ -573,7 +580,7 @@
                                     </ToggleButton.Resources>
                                     <StackPanel Orientation="Horizontal" Spacing="20">
                                         <Image Source="/Assets/spacepreview.png" Width="490"/>
-                                        <TextBlock VerticalAlignment="Center"  FontFamily="{StaticResource GlobalFontHolder}" Text="Space" Style="{StaticResource TitleTextBlockStyle}"/>
+                                        <TextBlock VerticalAlignment="Center"  FontFamily="/Assets/Themes/Space/themefont.ttf#Rajdhani Medium" Text="Space" Style="{StaticResource TitleTextBlockStyle}"/>
                                     </StackPanel>
                                 </ToggleButton>
                             </StackPanel>

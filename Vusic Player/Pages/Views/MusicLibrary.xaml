@@ -47,7 +47,7 @@ AlwaysUseFallback="False"/>
                 </Button>
 
 
-                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"   Content="View Entire Library" Click="hypViewEntireLib_Click" FontSize="16"  Grid.Row="0"></HyperlinkButton>
+                <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   FontFamily="{StaticResource GlobalFontHolder}"   Content="View Entire Library" Click="hypViewEntireLib_Click" FontSize="16"  Grid.Row="0"></HyperlinkButton>
             </StackPanel>
             <Expander Grid.Row="1" 
           Header="Recently Played"

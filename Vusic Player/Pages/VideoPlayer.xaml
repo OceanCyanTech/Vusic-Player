@@ -758,7 +758,10 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                         <MenuFlyoutSeparator Grid.Row="3"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Episodes" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                         <SelectorBar SelectionChanged="selbarSeasons_SelectionChanged" Name="selbarSeasons" Grid.Row="5">
-
+                            <SelectorBar.Resources>
+                                <SolidColorBrush x:Key="SelectorBarItemPillFill" 
+                         Color="{StaticResource GlobalAccentColor}"/>
+                            </SelectorBar.Resources>
                         </SelectorBar>
                         <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtSeasonEpisodeCount" Text="Loading episodes..." Grid.Row="6" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                         <Grid Visibility="Collapsed" HorizontalAlignment="Center" Grid.Row="7" Name="grdNoEpisodes" RowSpacing="20">
@@ -882,7 +885,7 @@ Name="txtBufferDuration" IsTextSelectionEnabled="True"/>
                             <ui:Effects.Shadow>
                                 <ui:AttachedDropShadow 
 x:Name="NeonGlow"
-Color="{x:Bind Glow.GlowColor, Mode=OneWay}" 
+Color="#00FF2B" 
 BlurRadius="30" 
                             CastTo="{x:Bind GlowSurround}"
 Opacity="0.9" 

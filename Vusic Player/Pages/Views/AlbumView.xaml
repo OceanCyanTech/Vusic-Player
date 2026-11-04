@@ -198,7 +198,7 @@ ToolTipService.ToolTip="Set Album Cover">
                                 <PersonPicture Width="60" Grid.Column="0" Name="ppArtist" Tapped="ppArtist_Tapped"  ProfilePicture="{Binding ArtistThumbnailImage}" Margin="0, 0, 10, 0" />
                                 <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                                     <HyperlinkButton Padding="0" ToolTipService.ToolTip="{Binding ArtistName}" Click="HyperlinkButton_Click" Margin="0, 0, 0, 5" Foreground="{StaticResource TextFillColorSecondaryBrush}">
-                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding ArtistName}"  Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
+                                        <TextBlock    FontFamily="{StaticResource GlobalFontHolder}" Text="{Binding ArtistName}"  Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                                     </HyperlinkButton>
                                 </StackPanel>
                             </Grid>

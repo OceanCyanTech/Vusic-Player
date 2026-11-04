@@ -341,6 +341,7 @@ where T : DependencyObject
         private void btnPrimary_Click(object sender, RoutedEventArgs e)
         {
             PrimaryRequested?.Invoke();
+            HideDialog();
         }
 
         private void ChangeDialogSize_Click(object sender, RoutedEventArgs e)

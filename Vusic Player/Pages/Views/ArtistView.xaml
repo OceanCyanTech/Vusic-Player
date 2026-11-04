@@ -294,6 +294,10 @@ ToolTipService.ToolTip="Set Artist Cover">
                 </StackPanel>
             </StackPanel>
             <SelectorBar Name="selBarMain" SelectionChanged="selBarMain_SelectionChanged" Grid.Row="1">
+                <SelectorBar.Resources>
+                    <SolidColorBrush x:Key="SelectorBarItemPillFill" 
+  Color="{StaticResource GlobalAccentColor}"/>
+                </SelectorBar.Resources>
                 <SelectorBar.Items>
                     <SelectorBarItem Name="selBarItemMostPlayed"  FontSize="18"  IsSelected="True" Text="Most Played"/>
                     <SelectorBarItem Name="selBarItemAlbum" FontSize="18" Margin="10, 0"  Text="Albums"/>

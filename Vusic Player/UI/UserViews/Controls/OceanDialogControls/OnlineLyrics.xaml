@@ -132,7 +132,7 @@ CornerRadius="16"
                     </ListView>
                     <MenuFlyoutSeparator Grid.Row="6"/>
                     <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttJustSaved">
-                        <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Name="hypPathSaved" Click="hypPathSaved_Click"/>
+                        <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   FontFamily="{StaticResource GlobalFontHolder}"  Name="hypPathSaved" Click="hypPathSaved_Click"/>
                     </TeachingTip>
                 </Grid>
             </Grid>

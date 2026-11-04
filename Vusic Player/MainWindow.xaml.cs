@@ -5,6 +5,7 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Diagnostics;
@@ -155,26 +156,26 @@ namespace Vusic_Player
                 var font = currentSettings.FontFamily;
                 var theme = currentSettings.Theme;
                 ThemeManager.Instance.GlobalTheme = theme;
+                IconHolder.Instance.Play = $"ms-appx:///Assets/Themes/{theme}/play.png";
+                IconHolder.Instance.Pause = $"ms-appx:///Assets/Themes/{theme}/pause.png";
+                IconHolder.Instance.PlaylistIcon = $"ms-appx:///Assets/Themes/{theme}/playlisticon.png";
+                IconHolder.Instance.DefaultVideo = $"ms-appx:///Assets/Themes/{theme}/defaultvideo.png";
+                MediaPlaybackController.Instance.Thumbnail = IconHolder.Instance.Play;
                 if (theme == "Ocean")
                 {
 
                 }
                 else if (theme == "NeonGlow")
                 {
-                    var customFont = new FontFamily("ms-appx:///Assets/Themes/NeonGlow/themefont.ttf#Beon");
-                    Application.Current.Resources["GlobalFontHolder"] = customFont;
-
-                    // Assign Windows.UI.Color, NOT SolidColorBrush:
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 7, 177, 35);
                 }
                 else if (theme == "Space")
                 {
-                    var customFont = new FontFamily("ms-appx:///Assets/Themes/Space/themefont.ttf#Rajdhani Medium");
-                    Application.Current.Resources["GlobalFontHolder"] = customFont;
-
-                    // Assign Windows.UI.Color, NOT SolidColorBrush:
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 206, 206, 206);
                 }
+                Application.Current.Resources["GlobalFontHolder"] = new FontFamily(font);
+
+                await SettingsLoader.SaveSettingsAsync(currentSettings);
                 //    Application.Current.Resources["GlobalFontHolder"] = new FontFamily(font);
 
             }

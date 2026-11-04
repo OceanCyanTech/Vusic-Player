@@ -94,10 +94,10 @@ Stretch="UniformToFill"/>
                                     <ColumnDefinition></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <HyperlinkButton Foreground="#CECECE"  FontFamily="{StaticResource GlobalFontHolder}"  Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}">
+                                <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   FontFamily="{StaticResource GlobalFontHolder}"  Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}">
 
                                 </HyperlinkButton>
-                                <HyperlinkButton  Foreground="#CECECE"   FontFamily="{StaticResource GlobalFontHolder}" Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName,Mode=OneWay}">
+                                <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   FontFamily="{StaticResource GlobalFontHolder}" Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName,Mode=OneWay}">
 
                                 </HyperlinkButton>
                             </Grid>

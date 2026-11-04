@@ -454,7 +454,7 @@ namespace Vusic_Player.Configuration
             {
                 var bitm = new BitmapImage(new Uri(IconHolder.Instance.Pause));
                 UIController.PlayPauseToolTip = "Pause";
-                UIController.Thumbnail = bitm;
+                UIController.Thumbnail = IconHolder.Instance.Pause;
                 maintimer?.Start();
             });
         }
@@ -602,7 +602,7 @@ namespace Vusic_Player.Configuration
                 var bitm = new BitmapImage(new Uri(IconHolder.Instance.Play));
                 UIController.PlayPauseToolTip = "Play";
 
-                UIController.Thumbnail = bitm;
+                UIController.Thumbnail = IconHolder.Instance.Play;
                 maintimer?.Stop();
 
             });
@@ -646,7 +646,7 @@ namespace Vusic_Player.Configuration
                     {
                         var bitm = new BitmapImage(new Uri(IconHolder.Instance.Pause));
                         UIController.PlayPauseToolTip = "Pause";
-                        UIController.Thumbnail = bitm;
+                        UIController.Thumbnail = IconHolder.Instance.Pause;
                         maintimer?.Start();
                     });
                 }
@@ -701,7 +701,7 @@ namespace Vusic_Player.Configuration
             {
                 var bitm = new BitmapImage(new Uri(IconHolder.Instance.Pause));
                 UIController.PlayPauseToolTip = "Pause";
-                UIController.Thumbnail = bitm;
+                UIController.Thumbnail = IconHolder.Instance.Pause;
                 maintimer?.Start();
             });
             NavigateToVideoPage();
@@ -803,7 +803,7 @@ namespace Vusic_Player.Configuration
 
                         UIController.CurrentPosition = 0;
                         UIController.PlayPauseToolTip = "Play";
-                        UIController.Thumbnail = bitm;
+                        UIController.Thumbnail = IconHolder.Instance.Play;
                         maintimer?.Stop();
 
                         // QueueService.PlayNext();

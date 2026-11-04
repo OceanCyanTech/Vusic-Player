@@ -107,7 +107,7 @@
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="{Binding Name}" Grid.Column="0"></TextBlock>
-                                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"    Content="{Binding Path}" Click="HyperlinkButton_Click" Grid.Column="1"></HyperlinkButton>
+                                <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   FontFamily="{StaticResource GlobalFontHolder}"    Content="{Binding Path}" Click="HyperlinkButton_Click" Grid.Column="1"></HyperlinkButton>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

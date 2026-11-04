@@ -152,7 +152,7 @@
                 <StackPanel Name="txtInvalidFormat" Visibility="Collapsed" Orientation="Horizontal" Spacing="10">
                     <TextBlock   FontFamily="{StaticResource GlobalFontHolder}"   Style="{StaticResource BodyStrongTextBlockStyle}" Text="Invalid Format" Foreground="Red" />
 
-                    <HyperlinkButton Content="View Valid Formats" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player/blob/master/Wiki/Features/Usage/ValidTimecodeFormats.md"></HyperlinkButton>
+                    <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="View Valid Formats" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player/blob/master/Wiki/Features/Usage/ValidTimecodeFormats.md"></HyperlinkButton>
                 </StackPanel>
                 <NumberBox FontFamily="{StaticResource GlobalFontHolder}"    ValueChanged="numOffset_ValueChanged" Header="Offset (Milliseconds)" Value="0" Name="numOffset"/>
                 <Button FontFamily="{StaticResource GlobalFontHolder}"    Name="btnFontSettings" Content="Font Settings">

@@ -211,7 +211,7 @@ namespace Vusic_Player.Pages.Views
 
         }
         List<FontStyleModel> systemFonts = new List<FontStyleModel>();
-        private void LoadFonts()
+        private async void LoadFonts()
         {
             var systemFontstemp = Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies()
                               .OrderBy(f => f)
@@ -226,13 +226,25 @@ namespace Vusic_Player.Pages.Views
                     FontName = font
                 });
             }
-
+            systemFonts.Add(new FontStyleModel { FontFam = new FontFamily("ms-appx:///Assets/Themes/NeonGlow/themefont.tff#Beon"), FontName = "Beon" });
+            systemFonts.Add(new FontStyleModel { FontFam = new FontFamily("ms-appx:///Assets/Themes/Space/themefont.tff#Rajdhani Medium"), FontName = "Rajdhani Medium" });
             cmbFontFamilies.ItemsSource = systemFonts;
 
             if (Application.Current.Resources.TryGetValue("GlobalFontHolder", out object resource)
                 && resource is FontFamily currentFont)
             {
+                Debug.WriteLine("CURRENT FONT FAMILY " + currentFont.Source);
+                
                 string fontName = currentFont.Source;
+
+                if (currentFont.Source.Contains("/Space/themefont.ttf"))
+                {
+                    fontName = "Rajdhani Medium";
+                }
+                else if (currentFont.Source.Contains("/NeonGlow/themefont.ttf"))
+                {
+                    fontName = "Beon";
+                }
                 var def = systemFonts.FirstOrDefault(p => p.FontName.Equals(fontName, StringComparison.OrdinalIgnoreCase))
                        ?? systemFonts.FirstOrDefault(p => p.FontName.Equals("Segoe UI Variable Text", StringComparison.OrdinalIgnoreCase))
                        ?? systemFonts.FirstOrDefault();
@@ -1825,23 +1837,30 @@ namespace Vusic_Player.Pages.Views
             OceanContentDialog.Show("Keyboard Shortcuts Guide", "", "", "Close", OceanDialogWindow.ContentType.KeyboardShortcuts, OceanContentDialogDefault.Close, XamlRoot, 600, 900, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "");
         }
         bool isChecking = false;
-        private void tglOcean_Checked(object sender, RoutedEventArgs e)
+        private async void tglOcean_Checked(object sender, RoutedEventArgs e)
         {
             if (isChecking) return;
             isChecking = true;
 
             tglNeon.IsChecked = false;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.FontFamily = "Segoe UI Variable Text";
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
             tglSpace.IsChecked = false; SaveTheme();
             isChecking = false;
         }
 
-        private void tglNeon_Checked(object sender, RoutedEventArgs e)
+        private async void tglNeon_Checked(object sender, RoutedEventArgs e)
         {
             if (isChecking) return;
             isChecking = true;
             tglOcean.IsChecked = false;
             tglSpace.IsChecked = false;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.FontFamily = "ms-appx:///Assets/Themes/NeonGlow/themefont.ttf#Beon";
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
             SaveTheme(); isChecking = false;
+
 
         }
         private async void LoadTheme()
@@ -1852,7 +1871,7 @@ namespace Vusic_Player.Pages.Views
             tglOcean.IsChecked = false;
             tglSpace.IsChecked = false;
 
-            if (currenttheme == "Neon")
+            if (currenttheme == "NeonGlow")
             {
                 tglNeon.IsChecked = true;
             }
@@ -1880,17 +1899,31 @@ namespace Vusic_Player.Pages.Views
             {
                 currentSettings.Theme = "NeonGlow";
             }
+            stkRestartApp.Visibility = Visibility.Visible;
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
+        private void tgl_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // If we are programmatically swapping themes, allow the uncheck
+            if (isChecking) return;
 
+            // If the user directly clicked an already-checked button to turn it off, force it back on
+            if (sender is ToggleButton tgl)
+            {
+                tgl.IsChecked = true;
+            }
+        }
 
-        private void tglSpace_Checked(object sender, RoutedEventArgs e)
+        private async void tglSpace_Checked(object sender, RoutedEventArgs e)
         {
             if (isChecking) return;
             isChecking = true;
 
             tglNeon.IsChecked = false;
             tglOcean.IsChecked = false;
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.FontFamily = "ms-appx:///Assets/Themes/Space/themefont.ttf#Rajdhani Medium";
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
             SaveTheme();
             isChecking = false;
         }
