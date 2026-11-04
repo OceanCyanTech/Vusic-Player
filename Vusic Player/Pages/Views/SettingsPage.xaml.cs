@@ -42,6 +42,7 @@ namespace Vusic_Player.Pages.Views
         {
             InitializeComponent();
             LoadSettings();
+            LoadTheme();
         }
         private async void LoadSettings()
         {
@@ -945,7 +946,7 @@ namespace Vusic_Player.Pages.Views
         }
         private static readonly HttpClient _httpClient = new HttpClient();
         private const string VersionEndpoint = "https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/version.json";
-        
+
         public async Task<bool> IsUpdateAvailableAsync()
         {
             try
@@ -1486,7 +1487,7 @@ namespace Vusic_Player.Pages.Views
             rchEditBoxStatements.IsReadOnly = true;
             txtStatementHeader.Text = "Open Source ";
         }
-       public void SettingsPageNavigate(string setting)
+        public void SettingsPageNavigate(string setting)
         {
             if (setting == "Skip Duration" || setting == "Seek Duration")
             {
@@ -1822,6 +1823,76 @@ namespace Vusic_Player.Pages.Views
         {
             if (App.MainWindowInstance == null) return;
             OceanContentDialog.Show("Keyboard Shortcuts Guide", "", "", "Close", OceanDialogWindow.ContentType.KeyboardShortcuts, OceanContentDialogDefault.Close, XamlRoot, 600, 900, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "");
+        }
+        bool isChecking = false;
+        private void tglOcean_Checked(object sender, RoutedEventArgs e)
+        {
+            if (isChecking) return;
+            isChecking = true;
+
+            tglNeon.IsChecked = false;
+            tglSpace.IsChecked = false; SaveTheme();
+            isChecking = false;
+        }
+
+        private void tglNeon_Checked(object sender, RoutedEventArgs e)
+        {
+            if (isChecking) return;
+            isChecking = true;
+            tglOcean.IsChecked = false;
+            tglSpace.IsChecked = false;
+            SaveTheme(); isChecking = false;
+
+        }
+        private async void LoadTheme()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var currenttheme = currentSettings.Theme;
+            tglNeon.IsChecked = false;
+            tglOcean.IsChecked = false;
+            tglSpace.IsChecked = false;
+
+            if (currenttheme == "Neon")
+            {
+                tglNeon.IsChecked = true;
+            }
+            else if (currenttheme == "Ocean")
+            {
+                tglOcean.IsChecked = true;
+            }
+            else if (currenttheme == "Space")
+            {
+                tglSpace.IsChecked = true;
+            }
+        }
+        private async void SaveTheme()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if (tglSpace.IsChecked == true)
+            {
+                currentSettings.Theme = "Space";
+            }
+            else if (tglOcean.IsChecked == true)
+            {
+                currentSettings.Theme = "Ocean";
+            }
+            else if (tglNeon.IsChecked == true)
+            {
+                currentSettings.Theme = "NeonGlow";
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+
+        private void tglSpace_Checked(object sender, RoutedEventArgs e)
+        {
+            if (isChecking) return;
+            isChecking = true;
+
+            tglNeon.IsChecked = false;
+            tglOcean.IsChecked = false;
+            SaveTheme();
+            isChecking = false;
         }
     }
 }

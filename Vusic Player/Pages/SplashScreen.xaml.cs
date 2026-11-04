@@ -27,7 +27,7 @@ public sealed partial class SplashScreen : Page
         counter--;
         if (counter == 0)
         {
-            Frame.Navigate(typeof(OptimizeApp));
+            Frame.Navigate(typeof(MainPage));
         }
     }
 }

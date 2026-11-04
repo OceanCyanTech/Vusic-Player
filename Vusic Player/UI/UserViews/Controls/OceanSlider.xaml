@@ -69,7 +69,7 @@
                 HorizontalAlignment="Left"
                 Width="0" Margin="0,0,0,0">
             <Border.Background>
-                <ImageBrush Stretch="UniformToFill" ImageSource="/Assets/Themes/NeonGlow/SliderProgress.png"/>
+                <ImageBrush Stretch="UniformToFill" ImageSource="{Binding SliderProgress ,Source={StaticResource GlobalIconHolder}}"/>
             </Border.Background>
         </Border>
 
@@ -92,7 +92,7 @@
                      StrokeThickness="3"
                      Canvas.Top="8">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="/Assets/Themes/NeonGlow/SliderThumb.png"/>
+                    <ImageBrush ImageSource="{Binding SliderThumb ,Source={StaticResource GlobalIconHolder}}"/>
                 </Ellipse.Fill>
             </Ellipse>
         </Canvas>

@@ -49,7 +49,7 @@ namespace Vusic_Player.Pages
 
                     if (currentSettings.IsSplashEnabled == false)
                     {
-                        Frame.Navigate(typeof(OptimizeApp));
+                        Frame.Navigate(typeof(MainPage));
                     }
                     else
                     {
@@ -72,7 +72,7 @@ namespace Vusic_Player.Pages
 
             if (currentSettings.IsSplashEnabled == false)
             {
-                Frame.Navigate(typeof(OptimizeApp));
+                Frame.Navigate(typeof(MainPage));
             }
             else
             {

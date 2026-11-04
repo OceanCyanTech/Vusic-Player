@@ -18,8 +18,8 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _reseticon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/reseticon.png";
         private string _genreonline = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/genreonline.png";
         private string _genrelocal = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/genrelocal.png";
-        private string _pageicon = "ms-appx:///Assets/Themes/Ocean/pageicon.png";
-        private string _pause = "ms-appx:///Assets/Themes/Ocean/pause.png";
+        private string _pageicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/pageicon.png";
+        private string _pause = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/pause.png";
 
         private string _viewfulllyrics = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/viewfulllyrics.png";
         private string _personalize = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/personalize.png";
@@ -56,6 +56,8 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _previous = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/previous.png";
         private string _speed = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/speedicon.png";
         private string _miniplayer = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/miniplayer.png";
+        private string _sliderprogress = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/SliderProgress.png";
+        private string _sliderthumb = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/SliderThumb.png";
         private string _play = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/play.png";
         private string _options = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/options.png";
         private string _expandedicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/expandedicon.png";
@@ -128,6 +130,30 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
                 if (_settingIcon != value)
                 {
                     _settingIcon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string SliderThumb
+        {
+            get => _sliderthumb;
+            set
+            {
+                if (_sliderthumb != value)
+                {
+                    _sliderthumb = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string SliderProgress
+        {
+            get => _sliderprogress;
+            set
+            {
+                if (_sliderprogress != value)
+                {
+                    _sliderprogress = value;
                     OnPropertyChanged();
                 }
             }

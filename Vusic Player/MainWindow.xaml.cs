@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
@@ -88,7 +89,7 @@ namespace Vusic_Player
             InitializeComponent();
             EngineService.StartEngine();
             LoadVersion();
-            LoadFonts();
+            LoadThemes();
             this.ExtendsContentIntoTitleBar = true;
             rootGrid.Loaded += RootGrid_Loaded;
 
@@ -138,7 +139,7 @@ namespace Vusic_Player
 
                 if (currentSettings.IsSplashEnabled == false)
                 {
-                    frmMain.Navigate(typeof(OptimizeApp));
+                    frmMain.Navigate(typeof(MainPage));
                 }
                 else
                 {
@@ -146,13 +147,36 @@ namespace Vusic_Player
                 }
             }
         }
-        private async void LoadFonts()
+        private async void LoadThemes()
         {
             try
             {
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 var font = currentSettings.FontFamily;
-                Application.Current.Resources["GlobalFontHolder"] = new FontFamily(font);
+                var theme = currentSettings.Theme;
+                ThemeManager.Instance.GlobalTheme = theme;
+                if (theme == "Ocean")
+                {
+
+                }
+                else if (theme == "NeonGlow")
+                {
+                    var customFont = new FontFamily("ms-appx:///Assets/Themes/NeonGlow/themefont.ttf#Beon");
+                    Application.Current.Resources["GlobalFontHolder"] = customFont;
+
+                    // Assign Windows.UI.Color, NOT SolidColorBrush:
+                    Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 7, 177, 35);
+                }
+                else if (theme == "Space")
+                {
+                    var customFont = new FontFamily("ms-appx:///Assets/Themes/Space/themefont.ttf#Rajdhani Medium");
+                    Application.Current.Resources["GlobalFontHolder"] = customFont;
+
+                    // Assign Windows.UI.Color, NOT SolidColorBrush:
+                    Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 206, 206, 206);
+                }
+                //    Application.Current.Resources["GlobalFontHolder"] = new FontFamily(font);
+
             }
             catch
             {

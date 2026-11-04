@@ -14,7 +14,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
     public class ThemeManager : INotifyPropertyChanged
     {
         #region Back Properties
-        private string _globaltheme = "NeonGlow";
+        private string _globaltheme = "Space";
         private string _hyperlinkForeground = "Cyan";
         #endregion
         public static ThemeManager Instance { get; } = new ThemeManager();

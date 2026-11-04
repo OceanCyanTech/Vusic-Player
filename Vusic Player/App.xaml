@@ -23,6 +23,7 @@
     FalseBrush="White"/>
             <FontFamily x:Key="GlobalFontHolder">Candara</FontFamily>
             <customization:IconHolder x:Key="GlobalIconHolder"/>
+            <Color x:Key="GlobalAccentColor">Cyan</Color>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

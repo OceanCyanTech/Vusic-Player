@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Diagnostics;
@@ -8,6 +9,8 @@ using System.Linq;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.Helper.UI.Customization;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Experience;
@@ -47,7 +50,7 @@ namespace Vusic_Player
         }
 
 
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             var activatedArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
             if (activatedArgs.Kind == ExtendedActivationKind.File)
@@ -93,7 +96,11 @@ namespace Vusic_Player
                     }
                 }
             }
-            DatabaseService.InitializeDatabase();
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var theme = currentSettings.Theme;
+            ThemeManager.Instance.GlobalTheme = theme;
+            var customFont = new FontFamily("ms-appx:///Assets/Themes/NeonGlow/themefont.ttf#Beon");
+            Application.Current.Resources["GlobalFontHolder"] = customFont; DatabaseService.InitializeDatabase();
             MainWindow.ShowWindow();
             FirstLaunchExperience wind = new FirstLaunchExperience();
             wind.Activate();

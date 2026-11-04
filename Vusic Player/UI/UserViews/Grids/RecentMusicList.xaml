@@ -31,7 +31,7 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <HyperlinkButton  Content="View Full History" Click="btnAllRecents_Click"></HyperlinkButton>
+                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Content="View Full History" Click="btnAllRecents_Click"></HyperlinkButton>
 
             </StackPanel>
             <Button Grid.Row="1" Name="btnPlayAll" Click="btnPlayAll_Click" CornerRadius="12" >

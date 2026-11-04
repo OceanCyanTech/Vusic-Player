@@ -33,10 +33,16 @@ Stretch="UniformToFill"/>
                             <ColumnDefinition MaxWidth="700" MinWidth="280" x:Name="ColumnMaster" Width="300"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <NavigationView  IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="nvgMain_BackRequested" Grid.Column="0" Background="Transparent" Name="nvgMain" PaneDisplayMode="Top" IsSettingsVisible="True" SelectionChanged="nvgMain_SelectionChanged">
+                            <NavigationView.Resources>
+                                <!-- The default selection indicator bar color -->
+                                <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" 
+                         Color="{StaticResource GlobalAccentColor}"/>
 
+                           
+                            </NavigationView.Resources>
                             <NavigationView.MenuItems>
                                 <NavigationViewItem   FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitHome" Content="Home" Tag="HomePage"></NavigationViewItem>
-                                <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitMusic" Content="Music Library" Tag="MusicLibrary"></NavigationViewItem>
+                                <NavigationViewItem  FontFamily="{ThemeResource GlobalFontHolder}"  Name="nvgitMusic" Content="Music Library" Tag="MusicLibrary"></NavigationViewItem>
                                 <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitVideo" Content="Video Library"></NavigationViewItem>
                                 <NavigationViewItem  FontFamily="{StaticResource GlobalFontHolder}"  Name="nvgitQueue" Content="Play Queue" Visibility="Visible"></NavigationViewItem>
                             </NavigationView.MenuItems>
@@ -48,7 +54,7 @@ Stretch="UniformToFill"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <playback_views:MasterSearchControl Grid.Column="1" MinWidth="300" Margin="40, 0" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="0" Name="txtHeader" Text=""/>
+                                    <TextBlock  FontFamily="{ThemeResource GlobalFontHolder}"  Grid.Column="0" Name="txtHeader" Text=""/>
                                 </Grid>
                             </NavigationView.Header>
 
@@ -88,10 +94,10 @@ Stretch="UniformToFill"/>
                                     <ColumnDefinition></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <HyperlinkButton Foreground="#00FF2B"  FontFamily="{StaticResource GlobalFontHolder}"  Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}">
+                                <HyperlinkButton Foreground="#CECECE"  FontFamily="{StaticResource GlobalFontHolder}"  Click="HyperlinkButton_Click" Grid.Column="0" Content="{x:Bind mediacontroller.ArtistDisplayName, Mode=OneWay}">
 
                                 </HyperlinkButton>
-                                <HyperlinkButton  Foreground="#00FF2B"   FontFamily="{StaticResource GlobalFontHolder}" Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName,Mode=OneWay}">
+                                <HyperlinkButton  Foreground="#CECECE"   FontFamily="{StaticResource GlobalFontHolder}" Click="HyperlinkButton_Click_1" Grid.Column="1" HorizontalAlignment="Right" Content="{x:Bind mediacontroller.AlbumDisplayName,Mode=OneWay}">
 
                                 </HyperlinkButton>
                             </Grid>

@@ -14,13 +14,13 @@
     <Grid  Margin="30, 30">
         <NavigationView IsBackButtonVisible="Collapsed" PaneDisplayMode="Top" SelectionChanged="nvgNavigationMain_SelectionChanged" IsSettingsVisible="False"  Name="nvgNavigationMain">
             <NavigationView.MenuItems>
-                <NavigationViewItem Name="nvgitPlayback" Content="General"/>
-                <NavigationViewItem Name="nvgitHomePage" Content="Home Page Options"/>
+                <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"   Name="nvgitPlayback" Content="General"/>
+                <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"   Name="nvgitHomePage" Content="Home Page Options"/>
 
-                <NavigationViewItem Name="nvgitMusicOptions" Content="Music Options"/>
-                <NavigationViewItem Name="nvgitVideoOptions" Content="Video Options"/>
-                <NavigationViewItem Name="nvgitAppSettings" Content="App Config"/>
-                <NavigationViewItem Name="nvgitAboutHelp" Content="About &amp; Help"/>
+                <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"   Name="nvgitMusicOptions" Content="Music Options"/>
+                <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"   Name="nvgitVideoOptions" Content="Video Options"/>
+                <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"   Name="nvgitAppSettings" Content="App Config"/>
+                <NavigationViewItem FontFamily="{StaticResource GlobalFontHolder}"   Name="nvgitAboutHelp" Content="About &amp; Help"/>
             </NavigationView.MenuItems>
             <ScrollViewer>
                 <Grid Background="Transparent" Margin="30, 30">
@@ -494,27 +494,88 @@
                                 <Button FontFamily="{StaticResource GlobalFontHolder}"   Style="{StaticResource AccentButtonStyle}" Content="Restart Vusic Player" Click="btnRestartVusicPlayer_Click" Name="btnRestartVusicPlayer"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Spacing="30" >
-                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtChangeTheme" Text="Change Theme" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtChangeTheme" Text="Change Theme" Style="{StaticResource TitleTextBlockStyle}"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Spacing="30">
-                                <Button Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-                                    <StackPanel Orientation="Vertical" Spacing="20">
-                                        <Image Width="40"/>
-                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Ocean" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                            <StackPanel  Spacing="30">
+                                <ToggleButton Name="tglOcean" Unchecked="tglOcean_Checked" Checked="tglOcean_Checked" Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                    <ToggleButton.Resources>
+                                        <!-- Background when Checked (Idle) -->
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="#00E5FF"/>
+
+                                        <!-- Background when Checked + Mouse Hover -->
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="#33EAFF"/>
+
+                                        <!-- Background when Checked + Pressed -->
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPressed" Color="#00B8CC"/>
+
+                                        <!-- Border colors when Checked -->
+                                        <SolidColorBrush x:Key="ToggleButtonBorderChecked" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBorderCheckedPointerOver" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBorderCheckedPressed" Color="Transparent"/>
+
+                                        <!-- Text / Content color when Checked -->
+                                        <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="#0B0D13"/>
+                                    </ToggleButton.Resources>
+                                    <StackPanel Orientation="Horizontal" Spacing="20">
+                                        <Image Source="/Assets/oceanpreview.png" Width="490"/>
+                                        <TextBlock VerticalAlignment="Center" Text="Ocean" Style="{StaticResource TitleTextBlockStyle}"/>
                                     </StackPanel>
-                                </Button>
-                                <Button Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-                                    <StackPanel Orientation="Vertical" Spacing="20">
-                                        <Image Width="40"/>
-                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Neon" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                </ToggleButton>
+                                <ToggleButton Name="tglNeon" Checked="tglNeon_Checked" Unchecked="tglNeon_Checked" Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                    <ToggleButton.Resources>
+                                        <!-- Background when Checked (Idle) -->
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="#00FF2B"/>
+
+                                        <!-- Background when Checked + Mouse Hover -->
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="#2CFD4F"/>
+
+                                        <!-- Background when Checked + Pressed -->
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPressed" Color="#07B123"/>
+
+                                        <!-- Border colors when Checked -->
+                                        <SolidColorBrush x:Key="ToggleButtonBorderChecked" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBorderCheckedPointerOver" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBorderCheckedPressed" Color="Transparent"/>
+
+                                        <!-- Text / Content color when Checked -->
+                                        <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="#0B0D13"/>
+                                    </ToggleButton.Resources>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="20">
+                                        <Image Source="/Assets/neonpreview.png" Width="490"/>
+                                        <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}" Text="Neon" Style="{StaticResource TitleTextBlockStyle}"/>
                                     </StackPanel>
-                                </Button>
-                                <Button Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-                                    <StackPanel Orientation="Vertical" Spacing="20">
-                                        <Image Width="40"/>
-                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Space" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                </ToggleButton>
+                                <ToggleButton Name="tglSpace" Checked="tglSpace_Checked" Unchecked="tglSpace_Checked" Background="Transparent" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                    <ToggleButton.Resources>
+                                        <!-- Background when Checked (Idle) -->
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="#E6E6E6"/>
+
+                                        <!-- Background when Checked + Mouse Hover -->
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="#CECECE"/>
+
+                                        <!-- Background when Checked + Pressed -->
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPressed" Color="#C8C8C8"/>
+
+                                        <!-- Border colors when Checked -->
+                                        <SolidColorBrush x:Key="ToggleButtonBorderChecked" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBorderCheckedPointerOver" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBorderCheckedPressed" Color="Transparent"/>
+
+                                        <!-- Text / Content color when Checked -->
+                                        <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="#0B0D13"/>
+                                    </ToggleButton.Resources>
+                                    <StackPanel Orientation="Horizontal" Spacing="20">
+                                        <Image Source="/Assets/spacepreview.png" Width="490"/>
+                                        <TextBlock VerticalAlignment="Center"  FontFamily="{StaticResource GlobalFontHolder}" Text="Space" Style="{StaticResource TitleTextBlockStyle}"/>
                                     </StackPanel>
-                                </Button>
+                                </ToggleButton>
                             </StackPanel>
                         </StackPanel>
                     </Grid>
