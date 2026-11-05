@@ -32,7 +32,28 @@
         </Button>
         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind AddedFiles.Count, Converter={StaticResource CountToAudioFilesConv}, Mode=OneWay}" Grid.Row="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind ProcessedFiles.Count, Converter={StaticResource CountToAudioFilesProcessedConv}, Mode=OneWay}" Grid.Row="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-        <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnConvertAll" Click="btnConvertAll_Click" Content="Convert All" Style="{StaticResource AccentButtonStyle}" Grid.Row="5"/>
+        <Button FontFamily="{StaticResource GlobalFontHolder}"  Name="btnConvertAll" Click="btnConvertAll_Click" Content="Convert All" Style="{StaticResource AccentButtonStyle}" Grid.Row="5" Background="{StaticResource GlobalAccentColor}" >
+            <Button.Resources>
+                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                <!-- Pointer Over (Hover) -->
+                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                <!-- Pressed State -->
+                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                <!-- Disabled State -->
+                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+            </Button.Resources>
+        </Button>
         <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -136,7 +157,28 @@
                             </Button.Flyout>
                         </Button>
                         </StackPanel>
-                        <Button  FontFamily="{StaticResource GlobalFontHolder}"   Name="btnConvert" IsEnabled="{Binding IsEnabled}" Click="btnConvert_Click" Content="Convert" Style="{StaticResource AccentButtonStyle}" Grid.Column="5"/>
+                        <Button  FontFamily="{StaticResource GlobalFontHolder}"   Name="btnConvert" IsEnabled="{Binding IsEnabled}" Click="btnConvert_Click" Content="Convert" Style="{StaticResource AccentButtonStyle}" Grid.Column="5" Background="{StaticResource GlobalAccentColor}" >
+                            <Button.Resources>
+                                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                <!-- Pointer Over (Hover) -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                <!-- Pressed State -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                <!-- Disabled State -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                            </Button.Resources>
+                        </Button>
                         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Column="6">
                             <Image ToolTipService.ToolTip="{Binding Info}" Width="20" Source="{Binding ImageState}"/>
                             <ProgressBar Grid.Column="6" Value="{Binding Progress}" Width="100" Maximum="100"/>

@@ -69,8 +69,13 @@
                 HorizontalAlignment="Left"
                 Width="0" Margin="0,0,0,0">
             <Border.Background>
-                <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Path=SliderProgress, Source={StaticResource GlobalIconHolder}, Mode=OneWay}"/>
+                <LinearGradientBrush StartPoint="0, 0.5" EndPoint="1, 0.5">
+                    <GradientStop Color="#00FF2B" Offset="0"/>
+                    <GradientStop Color="#1DFF96" Offset="0.5"/>
+                    <GradientStop Color="#00FF2B" Offset="1"/>
+                </LinearGradientBrush>
             </Border.Background>
+      
         </Border>
 
         <Canvas x:Name="InputLayer"

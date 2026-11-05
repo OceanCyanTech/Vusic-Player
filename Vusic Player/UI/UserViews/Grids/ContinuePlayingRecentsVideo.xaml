@@ -85,11 +85,11 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Button  Click="btnResume_Click" Grid.Column="0" Background="#00B2B2" Foreground="White" CornerRadius="8" Height="44">
+                    <Button  Click="btnResume_Click" Grid.Column="0" Foreground="White" CornerRadius="8" Height="44" Background="{StaticResource GlobalAccentColor}" >
                         <Button.Resources>
-                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Cyan" />
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerPressed}" />
                             <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
-                            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#008080" />
+                            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerOver}" />
                         </Button.Resources>
                         <StackPanel Orientation="Horizontal" Spacing="8" Padding="12,0">
                             <FontIcon Foreground="Black" Glyph="&#xE768;" />
@@ -178,9 +178,59 @@
             <StackPanel Orientation="Horizontal" Spacing="20">
 
                 <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Recents" Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
-                <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"  Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Unchecked"></CheckBox>
+                <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"  Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Unchecked">
+                    <CheckBox.Resources>
+                        <!-- Checked State (Background box fill) -->
+                        <SolidColorBrush x:Key="CheckBoxFillColorDefault" Color="{StaticResource GlobalAccentColor}"/>
+                        <SolidColorBrush x:Key="CheckBoxFillColorPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                        <SolidColorBrush x:Key="CheckBoxFillColorPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                        <SolidColorBrush x:Key="CheckBoxFillColorDisabled" Color="#2A2A2A"/>
+
+                        <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForeground" Color="#000000"/>
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPointerOver" Color="#000000"/>
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPressed" Color="#000000"/>
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundDisabled" Color="#707070"/>
+
+                        <!-- Unchecked State (Empty box outline border) -->
+                        <SolidColorBrush x:Key="CheckBoxStrokeColorDefault" Color="#808080"/>
+                        <SolidColorBrush x:Key="CheckBoxStrokeColorPointerOver" Color="#B0B0B0"/>
+                        <SolidColorBrush x:Key="CheckBoxStrokeColorPressed" Color="#606060"/>
+
+                        <!-- Text Label Foreground -->
+                        <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                    </CheckBox.Resources>
+                </CheckBox>
+
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
-                    <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"  Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Unchecked"></CheckBox>
+                    <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"  Content="Select all" Tag="Selectallcontinuewatch" Name="chckSelectAllContinuePlaying" Visibility="Visible" Checked="chckSelectAllContinuePlaying_Checked" Unchecked="chckSelectAllContinuePlaying_Unchecked">
+                        <CheckBox.Resources>
+                            <!-- Checked State (Background box fill) -->
+                            <SolidColorBrush x:Key="CheckBoxFillColorDefault" Color="{StaticResource GlobalAccentColor}"/>
+                            <SolidColorBrush x:Key="CheckBoxFillColorPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                            <SolidColorBrush x:Key="CheckBoxFillColorPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                            <SolidColorBrush x:Key="CheckBoxFillColorDisabled" Color="#2A2A2A"/>
+
+                            <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForeground" Color="#000000"/>
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPointerOver" Color="#000000"/>
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPressed" Color="#000000"/>
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundDisabled" Color="#707070"/>
+
+                            <!-- Unchecked State (Empty box outline border) -->
+                            <SolidColorBrush x:Key="CheckBoxStrokeColorDefault" Color="#808080"/>
+                            <SolidColorBrush x:Key="CheckBoxStrokeColorPointerOver" Color="#B0B0B0"/>
+                            <SolidColorBrush x:Key="CheckBoxStrokeColorPressed" Color="#606060"/>
+
+                            <!-- Text Label Foreground -->
+                            <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                        </CheckBox.Resources>
+                    </CheckBox>
+
                     <Button ToolTipService.ToolTip="Remove from Recents" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemoveFromContinueWatchingSelected_Click"  Name="btnRemoveFromContinueWatchingSelected" >
                         <StackPanel Orientation="Horizontal">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>

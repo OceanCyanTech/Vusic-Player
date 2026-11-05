@@ -168,10 +168,17 @@ namespace Vusic_Player
                 else if (theme == "NeonGlow")
                 {
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 7, 177, 35);
+                    Application.Current.Resources["CheckBoxCheckBackgroundFillChecked"] = Windows.UI.Color.FromArgb(255, 7, 177, 35);
+                    Application.Current.Resources["GlobalAccentColorPointerOver"] = Windows.UI.Color.FromArgb(255, 2, 119, 21);
+                    Application.Current.Resources["GlobalAccentColorPointerPressed"] = Windows.UI.Color.FromArgb(255, 7, 190, 37);
                 }
                 else if (theme == "Space")
                 {
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 206, 206, 206);
+                    Application.Current.Resources["CheckBoxCheckBackgroundFillChecked"] = Windows.UI.Color.FromArgb(255, 206, 206, 206);
+                    Application.Current.Resources["GlobalAccentColorPointerOver"] = Windows.UI.Color.FromArgb(255, 230, 230, 230);
+                    Application.Current.Resources["GlobalAccentColorPointerPressed"] = Windows.UI.Color.FromArgb(255, 200, 200, 200);
+
                 }
                 Application.Current.Resources["GlobalFontHolder"] = new FontFamily(font);
 

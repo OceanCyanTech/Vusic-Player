@@ -116,7 +116,28 @@ CornerRadius="16"
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Text="{x:Bind ProcessedFiles.Count, Mode=OneWay, Converter={StaticResource CountToAudioFilesProcessedConv}}" Grid.Row="0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <Button HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb" Name="btnApplyReverb" Click="btnApplyReverb_Click"/>
+                            <Button HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb" Name="btnApplyReverb" Click="btnApplyReverb_Click" Background="{StaticResource GlobalAccentColor}" >
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- Pointer Over (Hover) -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- Pressed State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- Disabled State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                </Button.Resources>
+                            </Button>
                             <StackPanel Visibility="Collapsed" Orientation="Horizontal" Name="stkOutputActions" Grid.Row="2" Spacing="10">
                                 <Button Name="btnPlayAllOutput" Click="btnPlayAllOutput_Click">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
@@ -144,7 +165,32 @@ CornerRadius="16"
 VerticalAlignment="Stretch" HorizontalAlignment="Right" Name="btnExportDirectory" 
 Content="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" 
 Click="btnExportDirectory_Click"/>
-                            <CheckBox FontFamily="{StaticResource GlobalFontHolder}"   Checked="chkCustomDirectories_Checked" Unchecked="chkCustomDirectories_Checked" Grid.Row="2" Name="chkCustomDirectories" Content="Custom Directories for individual audio files"/>
+                            <CheckBox FontFamily="{StaticResource GlobalFontHolder}"   Checked="chkCustomDirectories_Checked" Unchecked="chkCustomDirectories_Checked" Grid.Row="2" Name="chkCustomDirectories" Content="Custom Directories for individual audio files">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
 
                         </Grid>
                     </StackPanel>

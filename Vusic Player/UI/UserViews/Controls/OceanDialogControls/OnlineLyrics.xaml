@@ -84,7 +84,27 @@ CornerRadius="16"
 
                     <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Grid.Row="0" Spacing="10">
                         <TextBox  FontFamily="{StaticResource GlobalFontHolder}" PreviewKeyDown="txtQuery_PreviewKeyDown" HorizontalAlignment="Stretch" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" PlaceholderText="Enter song name to find lyrics..." Name="txtQuery"></TextBox>
-                        <Button MinWidth="100" Style="{StaticResource AccentButtonStyle}" Name="btnSearch"  Click="btnSearch_Click">
+                        <Button MinWidth="100" Style="{StaticResource AccentButtonStyle}" Name="btnSearch"  Click="btnSearch_Click" Background="{StaticResource GlobalAccentColor}" >
+                            <Button.Resources>
+                                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                <!-- Pointer Over (Hover) -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                <!-- Pressed State -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                <!-- Disabled State -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                            </Button.Resources>
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <FontIcon Margin="0, 3" VerticalAlignment="Center" Glyph="&#xE721;" FontSize="14"/>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtBtnFind" Text="Find"/>

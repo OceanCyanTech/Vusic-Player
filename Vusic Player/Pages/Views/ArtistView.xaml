@@ -208,7 +208,44 @@ CornerRadius="16"
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox FontFamily="{StaticResource GlobalFontHolder}" GotFocus="txtRename_GotFocus" Width="150" Grid.Column="0" 
-                             Name="txtRename" PlaceholderText="Rename artist" />
+                             Name="txtRename" PlaceholderText="Rename artist" >
+                                        <TextBox.Resources>
+                                            <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                                            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+                                            <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
+
+                                            <!-- 2. Resting / Unfocused State -->
+                                            <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                            <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                            <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                            <!-- 3. Pointer Over (Hover) State -->
+                                            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                                            <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                                            <!-- 4. Text Selection Highlight (Highlight color when selecting text) -->
+                                            <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                            <!-- 5. Inner Clear / Action Button (The "X" delete button) -->
+                                            <SolidColorBrush x:Key="TextControlButtonBackground" Color="Transparent"/>
+                                            <SolidColorBrush x:Key="TextControlButtonBackgroundPointerOver" Color="#303030"/>
+                                            <SolidColorBrush x:Key="TextControlButtonBackgroundPressed" Color="#404040"/>
+                                            <SolidColorBrush x:Key="TextControlButtonForeground" Color="#808080"/>
+                                            <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#FFFFFF"/>
+                                            <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
+
+                                            <!-- 6. Disabled State -->
+                                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                            <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                            <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                            <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
+                                        </TextBox.Resources>
+                                    </TextBox>
                                     <Button Background="Transparent" BorderBrush="Transparent" Margin="5, 0" Grid.Column="1" Click="btnRenameArtist_Click" Name="btnRenameArtist" >
                                         <Image Margin="5, 0" Width="20" Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" />
                                     </Button>
@@ -228,6 +265,44 @@ CornerRadius="16"
 
                     <ToggleButton Background="Transparent" BorderBrush="Transparent" Name="btnShuffle" Checked="btnShuffle_Checked" Unchecked="btnShuffle_Unchecked" Margin="5"
                   ToolTipService.ToolTip="Shuffle playlist">
+                        <ToggleButton.Resources>
+                            <!-- 1. Background Fill when CHECKED -->
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="{StaticResource GlobalAccentColor}"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedDisabled" Color="#2A2A2A"/>
+
+                            <!-- 2. Text / Icon Foreground when CHECKED -->
+                            <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="#000000"/>
+                            <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="#000000"/>
+                            <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="#000000"/>
+                            <SolidColorBrush x:Key="ToggleButtonForegroundCheckedDisabled" Color="#707070"/>
+
+                            <!-- 3. Border Stroke when CHECKED -->
+                            <SolidColorBrush x:Key="ToggleButtonBorderBrushChecked" Color="Transparent"/>
+                            <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedPointerOver" Color="Transparent"/>
+                            <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedPressed" Color="Transparent"/>
+                            <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedDisabled" Color="Transparent"/>
+
+                            <!-- 4. Background Fill when UNCHECKED -->
+                            <SolidColorBrush x:Key="ToggleButtonBackground" Color="#202020"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#2D2D2D"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="#181818"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="#1E1E1E"/>
+
+                            <!-- 5. Text / Icon Foreground when UNCHECKED -->
+                            <SolidColorBrush x:Key="ToggleButtonForeground" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="ToggleButtonForegroundPointerOver" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="ToggleButtonForegroundPressed" Color="#CCCCCC"/>
+                            <SolidColorBrush x:Key="ToggleButtonForegroundDisabled" Color="#505050"/>
+
+                            <!-- 6. Border Stroke when UNCHECKED -->
+                            <SolidColorBrush x:Key="ToggleButtonBorderBrush" Color="#404040"/>
+                            <SolidColorBrush x:Key="ToggleButtonBorderBrushPointerOver" Color="#555555"/>
+                            <SolidColorBrush x:Key="ToggleButtonBorderBrushPressed" Color="#303030"/>
+                            <SolidColorBrush x:Key="ToggleButtonBorderBrushDisabled" Color="#2A2A2A"/>
+                        </ToggleButton.Resources>
+
                         <Image Width="25" Source="{Binding ShuffleIcon, Source={StaticResource GlobalIconHolder}}" />
                     </ToggleButton>
 
@@ -317,7 +392,27 @@ ToolTipService.ToolTip="Set Artist Cover">
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtMostPlayedCount" Text="• 0 items"></TextBlock>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtMostPlayedDuration" Text="• 00:00"></TextBlock>
                 <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="10">
-                    <Button Click="btnPlayAllMostPlayed_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllMostPlayed" Grid.Row="3" Style="{StaticResource AccentButtonStyle}">
+                    <Button Click="btnPlayAllMostPlayed_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllMostPlayed" Grid.Row="3" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                        <Button.Resources>
+                            <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                            <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                            <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                            <!-- Pointer Over (Hover) -->
+                            <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                            <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                            <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                            <!-- Pressed State -->
+                            <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                            <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                            <!-- Disabled State -->
+                            <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                            <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                            <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                        </Button.Resources>
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <FontIcon Glyph="&#xE768;"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play All"/>
@@ -341,7 +436,32 @@ ToolTipService.ToolTip="Set Artist Cover">
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Spacing="20">
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleTextBlockStyle}" Text="Albums"></TextBlock>
-                    <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Content="Select" Margin="0, 5" Checked="chckSelectAlbums_Checked" Unchecked="chckSelectAlbums_Checked" Name="chckSelectAlbums"></CheckBox>
+                    <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Content="Select" Margin="0, 5" Checked="chckSelectAlbums_Checked" Unchecked="chckSelectAlbums_Checked" Name="chckSelectAlbums">
+                        <CheckBox.Resources>
+                            <!-- Checked State (Background box fill) -->
+                            <SolidColorBrush x:Key="CheckBoxFillColorDefault" Color="{StaticResource GlobalAccentColor}"/>
+                            <SolidColorBrush x:Key="CheckBoxFillColorPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                            <SolidColorBrush x:Key="CheckBoxFillColorPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                            <SolidColorBrush x:Key="CheckBoxFillColorDisabled" Color="#2A2A2A"/>
+
+                            <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForeground" Color="#000000"/>
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPointerOver" Color="#000000"/>
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPressed" Color="#000000"/>
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundDisabled" Color="#707070"/>
+
+                            <!-- Unchecked State (Empty box outline border) -->
+                            <SolidColorBrush x:Key="CheckBoxStrokeColorDefault" Color="#808080"/>
+                            <SolidColorBrush x:Key="CheckBoxStrokeColorPointerOver" Color="#B0B0B0"/>
+                            <SolidColorBrush x:Key="CheckBoxStrokeColorPressed" Color="#606060"/>
+
+                            <!-- Text Label Foreground -->
+                            <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                        </CheckBox.Resources>
+                    </CheckBox>
+
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Visibility="Collapsed" Spacing="10" Name="stkMultiOptionsAlbums">
@@ -445,7 +565,27 @@ ToolTipService.ToolTip="Set Artist Cover">
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}" Text="Singles"></TextBlock>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtSinglesCount" Text="• 0 items"></TextBlock>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtSinglesDuration" Text="• 00:00"></TextBlock>
-                <Button Click="btnPlayAllSingles_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllSingles" Grid.Row="3" Style="{StaticResource AccentButtonStyle}">
+                <Button Click="btnPlayAllSingles_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllSingles" Grid.Row="3" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                    <Button.Resources>
+                        <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                        <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                        <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                        <!-- Pointer Over (Hover) -->
+                        <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                        <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                        <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                        <!-- Pressed State -->
+                        <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                        <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                        <!-- Disabled State -->
+                        <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                        <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                        <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                    </Button.Resources>
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <FontIcon Glyph="&#xE768;"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play All"/>
@@ -471,8 +611,66 @@ ToolTipService.ToolTip="Set Artist Cover">
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBox Name="txtRenameAlbum" PlaceholderText="Rename album..."/>
-                        <Button Name="btnRenameAlbum" Content="Rename Album" Style="{StaticResource AccentButtonStyle}" Grid.Row="1"/>
+                        <TextBox Name="txtRenameAlbum" PlaceholderText="Rename album...">
+                            <TextBox.Resources>
+                                <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
+
+                                <!-- 2. Resting / Unfocused State -->
+                                <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                <!-- 3. Pointer Over (Hover) State -->
+                                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                                <!-- 4. Text Selection Highlight (Highlight color when selecting text) -->
+                                <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                <!-- 5. Inner Clear / Action Button (The "X" delete button) -->
+                                <SolidColorBrush x:Key="TextControlButtonBackground" Color="Transparent"/>
+                                <SolidColorBrush x:Key="TextControlButtonBackgroundPointerOver" Color="#303030"/>
+                                <SolidColorBrush x:Key="TextControlButtonBackgroundPressed" Color="#404040"/>
+                                <SolidColorBrush x:Key="TextControlButtonForeground" Color="#808080"/>
+                                <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
+
+                                <!-- 6. Disabled State -->
+                                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
+                            </TextBox.Resources>
+                        </TextBox>
+                        <Button Name="btnRenameAlbum" Content="Rename Album" Style="{StaticResource AccentButtonStyle}" Grid.Row="1" Background="{StaticResource GlobalAccentColor}" >
+                            <Button.Resources>
+                                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                <!-- Pointer Over (Hover) -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                <!-- Pressed State -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                <!-- Disabled State -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                            </Button.Resources>
+                        </Button>
                     </Grid>
                 </TeachingTip>
                 <vusic:ListViewMedia 

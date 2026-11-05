@@ -22,7 +22,28 @@
         <Frame Grid.Row="1" Name="frmMain">
 
         </Frame>
-        <Button Name="btnAccept" Click="btnAccept_Click" Visibility="Collapsed" Content="Accept" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" HorizontalAlignment="Right"/>
+        <Button Name="btnAccept" Click="btnAccept_Click" Visibility="Collapsed" Content="Accept" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" HorizontalAlignment="Right" Background="{StaticResource GlobalAccentColor}" >
+            <Button.Resources>
+                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                <!-- Pointer Over (Hover) -->
+                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                <!-- Pressed State -->
+                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                <!-- Disabled State -->
+                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+            </Button.Resources>
+        </Button>
         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="10" Grid.Row="2">
             <Button IsEnabled="False" Name="btnGoBack" ToolTipService.ToolTip="Go Back" Click="btnGoBack_Click">
                 <Image Width="20" Source="{Binding ChevronLeft , Source={StaticResource GlobalIconHolder}}"/>

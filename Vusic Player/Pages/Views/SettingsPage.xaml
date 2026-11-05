@@ -51,7 +51,28 @@
                         <MenuFlyoutSeparator Grid.Row="1"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="App Log" Grid.Row="2" Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="View events that are recorded when Vusic Player performs informative/successful actions or unexpectedly crashes due to bugs" Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
-                        <Button Name="btnViewLog" Grid.Row="4" Content="View App Log" Style="{StaticResource AccentButtonStyle}" Click="btnViewLog_Click"/>
+                        <Button Name="btnViewLog" Grid.Row="4" Content="View App Log" Style="{StaticResource AccentButtonStyle}" Click="btnViewLog_Click" Background="{StaticResource GlobalAccentColor}" >
+                            <Button.Resources>
+                                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                <!-- Pointer Over (Hover) -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                <!-- Pressed State -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                <!-- Disabled State -->
+                                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                            </Button.Resources>
+                        </Button>
                         <MenuFlyoutSeparator Grid.Row="5"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Media Database" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Re-scan the media database. The media database will be cleared and rescaned fresh." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="7"/>
@@ -70,6 +91,43 @@
                                     <GridView.ItemTemplate>
                                         <DataTemplate>
                                             <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16"  Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+                                                <ToggleButton.Resources>
+                                                    <!-- 1. Background Fill when CHECKED -->
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedDisabled" Color="#2A2A2A"/>
+
+                                                    <!-- 2. Text / Icon Foreground when CHECKED -->
+                                                    <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="#000000"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="#000000"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="#000000"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonForegroundCheckedDisabled" Color="#707070"/>
+
+                                                    <!-- 3. Border Stroke when CHECKED -->
+                                                    <SolidColorBrush x:Key="ToggleButtonBorderBrushChecked" Color="Transparent"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedPointerOver" Color="Transparent"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedPressed" Color="Transparent"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedDisabled" Color="Transparent"/>
+
+                                                    <!-- 4. Background Fill when UNCHECKED -->
+                                                    <SolidColorBrush x:Key="ToggleButtonBackground" Color="#202020"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#2D2D2D"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="#181818"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="#1E1E1E"/>
+
+                                                    <!-- 5. Text / Icon Foreground when UNCHECKED -->
+                                                    <SolidColorBrush x:Key="ToggleButtonForeground" Color="#FFFFFF"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonForegroundPointerOver" Color="#FFFFFF"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonForegroundPressed" Color="#CCCCCC"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonForegroundDisabled" Color="#505050"/>
+
+                                                    <!-- 6. Border Stroke when UNCHECKED -->
+                                                    <SolidColorBrush x:Key="ToggleButtonBorderBrush" Color="#404040"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBorderBrushPointerOver" Color="#555555"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBorderBrushPressed" Color="#303030"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBorderBrushDisabled" Color="#2A2A2A"/>
+                                                </ToggleButton.Resources>
                                                 <ToggleButton.ContextFlyout>
                                                     <MenuFlyout >
                                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
@@ -105,7 +163,32 @@
                             <MenuFlyoutSeparator/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Startup" Name="txtStartup" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Configure app startup settings." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
-                            <CheckBox Name="chkShowSplash" Content="Show Splash Screen" Checked="chkShowSplash_Checked" Unchecked="chkShowSplash_Checked"/>
+                            <CheckBox Name="chkShowSplash" Content="Show Splash Screen" Checked="chkShowSplash_Checked" Unchecked="chkShowSplash_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
                             <ComboBox FontFamily="{StaticResource GlobalFontHolder}"  Header="Page to show when app starts" SelectedIndex="0" Name="cmbStartupPage" SelectionChanged="cmbStartupPage_SelectionChanged">
                                 <ComboBox.Items>
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Home Page"/>
@@ -113,15 +196,78 @@
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Video Library Page"/>
                                 </ComboBox.Items>
                             </ComboBox>
-                            <Button Content="App Lock" Click="btnAppLock_Click"  Name="btnAppLock" Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="App Lock" Click="btnAppLock_Click"  Name="btnAppLock" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- Pointer Over (Hover) -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- Pressed State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- Disabled State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                </Button.Resources>
+                            </Button>
                             <MenuFlyoutSeparator/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Default App" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Make Vusic Player the default media player app for various media formats." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
-                            <Button Content="Open Settings" Click="btnOpenSettings_Click"  Name="btnOpenSettings" Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="Open Settings" Click="btnOpenSettings_Click"  Name="btnOpenSettings" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- Pointer Over (Hover) -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- Pressed State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- Disabled State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                </Button.Resources>
+                            </Button>
 
                             <MenuFlyoutSeparator/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="App Reset" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                            <Button Content="Reset All Vusic Player Settings" Click="btnResetAppSettings_Click"  Name="btnResetAppSettings" Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="Reset All Vusic Player Settings" Click="btnResetAppSettings_Click"  Name="btnResetAppSettings" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- Pointer Over (Hover) -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- Pressed State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- Disabled State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                </Button.Resources>
+                            </Button>
 
                         </StackPanel>
                     </Grid>
@@ -176,7 +322,28 @@
                         <StackPanel Orientation="Vertical" Spacing="20" Grid.Row="5">
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" Text="The Microsoft Store handles updates automatically. But if you want to double-check right now, you can trigger a manual check below."/>
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <Button Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" Style="{StaticResource AccentButtonStyle}" Content="Check For Updates"/>
+                                <Button Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" Style="{StaticResource AccentButtonStyle}" Content="Check For Updates" Background="{StaticResource GlobalAccentColor}" >
+                                    <Button.Resources>
+                                        <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                        <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                        <!-- Pointer Over (Hover) -->
+                                        <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                        <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                        <!-- Pressed State -->
+                                        <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                        <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                        <!-- Disabled State -->
+                                        <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                        <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                        <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                    </Button.Resources>
+                                </Button>
                                 <Button Name="btnOpenStore" Click="btnOpenStore_Click"  Content="Open Microsoft Store to Update" Visibility="Collapsed"/>
                                 <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Name="hypWhatsNew" NavigateUri="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/NewVersionReleasenotes.md" Content="See what's new!" Visibility="Collapsed"/>
                             </StackPanel>
@@ -185,8 +352,50 @@
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Help" Name="txtHelp"  Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Grid.Row="8" Text="Vusic Player is an open source project!"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="9">
-                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Open Source License" Content="Open Source License" Name="btnViewOSLicense" Click="btnViewOSLicense_Click"/>
-                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Third Party Licenses" Content="Third Party Licenses" Name="btnViewThirdPartyLicense" Click="btnViewThirdPartyLicense_Click"/>
+                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Open Source License" Content="Open Source License" Name="btnViewOSLicense" Click="btnViewOSLicense_Click" Background="{StaticResource GlobalAccentColor}" >
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- Pointer Over (Hover) -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- Pressed State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- Disabled State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                </Button.Resources>
+                            </Button>
+                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Third Party Licenses" Content="Third Party Licenses" Name="btnViewThirdPartyLicense" Click="btnViewThirdPartyLicense_Click" Background="{StaticResource GlobalAccentColor}" >
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- Pointer Over (Hover) -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- Pressed State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- Disabled State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                </Button.Resources>
+                            </Button>
 
                             <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="View Source on GitHub" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player"  Grid.Row="9"/>
                             <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Documentation and Support" NavigateUri="https://oceancyantech.github.io/Vusic-Player/documentation.html" Grid.Row="10"/>
@@ -195,10 +404,52 @@
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
                             <MenuFlyoutSeparator />
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Privacy" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
-                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Privacy Statement" Content="Privacy Statement" Name="btnViewPrivacyStatement" Click="btnViewPrivacyStatement_Click"/>
+                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View Privacy Statement" Content="Privacy Statement" Name="btnViewPrivacyStatement" Click="btnViewPrivacyStatement_Click" Background="{StaticResource GlobalAccentColor}" >
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- Pointer Over (Hover) -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- Pressed State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- Disabled State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                </Button.Resources>
+                            </Button>
                             <MenuFlyoutSeparator />
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Keyboard Shortcuts" Grid.Row="7" Style="{StaticResource TitleTextBlockStyle}"/>
-                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View All Keyboard Shortcuts" Content="Keyboard Shortcut Guide" Name="btnViewKS" Click="btnViewKS_Click"/>
+                            <Button Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="View All Keyboard Shortcuts" Content="Keyboard Shortcut Guide" Name="btnViewKS" Click="btnViewKS_Click" Background="{StaticResource GlobalAccentColor}" >
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- Pointer Over (Hover) -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- Pressed State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- Disabled State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                </Button.Resources>
+                            </Button>
 
                         </StackPanel>
                     </Grid>
@@ -228,7 +479,28 @@
                                     <StackPanel Orientation="Vertical" Spacing="10">
                                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all playlists created?"/>
                                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
-                                        <Button Content="Confirm Delete" Name="btnDeleteAllPlaylists" Click="btnDeleteAllPlaylists_Click" Style="{StaticResource AccentButtonStyle}" />
+                                        <Button Content="Confirm Delete" Name="btnDeleteAllPlaylists" Click="btnDeleteAllPlaylists_Click" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                                            <Button.Resources>
+                                                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                                <!-- Pointer Over (Hover) -->
+                                                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                                <!-- Pressed State -->
+                                                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                                <!-- Disabled State -->
+                                                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                            </Button.Resources>
+                                        </Button>
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
@@ -244,7 +516,28 @@
                                             <StackPanel Orientation="Vertical" Spacing="10">
                                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all artist profile pictures saved?"/>
                                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
-                                                <Button Content="Confirm Delete" Name="btnDeleteAllArtists" Click="btnDeleteAllArtists_Click" Style="{StaticResource AccentButtonStyle}" />
+                                                <Button Content="Confirm Delete" Name="btnDeleteAllArtists" Click="btnDeleteAllArtists_Click" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                                                    <Button.Resources>
+                                                        <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                                        <!-- Pointer Over (Hover) -->
+                                                        <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                                        <!-- Pressed State -->
+                                                        <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                                        <!-- Disabled State -->
+                                                        <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                                    </Button.Resources>
+                                                </Button>
                                             </StackPanel>
                                         </Flyout>
                                     </Button.Flyout>
@@ -259,7 +552,28 @@
                                             <StackPanel Orientation="Vertical" Spacing="10">
                                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all album covers saved?"/>
                                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
-                                                <Button Content="Confirm Delete" Name="btnDeleteAllAlbums" Click="btnDeleteAllAlbums_Click" Style="{StaticResource AccentButtonStyle}" />
+                                                <Button Content="Confirm Delete" Name="btnDeleteAllAlbums" Click="btnDeleteAllAlbums_Click" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                                                    <Button.Resources>
+                                                        <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                                        <!-- Pointer Over (Hover) -->
+                                                        <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                                        <!-- Pressed State -->
+                                                        <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                                        <!-- Disabled State -->
+                                                        <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                                    </Button.Resources>
+                                                </Button>
                                             </StackPanel>
                                         </Flyout>
                                     </Button.Flyout>
@@ -274,7 +588,28 @@
                                             <StackPanel Orientation="Vertical" Spacing="10">
                                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all genre covers saved?"/>
                                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
-                                                <Button Content="Confirm Delete" Name="btnDeleteAllGenres" Click="btnDeleteAllGenres_Click" Style="{StaticResource AccentButtonStyle}" />
+                                                <Button Content="Confirm Delete" Name="btnDeleteAllGenres" Click="btnDeleteAllGenres_Click" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                                                    <Button.Resources>
+                                                        <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                                        <!-- Pointer Over (Hover) -->
+                                                        <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                                        <!-- Pressed State -->
+                                                        <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                                        <!-- Disabled State -->
+                                                        <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                                        <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                                        <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                                    </Button.Resources>
+                                                </Button>
                                             </StackPanel>
                                         </Flyout>
                                     </Button.Flyout>
@@ -285,10 +620,110 @@
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="8"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Hide or show panels in the music library page." Grid.Row="9"/>
                         <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="10">
-                            <CheckBox x:Name="chkMusicRecent" Content="Recent Music" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
-                            <CheckBox x:Name="chkMusicPlaylists" Content="Playlists" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
-                            <CheckBox x:Name="chkMusicInstantPlaylists" Content="Instant Playlists" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
-                            <CheckBox x:Name="chkMusicGenreRecommendations" Content="Genre Recommendations" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked"/>
+                            <CheckBox x:Name="chkMusicRecent" Content="Recent Music" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
+                            <CheckBox x:Name="chkMusicPlaylists" Content="Playlists" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
+                            <CheckBox x:Name="chkMusicInstantPlaylists" Content="Instant Playlists" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
+                            <CheckBox x:Name="chkMusicGenreRecommendations" Content="Genre Recommendations" Checked="chkHidePanel2_Checked" Unchecked="chkHidePanel2_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
                         </StackPanel>
                     </Grid>
                     <Grid Name="grdVideoOptions" RowSpacing="30" Visibility="Collapsed">
@@ -315,7 +750,32 @@
                         <MenuFlyoutSeparator Grid.Row="1"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Continue Playing" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="3">
-                            <CheckBox Checked="chkSaveHistory_Checked" Unchecked="chkSaveHistory_Checked" Content="Save videos to history" Name="chkSaveHistory"/>
+                            <CheckBox Checked="chkSaveHistory_Checked" Unchecked="chkSaveHistory_Checked" Content="Save videos to history" Name="chkSaveHistory">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
 
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Delete all history of videos you've viewed on Vusic Player." Grid.Row="3"/>
                             <Button Grid.Row="4"  Content="Delete all Video History">
@@ -324,7 +784,28 @@
                                         <StackPanel Orientation="Vertical" Spacing="10">
                                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all video history?"/>
                                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
-                                            <Button Content="Confirm Delete" Name="btnDeleteAllVideoHistory" Click="btnDeleteAllVideoHistory_Click" Style="{StaticResource AccentButtonStyle}" />
+                                            <Button Content="Confirm Delete" Name="btnDeleteAllVideoHistory" Click="btnDeleteAllVideoHistory_Click" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                                                <Button.Resources>
+                                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                                    <!-- Pointer Over (Hover) -->
+                                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                                    <!-- Pressed State -->
+                                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                                    <!-- Disabled State -->
+                                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                                </Button.Resources>
+                                            </Button>
                                         </StackPanel>
                                     </Flyout>
                                 </Button.Flyout>
@@ -364,7 +845,28 @@
                                     <StackPanel Orientation="Vertical" Spacing="10">
                                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all playlists created?"/>
                                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
-                                        <Button Content="Confirm Delete" Click="btnDeleteAllPlaylists_Click" Style="{StaticResource AccentButtonStyle}" />
+                                        <Button Content="Confirm Delete" Click="btnDeleteAllPlaylists_Click" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                                            <Button.Resources>
+                                                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                                <!-- Pointer Over (Hover) -->
+                                                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                                <!-- Pressed State -->
+                                                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                                <!-- Disabled State -->
+                                                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                            </Button.Resources>
+                                        </Button>
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
@@ -379,7 +881,28 @@
                                     <StackPanel Orientation="Vertical" Spacing="10">
                                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Are you sure you want to delete all shows created?"/>
                                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="This cannot be undone"/>
-                                        <Button Content="Confirm Delete" Name="btnDeleteAllShows" Click="btnDeleteAllShows_Click" Style="{StaticResource AccentButtonStyle}" />
+                                        <Button Content="Confirm Delete" Name="btnDeleteAllShows" Click="btnDeleteAllShows_Click" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                                            <Button.Resources>
+                                                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                                <!-- Pointer Over (Hover) -->
+                                                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                                <!-- Pressed State -->
+                                                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                                <!-- Disabled State -->
+                                                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                            </Button.Resources>
+                                        </Button>
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
@@ -388,10 +911,110 @@
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="12"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Hide or show panels in the video library page." Grid.Row="13"/>
                         <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="14">
-                            <CheckBox x:Name="chkVideoContinueRecent" Content="Continue Playing and Recent Videos" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
-                            <CheckBox x:Name="chkVideoRecommended" Content="Recommended Videos" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
-                            <CheckBox x:Name="chkVideoPlaylists" Content="Playlists" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
-                            <CheckBox x:Name="chkVideoShows" Content="Shows" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked"/>
+                            <CheckBox x:Name="chkVideoContinueRecent" Content="Continue Playing and Recent Videos" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
+                            <CheckBox x:Name="chkVideoRecommended" Content="Recommended Videos" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
+                            <CheckBox x:Name="chkVideoPlaylists" Content="Playlists" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
+                            <CheckBox x:Name="chkVideoShows" Content="Shows" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
                         </StackPanel>
                     </Grid>
                     <Grid Name="grdHomeOptions" RowSpacing="30" Visibility="Collapsed">
@@ -410,10 +1033,110 @@
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Panels" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Hide or show panels in the home page." Grid.Row="3"/>
                         <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="4">
-                            <CheckBox x:Name="chkHomeContinueRecent" Content="Continue Playing and Recent Videos" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
-                            <CheckBox x:Name="chkHomeRecentMusic" Content="Recent Music" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
-                            <CheckBox x:Name="chkHomeMusicMix" Content="Music Mix" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
-                            <CheckBox x:Name="chkHomeFavouritesRecommendations" Content="Favourites Recommendations" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked"/>
+                            <CheckBox x:Name="chkHomeContinueRecent" Content="Continue Playing and Recent Videos" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
+                            <CheckBox x:Name="chkHomeRecentMusic" Content="Recent Music" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
+                            <CheckBox x:Name="chkHomeMusicMix" Content="Music Mix" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
+                            <CheckBox x:Name="chkHomeFavouritesRecommendations" Content="Favourites Recommendations" Checked="chkHidePanel1_Checked" Unchecked="chkHidePanel1_Checked">
+                                <CheckBox.Resources>
+                                    <!-- Checked State (Background box fill) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+
+                                    <!-- Text Label Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
+
                         </StackPanel>
                     </Grid>
                     <Grid Name="grdGeneral" RowSpacing="30" Visibility="Visible">
@@ -498,7 +1221,29 @@
                             </StackPanel>
                             <StackPanel Name="stkRestartApp" Visibility="Collapsed" Orientation="Horizontal" Spacing="30" Grid.Row="8">
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Text="Changes will be applied when Vusic Player is opened the next time."/>
-                                <Button FontFamily="{StaticResource GlobalFontHolder}"   Style="{StaticResource AccentButtonStyle}" Content="Restart Vusic Player" Click="btnRestartVusicPlayer_Click" Name="btnRestartVusicPlayer"/>
+                                <Button FontFamily="{StaticResource GlobalFontHolder}"   Style="{StaticResource AccentButtonStyle}" Content="Restart Vusic Player" Click="btnRestartVusicPlayer_Click" Name="btnRestartVusicPlayer" Background="{StaticResource GlobalAccentColor}" >
+                              
+                                    <Button.Resources>
+                                        <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                        <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                        <!-- Pointer Over (Hover) -->
+                                        <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                        <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                        <!-- Pressed State -->
+                                        <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                        <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                        <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                        <!-- Disabled State -->
+                                        <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                        <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                        <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                    </Button.Resources>
+                                </Button>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Spacing="30" >
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtChangeTheme" Text="Change Theme" Style="{StaticResource TitleTextBlockStyle}"/>

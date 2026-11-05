@@ -114,8 +114,40 @@ Stretch="UniformToFill"/>
 
                             <playback_views:PlayPauseControls SpaceWidth="10" Margin="0, 5" Grid.Row="5" HorizontalAlignment="Center"></playback_views:PlayPauseControls>
                             <playback_views:VolumeSlider Margin="0, 10" Grid.Row="6" HorizontalAlignment="Center"></playback_views:VolumeSlider>
+
                             <playback_views:PanelControlsAudioPlayer x:Name="panelControlAudioPlayer"  ExpandedViewButtonToolTip="Expanded View" Grid.Row="7"></playback_views:PanelControlsAudioPlayer>
-                            <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" Name="chckMultioutput" Grid.Row="8" Content="Multi-Device Audio Output" Checked="chckMultioutput_Checked" Unchecked="chckMultioutput_Checked"/>
+                            <CheckBox  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" Name="chckMultioutput" Grid.Row="8" Content="Multi-Device Audio Output" Checked="chckMultioutput_Checked" Unchecked="chckMultioutput_Checked">
+                                <CheckBox.Resources>
+                                    <!-- 1. Background Fill when CHECKED -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
+
+                                    <!-- 2. The Checkmark Glyph Color -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
+
+                                    <!-- 3. Border Stroke when CHECKED -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedDisabled" Color="Transparent"/>
+
+                                    <!-- 4. Background Fill & Stroke when UNCHECKED -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/>
+
+                                    <!-- 5. Label Text Foreground -->
+                                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                                </CheckBox.Resources>
+                            </CheckBox>
 
                             <Button  FontFamily="{StaticResource GlobalFontHolder}"  Click="btnMultiDeviceOptions_Click" IsEnabled="{x:Bind mediacontroller.MultiDeviceOutputFeature,Mode=OneWay}" Name="btnMultiDeviceOptions" Content="Multi-Device Audio Output Mixer" HorizontalAlignment="Center" Margin="0, 10" Grid.Row="9"/>
                             

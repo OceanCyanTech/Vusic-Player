@@ -30,7 +30,28 @@
         <subtitle:SubtitleEditorUI x:Name="subeditor" Grid.Row="1"/>
         <controls:LyricEditorUI x:Name="lyreditor" Grid.Row ="1"/>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="10,10" Spacing="10" HorizontalAlignment="Right">
-            <Button FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource AccentButtonStyle}" Content="Save and Close" Click="btnSaveandClose_Click" Name="btnSaveandClose" Grid.Row="2" HorizontalAlignment="Right"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource AccentButtonStyle}" Content="Save and Close" Click="btnSaveandClose_Click" Name="btnSaveandClose" Grid.Row="2" HorizontalAlignment="Right" Background="{StaticResource GlobalAccentColor}" >
+                <Button.Resources>
+                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                    <!-- Pointer Over (Hover) -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                    <!-- Pressed State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                    <!-- Disabled State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                </Button.Resources>
+            </Button>
             <Button FontFamily="{StaticResource GlobalFontHolder}"    Content="Cancel Changes and Close" Click="btnCancelandClose_Click" Name="btnCancelandClose" Grid.Row="2"  HorizontalAlignment="Right"/>
         </StackPanel>
     </Grid>

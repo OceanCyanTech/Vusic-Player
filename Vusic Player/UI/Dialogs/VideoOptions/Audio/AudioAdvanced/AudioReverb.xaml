@@ -35,8 +35,54 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Content="Show More Options" Grid.Column="0"></CheckBox>
-            <Button FontFamily="{StaticResource GlobalFontHolder}"    HorizontalAlignment="Right" Content="Apply Reverb" Name="btnApply" Click="btnApply_Click" Style="{StaticResource AccentButtonStyle}" Grid.Column="1"></Button>
+            <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Content="Show More Options" Grid.Column="0">
+                <CheckBox.Resources>
+                    <!-- Checked State (Background box fill) -->
+                    <SolidColorBrush x:Key="CheckBoxFillColorDefault" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="CheckBoxFillColorPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="CheckBoxFillColorPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="CheckBoxFillColorDisabled" Color="#2A2A2A"/>
+
+                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForeground" Color="#000000"/>
+                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPointerOver" Color="#000000"/>
+                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPressed" Color="#000000"/>
+                    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundDisabled" Color="#707070"/>
+
+                    <!-- Unchecked State (Empty box outline border) -->
+                    <SolidColorBrush x:Key="CheckBoxStrokeColorDefault" Color="#808080"/>
+                    <SolidColorBrush x:Key="CheckBoxStrokeColorPointerOver" Color="#B0B0B0"/>
+                    <SolidColorBrush x:Key="CheckBoxStrokeColorPressed" Color="#606060"/>
+
+                    <!-- Text Label Foreground -->
+                    <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                </CheckBox.Resources>
+            </CheckBox>
+
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    HorizontalAlignment="Right" Content="Apply Reverb" Name="btnApply" Click="btnApply_Click" Style="{StaticResource AccentButtonStyle}" Grid.Column="1" Background="{StaticResource GlobalAccentColor}" >
+                <Button.Resources>
+                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                    <!-- Pointer Over (Hover) -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                    <!-- Pressed State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                    <!-- Disabled State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                </Button.Resources>
+            </Button>
         </Grid>
         <MenuFlyoutSeparator Grid.Row="3" Name="mnfs1" Visibility="Collapsed"/>
         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Visibility="Collapsed" Text="More Options" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Name="txtMore" Grid.Row="4"/>
@@ -48,7 +94,28 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button FontFamily="{StaticResource GlobalFontHolder}"    Name="btnApplyMultiple" Click="btnApplyMultiple_Click" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb to Multiple Files"/>
+            <Button FontFamily="{StaticResource GlobalFontHolder}"    Name="btnApplyMultiple" Click="btnApplyMultiple_Click" Style="{StaticResource AccentButtonStyle}" Content="Apply Reverb to Multiple Files" Background="{StaticResource GlobalAccentColor}" >
+                <Button.Resources>
+                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                    <!-- Pointer Over (Hover) -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                    <!-- Pressed State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                    <!-- Disabled State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                </Button.Resources>
+            </Button>
             <TextBox FontFamily="{StaticResource GlobalFontHolder}"    Header="File Name" Name="txtFileName" Grid.Row="1" TextChanged="txtFileName_TextChanged" Visibility="Collapsed" PlaceholderText="Enter file name...."></TextBox>
             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Enter File Name!" Grid.Row="2" Visibility="Collapsed" Foreground="Red" Name="txtEnterFileNameWarning"></TextBlock>
             <Grid Grid.Row="3" ColumnSpacing="10">
@@ -62,7 +129,32 @@
                         <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Temporary File on Disk" ToolTipService.ToolTip="Create output as temporary file on Disk (Saves RAM)"/>
                     </ComboBox.Items>
                 </ComboBox>
-                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Name="chckExporttoFile" Content="Export to File" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Checked_1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" ToolTipService.ToolTip="When Apply Reverb is clicked, you can choose to export the output to your PC and play"></CheckBox>
+                <CheckBox FontFamily="{StaticResource GlobalFontHolder}"    Name="chckExporttoFile" Content="Export to File" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Checked_1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" ToolTipService.ToolTip="When Apply Reverb is clicked, you can choose to export the output to your PC and play">
+                    <CheckBox.Resources>
+                        <!-- Checked State (Background box fill) -->
+                        <SolidColorBrush x:Key="CheckBoxFillColorDefault" Color="{StaticResource GlobalAccentColor}"/>
+                        <SolidColorBrush x:Key="CheckBoxFillColorPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                        <SolidColorBrush x:Key="CheckBoxFillColorPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                        <SolidColorBrush x:Key="CheckBoxFillColorDisabled" Color="#2A2A2A"/>
+
+                        <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForeground" Color="#000000"/>
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPointerOver" Color="#000000"/>
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPressed" Color="#000000"/>
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundDisabled" Color="#707070"/>
+
+                        <!-- Unchecked State (Empty box outline border) -->
+                        <SolidColorBrush x:Key="CheckBoxStrokeColorDefault" Color="#808080"/>
+                        <SolidColorBrush x:Key="CheckBoxStrokeColorPointerOver" Color="#B0B0B0"/>
+                        <SolidColorBrush x:Key="CheckBoxStrokeColorPressed" Color="#606060"/>
+
+                        <!-- Text Label Foreground -->
+                        <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                    </CheckBox.Resources>
+                </CheckBox>
+
             </Grid>
             <Grid Grid.Row="4" RowSpacing="10" ColumnSpacing="20">
                 <Grid.RowDefinitions>

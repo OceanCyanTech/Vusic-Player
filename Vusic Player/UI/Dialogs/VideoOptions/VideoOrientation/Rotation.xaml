@@ -48,7 +48,28 @@
 
             <Button FontFamily="{StaticResource GlobalFontHolder}"    Margin="0, 10" Style="{StaticResource AccentButtonStyle}" 
                 Content="Reset Rotation" Name="btnResetRotation" 
-                Click="btnResetRotation_Click" HorizontalAlignment="Center" />
+                Click="btnResetRotation_Click" HorizontalAlignment="Center"  Background="{StaticResource GlobalAccentColor}" >
+                <Button.Resources>
+                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                    <!-- Pointer Over (Hover) -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                    <!-- Pressed State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                    <!-- Disabled State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                </Button.Resources>
+            </Button>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8" Margin="0,10,0,0">

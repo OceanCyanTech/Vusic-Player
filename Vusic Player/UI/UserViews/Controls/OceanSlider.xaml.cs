@@ -2,12 +2,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 
 
@@ -20,6 +22,59 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             this.InitializeComponent();
             this.IsTabStop = false;
+            this.Loaded += OceanSlider_Loaded;
+        }
+
+        private void OceanSlider_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ThemeManager.Instance.GlobalTheme == "Space")
+            {
+                LinearGradientBrush gradient = new LinearGradientBrush
+                {
+                    StartPoint = new Windows.Foundation.Point(0, 0.5),
+                    EndPoint = new Windows.Foundation.Point(1, 0.5)
+                };
+                gradient.GradientStops.Add(new GradientStop
+                {
+                    Color = Windows.UI.Color.FromArgb(255, 206, 206, 206),
+                    Offset = 0.0
+                });
+                gradient.GradientStops.Add(new GradientStop
+                {
+                    Color = Windows.UI.Color.FromArgb(255, 230, 230, 230),
+                    Offset = 0.5
+                }); gradient.GradientStops.Add(new GradientStop
+                {
+                    Color = Windows.UI.Color.FromArgb(255, 200, 200, 200),
+                    Offset = 1.0
+                });
+                Progress.Background = gradient;
+            }
+            //        UpdateThemeBrush();
+            //     UpdateVisuals();
+        }
+
+        public void UpdateThemeBrush()
+        {
+            if (Progress == null) return;
+
+            string theme = ThemeManager.Instance.GlobalTheme;
+            string path = theme switch
+            {
+                "Space" => "ms-appx:///Assets/Themes/Space/SliderProgress.png",
+                "NeonGlow" => "ms-appx:///Assets/Themes/NeonGlow/SliderProgress.png",
+                _ => "ms-appx:///Assets/Themes/NeonGlow/SliderProgress.png"
+            };
+
+            var bitmap = new BitmapImage();
+            bitmap.UriSource = new Uri(path);
+
+            Progress.Background = new ImageBrush
+            {
+                Stretch = Stretch.UniformToFill,
+                AlignmentX = AlignmentX.Left,
+                ImageSource = bitmap
+            };
         }
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(OceanSlider),
@@ -282,7 +337,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void UpdateVisuals()
         {
-            if (ControlRoot.ActualWidth <= 0 || ControlRoot.ActualHeight <= 0) return;
+            //       if (ControlRoot.ActualWidth <= 0 || ControlRoot.ActualHeight <= 0) return;
 
             double percent = (Maximum > Minimum) ? (Value - Minimum) / (Maximum - Minimum) : 0;
             Thumb.Visibility = IsThumbVisible;

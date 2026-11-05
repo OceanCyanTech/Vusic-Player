@@ -10,7 +10,28 @@
 
     <StackPanel Spacing="16">
         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="Aspect Ratio" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-        <Button FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource AccentButtonStyle}" Name="btnDefaultRatio" Content="Default Ratio" Click="btnDefaultRatio_Click" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+        <Button FontFamily="{StaticResource GlobalFontHolder}"    Style="{StaticResource AccentButtonStyle}" Name="btnDefaultRatio" Content="Default Ratio" Click="btnDefaultRatio_Click" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Background="{StaticResource GlobalAccentColor}" >
+            <Button.Resources>
+                <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                <!-- Pointer Over (Hover) -->
+                <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                <!-- Pressed State -->
+                <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                <!-- Disabled State -->
+                <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+            </Button.Resources>
+        </Button>
 
         <ItemsControl x:Name="RatioGrid">
             <ItemsControl.ItemsPanel>

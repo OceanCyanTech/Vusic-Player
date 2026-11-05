@@ -101,9 +101,59 @@
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Tapped="TextBlock_Tapped_1" Text="Folders Opened" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             </StackPanel>
             <StackPanel Visibility="Collapsed" Name="stkFoldersOptions" Orientation="Horizontal" Spacing="20" Grid.Row="10">
-                <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked"></CheckBox>
+                <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked">
+                    <CheckBox.Resources>
+                        <!-- Checked State (Background box fill) -->
+                        <SolidColorBrush x:Key="CheckBoxFillColorDefault" Color="{StaticResource GlobalAccentColor}"/>
+                        <SolidColorBrush x:Key="CheckBoxFillColorPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                        <SolidColorBrush x:Key="CheckBoxFillColorPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                        <SolidColorBrush x:Key="CheckBoxFillColorDisabled" Color="#2A2A2A"/>
+
+                        <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForeground" Color="#000000"/>
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPointerOver" Color="#000000"/>
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPressed" Color="#000000"/>
+                        <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundDisabled" Color="#707070"/>
+
+                        <!-- Unchecked State (Empty box outline border) -->
+                        <SolidColorBrush x:Key="CheckBoxStrokeColorDefault" Color="#808080"/>
+                        <SolidColorBrush x:Key="CheckBoxStrokeColorPointerOver" Color="#B0B0B0"/>
+                        <SolidColorBrush x:Key="CheckBoxStrokeColorPressed" Color="#606060"/>
+
+                        <!-- Text Label Foreground -->
+                        <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                    </CheckBox.Resources>
+                </CheckBox>
+
                 <StackPanel Name="selectMoreOptions" Visibility="Collapsed" Margin="0, 5" Orientation="Horizontal">
-                    <CheckBox Content="Select all" Name="chckSelectAllFolders" Visibility="Visible" Checked="chckSelectAllFolders_Checked" Unchecked="chckSelectAllFolders_Checked"/>
+                    <CheckBox Content="Select all" Name="chckSelectAllFolders" Visibility="Visible" Checked="chckSelectAllFolders_Checked" Unchecked="chckSelectAllFolders_Checked">
+                        <CheckBox.Resources>
+                            <!-- Checked State (Background box fill) -->
+                            <SolidColorBrush x:Key="CheckBoxFillColorDefault" Color="{StaticResource GlobalAccentColor}"/>
+                            <SolidColorBrush x:Key="CheckBoxFillColorPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                            <SolidColorBrush x:Key="CheckBoxFillColorPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                            <SolidColorBrush x:Key="CheckBoxFillColorDisabled" Color="#2A2A2A"/>
+
+                            <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForeground" Color="#000000"/>
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPointerOver" Color="#000000"/>
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundPressed" Color="#000000"/>
+                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundDisabled" Color="#707070"/>
+
+                            <!-- Unchecked State (Empty box outline border) -->
+                            <SolidColorBrush x:Key="CheckBoxStrokeColorDefault" Color="#808080"/>
+                            <SolidColorBrush x:Key="CheckBoxStrokeColorPointerOver" Color="#B0B0B0"/>
+                            <SolidColorBrush x:Key="CheckBoxStrokeColorPressed" Color="#606060"/>
+
+                            <!-- Text Label Foreground -->
+                            <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
+                        </CheckBox.Resources>
+                    </CheckBox>
+
                     <Button ToolTipService.ToolTip="Remove from Folders Opened" Background="Transparent" BorderBrush="Transparent" Visibility="Visible" Margin="0, 0"  Click="btnRemove_Click"  Name="btnRemove" >
                         <StackPanel Orientation="Horizontal">
                             <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"></Image>

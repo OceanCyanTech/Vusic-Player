@@ -6,6 +6,7 @@
     xmlns:local="using:Vusic_Player" xmlns:converter="using:Vusic_Player.Configuration.Helper.Converters" xmlns:customization="using:Vusic_Player.Configuration.Helper.UI.Customization">
     <Application.Resources>
         <ResourceDictionary>
+            
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
@@ -24,6 +25,10 @@
             <FontFamily x:Key="GlobalFontHolder">Candara</FontFamily>
             <customization:IconHolder x:Key="GlobalIconHolder"/>
             <Color x:Key="GlobalAccentColor">Cyan</Color>
+            <Color x:Key="GlobalAccentColorPointerPressed">#027715</Color>
+            <Color x:Key="GlobalAccentColorPointerOver">#07BE25</Color>
+
+      
         </ResourceDictionary>
     </Application.Resources>
 </Application>

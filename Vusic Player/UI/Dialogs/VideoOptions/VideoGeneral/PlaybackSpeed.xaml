@@ -39,8 +39,94 @@ Text="{x:Bind FormatSpeed(sldSpeed.Value), Mode=OneWay}"
                 </StackPanel>
             </StackPanel>
             <Button FontFamily="{StaticResource GlobalFontHolder}"    Content="Default Speed" Name="btnDefaultSpeed" Click="btnDefaultSpeed_Click"></Button>
-            <ToggleSwitch FontFamily="{StaticResource GlobalFontHolder}"    Visibility="{x:Bind mediacontroller.AudioProperties, Mode=OneWay}"  Name="tsReverse" Header="Reverse Playback" IsOn="{x:Bind mediacontroller.IsReversePlayback, Mode=TwoWay}" Toggled="tsReverse_Toggled" />
-            <ToggleSwitch FontFamily="{StaticResource GlobalFontHolder}"    Toggled="tsLoop_Toggled" Name="tsLoop" Header="Loop Media" IsOn="False" />
+            <ToggleSwitch FontFamily="{StaticResource GlobalFontHolder}"    Visibility="{x:Bind mediacontroller.AudioProperties, Mode=OneWay}"  Name="tsReverse" Header="Reverse Playback" IsOn="{x:Bind mediacontroller.IsReversePlayback, Mode=TwoWay}" Toggled="tsReverse_Toggled" >
+                <ToggleSwitch.Resources>
+                    <!-- 1. Pill Track Fill when ON -->
+                    <SolidColorBrush x:Key="ToggleSwitchFillOn" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOnPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOnPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOnDisabled" Color="#2A2A2A"/>
+
+                    <!-- 2. Thumb Knob Fill when ON -->
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOn" Color="#000000"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOnPointerOver" Color="#000000"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOnPressed" Color="#000000"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOnDisabled" Color="#707070"/>
+
+                    <!-- 3. Pill Track Border Stroke when ON -->
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOn" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOnPointerOver" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOnPressed" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOnDisabled" Color="Transparent"/>
+
+                    <!-- 4. Pill Track Fill when OFF -->
+                    <SolidColorBrush x:Key="ToggleSwitchFillOff" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOffPointerOver" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOffPressed" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOffDisabled" Color="Transparent"/>
+
+                    <!-- 5. Pill Track Border Stroke when OFF -->
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOff" Color="#808080"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOffPointerOver" Color="#B0B0B0"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOffPressed" Color="#606060"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOffDisabled" Color="#404040"/>
+
+                    <!-- 6. Thumb Knob Fill when OFF -->
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOff" Color="#CCCCCC"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOffPointerOver" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOffPressed" Color="#999999"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOffDisabled" Color="#505050"/>
+
+                    <!-- 7. Header and On/Off Label Text Foreground -->
+                    <SolidColorBrush x:Key="ToggleSwitchHeaderForeground" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="ToggleSwitchHeaderForegroundDisabled" Color="#707070"/>
+                    <SolidColorBrush x:Key="ToggleSwitchContainerForeground" Color="#FFFFFF"/>
+                </ToggleSwitch.Resources>
+            </ToggleSwitch>
+            <ToggleSwitch FontFamily="{StaticResource GlobalFontHolder}"    Toggled="tsLoop_Toggled" Name="tsLoop" Header="Loop Media" IsOn="False" >
+                <ToggleSwitch.Resources>
+                    <!-- 1. Pill Track Fill when ON -->
+                    <SolidColorBrush x:Key="ToggleSwitchFillOn" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOnPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOnPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOnDisabled" Color="#2A2A2A"/>
+
+                    <!-- 2. Thumb Knob Fill when ON -->
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOn" Color="#000000"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOnPointerOver" Color="#000000"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOnPressed" Color="#000000"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOnDisabled" Color="#707070"/>
+
+                    <!-- 3. Pill Track Border Stroke when ON -->
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOn" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOnPointerOver" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOnPressed" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOnDisabled" Color="Transparent"/>
+
+                    <!-- 4. Pill Track Fill when OFF -->
+                    <SolidColorBrush x:Key="ToggleSwitchFillOff" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOffPointerOver" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOffPressed" Color="Transparent"/>
+                    <SolidColorBrush x:Key="ToggleSwitchFillOffDisabled" Color="Transparent"/>
+
+                    <!-- 5. Pill Track Border Stroke when OFF -->
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOff" Color="#808080"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOffPointerOver" Color="#B0B0B0"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOffPressed" Color="#606060"/>
+                    <SolidColorBrush x:Key="ToggleSwitchStrokeOffDisabled" Color="#404040"/>
+
+                    <!-- 6. Thumb Knob Fill when OFF -->
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOff" Color="#CCCCCC"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOffPointerOver" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOffPressed" Color="#999999"/>
+                    <SolidColorBrush x:Key="ToggleSwitchThumbFillOffDisabled" Color="#505050"/>
+
+                    <!-- 7. Header and On/Off Label Text Foreground -->
+                    <SolidColorBrush x:Key="ToggleSwitchHeaderForeground" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="ToggleSwitchHeaderForegroundDisabled" Color="#707070"/>
+                    <SolidColorBrush x:Key="ToggleSwitchContainerForeground" Color="#FFFFFF"/>
+                </ToggleSwitch.Resources>
+            </ToggleSwitch>
         </StackPanel>
 
         <Rectangle Height="1" Fill="{ThemeResource SystemControlBackgroundBaseLowBrush}" Margin="0,4"/>

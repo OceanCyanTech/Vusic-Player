@@ -26,8 +26,28 @@
                 </Grid>
             </StackPanel>
 
-            <Button Name="btnRecord" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch" Click="btnRecord_Click">
-                <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Name="btnRecord" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch" Click="btnRecord_Click" Background="{StaticResource GlobalAccentColor}" >
+                <Button.Resources>
+                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                    <!-- Pointer Over (Hover) -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                    <!-- Pressed State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                    <!-- Disabled State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                </Button.Resources>
+            <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon FontFamily="{StaticResource GlobalFontHolder}"    Name="fntIconRecord" Glyph="{x:Bind playerser:PlayerService.Masterplayer.IsRecording, Mode=OneWay, Converter={StaticResource RecConverter}, ConverterParameter='Icon'}" />
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Name="txtRecord" Text="{x:Bind playerser:PlayerService.Masterplayer.IsRecording, Mode=OneWay, Converter={StaticResource RecConverter}, ConverterParameter='Text'}"/>
                 </StackPanel>
