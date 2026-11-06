@@ -23,7 +23,7 @@
                 <Ellipse Stroke="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" 
                      StrokeThickness="12" Margin="10"/>
 
-                <Rectangle x:Name="DialNeedle" Width="6" Height="60" Fill="Cyan" 
+                <Rectangle x:Name="DialNeedle" Width="6" Height="60" Fill="{StaticResource GlobalAccentColor}" 
                        VerticalAlignment="Top" HorizontalAlignment="Center" 
                        Margin="0,15,0,0" RadiusX="3" RadiusY="3" 
                        RenderTransformOrigin="0.5,1">
@@ -33,7 +33,7 @@
                     </Rectangle.RenderTransform>
                 </Rectangle>
 
-                <Ellipse Width="16" Height="16" Fill="Cyan"/>
+                <Ellipse Width="16" Height="16" Fill="{StaticResource GlobalAccentColor}"/>
 
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    x:Name="txtRotationValue" 
                      Text="{Binding RotationAngle, Converter={StaticResource RotationAngleConverter}}"

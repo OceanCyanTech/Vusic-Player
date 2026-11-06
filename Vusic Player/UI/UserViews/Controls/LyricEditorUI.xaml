@@ -26,7 +26,44 @@
         <TeachingTip Name="ttRenameFile">
             <StackPanel Orientation="Vertical" Spacing="10">
                 <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  Name="ifbErrorRename"></InfoBar>
-                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtRename" PlaceholderText="Rename file..."></TextBox>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  Name="txtRename" PlaceholderText="Rename file...">
+                    <TextBox.Resources>
+                        <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                        <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
+
+                        <!-- 2. Resting / Unfocused State -->
+                        <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                        <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                        <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                        <!-- 3. Pointer Over (Hover) State -->
+                        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                        <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                        <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                        <!-- 4. Text Selection Highlight (Highlight color when selecting text) -->
+                        <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                        <!-- 5. Inner Clear / Action Button (The "X" delete button) -->
+                        <SolidColorBrush x:Key="TextControlButtonBackground" Color="Transparent"/>
+                        <SolidColorBrush x:Key="TextControlButtonBackgroundPointerOver" Color="#303030"/>
+                        <SolidColorBrush x:Key="TextControlButtonBackgroundPressed" Color="#404040"/>
+                        <SolidColorBrush x:Key="TextControlButtonForeground" Color="#808080"/>
+                        <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
+
+                        <!-- 6. Disabled State -->
+                        <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                        <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                        <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                        <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
+                    </TextBox.Resources>
+                </TextBox>
                 <Button Name="btnOfficialRename" Click="btnOfficialRename_Click" ToolTipService.ToolTip="Rename">
                     <Image Source="{Binding TickIcon, Source={StaticResource GlobalIconHolder}}" Width="20"/>
                 </Button>
@@ -122,7 +159,44 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Lyric Cue" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  TextChanged="txtTranscript_TextChanged" Name="txtTranscript" Grid.Row="1" PlaceholderText="Select a lyric cue in the list to load it here..."/>
+                <TextBox FontFamily="{StaticResource GlobalFontHolder}"  TextChanged="txtTranscript_TextChanged" Name="txtTranscript" Grid.Row="1" PlaceholderText="Select a lyric cue in the list to load it here...">
+                    <TextBox.Resources>
+                        <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                        <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
+
+                        <!-- 2. Resting / Unfocused State -->
+                        <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                        <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                        <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                        <!-- 3. Pointer Over (Hover) State -->
+                        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                        <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                        <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                        <!-- 4. Text Selection Highlight (Highlight color when selecting text) -->
+                        <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                        <!-- 5. Inner Clear / Action Button (The "X" delete button) -->
+                        <SolidColorBrush x:Key="TextControlButtonBackground" Color="Transparent"/>
+                        <SolidColorBrush x:Key="TextControlButtonBackgroundPointerOver" Color="#303030"/>
+                        <SolidColorBrush x:Key="TextControlButtonBackgroundPressed" Color="#404040"/>
+                        <SolidColorBrush x:Key="TextControlButtonForeground" Color="#808080"/>
+                        <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
+
+                        <!-- 6. Disabled State -->
+                        <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                        <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                        <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                        <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
+                    </TextBox.Resources>
+                </TextBox>
                 <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" Spacing="10" Grid.Row="2">
                     <Button HorizontalAlignment="Stretch" Name="btnRemoveSubtitle" FontFamily="{StaticResource GlobalFontHolder}"  Click="btnRemoveSubtitle_Click" Content="Remove Lyric Cue" Grid.Row="2"/>
 
@@ -144,7 +218,57 @@
                 <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
                     <StackPanel Orientation="Vertical" Spacing="10">
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyStrongTextBlockStyle}"  Text="Lyric Cue Duration"/>
-                        <NumberBox ValueChanged="subDifference_ValueChanged" Name="subDifference" Minimum="0"/>
+                        <NumberBox ValueChanged="subDifference_ValueChanged" Name="subDifference" Minimum="0">
+                            <NumberBox.Resources>
+                                <!-- 1. Focused State (Accent Border & Caret) -->
+                                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                                <!-- 2. Resting / Unfocused State -->
+                                <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                <!-- 3. Pointer Over (Hover) State -->
+                                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+
+                                <!-- 4. Text Selection Highlight -->
+                                <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                <!-- 5. Spin Up/Down Repeat Buttons (Resting) -->
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonBackground" Color="Transparent"/>
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonForeground" Color="#AAAAAA"/>
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrush" Color="Transparent"/>
+
+                                <!-- 6. Spin Up/Down Repeat Buttons (Pointer Over) -->
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPointerOver" Color="#303030"/>
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColor}"/>
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                <!-- 7. Spin Up/Down Repeat Buttons (Pressed) -->
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPressed" Color="#404040"/>
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPressed" Color="Transparent"/>
+
+                                <!-- 8. Spin Up/Down Repeat Buttons (Disabled) -->
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundDisabled" Color="Transparent"/>
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundDisabled" Color="#404040"/>
+                                <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushDisabled" Color="Transparent"/>
+
+                                <!-- 9. Header / Label Foreground -->
+                                <SolidColorBrush x:Key="NumberBoxHeaderForeground" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="NumberBoxHeaderForegroundDisabled" Color="#707070"/>
+
+                                <!-- 10. Disabled NumberBox State -->
+                                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                            </NumberBox.Resources>
+                        </NumberBox>
                     </StackPanel>
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Bottom" Margin="0, 10" Text="seconds"/>
                 </StackPanel>
@@ -156,13 +280,87 @@
                     <StackPanel Orientation="Vertical" Spacing="15">
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyStrongTextBlockStyle}" Text="Start Time"/>
                         <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  Name="ifbErrorStartTime"/>
-                        <TextBox FontFamily="{StaticResource GlobalFontHolder}"  TextChanged="txtStartTime_TextChanged"  Text="00:00:00.000" Name="txtStartTime"/>
+                        <TextBox FontFamily="{StaticResource GlobalFontHolder}"  TextChanged="txtStartTime_TextChanged"  Text="00:00:00.000" Name="txtStartTime">
+                            <TextBox.Resources>
+                                <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
+
+                                <!-- 2. Resting / Unfocused State -->
+                                <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                <!-- 3. Pointer Over (Hover) State -->
+                                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                                <!-- 4. Text Selection Highlight (Highlight color when selecting text) -->
+                                <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                <!-- 5. Inner Clear / Action Button (The "X" delete button) -->
+                                <SolidColorBrush x:Key="TextControlButtonBackground" Color="Transparent"/>
+                                <SolidColorBrush x:Key="TextControlButtonBackgroundPointerOver" Color="#303030"/>
+                                <SolidColorBrush x:Key="TextControlButtonBackgroundPressed" Color="#404040"/>
+                                <SolidColorBrush x:Key="TextControlButtonForeground" Color="#808080"/>
+                                <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
+
+                                <!-- 6. Disabled State -->
+                                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
+                            </TextBox.Resources>
+                        </TextBox>
                         <Button FontFamily="{StaticResource GlobalFontHolder}"  Content="Get Current Time" Name="btnGetCurrentTimeStart" Click="btnGetCurrentTimeStart_Click"></Button>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="15">
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyStrongTextBlockStyle}" Text="End Time"/>
                         <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  Name="ifbErrorEndTime"/>
-                        <TextBox FontFamily="{StaticResource GlobalFontHolder}"  TextChanged="txtEndTime_TextChanged" Text="00:00:00.000" Name="txtEndTime"/>
+                        <TextBox FontFamily="{StaticResource GlobalFontHolder}"  TextChanged="txtEndTime_TextChanged" Text="00:00:00.000" Name="txtEndTime">
+                            <TextBox.Resources>
+                                <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
+
+                                <!-- 2. Resting / Unfocused State -->
+                                <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                <!-- 3. Pointer Over (Hover) State -->
+                                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                                <!-- 4. Text Selection Highlight (Highlight color when selecting text) -->
+                                <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                <!-- 5. Inner Clear / Action Button (The "X" delete button) -->
+                                <SolidColorBrush x:Key="TextControlButtonBackground" Color="Transparent"/>
+                                <SolidColorBrush x:Key="TextControlButtonBackgroundPointerOver" Color="#303030"/>
+                                <SolidColorBrush x:Key="TextControlButtonBackgroundPressed" Color="#404040"/>
+                                <SolidColorBrush x:Key="TextControlButtonForeground" Color="#808080"/>
+                                <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#FFFFFF"/>
+                                <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
+
+                                <!-- 6. Disabled State -->
+                                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
+                            </TextBox.Resources>
+                        </TextBox>
                         <Button FontFamily="{StaticResource GlobalFontHolder}"  Content="Get Current Time" Name="btnGetCurrentTimeEnd" Click="btnGetCurrentTimeEnd_Click"></Button>
                     </StackPanel>
                 </Grid>
@@ -346,7 +544,58 @@ CornerRadius="16"
                     Name="asbFind" 
                     Header="Find" 
                     QueryIcon="Find" 
-                    VerticalAlignment="Bottom"/>
+                    VerticalAlignment="Bottom">
+                        <AutoSuggestBox.Resources>
+                            <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                            <!-- 2. Resting / Unfocused State -->
+                            <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                            <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                            <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                            <!-- 3. Pointer Over (Hover) State -->
+                            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                            <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                            <!-- 4. Text Selection Highlight -->
+                            <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                            <!-- 5. Query / Search Icon Button & Clear ("X") Button -->
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonForeground" Color="#808080"/>
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPointerOver" Color="#303030"/>
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPressed" Color="#404040"/>
+
+                            <!-- 6. Suggestions Dropdown Popup (ListView items) -->
+                            <!-- Background surface of the dropdown overlay -->
+                            <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="#1E1E1E"/>
+
+                            <!-- Hovered suggestion item -->
+                            <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#2C2C2C"/>
+                            <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="#FFFFFF"/>
+
+                            <!-- Selected suggestion item (Focused or Arrow-Key Navigated) -->
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#333333"/>
+                            <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#383838"/>
+
+                            <!-- Selection Indicator Pill on the left of the item -->
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFill" Color="{StaticResource GlobalAccentColor}"/>
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFillPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+
+                            <!-- 7. Disabled State -->
+                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                            <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                        </AutoSuggestBox.Resources>
+                    </AutoSuggestBox>
                     <Button Grid.Row="1" 
             Grid.Column="1"  FontFamily="{StaticResource GlobalFontHolder}" 
             Name="btnFindActual" 
@@ -359,7 +608,58 @@ CornerRadius="16"
                     Grid.Column="0" 
                     Name="asbReplace" 
                     Header="Replace" 
-                    VerticalAlignment="Bottom"/>
+                    VerticalAlignment="Bottom">
+                        <AutoSuggestBox.Resources>
+                            <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                            <!-- 2. Resting / Unfocused State -->
+                            <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                            <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                            <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                            <!-- 3. Pointer Over (Hover) State -->
+                            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                            <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                            <!-- 4. Text Selection Highlight -->
+                            <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                            <!-- 5. Query / Search Icon Button & Clear ("X") Button -->
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonForeground" Color="#808080"/>
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPointerOver" Color="#303030"/>
+                            <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPressed" Color="#404040"/>
+
+                            <!-- 6. Suggestions Dropdown Popup (ListView items) -->
+                            <!-- Background surface of the dropdown overlay -->
+                            <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="#1E1E1E"/>
+
+                            <!-- Hovered suggestion item -->
+                            <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#2C2C2C"/>
+                            <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="#FFFFFF"/>
+
+                            <!-- Selected suggestion item (Focused or Arrow-Key Navigated) -->
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#333333"/>
+                            <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#383838"/>
+
+                            <!-- Selection Indicator Pill on the left of the item -->
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFill" Color="{StaticResource GlobalAccentColor}"/>
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFillPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+
+                            <!-- 7. Disabled State -->
+                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                            <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                        </AutoSuggestBox.Resources>
+                    </AutoSuggestBox>
                     <Button Grid.Row="2" 
             Grid.Column="1"  FontFamily="{StaticResource GlobalFontHolder}" 
             Name="btnReplace" 

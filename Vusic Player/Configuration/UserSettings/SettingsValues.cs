@@ -34,8 +34,10 @@ namespace Vusic_Player.Configuration.UserSettings
         public ObservableCollection<PlaylistItem> SavedPlaylists { get; set; } = new();
         //public ObservableCollection<AppPersonalization> UserSettings { get; set; } = new();
         public ObservableCollection<RecentMusicModel> RecentMusic { get; set; } = new();
-     
-        
+
+        public string GlowColorHex { get; set; } = "#FF0000";
+        public bool GlowAnimation { get; set; } = false;
+        public bool GlowEffect { get; set; } = true;
         public ObservableCollection<FavouriteItems> Favourites { get; set; } = new();
         public ObservableCollection<MediaOptions> VideoFilesOptions { get; set; } = new();
         public WatermarkSettingsModel Watermark { get; set; } = new();

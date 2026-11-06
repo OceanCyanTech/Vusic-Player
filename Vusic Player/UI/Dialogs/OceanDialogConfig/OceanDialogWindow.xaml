@@ -33,7 +33,7 @@
 
                                             <Border x:Name="BackgroundElement"
                             CornerRadius="8"
-                            Background="Cyan"
+                           Background="{StaticResource GlobalAccentColor}"
                             Opacity="0.6"
                             RenderTransformOrigin="0.5,0.5">
 

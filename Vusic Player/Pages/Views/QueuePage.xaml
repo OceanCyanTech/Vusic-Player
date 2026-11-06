@@ -160,7 +160,58 @@ AlwaysUseFallback="False"/>
                             <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}"   QuerySubmitted="asbFindQueue_QuerySubmitted"  IsEnabled="True" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"  Grid.Column="1" Name="asbFindQueue" TextChanged="asbFindQueue_TextChanged"
                         QueryIcon="Find"
                         PlaceholderText="Find in queue..."
-                        HorizontalAlignment="Stretch" Height="35" Width="300"/>
+                        HorizontalAlignment="Stretch" Height="35" Width="300">
+                                <AutoSuggestBox.Resources>
+                                    <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                                    <!-- 2. Resting / Unfocused State -->
+                                    <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                    <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                    <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                    <!-- 3. Pointer Over (Hover) State -->
+                                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                                    <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                                    <!-- 4. Text Selection Highlight -->
+                                    <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                    <!-- 5. Query / Search Icon Button & Clear ("X") Button -->
+                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonForeground" Color="#808080"/>
+                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPointerOver" Color="#303030"/>
+                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPressed" Color="#404040"/>
+
+                                    <!-- 6. Suggestions Dropdown Popup (ListView items) -->
+                                    <!-- Background surface of the dropdown overlay -->
+                                    <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="#1E1E1E"/>
+
+                                    <!-- Hovered suggestion item -->
+                                    <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#2C2C2C"/>
+                                    <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="#FFFFFF"/>
+
+                                    <!-- Selected suggestion item (Focused or Arrow-Key Navigated) -->
+                                    <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#333333"/>
+                                    <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#383838"/>
+
+                                    <!-- Selection Indicator Pill on the left of the item -->
+                                    <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFill" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFillPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+
+                                    <!-- 7. Disabled State -->
+                                    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                    <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                    <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                </AutoSuggestBox.Resources>
+                            </AutoSuggestBox>
                         </Grid>
 
 

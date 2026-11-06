@@ -195,7 +195,7 @@
                                 </oceancyan:OceanSlider>
                                 <StackPanel Margin="0, 10" Orientation="Horizontal" >
                                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="White" Name="txtVolumepercent" />
-                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="Cyan"/>
+                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Text="{x:Bind mediacontroller.VolumeString, Mode=OneWay}" Foreground="{StaticResource GlobalAccentColor}"/>
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>

@@ -16,7 +16,36 @@
         </Grid.RowDefinitions>
 
         <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" Text="" Name="txtMain" Grid.Row="0" MinWidth="250" Style="{StaticResource TitleLargeTextBlockStyle}"/>
-        <ProgressBar Name="prgMain"   HorizontalAlignment="Center" IsIndeterminate="True" Width="300" Grid.Row="1"/>
+        <ProgressBar Name="prgMain"   HorizontalAlignment="Center" IsIndeterminate="True" Width="300" Grid.Row="1">
+            <ProgressBar.Resources>
+                <!-- 1. Determinate State: Active Track Indicator Fill -->
+                <SolidColorBrush x:Key="ProgressBarForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                <!-- 2. Track Background (The empty track/trough behind the progress) -->
+                <SolidColorBrush x:Key="ProgressBarBackground" Color="#2A2A2A"/>
+
+                <!-- 3. Outer Border Stroke (Default is transparent in WinUI) -->
+                <SolidColorBrush x:Key="ProgressBarBorderBrush" Color="Transparent"/>
+
+                <!-- 4. Indeterminate State (Looping pulse animation / loading bar) -->
+                <SolidColorBrush x:Key="ProgressBarIndeterminateForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                <!-- 5. Paused State (When ShowPaused="True") -->
+                <SolidColorBrush x:Key="ProgressBarPausedForeground" Color="#FFC83B"/>
+
+                <!-- 6. Error State (When ShowError="True") -->
+                <SolidColorBrush x:Key="ProgressBarErrorForeground" Color="#FF4343"/>
+
+                <!-- 7. Disabled State -->
+                <SolidColorBrush x:Key="ProgressBarForegroundDisabled" Color="#404040"/>
+                <SolidColorBrush x:Key="ProgressBarBackgroundDisabled" Color="#1E1E1E"/>
+                <SolidColorBrush x:Key="ProgressBarBorderBrushDisabled" Color="Transparent"/>
+
+                <!-- 8. Corner Radius (Geometry rounding for both track and indicator) -->
+                <CornerRadius x:Key="ProgressBarCornerRadius">3</CornerRadius>
+                <CornerRadius x:Key="ProgressBarTrackCornerRadius">3</CornerRadius>
+            </ProgressBar.Resources>
+        </ProgressBar>
         <Button  FontFamily="{StaticResource GlobalFontHolder}"  Name="btnReady" Content="Use Vusic Player" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" HorizontalAlignment="Left" Visibility="Collapsed" Click="btnReady_Click" Background="{StaticResource GlobalAccentColor}" >
             <Button.Resources>
                 <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>

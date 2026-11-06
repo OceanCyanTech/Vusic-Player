@@ -56,7 +56,26 @@
                         </Border.Background>
                     </Border>
 
-                    <ProgressRing Visibility="Collapsed" Name="prgAwaitResume" VerticalAlignment="Center" IsIndeterminate="True"></ProgressRing>
+                    <ProgressRing Visibility="Collapsed" Name="prgAwaitResume" VerticalAlignment="Center" IsIndeterminate="True">
+                        <ProgressRing.Resources>
+                            <!-- 1. Indeterminate Animated Sweep Segment (The rotating colored tail) -->
+                            <SolidColorBrush x:Key="ProgressRingIndeterminateForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                            <!-- 2. Determinate Active Arc Fill (The completed percentage portion) -->
+                            <SolidColorBrush x:Key="ProgressRingForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                            <!-- 3. Full Circular Track / Rail (The background ring in determinate mode) -->
+                            <SolidColorBrush x:Key="ProgressRingBackground" Color="#2A2A2A"/>
+
+                            <!-- 4. Outer Border Stroke (Default is Transparent) -->
+                            <SolidColorBrush x:Key="ProgressRingBorderBrush" Color="Transparent"/>
+
+                            <!-- 5. Disabled State -->
+                            <SolidColorBrush x:Key="ProgressRingForegroundDisabled" Color="#404040"/>
+                            <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="ProgressRingBorderBrushDisabled" Color="Transparent"/>
+                        </ProgressRing.Resources>
+                    </ProgressRing>
 
                     <Border Margin="10, 10" VerticalAlignment="Top" HorizontalAlignment="Left" CornerRadius="12,12,12,12">
 
@@ -327,14 +346,14 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
         <Grid Name="grdEmptyRecents" Visibility="{x:Bind VideoProgressList.Count, Converter={StaticResource VisibilityofEmpty}, Mode=OneWay}" Grid.Column="1">
             <StackPanel Name="stkEnabledEmptyRecents"  Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
-                    <Image Width="90" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"></Image>
+                    <Image Width="90" Source="{Binding RecentVideos, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" TextWrapping="Wrap" Text="Start watching videos to see them here in Recents!" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
-                <Button HorizontalAlignment="Center"  Content="Disable Recents" Name="btnDisableRecents" Click="btnDisableRecents_Click"></Button>
+                <Button  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center"  Content="Disable Recents" Name="btnDisableRecents" Click="btnDisableRecents_Click"></Button>
             </StackPanel>
             <StackPanel Name="stkDisabledEmptyRecents" Visibility="Collapsed"  Orientation="Vertical" Spacing="15">
                 <StackPanel Orientation="Vertical" Spacing="20">
-                    <Image Width="90" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"></Image>
+                    <Image Width="90" Source="{Binding RecentVideos, Source={StaticResource GlobalIconHolder}}"></Image>
                     <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  HorizontalAlignment="Center" TextWrapping="Wrap" Text="Saving to Recents has been disabled." Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                 </StackPanel>
                 <Button HorizontalAlignment="Center"  Content="Enable Recents" Name="btnEnableRecents" Click="btnEnableRecents_Click"></Button>

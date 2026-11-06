@@ -332,6 +332,10 @@ namespace Vusic_Player.Pages
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var snapshotpath = currentSettings.SnapshotPath;
             Screen.Instance.TakeSnapshot(snapshotpath, currentSettings.IsTimeStampEnabledOnSnapshot, currentSettings.IsPositionEnabledOnSnapshot);
+            if(currentSettings.GlowAnimation == true)
+            {
+                GlowService.StartNeonGlowAnimation();
+            }
         }
         int pointertimercount = 2;
         private bool _isCursorSuppressed = false;
@@ -2794,6 +2798,8 @@ namespace Vusic_Player.Pages
                     }
                     ManualNavigationVideoSettings.CallClearance();
                     PlayerService.InVideoPage = false;
+                    OceanContentDialog.HideDlg();
+
                 }
 
             }

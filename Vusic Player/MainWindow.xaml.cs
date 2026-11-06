@@ -1,6 +1,7 @@
 // Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -19,10 +20,12 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views.Onboarding;
+using Vusic_Player.UI;
 using Vusic_Player.UI.Dialogs;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI;
 using WinRT.Interop;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
@@ -155,6 +158,8 @@ namespace Vusic_Player
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 var font = currentSettings.FontFamily;
                 var theme = currentSettings.Theme;
+                GlowService.Instance.GlowEffectVisibility = currentSettings.GlowEffect ? Visibility.Visible : Visibility.Collapsed;
+                GlowService.Instance.GlowColor = currentSettings.GlowColorHex.ToColor();
                 ThemeManager.Instance.GlobalTheme = theme;
                 IconHolder.Instance.Play = $"ms-appx:///Assets/Themes/{theme}/play.png";
                 IconHolder.Instance.Pause = $"ms-appx:///Assets/Themes/{theme}/pause.png";
@@ -163,19 +168,20 @@ namespace Vusic_Player
                 MediaPlaybackController.Instance.Thumbnail = IconHolder.Instance.Play;
                 if (theme == "Ocean")
                 {
+                    Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 0, 255, 255);
+                    Application.Current.Resources["GlobalAccentColorPointerOver"] = Windows.UI.Color.FromArgb(255, 3, 234, 255);
+                    Application.Current.Resources["GlobalAccentColorPointerPressed"] = Windows.UI.Color.FromArgb(255, 6, 180, 255);
 
                 }
                 else if (theme == "NeonGlow")
                 {
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 7, 177, 35);
-                    Application.Current.Resources["CheckBoxCheckBackgroundFillChecked"] = Windows.UI.Color.FromArgb(255, 7, 177, 35);
                     Application.Current.Resources["GlobalAccentColorPointerOver"] = Windows.UI.Color.FromArgb(255, 2, 119, 21);
                     Application.Current.Resources["GlobalAccentColorPointerPressed"] = Windows.UI.Color.FromArgb(255, 7, 190, 37);
                 }
                 else if (theme == "Space")
                 {
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 206, 206, 206);
-                    Application.Current.Resources["CheckBoxCheckBackgroundFillChecked"] = Windows.UI.Color.FromArgb(255, 206, 206, 206);
                     Application.Current.Resources["GlobalAccentColorPointerOver"] = Windows.UI.Color.FromArgb(255, 230, 230, 230);
                     Application.Current.Resources["GlobalAccentColorPointerPressed"] = Windows.UI.Color.FromArgb(255, 200, 200, 200);
 

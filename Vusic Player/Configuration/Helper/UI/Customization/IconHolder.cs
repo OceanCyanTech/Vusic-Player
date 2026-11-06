@@ -13,6 +13,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _sourceerror = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/sourceerror.png";
         private string _deviceIcon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/deviceicon.png";
         private string _settingIcon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/settingicon.png";
+        private string _recentVideos = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/recentvideos.png";
         private string _recordicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/recordicon.png";
         private string _backicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/backicon.png";
         private string _reseticon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/reseticon.png";
@@ -118,6 +119,18 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
                 if (_sampleimage != value)
                 {
                     _sampleimage = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string RecentVideos
+        {
+            get => _recentVideos;
+            set
+            {
+                if (_recentVideos != value)
+                {
+                    _recentVideos = value;
                     OnPropertyChanged();
                 }
             }

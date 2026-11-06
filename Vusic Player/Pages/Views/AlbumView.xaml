@@ -13,7 +13,26 @@
             <ColumnDefinition Width="Auto" MaxWidth="400"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ProgressRing Grid.Column="1" Width="60" Height="60" Name="prgActiveProgress" Visibility="Collapsed" IsIndeterminate="True"  HorizontalAlignment="Center"></ProgressRing>
+        <ProgressRing Grid.Column="1" Width="60" Height="60" Name="prgActiveProgress" Visibility="Collapsed" IsIndeterminate="True"  HorizontalAlignment="Center">
+            <ProgressRing.Resources>
+                <!-- 1. Indeterminate Animated Sweep Segment (The rotating colored tail) -->
+                <SolidColorBrush x:Key="ProgressRingIndeterminateForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                <!-- 2. Determinate Active Arc Fill (The completed percentage portion) -->
+                <SolidColorBrush x:Key="ProgressRingForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                <!-- 3. Full Circular Track / Rail (The background ring in determinate mode) -->
+                <SolidColorBrush x:Key="ProgressRingBackground" Color="#2A2A2A"/>
+
+                <!-- 4. Outer Border Stroke (Default is Transparent) -->
+                <SolidColorBrush x:Key="ProgressRingBorderBrush" Color="Transparent"/>
+
+                <!-- 5. Disabled State -->
+                <SolidColorBrush x:Key="ProgressRingForegroundDisabled" Color="#404040"/>
+                <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="#1E1E1E"/>
+                <SolidColorBrush x:Key="ProgressRingBorderBrushDisabled" Color="Transparent"/>
+            </ProgressRing.Resources>
+        </ProgressRing>
 
         <Grid HorizontalAlignment="Stretch" Grid.Column="0" VerticalAlignment="Stretch" Margin="20">
             <Grid.RowDefinitions>
@@ -51,7 +70,36 @@
 
             <TeachingTip  FontFamily="{StaticResource GlobalFontHolder}"  Title="Finding files across your libraries" Name="ttProgress" >
                 <StackPanel Orientation="Horizontal" Margin="0, 20">
-                    <ProgressBar Name="prgProgress" IsIndeterminate="True" Width="300" Margin="10, 0"></ProgressBar>
+                    <ProgressBar Name="prgProgress" IsIndeterminate="True" Width="300" Margin="10, 0">
+                        <ProgressBar.Resources>
+                            <!-- 1. Determinate State: Active Track Indicator Fill -->
+                            <SolidColorBrush x:Key="ProgressBarForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                            <!-- 2. Track Background (The empty track/trough behind the progress) -->
+                            <SolidColorBrush x:Key="ProgressBarBackground" Color="#2A2A2A"/>
+
+                            <!-- 3. Outer Border Stroke (Default is transparent in WinUI) -->
+                            <SolidColorBrush x:Key="ProgressBarBorderBrush" Color="Transparent"/>
+
+                            <!-- 4. Indeterminate State (Looping pulse animation / loading bar) -->
+                            <SolidColorBrush x:Key="ProgressBarIndeterminateForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                            <!-- 5. Paused State (When ShowPaused="True") -->
+                            <SolidColorBrush x:Key="ProgressBarPausedForeground" Color="#FFC83B"/>
+
+                            <!-- 6. Error State (When ShowError="True") -->
+                            <SolidColorBrush x:Key="ProgressBarErrorForeground" Color="#FF4343"/>
+
+                            <!-- 7. Disabled State -->
+                            <SolidColorBrush x:Key="ProgressBarForegroundDisabled" Color="#404040"/>
+                            <SolidColorBrush x:Key="ProgressBarBackgroundDisabled" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="ProgressBarBorderBrushDisabled" Color="Transparent"/>
+
+                            <!-- 8. Corner Radius (Geometry rounding for both track and indicator) -->
+                            <CornerRadius x:Key="ProgressBarCornerRadius">3</CornerRadius>
+                            <CornerRadius x:Key="ProgressBarTrackCornerRadius">3</CornerRadius>
+                        </ProgressBar.Resources>
+                    </ProgressBar>
                 </StackPanel>
             </TeachingTip>
             <StackPanel Grid.Row="1" Margin="0, 20" Orientation="Vertical" HorizontalAlignment="Center">

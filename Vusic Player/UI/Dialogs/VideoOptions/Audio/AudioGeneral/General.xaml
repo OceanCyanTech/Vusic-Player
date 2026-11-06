@@ -27,7 +27,7 @@ SelectionChanged="cmbAudioTrack_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="flyleaf:AudioStream">
                             <StackPanel Orientation="Horizontal" Spacing="8">
-                                <FontIcon Glyph="&#xE8D6;" FontSize="16" Foreground="Cyan"/>
+                                <FontIcon Glyph="&#xE8D6;" FontSize="16" Foreground="{StaticResource GlobalAccentColor}"/>
 
                                 <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}"   >
        <Run Text="Stream"/>

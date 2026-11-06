@@ -1,7 +1,9 @@
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Vusic_Player.Configuration.Playback;
+using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.MediaProperties.VideoProperties;
 using Windows.UI;
 
@@ -39,10 +41,12 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
             ZoomService.Set(100);
         }
 
-        private void chkGlow_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void chkGlow_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
             if (chkGlow.IsChecked == true)
             {
+                currentSettings.GlowEffect = true;
                 GlowService.Instance.GlowEffectVisibility = Visibility.Visible;
                 tglMoreGlowOptions.IsEnabled = true;
                 glowColorPicker.IsEnabled = true;
@@ -53,6 +57,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
             }
             else
             {
+                currentSettings.GlowEffect = false;
                 tglMoreGlowOptions.IsEnabled = false;
                 glowColorPicker.IsEnabled = false;
                 btnChooseGlowColor.IsEnabled = false;
@@ -60,6 +65,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
                 speedSlider.IsEnabled = false;
                 GlowService.Instance.GlowEffectVisibility = Visibility.Collapsed;
             }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
 
@@ -87,27 +93,37 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
             MoreGlowOptions();
         }
 
-        private void glowColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+        private async void glowColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
         {
             GlowService.Instance.GlowColor = glowColorPicker.Color;
             rctColorGlow.Fill = new SolidColorBrush(args.NewColor);
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.GlowColorHex = glowColorPicker.Color.ToHex();
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
         private void switchRGB_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
         }
 
-        private void switchMoving_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void switchMoving_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+
             if (switchMoving.IsOn)
             {
                 originalGlowColor = GlowService.Instance.GlowColor;
                 GlowService.GlowSpeed = speedSlider.Value;
                 GlowService.StartNeonGlowAnimation();
+                currentSettings.GlowAnimation = true;
+
             }
             else
             {
+                currentSettings.GlowAnimation = false;
                 GlowService.StopAnimation(originalGlowColor);
             }
+
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
         #endregion
 

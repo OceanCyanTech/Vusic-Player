@@ -46,7 +46,26 @@
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="1" Text="{Binding FileName}"   TextWrapping="Wrap" />
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding FolderName}" Visibility="Visible" TextWrapping="Wrap" />
                     </StackPanel>
-                        <ProgressRing Visibility="{Binding LoadingVisibility}" IsIndeterminate="True"/>
+                        <ProgressRing Visibility="{Binding LoadingVisibility}" IsIndeterminate="True">
+                            <ProgressRing.Resources>
+                                <!-- 1. Indeterminate Animated Sweep Segment (The rotating colored tail) -->
+                                <SolidColorBrush x:Key="ProgressRingIndeterminateForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                                <!-- 2. Determinate Active Arc Fill (The completed percentage portion) -->
+                                <SolidColorBrush x:Key="ProgressRingForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                                <!-- 3. Full Circular Track / Rail (The background ring in determinate mode) -->
+                                <SolidColorBrush x:Key="ProgressRingBackground" Color="#2A2A2A"/>
+
+                                <!-- 4. Outer Border Stroke (Default is Transparent) -->
+                                <SolidColorBrush x:Key="ProgressRingBorderBrush" Color="Transparent"/>
+
+                                <!-- 5. Disabled State -->
+                                <SolidColorBrush x:Key="ProgressRingForegroundDisabled" Color="#404040"/>
+                                <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="#1E1E1E"/>
+                                <SolidColorBrush x:Key="ProgressRingBorderBrushDisabled" Color="Transparent"/>
+                            </ProgressRing.Resources>
+                        </ProgressRing>
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>

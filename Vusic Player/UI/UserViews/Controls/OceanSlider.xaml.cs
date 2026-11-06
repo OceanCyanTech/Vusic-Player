@@ -50,6 +50,53 @@ namespace Vusic_Player.UI.UserViews.Controls
                 });
                 Progress.Background = gradient;
             }
+            else if (ThemeManager.Instance.GlobalTheme == "NeonGlow")
+            {
+                LinearGradientBrush gradient = new LinearGradientBrush
+                {
+                    StartPoint = new Windows.Foundation.Point(0, 0.5),
+                    EndPoint = new Windows.Foundation.Point(1, 0.5)
+                };
+                gradient.GradientStops.Add(new GradientStop
+                {
+                    Color = Windows.UI.Color.FromArgb(255, 0, 255, 43),
+                    Offset = 0.0
+                });
+                gradient.GradientStops.Add(new GradientStop
+                {
+                    Color = Windows.UI.Color.FromArgb(255, 29, 255, 150),
+                    Offset = 0.5
+                }); gradient.GradientStops.Add(new GradientStop
+                {
+                    Color = Windows.UI.Color.FromArgb(255, 0, 255, 43),
+                    Offset = 1.0
+                });
+                Progress.Background = gradient;
+            }
+            else if (ThemeManager.Instance.GlobalTheme == "Ocean")
+            {
+                LinearGradientBrush gradient = new LinearGradientBrush
+                {
+                    StartPoint = new Windows.Foundation.Point(0, 0.5),
+                    EndPoint = new Windows.Foundation.Point(1, 0.5)
+                };
+                gradient.GradientStops.Add(new GradientStop
+                {
+                    Color = Windows.UI.Color.FromArgb(255, 0, 255, 255),
+                    Offset = 0.0
+                });
+                gradient.GradientStops.Add(new GradientStop
+                {
+                    Color = Windows.UI.Color.FromArgb(255, 3, 234, 255),
+                    Offset = 0.5
+                }); gradient.GradientStops.Add(new GradientStop
+                {
+                    Color = Windows.UI.Color.FromArgb(255, 6, 180, 255),
+                    Offset = 1.0
+                });
+                Progress.Background = gradient;
+            }
+
             //        UpdateThemeBrush();
             //     UpdateVisuals();
         }

@@ -51,7 +51,7 @@
                         <MenuFlyoutSeparator Grid.Row="1"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="App Log" Grid.Row="2" Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="View events that are recorded when Vusic Player performs informative/successful actions or unexpectedly crashes due to bugs" Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
-                        <Button Name="btnViewLog" Grid.Row="4" Content="View App Log" Style="{StaticResource AccentButtonStyle}" Click="btnViewLog_Click" Background="{StaticResource GlobalAccentColor}" >
+                        <Button FontFamily="{StaticResource GlobalFontHolder}" Name="btnViewLog" Grid.Row="4" Content="View App Log" Style="{StaticResource AccentButtonStyle}" Click="btnViewLog_Click" Background="{StaticResource GlobalAccentColor}" >
                             <Button.Resources>
                                 <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
                                 <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
@@ -315,7 +315,26 @@
                         <MenuFlyoutSeparator Grid.Row="2"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Updates" Grid.Row="3" Style="{StaticResource TitleTextBlockStyle}"/>
                         <StackPanel Orientation="Horizontal" Spacing="10" Grid.Row="4">
-                            <ProgressRing Name="prgCheckingForUpdates" Visibility="Collapsed"/>
+                            <ProgressRing Name="prgCheckingForUpdates" Visibility="Collapsed">
+                                <ProgressRing.Resources>
+                                    <!-- 1. Indeterminate Animated Sweep Segment (The rotating colored tail) -->
+                                    <SolidColorBrush x:Key="ProgressRingIndeterminateForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                                    <!-- 2. Determinate Active Arc Fill (The completed percentage portion) -->
+                                    <SolidColorBrush x:Key="ProgressRingForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                                    <!-- 3. Full Circular Track / Rail (The background ring in determinate mode) -->
+                                    <SolidColorBrush x:Key="ProgressRingBackground" Color="#2A2A2A"/>
+
+                                    <!-- 4. Outer Border Stroke (Default is Transparent) -->
+                                    <SolidColorBrush x:Key="ProgressRingBorderBrush" Color="Transparent"/>
+
+                                    <!-- 5. Disabled State -->
+                                    <SolidColorBrush x:Key="ProgressRingForegroundDisabled" Color="#404040"/>
+                                    <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="#1E1E1E"/>
+                                    <SolidColorBrush x:Key="ProgressRingBorderBrushDisabled" Color="Transparent"/>
+                                </ProgressRing.Resources>
+                            </ProgressRing>
                             <Image Width="30" Name="imgUpdate" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Name="txtUpdateInfo" Style="{StaticResource BodyLargeStrongTextBlockStyle}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="You are on the latest version of Vusic Player!"/>
                         </StackPanel>
@@ -758,6 +777,11 @@
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
 
+
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedDisabled" Color="Transparent"/>
                                     <!-- Checkmark Glyph Color (The tick mark inside the box) -->
                                     <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
@@ -767,7 +791,8 @@
                                     <!-- Unchecked State (Empty box outline border) -->
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
-                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                               
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
 
                                     <!-- Text Label Foreground -->
                                     <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
@@ -913,24 +938,31 @@
                         <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="14">
                             <CheckBox x:Name="chkVideoContinueRecent" Content="Continue Playing and Recent Videos" Checked="chkHidePanel3_Checked" Unchecked="chkHidePanel3_Checked">
                                 <CheckBox.Resources>
-                                    <!-- Checked State (Background box fill) -->
+                                    <!-- 1. Background Fill when CHECKED -->
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedDisabled" Color="#2A2A2A"/>
 
-                                    <!-- Checkmark Glyph Color (The tick mark inside the box) -->
+                                    <!-- 2. The Checkmark Glyph Color -->
                                     <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#000000"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#000000"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#000000"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedDisabled" Color="#707070"/>
 
-                                    <!-- Unchecked State (Empty box outline border) -->
+                                    <!-- 3. Border Stroke when CHECKED -->
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedDisabled" Color="Transparent"/>
+
+                                    <!-- 4. Background Fill & Stroke when UNCHECKED -->
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="Transparent"/>
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#808080"/>
-                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/> 
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#B0B0B0"/>
+                                    <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" Color="#606060"/>
 
-                                    <!-- Text Label Foreground -->
+                                    <!-- 5. Label Text Foreground -->
                                     <SolidColorBrush x:Key="CheckBoxForeground" Color="#FFFFFF"/>
                                     <SolidColorBrush x:Key="CheckBoxForegroundPointerOver" Color="#FFFFFF"/>
                                     <SolidColorBrush x:Key="CheckBoxForegroundPressed" Color="#CCCCCC"/>
@@ -1160,7 +1192,57 @@
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="30 seconds"/>
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}" Content="Custom"/>
                                 </ComboBox>
-                                <NumberBox  FontFamily="{StaticResource GlobalFontHolder}"   ValueChanged="numCustomSkipBack_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipBack"/>
+                                <NumberBox  FontFamily="{StaticResource GlobalFontHolder}"   ValueChanged="numCustomSkipBack_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipBack">
+                                    <NumberBox.Resources>
+                                        <!-- 1. Focused State (Accent Border & Caret) -->
+                                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                        <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                                        <!-- 2. Resting / Unfocused State -->
+                                        <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                        <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                        <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                        <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                        <!-- 3. Pointer Over (Hover) State -->
+                                        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                        <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+
+                                        <!-- 4. Text Selection Highlight -->
+                                        <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                        <!-- 5. Spin Up/Down Repeat Buttons (Resting) -->
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBackground" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonForeground" Color="#AAAAAA"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrush" Color="Transparent"/>
+
+                                        <!-- 6. Spin Up/Down Repeat Buttons (Pointer Over) -->
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPointerOver" Color="#303030"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColor}"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                        <!-- 7. Spin Up/Down Repeat Buttons (Pressed) -->
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPressed" Color="#404040"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPressed" Color="Transparent"/>
+
+                                        <!-- 8. Spin Up/Down Repeat Buttons (Disabled) -->
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundDisabled" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundDisabled" Color="#404040"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushDisabled" Color="Transparent"/>
+
+                                        <!-- 9. Header / Label Foreground -->
+                                        <SolidColorBrush x:Key="NumberBoxHeaderForeground" Color="#FFFFFF"/>
+                                        <SolidColorBrush x:Key="NumberBoxHeaderForegroundDisabled" Color="#707070"/>
+
+                                        <!-- 10. Disabled NumberBox State -->
+                                        <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                        <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                        <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                    </NumberBox.Resources>
+                                </NumberBox>
                             </StackPanel>
                             <StackPanel  Orientation="Horizontal" Spacing="10" Grid.Row="5">
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Text="Forward Skip" Style="{StaticResource BodyStrongTextBlockStyle}"/>
@@ -1172,16 +1254,166 @@
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="30 seconds"/>
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Custom"/>
                                 </ComboBox>
-                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   ValueChanged="numCustomSkipAhead_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipForward"/>
+                                <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   ValueChanged="numCustomSkipAhead_ValueChanged"  Visibility="Collapsed" Minimum="0" Maximum="180" Name="numCustomSkipForward">
+                                    <NumberBox.Resources>
+                                        <!-- 1. Focused State (Accent Border & Caret) -->
+                                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                        <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                                        <!-- 2. Resting / Unfocused State -->
+                                        <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                        <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                        <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                        <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                        <!-- 3. Pointer Over (Hover) State -->
+                                        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                        <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+
+                                        <!-- 4. Text Selection Highlight -->
+                                        <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                        <!-- 5. Spin Up/Down Repeat Buttons (Resting) -->
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBackground" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonForeground" Color="#AAAAAA"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrush" Color="Transparent"/>
+
+                                        <!-- 6. Spin Up/Down Repeat Buttons (Pointer Over) -->
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPointerOver" Color="#303030"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColor}"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                        <!-- 7. Spin Up/Down Repeat Buttons (Pressed) -->
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPressed" Color="#404040"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPressed" Color="Transparent"/>
+
+                                        <!-- 8. Spin Up/Down Repeat Buttons (Disabled) -->
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundDisabled" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundDisabled" Color="#404040"/>
+                                        <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushDisabled" Color="Transparent"/>
+
+                                        <!-- 9. Header / Label Foreground -->
+                                        <SolidColorBrush x:Key="NumberBoxHeaderForeground" Color="#FFFFFF"/>
+                                        <SolidColorBrush x:Key="NumberBoxHeaderForegroundDisabled" Color="#707070"/>
+
+                                        <!-- 10. Disabled NumberBox State -->
+                                        <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                        <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                        <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                    </NumberBox.Resources>
+                                </NumberBox>
                             </StackPanel>
                             <MenuFlyoutSeparator Grid.Row="6"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Maximum Volume" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyStrongTextBlockStyle}" Text="Maximum Volume allowed." Grid.Row="3"/>
-                            <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   SpinButtonPlacementMode="Inline"  Minimum="10" Maximum="300" Name="numMaxVolume" ValueChanged="numMaxVolume_ValueChanged"/>
+                            <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   SpinButtonPlacementMode="Inline"  Minimum="10" Maximum="300" Name="numMaxVolume" ValueChanged="numMaxVolume_ValueChanged">
+                                <NumberBox.Resources>
+                                    <!-- 1. Focused State (Accent Border & Caret) -->
+                                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                                    <!-- 2. Resting / Unfocused State -->
+                                    <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                    <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                    <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                    <!-- 3. Pointer Over (Hover) State -->
+                                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+
+                                    <!-- 4. Text Selection Highlight -->
+                                    <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                    <!-- 5. Spin Up/Down Repeat Buttons (Resting) -->
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBackground" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonForeground" Color="#AAAAAA"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- 6. Spin Up/Down Repeat Buttons (Pointer Over) -->
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPointerOver" Color="#303030"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- 7. Spin Up/Down Repeat Buttons (Pressed) -->
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPressed" Color="#404040"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- 8. Spin Up/Down Repeat Buttons (Disabled) -->
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundDisabled" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundDisabled" Color="#404040"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushDisabled" Color="Transparent"/>
+
+                                    <!-- 9. Header / Label Foreground -->
+                                    <SolidColorBrush x:Key="NumberBoxHeaderForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="NumberBoxHeaderForegroundDisabled" Color="#707070"/>
+
+                                    <!-- 10. Disabled NumberBox State -->
+                                    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                    <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                    <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                </NumberBox.Resources>
+                            </NumberBox>
                             <MenuFlyoutSeparator Grid.Row="6"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Maximum Search Results" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyStrongTextBlockStyle}" Text="Maximum number of Search Results to be displayed." Grid.Row="3"/>
-                            <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   SpinButtonPlacementMode="Inline"  Minimum="3" Maximum="15" Name="numMaxSearchResults" ValueChanged="numMaxSearchResults_ValueChanged"/>
+                            <NumberBox FontFamily="{StaticResource GlobalFontHolder}"   SpinButtonPlacementMode="Inline"  Minimum="3" Maximum="15" Name="numMaxSearchResults" ValueChanged="numMaxSearchResults_ValueChanged">
+                                <NumberBox.Resources>
+                                    <!-- 1. Focused State (Accent Border & Caret) -->
+                                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                                    <!-- 2. Resting / Unfocused State -->
+                                    <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                    <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                    <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                    <!-- 3. Pointer Over (Hover) State -->
+                                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+
+                                    <!-- 4. Text Selection Highlight -->
+                                    <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                    <!-- 5. Spin Up/Down Repeat Buttons (Resting) -->
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBackground" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonForeground" Color="#AAAAAA"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- 6. Spin Up/Down Repeat Buttons (Pointer Over) -->
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPointerOver" Color="#303030"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- 7. Spin Up/Down Repeat Buttons (Pressed) -->
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundPressed" Color="#404040"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- 8. Spin Up/Down Repeat Buttons (Disabled) -->
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBackgroundDisabled" Color="Transparent"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonForegroundDisabled" Color="#404040"/>
+                                    <SolidColorBrush x:Key="NumberBoxSpinButtonBorderBrushDisabled" Color="Transparent"/>
+
+                                    <!-- 9. Header / Label Foreground -->
+                                    <SolidColorBrush x:Key="NumberBoxHeaderForeground" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="NumberBoxHeaderForegroundDisabled" Color="#707070"/>
+
+                                    <!-- 10. Disabled NumberBox State -->
+                                    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                    <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                    <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                </NumberBox.Resources>
+                            </NumberBox>
                             <MenuFlyoutSeparator/>
                         </StackPanel>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Customization" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="1"/>
@@ -1208,7 +1440,58 @@
                             QueryIcon="Find"
                             TextChanged="asbSearchFormats_TextChanged" 
                             SuggestionChosen="asbSearchFormats_SuggestionChosen" 
-                            QuerySubmitted="asbSearchFormats_QuerySubmitted"/>
+                            QuerySubmitted="asbSearchFormats_QuerySubmitted">
+                                                <AutoSuggestBox.Resources>
+                                                    <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                                                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                                                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                                    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                                                    <!-- 2. Resting / Unfocused State -->
+                                                    <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                                    <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                                                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                                                    <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                                                    <!-- 3. Pointer Over (Hover) State -->
+                                                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                                    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                                                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                                                    <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                                                    <!-- 4. Text Selection Highlight -->
+                                                    <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                                                    <!-- 5. Query / Search Icon Button & Clear ("X") Button -->
+                                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonForeground" Color="#808080"/>
+                                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPointerOver" Color="#303030"/>
+                                                    <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPressed" Color="#404040"/>
+
+                                                    <!-- 6. Suggestions Dropdown Popup (ListView items) -->
+                                                    <!-- Background surface of the dropdown overlay -->
+                                                    <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="#1E1E1E"/>
+
+                                                    <!-- Hovered suggestion item -->
+                                                    <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#2C2C2C"/>
+                                                    <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="#FFFFFF"/>
+
+                                                    <!-- Selected suggestion item (Focused or Arrow-Key Navigated) -->
+                                                    <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#333333"/>
+                                                    <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="#FFFFFF"/>
+                                                    <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#383838"/>
+
+                                                    <!-- Selection Indicator Pill on the left of the item -->
+                                                    <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFill" Color="{StaticResource GlobalAccentColor}"/>
+                                                    <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFillPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+
+                                                    <!-- 7. Disabled State -->
+                                                    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                                    <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                                                    <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                                                </AutoSuggestBox.Resources>
+                                            </AutoSuggestBox>
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>

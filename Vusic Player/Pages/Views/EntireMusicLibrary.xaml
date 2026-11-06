@@ -425,7 +425,26 @@
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="There are no songs in the specified folders. Trying adding other folders." Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Grid>
             <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoading" Orientation="Horizontal" Spacing="20" Grid.Row="4">
-                <ProgressRing IsIndeterminate="True"/>
+                <ProgressRing IsIndeterminate="True">
+                    <ProgressRing.Resources>
+                        <!-- 1. Indeterminate Animated Sweep Segment (The rotating colored tail) -->
+                        <SolidColorBrush x:Key="ProgressRingIndeterminateForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                        <!-- 2. Determinate Active Arc Fill (The completed percentage portion) -->
+                        <SolidColorBrush x:Key="ProgressRingForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                        <!-- 3. Full Circular Track / Rail (The background ring in determinate mode) -->
+                        <SolidColorBrush x:Key="ProgressRingBackground" Color="#2A2A2A"/>
+
+                        <!-- 4. Outer Border Stroke (Default is Transparent) -->
+                        <SolidColorBrush x:Key="ProgressRingBorderBrush" Color="Transparent"/>
+
+                        <!-- 5. Disabled State -->
+                        <SolidColorBrush x:Key="ProgressRingForegroundDisabled" Color="#404040"/>
+                        <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="#1E1E1E"/>
+                        <SolidColorBrush x:Key="ProgressRingBorderBrushDisabled" Color="Transparent"/>
+                    </ProgressRing.Resources>
+                </ProgressRing>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
             </StackPanel>
 
@@ -442,7 +461,58 @@
                 <Button FontFamily="{StaticResource GlobalFontHolder}" Content="Play All" Name="btnPlayAll"  Click="btnPlayAll_Click"></Button>
                 <Button FontFamily="{StaticResource GlobalFontHolder}" Content="Clear History" Name="btnClearHistory" Click="btnClearHistory_Click"></Button>
                 <Button FontFamily="{StaticResource GlobalFontHolder}" Content="Disable Saving to History" Name="btnDisableHistory" Click="btnDisableHistory_Click"></Button>
-                <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}" Width="250" CornerRadius="12" Name="asbRecents" HorizontalAlignment="Right" PlaceholderText="Search..." TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" QueryIcon="Find" Grid.Row="1"></AutoSuggestBox>
+                <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}" Width="250" CornerRadius="12" Name="asbRecents" HorizontalAlignment="Right" PlaceholderText="Search..." TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" QueryIcon="Find" Grid.Row="1">
+                    <AutoSuggestBox.Resources>
+                        <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                        <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                        <!-- 2. Resting / Unfocused State -->
+                        <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                        <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                        <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                        <!-- 3. Pointer Over (Hover) State -->
+                        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                        <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                        <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                        <!-- 4. Text Selection Highlight -->
+                        <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                        <!-- 5. Query / Search Icon Button & Clear ("X") Button -->
+                        <SolidColorBrush x:Key="AutoSuggestBoxButtonForeground" Color="#808080"/>
+                        <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                        <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                        <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPointerOver" Color="#303030"/>
+                        <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPressed" Color="#404040"/>
+
+                        <!-- 6. Suggestions Dropdown Popup (ListView items) -->
+                        <!-- Background surface of the dropdown overlay -->
+                        <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="#1E1E1E"/>
+
+                        <!-- Hovered suggestion item -->
+                        <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#2C2C2C"/>
+                        <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="#FFFFFF"/>
+
+                        <!-- Selected suggestion item (Focused or Arrow-Key Navigated) -->
+                        <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#333333"/>
+                        <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="#FFFFFF"/>
+                        <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#383838"/>
+
+                        <!-- Selection Indicator Pill on the left of the item -->
+                        <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFill" Color="{StaticResource GlobalAccentColor}"/>
+                        <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFillPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+
+                        <!-- 7. Disabled State -->
+                        <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                        <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                        <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                    </AutoSuggestBox.Resources>
+                </AutoSuggestBox>
             </StackPanel>
             <StackPanel Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkEmptyHistory" Spacing="20">
                 <StackPanel Spacing="20" Orientation="Horizontal">
@@ -523,7 +593,26 @@
 
             <controls:GridViewRecentMusic Margin="0, 20" Grid.Row="3" x:Name="grdViewAllRecentMusic"></controls:GridViewRecentMusic>
             <StackPanel Visibility="Collapsed" HorizontalAlignment="Center" Name="stkLoadingAll" Orientation="Horizontal" Spacing="20" Grid.Row="3">
-                <ProgressRing IsIndeterminate="True"/>
+                <ProgressRing IsIndeterminate="True">
+                    <ProgressRing.Resources>
+                        <!-- 1. Indeterminate Animated Sweep Segment (The rotating colored tail) -->
+                        <SolidColorBrush x:Key="ProgressRingIndeterminateForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                        <!-- 2. Determinate Active Arc Fill (The completed percentage portion) -->
+                        <SolidColorBrush x:Key="ProgressRingForeground" Color="{StaticResource GlobalAccentColor}"/>
+
+                        <!-- 3. Full Circular Track / Rail (The background ring in determinate mode) -->
+                        <SolidColorBrush x:Key="ProgressRingBackground" Color="#2A2A2A"/>
+
+                        <!-- 4. Outer Border Stroke (Default is Transparent) -->
+                        <SolidColorBrush x:Key="ProgressRingBorderBrush" Color="Transparent"/>
+
+                        <!-- 5. Disabled State -->
+                        <SolidColorBrush x:Key="ProgressRingForegroundDisabled" Color="#404040"/>
+                        <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="#1E1E1E"/>
+                        <SolidColorBrush x:Key="ProgressRingBorderBrushDisabled" Color="Transparent"/>
+                    </ProgressRing.Resources>
+                </ProgressRing>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Loading items..." Style="{StaticResource BodyLargeStrongTextBlockStyle}" VerticalAlignment="Center"/>
             </StackPanel>
             <Grid  Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
@@ -609,7 +698,58 @@
 
             </Grid.RowDefinitions>
             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtGenresAll" Text="Genres" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
-            <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}" TextChanged="asbSearchGenres_TextChanged" QuerySubmitted="asbSearchGenres_QuerySubmitted" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" QueryIcon="Find" Name="asbSearchGenres" PlaceholderText="Search genres..." Grid.Row="1"></AutoSuggestBox>
+            <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}" TextChanged="asbSearchGenres_TextChanged" QuerySubmitted="asbSearchGenres_QuerySubmitted" CornerRadius="12" Background="Transparent" BorderThickness="1.2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" QueryIcon="Find" Name="asbSearchGenres" PlaceholderText="Search genres..." Grid.Row="1">
+                <AutoSuggestBox.Resources>
+                    <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
+                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
+
+                    <!-- 2. Resting / Unfocused State -->
+                    <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                    <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
+                    <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
+
+                    <!-- 3. Pointer Over (Hover) State -->
+                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
+                    <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
+
+                    <!-- 4. Text Selection Highlight -->
+                    <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="{StaticResource GlobalAccentColor}"/>
+
+                    <!-- 5. Query / Search Icon Button & Clear ("X") Button -->
+                    <SolidColorBrush x:Key="AutoSuggestBoxButtonForeground" Color="#808080"/>
+                    <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="AutoSuggestBoxButtonForegroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPointerOver" Color="#303030"/>
+                    <SolidColorBrush x:Key="AutoSuggestBoxButtonBackgroundPressed" Color="#404040"/>
+
+                    <!-- 6. Suggestions Dropdown Popup (ListView items) -->
+                    <!-- Background surface of the dropdown overlay -->
+                    <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="#1E1E1E"/>
+
+                    <!-- Hovered suggestion item -->
+                    <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#2C2C2C"/>
+                    <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="#FFFFFF"/>
+
+                    <!-- Selected suggestion item (Focused or Arrow-Key Navigated) -->
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#333333"/>
+                    <SolidColorBrush x:Key="ListViewItemForegroundSelected" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#383838"/>
+
+                    <!-- Selection Indicator Pill on the left of the item -->
+                    <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFill" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFillPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+
+                    <!-- 7. Disabled State -->
+                    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                    <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
+                    <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
+                </AutoSuggestBox.Resources>
+            </AutoSuggestBox>
             <GridView Name="grdViewGenres" Margin="0, 20" Grid.Row="2" ItemClick="grdViewGenres_ItemClick" IsItemClickEnabled="True">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>

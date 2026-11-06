@@ -37,7 +37,7 @@
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Spacing="12">
-                                <FontIcon Glyph="&#xE7F5;" FontSize="16" Foreground="Cyan" />
+                                <FontIcon Glyph="&#xE7F5;" FontSize="16" Foreground="{StaticResource GlobalAccentColor}" />
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>

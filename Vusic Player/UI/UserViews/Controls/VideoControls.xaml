@@ -233,7 +233,7 @@
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
-                    <ToggleMenuFlyoutItem x:Name="mnftRecord" Text="Record" Click="mnftRecord_Click">
+                    <ToggleMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftRecord" Text="Record" Click="mnftRecord_Click">
                         <ToggleMenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xC172;" />
                         </ToggleMenuFlyoutItem.Icon>

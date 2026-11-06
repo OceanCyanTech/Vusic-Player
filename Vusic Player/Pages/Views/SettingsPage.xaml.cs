@@ -1049,8 +1049,9 @@ namespace Vusic_Player.Pages.Views
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
 
             if (cmbFontFamilies.SelectedItem is FontStyleModel fontst && fontst.FontName is string str)
+         
             {
-                Application.Current.Resources["GlobalFontHolder"] = str;
+                Debug.WriteLine("THE FONT IS BLA: " + str + "  " + fontst.FontFam.Source);
                 if (currentSettings.FontFamily != str)
                 {
                     stkRestartApp.Visibility = Visibility.Visible;
@@ -1843,9 +1844,6 @@ namespace Vusic_Player.Pages.Views
             isChecking = true;
 
             tglNeon.IsChecked = false;
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            currentSettings.FontFamily = "Segoe UI Variable Text";
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
             tglSpace.IsChecked = false; SaveTheme();
             isChecking = false;
         }
@@ -1856,9 +1854,6 @@ namespace Vusic_Player.Pages.Views
             isChecking = true;
             tglOcean.IsChecked = false;
             tglSpace.IsChecked = false;
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            currentSettings.FontFamily = "ms-appx:///Assets/Themes/NeonGlow/themefont.ttf#Beon";
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
             SaveTheme(); isChecking = false;
 
 
@@ -1890,14 +1885,21 @@ namespace Vusic_Player.Pages.Views
             if (tglSpace.IsChecked == true)
             {
                 currentSettings.Theme = "Space";
+                currentSettings.GlowColorHex = "#CECECE";
+                currentSettings.FontFamily = "ms-appx:///Assets/Themes/Space/themefont.ttf#Rajdhani Medium";
             }
             else if (tglOcean.IsChecked == true)
             {
                 currentSettings.Theme = "Ocean";
+                currentSettings.GlowColorHex = "##00FFFF";
+                currentSettings.FontFamily = "Segoe UI Variable Text";
+
             }
             else if (tglNeon.IsChecked == true)
             {
                 currentSettings.Theme = "NeonGlow";
+                currentSettings.FontFamily = "ms-appx:///Assets/Themes/NeonGlow/themefont.ttf#Beon";
+                currentSettings.GlowColorHex = "#00FF2B";
             }
             stkRestartApp.Visibility = Visibility.Visible;
             await SettingsLoader.SaveSettingsAsync(currentSettings);
@@ -1921,9 +1923,6 @@ namespace Vusic_Player.Pages.Views
 
             tglNeon.IsChecked = false;
             tglOcean.IsChecked = false;
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            currentSettings.FontFamily = "ms-appx:///Assets/Themes/Space/themefont.ttf#Rajdhani Medium";
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
             SaveTheme();
             isChecking = false;
         }
