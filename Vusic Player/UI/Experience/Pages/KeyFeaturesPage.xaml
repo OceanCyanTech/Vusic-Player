@@ -9,6 +9,74 @@
     mc:Ignorable="d">
 
     <Grid>
+        <StackPanel Orientation="Vertical" Spacing="50">
+            <StackPanel Orientation="Horizontal" Spacing="40">
+                <Image Width="190" Source="/Assets/MultiDeviceOutput.png"/>
+                <StackPanel Orientation="Vertical" Spacing="30">
+                    <TextBlock Text="Multi-Device Output" Style="{StaticResource TitleTextBlockStyle}"/>
+                    <TextBlock Text="• Want to listen or watch something together but in individual headphones or earpods?" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• Vusic Player's Multi-Device Output feature allows you to listen the same audio in as many devices as you wish!" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• Control each device's volume individually!" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="40">
+                <StackPanel Orientation="Vertical" Spacing="30">
+                    <TextBlock Text="All media managed" Style="{StaticResource TitleTextBlockStyle}"/>
+                    <TextBlock Text="• Play literally any format of video or audio. Vusic Player supports them all for free!" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• Easily manage all your songs, audio, videos on your PC. Add them to playlists, filter them by artists, albums, genres etc." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• Add Reverb, Control Pitch and Speed, Convert Formats, Adjust EQ bands, Apply Video Filters, Video Watermarks" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• Save history of music, continue watching videos from where you've left earlier." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                </StackPanel>
+                <FlipView MaxWidth="400" MaxHeight="200">
+                    <Image  Source="/Assets/FeaturePreview/FP (1).png"/>
+                    <Image  Source="/Assets/FeaturePreview/FP (2).png"/>
+                    <Image Source="/Assets/FeaturePreview/FP (3).png"/>
+                    <Image Source="/Assets/FeaturePreview/FP (4).png"/>
+                    <Image  Source="/Assets/FeaturePreview/FP (5).png"/>
+                    <Image Source="/Assets/FeaturePreview/FP (6).png"/>
+                    <Image  Source="/Assets/FeaturePreview/FP (7).png"/>
+                    <Image  Source="/Assets/FeaturePreview/FP (8).png"/>
+                    <Image  Source="/Assets/FeaturePreview/FP (9).png"/>
+                    <Image  Source="/Assets/FeaturePreview/FP (10).png"/>
+                    <Image Source="/Assets/FeaturePreview/FP (11).png"/>
+                </FlipView>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="40">
 
+                <FlipView MaxWidth="400" MaxHeight="200">
+                    <Image  Source="/Assets/FeaturePreview/FP (12).png"/>
+                    <Image  Source="/Assets/FeaturePreview/FP (15).png"/>
+                    <Image Source="/Assets/FeaturePreview/FP (14).png"/>
+                    <Image Source="/Assets/FeaturePreview/FP (16).png"/>
+                </FlipView>
+                <StackPanel Orientation="Vertical" Spacing="30">
+                    <TextBlock Text="Your Media, Your Choice." Style="{StaticResource TitleTextBlockStyle}"/>
+                    <TextBlock Text="• See media of your folders only you choose." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• Have a TV show downloaded? Classify seasons and episodes with the Show Model Feature." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock  Text="• Need to edit artist, album, genre, year tags on music? Edit them all at once to multiple files using Vusic Player's Mass Metadata Editor. " Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• Update audio/video album covers directly without any hastle under File Info dialog in Vusic Player. " Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• You can also download Artist or Album Covers from within Vusic Player!" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="40">
+
+                
+                <StackPanel Orientation="Vertical" Spacing="30">
+                    <TextBlock Text="Subtitles and Lyrics under your convinience." Style="{StaticResource TitleTextBlockStyle}"/>
+                    <TextBlock Text="• Have you ever had the need of editing subtitles for a movie or a short creation of yours?" Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• With the Subtitles Editor and the Lyrics Editor, edit .srt and .lrc files both visually and textually." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                    <TextBlock Text="• Download Lyrics from within the app for plenty of songs. View them as per your choice. Timed or all at once." Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+
+                </StackPanel>
+                <FlipView MaxWidth="400" MaxHeight="200">
+                    <Image  Source="/Assets/FeaturePreview/FP (18).png"/>
+                    <Image  Source="/Assets/FeaturePreview/FP (17).png"/>
+                    <Image Source="/Assets/FeaturePreview/FP (19).png"/>
+                    <Image Source="/Assets/FeaturePreview/FP (13).png"/>
+                </FlipView>
+            </StackPanel>
+
+        </StackPanel>
     </Grid>
 </Page>

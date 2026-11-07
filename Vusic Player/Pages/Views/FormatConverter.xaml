@@ -74,7 +74,7 @@
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Add Output to Queue"  IsEnabled="{Binding CanPlayOutput}"   Name="mnftAddOutputToQueue" Click="mnftAddOutputToQueue_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
+                                        <ImageIcon  Width="20"   Source="/Assets/addtoqueuefonticon.png"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Remove" Name="mnftRemoveFile" Click="mnftRemoveFile_Click">

@@ -31,7 +31,7 @@
                         </MenuFlyoutItem>
                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
                             <MenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/shuffleandloopfonticon.png"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>
@@ -63,7 +63,7 @@ ItemClick="grdvFavourites_ItemClick"  Margin="0, 20" >
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Add to Queue" Click="mnftAddtoQueue_Click">
                                         <MenuFlyoutItem.Icon>
-                                            <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
+                                            <ImageIcon  Width="20"   Source="/Assets/addtoqueuefonticon.png"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>

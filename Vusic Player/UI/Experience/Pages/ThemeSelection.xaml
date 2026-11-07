@@ -7,8 +7,26 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <Grid>
-
-    </Grid>
+    <StackPanel HorizontalAlignment="Center" Orientation="Vertical" Spacing="30">
+    <StackPanel Orientation="Horizontal" Spacing="30">
+            <ToggleButton Background="Transparent" Name="tglOcean" Checked="tglOcean_Checked" Unchecked="tgl_Unchecked">
+            <StackPanel Orientation="Vertical" Spacing="30">
+                <Image Width="500" Source="/Assets/oceanpreview.png"/>
+                <TextBlock HorizontalAlignment="Center" Text="Ocean" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+            </StackPanel>
+        </ToggleButton>
+            <ToggleButton Background="Transparent" Unchecked="tgl_Unchecked" Name="tglNeon" Checked="tglNeon_Checked">
+            <StackPanel Orientation="Vertical" Spacing="30">
+                <Image Width="500" Source="/Assets/neonpreview.png"/>
+                <TextBlock HorizontalAlignment="Center" Text="Neon" FontFamily="/Assets/Themes/NeonGlow/themefont.ttf#Beon" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+            </StackPanel>
+            </ToggleButton>
+        </StackPanel>
+        <ToggleButton HorizontalAlignment="Center" Background="Transparent" Unchecked="tgl_Unchecked" Name="tglSpace" Checked="tglSpace_Checked">
+            <StackPanel Orientation="Vertical" Spacing="30">
+                <Image Width="500" Source="/Assets/spacepreview.png"/>
+                <TextBlock HorizontalAlignment="Center" Text="Space" FontFamily="/Assets/Themes/Space/themefont.ttf#Rajdhani Medium" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+            </StackPanel>
+        </ToggleButton>
+    </StackPanel>
 </Page>

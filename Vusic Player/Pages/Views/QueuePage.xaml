@@ -292,7 +292,7 @@ AlwaysUseFallback="False"/>
                                         <MenuFlyout>
                                             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Shuffle and play all" Name="mnftShuffleandPlayAll">
                                                 <MenuFlyoutItem.Icon>
-                                                    <ImageIcon Source="/Assets/shuffleandplayallfonticon.png"/>
+                                                    <ImageIcon  Width="20"   Source="/Assets/shuffleandplayallfonticon.png"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                         </MenuFlyout>

@@ -1891,7 +1891,7 @@ namespace Vusic_Player.Pages.Views
             else if (tglOcean.IsChecked == true)
             {
                 currentSettings.Theme = "Ocean";
-                currentSettings.GlowColorHex = "##00FFFF";
+                currentSettings.GlowColorHex = "#00FFFF";
                 currentSettings.FontFamily = "Segoe UI Variable Text";
 
             }
@@ -1906,10 +1906,8 @@ namespace Vusic_Player.Pages.Views
         }
         private void tgl_Unchecked(object sender, RoutedEventArgs e)
         {
-            // If we are programmatically swapping themes, allow the uncheck
             if (isChecking) return;
 
-            // If the user directly clicked an already-checked button to turn it off, force it back on
             if (sender is ToggleButton tgl)
             {
                 tgl.IsChecked = true;

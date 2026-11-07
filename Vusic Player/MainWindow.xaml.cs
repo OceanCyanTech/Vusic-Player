@@ -93,7 +93,7 @@ namespace Vusic_Player
             InitializeComponent();
             EngineService.StartEngine();
             LoadVersion();
-            LoadThemes();
+      
             this.ExtendsContentIntoTitleBar = true;
             rootGrid.Loaded += RootGrid_Loaded;
 
@@ -164,9 +164,11 @@ namespace Vusic_Player
                 IconHolder.Instance.Play = $"ms-appx:///Assets/Themes/{theme}/play.png";
                 IconHolder.Instance.Pause = $"ms-appx:///Assets/Themes/{theme}/pause.png";
                 IconHolder.Instance.PlaylistIcon = $"ms-appx:///Assets/Themes/{theme}/playlisticon.png";
+                IconHolder.Instance.SliderThumb = $"ms-appx:///Assets/Themes/{theme}/SliderThumb.png";
                 IconHolder.Instance.DefaultVideo = $"ms-appx:///Assets/Themes/{theme}/defaultvideo.png";
                 MediaPlaybackController.Instance.Thumbnail = IconHolder.Instance.Play;
                 if (theme == "Ocean")
+
                 {
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 0, 255, 255);
                     Application.Current.Resources["GlobalAccentColorPointerOver"] = Windows.UI.Color.FromArgb(255, 3, 234, 255);
@@ -311,6 +313,7 @@ namespace Vusic_Player
         }
         private void RootGrid_Loaded(object sender, RoutedEventArgs e)
         {
+            LoadThemes();
             //var island = rootGrid.XamlRoot?.ContentIsland;
 
             //if (island != null)

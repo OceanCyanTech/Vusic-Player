@@ -49,7 +49,7 @@
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Shuffled and on Loop" Name="mnftPlayGenreLoopShuffle" Click="mnftPlayGenreLoopShuffle_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
+                                        <ImageIcon  Width="20"   Source="/Assets/shuffleandloopfonticon.png"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                               

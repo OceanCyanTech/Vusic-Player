@@ -372,7 +372,7 @@ Click="btnExportDirectory_Click"/>
                                             <MenuFlyoutSeparator Visibility="{Binding VisibilityOfCompletedFileLocation}"/>
                                             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Add Pitch Change Output to Queue" Name="mnftAddToQueueOutput" Click="mnftAddToQueueOutput_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
+                                                    <ImageIcon  Width="20"   Source="/Assets/addtoqueuefonticon.png"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>

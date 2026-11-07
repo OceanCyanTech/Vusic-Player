@@ -550,7 +550,7 @@ Click="btnExportDirectory_Click"/>
                                             <MenuFlyoutSeparator Visibility="{Binding VisibilityOfCompletedFileLocation}"/>
                                             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Visibility="{Binding VisibilityOfCompletedFileLocation}"  Text="Add Reverb Output to Queue" Name="mnftAddToQueueOutput" Click="mnftAddToQueueOutput_Click">
                                                 <MenuFlyoutItem.Icon>
-                                                    <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
+                                                    <ImageIcon  Width="20"   Source="/Assets/addtoqueuefonticon.png"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
@@ -602,7 +602,7 @@ Click="btnExportDirectory_Click"/>
                                     </Grid.ContextFlyout>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
@@ -610,7 +610,7 @@ Click="btnExportDirectory_Click"/>
                                     </Grid.ColumnDefinitions>
 
                                     <FontIcon Glyph="{Binding Glyph}" FontSize="14"/>
-                                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Title}" Grid.Column="1"/>
+                                    <TextBlock TextWrapping="Wrap" MaxWidth="200" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Title}" Grid.Column="1"/>
                                     <Button IsEnabled="{Binding DirectorySelectionEnabled}"  ToolTipService.ToolTip="{Binding DirectoryPath}" FontFamily="{StaticResource SymbolThemeFontFamily}"  Visibility="{Binding IndividualDirectorySel}" Grid.Column="2" Content="&#xE8B7;" Name="btnSelectIndividualDir" Click="btnSelectIndividualDir_Click">
                                         
                                     </Button>

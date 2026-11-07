@@ -8,7 +8,59 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Margin="0,30" RowSpacing="50">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Choose which folders Vusic Player is allowed to access audio and videos from:" Style="{StaticResource TitleTextBlockStyle}"/>
+        <TextBlock Text="Check the folders you want or add custom folders." Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"/>
+        <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="2">
+            <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="2">
+                <CheckBox x:Name="chkMusic" Content="Music" Click="HighLevelFolder_Click"/>
+                <CheckBox x:Name="chkVideos" Content="Videos" Click="HighLevelFolder_Click"/>
+                <CheckBox x:Name="chkPictures" Content="Pictures" Click="HighLevelFolder_Click"/>
+                <CheckBox x:Name="chkDocuments" Content="Documents" Click="HighLevelFolder_Click"/>
+                <CheckBox x:Name="chkDownloads" Content="Downloads" Click="HighLevelFolder_Click"/>
+            </StackPanel>
+        </StackPanel>
+        <GridView ItemsSource="{x:Bind foldersListOpened,Mode=OneWay}" SelectionMode="None" VerticalAlignment="Stretch" Name="grdViewFolders" Grid.Row="2">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal" ItemWidth="NaN" />
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16"  Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
+                        <ToggleButton.ContextFlyout>
+                            <MenuFlyout >
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Open Folder" Name="mnftOpenFolder" Click="mnftOpenFolder_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE838;"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Copy Folder Path" Name="mnftCopyPathFolder" Click="mnftCopyPathFolder_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Remove Folder" Name="mnftRemoveFolder" Click="mnftRemoveFolder_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE894;"></FontIcon>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
 
+                        </ToggleButton.ContextFlyout>
+                    </ToggleButton>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+
+        <Button Name="btnAddFolder" Click="btnAddFolder_Click" Style="{StaticResource AccentButtonStyle}" Content="Add Folder" Grid.Row="4"/>
     </Grid>
 </Page>

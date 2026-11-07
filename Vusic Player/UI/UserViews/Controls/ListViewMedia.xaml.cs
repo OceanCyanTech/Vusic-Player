@@ -1121,8 +1121,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().ToList();
             if (isViewList == false)
             {
-                selected = grdViewMain.SelectedItems.Cast<SongModel>().ToList();
-                return;
+                selected = grdViewMain.SelectedItems.Cast<SongModel>().ToList(); 
             }
             var observable = new ObservableCollection<SongModel>();
             foreach (var item in selected)

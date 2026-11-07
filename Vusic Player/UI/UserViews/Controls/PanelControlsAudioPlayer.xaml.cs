@@ -4,11 +4,13 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -183,7 +185,16 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void mnftReverb_Click(object sender, RoutedEventArgs e)
         {
-            ttReverb.IsOpen = true;
+            ttReverb.IsOpen = false;
+            var filext = Path.GetExtension(PlayerService.CurrentPlayingPath).ToLowerInvariant();
+            if (VideoExtensions.List.Contains(filext))
+            {
+                ttOnlyAudioAllowed.IsOpen = true;
+            }
+            else
+            {
+                ttReverb.IsOpen = true;
+            }
         }
 
 

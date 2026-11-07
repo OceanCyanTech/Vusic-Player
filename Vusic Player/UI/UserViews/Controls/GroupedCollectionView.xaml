@@ -340,7 +340,7 @@ BorderThickness="0"
                             </MenuFlyoutItem>
                             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Artist Shuffled and On Loop" Name="mnftPlayArtistLoopandShuffle" Click="mnftPlayArtistLoopandShuffle_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
+                                    <ImageIcon  Width="20"   Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Unlink songs from this artist" Name="mnftUnlinkArtist" Click="mnftUnlinkArtist_Click">
@@ -438,7 +438,7 @@ BorderThickness="0"
                             </MenuFlyoutItem>
                             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play Album Shuffled and On Loop" Name="mnftPlayAlbumLoopAndShuffled" Click="mnftPlayAlbumLoopAndShuffled_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
+                                    <ImageIcon  Width="20"   Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Unlink songs from this album" Name="mnftUnlinkAlbum" Click="mnftUnlinkAlbum_Click">

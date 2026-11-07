@@ -266,7 +266,7 @@
                     </Grid.RowDefinitions>
 
                     <Image HorizontalAlignment="Center" Width="150" Grid.Row="0" Source="{x:Bind mediacontroller.CoverThumbnail, Mode=OneWay}"></Image>
-                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="0,0,0,0" TextWrapping="NoWrap" HorizontalAlignment="Center" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="1"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="0,0,0,0" TextWrapping="NoWrap" HorizontalAlignment="Center" Text="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}"  MaxWidth="200"  ToolTipService.ToolTip="{x:Bind mediacontroller.MediaDisplayName, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="1"></TextBlock>
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>

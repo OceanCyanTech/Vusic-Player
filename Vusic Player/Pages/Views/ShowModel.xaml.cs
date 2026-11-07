@@ -90,6 +90,33 @@ namespace Vusic_Player.Pages.Views
 
         }
         PlaylistItem currentSeason = new PlaylistItem();
+        bool IsMatchingEpisode(string fileName)
+        {
+            var episodePatterns = new List<string>
+{
+    // 1. Standard SxxExx or just Exx (Looks for 'E' or 'EP' optionally preceded by 'Sxx')
+    @"(?i)(?:s\d+)?e(\d+)\b",
+
+    // 2. Multi-episode format: E02-E03, E02E03, e02_03
+    @"(?i)e(\d+)(?:[-_]?e?(\d+))?\b",
+
+    // 3. Standard text 'episode' or 'ep' followed by numbers (e.g., Ep.01, Episode 1)
+    @"(?i)\b(?:ep|episode)(?:\s*|\s*\.\s*)(\d+)\b",
+
+    // 4. X / Cross format: S01x02, 1x02, 1x2
+    @"(?i)\b\d+x(\d+)\b",
+
+    // 5. Bracketed numbers (Anime style): [02], (02)
+    @"\[(\d+)\]",
+    @"\((\d+)\)",
+
+    // 6. Absolute / Standalone numbers: "Show - 02.mp4" 
+    @"(?<=\s+|-|_|#)(\d+)(?=\.\w+$|\s+|-|_)"
+};
+
+            string nameOnly = Path.GetFileNameWithoutExtension(fileName);
+            return episodePatterns.Any(pattern => Regex.IsMatch(nameOnly, pattern));
+        }
         string CurrentSeasonDirectory = "";
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -336,42 +363,68 @@ namespace Vusic_Player.Pages.Views
                             // This variable will track the actual deep folder where files are found!
                             string actualContentPath = path;
 
-                            foreach (var ext in Extensions.VideoExtensions.List)
-                            {
-                                string searchPattern = $"*{ext.ToLower()}";
+                            var allowedExtensions = new HashSet<string>(
+       Extensions.VideoExtensions.List.Select(e => e.TrimStart('.').ToLowerInvariant())
+   ); var episodePatterns = new List<string>
+{
+    // 1. Standard SxxExx or just Exx (Looks for 'E' or 'EP' optionally preceded by 'Sxx')
+    @"(?i)(?:s\d+)?e(\d+)\b",
 
-                                // Get the full path details of any matching video files inside
-                                var foundFiles = Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
+    // 2. Multi-episode format: E02-E03, E02E03, e02_03
+    @"(?i)e(\d+)(?:[-_]?e?(\d+))?\b",
 
-                                if (foundFiles.Any())
+    // 3. Standard text 'episode' or 'ep' followed by numbers (e.g., Ep.01, Episode 1)
+    @"(?i)\b(?:ep|episode)(?:\s*|\s*\.\s*)(\d+)\b",
+
+    // 4. X / Cross format: S01x02, 1x02, 1x2
+    @"(?i)\b\d+x(\d+)\b",
+
+    // 5. Bracketed numbers (Anime style): [02], (02)
+    @"\[(\d+)\]",
+    @"\((\d+)\)",
+
+    // 6. Absolute / Standalone numbers: "Show - 02.mp4" 
+    @"(?<=\s+|-|_|#)(\d+)(?=\.\w+$|\s+|-|_)"
+};
+
+
+                            // Collect all matching episode files
+                            var matchedEpisodeFiles = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories)
+                                .Where(file =>
                                 {
-                                    episodeCount += foundFiles.Count;
+                                    string ext = Path.GetExtension(file).TrimStart('.').ToLowerInvariant();
+                                    if (!allowedExtensions.Contains(ext)) return false;
 
-                                    // Grab the directory name of the first video file found. 
-                                    // This is guaranteed to be the real folder containing the episodes!
-                                    actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
-                                }
+                                    string nameOnly = Path.GetFileNameWithoutExtension(file);
+                                    return episodePatterns.Any(pattern => Regex.IsMatch(nameOnly, pattern));
+                                })
+                                .OrderBy(f => f)
+                                .ToList();
+
+                            if (matchedEpisodeFiles.Any())
+                            {
+                                // Directory of the first discovered episode
+                                actualContentPath = Path.GetDirectoryName(matchedEpisodeFiles.First())!;
                             }
-
-                            string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
                             Logger.Log("CURRNTSES: " + seasonNum, "ONNAVIGATEDTO.SHOWMODELPAGE", Logger.LogLevelType.Success);
+
                             var existingSeason = seasons.FirstOrDefault(p => p.PlaylistName == seasonName);
                             if (existingSeason == null)
                             {
                                 var newSeason = new PlaylistItem
                                 {
                                     PlaylistName = seasonName,
-
-                                    // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
                                     PlaylistId = actualContentPath,
-
-                                    SeasonNumber = seasonNum
+                                    SeasonNumber = seasonNum,
+                                    SongsPaths = matchedEpisodeFiles.ToHashSet() // Populates SongsPaths so PlaylistCount works automatically
                                 };
+
                                 seasons.Add(newSeason);
                             }
                             else
                             {
-                                existingSeason.PlaylistId = actualContentPath; // Update path if found
+                                // If the season already exists, refresh its paths
+                                existingSeason.SongsPaths = matchedEpisodeFiles.ToHashSet();
                             }
                         }
                     }
@@ -557,8 +610,6 @@ namespace Vusic_Player.Pages.Views
                             seasons.Add(new PlaylistItem
                             {
                                 PlaylistName = seasonName,
-
-                                // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
                                 PlaylistId = actualContentPath,
 
                                 SeasonNumber = seasonNum

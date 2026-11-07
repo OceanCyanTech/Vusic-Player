@@ -404,7 +404,7 @@
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Copy Lyric with Timestamps" Name="mnftCopySubtitlewithTimestamps" Click="mnftCopySubtitlewithTimestamps_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <ImageIcon Source="/Assets/copylyricwithtimestampsfonticon .png"/>
+                                                <ImageIcon  Width="20"   Source="/Assets/copylyricwithtimestampsfonticon .png"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Remove Lyric" Name="mnftRemoveSubtitle" Click="mnftRemoveSubtitle_Click">

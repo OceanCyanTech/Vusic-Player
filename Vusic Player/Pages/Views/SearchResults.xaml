@@ -60,12 +60,12 @@
                         </ToggleMenuFlyoutItem>
                         <ToggleMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Genre" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/genrefonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/genrefonticon.png"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
                         <ToggleMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Show" Click="tglGeneric_Click">
                             <ToggleMenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/showfonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/showfonticon.png"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
                         <ToggleMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Folder" Click="tglGeneric_Click">

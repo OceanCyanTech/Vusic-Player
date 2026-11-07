@@ -76,7 +76,7 @@
                         <MenuFlyoutSeparator Grid.Row="5"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Media Database" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Re-scan the media database. The media database will be cleared and rescaned fresh." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="7"/>
-                        <Button Content="Re-scan Database" Name="btnRefreshDatabase" Click="btnRefreshDatabase_Click" Grid.Row="8"/>
+                        <Button FontFamily="{StaticResource GlobalFontHolder}"  Content="Re-scan Database" Name="btnRefreshDatabase" Click="btnRefreshDatabase_Click" Grid.Row="8"/>
                         <MenuFlyoutSeparator Grid.Row="9"/>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtFolderPermissions" Text="Folder Permissions" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
@@ -93,9 +93,9 @@
                                             <ToggleButton VerticalAlignment="Stretch" IsChecked="{Binding isChecked}" Width="160" Margin="5, 0" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding FolderPath}"  CornerRadius="16"  Name="btnGenericFolder" Checked="btnGenericFolder_Checked" Unchecked="btnGenericFolder_Checked" FontSize="16" Padding="10" Content="{Binding FolderName}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="Transparent" Grid.Column="0">
                                                 <ToggleButton.Resources>
                                                     <!-- 1. Background Fill when CHECKED -->
-                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="{StaticResource GlobalAccentColor}"/>
-                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
-                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="{ThemeResource GlobalAccentColor}"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="{ThemeResource GlobalAccentColorPointerOver}"/>
+                                                    <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPressed" Color="{ThemeResource GlobalAccentColorPointerPressed}"/>
                                                     <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedDisabled" Color="#2A2A2A"/>
 
                                                     <!-- 2. Text / Icon Foreground when CHECKED -->
@@ -163,7 +163,7 @@
                             <MenuFlyoutSeparator/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Startup" Name="txtStartup" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Configure app startup settings." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
-                            <CheckBox Name="chkShowSplash" Content="Show Splash Screen" Checked="chkShowSplash_Checked" Unchecked="chkShowSplash_Checked">
+                            <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Name="chkShowSplash" Content="Show Splash Screen" Checked="chkShowSplash_Checked" Unchecked="chkShowSplash_Checked">
                                 <CheckBox.Resources>
                                     <!-- Checked State (Background box fill) -->
                                     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource GlobalAccentColor}"/>
@@ -196,7 +196,7 @@
                                     <ComboBoxItem FontFamily="{StaticResource GlobalFontHolder}"  Content="Video Library Page"/>
                                 </ComboBox.Items>
                             </ComboBox>
-                            <Button Content="App Lock" Click="btnAppLock_Click"  Name="btnAppLock" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
+                            <Button FontFamily="{StaticResource GlobalFontHolder}"  Content="App Lock" Click="btnAppLock_Click"  Name="btnAppLock" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
                                 <Button.Resources>
                                     <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
                                     <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
@@ -221,7 +221,7 @@
                             <MenuFlyoutSeparator/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Default App" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Make Vusic Player the default media player app for various media formats." Style="{StaticResource BodyStrongTextBlockStyle}" Grid.Row="3"/>
-                            <Button Content="Open Settings" Click="btnOpenSettings_Click"  Name="btnOpenSettings" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
+                            <Button FontFamily="{StaticResource GlobalFontHolder}"  Content="Open Settings" Click="btnOpenSettings_Click"  Name="btnOpenSettings" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
                                 <Button.Resources>
                                     <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
                                     <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
@@ -246,7 +246,7 @@
 
                             <MenuFlyoutSeparator/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="App Reset" Grid.Row="6" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                            <Button Content="Reset All Vusic Player Settings" Click="btnResetAppSettings_Click"  Name="btnResetAppSettings" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
+                            <Button FontFamily="{StaticResource GlobalFontHolder}"  Content="Reset All Vusic Player Settings" Click="btnResetAppSettings_Click"  Name="btnResetAppSettings" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
                                 <Button.Resources>
                                     <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
                                     <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>

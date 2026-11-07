@@ -24,11 +24,11 @@
     FalseBrush="White"/>
             <FontFamily x:Key="GlobalFontHolder">Candara</FontFamily>
             <customization:IconHolder x:Key="GlobalIconHolder"/>
-            <Color x:Key="GlobalAccentColor">Cyan</Color>
-            <Color x:Key="GlobalAccentColorPointerPressed">#027715</Color>
-            <Color x:Key="GlobalAccentColorPointerOver">#07BE25</Color>
+            <Color x:Key="GlobalAccentColor">#00FFFF</Color>
+            <Color x:Key="GlobalAccentColorPointerOver">#03EAFF</Color>
+            <Color x:Key="GlobalAccentColorPointerPressed">#06B4FF</Color>
 
-      
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

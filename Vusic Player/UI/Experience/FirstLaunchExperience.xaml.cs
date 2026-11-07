@@ -81,17 +81,35 @@ namespace Vusic_Player.UI.Experience
                 btnAccept.Visibility = Visibility.Visible;
                 frmMain.Navigate(typeof(LicenseAgreement));
             }
+            else if(currentindex == 8)
+            {
+
+                txtHeader.Text = "App Lock";
+                frmMain.Navigate(typeof(AppLockDuringExperience));
+            }
        
         }
 
         private void btnAccept_Click(object sender, RoutedEventArgs e)
         {
-            currentindex += 1;  
             txtHeader.Text = "Your Privacy is OceanCyan's Priority";
 
             frmMain.Navigate(typeof(PrivacyAgreement));
             btnGoForward.IsEnabled = true;
             btnAccept.Visibility = Visibility.Collapsed;
+        }
+
+        private void frmMain_Navigated(object sender, NavigationEventArgs e)
+        {
+            if (e.SourcePageType == typeof(WhatIsVusicPlayerPage))
+            {
+                btnGoBack.Visibility = Visibility.Visible;
+                btnGoForward.Visibility = Visibility.Visible;
+                currentindex = 2;
+                rootgrd.Margin = new Thickness(40, 20,0, 10);
+                txtHeader.Text = "Welcome to Vusic Player";
+
+            }
         }
     }
 }

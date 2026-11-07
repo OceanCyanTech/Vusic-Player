@@ -289,7 +289,7 @@
                             </MenuFlyoutItem>
                             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play on Loop and Shuffled" Name="mnftPlayOnLoopShuffled" Click="mnftPlayOnLoopShuffled_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
+                                    <ImageIcon  Width="20"   Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -784,7 +784,7 @@
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play Shuffled and on Loop" Name="mnftPlayGenreLoopShuffle" Click="mnftPlayGenreLoopShuffle_Click">
                                         <MenuFlyoutItem.Icon>
-                                            <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
+                                            <ImageIcon  Width="20"   Source="/Assets/shuffleandloopfonticon.png"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Remove Genre" Name="mnftRemoveGenre" Click="mnftRemoveGenre_Click">

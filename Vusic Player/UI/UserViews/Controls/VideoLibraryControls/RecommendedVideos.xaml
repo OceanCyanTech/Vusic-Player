@@ -69,7 +69,7 @@
                             </MenuFlyoutItem>
                             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Play on Loop and Shuffled" Name="mnftLoopShufflePlay" Click="mnftLoopShufflePlay_Click">
                                 <MenuFlyoutItem.Icon>
-                                    <ImageIcon Source="/Assets/shuffleandloopfonticon.png"/>
+                                    <ImageIcon  Width="20"   Source="/Assets/shuffleandloopfonticon.png"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -178,7 +178,7 @@ ItemClick="grdvRecents_ItemClick"  Margin="0, 0" ScrollViewer.HorizontalScrollMo
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftAddtoQueue" Text="Add to Queue" Click="mnftAddtoQueue_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
+                                                <ImageIcon  Width="20"   Source="/Assets/addtoqueuefonticon.png"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">

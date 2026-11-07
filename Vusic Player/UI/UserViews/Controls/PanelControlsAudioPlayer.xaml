@@ -114,12 +114,12 @@
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Reverb" Name="mnftReverb" Click="mnftReverb_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <ImageIcon Source="/Assets/reverbfonticon.png"></ImageIcon>
+                                                <ImageIcon  Width="20"   Source="/Assets/reverbfonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="File Format Converter" Name="mnftFormatConverter" Click="mnftFormatConverter_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <ImageIcon Source="/Assets/fileformatconverterfonticon.png"></ImageIcon>
+                                                <ImageIcon  Width="20"   Source="/Assets/fileformatconverterfonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Jump To Time" Name="mnftJumpToTime" Click="mnftJumpToTime_Click">
@@ -130,7 +130,7 @@
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  IsEnabled="{x:Bind media.MultiDeviceOutputFeature, Mode=OneWay}"  Text="Multi-Device Output Mixer" Name="mnftMultiDevice" Click="mnftMultiDevice_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <ImageIcon Source="/Assets/multioutputfonticon.png"></ImageIcon>
+                                                <ImageIcon  Width="20"   Source="/Assets/multioutputfonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                
@@ -384,6 +384,9 @@
                     </Button.Resources>
                 </Button>
             </Grid>
+        </TeachingTip>
+        <TeachingTip Name="ttOnlyAudioAllowed">
+            <TextBlock Text="As of now, Reverb is only allowed for Audio Files. Sorry :("/>
         </TeachingTip>
         <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Title="Equalizer"  Name="popUpEqualizer" >
             <TeachingTip.Resources>

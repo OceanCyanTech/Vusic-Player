@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml;
+using Vusic_Player.Configuration.UserSettings;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -29,6 +31,68 @@ namespace Vusic_Player.UI.Experience.Pages
         public ThemeSelection()
         {
             InitializeComponent();
+        }
+        private void tgl_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (isChecking) return;
+
+            if (sender is ToggleButton tgl)
+            {
+                tgl.IsChecked = true;
+            }
+        }
+        private void tglOcean_Checked(object sender, RoutedEventArgs e)
+        {
+            if (isChecking) return;
+            isChecking = true;
+
+            tglNeon.IsChecked = false;
+            tglSpace.IsChecked = false; SaveTheme();
+            isChecking = false;
+        }
+        bool isChecking = false;
+        private void tglNeon_Checked(object sender, RoutedEventArgs e)
+        {
+            if (isChecking) return;
+            isChecking = true;
+            tglOcean.IsChecked = false;
+            tglSpace.IsChecked = false;
+            SaveTheme(); isChecking = false;
+        }
+        private async void SaveTheme()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            if (tglSpace.IsChecked == true)
+            {
+                currentSettings.Theme = "Space";
+                currentSettings.GlowColorHex = "#CECECE";
+                currentSettings.FontFamily = "ms-appx:///Assets/Themes/Space/themefont.ttf#Rajdhani Medium";
+            }
+            else if (tglOcean.IsChecked == true)
+            {
+                currentSettings.Theme = "Ocean";
+                currentSettings.GlowColorHex = "##00FFFF";
+                currentSettings.FontFamily = "Segoe UI Variable Text";
+
+            }
+            else if (tglNeon.IsChecked == true)
+            {
+                currentSettings.Theme = "NeonGlow";
+                currentSettings.FontFamily = "ms-appx:///Assets/Themes/NeonGlow/themefont.ttf#Beon";
+                currentSettings.GlowColorHex = "#00FF2B";
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+        }
+
+        private void tglSpace_Checked(object sender, RoutedEventArgs e)
+        {
+            if (isChecking) return;
+            isChecking = true;
+
+            tglNeon.IsChecked = false;
+            tglOcean.IsChecked = false;
+            SaveTheme();
+            isChecking = false;
         }
     }
 }

@@ -22,7 +22,7 @@
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Add to Queue" Click="mnftAddtoQueueRecentMusic_Click" >
                                     <MenuFlyoutItem.Icon>
-                                        <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
+                                        <ImageIcon  Width="20"   Source="/Assets/addtoqueuefonticon.png"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator/>

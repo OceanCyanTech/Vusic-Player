@@ -62,7 +62,7 @@ AlwaysUseFallback="False"/>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="Disable Recent Music" Name="mnftDisableRecentMusic" Click="mnftDisableRecentMusic_Click">
                             <MenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/disablehistoryfonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/disablehistoryfonticon.png"/>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>

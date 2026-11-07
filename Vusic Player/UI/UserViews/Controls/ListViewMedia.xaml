@@ -182,37 +182,37 @@ ToolTipService.ToolTip="Sort items">
                     <MenuFlyout>
                         <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftSortName" Text="Sort by Name" Click="mnftSortName_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/sortbynamefonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/sortbynamefonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftSortDuration" Text="Sort by Duration" Click="mnftSortDuration_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/sortbydurationfonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/sortbydurationfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftSortbyArtist" Text="Sort by Artist Name" Click="mnftSortbyArtist_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/sortbyartistfonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/sortbyartistfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftSortbyAlbum" Text="Sort by Album Name" Click="mnftSortbyAlbum_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/sortbyalbumfonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/sortbyalbumfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftSortbyDateMod" Text="Sort by Date Modified" Click="mnftSortbyDateMod_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/sortbydatemodifiedfonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/sortbydatemodifiedfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftSortbyDateCreated" Text="Sort by Date Created" Click="mnftSortbyDateCreated_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/sortbydatecreatedfonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/sortbydatecreatedfonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Name="mnftSortbyMediaType" Text="Sort by Media Type" Click="mnftSortbyMediaType_Click">
                             <RadioMenuFlyoutItem.Icon>
-                                <ImageIcon Source="/Assets/sortbymediatypefonticon.png"/>
+                                <ImageIcon  Width="20"   Source="/Assets/sortbymediatypefonticon.png"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                     
@@ -293,7 +293,7 @@ ToolTipService.ToolTip="View Mode">
                     </MenuFlyout>
                 </Button.Flyout>
                 <StackPanel Orientation="Horizontal">
-                    <Image Width="25" Source="{Binding ModeIcon, Source={StaticResource GlobalIconHolder}}" />
+                    <Image Width="35" Source="{Binding ModeIcon, Source={StaticResource GlobalIconHolder}}" />
                 </StackPanel>
             </Button>
 

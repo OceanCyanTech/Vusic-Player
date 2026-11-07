@@ -90,7 +90,7 @@
 
                                 <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSkipBack" Text="Skip back 10 secs" Click="mnftSkipBack_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <ImageIcon Source="{Binding SkipBack, Source= {StaticResource GlobalIconHolder}}"/>
+                                        <ImageIcon  Width="20"   Source="{Binding SkipBack, Source= {StaticResource GlobalIconHolder}}"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
@@ -102,7 +102,7 @@
 
                                 <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftSkipForward" Text="Skip Forward 10 secs" Click="mnftSkipForward_Click">
                                     <MenuFlyoutItem.Icon>
-                                        <ImageIcon Source="{Binding SkipAhead, Source= {StaticResource GlobalIconHolder}}"/>
+                                        <ImageIcon  Width="20"   Source="{Binding SkipAhead, Source= {StaticResource GlobalIconHolder}}"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 

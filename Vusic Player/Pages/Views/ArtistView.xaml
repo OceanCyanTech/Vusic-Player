@@ -449,7 +449,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                     </Button>
                     <Button Click="btnAddtoQueueMostPlayed_Click" ToolTipService.ToolTip="Add all songs in list to Queue" Name="btnAddtoQueueMostPlayed" Grid.Row="3" >
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <ImageIcon Source="/Assets/addtoqueuefonticon.png"/>
+                            <ImageIcon  Width="20"    Source="/Assets/addtoqueuefonticon.png"/>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add to Queue"/>
                         </StackPanel>
                     </Button>

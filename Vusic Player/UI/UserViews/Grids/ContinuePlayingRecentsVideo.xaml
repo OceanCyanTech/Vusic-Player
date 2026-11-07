@@ -152,7 +152,7 @@
                                     <MenuFlyoutSeparator/>
                                  <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftAddToQueueCW" Click="mnftAddToQueueCW_Click" Text="Add to Queue">
                                         <MenuFlyoutItem.Icon>
-                                            <ImageIcon Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
+                                            <ImageIcon  Width="20"   Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                  <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftAddToFavCW" Click="mnftAddToFavCW_Click" Text="Add to Favourites">
@@ -298,7 +298,7 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
 
                                      <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftAddToQueue" Text="Add to Queue" Click="mnftAddToQueue_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <ImageIcon Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
+                                                <ImageIcon  Width="20"   Source="/Assets/addtoqueuefonticon.png"></ImageIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                      <MenuFlyoutItem  FontFamily="{StaticResource GlobalFontHolder}" Name="mnftAddToFavRec" Text="Add to Favourites" Click="mnftAddToFavRec_Click">

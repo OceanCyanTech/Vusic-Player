@@ -293,7 +293,7 @@ namespace Vusic_Player.Configuration.Helper
                     media.DisplayResolution = fileinfo.DisplayResolution;
                 }
                 var titleheader = media.Title;
-                if (titleheader == "")
+                if (string.IsNullOrEmpty(titleheader))
                 {
                     titleheader = Path.GetFileNameWithoutExtension(FilePath);
                 }

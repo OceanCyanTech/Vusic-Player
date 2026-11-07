@@ -10,13 +10,17 @@
 
     <Grid>
         <StackPanel Orientation="Vertical" Spacing="30">
-            <StackPanel Orientation="Horizontal" Spacing="20">
+            <StackPanel Orientation="Horizontal" Spacing="30">
+            <Image Source="/Assets/VusicPlayerPreview.png" Width="480" HorizontalAlignment="Left"/>
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Spacing="20">
                 <Image Width="40" Source="/Assets/appicon.png"/>
                 <TextBlock Text="Vusic Player by OceanCyan Tech" Style="{StaticResource TitleTextBlockStyle}"/>
+                </StackPanel>
             </StackPanel>
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Vusic Player is a media player app that can play videos and audio on your PC."/>
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"  Text="• It is completely open source and free."/>
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"  Text="• It is the ultimate hub for all media on your PC. Bundled with plenty of features, you need not rely on online tools for modifying your songs or videos."/>
+
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"  Text="• It is completely open source and free."/>
         </StackPanel>
     </Grid>
 </Page>

@@ -450,7 +450,7 @@
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Copy Subtitle with Timestamps" Name="mnftCopySubtitlewithTimestamps" Click="mnftCopySubtitlewithTimestamps_Click">
                                             <MenuFlyoutItem.Icon>
-                                                <ImageIcon Source="/Assets/copysubtitlewithtimestampsfonticon.png"/>
+                                                <ImageIcon  Width="20"   Source="/Assets/copysubtitlewithtimestampsfonticon.png"/>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="Remove Subtitle" Name="mnftRemoveSubtitle" Click="mnftRemoveSubtitle_Click">
