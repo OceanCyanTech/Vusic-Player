@@ -35,6 +35,17 @@ namespace Vusic_Player.UI.Experience
         public FirstLaunchExperience()
         {
             InitializeComponent();
+            IntPtr hWnd = WindowNative.GetWindowHandle(this);
+
+            // 2. Get the WindowId and AppWindow
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            AppWindow appWindow = AppWindow.GetFromWindowId(windowId);
+
+            // 3. Set presenter to Overlapped and Maximize
+            if (appWindow.Presenter is OverlappedPresenter presenter)
+            {
+                presenter.Maximize();
+            }
             frmMain.Navigate(typeof(OceanCyanLogoIntro));
             this.ExtendsContentIntoTitleBar = true;
             this.Title = "Welcome to Vusic Player!";
@@ -45,7 +56,6 @@ namespace Vusic_Player.UI.Experience
                 "Assets",
                 "appicon.ico"
             );
-            WindowId windowId = Win32Interop.GetWindowIdFromWindow(_hwnd);
             _appWindow = AppWindow.GetFromWindowId(windowId);
             _appWindow.SetIcon(iconPath);
         }
