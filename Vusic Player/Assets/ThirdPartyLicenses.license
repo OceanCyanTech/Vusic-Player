@@ -1,90 +1,143 @@
 THIRD-PARTY SOFTWARE NOTICES AND ACKNOWLEDGMENTS
 
-Vusic Player incorporates third-party open-source libraries and APIs. 
-OceanCyan Tech gratefully acknowledges the authors and contributors of these 
+Vusic Player incorporates third-party open-source libraries, APIs, and media assets.
+OceanCyan Tech gratefully acknowledges the authors and contributors of these
 projects.
 
-
 1. Flyleaf (FlyleafLib)
---------------------------------------------------------------------------------
+
+---
+
 Copyright (c) Flyleaf Project Contributors
 License: GNU Lesser General Public License v3.0 (LGPLv3)
-Project URL: https://github.com/SuRGeoNix/Flyleaf
+Project URL: [https://github.com/SuRGeoNix/Flyleaf](https://github.com/SuRGeoNix/Flyleaf)
 
 Provides media playback engines, rendering, and hardware-accelerated decoding pipelines.
 
-
 2. FFmpeg
---------------------------------------------------------------------------------
+
+---
+
 Copyright (c) FFmpeg Developers
 License: LGPL v2.1+ / GPL v3.0+
-Project URL: https://ffmpeg.org/
+Project URL: [https://ffmpeg.org/](https://ffmpeg.org/)
 
 Demuxing, audio/video codecs, and multimedia processing pipelines.
 
-
 3. TagLib# (TagLibSharp)
---------------------------------------------------------------------------------
+
+---
+
 Copyright (c) Brian Nickel, Gabriel Burt, and other contributors
 License: GNU Lesser General Public License v2.1 (LGPLv2.1)
-Project URL: https://github.com/mono/taglib-sharp
+Project URL: [https://github.com/mono/taglib-sharp](https://github.com/mono/taglib-sharp)
 
 Reading, parsing, and extracting ID3, Vorbis, and media metadata tags.
 
-
 4. SoX Reverb (libsox / SoX effect DSP)
---------------------------------------------------------------------------------
+
+---
+
 Copyright (c) SoX Contributors
 License: GNU General Public License v2.0+ (GPLv2+) / LGPL
-Project URL: https://sourceforge.net/projects/sox/
+Project URL: [https://sourceforge.net/projects/sox/](https://sourceforge.net/projects/sox/)
 
 Audio digital signal processing and reverb effect algorithms.
 
-
 5. Vortice.Windows (Vortice.XAudio2)
---------------------------------------------------------------------------------
+
+---
+
 Copyright (c) Amer Koleci and Vortice.Windows contributors
 License: MIT License
-Project URL: https://github.com/amerkoleci/Vortice.Windows
+Project URL: [https://github.com/amerkoleci/Vortice.Windows](https://github.com/amerkoleci/Vortice.Windows)
 
 Low-latency audio playback, mastering voices, and audio submix routing via XAudio2.
 
-
 6. Windows App SDK / WinUI 3
---------------------------------------------------------------------------------
+
+---
+
 Copyright (c) Microsoft Corporation
 License: MIT License
-Project URL: https://github.com/microsoft/WindowsAppSDK
+Project URL: [https://github.com/microsoft/WindowsAppSDK](https://github.com/microsoft/WindowsAppSDK)
 
 Modern Windows user interface framework and controls.
 
-
 7. SQLite (Microsoft.Data.Sqlite / sqlite-net)
---------------------------------------------------------------------------------
+
+---
+
 License: Public Domain / MIT License
-Project URL: https://www.sqlite.org/
+Project URL: [https://www.sqlite.org/](https://www.sqlite.org/)
 
 Local media indexing, track caching, and playlist persistence.
 
-
 8. CommunityToolkit (MVVM / WinUI)
---------------------------------------------------------------------------------
+
+---
+
 Copyright (c) .NET Foundation and Contributors
 License: MIT License
-Project URL: https://github.com/CommunityToolkit/Windows
+Project URL: [https://github.com/CommunityToolkit/Windows](https://github.com/CommunityToolkit/Windows)
 
 MVVM architectural primitives, relay commands, and UI helper components.
 
-
 9. DuckDuckGo Image Search / Scraper (gogoduck)
---------------------------------------------------------------------------------
+
+---
+
 License: MIT / Apache 2.0 (Open-source scraper utility)
 Purpose: Fetching online artist artwork and album thumbnails.
 
-
 10. LRCLIB API
---------------------------------------------------------------------------------
+
+---
+
 Author: Tran Duc Nam (t-recx)
-Service: https://lrclib.net/
+Service: [https://lrclib.net/](https://lrclib.net/)
 Project: Open-source synchronized and plain lyrics provider.
 Purpose: Querying and retrieving synchronized (.lrc) and unsynchronized lyrics.
+
+11. Unsplash Photography Assets
+
+---
+
+License: Unsplash License (Free commercial & non-commercial use)
+Website: [https://unsplash.com/](https://unsplash.com/)
+
+Bundled background, visual theme, and category photography:
+
+* "Blue and Black Galaxy Digital Wallpaper" by Aldebaran S
+Photo URL: [https://unsplash.com/photos/blue-and-black-galaxy-digital-wallpaper-qtRF_RxCAo0](https://unsplash.com/photos/blue-and-black-galaxy-digital-wallpaper-qtRF_RxCAo0)
+Creator Profile: [https://unsplash.com/@aldebarans](https://unsplash.com/@aldebarans)
+* "Wet Street at Night in Tokyo" by Valentin BEAUVAIS
+Photo URL: [https://unsplash.com/photos/wet-street-at-night-in-tokyo-yVUQlyRlJSw](https://unsplash.com/photos/wet-street-at-night-in-tokyo-yVUQlyRlJSw)
+Creator Profile: [https://unsplash.com/@valentinbvs](https://unsplash.com/@valentinbvs)
+* "Purple and Black Pyramid Wallpaper" by Sandro Katalina
+Photo URL: [https://unsplash.com/photos/purple-and-black-pyramid-wallpaper-k1bO_VTiZSs](https://unsplash.com/photos/purple-and-black-pyramid-wallpaper-k1bO_VTiZSs)
+Creator Profile: [https://unsplash.com/@sandrokatalina](https://unsplash.com/@sandrokatalina)
+* "Starry Night Sky Over Starry Night" by Tiago Muraro
+Photo URL: [https://unsplash.com/photos/starry-night-sky-over-starry-night-EX1bw6pPSvU](https://unsplash.com/photos/starry-night-sky-over-starry-night-EX1bw6pPSvU)
+Creator Profile: [https://unsplash.com/@tiago](https://unsplash.com/@tiago)
+* "People Walking on Walkway During Nighttime" by Kevin Laminto
+Photo URL: [https://unsplash.com/photos/people-walking-on-walkway-during-nighttime-7PqRZK6rbaE](https://unsplash.com/photos/people-walking-on-walkway-during-nighttime-7PqRZK6rbaE)
+Creator Profile: [https://unsplash.com/@kxvn_lx](https://unsplash.com/@kxvn_lx)
+* "The Stars and Galaxy as Seen from Rocky Mountain National Park" by Jeremy Thomas
+Photo URL: [https://unsplash.com/photos/the-stars-and-galaxy-as-seen-from-rocky-mountain-national-park-4dpAqfTbvKA](https://unsplash.com/photos/the-stars-and-galaxy-as-seen-from-rocky-mountain-national-park-4dpAqfTbvKA)
+Creator Profile: [https://unsplash.com/@jeremythomasphoto](https://unsplash.com/@jeremythomasphoto)
+* "A Close-Up of a Person Playing a Violin" by Xingchen Yan
+Photo URL: [https://unsplash.com/photos/a-close-up-of-a-person-playing-a-violin-KGGsJI6r-0U](https://unsplash.com/photos/a-close-up-of-a-person-playing-a-violin-KGGsJI6r-0U)
+Creator Profile: [https://unsplash.com/@xingchenyan](https://unsplash.com/@xingchenyan)
+* "Man in Red Jacket Holding Black DJ Controller" by Gordon Cowie
+Photo URL: [https://unsplash.com/photos/man-in-red-jacket-holding-black-dj-controller-qQzw8jPvip8](https://unsplash.com/photos/man-in-red-jacket-holding-black-dj-controller-qQzw8jPvip8)
+Creator Profile: [https://unsplash.com/@gcowie](https://unsplash.com/@gcowie)
+* "Person Playing Saxophone" by Jens Thekkeveettil
+Photo URL: [https://unsplash.com/photos/person-playing-saxophone-dBWvUqBoOU8](https://unsplash.com/photos/person-playing-saxophone-dBWvUqBoOU8)
+Creator Profile: [https://unsplash.com/@jensth](https://unsplash.com/@jensth)
+* "Selective Focus Silhouette Photography of Man Playing Red Lighted DJ Terminal" by Marcela Laskoski
+Photo URL: [https://unsplash.com/photos/selective-focus-silhouette-photography-of-man-playing-red-lighted-dj-terminal-YrtFlrLo2DQ](https://unsplash.com/photos/selective-focus-silhouette-photography-of-man-playing-red-lighted-dj-terminal-YrtFlrLo2DQ)
+Creator Profile: [https://unsplash.com/@marcelalaskoski](https://unsplash.com/@marcelalaskoski)
+* "Rock Band on Stage" by Sebastian Ervi
+Photo URL: [https://unsplash.com/photos/rock-band-on-stage-uCZVEo8iT9Q](https://unsplash.com/photos/rock-band-on-stage-uCZVEo8iT9Q)
+Creator Profile: [https://unsplash.com/@sebastianervi](https://unsplash.com/@sebastianervi)

@@ -53,7 +53,7 @@ namespace Vusic_Player
         protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            //     if (currentSettings.isFirstTimeLaunch == false)
+             if (currentSettings.isFirstTimeLaunch == false)
             {
                 var theme = currentSettings.Theme;
                 ThemeManager.Instance.GlobalTheme = theme;
@@ -63,12 +63,13 @@ namespace Vusic_Player
                 await FilesInDatabase.InitializeDatabaseFunctionsAsync();
                 _ = FilesInDatabase.RunBackgroundServiceAsync();
             }
-            //else
-            //{    EngineService.StartEngine();
-            //    FirstLaunchExperience wind = new FirstLaunchExperience();
-            //    wind.Activate();
-            //}
-         
+            else
+            {
+                EngineService.StartEngine();
+                FirstLaunchExperience wind = new FirstLaunchExperience();
+                wind.Activate();
+            }
+
         }
     }
 }

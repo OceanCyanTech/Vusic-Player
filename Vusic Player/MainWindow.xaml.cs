@@ -123,7 +123,6 @@ namespace Vusic_Player
                 SubtitleEditorWindow.KillDialog();
 
             };
-            // AppVersion.LoadBuildCounter();
 
 
         }
@@ -131,9 +130,6 @@ namespace Vusic_Player
         {
             if (PinService.IsPinEnabled() || PinService.IsWindowsAuthEnabled())
             {
-                //     string aumid = $"{Package.Current.Id.FamilyName}!App";
-
-                //    ShellDestinationsManager.ClearRecentDestinations(aumid);
                 frmMain.Navigate(typeof(AppLockVerify));
             }
             else
