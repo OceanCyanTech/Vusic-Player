@@ -53,7 +53,7 @@ Stretch="UniformToFill"/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <playback_views:MasterSearchControl Grid.Column="1" MinWidth="300" Margin="40, 0" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                    <playback_views:MasterSearchControl x:Name="masterSearchControl" Grid.Column="1" MinWidth="300" Margin="40, 0" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                     <TextBlock  FontFamily="{ThemeResource GlobalFontHolder}"  Grid.Column="0" Name="txtHeader" Text=""/>
                                 </Grid>
                             </NavigationView.Header>
@@ -164,6 +164,18 @@ Stretch="UniformToFill"/>
         </TeachingTip>
         <TeachingTip Name="ttReverbControl">
             <audiogeneral:Pitch/>
+        </TeachingTip>
+        <TeachingTip Name="ttTutorial" Title="Welcome to Vusic Player!">
+            <Grid Margin="20, 20" RowSpacing="30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="New to Vusic Player? Check out how to use Vusic Player in our documentation! " Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1" Content="How To Use Vusic Player?" NavigateUri="https://oceancyantech.github.io/Vusic-Player/howtousevusicplayer.html"/>
+                <Button  FontFamily="{StaticResource GlobalFontHolder}" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" Content="Close" Name="btnCloseTutorial" Click="btnCloseTutorial_Click"/>
+            </Grid>
         </TeachingTip>
         <TeachingTip Name="ttEXCEPTION" Title="Exception">
             <StackPanel Orientation="Horizontal" Spacing="10">

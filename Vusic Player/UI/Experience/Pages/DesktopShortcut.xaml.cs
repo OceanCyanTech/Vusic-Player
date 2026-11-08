@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -29,6 +30,72 @@ namespace Vusic_Player.UI.Experience.Pages
         public DesktopShortcut()
         {
             InitializeComponent();
+        }
+        string ShortcutName => "Vusic Player";
+        string DesktopDirectory => Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        string ShortcutPath => Path.Combine(DesktopDirectory, $"{ShortcutName}.lnk");
+        private void CreateDesktopShortcut()
+        {
+            try
+            {
+                string packageFamily = Package.Current.Id.FamilyName;
+                string appID = "VusicPlayerOceanCyan";
+                string aumid = $"{packageFamily}!{appID}";
+
+                string iconPath = Path.Combine(Package.Current.InstalledLocation.Path, "Assets", "appicon.ico");
+
+                Type? shellType = Type.GetTypeFromProgID("WScript.Shell");
+                if (shellType == null) return;
+
+                dynamic? shell = Activator.CreateInstance(shellType);
+                if (shell == null) return;
+                dynamic shortcut = shell.CreateShortcut(ShortcutPath);
+
+                // Packaged apps are launched via explorer.exe shell:AppsFolder\[AUMID]
+                shortcut.TargetPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
+                shortcut.Arguments = $@"shell:AppsFolder\{aumid}";
+                shortcut.Description = $"Launch {ShortcutName}";
+                if (File.Exists(iconPath))
+                {
+                    shortcut.IconLocation = $"{iconPath},0";
+                }
+
+                shortcut.Save();
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void chkDesktopShortcut_Checked(object sender, RoutedEventArgs e)
+        {
+            if(chkDesktopShortcut.IsChecked == true)
+            {
+                CreateDesktopShortcut();
+            }
+            else
+            {
+                if (File.Exists(ShortcutPath))
+                {
+                    File.Delete(ShortcutPath);
+                }
+            }
+        }
+
+        private void chkDesktopShortcut_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (chkDesktopShortcut.IsChecked == true)
+            {
+                CreateDesktopShortcut();
+            }
+            else
+            {
+                if (File.Exists(ShortcutPath))
+                {
+                    File.Delete(ShortcutPath);
+                }
+            }
         }
     }
 }

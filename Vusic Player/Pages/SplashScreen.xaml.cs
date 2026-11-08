@@ -28,6 +28,7 @@ public sealed partial class SplashScreen : Page
         if (counter == 0)
         {
             Frame.Navigate(typeof(MainPage));
+
         }
     }
 }

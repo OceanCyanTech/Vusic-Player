@@ -1,11 +1,14 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
+
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,6 +31,7 @@ using Vusic_Player.FilePickers;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Vusic_Player.UI.UserViews;
+using Windows.ApplicationModel.Activation;
 using Windows.System;
 using Windows.UI.Core;
 using Page = Microsoft.UI.Xaml.Controls.Page;
@@ -40,7 +44,6 @@ namespace Vusic_Player.Pages
     public sealed partial class MainPage : Page
     {
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
-        private DispatcherTimer? _placeholderTimer;
         private List<string>? _suggestions;
         private int _currentIndex = 0;
         private object? _originalHeader;
@@ -91,12 +94,16 @@ namespace Vusic_Player.Pages
                   {
                       CreatePlaylist();
                   }
-                  else if (isCtrlDown && keyArgs.Key == VirtualKey.F)
+                  else if (isShiftDown && keyArgs.Key == VirtualKey.F)
                   {
                       if (App.NavigationFrame.Content is not VideoPlayer)
                       {
                           OpenFolder();
                       }
+                  }
+                  else if (isCtrlDown && keyArgs.Key == VirtualKey.F)
+                  {
+                      masterSearchControl.FocusText();
                   }
                   else if (isCtrlDown && keyArgs.Key == VirtualKey.H)
                   {
@@ -181,6 +188,48 @@ namespace Vusic_Player.Pages
           );
         }
         bool iscreating = false;
+        public void CheckForArguments()
+        {
+
+            var activatedArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+            if (activatedArgs.Kind == ExtendedActivationKind.File)
+            {
+                var fileArgs = (FileActivatedEventArgs)activatedArgs.Data;
+                var file = fileArgs.Files.FirstOrDefault();
+
+                if (file != null)
+                {
+                    string filePath = file.Path;
+
+                    string extension = System.IO.Path.GetExtension(filePath).ToLower();
+
+                    string[] videoExtensions = Extensions.VideoExtensions.List;
+                    string[] audioExtensions = Extensions.AudioExtensions.List;
+                    string[] lyricExtensions = Extensions.LyricExtensions.List;
+                    if (videoExtensions.Contains(extension))
+                    {
+
+                        if (PlayerService.InVideoPage == false)
+                        {
+                            frmMain.Navigate(typeof(VideoPlayer), filePath);
+
+                        }
+                        return;
+                    }
+                    else if (audioExtensions.Contains(extension))
+                    {
+                        PlayerService.OpenPath(filePath);
+                        return;
+                    }
+                    else if (lyricExtensions.Contains(extension))
+                    {
+                      frmMain.Navigate(typeof(MusicPlayerFull), filePath);
+                        
+                    }
+                }
+            }
+
+        }
         private async void CreatePlaylist()
         {
             if (App.MainWindowInstance == null) return;
@@ -223,6 +272,7 @@ namespace Vusic_Player.Pages
             });
 
         }
+        private DispatcherTimer? _placeholderTimer;
         private async void OpenFolder()
         {
             try
@@ -299,7 +349,10 @@ namespace Vusic_Player.Pages
         private async void CheckforStartupPage()
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-
+            if (currentSettings.ShowTutorialDialog == true)
+            {
+                ttTutorial.IsOpen = true;
+            }
             var startuppage = currentSettings.StartupPage;
             if (startuppage == "Home")
             {
@@ -316,6 +369,8 @@ namespace Vusic_Player.Pages
                 nvgitVideo.IsSelected = true;
                 frmMain.Navigate(typeof(VideoLibrary));
             }
+            CheckForArguments();
+
         }
         private bool IsTextInputFocused()
         {
@@ -595,8 +650,8 @@ namespace Vusic_Player.Pages
             MusicPlayerMaster.Visibility = Visibility.Visible;
             InitializeSettings();
             //    SetGridBackground();
-        
-             if (e.SourcePageType == typeof(EntireMusicLibrary))
+
+            if (e.SourcePageType == typeof(EntireMusicLibrary))
             {
                 txtHeader.Text = "Music Library";
             }
@@ -879,6 +934,14 @@ namespace Vusic_Player.Pages
                 PlayerService.VolumeChange(mediacontroller.OldVolume);
             }
             args.Handled = true;
+        }
+
+        private async void btnCloseTutorial_Click(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.ShowTutorialDialog = false;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            ttTutorial.IsOpen = false;
         }
     }
 }

@@ -52,58 +52,23 @@ namespace Vusic_Player
 
         protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            var activatedArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
-            if (activatedArgs.Kind == ExtendedActivationKind.File)
-            {
-                var fileArgs = (FileActivatedEventArgs)activatedArgs.Data;
-                var file = fileArgs.Files.FirstOrDefault();
-
-                if (file != null)
-                {
-                    string filePath = file.Path;
-
-                    string extension = System.IO.Path.GetExtension(filePath).ToLower();
-
-                    string[] videoExtensions = Extensions.VideoExtensions.List;
-                    string[] audioExtensions = Extensions.AudioExtensions.List;
-                    string[] lyricExtensions = Extensions.LyricExtensions.List;
-                    if (videoExtensions.Contains(extension))
-                    {
-                        MainWindow.ShowWindow();
-                        if (NavigationFrame != null)
-                        {
-                            if (PlayerService.InVideoPage == false)
-                            {
-                                NavigationFrame.Navigate(typeof(VideoPlayer), filePath);
-                            }
-                        }
-                        return;
-                    }
-                    else if (audioExtensions.Contains(extension))
-                    {
-                        MainWindow.ShowWindow();
-                        PlayerService.OpenPath(filePath);
-                        return;
-                    }
-                    else if (lyricExtensions.Contains(extension))
-                    {
-                        MainWindow.ShowWindow();
-                        if (NavigationFrame != null)
-                        {
-
-                            NavigationFrame.Navigate(typeof(MusicPlayerFull), filePath);
-                        }
-                    }
-                }
-            }
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var theme = currentSettings.Theme;
-            ThemeManager.Instance.GlobalTheme = theme;
-            var customFont = new FontFamily("ms-appx:///Assets/Themes/NeonGlow/themefont.ttf#Beon");
-            Application.Current.Resources["GlobalFontHolder"] = customFont; DatabaseService.InitializeDatabase();
-            MainWindow.ShowWindow();
-            FirstLaunchExperience wind = new FirstLaunchExperience();
-            wind.Activate();
+            //     if (currentSettings.isFirstTimeLaunch == false)
+            {
+                var theme = currentSettings.Theme;
+                ThemeManager.Instance.GlobalTheme = theme;
+                DatabaseService.InitializeDatabase();
+                MainWindow.ShowWindow();
+                await FilesInDatabase.LoadAllFiles();
+                await FilesInDatabase.InitializeDatabaseFunctionsAsync();
+                _ = FilesInDatabase.RunBackgroundServiceAsync();
+            }
+            //else
+            //{    EngineService.StartEngine();
+            //    FirstLaunchExperience wind = new FirstLaunchExperience();
+            //    wind.Activate();
+            //}
+         
         }
     }
 }

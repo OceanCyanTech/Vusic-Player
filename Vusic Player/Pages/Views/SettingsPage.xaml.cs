@@ -234,7 +234,7 @@ namespace Vusic_Player.Pages.Views
                 && resource is FontFamily currentFont)
             {
                 Debug.WriteLine("CURRENT FONT FAMILY " + currentFont.Source);
-                
+
                 string fontName = currentFont.Source;
 
                 if (currentFont.Source.Contains("/Space/themefont.ttf"))
@@ -1049,7 +1049,7 @@ namespace Vusic_Player.Pages.Views
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
 
             if (cmbFontFamilies.SelectedItem is FontStyleModel fontst && fontst.FontName is string str)
-         
+
             {
                 Debug.WriteLine("THE FONT IS BLA: " + str + "  " + fontst.FontFam.Source);
                 if (currentSettings.FontFamily != str)
@@ -1431,9 +1431,9 @@ namespace Vusic_Player.Pages.Views
                 "Are you sure you want to reset all Vusic Player Settings?", "warning");
         }
 
-        private void OceanContentDialog_PrimaryRequested1()
+        private async void OceanContentDialog_PrimaryRequested1()
         {
-            SettingsFunctions.ResetAllSettings();
+            await SettingsFunctions.ResetAllSettings();
             PinService.RemovePin();
             PinService.RemoveWindowsAuthentication();
             RestartApp();
@@ -1445,7 +1445,7 @@ namespace Vusic_Player.Pages.Views
             string pfn = Package.Current.Id.FamilyName;
 
             // Replace "App" with the Id attribute defined in <Application Id="..." ...> in Package.appxmanifest
-            string aumid = $"{pfn}!App";
+            string aumid = $"{pfn}!VusicPlayerOceanCyan";
 
             string uriString = $"ms-settings:defaultapps?registeredAUMID={Uri.EscapeDataString(aumid)}";
             await Launcher.LaunchUriAsync(new Uri(uriString));

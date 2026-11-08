@@ -5,13 +5,63 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.UI.Experience.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:grids="using:Vusic_Player.UI.UserViews.Grids"
     mc:Ignorable="d">
-
     <Grid>
+    <Grid Name="grdInitial" RowSpacing="30">
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Do you wish to set app lock?" Style="{StaticResource TitleTextBlockStyle}"/>
+        <StackPanel Orientation="Horizontal" Spacing="20" Grid.Row="1">
+            <Button Name="btnYes" Click="btnYes_Click" Width="80" Content="Yes" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                <Button.Resources>
+                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                    <!-- Pointer Over (Hover) -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                    <!-- Pressed State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                    <!-- Disabled State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                </Button.Resources>
+            </Button>
+            <Button Name="btnNo" Click="btnNo_Click" Width="80" Content="No" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                <Button.Resources>
+                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                    <!-- Pointer Over (Hover) -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                    <!-- Pressed State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                    <!-- Disabled State -->
+                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                </Button.Resources>
+            </Button>
+
+        </StackPanel>
+        </Grid>
+        <grids:SetAppLock x:Name="setAppLock" AppLockDone="setAppLock_AppLockDone" FirstLaunchMode="True" Visibility="Collapsed"/>
     </Grid>
 </Page>

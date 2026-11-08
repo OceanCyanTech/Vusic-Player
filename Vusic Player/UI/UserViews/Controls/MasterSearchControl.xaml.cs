@@ -377,7 +377,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                 }
             }
         }
-
+        public void FocusText()
+        {
+            asbSearchOptions.Focus(FocusState.Programmatic);
+        }
         private void asbSearchOptions_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Space)

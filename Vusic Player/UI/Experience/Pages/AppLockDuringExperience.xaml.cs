@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Vusic_Player.Configuration;
+using Vusic_Player.Pages.Views.Onboarding;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -29,6 +31,22 @@ namespace Vusic_Player.UI.Experience.Pages
         public AppLockDuringExperience()
         {
             InitializeComponent();
+        }
+
+        private void btnYes_Click(object sender, RoutedEventArgs e)
+        {
+            grdInitial.Visibility = Visibility.Collapsed;
+            setAppLock.Visibility = Visibility.Visible;
+        }
+
+        private void btnNo_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(OptimizeApp));
+        }
+
+        private void setAppLock_AppLockDone()
+        {
+            Frame.Navigate(typeof(OptimizeApp));
         }
     }
 }

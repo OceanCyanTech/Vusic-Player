@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using Vusic_Player.Configuration;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using Vusic_Player.UI.UserViews.Controls;
 using Windows.System;
 using WinRT.Interop;
 
@@ -270,12 +271,32 @@ public sealed partial class SetAppLock : UserControl
         txtNum5.Text = "";
         txtNum6.Text = "";
     }
+    public bool FirstLaunchMode
+    {
+        get => (bool)GetValue(FirstLaunch);
+        set => SetValue(FirstLaunch, value);
+    }
+
+    public static readonly DependencyProperty FirstLaunch =
+        DependencyProperty.Register(
+            nameof(FirstLaunchMode),
+            typeof(bool),
+            typeof(SetAppLock),
+            new PropertyMetadata(false));
+    public event Action? AppLockDone;
     private void btnDone_Click(object sender, RoutedEventArgs e)
     {
-        OceanContentDialog.HideDlg();
-        MainWindow.ShowWindow();
-        grdDashboard.Visibility = Visibility.Visible;
-        grdSuccess.Visibility = Visibility.Collapsed;
+        if (FirstLaunchMode)
+        {
+            AppLockDone?.Invoke();
+        }
+        else
+        {
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+            grdDashboard.Visibility = Visibility.Visible;
+            grdSuccess.Visibility = Visibility.Collapsed;
+        }
     }
     public async void ShowDashboard()
     {

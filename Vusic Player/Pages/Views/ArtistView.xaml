@@ -58,7 +58,7 @@
             <PersonPicture Grid.Row="0" Name="imgArtist" Width="300" Tapped="imgArtist_Tapped" Height="300" >
                 <PersonPicture.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="View Image" Click="mnftViewImage_Click" Name="mnftViewImage">
+                        <MenuFlyoutItem Visibility="Collapsed" FontFamily="{StaticResource GlobalFontHolder}" Text="View Image" Click="mnftViewImage_Click" Name="mnftViewImage">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="x"></FontIcon>
                             </MenuFlyoutItem.Icon>

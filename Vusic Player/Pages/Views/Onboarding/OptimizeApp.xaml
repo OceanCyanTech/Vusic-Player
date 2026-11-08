@@ -46,7 +46,7 @@
                 <CornerRadius x:Key="ProgressBarTrackCornerRadius">3</CornerRadius>
             </ProgressBar.Resources>
         </ProgressBar>
-        <Button  FontFamily="{StaticResource GlobalFontHolder}"  Name="btnReady" Content="Use Vusic Player" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" HorizontalAlignment="Left" Visibility="Collapsed" Click="btnReady_Click" Background="{StaticResource GlobalAccentColor}" >
+        <Button  FontFamily="{StaticResource GlobalFontHolder}"  Name="btnReady" Content="Launch Vusic Player" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" HorizontalAlignment="Center" Visibility="Collapsed" Click="btnReady_Click" Background="{StaticResource GlobalAccentColor}" >
             <Button.Resources>
                 <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
                 <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>

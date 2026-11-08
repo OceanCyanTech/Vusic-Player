@@ -12,16 +12,16 @@ namespace Vusic_Player.Configuration.UserSettings
         public ObservableCollection<VideoProgress> SavedVideoProgress { get; set; } = new();
         public ObservableCollection<VideoProgress> DoNotShowRecommendations { get; set; } = new();
         public ObservableCollection<FoldersListOpened> SavedFoldersOpened { get; set; } = new();
-        public bool IsDocumentEnabled { get; set; } = true;
-        public bool IsSplashEnabled { get; set; } = true;
+        public bool IsDocumentEnabled { get; set; } = false;
+        public bool IsSplashEnabled { get; set; } = false;
         public string StartupPage { get; set; } = "Home";
         public string ExpandedPanelHomeView { get; set; } = "expRecentsVideo";
         public string ExpandedPanelMusicLib { get; set; } = "expRecent";
         public string ExpandedPanelVideoLib { get; set; } = "expRecents";
-        public bool IsDownloadsEnabled { get; set; } = true;
-        public bool IsPicturesEnabled { get; set; } = true;
-        public bool IsVideosEnabled { get; set; } = true;
-        public bool IsMusicEnabled { get; set; } = true;
+        public bool IsDownloadsEnabled { get; set; } = false;
+        public bool IsPicturesEnabled { get; set; } = false;
+        public bool IsVideosEnabled { get; set; } = false;
+        public bool IsMusicEnabled { get; set; } = false;
         public ObservableCollection<Show> Shows { get; set; } = new();
         public ObservableCollection<FoldersListOpened> SavedFoldersVideoLibraryRecommendations { get; set; } = new ObservableCollection<FoldersListOpened>();
 
@@ -53,7 +53,8 @@ namespace Vusic_Player.Configuration.UserSettings
         public string SnapshotPath { get; set; } = "";
         public ObservableCollection<EqualizerPreset> EqPresets = new ObservableCollection<EqualizerPreset>();
         public string RecordPath { get; set; } = "";
-        public string FontFamily { get; set; } = "Ocean";
+        public bool isFirstTimeLaunch { get; set; } = true;
+        public string FontFamily { get; set; } = "Segoe UI Variable Text";
         public bool Panel2VisibilityHome { get; set; } = true;
         public bool Panel3VisibilityHome { get; set; } = true;
         public bool Panel4VisibilityHome { get; set; } = true;
@@ -83,6 +84,7 @@ namespace Vusic_Player.Configuration.UserSettings
         public double VideoHue { get; set; } = 0;
         public double VideoSaturation { get; set; } = 0;
         public bool ShowDefaultMessage { get; set; }
+        public bool ShowTutorialDialog { get; set; } = true;
 
     }
 

@@ -1,9 +1,12 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Windows.AppLifecycle;
 using System.Threading;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.Helper.FileSystem;
+using Vusic_Player.Configuration.UserSettings;
+using Windows.ApplicationModel.Core;
 
 
 namespace Vusic_Player.Pages.Views.Onboarding
@@ -63,16 +66,38 @@ namespace Vusic_Player.Pages.Views.Onboarding
 
                 // Stop animation when done
                 _loadingCts?.Cancel();
-                txtMain.Text = "Ready!";
+                txtMain.Text = "Vusic Player is all set to use!";
                 prgMain.Visibility = Visibility.Collapsed;
                 btnReady.Visibility = Visibility.Visible;
             }
             base.OnNavigatedTo(e);
         }
-
-        private void btnReady_Click(object sender, RoutedEventArgs e)
+        private void RestartApp()
         {
-            Frame.Navigate(typeof(MainPage));
+            AppRestartFailureReason result = AppInstance.Restart(string.Empty);
+
+            // If restart succeeds, the current process terminates automatically.
+            // If it fails, inspect the failure reason:
+            switch (result)
+            {
+                case AppRestartFailureReason.RestartPending:
+                    // A restart request is already processing
+                    break;
+                case AppRestartFailureReason.InvalidUser:
+                    // The user token is invalid
+                    break;
+                case AppRestartFailureReason.Other:
+                    // General failure, handle fallback
+                    break;
+            }
+        }
+
+        private async void btnReady_Click(object sender, RoutedEventArgs e)
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            currentSettings.isFirstTimeLaunch = false;
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            RestartApp();
         }
     }
 }

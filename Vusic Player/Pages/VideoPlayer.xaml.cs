@@ -2372,7 +2372,6 @@ namespace Vusic_Player.Pages
 
         private void videoControls_ViewEpisodeClick()
         {
-            //PENDING
             if (ShowManager.mainShowPlayable == null) return;
             grdInfo.Visibility = Visibility.Collapsed;
             grdInfo.Opacity = 0;

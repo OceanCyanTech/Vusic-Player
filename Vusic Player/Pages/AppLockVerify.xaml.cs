@@ -1,11 +1,15 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.Windows.AppLifecycle;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Pages.Views;
 using Vusic_Player.Pages.Views.Onboarding;
+using Windows.ApplicationModel.Activation;
 using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -49,6 +53,7 @@ namespace Vusic_Player.Pages
 
                     if (currentSettings.IsSplashEnabled == false)
                     {
+
                         Frame.Navigate(typeof(MainPage));
                     }
                     else

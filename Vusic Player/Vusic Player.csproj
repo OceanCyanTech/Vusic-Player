@@ -99,6 +99,7 @@
     <None Remove="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml" />
     <None Remove="UI\Experience\FirstLaunchExperience.xaml" />
     <None Remove="UI\Experience\Pages\AppLockDuringExperience.xaml" />
+    <None Remove="UI\Experience\Pages\DefaultFormats.xaml" />
     <None Remove="UI\Experience\Pages\DesktopShortcut.xaml" />
     <None Remove="UI\Experience\Pages\FolderSelection.xaml" />
     <None Remove="UI\Experience\Pages\KeyFeaturesPage.xaml" />
@@ -757,6 +758,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Coding\Vusic Player\Vusic Player\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Experience\Pages\DefaultFormats.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\Experience\Pages\AppLockDuringExperience.xaml">

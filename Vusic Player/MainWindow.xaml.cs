@@ -123,7 +123,6 @@ namespace Vusic_Player
                 SubtitleEditorWindow.KillDialog();
 
             };
-            CheckAuthentication();
             // AppVersion.LoadBuildCounter();
 
 
@@ -192,6 +191,9 @@ namespace Vusic_Player
 
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
                 //    Application.Current.Resources["GlobalFontHolder"] = new FontFamily(font);
+
+                CheckAuthentication();
+
 
             }
             catch

@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Grid Margin="0, 40">
-        <CheckBox VerticalAlignment="Top" Content="Create Desktop Shortcut">
+        <CheckBox Name="chkDesktopShortcut" Checked="chkDesktopShortcut_Checked" Unchecked="chkDesktopShortcut_Unchecked" VerticalAlignment="Top" Content="Create Desktop Shortcut">
             <CheckBox.Resources>
                 <!-- Checked State (Background box fill) -->
                 <SolidColorBrush x:Key="CheckBoxFillColorDefault" Color="{StaticResource GlobalAccentColor}"/>
