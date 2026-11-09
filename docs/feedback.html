@@ -3,27 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>App Feedback</title>
+  <title>Vusic Player - Send Feedback</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
 
   <div class="w-full max-w-md bg-slate-800/80 backdrop-blur border border-slate-700 rounded-2xl p-6 shadow-xl">
     <h2 class="text-2xl font-bold mb-1 text-sky-400">Vusic Player</h2>
-      <h2 class="text-2xl font-bold mb-1 text-sky-400">Send Feedback</h2>
+    <h3 class="text-lg font-semibold mb-1 text-slate-200">Send Feedback</h3>
     <p class="text-sm text-slate-400 mb-6">Let us know about bugs, feature requests, or suggestions.</p>
 
-    <!-- Web3Forms handles the submission and sends it directly to your email without a server -->
-    <form action="https://api.web3forms.com/submit" method="POST" id="feedbackForm" class="space-y-4">
-      
-      <!-- Replace with your Access Key from https://web3forms.com (free, no sign-up required) -->
-      <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
-      <input type="hidden" name="subject" value="New App Feedback Submission" />
-      <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
-
+    <form id="feedbackForm" class="space-y-4">
       <div>
         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Feedback Type</label>
-        <select name="type" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-sky-500">
+        <select id="feedbackType" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-sky-500">
           <option value="Bug Report">Bug Report</option>
           <option value="Feature Request">Feature Request</option>
           <option value="General Feedback">General Feedback</option>
@@ -32,23 +27,28 @@
 
       <div>
         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Your Email (Optional)</label>
-        <input type="email" name="email" placeholder="name@example.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-sky-500" />
+        <input type="email" id="userEmail" placeholder="name@example.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-sky-500" />
       </div>
 
       <div>
         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Message</label>
-        <textarea name="message" rows="4" required placeholder="Describe the issue or feature in detail..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-sky-500"></textarea>
+        <textarea id="userMessage" rows="4" required placeholder="Describe the issue or feature in detail..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-sky-500"></textarea>
       </div>
 
       <button type="submit" id="submitBtn" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold py-2.5 rounded-lg text-sm transition">
         Submit Feedback
       </button>
 
-      <p id="formStatus" class="text-center text-xs text-slate-400 mt-2 hidden"></p>
+      <p id="formStatus" class="text-center text-xs mt-2 hidden"></p>
     </form>
   </div>
 
   <script>
+    const SUPABASE_URL = 'https://bdjkwfbjoswkaeqosyvp.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_TXTb7MnFqwMvUvKAtxyBEQ_edLTAb0T';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const form = document.getElementById('feedbackForm');
     const status = document.getElementById('formStatus');
     const submitBtn = document.getElementById('submitBtn');
@@ -58,32 +58,25 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending...';
 
-      const formData = new FormData(form);
-      const json = JSON.stringify(Object.fromEntries(formData));
+      const type = document.getElementById('feedbackType').value;
+      const email = document.getElementById('userEmail').value.trim() || null;
+      const message = document.getElementById('userMessage').value.trim();
 
-      try {
-        const res = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: json
-        });
+      const { data, error } = await supabase
+        .from('feedback')
+        .insert([{ type, email, message }]);
 
-        if (res.status === 200) {
-          status.textContent = 'Feedback received! Thank you.';
-          status.classList.remove('hidden', 'text-rose-400');
-          status.classList.add('text-emerald-400');
-          form.reset();
-        } else {
-          throw new Error();
-        }
-      } catch (err) {
-        status.textContent = 'Something went wrong. Please try again.';
-        status.classList.remove('hidden', 'text-emerald-400');
-        status.classList.add('text-rose-400');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Feedback';
+      if (error) {
+        status.textContent = 'Error sending feedback. Please try again.';
+        status.className = 'text-center text-xs mt-2 text-rose-400';
+      } else {
+        status.textContent = 'Feedback received! Thank you.';
+        status.className = 'text-center text-xs mt-2 text-emerald-400';
+        form.reset();
       }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Feedback';
     });
   </script>
 </body>
