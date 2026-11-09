@@ -8,11 +8,24 @@
   <!-- Supabase Client Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
 
   <div class="w-full max-w-md bg-slate-800/80 backdrop-blur border border-slate-700 rounded-2xl p-6 shadow-xl">
-    <h2 class="text-2xl font-bold mb-1 text-sky-400">Vusic Player</h2>
-    <h3 class="text-lg font-semibold mb-1 text-slate-200">Send Feedback</h3>
+    
+    <!-- Title with Transparent App Icon -->
+    <div class="flex items-center gap-3 mb-2">
+      <img 
+        src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" 
+        alt="Vusic Player Logo" 
+        class="w-10 h-10 object-contain shrink-0 drop-shadow-md"
+        onerror="this.style.display='none'"
+      />
+      <div>
+        <h2 class="text-2xl font-bold text-sky-400 leading-tight">Vusic Player</h2>
+        <h3 class="text-xs font-medium text-slate-400">Send Feedback</h3>
+      </div>
+    </div>
+
     <p class="text-sm text-slate-400 mb-6">Let us know about bugs, feature requests, or suggestions.</p>
 
     <form id="feedbackForm" class="space-y-4">
@@ -42,6 +55,17 @@
       <p id="formStatus" class="text-center text-xs mt-2 hidden"></p>
     </form>
   </div>
+
+  <!-- Bottom OceanCyan Footer Branding -->
+<footer class="mt-6 flex items-center justify-center gap-3 text-sm text-slate-400">
+    <img 
+      src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/OceanCyan%20Logo.png" 
+      alt="OceanCyan Tech Logo" 
+      class="h-7 w-auto object-contain drop-shadow"
+      onerror="this.style.display='none'"
+    />
+    <span class="font-medium">&copy; 2026 OceanCyan Tech. All rights reserved.</span>
+  </footer>
 
   <script>
     const SUPABASE_URL = 'https://bdjkwfbjoswkaeqosyvp.supabase.co';
