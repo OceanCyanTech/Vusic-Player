@@ -439,7 +439,7 @@
             <StackPanel Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkEmptyHistory" Spacing="20">
                 <StackPanel Spacing="20" Orientation="Horizontal">
                     <Image Width="50" Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}"></Image>
-                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Style="{StaticResource TitleTextBlockStyle}" Text="You have no history!" Name="txtEmptyHistory"></TextBlock>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Style="{StaticResource TitleTextBlockStyle}" Text="You have no video history in Vusic Player!" Name="txtEmptyHistory"></TextBlock>
                 </StackPanel>
             </StackPanel>
             <StackPanel Visibility="Collapsed"  Grid.Row="3" VerticalAlignment="Top" Margin="0, 40" HorizontalAlignment="Center" Orientation="Vertical" Name="stkDisabledHistory" Spacing="20">

@@ -806,6 +806,10 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
+            <StackPanel Name="stkNoGenres" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
+                <Image Width="80" Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Text="Songs on this PC have no genre associated!"/>
+            </StackPanel>
             <Grid  Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResultsGenre" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>

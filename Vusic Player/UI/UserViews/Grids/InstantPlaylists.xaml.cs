@@ -30,8 +30,16 @@ namespace Vusic_Player.UI.UserViews.Grids
             InitializeComponent();
             CreateInstantPlaylists();
         }
+        private void UpdateUI()
+        {
+            stkNoInstantPlaylists.Visibility = instantPlaylists.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            btnRefreshPlaylists.Visibility = instantPlaylists.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            grdViewPlaylists.Visibility = instantPlaylists.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+
+        }
         private async void CreateInstantPlaylists()
         {
+            UpdateUI();
             instantPlaylists.Clear();
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             //First playlist
@@ -189,6 +197,7 @@ namespace Vusic_Player.UI.UserViews.Grids
                     Thumbnail = new Uri(IconHolder.Instance.MusicNoteIcon)
                 });
             }
+            UpdateUI();
         }
 
         private void chkSelect_Checked(object sender, RoutedEventArgs e)

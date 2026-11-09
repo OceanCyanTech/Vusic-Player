@@ -55,7 +55,10 @@ namespace Vusic_Player.UI.UserViews.Controls
             TimelineCollectionArtist.CollectionChanged -= TimelineCollectionArtist_CollectionChanged;
             TimelineCollectionArtist.CollectionChanged += TimelineCollectionArtist_CollectionChanged;
             TimelineCollectionAlbum.CollectionChanged -= TimelineCollectionAlbum_CollectionChanged;
+            TimelineCollectionAlbum.CollectionChanged += TimelineCollectionAlbum_CollectionChanged;
+            TimelineCollectionShow.CollectionChanged -= TimelineCollectionShow_CollectionChanged;
             TimelineCollectionShow.CollectionChanged += TimelineCollectionShow_CollectionChanged;
+            TimelineCollectionSearch.CollectionChanged -= TimelineCollectionSearch_CollectionChanged; ;
             TimelineCollectionSearch.CollectionChanged += TimelineCollectionSearch_CollectionChanged; ;
         }
 

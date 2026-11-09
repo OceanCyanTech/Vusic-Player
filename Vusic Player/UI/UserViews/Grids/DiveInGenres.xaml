@@ -67,6 +67,9 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Visibility="Collapsed" Name="txtNoGenresAvailable" Text="No Genres Available!"/>
+        <StackPanel Name="stkNoGenres" VerticalAlignment="Center" Visibility="Collapsed"  Grid.Row="1" Orientation="Vertical" Spacing="20">
+            <Image Width="80" Source="{Binding EmptyStuffLeaves, Source={StaticResource GlobalIconHolder}}"/>
+            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Text="No Genres Available!"/>
+        </StackPanel>
     </Grid>
 </UserControl>

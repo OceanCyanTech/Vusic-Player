@@ -27,6 +27,9 @@ namespace Vusic_Player.UI.UserViews.Grids
         ObservableCollection<GenreModel> genresRecommended = new();
         private async void LoadGenres()
         {
+            txtNoGenresAvailable.Visibility = genresRecommended.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            grdViewGenres.Visibility = genresRecommended.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+
             var rawsongs = FilesInDatabase.rawSongs;
             if (rawsongs == null || rawsongs.Count == 0) return;
 
@@ -74,6 +77,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             }
             txtNoGenresAvailable.Visibility = genresRecommended.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             grdViewGenres.Visibility = genresRecommended.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+
         }
         private void grdViewGenres_ItemClick(object sender, ItemClickEventArgs e)
         {

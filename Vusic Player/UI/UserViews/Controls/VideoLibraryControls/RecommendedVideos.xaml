@@ -22,7 +22,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Image Width="50" Source="{Binding DefaultVideo, Source={StaticResource GlobalIconHolder}}"/>
+                <Image Width="50" Source="{Binding RecommendationsVideo, Source={StaticResource GlobalIconHolder}}"/>
                 <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  VerticalAlignment="Center" Grid.Column="1" Text="There are no videos to index!" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </Grid>
             <Button  FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1" HorizontalAlignment="Center" Content="Disable Recommendations" Name="btnDisableRecommendations" Click="btnDisableRecommendations_Click"/>

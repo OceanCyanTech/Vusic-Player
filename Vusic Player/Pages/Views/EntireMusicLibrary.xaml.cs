@@ -45,6 +45,7 @@ namespace Vusic_Player.Pages.Views
             foldersListOpened.CollectionChanged += FoldersListOpened_CollectionChanged;
             PlaylistCreation.CreationCallAdd -= PlaylistCreation_CreationCallAdd;
             PlaylistCreation.CreationCallAdd += PlaylistCreation_CreationCallAdd;
+            genresAll.CollectionChanged += GenresAll_CollectionChanged;
 
             LoadSettings();
 
@@ -196,12 +197,19 @@ namespace Vusic_Player.Pages.Views
             foreach (var playlist in playlists)
             {
                 Debug.WriteLine("PLAYLIST BEING ADDED IS :" + playlist.PlaylistName);
-                playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
+       //         playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
             }
             Debug.WriteLine("Playlst3");
-            stkNoPlaylists.Visibility = Visibility.Collapsed;
-            AllPlaylistGroupedCollection.Visibility = Visibility.Visible;
-
+            if (playlistsAll.Count > 0)
+            {
+                stkNoPlaylists.Visibility = Visibility.Collapsed;
+                AllPlaylistGroupedCollection.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                stkNoPlaylists.Visibility = Visibility.Visible;
+                AllPlaylistGroupedCollection.Visibility = Visibility.Collapsed;
+            }
 
         }
         ObservableCollection<RecentMusicModel> recentMusics = new();
@@ -569,8 +577,18 @@ namespace Vusic_Player.Pages.Views
                     }
                 }
             }
+            grdViewGenres.Visibility = genresAll.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            stkNoGenres.Visibility = genresAll.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            asbSearchGenres.Visibility = genresAll.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
         }
 
+        private void GenresAll_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+      
+            grdViewGenres.Visibility = genresAll.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            stkNoGenres.Visibility = genresAll.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            asbSearchGenres.Visibility = genresAll.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        }
 
         private async void LoadSettings()
         {
@@ -796,7 +814,7 @@ namespace Vusic_Player.Pages.Views
             }
 
             AllAvailableSongs.Clear();
-            await LoadAllFilesAsync();
+        //    await LoadAllFilesAsync();
             stkLoading.Visibility = Visibility.Collapsed;
         }
         //private async void LoadAllFiles()

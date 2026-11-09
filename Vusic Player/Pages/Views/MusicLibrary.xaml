@@ -50,9 +50,13 @@ AlwaysUseFallback="False"/>
                 <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   FontFamily="{StaticResource GlobalFontHolder}"   Content="View Entire Library" Click="hypViewEntireLib_Click" FontSize="16"  Grid.Row="0"></HyperlinkButton>
             </StackPanel>
             <Expander Grid.Row="1" 
-          Header="Recently Played"
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
           IsExpanded="True" Name="expRecent" Expanding="expRecent_Expanding">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Recently Played" FontFamily="{StaticResource GlobalFontHolder}"/>
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
                 <Expander.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"   Text="View Full Music History" Name="mnftViewFullMusicHistory" Click="mnftViewFullMusicHistory_Click">
@@ -72,8 +76,12 @@ AlwaysUseFallback="False"/>
             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtDisplay1"  Tapped="TextBlock_Tapped" Text="My Playlists" Grid.Row="2" Style="{StaticResource TitleTextBlockStyle}"/>
 
             <Expander Grid.Row="3"  
-          Header="View My Playlists"
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Name="expPlaylists" FontFamily="{StaticResource GlobalFontHolder}"   Expanding="expRecent_Expanding">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="View My Playlists" FontFamily="{StaticResource GlobalFontHolder}"/>
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
                 <Expander.Resources>
                     <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
@@ -99,8 +107,13 @@ AlwaysUseFallback="False"/>
             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtDisplay2" Tapped="TextBlock_Tapped_1" Text="Instant Playlists for you" Grid.Row="4" Style="{StaticResource TitleTextBlockStyle}"/>
 
             <Expander Grid.Row="5"  FontFamily="{StaticResource GlobalFontHolder}"  
-          Header="Recommendations" HorizontalContentAlignment="Stretch"
+       HorizontalContentAlignment="Stretch"
           HorizontalAlignment="Stretch" Name="expRecommend" Expanding="expRecent_Expanding">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Recommendations" FontFamily="{StaticResource GlobalFontHolder}"/>
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
                 <Expander.Resources>
                     <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
@@ -115,8 +128,13 @@ AlwaysUseFallback="False"/>
             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtDisplay3" Tapped="TextBlock_Tapped_2" Text="Dive into the mood" Grid.Row="6" Style="{StaticResource TitleTextBlockStyle}"/>
 
             <Expander Grid.Row="7"  Background="Transparent"
-          Header="Explore Genres" FontFamily="{StaticResource GlobalFontHolder}"  
+FontFamily="{StaticResource GlobalFontHolder}"  
           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Name="expGenres" Expanding="expRecent_Expanding">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Explore Genres" FontFamily="{StaticResource GlobalFontHolder}"/>
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
                 <Expander.Resources>
                     <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="Transparent" />
                     <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="{ThemeResource SurfaceStrokeColorDefaultBrush}" />

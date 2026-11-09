@@ -130,6 +130,10 @@ ItemClick="grdViewPlaylists_ItemClick"  Margin="0, 20" >
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Spacing="20" Visibility="Collapsed" Name="stkNoInstantPlaylists">
+            <Image Width="50" Source="{Binding InstantPlaylists,Source={StaticResource GlobalIconHolder}}"/>
+            <TextBlock Text="Instant Playlists cannot be created at this moment as there is no media to index." Style="{StaticResource SubtitleTextBlockStyle}"  VerticalAlignment="Center" />
+        </StackPanel>
         <TeachingTip FontFamily="{StaticResource GlobalFontHolder}"  Name="ttPlaylistSaved" >
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Width="25" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>

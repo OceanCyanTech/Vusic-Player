@@ -21,6 +21,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _genrelocal = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/genrelocal.png";
         private string _pageicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/pageicon.png";
         private string _pause = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/pause.png";
+        private string _recommendedvideos = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/videorecommendations.png";
 
         private string _viewfulllyrics = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/viewfulllyrics.png";
         private string _personalize = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/personalize.png";
@@ -88,6 +89,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _removeimage = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/removeimg.png";
         private string _defaultartist = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/defaultartist.png";
         private string _editicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/editicon.png";
+        private string _instantplaylists = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/instantplaylists.png";
         private string _artistpictureonline = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/artistpictureonline.png";
         private string _artistpicturelocal = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/artistpicturelocal.png";
         private string _selectall = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/selectall.png";
@@ -119,6 +121,30 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
                 if (_sampleimage != value)
                 {
                     _sampleimage = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string RecommendationsVideo
+        {
+            get => _recommendedvideos;
+            set
+            {
+                if (_recommendedvideos != value)
+                {
+                    _recommendedvideos = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string InstantPlaylists
+        {
+            get => _instantplaylists;
+            set
+            {
+                if (_instantplaylists != value)
+                {
+                    _instantplaylists = value;
                     OnPropertyChanged();
                 }
             }
