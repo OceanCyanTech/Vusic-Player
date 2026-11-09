@@ -1,4 +1,4 @@
-# Vusic Player (Under Development)
+# Vusic Player (Coming Soon)
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/5dadd3e4-f8f7-4793-93ca-ac985e2162b5" />
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2f88e30f-450a-4187-8c4c-9976bff7d343" />
 
