@@ -1,4 +1,4 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 091126) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 #region Namespaces
 using Microsoft.UI.Xaml;
@@ -32,7 +32,7 @@ using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 © OCEANCYAN TECH 2026
 
 PAGE - ALBUMVIEW
-BUILD 211026
+BUILD 091126
  */
 namespace Vusic_Player.Pages.Views;
 

@@ -1,4 +1,4 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 091126) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 
 #region Namespaces
@@ -25,16 +25,17 @@ using Vusic_Player.FilePickers;
 #endregion
 
 
-/*  OCEANCYAN TECH HEADER
+
+
+namespace Vusic_Player.Pages.Views
+{
+    /*  OCEANCYAN TECH HEADER
  VUSIC PLAYER - VERSION v1.0.0.0
 © OCEANCYAN TECH 2026
 
 PAGE - HOMEVIEW
-BUILD 211026
+BUILD 091126
  */
-
-namespace Vusic_Player.Pages.Views
-{
     public sealed partial class HomeView : Page
     {
         #region Fields

@@ -1,4 +1,4 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 091126) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 
 using FlyleafLib.MediaPlayer;
@@ -30,38 +30,85 @@ namespace Vusic_Player.UI.Experience.Pages
     public sealed partial class OceanCyanLogoIntro : Page
     {
         Player localplayer = new Player();
+        private bool _isCompleted = false;
+
+        public event Action? Completed;
+
         public OceanCyanLogoIntro()
         {
             InitializeComponent();
             this.Loaded += OceanCyanLogoIntro_Loaded;
-            var keyConfig = localplayer.Config.Player.KeyBindings;
+            this.Unloaded += OceanCyanLogoIntro_Unloaded;
 
-            keyConfig.Remove(Key.Left);
-            keyConfig.Remove(Key.Space);
-            keyConfig.Remove(Key.Right);
-            keyConfig.Remove(Key.M);
-
-            keyConfig.Remove(Key.Left, ctrl: true);
-            keyConfig.Remove(Key.Right, ctrl: true);
-            keyConfig.Remove(Key.Left, shift: true);
-            keyConfig.Remove(Key.Right, shift: true); keyConfig.RemoveAll();
+            // Strip keybindings safely
+            try
+            {
+                localplayer.Config.Player.KeyBindings.RemoveAll();
+            }
+            catch { }
         }
-        public event Action? Completed;
+
         private async void OceanCyanLogoIntro_Loaded(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                hostMedia.Player = localplayer;
+                localplayer.PlaybackStopped += Localplayer_PlaybackStopped;
 
-            hostMedia.Player = localplayer;
-            localplayer.PlaybackStopped += Localplayer_PlaybackStopped;
-            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Ocean Cyan Intro.mov"));
-            localplayer.Open(file.Path);
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Ocean Cyan Intro.mov"));
+                if (file != null && System.IO.File.Exists(file.Path))
+                {
+                    localplayer.Open(file.Path);
+                }
+                else
+                {
+                    FinishIntro();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Intro video load error: {ex.Message}");
+                FinishIntro();
+            }
         }
 
-        private void Localplayer_PlaybackStopped(object? sender, PlaybackStoppedArgs e)
+        private void Localplayer_PlaybackStopped(object? sender, EventArgs e)
         {
-            DispatcherQueue.TryEnqueue(() =>
+            this.DispatcherQueue.TryEnqueue(() =>
             {
-                Frame.Navigate(typeof(WelcomePage));
+                FinishIntro();
             });
+        }
+
+        private void FinishIntro()
+        {
+            if (_isCompleted) return;
+            _isCompleted = true;
+
+            try
+            {
+                localplayer.PlaybackStopped -= Localplayer_PlaybackStopped;
+                localplayer.Stop();
+                hostMedia.Player = null; // Unbind DirectX host surface cleanly
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    Frame.Navigate(typeof(WelcomePage));
+                });
+            }
+            catch { }
+
+            // Trigger next wizard page on UI thread
+            Completed?.Invoke();
+        }
+
+        private void OceanCyanLogoIntro_Unloaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                localplayer.PlaybackStopped -= Localplayer_PlaybackStopped;
+                hostMedia.Player = null;
+            }
+            catch { }
         }
     }
 }

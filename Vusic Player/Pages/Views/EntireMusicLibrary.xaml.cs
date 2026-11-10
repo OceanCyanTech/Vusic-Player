@@ -814,7 +814,7 @@ namespace Vusic_Player.Pages.Views
             }
 
             AllAvailableSongs.Clear();
-        //    await LoadAllFilesAsync();
+         await LoadAllFilesAsync();
             stkLoading.Visibility = Visibility.Collapsed;
         }
         //private async void LoadAllFiles()

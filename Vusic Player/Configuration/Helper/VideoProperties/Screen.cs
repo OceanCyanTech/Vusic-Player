@@ -1,4 +1,4 @@
-﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 211026) . All Rights Reserved.
+﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 091126) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 
 using System;

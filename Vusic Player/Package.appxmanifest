@@ -10,10 +10,10 @@
 
 	<Identity
 	  Name="OceanCyanTech.2212247558119"
-	  Publisher="CN=OceanCyan Tech"
-	  Version="1.0.0.0" />
+	  Publisher="CN=4A4A5EC3-CCA3-4E98-9B45-924241BDB4F6"
+	  Version="1.0.3.0" />
 
-	<mp:PhoneIdentity PhoneProductId="a831f905-0ea4-4264-a418-c2d4b3e6cd70" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="4fd5a146-851c-403f-bcac-0217900e5fe8" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
 	<Properties>
 		<DisplayName>Vusic Player</DisplayName>
