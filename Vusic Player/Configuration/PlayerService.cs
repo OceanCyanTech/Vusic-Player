@@ -507,6 +507,7 @@ namespace Vusic_Player.Configuration
         {
             if (Masterplayer == null) return;
             // Create engine instance attached to Flyleaf player
+            DisableMultiAudioOutput();
             _multiAudioEngine = new XAudio2MultiOutputEngine(Masterplayer);
 
             var targetDeviceIds = new List<string>();
@@ -526,6 +527,20 @@ namespace Vusic_Player.Configuration
             if (targetDeviceIds.Count > 0)
             {
                 _multiAudioEngine.InitializeOutputs(targetDeviceIds);
+            }
+        }
+        public static void DisableMultiAudioOutput()
+        {
+            if (_multiAudioEngine != null)
+            {
+                //_multiAudioEngine.DeviceDisconnected -= OnMultiAudioDeviceDisconnected; // if subscribed
+                _multiAudioEngine.Dispose();
+                _multiAudioEngine = null;
+            }
+
+            if (Masterplayer != null)
+            {
+                Masterplayer.Audio.Mute = false;
             }
         }
         public static void ProcessUsageInvoke()
@@ -732,7 +747,7 @@ namespace Vusic_Player.Configuration
                 if (App.NavigationFrame != null)
                 {
                     var videoprogress = new VideoProgress { FilePath = CurrentPlayingPath, CurrentDuration = Masterplayer.CurTime, TotalDuration = Masterplayer.Duration, ShowInformationOfOpen = false };
-                    ContinuePlaying.videoProgressMain = videoprogress;
+                    ContinuePlaying.Instance.VideoProgressMain = videoprogress;
                     if (InVideoPage == false)
                     {
                         Debug.WriteLine("TRUEU");
@@ -787,9 +802,6 @@ namespace Vusic_Player.Configuration
         }
         private static async void Masterplayer_PlaybackStopped(object? sender, PlaybackStoppedArgs e)
         {
-            Debug.WriteLine("FINISHED1");
-            Debug.WriteLine(UIController.TotalDurationString);
-            Debug.WriteLine(UIController.RunningDurationString);
             if (Masterplayer != null)
             {
                 if (Masterplayer.Status == Status.Ended)

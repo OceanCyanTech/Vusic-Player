@@ -166,15 +166,39 @@ Stretch="UniformToFill"/>
             <audiogeneral:Pitch/>
         </TeachingTip>
         <TeachingTip Name="ttTutorial" Title="Welcome to Vusic Player!">
-            <Grid Margin="20, 20" RowSpacing="30">
+            <Grid Margin="20, 20" RowSpacing="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="New to Vusic Player? Check out how to use Vusic Player in our documentation! " Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
-                <HyperlinkButton FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1" Content="How To Use Vusic Player?" NavigateUri="https://oceancyantech.github.io/Vusic-Player/howtousevusicplayer.html"/>
-                <Button  FontFamily="{StaticResource GlobalFontHolder}" Style="{StaticResource AccentButtonStyle}" Grid.Row="2" Content="Close" Name="btnCloseTutorial" Click="btnCloseTutorial_Click"/>
+
+                <TextBlock 
+            FontFamily="{StaticResource GlobalFontHolder}" 
+            Text="New to Vusic Player? Check out our documentation, or support ongoing development!" 
+            Style="{StaticResource BodyLargeStrongTextBlockStyle}" 
+            TextWrapping="Wrap"/>
+
+                <HyperlinkButton 
+            FontFamily="{StaticResource GlobalFontHolder}" 
+            Grid.Row="1" 
+            Content="How To Use Vusic Player?" 
+            NavigateUri="https://oceancyantech.github.io/Vusic-Player/howtousevusicplayer.html"/>
+
+                <HyperlinkButton 
+            FontFamily="{StaticResource GlobalFontHolder}" 
+            Grid.Row="2" 
+            Content="Support Vusic Player (Donate)" 
+            NavigateUri="https://oceancyantech.github.io/Vusic-Player/donate.html"/>
+
+                <Button 
+            FontFamily="{StaticResource GlobalFontHolder}" 
+            Style="{StaticResource AccentButtonStyle}" 
+            Grid.Row="3" 
+            Content="Close" 
+            Name="btnCloseTutorial" 
+            Click="btnCloseTutorial_Click"/>
             </Grid>
         </TeachingTip>
         <TeachingTip Name="ttEXCEPTION" Title="Exception">

@@ -186,7 +186,41 @@ namespace Vusic_Player.Pages
               }),
              handledEventsToo: false
           );
+            PlayerService.ErrorCalled -= PlayerService_ErrorCalled;
+            PlayerService.ErrorCalled += PlayerService_ErrorCalled;
+            this.Loaded += MainPage_Loaded;
         }
+
+        private void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadVersion();
+        }
+        public async void LoadVersion()
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            //if (currentSettings.LastSeenVersion == "")
+            //{
+  
+            //    if (App.MainWindowInstance == null) return;
+            //    OceanContentDialog.Show("What's New?", "", "", "Close", OceanDialogWindow.ContentType.WhatsNew, OceanContentDialogDefault.Close, XamlRoot, 700, 700, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new System.Collections.ObjectModel.ObservableCollection<Configuration.ClassModels.SongModel>(), "");
+
+            //}
+            currentSettings.LastSeenVersion = "1.0.2.0";
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            //var counter = currentSettings.VersionCounter;
+            //if (counter.Count == 0)
+            //{
+            //    counter.Add(0);
+            //}
+            //int counter2 = counter.FirstOrDefault() + 1;
+            //counter.Clear();
+            //counter.Add(counter2);
+            //await SettingsLoader.SaveSettingsAsync(currentSettings);
+
+            //txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} {DateTime.Now.ToString("MMddyy")}.{counter2}";
+
+        }
+
         bool iscreating = false;
         public void CheckForArguments()
         {
@@ -390,7 +424,19 @@ namespace Vusic_Player.Pages
             PlayerService.PlayPause();
             args.Handled = true;
         }
+        private void PlayerService_ErrorCalled()
+        {
+            if (App.MainWindowInstance == null) return;
 
+            OceanContentDialog.Show("Error", "OK", "", "", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 400, 400, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", mediacontroller.ErrorMessage, "error");
+            OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
+            OceanContentDialog.PrimaryRequested += OceanContentDialog_PrimaryRequested;
+        }
+        private static void OceanContentDialog_PrimaryRequested()
+        {
+            OceanContentDialog.HideDlg();
+            MainWindow.ShowWindow();
+        }
         private void ControlRoot_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Space)
@@ -886,6 +932,7 @@ namespace Vusic_Player.Pages
             else
             {
                 mediacontroller.MultiDeviceOutputFeature = false;
+                PlayerService.DisableMultiAudioOutput();
             }
         }
 

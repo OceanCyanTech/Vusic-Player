@@ -116,6 +116,7 @@
                         <controls:OnlineLyrics x:Name="LyricOnline" Visibility="Collapsed"/>
                         <grids:SetAppLock x:Name="AppLock" Visibility="Collapsed"/>
                         <local1:KeyboardShortcutsGuide x:Name="KeyboardShortcutGuide" Visibility="Collapsed"/>
+                        <controls:WhatsNew x:Name="WhatsNew" Visibility="Collapsed"/>
                     </Grid>
 
                     <Grid Grid.Row="2" Name="smokegrid" Background="Black" Opacity="0">

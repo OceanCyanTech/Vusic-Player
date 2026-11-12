@@ -1,0 +1,53 @@
+<Page
+    x:Class="Vusic_Player.UI.Experience.Pages.DonateToVusicPlayer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid MaxWidth="540" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="16">
+        <StackPanel Spacing="20">
+
+            <StackPanel Spacing="10">
+                <TextBlock
+                    Text="Vusic Player is 100% Free &amp; Open Source"
+                    Style="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock
+                    Text="Every feature—including Multi-Device Audio Output, Reverb, Pitch Control, and Batch Processing—is completely unlocked with no subscriptions or paywalls."
+                    Style="{StaticResource BodyTextBlockStyle}"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <Border
+                Padding="20"
+                CornerRadius="12"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1">
+                <StackPanel Spacing="12">
+                    <TextBlock
+                        Text="Want to support development? (Completely Optional)"
+                        Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock
+                        Text="If you enjoy using Vusic Player, you can leave an optional tip via UPI or Ko-fi—or just click Next below to continue setting up the app."
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        TextWrapping="Wrap" />
+
+                    <Button
+                        x:Name="btnDonate"
+                        Click="btnDonate_Click"
+                        Margin="0,4,0,0">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE8A7;" FontSize="14" />
+                            <TextBlock Text="Open Donation Page" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </Grid>
+</Page>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Vusic_Player.UI.UserViews.Controls.OceanDialogControls.WhatsNew"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vusic_Player.UI.UserViews.Controls.OceanDialogControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid RowSpacing="30" Margin="0, 20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Vusic Player has been updated!" Style="{StaticResource BodyLargeStrongTextBlockStyle}" FontFamily="{StaticResource GlobalFontHolder}" />
+        <TextBlock Text="• Improvements in Audio Reverb tool" Style="{StaticResource BodyStrongTextBlockStyle}" FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="2"/>
+        <TextBlock Text="• Improvements in Audio Player (When file is missing mid-runtime)" Style="{StaticResource BodyStrongTextBlockStyle}" FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="3"/>
+        <TextBlock Text="• Fixed broken links in Settings Page" Style="{StaticResource BodyStrongTextBlockStyle}" FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="4"/>
+    </Grid>
+</UserControl>

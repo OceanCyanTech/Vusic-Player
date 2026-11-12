@@ -979,9 +979,14 @@ namespace Vusic_Player.Pages.Views
                 // Get current running app package version
                 var packageVersion = Package.Current.Id.Version;
                 Version currentVersion = new Version(packageVersion.Major, packageVersion.Minor, packageVersion.Build);
-
+                bool newversion = false;
+                if(remoteVersion.ToString() != "1.0.2.0")
+                {
+                    newversion = true;
+                }
+                Debug.WriteLine(currentVersion);
                 // True if remote is strictly newer
-                return remoteVersion > currentVersion;
+                return newversion;
             }
             catch (Exception ex)
             {
@@ -1033,7 +1038,7 @@ namespace Vusic_Player.Pages.Views
         private async void btnOpenStore_Click(object sender, RoutedEventArgs e)
         {
             await Windows.System.Launcher.LaunchUriAsync(
-    new Uri("ms-windows-store://pdp/?ProductId=YOUR_12_CHAR_ID")
+    new Uri("https://apps.microsoft.com/detail/9MST111CFJPD?hl=en-us&gl=US&ocid=pdpshare")
 );
         }
 
@@ -1923,6 +1928,12 @@ namespace Vusic_Player.Pages.Views
             tglOcean.IsChecked = false;
             SaveTheme();
             isChecking = false;
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var uri = new Uri("https://oceancyantech.github.io/Vusic-Player/donate.html");
+            await Launcher.LaunchUriAsync(uri);
         }
     }
 }

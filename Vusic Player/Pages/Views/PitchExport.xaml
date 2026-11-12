@@ -238,7 +238,7 @@ CornerRadius="16"
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   VerticalAlignment="Center" Text="{x:Bind ProcessedFiles.Count, Mode=OneWay, Converter={StaticResource CountToAudioFilesProcessedConv}}" Grid.Row="0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <Button FontFamily="{StaticResource GlobalFontHolder}"   HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Content="Apply Pitch Change" Name="btnApplyReverb" Click="btnApplyReverb_Click" Background="{StaticResource GlobalAccentColor}" >
+                            <Button FontFamily="{StaticResource GlobalFontHolder}"   HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}" Content="Apply Pitch Change" Name="btnApplyPitch" Click="btnApplyPitch_Click" Background="{StaticResource GlobalAccentColor}" >
                                 <Button.Resources>
                                     <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
                                     <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>

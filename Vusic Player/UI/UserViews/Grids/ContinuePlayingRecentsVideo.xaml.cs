@@ -107,7 +107,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             if (lastSavedItem != null)
             {
                 grdHighlightVideo.Visibility = Visibility.Visible;
-                ContinuePlaying.videoProgressMain = lastSavedItem;
+                ContinuePlaying.Instance.VideoProgressMain = lastSavedItem;
                 ContinuePlaying.InvokeCall();
             }
             else
@@ -183,7 +183,7 @@ namespace Vusic_Player.UI.UserViews.Grids
         }
         private async void ContinuePlaying_InvokeList()
         {
-            if (ContinuePlaying.videoProgressMain is VideoProgress vd && vd != null)
+            if (ContinuePlaying.Instance.VideoProgressMain is VideoProgress vd && vd != null)
             {
                 if (vd.FilePath is string path)
                 {
@@ -227,8 +227,8 @@ namespace Vusic_Player.UI.UserViews.Grids
                                         {
                                             await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
                                         }
-                                        ContinuePlaying.videoProgressMain.Thumbnail = bitmap;
-                                        ContinuePlaying.videoProgressMain.ThumbnailPath = thumb;
+                                        ContinuePlaying.Instance.VideoProgressMain.Thumbnail = bitmap;
+                                        ContinuePlaying.Instance.VideoProgressMain.ThumbnailPath = thumb;
                                         //       Delete the file immediately after the stream closes safely
                                         File.Delete(thumb);
                                     }
@@ -255,7 +255,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 prgAwaitResume.Visibility = Visibility.Visible;
                 prgAwaitResume.IsActive = true;
-                App.NavigationFrame.Navigate(typeof(VideoPlayer), ContinuePlaying.videoProgressMain);
+                App.NavigationFrame.Navigate(typeof(VideoPlayer), ContinuePlaying.Instance.VideoProgressMain);
             }
 
 
@@ -291,7 +291,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 if (chkSelect.IsChecked == false)
                 {
-                    ContinuePlaying.videoProgressMain = videoprogress;
+                    ContinuePlaying.Instance.VideoProgressMain = videoprogress;
                     Logger.Log("IS IT EPISODE: " + videoprogress.IsEpisode, "continueplA", Logger.LogLevelType.Information);
                     if (App.NavigationFrame != null)
                     {
@@ -376,14 +376,14 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private async void mnftStartFirstCW_Click(object sender, RoutedEventArgs e)
         {
-            if (ContinuePlaying.videoProgressMain != null)
+            if (ContinuePlaying.Instance.VideoProgressMain != null)
             {
                 prgAwaitResume.Visibility = Visibility.Visible;
                 prgAwaitResume.IsActive = true;
-                if (File.Exists(ContinuePlaying.videoProgressMain.FilePath))
+                if (File.Exists(ContinuePlaying.Instance.VideoProgressMain.FilePath))
                     if (App.NavigationFrame != null)
                     {
-                        App.NavigationFrame.Navigate(typeof(VideoPlayer), ContinuePlaying.videoProgressMain.FilePath);
+                        App.NavigationFrame.Navigate(typeof(VideoPlayer), ContinuePlaying.Instance.VideoProgressMain.FilePath);
                     }
 
             }
@@ -404,7 +404,7 @@ namespace Vusic_Player.UI.UserViews.Grids
         private async void mnftAddToFavCW_Click(object sender, RoutedEventArgs e)
         {
 
-            if (ContinuePlaying.videoProgressMain == null) return;
+            if (ContinuePlaying.Instance.VideoProgressMain == null) return;
 
             var settings = await SettingsLoader.LoadSettingsAsync();
             var favourites = settings.Favourites;
@@ -412,16 +412,16 @@ namespace Vusic_Player.UI.UserViews.Grids
             if (mnftAddToFavCW.Text == "Add to Favourites")
             {
                 fnticonFav.Glyph = "\uEB52";
-                var exist = favourites.FirstOrDefault(p => p.FilePath == ContinuePlaying.videoProgressMain.FilePath);
+                var exist = favourites.FirstOrDefault(p => p.FilePath == ContinuePlaying.Instance.VideoProgressMain.FilePath);
                 if (exist == null)
                 {
-                    favourites.Add(new FavouriteItems { FilePath = ContinuePlaying.videoProgressMain.FilePath });
+                    favourites.Add(new FavouriteItems { FilePath = ContinuePlaying.Instance.VideoProgressMain.FilePath });
                 }
             }
             else
             {
                 fnticonFav.Glyph = "\uEB51";
-                var exist = favourites.FirstOrDefault(p => p.FilePath == ContinuePlaying.videoProgressMain.FilePath);
+                var exist = favourites.FirstOrDefault(p => p.FilePath == ContinuePlaying.Instance.VideoProgressMain.FilePath);
                 if (exist != null)
                 {
                     favourites.Remove(exist);
@@ -434,8 +434,8 @@ namespace Vusic_Player.UI.UserViews.Grids
         {
             if (App.MainWindowInstance is MainWindow wind)
             {
-                if (ContinuePlaying.videoProgressMain != null && ContinuePlaying.videoProgressMain.FilePath != null)
-                    wind.ShowFileInfo(ContinuePlaying.videoProgressMain.FilePath);
+                if (ContinuePlaying.Instance.VideoProgressMain != null && ContinuePlaying.Instance.VideoProgressMain.FilePath != null)
+                    wind.ShowFileInfo(ContinuePlaying.Instance.VideoProgressMain.FilePath);
                 FileInfo.RefreshValues -= FileInfo_RefreshValues;
                 FileInfo.RefreshValues -= FileInfo_RefreshValues1;
                 FileInfo.RefreshValues += FileInfo_RefreshValues;
@@ -454,9 +454,9 @@ namespace Vusic_Player.UI.UserViews.Grids
             }
             else
             {
-                if (ContinuePlaying.videoProgressMain != null)
+                if (ContinuePlaying.Instance.VideoProgressMain != null)
                 {
-                    ContinuePlaying.videoProgressMain.FilePath = FileInfo.JustUpdatedRenamePath;
+                    ContinuePlaying.Instance.VideoProgressMain.FilePath = FileInfo.JustUpdatedRenamePath;
                     ContinuePlaying.InvokeCall();
                 }
             }
@@ -465,8 +465,8 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private async void mnftOpenFileLocCW_Click(object sender, RoutedEventArgs e)
         {
-            if (ContinuePlaying.videoProgressMain == null) return;
-            var path = ContinuePlaying.videoProgressMain.FilePath;
+            if (ContinuePlaying.Instance.VideoProgressMain == null) return;
+            var path = ContinuePlaying.Instance.VideoProgressMain.FilePath;
 
             if (File.Exists(path))
             {
@@ -478,8 +478,8 @@ namespace Vusic_Player.UI.UserViews.Grids
         {
             if (sender is MenuFlyoutItem mnft)
             {
-                if (ContinuePlaying.videoProgressMain == null) return;
-                var path = ContinuePlaying.videoProgressMain.FilePath;
+                if (ContinuePlaying.Instance.VideoProgressMain == null) return;
+                var path = ContinuePlaying.Instance.VideoProgressMain.FilePath;
                 if (path == null) return;
                 CopyToClipboard.CopyStringToClipboard(path);
                 ttCopiedToClipboard.IsOpen = true;
@@ -490,21 +490,29 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private async void mnftAddToQueueCW_Click(object sender, RoutedEventArgs e)
         {
-            if (ContinuePlaying.videoProgressMain == null) return;
+            if (ContinuePlaying.Instance.VideoProgressMain == null) return;
 
-            if (File.Exists(ContinuePlaying.videoProgressMain.FilePath))
+            if (File.Exists(ContinuePlaying.Instance.VideoProgressMain.FilePath))
             {
                 try
                 {
-                    var storagefile = await StorageFile.GetFileFromPathAsync(ContinuePlaying.videoProgressMain.FilePath);
+                    var storagefile = await StorageFile.GetFileFromPathAsync(ContinuePlaying.Instance.VideoProgressMain.FilePath);
                     var vidprops = await storagefile.Properties.GetVideoPropertiesAsync();
-                    var newsong = new SongModel { Title = ContinuePlaying.videoProgressMain.FileName, FilePath = ContinuePlaying.videoProgressMain.FilePath, IsEpisode = ContinuePlaying.videoProgressMain.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
+                    var title = ContinuePlaying.Instance.VideoProgressMain.FileName;
+                    if (string.IsNullOrEmpty(title))
+                    {
+                        title = Path.GetFileName(ContinuePlaying.Instance.VideoProgressMain.FilePath);
+                    }
+                    var newsong = new SongModel { Title = title, FilePath = ContinuePlaying.Instance.VideoProgressMain.FilePath, IsEpisode = ContinuePlaying.Instance.VideoProgressMain.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
                     QueueService.VusicQueue.Add(newsong);
                     QueueService.VusicQueueNext.Add(newsong);
+                    ttAddedToQueue.IsOpen = true;
+                    await Task.Delay(3000);
+                    ttAddedToQueue.IsOpen = false;
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    Logger.Log("Error: " + ex.Message, "ContinuePlaying.MnftAddToQueueHighlightVideo", Logger.LogLevelType.Error);
                 }
             }
         }
@@ -636,11 +644,11 @@ namespace Vusic_Player.UI.UserViews.Grids
     .FirstOrDefault(x => x.Name == "mnftAddToFavCW");
 
             if (mnftAddtoFav == null) return;
-            if (ContinuePlaying.videoProgressMain == null) return;
+            if (ContinuePlaying.Instance.VideoProgressMain == null) return;
 
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var favourites = currentSettings.Favourites;
-            var exist = favourites.FirstOrDefault(o => o.FilePath == ContinuePlaying.videoProgressMain.FilePath);
+            var exist = favourites.FirstOrDefault(o => o.FilePath == ContinuePlaying.Instance.VideoProgressMain.FilePath);
             bool isFav = false;
             if (exist != null)
             {
@@ -731,9 +739,9 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private async void mnftHideVideoFromContinuePlaying_Click(object sender, RoutedEventArgs e)
         {
-            if (ContinuePlaying.videoProgressMain == null) return;
+            if (ContinuePlaying.Instance.VideoProgressMain == null) return;
             var settings = await SettingsLoader.LoadSettingsAsync();
-            settings.HiddenMedia.Add(new HiddenMediaItem { FilePath = ContinuePlaying.videoProgressMain.FilePath });
+            settings.HiddenMedia.Add(new HiddenMediaItem { FilePath = ContinuePlaying.Instance.VideoProgressMain.FilePath });
             // Retrieve the item at the end of the list
             var lastSavedItem = settings.SavedVideoProgress.LastOrDefault();
             if (lastSavedItem != null)
@@ -769,16 +777,54 @@ namespace Vusic_Player.UI.UserViews.Grids
                     {
                         var storagefile = await StorageFile.GetFileFromPathAsync(vdprg.FilePath);
                         var vidprops = await storagefile.Properties.GetVideoPropertiesAsync();
-                        var newsong = new SongModel { Title = vdprg.FileName, FilePath = vdprg.FilePath, IsEpisode = vdprg.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
+                        var title = vdprg.FileName;
+                        if (string.IsNullOrEmpty(title))
+                        {
+                            title = Path.GetFileName(vdprg.FilePath);
+                        }
+                        var newsong = new SongModel { Title = title, FilePath = vdprg.FilePath, IsEpisode = vdprg.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
                         QueueService.VusicQueue.Add(newsong);
                         QueueService.VusicQueueNext.Add(newsong);
+                        ttAddedToQueue.IsOpen = true;
+                        await Task.Delay(3000);
+                        ttAddedToQueue.IsOpen = false;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-
+                        Logger.Log("An unexpected error occured: " + ex.Message, "ContinuePlayingGrid.MnftAddToQueue", Logger.LogLevelType.Error);
                     }
                 }
             }
+        }
+
+        private async void btnAddToQueue_Click(object sender, RoutedEventArgs e)
+        {
+            if (ContinuePlaying.Instance.VideoProgressMain == null) return;
+
+            if (File.Exists(ContinuePlaying.Instance.VideoProgressMain.FilePath))
+            {
+                try
+                {
+                    var storagefile = await StorageFile.GetFileFromPathAsync(ContinuePlaying.Instance.VideoProgressMain.FilePath);
+                    var vidprops = await storagefile.Properties.GetVideoPropertiesAsync();
+                    var title = ContinuePlaying.Instance.VideoProgressMain.FileName;
+                    if (string.IsNullOrEmpty(title))
+                    {
+                        title = Path.GetFileName(ContinuePlaying.Instance.VideoProgressMain.FilePath);
+                    }
+                    var newsong = new SongModel { Title = title, FilePath = ContinuePlaying.Instance.VideoProgressMain.FilePath, IsEpisode = ContinuePlaying.Instance.VideoProgressMain.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
+                    QueueService.VusicQueue.Add(newsong);
+                    QueueService.VusicQueueNext.Add(newsong);
+                    ttAddedToQueue.IsOpen = true;
+                    await Task.Delay(3000);
+                    ttAddedToQueue.IsOpen = false;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Error: " + ex.Message, "ContinuePlaying.MnftAddToQueueHighlightVideo", Logger.LogLevelType.Error);
+                }
+            }
+
         }
     }
 }

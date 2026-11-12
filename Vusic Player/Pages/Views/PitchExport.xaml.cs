@@ -3,11 +3,13 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
@@ -243,18 +245,21 @@ namespace Vusic_Player.Pages.Views
             }
         }
 
-        private async void btnApplyReverb_Click(object sender, RoutedEventArgs e)
+        private async void btnApplyPitch_Click(object sender, RoutedEventArgs e)
         {
             if (AddedFiles.Count == 0) return;
-            if (numPitchValue.Text == "")
+
+            if (string.IsNullOrWhiteSpace(numPitchValue.Text) || double.IsNaN(numPitchValue.Value))
             {
                 numPitchValue.Value = 1;
             }
+
             btnAddAudioFiles.IsEnabled = false;
             mnftAddFiles.IsEnabled = false;
-            btnApplyReverb.IsEnabled = false;
+            btnApplyPitch.IsEnabled = false;
             btnExportDirectory.IsEnabled = false;
             stkOutputActions.Visibility = Visibility.Collapsed;
+
             foreach (var item in AddedFiles.ToList())
             {
                 item.DirectorySelectionEnabled = false;
@@ -263,206 +268,233 @@ namespace Vusic_Player.Pages.Views
                 item.ImageState = "";
                 item.Progress = 0;
             }
-            ProcessedFiles.Clear();
-            string baseDirOutput = txtOutputDirectory.Text;
 
-            if (txtOutputDirectory.Text == "")
+            ProcessedFiles.Clear();
+
+            string baseDirOutput = txtOutputDirectory.Text;
+            if (string.IsNullOrWhiteSpace(baseDirOutput))
             {
                 baseDirOutput = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
             }
 
             string baseDir = AppContext.BaseDirectory;
             string ffmpegPath = Path.Combine(baseDir, "FFmpeg", "ffmpeg.exe");
-            // Capture the UI thread dispatcher before switching to background tasks
+            string ffmpegWorkingDir = Path.GetDirectoryName(ffmpegPath) ?? baseDir;
+
             var dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
             var throttler = new SemaphoreSlim(Environment.ProcessorCount);
-            Debug.WriteLine(ffmpegPath);
-            if (!File.Exists(ffmpegPath))
-            {
-                Debug.WriteLine($"Executable missing: FFmpeg={File.Exists(ffmpegPath)}");
-                return;
-            }
 
-            var tasks = AddedFiles.Select(async item =>
+            try
             {
-                await throttler.WaitAsync();
-                try
+                if (!File.Exists(ffmpegPath))
                 {
-                    if (!File.Exists(item.FilePath))
+                    Debug.WriteLine($"Executable missing: FFmpeg={File.Exists(ffmpegPath)}");
+                    foreach (var item in AddedFiles)
                     {
-                        Debug.WriteLine($"Input file does not exist: {item.FilePath}");
-                        dispatcherQueue.TryEnqueue(() =>
-                        {
-                            item.ImageState = IconHolder.Instance.Error;
-                            item.ErrorToolTip = "Input file does not exist on disk.";
-                        });
-                        return;
+                        item.ImageState = IconHolder.Instance.Error;
+                        item.DirectorySelectionEnabled = true;
+                        item.ErrorToolTip = "FFmpeg executable is missing.";
                     }
+                    return;
+                }
 
-                    string sanitizedTitle = string.Join("_", item.Title.Split(Path.GetInvalidFileNameChars()));
-                    string outputMp3 = Path.Combine(baseDirOutput, $"{sanitizedTitle}_{Guid.NewGuid()}.mp3");
+                // Capture pitch value on the UI thread using InvariantCulture (prevents decimal comma issues on non-US PCs)
+                string pitchValueStr = numPitchValue.Value.ToString(CultureInfo.InvariantCulture);
 
-                    if (txtOutputDirectory.Text != "Custom Directories" && !Directory.Exists(baseDirOutput))
+                var tasks = AddedFiles.Select(async item =>
+                {
+                    await throttler.WaitAsync();
+                    try
                     {
-                        dispatcherQueue.TryEnqueue(() =>
+                        if (!File.Exists(item.FilePath))
                         {
-                            item.ImageState = IconHolder.Instance.Error;
-                            item.ErrorToolTip = "Output directory does not exist.";
-                        });
-                        return;
-                    }
-
-                    if (item.IndividualDirectorySelBool)
-                    {
-                        outputMp3 = Path.Combine(item.DirectoryPath, $"{sanitizedTitle}_{Guid.NewGuid()}.mp3");
-                        if (!Directory.Exists(item.DirectoryPath))
-                        {
+                            Debug.WriteLine($"Input file does not exist: {item.FilePath}");
                             dispatcherQueue.TryEnqueue(() =>
                             {
                                 item.ImageState = IconHolder.Instance.Error;
                                 item.DirectorySelectionEnabled = true;
-                                item.ErrorToolTip = "Output directory not selected or does not exist.";
+                                item.ErrorToolTip = "Input file does not exist on disk.";
                             });
                             return;
                         }
-                    }
 
-                    // -vn prevents corrupt embedded album art from crashing conversion
-                    string commandPipeline = $"\"{ffmpegPath}\" -i \"{item.FilePath}\" -vn -af \"rubberband=pitch={numPitchValue.Value}\" \"{outputMp3}\"";
+                        string sanitizedTitle = string.Join("_", item.Title.Split(Path.GetInvalidFileNameChars())).TrimEnd('.');
+                        string outputMp3 = Path.Combine(baseDirOutput, $"{sanitizedTitle}_{Guid.NewGuid():N}.mp3");
 
-                    ProcessStartInfo startInfo = new ProcessStartInfo
-                    {
-                        FileName = "cmd.exe",
-                        Arguments = $"/c \"{commandPipeline}\"",
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        RedirectStandardOutput = false,
-                        RedirectStandardError = true,
-                        WorkingDirectory = baseDir
-                    };
-
-                    using var cts = new CancellationTokenSource();
-
-                    var progressTask = Task.Run(async () =>
-                    {
-                        while (!cts.Token.IsCancellationRequested)
+                        if (item.IndividualDirectorySelBool)
                         {
-                            try
+                            if (string.IsNullOrWhiteSpace(item.DirectoryPath) || !Directory.Exists(item.DirectoryPath))
+                            {
+                                dispatcherQueue.TryEnqueue(() =>
+                                {
+                                    item.ImageState = IconHolder.Instance.Error;
+                                    item.DirectorySelectionEnabled = true;
+                                    item.ErrorToolTip = "Output directory not selected or does not exist.";
+                                });
+                                return;
+                            }
+                            outputMp3 = Path.Combine(item.DirectoryPath, $"{sanitizedTitle}_{Guid.NewGuid():N}.mp3");
+                        }
+                        else if (txtOutputDirectory.Text != "Custom Directories" && !Directory.Exists(baseDirOutput))
+                        {
+                            dispatcherQueue.TryEnqueue(() =>
+                            {
+                                item.ImageState = IconHolder.Instance.Error;
+                                item.DirectorySelectionEnabled = true;
+                                item.ErrorToolTip = "Output directory does not exist.";
+                            });
+                            return;
+                        }
+
+                        // Launch ffmpeg.exe directly with ArgumentList (no cmd.exe quote-escaping issues)
+                        ProcessStartInfo startInfo = new ProcessStartInfo
+                        {
+                            FileName = ffmpegPath,
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            RedirectStandardOutput = false,
+                            RedirectStandardError = true,
+                            WorkingDirectory = ffmpegWorkingDir
+                        };
+
+                        startInfo.ArgumentList.Add("-y");
+                        startInfo.ArgumentList.Add("-i");
+                        startInfo.ArgumentList.Add(item.FilePath);
+                        startInfo.ArgumentList.Add("-vn");
+                        startInfo.ArgumentList.Add("-af");
+                        startInfo.ArgumentList.Add($"rubberband=pitch={pitchValueStr}");
+                        startInfo.ArgumentList.Add("-b:a");
+                        startInfo.ArgumentList.Add("192k");
+                        startInfo.ArgumentList.Add(outputMp3);
+
+                        using var cts = new CancellationTokenSource();
+
+                        var progressTask = Task.Run(async () =>
+                        {
+                            while (!cts.Token.IsCancellationRequested)
                             {
                                 await Task.Delay(50);
-                            }
-                            catch
-                            {
-                                break;
-                            }
+                                if (cts.Token.IsCancellationRequested) break;
 
-                            if (cts.Token.IsCancellationRequested) break;
+                                dispatcherQueue.TryEnqueue(() =>
+                                {
+                                    if (item.Progress < 95)
+                                    {
+                                        item.Progress += 0.95;
+                                    }
+                                });
+                            }
+                        });
+
+                        var errorBuilder = new System.Text.StringBuilder();
+
+                        using (Process process = new Process { StartInfo = startInfo })
+                        {
+                            process.ErrorDataReceived += (s, args) =>
+                            {
+                                if (!string.IsNullOrEmpty(args.Data))
+                                {
+                                    lock (errorBuilder)
+                                    {
+                                        errorBuilder.AppendLine(args.Data);
+                                    }
+                                    Debug.WriteLine($"[{item.Title}] {args.Data}");
+                                }
+                            };
+
+                            process.Start();
+                            process.BeginErrorReadLine();
+
+                            await process.WaitForExitAsync();
+                            process.CancelErrorRead();
+
+                            int exitCode = process.ExitCode;
+                            cts.Cancel();
+
+                            string fullErrorOutput;
+                            lock (errorBuilder)
+                            {
+                                fullErrorOutput = errorBuilder.ToString();
+                            }
 
                             dispatcherQueue.TryEnqueue(() =>
                             {
-                                if (item.Progress < 95)
-                                {
-                                    item.Progress += 0.95;
-                                }
-                            });
-                        }
-                    });
-
-                    var errorBuilder = new System.Text.StringBuilder();
-
-                    using (Process process = new Process { StartInfo = startInfo })
-                    {
-                        process.ErrorDataReceived += (s, e) =>
-                        {
-                            if (!string.IsNullOrEmpty(e.Data))
-                            {
-                                lock (errorBuilder)
-                                {
-                                    errorBuilder.AppendLine(e.Data);
-                                }
-                                Debug.WriteLine($"[{item.Title}] {e.Data}");
-                            }
-                        };
-
-                        process.Start();
-                        process.BeginErrorReadLine();
-
-                        await process.WaitForExitAsync();
-
-                        // Crucial: Stop async error reading before the using block calls process.Dispose()
-                        process.CancelErrorRead();
-
-                        int exitCode = process.ExitCode;
-                        cts.Cancel();
-
-                        string fullErrorOutput;
-                        lock (errorBuilder)
-                        {
-                            fullErrorOutput = errorBuilder.ToString();
-                        }
-
-                        dispatcherQueue.TryEnqueue(() =>
-                        {
-                            if (exitCode == 0)
-                            {
-                                item.Progress = 100;
-                                item.ImageState = IconHolder.Instance.Success;
-                                item.OutputPath = outputMp3;
-                                item.ErrorToolTip = "Completed successfully";
-                                Debug.WriteLine(outputMp3 + "  Post Processing");
-
-                                ProcessedFiles.Add(item);
-                                btnAddAudioFiles.IsEnabled = true;
-                                mnftAddFiles.IsEnabled = true;
-                                btnApplyReverb.IsEnabled = true;
-                                btnExportDirectory.IsEnabled = !chkCustomDirectories.IsChecked ?? false;
-                                item.DirectorySelectionEnabled = true;
-                                stkOutputActions.Visibility = Visibility.Visible;
-                                item.VisibilityOfCompletedFileLocation = Visibility.Visible;
-                            }
-                            else
-                            {
-                                item.Progress = 0;
-                                item.ImageState = IconHolder.Instance.Error;
                                 item.DirectorySelectionEnabled = true;
 
-                                // Extract the relevant error line(s) for the tooltip
-                                var errorLines = fullErrorOutput
-                                    .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                                    .Where(line => line.Contains("Error", StringComparison.OrdinalIgnoreCase) ||
-                                                   line.Contains("Invalid", StringComparison.OrdinalIgnoreCase) ||
-                                                   line.Contains("failed", StringComparison.OrdinalIgnoreCase))
-                                    .TakeLast(3)
-                                    .ToList();
-
-                                if (errorLines.Count > 0)
+                                if (exitCode == 0 && File.Exists(outputMp3))
                                 {
-                                    item.ErrorToolTip = string.Join(Environment.NewLine, errorLines);
+                                    item.Progress = 100;
+                                    item.ImageState = IconHolder.Instance.Success;
+                                    item.OutputPath = outputMp3;
+                                    item.ErrorToolTip = "Completed successfully";
+                                    Debug.WriteLine(outputMp3 + "  Post Processing");
+
+                                    ProcessedFiles.Add(item);
+                                    stkOutputActions.Visibility = Visibility.Visible;
+                                    item.VisibilityOfCompletedFileLocation = Visibility.Visible;
                                 }
                                 else
                                 {
-                                    // Fallback to exit code and the last stderr line
-                                    string lastLine = fullErrorOutput.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault() ?? "Unknown error";
-                                    item.ErrorToolTip = $"Exit Code {exitCode}: {lastLine}";
-                                }
+                                    item.Progress = 0;
+                                    item.ImageState = IconHolder.Instance.Error;
 
-                                Debug.WriteLine($"Failed with code {exitCode}: {fullErrorOutput}");
-                            }
-                        });
+                                    var errorLines = fullErrorOutput
+                                        .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                                        .Where(line => line.Contains("Error", StringComparison.OrdinalIgnoreCase) ||
+                                                       line.Contains("Invalid", StringComparison.OrdinalIgnoreCase) ||
+                                                       line.Contains("failed", StringComparison.OrdinalIgnoreCase))
+                                        .TakeLast(3)
+                                        .ToList();
+
+                                    if (errorLines.Count > 0)
+                                    {
+                                        item.ErrorToolTip = string.Join(Environment.NewLine, errorLines);
+                                    }
+                                    else
+                                    {
+                                        string lastLine = fullErrorOutput.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault() ?? "Unknown error";
+                                        item.ErrorToolTip = $"Exit Code {exitCode}: {lastLine}";
+                                    }
+
+                                    Logger.Log($"Batch Pitch failed for {item.Title} (Code {exitCode}): {fullErrorOutput}", "BatchPitch", Logger.LogLevelType.Error);
+                                }
+                            });
+                        }
                     }
-                }
-                finally
-                {
-                    throttler.Release();
-                }
-            }).ToList();
-            await Task.WhenAll(tasks);
+                    catch (Exception ex)
+                    {
+                        dispatcherQueue.TryEnqueue(() =>
+                        {
+                            item.Progress = 0;
+                            item.ImageState = IconHolder.Instance.Error;
+                            item.DirectorySelectionEnabled = true;
+                            item.ErrorToolTip = ex.Message;
+                        });
+                        Logger.Log(ex.Message, "BatchPitch", Logger.LogLevelType.Error);
+                    }
+                    finally
+                    {
+                        throttler.Release();
+                    }
+                }).ToList();
+
+                await Task.WhenAll(tasks);
+            }
+            finally
+            {
+                btnAddAudioFiles.IsEnabled = true;
+                mnftAddFiles.IsEnabled = true;
+                btnApplyPitch.IsEnabled = true;
+                btnExportDirectory.IsEnabled = !(chkCustomDirectories.IsChecked ?? false);
+                throttler.Dispose();
+            }
         }
         bool isValueChanging = false;
 
         private void numPitchValue_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (isValueChanging) return;
+            if (numPitchValue == null || numSemiTones == null || numOctaves == null) return;
             if (double.IsNaN(numPitchValue.Value) || numPitchValue.Value <= 0) return;
 
             try
@@ -481,10 +513,11 @@ namespace Vusic_Player.Pages.Views
                 isValueChanging = false;
             }
         }
-
         private void numSemiTones_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (isValueChanging) return;
+            if (numPitchValue == null || numSemiTones == null || numOctaves == null) return;
+
             if (double.IsNaN(numSemiTones.Value)) return;
 
             try
@@ -507,6 +540,8 @@ namespace Vusic_Player.Pages.Views
         private void numOctaves_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (isValueChanging) return;
+            if (numPitchValue == null || numSemiTones == null || numOctaves == null) return;
+
             if (double.IsNaN(numOctaves.Value)) return;
 
             try

@@ -43,8 +43,8 @@ namespace Vusic_Player.UI.Experience.Pages
         {
             var obser = new ObservableCollection<SongModel>();
 
-            if (App.MainWindowInstance == null) return;
-            var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Choose Folder", Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
+            if (App.FirstLaunchWindowInstance == null) return;
+            var folder = await FilePickers.FolderPickerFunct.PickFolder(App.FirstLaunchWindowInstance, "Choose Folder", Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
             if (folder != null)
             {
                 // Detach old handlers if any, and attach a specific one for THIS button
@@ -182,7 +182,7 @@ namespace Vusic_Player.UI.Experience.Pages
                 }
             }
         }
-        private async void HighLevelFolder_Click(object sender, RoutedEventArgs e)
+        private async void HighLevelFolder_CheckedChanged(object sender, RoutedEventArgs e)
         {
             if (_isInitializingSettings || sender is not CheckBox chk)
                 return;

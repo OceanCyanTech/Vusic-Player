@@ -117,7 +117,7 @@
                     </Button>
 
                     <StackPanel Margin="20, 0" HorizontalAlignment="Right" Grid.Column="1" Orientation="Horizontal" Spacing="12">
-                        <Button ToolTipService.ToolTip="Add to Queue" Background="#44FFFFFF" Foreground="White" CornerRadius="8" Height="44">
+                        <Button Name="btnAddToQueue" Click="btnAddToQueue_Click" ToolTipService.ToolTip="Add to Queue" Background="#44FFFFFF" Foreground="White" CornerRadius="8" Height="44">
                             <StackPanel Orientation="Horizontal" Spacing="8" Padding="12,0">
                                 <FontIcon Glyph="&#xE710;" />
                                 <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Add to Queue"/>
@@ -359,5 +359,11 @@ ItemClick="GridContinuePlaying_ItemClick"  Margin="0, 0" SelectionChanged="GridC
                 <Button HorizontalAlignment="Center"  Content="Enable Recents" Name="btnEnableRecents" Click="btnEnableRecents_Click"></Button>
             </StackPanel>
         </Grid>
+        <TeachingTip Name="ttAddedToQueue" IsOpen="False">
+            <StackPanel Orientation="Horizontal" Spacing="30">
+                <Image Width="30" Source="{Binding Success ,Source={StaticResource GlobalIconHolder}}"/>
+                <TextBlock Text="Added to Queue!"/>
+            </StackPanel>
+        </TeachingTip>
     </Grid>
 </UserControl>

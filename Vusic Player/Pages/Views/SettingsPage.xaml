@@ -297,8 +297,8 @@
                                 <Image VerticalAlignment="Center" Width="50" Source="/Assets/appicon.png"></Image>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" VerticalAlignment="Center" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Vusic Player"></TextBlock>
                             </StackPanel>
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.0.0"></TextBlock>
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="RTM"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.2.0"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="RTM (Build 121126)"></TextBlock>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech 2026" Name="txtCompanyCopyright"></TextBlock>
 
                             <Image Margin="0, 30" HorizontalAlignment="Left" Width="300" Source="/Assets/OceanCyan Logo High.png"/>
@@ -364,7 +364,7 @@
                                     </Button.Resources>
                                 </Button>
                                 <Button Name="btnOpenStore" Click="btnOpenStore_Click"  Content="Open Microsoft Store to Update" Visibility="Collapsed"/>
-                                <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Name="hypWhatsNew" NavigateUri="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Version/NewVersionReleasenotes.md" Content="See what's new!" Visibility="Collapsed"/>
+                                <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Name="hypWhatsNew" NavigateUri="https://oceancyantech.github.io/Vusic-Player/whatsnew.html" Content="See what's new!" Visibility="Collapsed"/>
                             </StackPanel>
                         </StackPanel>
                         <MenuFlyoutSeparator Grid.Row="6"/>
@@ -419,6 +419,30 @@
                             <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="View Source on GitHub" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player"  Grid.Row="9"/>
                             <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Documentation and Support" NavigateUri="https://oceancyantech.github.io/Vusic-Player/documentation.html" Grid.Row="10"/>
                             <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Share your feedback to help us improve the app" NavigateUri="https://oceancyantech.github.io/Vusic-Player/feedback.html" Grid.Row="11"/>
+                            <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Rate Vusic Player on the Microsoft Store!" NavigateUri="ms-windows-store://review/?ProductId=9MST111CFJPD" Grid.Row="11"/>
+                            <Button Style="{StaticResource AccentButtonStyle}"    Content="Donate to support Vusic Player!" Click="Button_Click" Grid.Row="11">
+
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
+
+                                    <!-- Pointer Over (Hover) -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
+
+                                    <!-- Pressed State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="Transparent"/>
+
+                                    <!-- Disabled State -->
+                                    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#707070"/>
+                                    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
+                                </Button.Resources>
+                            </Button>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Spacing="30" Grid.Row="10">
                             <MenuFlyoutSeparator />

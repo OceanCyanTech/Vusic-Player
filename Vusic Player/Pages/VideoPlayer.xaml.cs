@@ -1890,7 +1890,7 @@ namespace Vusic_Player.Pages
             {
                 SaveTimer?.Start();
             }
-            if (ContinuePlaying.videoProgressMain is VideoProgress vdprg && LoadingProgress == true)
+            if (ContinuePlaying.Instance.VideoProgressMain is VideoProgress vdprg && LoadingProgress == true)
             {
                 //z   isEpisodeVideo = vdprg.IsEpisode ?? false;
                 PlayerService.Masterplayer.SeekAccurate((int)(vdprg.CurrentDuration / 10000));

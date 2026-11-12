@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Helper.UI.Customization;
@@ -92,7 +93,8 @@ namespace Vusic_Player
         {
             InitializeComponent();
             EngineService.StartEngine();
-            LoadVersion();
+            this.Activated += MainWindow_Activated;
+     //       LoadVersion();
       
             this.ExtendsContentIntoTitleBar = true;
             rootGrid.Loaded += RootGrid_Loaded;
@@ -126,6 +128,18 @@ namespace Vusic_Player
 
 
         }
+        private bool _engineInitialized = false;
+        private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+        {
+            if (_engineInitialized) return;
+            _engineInitialized = true;
+            this.Activated -= MainWindow_Activated;
+
+            // Yield briefly so DWM presents the first WinUI 3 frame cleanly on Intel Arc GPUs
+            await Task.Delay(50);
+            await Task.Run(() => EngineService.StartEngine());
+        }
+
         private async void CheckAuthentication()
         {
             if (PinService.IsPinEnabled() || PinService.IsWindowsAuthEnabled())
@@ -321,22 +335,6 @@ namespace Vusic_Player
             //}
         }
 
-        public async void LoadVersion()
-        {
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var counter = currentSettings.VersionCounter;
-            if (counter.Count == 0)
-            {
-                counter.Add(0);
-            }
-            int counter2 = counter.FirstOrDefault() + 1;
-            counter.Clear();
-            counter.Add(counter2);
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
-
-            //txtPreviewBuild.Text = $"Vusic Player Version {AppVersion.VersionString + Environment.NewLine} {AppVersion.VersionType} {DateTime.Now.ToString("MMddyy")}.{counter2}";
-
-        }
 
     }
 }

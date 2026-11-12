@@ -138,13 +138,20 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
         {
             if (PlayerService.CurrentPlayingPath == null || PlayerService.Masterplayer == null) return;
 
+            string? tempFileToClean = null;
+
             try
             {
                 string baseDir = AppContext.BaseDirectory;
                 string soxExecutablePath = Path.Combine(baseDir, "soxReverb", "sox.exe");
                 string ffmpegPath = Path.Combine(baseDir, "FFmpeg", "ffmpeg.exe");
 
-                if (!File.Exists(soxExecutablePath) || !File.Exists(ffmpegPath)) return;
+                if (!File.Exists(soxExecutablePath) || !File.Exists(ffmpegPath))
+                {
+                    txtApplyReverbProgress.Text = "Required audio components are missing.";
+                    prgApplyingReverb.Visibility = Visibility.Visible;
+                    return;
+                }
 
                 string inputMp3 = PlayerService.CurrentPlayingPath ?? "";
                 string outputMp3 = "";
@@ -163,12 +170,13 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                     }
                     else
                     {
-                        outputMp3 = Path.Combine(baseDir, "tempfile.mp3");
-                        if (Path.Exists(outputMp3))
+                        // Write temp files to writable TempPath, NEVER to baseDir
+                        outputMp3 = Path.Combine(Path.GetTempPath(), $"vusic_temp_{Guid.NewGuid():N}.mp3");
+                        tempFileToClean = outputMp3;
+                        if (File.Exists(outputMp3))
                         {
                             File.Delete(outputMp3);
                         }
-                        Debug.WriteLine(outputMp3);
                     }
                 }
                 else
@@ -207,15 +215,18 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                 }
 
                 string outTarget = isMemoryStream ? "-" : $"\"{outputMp3}\"";
-                string dynamicCommand = $"\"\"{ffmpegPath}\" -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -i - -b:a 192k -f mp3 {outTarget}\"";
+
+                // Double quote wrapping to ensure cmd.exe handles spaces in Program Files/WindowsApps correctly
+                string dynamicCommand = $"/s /c \"\"{ffmpegPath}\" -y -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -y -i - -b:a 192k -f mp3 {outTarget}\"";
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
-                    Arguments = $"/c {dynamicCommand}",
+                    Arguments = dynamicCommand,
+                    WorkingDirectory = Path.GetDirectoryName(soxExecutablePath), // Crucial for SoX to locate dependent DLLs
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    RedirectStandardOutput = true,
+                    RedirectStandardOutput = isMemoryStream, // Only redirect output if we are reading it into memory
                     RedirectStandardError = true
                 };
 
@@ -246,11 +257,19 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                         copyTask = process.StandardOutput.BaseStream.CopyToAsync(ms);
                     }
 
-                    string errorLog = await process.StandardError.ReadToEndAsync();
+                    // Read error stream asynchronously to prevent deadlock
+                    Task<string> errorTask = process.StandardError.ReadToEndAsync();
 
-                    if (copyTask != null) await Task.WhenAll(copyTask, process.WaitForExitAsync());
-                    else await process.WaitForExitAsync();
+                    if (copyTask != null)
+                    {
+                        await Task.WhenAll(copyTask, errorTask, process.WaitForExitAsync());
+                    }
+                    else
+                    {
+                        await Task.WhenAll(errorTask, process.WaitForExitAsync());
+                    }
 
+                    string errorLog = await errorTask;
                     progressTimer.Stop();
 
                     if (process.ExitCode == 0)
@@ -269,19 +288,14 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                             ms.Position = 0;
                             if (PlayerService.Masterplayer.IsPlaying == false)
                             {
-                                Debug.WriteLine("FALSE");
-                                Debug.WriteLine(outputMp3);
                                 PlayerService.CurrentMemoryStream = ms;
                                 PlayerService.curtime = curtime;
                                 PlayerService.curtimetemp = curtimetemp;
-
                                 PlayerService.JustDisposed = true;
                                 PlayerService.filestreamcurrent?.Dispose();
                             }
                             else
                             {
-                                PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
-                                PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
                                 PlayerService.Masterplayer.Open(ms);
                             }
                         }
@@ -301,458 +315,31 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                             }
                             else
                             {
-                                string currentfilename = PlayerService.UIController.MediaDisplayName;
-                                PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
-                                PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
                                 PlayerService.filestreamcurrent = new FileStream(outputMp3, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
                                 PlayerService.Masterplayer.Open(PlayerService.filestreamcurrent);
-
                             }
                         }
                     }
                     else
                     {
+                        // Surface the real error from FFmpeg/SoX
                         prgApplyingReverb.Value = 0;
+                        prgApplyingReverb.ShowError = true;
                         txtApplyReverbProgress.Text = "Failed to process audio stream.";
+
+                        System.Diagnostics.Debug.WriteLine($"[AudioReverb Failure - ExitCode: {process.ExitCode}]");
+                        System.Diagnostics.Debug.WriteLine(errorLog);
+                        Logger.Log($"ExitCode {process.ExitCode}: {errorLog}", "AudioReverb", Logger.LogLevelType.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
+                prgApplyingReverb.ShowError = true;
+                txtApplyReverbProgress.Text = "Error applying reverb.";
                 Logger.Log(ex.Message, "AudioReverb", Logger.LogLevelType.Error);
             }
         }
-        //private async void btnApply_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (PlayerService.CurrentPlayingPath == null) return;
-        //    if (PlayerService.Masterplayer == null) return;
-        //    try
-        //    {
-        //        string baseDir = AppContext.BaseDirectory;
-        //        string soxExecutablePath = Path.Combine(baseDir, "soxReverb", "sox.exe");
-        //        string ffmpegPath = Path.Combine(baseDir, "FFmpeg", "ffmpeg.exe");
-        //        string inputMp3 = PlayerService.CurrentPlayingPath ?? "";
-        //        string outputMp3 = "";
-        //        prgApplyingReverb.Visibility = Visibility.Visible;
-        //        txtApplyReverbProgress.Visibility = Visibility.Visible;
-        //        prgApplyingReverb.ShowError = false;
-        //        prgApplyingReverb.Value = 0;
-        //        if (!File.Exists(soxExecutablePath) || !File.Exists(ffmpegPath)) return;
-        //        //   string dynamicCommand = $"\"\"{ffmpegPath}\" -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -i - -f mp3 -\"";
-        //        if (chckExporttoFile.IsChecked == false)
-        //        {
-        //            Debug.WriteLine("NOT CH");
-        //            //Case 1: Memory Stream Selected
-        //            if (cmbOutput.SelectedIndex == 0)
-        //            {
-        //                Debug.WriteLine("Memory Stream");
-        //                //ProgressTimer(false);
-        //                //ProcessReverb(dynamicCommand, true);
-
-
-
-        //                // Use the final hyphen '-' at the end to tell FFmpeg to output to the C# stream
-        //                string dynamicCommand = $"\"\"{ffmpegPath}\" -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -i - -b:a 192k -f mp3 -\"";
-
-        //                ProcessStartInfo startInfo = new ProcessStartInfo
-        //                {
-        //                    FileName = "cmd.exe",
-        //                    Arguments = $"/c {dynamicCommand}",
-        //                    UseShellExecute = false,
-        //                    CreateNoWindow = true,
-        //                    RedirectStandardOutput = true,  // C# hooks into the final '-' here
-        //                    RedirectStandardError = true    // Catches errors so your app won't crash
-        //                };
-
-        //                // 1. Reset your progress bar UI
-        //                prgApplyingReverb.Value = 0;
-
-        //                var progressTimer = new Microsoft.UI.Xaml.DispatcherTimer();
-        //                progressTimer.Interval = TimeSpan.FromMilliseconds(50);
-        //                progressTimer.Tick += (s, args) =>
-        //                {
-        //                    if (prgApplyingReverb.Value < 95)
-        //                    {
-        //                        prgApplyingReverb.Value += 0.95;
-        //                        txtApplyReverbProgress.Text = $"Applying reverb: {prgApplyingReverb.Value:F0}%";
-        //                    }
-        //                };
-        //                progressTimer.Start();
-
-        //                // 2. Launch the background process
-        //                using (Process process = new Process { StartInfo = startInfo })
-        //                {
-        //                    process.Start();
-
-        //                    var ms = PlayerService.msReverb;
-        //                    if (ms == null)
-        //                    {
-        //                        ms = new MemoryStream();
-        //                        PlayerService.msReverb = ms;
-        //                    }
-        //                    else
-        //                    {
-        //                        ms.SetLength(0); // Clear out old data safely
-        //                    }
-
-        //                    // Asynchronously copy the binary data straight into your MemoryStream
-        //                    Task copyTask = process.StandardOutput.BaseStream.CopyToAsync(ms);
-        //                    string errorLog = await process.StandardError.ReadToEndAsync();
-
-        //                    await Task.WhenAll(copyTask, process.WaitForExitAsync());
-
-        //                    // Stop our visual countdown illusion
-        //                    progressTimer.Stop();
-
-        //                    if (process.ExitCode == 0)
-        //                    {
-        //                        prgApplyingReverb.Value = 100;
-        //                        txtApplyReverbProgress.Text = "Reverb Applied Successfully!";
-
-        //                        // 3. Rewind your memory stream back to byte 0 and pass it to Flyleaf!
-        //                        ms.Position = 0;
-        //                        var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer!.CurTime);
-        //                        curtime = curTime;
-        //                        curtimetemp = PlayerService.Masterplayer.CurTime;
-        //                        PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
-        //                        PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
-        //                        PlayerService.Masterplayer?.Open(ms);
-        //                    }
-        //                    else
-        //                    {
-        //                        prgApplyingReverb.Value = 0;
-        //                        txtApplyReverbProgress.Text = "Failed to process audio stream.";
-        //                        Debug.WriteLine($"Pipeline Error: {errorLog}");
-        //                    }
-        //                }
-
-        //            }
-        //            //Case 2: Temporary File Selected
-        //            else
-        //            {
-        //                Debug.WriteLine("Temporary File");
-        //                outputMp3 = Path.Combine(baseDir, "tempfile.mp3");
-
-        //                if (Path.Exists(outputMp3))
-        //                {
-        //                    File.Delete(outputMp3);
-        //                }
-        //                Debug.WriteLine(outputMp3);
-        //                string dynamicCommand = $"\"\"{ffmpegPath}\" -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -i - -b:a 192k \"{outputMp3}\"\"";
-
-        //                ProcessStartInfo startInfo = new ProcessStartInfo
-        //                {
-        //                    FileName = "cmd.exe",
-        //                    Arguments = $"/c {dynamicCommand}",
-        //                    UseShellExecute = false,
-        //                    CreateNoWindow = true,
-        //                    RedirectStandardOutput = true,  // C# hooks into the final '-' here
-        //                    RedirectStandardError = true    // Catches errors so your app won't crash
-        //                };
-
-        //                // 1. Reset your progress bar UI
-        //                prgApplyingReverb.Value = 0;
-
-        //                var progressTimer = new Microsoft.UI.Xaml.DispatcherTimer();
-        //                progressTimer.Interval = TimeSpan.FromMilliseconds(50);
-        //                progressTimer.Tick += (s, args) =>
-        //                {
-        //                    if (prgApplyingReverb.Value < 95)
-        //                    {
-        //                        prgApplyingReverb.Value += 0.95;
-        //                        txtApplyReverbProgress.Text = $"Applying reverb: {prgApplyingReverb.Value:F0}%";
-        //                    }
-        //                };
-        //                progressTimer.Start();
-
-        //                // 2. Launch the background process
-        //                using (Process process = new Process { StartInfo = startInfo })
-        //                {
-        //                    process.Start();
-
-        //                    //var ms = PlayerService.msReverb;
-        //                    //if (ms == null)
-        //                    //{
-        //                    //    ms = new MemoryStream();
-        //                    //    PlayerService.msReverb = ms;
-        //                    //}
-        //                    //else
-        //                    //{
-        //                    //    ms.SetLength(0); // Clear out old data safely
-        //                    //}
-
-        //                    //// Asynchronously copy the binary data straight into your MemoryStream
-        //                    //Task copyTask = process.StandardOutput.BaseStream.CopyToAsync(ms);
-        //                    string errorLog = await process.StandardError.ReadToEndAsync();
-
-        //                    //    await Task.WhenAll(copyTask, process.WaitForExitAsync());
-        //                    await process.WaitForExitAsync();
-        //                    // Stop our visual countdown illusion
-        //                    progressTimer.Stop();
-
-        //                    if (process.ExitCode == 0)
-        //                    {
-        //                        prgApplyingReverb.Value = 100;
-        //                        txtApplyReverbProgress.Text = "Reverb Applied Successfully!";
-
-        //                        // 3. Rewind your memory stream back to byte 0 and pass it to Flyleaf!
-        //                   //     ms.Position = 0;
-        //                        var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer!.CurTime);
-        //                        curtime = curTime;
-        //                        curtimetemp = PlayerService.Masterplayer.CurTime;
-        //                        PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
-        //                        PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
-        //                        PlayerService.Masterplayer?.Open(outputMp3);
-        //                    }
-        //                    else
-        //                    {
-        //                        prgApplyingReverb.Value = 0;
-        //                        txtApplyReverbProgress.Text = "Failed to process audio stream.";
-        //                        Debug.WriteLine($"Pipeline Error: {errorLog}");
-        //                    }
-        //                }
-        //                //dynamicCommand = $"\"\"{ffmpegPath}\" -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -i - -b:a 192k \"{outputMp3}\"\"";
-        //                //ProgressTimer(false);
-        //                //ProcessReverb(dynamicCommand, false, outputMp3);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (App.MainWindowInstance == null) return;
-        //            Debug.WriteLine("Custom Export");
-        //            var folder = await Pickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Export", Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
-        //            if (folder != null)
-        //            {
-        //                if (string.IsNullOrEmpty(txtFileName.Text))
-        //                {
-        //                    txtEnterFileNameWarning.Visibility = Visibility.Visible;
-        //                    return;
-        //                }
-        //                string userFileName = txtFileName.Text.Trim();
-
-        //                char[] invalidChars = Path.GetInvalidFileNameChars();
-        //                foreach (char c in invalidChars)
-        //                {
-        //                    userFileName = userFileName.Replace(c, '_');
-        //                }
-        //                userFileName = userFileName.TrimEnd('.');
-
-        //                outputMp3 = Path.Combine(folder.Path, userFileName + ".mp3");
-        //                if (File.Exists(outputMp3))
-        //                {
-        //                    string extension = Path.GetExtension(outputMp3); // ".mp3"
-        //                    string nameWithoutExt = Path.GetFileNameWithoutExtension(outputMp3); // e.g., "MyReverbSong"
-        //                    int counter = 1;
-
-        //                    while (File.Exists(outputMp3))
-        //                    {
-        //                        string newFileName = $"{nameWithoutExt} ({counter}){extension}";
-        //                        outputMp3 = Path.Combine(folder.Path, newFileName);
-        //                        counter++;
-        //                    }
-
-        //                    txtFileName.Text = Path.GetFileName(outputMp3);
-
-        //                }
-        //                if (outputMp3 == "") return;
-        //                string dynamicCommand = $"\"\"{ffmpegPath}\" -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -i - -b:a 192k \"{outputMp3}\"\"";
-        //                Debug.WriteLine(outputMp3);
-
-
-        //                ProcessStartInfo startInfo = new ProcessStartInfo
-        //                {
-        //                    FileName = "cmd.exe",
-        //                    Arguments = $"/c {dynamicCommand}",
-        //                    UseShellExecute = false,
-        //                    CreateNoWindow = true,
-        //                    RedirectStandardOutput = true,  // C# hooks into the final '-' here
-        //                    RedirectStandardError = true    // Catches errors so your app won't crash
-        //                };
-
-        //                // 1. Reset your progress bar UI
-        //                prgApplyingReverb.Value = 0;
-
-        //                var progressTimer = new Microsoft.UI.Xaml.DispatcherTimer();
-        //                progressTimer.Interval = TimeSpan.FromMilliseconds(50);
-        //                progressTimer.Tick += (s, args) =>
-        //                {
-        //                    if (prgApplyingReverb.Value < 95)
-        //                    {
-        //                        prgApplyingReverb.Value += 0.95;
-        //                        txtApplyReverbProgress.Text = $"Applying reverb: {prgApplyingReverb.Value:F0}%";
-        //                    }
-        //                };
-        //                progressTimer.Start();
-
-        //                // 2. Launch the background process
-        //                using (Process process = new Process { StartInfo = startInfo })
-        //                {
-        //                    process.Start();
-
-        //                    //var ms = PlayerService.msReverb;
-        //                    //if (ms == null)
-        //                    //{
-        //                    //    ms = new MemoryStream();
-        //                    //    PlayerService.msReverb = ms;
-        //                    //}
-        //                    //else
-        //                    //{
-        //                    //    ms.SetLength(0); // Clear out old data safely
-        //                    //}
-
-        //                    //// Asynchronously copy the binary data straight into your MemoryStream
-        //                    //Task copyTask = process.StandardOutput.BaseStream.CopyToAsync(ms);
-        //                    string errorLog = await process.StandardError.ReadToEndAsync();
-
-        //                    //    await Task.WhenAll(copyTask, process.WaitForExitAsync());
-        //                    await process.WaitForExitAsync();
-        //                    // Stop our visual countdown illusion
-        //                    progressTimer.Stop();
-
-        //                    if (process.ExitCode == 0)
-        //                    {
-        //                        prgApplyingReverb.Value = 100;
-        //                        txtApplyReverbProgress.Text = "Reverb Applied Successfully!";
-
-        //                        // 3. Rewind your memory stream back to byte 0 and pass it to Flyleaf!
-        //                        //     ms.Position = 0;
-        //                        var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer!.CurTime);
-        //                        curtime = curTime;
-        //                        curtimetemp = PlayerService.Masterplayer.CurTime;
-        //                        PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
-        //                        PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
-        //                        PlayerService.Masterplayer?.Open(outputMp3);
-        //                    }
-        //                    else
-        //                    {
-        //                        prgApplyingReverb.Value = 0;
-        //                        txtApplyReverbProgress.Text = "Failed to process audio stream.";
-        //                        Debug.WriteLine($"Pipeline Error: {errorLog}");
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                return;
-        //            }
-
-        //            }
-        //                //dynamicCommand = $"\"\"{ffmpegPath}\" -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -i - -b:a 192k \"{outputMp3}\"\"";
-        //                //ProgressTimer(false);
-        //                //ProcessReverb(dynamicCommand, false, outputMp3);
-
-        //        //if (chckExporttoFile.IsChecked == true)
-        //        //{
-        //        //  
-        //        //}
-        //        //else
-        //        //{
-        //        //    if (cmbOutput.SelectedIndex == 1)
-        //        //    {
-
-        //        //        outputMp3 = Path.Combine(baseDir, "tempfile.mp3");
-
-        //        //        if (Path.Exists(outputMp3))
-        //        //        {
-        //        //            File.Delete(outputMp3);
-        //        //        }
-        //        //    }
-        //        //}
-
-
-
-        //        //if (chckExporttoFile.IsChecked == true)
-        //        //{
-        //        //    dynamicCommand = $"\"\"{ffmpegPath}\" -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -i - -b:a 192k \"{outputMp3}\"\"";
-        //        //    Debug.WriteLine(dynamicCommand);
-        //        //}
-        //        //
-
-        //        //Debug.WriteLine("Started reverb-1");
-
-        //        //
-        //        //    if (chckExporttoFile.IsChecked == false)
-        //        //    {
-        //        //        Debug.WriteLine("Not export");
-        //        //        if (cmbOutput.SelectedIndex == 0)
-        //        //        {
-        //        //            Debug.WriteLine("memorystream");
-        //        //           
-        //        //            var stderrStream = process.StandardError;
-        //        //            long durationTicks = PlayerService.Masterplayer?.Duration ?? 0;
-        //        //            TimeSpan totalDuration = TimeSpan.FromTicks(durationTicks);
-
-        //        //            double totalSeconds = totalDuration.TotalSeconds;
-
-
-        //        //         
-        //        //        }
-        //        //        else
-        //        //        {
-
-        //        //            var stderrStream = process.StandardError;
-        //        //            long durationTicks = PlayerService.Masterplayer?.Duration ?? 0;
-        //        //            TimeSpan totalDuration = TimeSpan.FromTicks(durationTicks);
-
-        //        //            double totalSeconds = totalDuration.TotalSeconds;
-
-
-        //        //            await Task.WhenAll(process.WaitForExitAsync());
-        //        //            progressTimer.Stop();
-        //        //            
-        //        //        }
-        //        //    }
-        //        //    else
-        //        //    {
-
-        //        //        var stderrStream = process.StandardError;
-        //        //        long durationTicks = PlayerService.Masterplayer?.Duration ?? 0;
-        //        //        TimeSpan totalDuration = TimeSpan.FromTicks(durationTicks);
-
-        //        //        double totalSeconds = totalDuration.TotalSeconds;
-
-
-        //        //        await Task.WhenAll(process.WaitForExitAsync());
-        //        //        progressTimer.Stop();
-        //        //        if (process.ExitCode == 0)
-        //        //        {
-        //        //            var curTime = TimeSpan.FromTicks(PlayerService.Masterplayer!.CurTime);
-        //        //            curtime = curTime;
-        //        //            curtimetemp = PlayerService.Masterplayer.CurTime;
-        //        //            if (PlayerService.Masterplayer.IsPlaying == false)
-        //        //            {
-        //        //                PlayerService.curtime = curtime;
-        //        //                PlayerService.curtimetemp = curtimetemp;
-        //        //                PlayerService.CurrentPlayingPath = outputMp3;
-        //        //                PlayerService.UIController.MediaDisplayName = Path.GetFileName(outputMp3);
-        //        //                PlayerService.JustDisposed = true;
-        //        //                PlayerService.filestreamcurrent?.Dispose();
-        //        //            }
-        //        //            else
-        //        //            {
-        //        //                PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
-        //        //                PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
-        //        //                PlayerService.OpenPath(outputMp3);
-        //        //            }
-        //        //            prgApplyingReverb.Value = 100;
-        //        //            txtApplyReverbProgress.Text = "Exported Output successfully!";
-
-        //        //        }
-        //        //        else
-        //        //        {
-        //        //            Debug.WriteLine($"Pipeline failed: {errorLog}");
-        //        //            prgApplyingReverb.ShowError = true;
-        //        //            txtApplyReverbProgress.Text = "An unexpected error occured. Check log page for details.";
-        //        //            Logger.Log(errorLog, "AudioReverb", Logger.LogLevelType.Error);
-        //        //        }
-        //        //    }
-        //        //}
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine($"Error: {ex.Message}");
-        //    }
-        //}
         public void ClearProgress()
         {
             if (txtApplyReverbProgress.Text == "Reverb Applied Successfully")

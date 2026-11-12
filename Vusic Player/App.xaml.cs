@@ -26,6 +26,7 @@ namespace Vusic_Player
     public partial class App : Application
     {
         public static Window? MainWindowInstance;
+        public static Window? FirstLaunchWindowInstance;
         public static Window? OceanDialogInstance;
         public static Window? VideoDialogInstance;
         public static Window? SubtitleEditorDialogInstance;
@@ -52,6 +53,12 @@ namespace Vusic_Player
 
         protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            EngineService.StartEngine();
+            FirstLaunchExperience wind = new FirstLaunchExperience();
+            wind.Activate();
+            FirstLaunchWindowInstance = wind;
+
+            return;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
              if (currentSettings.isFirstTimeLaunch == false)
             {
@@ -62,12 +69,14 @@ namespace Vusic_Player
                 await FilesInDatabase.LoadAllFiles();
                 await FilesInDatabase.InitializeDatabaseFunctionsAsync();
                 _ = FilesInDatabase.RunBackgroundServiceAsync();
+
+            
             }
             else
             {
                 EngineService.StartEngine();
-                FirstLaunchExperience wind = new FirstLaunchExperience();
-                wind.Activate();
+               FirstLaunchExperience wind = new FirstLaunchExperience();
+               wind.Activate();
             }
 
         }

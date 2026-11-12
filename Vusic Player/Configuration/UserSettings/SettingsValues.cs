@@ -9,6 +9,7 @@ namespace Vusic_Player.Configuration.UserSettings
 {
     public class SettingsValues
     {
+        public string LastSeenVersion { get; set; } = "";
         public ObservableCollection<VideoProgress> SavedVideoProgress { get; set; } = new();
         public ObservableCollection<VideoProgress> DoNotShowRecommendations { get; set; } = new();
         public ObservableCollection<FoldersListOpened> SavedFoldersOpened { get; set; } = new();

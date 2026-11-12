@@ -102,6 +102,7 @@
     <None Remove="UI\Experience\Pages\AppLockDuringExperience.xaml" />
     <None Remove="UI\Experience\Pages\DefaultFormats.xaml" />
     <None Remove="UI\Experience\Pages\DesktopShortcut.xaml" />
+    <None Remove="UI\Experience\Pages\DonateToVusicPlayer.xaml" />
     <None Remove="UI\Experience\Pages\FolderSelection.xaml" />
     <None Remove="UI\Experience\Pages\KeyFeaturesPage.xaml" />
     <None Remove="UI\Experience\Pages\LicenseAgreement.xaml" />
@@ -127,6 +128,7 @@
     <None Remove="UI\UserViews\Controls\OceanDialogControls\OnlineArtistPicture.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\OnlineLyrics.xaml" />
     <None Remove="UI\UserViews\Controls\OceanDialogControls\ShowModelCreation.xaml" />
+    <None Remove="UI\UserViews\Controls\OceanDialogControls\WhatsNew.xaml" />
     <None Remove="UI\UserViews\Controls\OceanSlider.xaml" />
     <None Remove="UI\UserViews\Controls\PanelControlsAudioPlayer.xaml" />
     <None Remove="UI\UserViews\Controls\PlaybackMainControls.xaml" />
@@ -744,15 +746,15 @@
     <PublishTrimmed>False</PublishTrimmed>
     <TrimMode>None</TrimMode>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>False</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateKeyFile>Vusic Player_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>09C503AC50737612ECF6EDA9F7C0E05E59B6A045</PackageCertificateThumbprint>
 	  
   </PropertyGroup>
   <ItemGroup>
@@ -760,6 +762,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Coding\Vusic Player\Vusic Player\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\Experience\Pages\DonateToVusicPlayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\UserViews\Controls\OceanDialogControls\WhatsNew.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\Experience\Pages\DefaultFormats.xaml">
@@ -825,5 +837,10 @@
     <Page Update="UI\Experience\Pages\WelcomePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Update="Package.appxmanifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AppxManifest>
   </ItemGroup>
 </Project>

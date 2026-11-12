@@ -96,6 +96,7 @@ namespace Vusic_Player.Pages.Views.Onboarding
         {
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             currentSettings.isFirstTimeLaunch = false;
+            currentSettings.LastSeenVersion = "1.0.2.0";
             await SettingsLoader.SaveSettingsAsync(currentSettings);
             RestartApp();
         }

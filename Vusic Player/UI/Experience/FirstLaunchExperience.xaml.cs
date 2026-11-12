@@ -63,18 +63,18 @@ namespace Vusic_Player.UI.Experience
         private record WizardStep(Type PageType, string Header);
 
         private readonly List<WizardStep> _steps = new()
-        {
-            new(typeof(WhatIsVusicPlayerPage), "Welcome to Vusic Player"),            // Index 0
-            new(typeof(KeyFeaturesPage), "Vusic Player is magical!"),                 // Index 1
-            new(typeof(ThemeSelection), "Select a Theme"),                            // Index 2
-            new(typeof(FolderSelection), "Folder Permissions"),                       // Index 3
-            new(typeof(DefaultFormats), "Default File Formats"),                      // Index 4 (Inserted before Desktop Shortcut)
-            new(typeof(DesktopShortcut), "Create Desktop Shortcut"),                  // Index 5
-            new(typeof(LicenseAgreement), "Open Source License"),                     // Index 6 (Requires Accept)
-            new(typeof(PrivacyAgreement), "Your Privacy is OceanCyan's Priority"),    // Index 7
-            new(typeof(AppLockDuringExperience), "App Lock")                          // Index 8 (Final Step)
-        };
-
+{
+    new(typeof(WhatIsVusicPlayerPage), "Welcome to Vusic Player"),            // Index 0
+    new(typeof(KeyFeaturesPage), "Vusic Player is magical!"),                 // Index 1
+    new(typeof(ThemeSelection), "Select a Theme"),                            // Index 2
+    new(typeof(FolderSelection), "Folder Permissions"),                       // Index 3
+    new(typeof(DefaultFormats), "Default File Formats"),                      // Index 4
+    new(typeof(DesktopShortcut), "Create Desktop Shortcut"),                  // Index 5
+    new(typeof(LicenseAgreement), "Open Source License"),                     // Index 6 (Requires Accept)
+    new(typeof(PrivacyAgreement), "Your Privacy is OceanCyan's Priority"),    // Index 7
+    new(typeof(DonateToVusicPlayer), "Support Vusic Player"),                 // Index 8 (Optional)
+    new(typeof(AppLockDuringExperience), "App Lock")                          // Index 9 (Final Step)
+};
         private int _currentIndex = 0;
 
         private void btnGoBack_Click(object sender, RoutedEventArgs e)
