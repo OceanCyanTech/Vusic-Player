@@ -37,6 +37,7 @@ namespace Vusic_Player.UI.Experience.Pages
         {
             grdInitial.Visibility = Visibility.Collapsed;
             setAppLock.Visibility = Visibility.Visible;
+            setAppLock.FocusNum1();
         }
 
         private void btnNo_Click(object sender, RoutedEventArgs e)

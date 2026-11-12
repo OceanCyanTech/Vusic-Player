@@ -159,7 +159,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="Set a 4 or 6-digit pin as app lock."/>
+            <TextBlock Grid.Row="0" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="Set a 4 or 6-digit pin as app lock. Start typing your pin."/>
             <TextBlock Grid.Row="1" Style="{StaticResource BodyLargeStrongTextBlockStyle}" Text="If you forget the pin, all the app settings will be reset to default."/>
             <CheckBox Name="chkIsSixDigit" Content="6-Digit Pin" Grid.Row="2" Checked="chkIsSixDigit_Checked" Unchecked="chkIsSixDigit_Checked">
                 <CheckBox.Resources>

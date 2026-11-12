@@ -980,7 +980,7 @@ namespace Vusic_Player.Pages.Views
                 var packageVersion = Package.Current.Id.Version;
                 Version currentVersion = new Version(packageVersion.Major, packageVersion.Minor, packageVersion.Build);
                 bool newversion = false;
-                if(remoteVersion.ToString() != "1.0.2.0")
+                if(remoteVersion.ToString() != "1.0.6.0")
                 {
                     newversion = true;
                 }
@@ -1934,6 +1934,12 @@ namespace Vusic_Player.Pages.Views
         {
             var uri = new Uri("https://oceancyantech.github.io/Vusic-Player/donate.html");
             await Launcher.LaunchUriAsync(uri);
+        }
+
+        private async void hypRateApp_Click(object sender, RoutedEventArgs e)
+        {
+            var uri = new Uri("ms-windows-store://review/?ProductId=9MST111CFJPD");
+            await Windows.System.Launcher.LaunchUriAsync(uri);
         }
     }
 }

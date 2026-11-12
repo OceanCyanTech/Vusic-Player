@@ -193,7 +193,10 @@ public sealed partial class SetAppLock : UserControl
             txtNum6.Text = "•";
         }
     }
-
+    public void FocusNum1()
+    {
+        txtNum1.Focus(FocusState.Programmatic);
+    } 
     private void btnGoBack_Click(object sender, RoutedEventArgs e)
     {
         grdMain.Visibility = Visibility.Visible;

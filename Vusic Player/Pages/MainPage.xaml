@@ -5,10 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Vusic_Player.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:controls="using:CommunityToolkit.WinUI.Controls" xmlns:playback_views="using:Vusic_Player.UI.UserViews.Controls" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral" xmlns:audioequalizer="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:controls="using:CommunityToolkit.WinUI.Controls" xmlns:playback_views="using:Vusic_Player.UI.UserViews.Controls" xmlns:videogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral" xmlns:audiogeneral="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioGeneral" xmlns:audioequalizer="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioEqualizer" xmlns:audioadvanced="using:Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Background="#FF0D1117">
         <Frame Name="frmVid" Visibility="Collapsed"></Frame>
         <Frame Name="frmRoot">
             <Grid Name="grdRoot" Visibility="Visible" PreviewKeyDown="ControlRoot_PreviewKeyDown" KeyboardAcceleratorPlacementMode="Hidden" >
@@ -163,7 +163,7 @@ Stretch="UniformToFill"/>
             <audiogeneral:Pitch/>
         </TeachingTip>
         <TeachingTip Name="ttReverbControl">
-            <audiogeneral:Pitch/>
+            <audioadvanced:AudioReverb/>
         </TeachingTip>
         <TeachingTip Name="ttTutorial" Title="Welcome to Vusic Player!">
             <Grid Margin="20, 20" RowSpacing="20">

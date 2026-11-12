@@ -41,24 +41,21 @@ namespace Vusic_Player
             InitializeComponent();
             this.UnhandledException += (sender, e) =>
             {
-                Debug.WriteLine("UNHANDLED EXCEPTION; " + e.Exception);
-            };
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
-            {
-                string logPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "winui_crash.txt");
-                File.WriteAllText(logPath, args.ExceptionObject.ToString());
+                e.Handled = true;
+                try
+                {
+                    string logPath = System.IO.Path.Combine(
+                        Windows.Storage.ApplicationData.Current.LocalFolder.Path,
+                        "crash.log");
+                    System.IO.File.AppendAllText(logPath, $"[{DateTime.Now:O}] {e.Exception}\n\n");
+                }
+                catch { }
             };
         }
 
 
         protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            EngineService.StartEngine();
-            FirstLaunchExperience wind = new FirstLaunchExperience();
-            wind.Activate();
-            FirstLaunchWindowInstance = wind;
-
-            return;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
              if (currentSettings.isFirstTimeLaunch == false)
             {
@@ -76,6 +73,7 @@ namespace Vusic_Player
             {
                 EngineService.StartEngine();
                FirstLaunchExperience wind = new FirstLaunchExperience();
+                FirstLaunchWindowInstance = wind;
                wind.Activate();
             }
 

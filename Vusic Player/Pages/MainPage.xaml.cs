@@ -50,6 +50,12 @@ namespace Vusic_Player.Pages
         public MainPage()
         {
             InitializeComponent();
+            var caps = Windows.UI.Composition.CompositionCapabilities.GetForCurrentView();
+            if (caps != null && !caps.AreEffectsSupported())
+            {
+                Bordermain.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                    Windows.UI.Color.FromArgb(204, 13, 17, 23));
+            }
             App.NavigationFrame = frmMain;
             App.VideoPlayerFrame = frmVid;
             App.MasterFrame = frmRoot;
@@ -205,7 +211,7 @@ namespace Vusic_Player.Pages
             //    OceanContentDialog.Show("What's New?", "", "", "Close", OceanDialogWindow.ContentType.WhatsNew, OceanContentDialogDefault.Close, XamlRoot, 700, 700, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new System.Collections.ObjectModel.ObservableCollection<Configuration.ClassModels.SongModel>(), "");
 
             //}
-            currentSettings.LastSeenVersion = "1.0.2.0";
+            currentSettings.LastSeenVersion = "1.0.6.0";
             await SettingsLoader.SaveSettingsAsync(currentSettings);
             //var counter = currentSettings.VersionCounter;
             //if (counter.Count == 0)

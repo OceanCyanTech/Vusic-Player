@@ -297,8 +297,8 @@
                                 <Image VerticalAlignment="Center" Width="50" Source="/Assets/appicon.png"></Image>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" VerticalAlignment="Center" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Vusic Player"></TextBlock>
                             </StackPanel>
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.2.0"></TextBlock>
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="RTM (Build 121126)"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.6.0"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="RTM (Build 131126)"></TextBlock>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech 2026" Name="txtCompanyCopyright"></TextBlock>
 
                             <Image Margin="0, 30" HorizontalAlignment="Left" Width="300" Source="/Assets/OceanCyan Logo High.png"/>
@@ -419,7 +419,7 @@
                             <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="View Source on GitHub" NavigateUri="https://github.com/OceanCyanTech/Vusic-Player"  Grid.Row="9"/>
                             <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Documentation and Support" NavigateUri="https://oceancyantech.github.io/Vusic-Player/documentation.html" Grid.Row="10"/>
                             <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Share your feedback to help us improve the app" NavigateUri="https://oceancyantech.github.io/Vusic-Player/feedback.html" Grid.Row="11"/>
-                            <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Rate Vusic Player on the Microsoft Store!" NavigateUri="ms-windows-store://review/?ProductId=9MST111CFJPD" Grid.Row="11"/>
+                            <HyperlinkButton Foreground="{StaticResource GlobalAccentColor}"   Content="Rate Vusic Player on the Microsoft Store!" Name="hypRateApp" Click="hypRateApp_Click" Grid.Row="11"/>
                             <Button Style="{StaticResource AccentButtonStyle}"    Content="Donate to support Vusic Player!" Click="Button_Click" Grid.Row="11">
 
                                 <Button.Resources>
