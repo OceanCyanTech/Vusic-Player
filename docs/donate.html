@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support Vusic Player — OceanCyan Tech</title>
+  <meta name="description" content="Support the open-source development of Vusic Player via UPI (India) or Ko-fi (International)." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Keyframes */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes ambientPulse {
+      0%, 100% {
+        opacity: 0.4;
+        transform: translate(-50%, 0) scale(1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: translate(-50%, -6px) scale(1.05);
+      }
+    }
+
+    /* Staggered Load Animations */
+    .stagger-1 {
+      opacity: 0;
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards;
+    }
+    .stagger-2 {
+      opacity: 0;
+      animation: fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.14s forwards;
+    }
+    .stagger-3 {
+      opacity: 0;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
+    }
+    .stagger-4 {
+      opacity: 0;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.30s forwards;
+    }
+    .stagger-5 {
+      opacity: 0;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.38s forwards;
+    }
+
+    .ambient-glow {
+      animation: ambientPulse 7s ease-in-out infinite;
+    }
+
+    /* Card Hover Physics */
+    .support-card {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color 0.35s ease,
+                  border-color 0.35s ease,
+                  box-shadow 0.35s ease;
+    }
+
+    .support-card:hover {
+      transform: translateY(-4px);
+      background-color: rgba(30, 41, 59, 0.85);
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.65),
+                  0 0 24px -5px rgba(56, 189, 248, 0.12);
+    }
+
+    /* QR Frame Hover */
+    .qr-container {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.35s ease;
+    }
+
+    .support-card:hover .qr-container {
+      transform: scale(1.03);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4),
+                  0 0 16px rgba(56, 189, 248, 0.2);
+    }
+
+    /* Button Micro-interactions */
+    .btn-interactive {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color 0.2s ease,
+                  border-color 0.2s ease,
+                  box-shadow 0.2s ease,
+                  color 0.2s ease;
+    }
+
+    .btn-interactive:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-interactive:active {
+      transform: translateY(0px) scale(0.97);
+    }
+
+    /* Respect Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      .stagger-1, .stagger-2, .stagger-3, .stagger-4, .stagger-5,
+      .ambient-glow, .support-card, .qr-container, .btn-interactive {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500/30 selection:text-sky-200">
+
+  <!-- Top Scroll Progress Line -->
+  <div class="fixed top-0 left-0 w-full h-0.5 bg-transparent z-50 pointer-events-none">
+    <div id="scroll-progress" class="h-full bg-gradient-to-r from-sky-500 to-cyan-300 w-0 transition-all duration-150 ease-out"></div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-30 bg-slate-900/85 backdrop-blur-md border-b border-slate-800 transition-colors">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <img 
+          src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" 
+          alt="Vusic Player Logo" 
+          class="w-9 h-9 object-contain drop-shadow group-hover:scale-105 group-hover:rotate-3 transition-transform duration-300"
+          onerror="this.style.display='none'"
+        />
+        <span class="font-bold text-lg text-slate-100 tracking-tight group-hover:text-sky-300 transition-colors">Vusic Player</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+        <a href="index.html" class="hover:text-sky-400 transition-colors">Home</a>
+        <a href="howtousevusicplayer.html" class="hover:text-sky-400 transition-colors">User Guide</a>
+        <a href="validtimestamps.html" class="hover:text-sky-400 transition-colors">Timestamp Formats</a>
+        <a href="donate.html" class="text-sky-400 font-semibold transition-colors">Donate</a>
+        <a href="https://github.com/OceanCyanTech/Vusic-Player" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors">GitHub</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5 text-xs sm:text-sm font-medium">
+        <a href="index.html" class="md:hidden text-slate-300 hover:text-sky-400 transition-colors">Home</a>
+        <a href="howtousevusicplayer.html" class="md:hidden text-slate-300 hover:text-sky-400 transition-colors">Docs</a>
+        <a href="feedback.html" class="btn-interactive bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-1.5 rounded-lg">
+          Feedback
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 relative overflow-hidden py-12 sm:py-16 px-4 sm:px-6">
+    <div class="ambient-glow pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[620px] h-[280px] bg-sky-500/12 blur-3xl rounded-full"></div>
+
+    <div class="max-w-4xl mx-auto relative">
+
+      <!-- Page Header -->
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <div class="stagger-1 inline-flex items-center gap-2 text-xs font-semibold text-sky-400 bg-sky-500/10 border border-sky-500/25 px-3 py-1 rounded-full mb-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse"></span>
+          <span>100% Free &amp; Open Source &bull; Zero Paywalls</span>
+        </div>
+        <h1 class="stagger-2 text-3xl sm:text-4xl font-extrabold text-slate-100 tracking-tight mb-3">
+          Support <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">Vusic Player</span>
+        </h1>
+        <p class="stagger-2 text-slate-300 text-sm sm:text-base leading-relaxed">
+          Every feature in Vusic Player—including Multi-Device Audio Output, Live Reverb, Pitch Control, and Batch Conversion—is completely unlocked for everyone. If the app helps your workflow, optional tips directly support ongoing development.
+        </p>
+      </div>
+
+      <!-- Two-Column Support Options -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+
+        <!-- Card 1: India (UPI) -->
+        <div class="stagger-3 support-card bg-slate-800/60 border border-slate-700/80 rounded-2xl p-6 sm:p-7 flex flex-col justify-between shadow-xl">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-sky-400 bg-sky-500/10 border border-sky-500/25 px-2.5 py-1 rounded-md">
+                India &bull; UPI (0% Fee)
+              </span>
+              <span class="text-xs text-slate-400">GPay &bull; PhonePe &bull; Paytm</span>
+            </div>
+
+            <h2 class="text-xl font-bold text-slate-100 mb-2">Scan or Pay via UPI</h2>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-5">
+              Scan the QR code below with any UPI app on your phone, or copy the UPI ID directly.
+            </p>
+
+            <!-- QR Code Box -->
+            <div class="qr-container bg-white rounded-xl p-4 w-52 h-52 mx-auto mb-5 flex items-center justify-center shadow-inner border border-slate-700">
+              <img 
+                src="Assets/upi-qr.png" 
+                alt="UPI QR Code for oceancyantech@axl" 
+                class="w-full h-full object-contain"
+                onerror="this.parentElement.innerHTML='<div class=\'text-center text-slate-700 text-xs font-medium px-2\'>UPI QR Image<br><span class=\'text-[11px] text-slate-500\'>Place file at Assets/upi-qr.png</span></div>'"
+              />
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <!-- Copyable UPI ID Bar -->
+            <div class="flex items-center justify-between bg-slate-900/90 border border-slate-700 hover:border-slate-600 transition-colors rounded-xl px-3.5 py-2.5">
+              <div class="truncate pr-2">
+                <div class="text-[10px] uppercase tracking-wider text-slate-400">UPI ID</div>
+                <code id="upi-id" class="text-sm font-mono font-semibold text-sky-300 select-all">oceancyantech@axl</code>
+              </div>
+              <button 
+                type="button" 
+                onclick="copyUpi()" 
+                id="copy-btn"
+                class="btn-interactive shrink-0 bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold text-xs px-3 py-1.5 rounded-lg"
+              >
+                Copy ID
+              </button>
+            </div>
+
+            <!-- Mobile Deep Link -->
+            <a 
+              href="upi://pay?pa=oceancyantech@axl&pn=OceanCyan%20Tech&cu=INR"
+              class="btn-interactive w-full h-10 inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs sm:text-sm rounded-xl border border-slate-700 hover:border-slate-600"
+            >
+              <span>Open in Mobile UPI App</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 2: International (Ko-fi) -->
+        <div class="stagger-4 support-card bg-slate-800/60 border border-slate-700/80 rounded-2xl p-6 sm:p-7 flex flex-col justify-between shadow-xl">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-1 rounded-md">
+                International
+              </span>
+              <span class="text-xs text-slate-400">Cards &bull; PayPal &bull; Apple/Google Pay</span>
+            </div>
+
+            <h2 class="text-xl font-bold text-slate-100 mb-2">Buy a Coffee on Ko-fi</h2>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">
+              Outside India? You can leave a quick one-time tip on Ko-fi—no account registration required, and 0% platform fee taken by Ko-fi.
+            </p>
+
+            <!-- Feature / Transparency Highlights -->
+            <ul class="space-y-3 text-xs sm:text-sm text-slate-300 bg-slate-900/60 border border-slate-700/70 rounded-xl p-4 mb-6">
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Fast checkout with debit/credit cards, Apple Pay, Google Pay, or PayPal</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Leave an optional message or feature request with your tip</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Supports independent Windows open-source development</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="space-y-3">
+            <a 
+              href="https://ko-fi.com/oceancyantech" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="group btn-interactive w-full h-11 inline-flex items-center justify-center gap-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-sky-500/15 hover:shadow-sky-500/30"
+            >
+              <svg class="w-5 h-5 group-hover:scale-125 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              <span>Support on Ko-fi</span>
+            </a>
+
+            <a 
+              href="https://github.com/OceanCyanTech/Vusic-Player" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="btn-interactive w-full h-10 inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs sm:text-sm rounded-xl border border-slate-700 hover:border-slate-600"
+            >
+              <span>Star the Repository on GitHub (Free!)</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Non-Monetary Support Note -->
+      <div class="stagger-5 mt-8 bg-slate-800/40 hover:bg-slate-800/60 border border-slate-800 hover:border-slate-700 transition-colors rounded-2xl p-5 text-center">
+        <p class="text-xs sm:text-sm text-slate-400">
+          Can&apos;t donate right now? No worries at all—leaving a quick review on the 
+          <a href="ms-windows-store://review/?ProductId=9MST111CFJPD" class="text-sky-400 hover:text-sky-300 hover:underline font-medium transition-colors">Microsoft Store</a> 
+          or starring Vusic Player on 
+          <a href="https://github.com/OceanCyanTech/Vusic-Player" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:text-sky-300 hover:underline font-medium transition-colors">GitHub</a> 
+          helps others discover the app just as much.
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/90 py-8 px-4 mt-auto">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+      <div class="flex items-center gap-2.5 group">
+        <img 
+          src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/OceanCyan%20Logo.png" 
+          alt="OceanCyan Tech Logo" 
+          class="h-6 w-auto object-contain drop-shadow group-hover:scale-105 transition-transform"
+          onerror="this.style.display='none'"
+        />
+        <span class="font-medium">&copy; 2026 OceanCyan Tech. All rights reserved.</span>
+      </div>
+
+      <div class="flex items-center gap-5">
+        <a href="index.html" class="hover:text-sky-400 transition-colors">Home</a>
+        <a href="howtousevusicplayer.html" class="hover:text-sky-400 transition-colors">User Guide</a>
+        <a href="validtimestamps.html" class="hover:text-sky-400 transition-colors">Timestamp Formats</a>
+        <a href="feedback.html" class="hover:text-sky-400 transition-colors">Feedback</a>
+        <a href="ms-windows-store://review/?ProductId=9MST111CFJPD" class="hover:text-sky-400 transition-colors">Rate App</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function copyUpi() {
+      const upi = document.getElementById('upi-id').textContent.trim();
+      const btn = document.getElementById('copy-btn');
+      navigator.clipboard.writeText(upi).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.remove('bg-sky-500', 'hover:bg-sky-400');
+        btn.classList.add('bg-emerald-400');
+        setTimeout(() => {
+          btn.textContent = 'Copy ID';
+          btn.classList.remove('bg-emerald-400');
+          btn.classList.add('bg-sky-500', 'hover:bg-sky-400');
+        }, 2000);
+      });
+    }
+
+    // Top scroll progress bar
+    document.addEventListener('DOMContentLoaded', () => {
+      const progressBar = document.getElementById('scroll-progress');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = `${progress}%`;
+      }, { passive: true });
+    });
+  </script>
+
+</body>
+</html>
