@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vusic Player — Modern Media Player & Audio DSP Suite for Windows</title>
+  <meta name="description" content="Vusic Player is an open-source Windows media player featuring universal Flyleaf/DirectX playback, simultaneous multi-device audio output, built-in reverb, lyric & subtitle editors, and local SQLite media management." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.45; transform: translate(-50%, 0) scale(1); }
+      50% { opacity: 0.75; transform: translate(-50%, -8px) scale(1.06); }
+    }
+
+    @keyframes eqBounce {
+      0%, 100% { transform: scaleY(0.35); }
+      50% { transform: scaleY(1); }
+    }
+
+    .animate-float-slow {
+      animation: floatSlow 5s ease-in-out infinite;
+    }
+
+    .animate-pulse-glow {
+      animation: pulseGlow 7s ease-in-out infinite;
+    }
+
+    .eq-bar {
+      transform-origin: bottom;
+      animation: eqBounce 1.1s ease-in-out infinite;
+    }
+    .eq-bar:nth-child(2) { animation-delay: 0.18s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.36s; }
+    .eq-bar:nth-child(4) { animation-delay: 0.12s; }
+
+    /* Scroll Reveal Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Subtle Interactive Card Spotlight */
+    .feature-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(480px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(56, 189, 248, 0.11), transparent 45%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animate-float-slow,
+      .animate-pulse-glow,
+      .eq-bar {
+        animation: none !important;
+      }
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500/30 selection:text-sky-200 overflow-x-hidden">
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-30 bg-slate-900/85 backdrop-blur-md border-b border-slate-800/90 transition-colors">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3 group">
+        <img 
+          src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" 
+          alt="Vusic Player Logo" 
+          class="w-9 h-9 object-contain drop-shadow group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300"
+          onerror="this.style.display='none'"
+        />
+        <span class="font-bold text-lg text-slate-100 tracking-tight">Vusic Player</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+        <a href="#features" class="hover:text-sky-400 transition-colors">Core Features</a>
+        <a href="howtousevusicplayer.html" class="hover:text-sky-400 transition-colors">User Guide</a>
+        <a href="validtimestamps.html" class="hover:text-sky-400 transition-colors">Timestamp Formats</a>
+        <a href="donate.html" class="hover:text-sky-400 transition-colors">Donate</a>
+        <a href="https://github.com/OceanCyanTech/Vusic-Player" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors">GitHub</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5 text-xs sm:text-sm font-medium">
+        <a href="howtousevusicplayer.html" class="md:hidden text-slate-300 hover:text-sky-400 transition">
+          Docs
+        </a>
+        <a href="donate.html" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 px-3.5 py-1.5 rounded-lg inline-flex items-center gap-1.5 hover:-translate-y-0.5 transition-all duration-200">
+          <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <span>Donate</span>
+        </a>
+        <a href="feedback.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-1.5 rounded-lg hover:-translate-y-0.5 transition-all duration-200">
+          Feedback
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1">
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24 px-4 sm:px-6">
+      <!-- Animated Ambient Background Glow -->
+      <div class="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 w-[740px] h-[360px] bg-sky-500/15 blur-3xl rounded-full animate-pulse-glow"></div>
+
+      <div class="max-w-6xl mx-auto relative">
+        <div class="text-center max-w-3xl mx-auto">
+          <div class="reveal inline-flex items-center gap-2.5 text-xs font-semibold text-sky-400 bg-sky-500/10 border border-sky-500/25 px-3.5 py-1.5 rounded-full mb-6">
+            <span class="flex items-end gap-0.5 h-3 w-3.5" aria-hidden="true">
+              <span class="eq-bar w-0.5 h-full bg-sky-400 rounded-full"></span>
+              <span class="eq-bar w-0.5 h-full bg-sky-400 rounded-full"></span>
+              <span class="eq-bar w-0.5 h-full bg-sky-400 rounded-full"></span>
+              <span class="eq-bar w-0.5 h-full bg-sky-400 rounded-full"></span>
+            </span>
+            <span>Windows 10 &amp; 11 &bull; GPLv3 Open Source &bull; WinUI 3</span>
+          </div>
+
+          <h1 class="reveal text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-100 tracking-tight leading-[1.12] mb-5" style="transition-delay: 80ms;">
+            Your Media, Routed &amp; Shaped <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-sky-400 to-cyan-300">Your Way.</span>
+          </h1>
+
+          <p class="reveal text-slate-300 text-base sm:text-lg leading-relaxed mb-8 max-w-2xl mx-auto" style="transition-delay: 160ms;">
+            Universal Flyleaf &amp; DirectX playback with zero external codecs, simultaneous multi-device audio routing, studio reverb, synchronized lyric &amp; subtitle editors, and 100% local privacy.
+          </p>
+
+          <!-- Primary CTA Buttons with Official Microsoft Store Badge, GitHub & Donate -->
+          <div class="reveal flex flex-wrap items-center justify-center gap-3.5 mb-14" style="transition-delay: 240ms;">
+            <a 
+              href="https://apps.microsoft.com/detail/9MST111CFJPD" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label="Download Vusic Player from the Microsoft Store"
+              class="inline-flex items-center justify-center rounded-xl overflow-hidden shadow-lg shadow-sky-500/10 hover:scale-[1.03] hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-200 border border-slate-700/80 bg-slate-950"
+            >
+              <img 
+                src="https://get.microsoft.com/images/en-us%20dark.svg" 
+                alt="Get it from Microsoft" 
+                class="h-12 sm:h-[52px] w-auto block"
+              />
+            </a>
+
+            <a 
+              href="https://github.com/OceanCyanTech/Vusic-Player" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="h-12 sm:h-[52px] px-5 inline-flex items-center justify-center gap-2.5 bg-slate-800/90 hover:bg-slate-800 text-slate-100 font-semibold text-sm rounded-xl border border-slate-700 hover:border-slate-500 hover:-translate-y-0.5 transition-all duration-200 shadow-md"
+            >
+              <svg class="w-5 h-5 text-slate-300" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+              </svg>
+              <span>View on GitHub</span>
+            </a>
+
+            <a 
+              href="donate.html" 
+              class="h-12 sm:h-[52px] px-5 inline-flex items-center justify-center gap-2 bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 font-semibold text-sm rounded-xl border border-sky-500/35 hover:border-sky-400/60 hover:-translate-y-0.5 transition-all duration-200 shadow-md"
+            >
+              <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              <span>Support Development</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Home Page App Screenshot Showcase with Gentle Float -->
+        <div class="reveal max-w-5xl mx-auto" style="transition-delay: 320ms;">
+          <div class="animate-float-slow bg-slate-950/85 p-2.5 sm:p-4 rounded-2xl border border-slate-700/80 shadow-2xl shadow-sky-950/50 hover:border-sky-500/40 transition-colors duration-300">
+            <img 
+              src="https://github.com/user-attachments/assets/6aff9822-58d9-4ecf-b143-85d141e39ec8" 
+              alt="Vusic Player Home Screen" 
+              class="rounded-xl w-full h-auto object-contain"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Features Section (5 Pillar Cards) -->
+    <section id="features" class="scroll-mt-20 py-16 sm:py-24 px-4 sm:px-6 border-t border-slate-800/80 bg-slate-900/50">
+      <div class="max-w-6xl mx-auto space-y-12">
+        <div class="reveal max-w-2xl">
+          <span class="text-sky-400 text-xs font-bold uppercase tracking-wider">Core Features</span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-100 mt-1.5 tracking-tight">
+            Engineered for Playback, DSP &amp; Control
+          </h2>
+          <p class="text-slate-400 text-sm sm:text-base mt-2.5">
+            Native WinUI 3 performance combined with hardware-accelerated decoding, multi-endpoint audio routing, and zero telemetry.
+          </p>
+        </div>
+
+        <!-- Top Row: 2 Featured Pillars -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          <!-- Pillar 1: Universal Playback Engine -->
+          <div class="reveal feature-card bg-slate-800/65 hover:bg-slate-800/90 border border-slate-700/80 hover:border-sky-500/40 rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 shadow-xl">
+            <div class="flex items-center gap-3.5 mb-5">
+              <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-sky-400">Flyleaf &amp; DirectX</span>
+                <h3 class="text-lg sm:text-xl font-bold text-slate-100">Universal Playback Engine</h3>
+              </div>
+            </div>
+
+            <ul class="space-y-3.5 text-xs sm:text-sm text-slate-300">
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                <span><strong class="text-slate-100">No External Codecs Required:</strong> Play MP4, MKV, AVI, MOV, FLV, MP3, FLAC, WAV, OGG, and dozens of other formats out of the box.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                <span><strong class="text-slate-100">DirectX Hardware Acceleration:</strong> Smooth, low-latency video decoding and presentation powered by Flyleaf and DirectX.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                <span><strong class="text-slate-100">Real-Time Video Adjustments:</strong> Fine-tune brightness, contrast, hue, saturation, and orientation on the fly during playback.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                <span><strong class="text-slate-100">Smart Playback Memory:</strong> Automatically remembers playback progress for videos and tracks recent media history.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Pillar 2: Advanced Audio & DSP Routing -->
+          <div class="reveal feature-card bg-slate-800/65 hover:bg-slate-800/90 border border-slate-700/80 hover:border-sky-500/40 rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 shadow-xl flex flex-col justify-between" style="transition-delay: 90ms;">
+            <div>
+              <div class="flex items-center gap-3.5 mb-5">
+                <div class="w-11 h-11 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  </svg>
+                </div>
+                <div>
+                  <span class="text-[11px] font-semibold uppercase tracking-wider text-sky-400">XAudio2 &amp; Built-in DSP</span>
+                  <h3 class="text-lg sm:text-xl font-bold text-slate-100">Advanced Audio &amp; DSP Routing</h3>
+                </div>
+              </div>
+
+              <ul class="space-y-3.5 text-xs sm:text-sm text-slate-300">
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                  <span><strong class="text-slate-100">Simultaneous Multi-Device Output:</strong> Route audio to multiple playback devices (wired headphones, Bluetooth earbuds, external speakers) at the same time with independent per-device volume controls.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                  <span><strong class="text-slate-100">Built-in Digital Reverb:</strong> Apply studio reverb effects directly to audio streams with zero external DSP dependencies.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-700/60 flex flex-wrap items-center gap-3 text-xs font-medium">
+              <a href="howtousevusicplayer.html#multi-device-output" class="text-sky-400 hover:text-sky-300 inline-flex items-center gap-1 transition">
+                <span>Multi-Device Guide</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+              <span class="text-slate-600">&bull;</span>
+              <a href="howtousevusicplayer.html#audio-reverb" class="text-sky-400 hover:text-sky-300 inline-flex items-center gap-1 transition">
+                <span>Audio Reverb Guide</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Row: 3 Pillars -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <!-- Pillar 3: Subtitle & Lyric Suite -->
+          <div class="reveal feature-card bg-slate-800/65 hover:bg-slate-800/90 border border-slate-700/80 hover:border-sky-500/40 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-xl">
+            <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v1
