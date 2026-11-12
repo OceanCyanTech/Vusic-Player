@@ -1,106 +1,312 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Custom Timestamp Formats — Vusic Player</title>
+  <meta name="description" content="Test and validate custom .NET TimeSpan and DateTime timestamp format strings for Vusic Player." />
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Keyframes */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes ambientPulse {
+      0%, 100% {
+        opacity: 0.4;
+        transform: translate(-50%, 0) scale(1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: translate(-50%, -6px) scale(1.05);
+      }
+    }
+
+    /* Staggered Load Animations */
+    .stagger-1 {
+      opacity: 0;
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards;
+    }
+    .stagger-2 {
+      opacity: 0;
+      animation: fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards;
+    }
+    .stagger-3 {
+      opacity: 0;
+      animation: fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.20s forwards;
+    }
+    .stagger-4 {
+      opacity: 0;
+      animation: fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.28s forwards;
+    }
+
+    .ambient-glow {
+      animation: ambientPulse 7s ease-in-out infinite;
+    }
+
+    /* Card & Interactive Transitions */
+    .surface-card {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.3s ease,
+                  box-shadow 0.3s ease;
+    }
+
+    .surface-card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.55),
+                  0 0 20px -5px rgba(56, 189, 248, 0.08);
+    }
+
+    .btn-interactive {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color 0.2s ease,
+                  border-color 0.2s ease,
+                  color 0.2s ease;
+    }
+
+    .btn-interactive:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-interactive:active {
+      transform: translateY(0px) scale(0.97);
+    }
+
+    .preset {
+      transition: background-color 0.2s ease, padding-left 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .preset:hover {
+      padding-left: 1.25rem;
+    }
+
+    /* Respect Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      .stagger-1, .stagger-2, .stagger-3, .stagger-4,
+      .ambient-glow, .surface-card, .btn-interactive, .preset {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
 </head>
-<body class="bg-zinc-950 text-zinc-200 antialiased">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500/30 selection:text-sky-200">
 
-  <main class="max-w-2xl mx-auto px-5 py-12 space-y-10">
+  <!-- Top Scroll Progress Line -->
+  <div class="fixed top-0 left-0 w-full h-0.5 bg-transparent z-50 pointer-events-none">
+    <div id="scroll-progress" class="h-full bg-gradient-to-r from-sky-500 to-cyan-300 w-0 transition-all duration-150 ease-out"></div>
+  </div>
 
-    <!-- Header -->
-    <header class="flex items-center justify-between border-b border-zinc-800 pb-5">
-      <div class="flex items-center gap-3">
-        <img src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" alt="" class="w-7 h-7 object-contain" onerror="this.style.display='none'" />
-        <h1 class="text-lg font-semibold text-zinc-100">Custom Timestamp Formats</h1>
-      </div>
-      <a href="howtousevusicplayer.html" class="text-xs text-zinc-400 hover:text-zinc-200">← Back to Guide</a>
-    </header>
-
-    <!-- Format Tester -->
-    <section class="space-y-3">
-      <div class="flex items-center justify-between">
-        <label for="formatInput" class="text-xs font-medium text-zinc-400">Test format string</label>
-        <span id="modeLabel" class="text-xs font-mono text-zinc-500">TimeSpan</span>
-      </div>
-
-      <div class="flex gap-2">
-        <input 
-          type="text" 
-          id="formatInput" 
-          value="hh\:mm\:ss\.fff"
-          spellcheck="false"
-          class="flex-1 bg-zinc-900 border border-zinc-800 focus:border-zinc-600 focus:outline-none rounded-lg px-3.5 py-2 font-mono text-sm text-sky-400"
+  <!-- Top Navigation Bar (Matches Landing Page) -->
+  <header class="sticky top-0 z-30 bg-slate-900/85 backdrop-blur-md border-b border-slate-800 transition-colors">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <img 
+          src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" 
+          alt="Vusic Player Logo" 
+          class="w-9 h-9 object-contain drop-shadow group-hover:scale-105 group-hover:rotate-3 transition-transform duration-300"
+          onerror="this.style.display='none'"
         />
-        <button 
-          type="button" 
-          id="copyBtn"
-          class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium px-4 py-2 rounded-lg border border-zinc-700 transition"
-        >
-          Copy
-        </button>
+        <span class="font-bold text-lg text-slate-100 tracking-tight group-hover:text-sky-300 transition-colors">Vusic Player</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+        <a href="index.html#features" class="hover:text-sky-400 transition-colors">Core Features</a>
+        <a href="howtousevusicplayer.html" class="hover:text-sky-400 transition-colors">User Guide</a>
+        <a href="validtimestamps.html" class="text-sky-400 font-semibold transition-colors">Timestamp Formats</a>
+        <a href="donate.html" class="hover:text-sky-400 transition-colors">Donate</a>
+        <a href="https://github.com/OceanCyanTech/Vusic-Player" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors">GitHub</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5 text-xs sm:text-sm font-medium">
+        <a href="howtousevusicplayer.html" class="md:hidden text-slate-300 hover:text-sky-400 transition-colors">
+          Guide
+        </a>
+        <a href="donate.html" class="group btn-interactive bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 px-3.5 py-1.5 rounded-lg inline-flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-sky-400 group-hover:scale-125 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <span>Donate</span>
+        </a>
+        <a href="feedback.html" class="btn-interactive bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-1.5 rounded-lg">
+          Feedback
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 relative overflow-hidden">
+    <div class="ambient-glow pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[560px] h-[260px] bg-sky-500/10 blur-3xl rounded-full"></div>
+
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-8 relative">
+
+      <!-- Page Title & Breadcrumb -->
+      <div class="stagger-1 flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-800 pb-6">
+        <div>
+          <span class="text-sky-400 text-xs font-bold uppercase tracking-wider">Developer &amp; UI Reference</span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight mt-1">
+            Custom Timestamp Formats
+          </h1>
+          <p class="text-slate-400 text-xs sm:text-sm mt-1.5">
+            Validate and preview custom .NET <code class="text-sky-300 bg-slate-800/80 px-1.5 py-0.5 rounded">TimeSpan</code> and <code class="text-sky-300 bg-slate-800/80 px-1.5 py-0.5 rounded">DateTime</code> format strings for the player timecode display.
+          </p>
+        </div>
+        <a href="howtousevusicplayer.html" class="btn-interactive inline-flex items-center gap-1.5 text-xs font-medium text-slate-300 hover:text-sky-400 bg-slate-800/80 border border-slate-700/80 px-3 py-1.5 rounded-lg shrink-0 w-fit">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span>Back to Guide</span>
+        </a>
       </div>
 
-      <div class="flex items-center justify-between text-xs px-1">
-        <span id="statusText" class="text-emerald-400">Valid format</span>
-        <span class="font-mono text-zinc-400">Preview: <strong id="livePreview" class="text-zinc-200 font-normal">01:23:45.678</strong></span>
-      </div>
-    </section>
+      <!-- Format Tester Card -->
+      <section class="stagger-2 surface-card bg-slate-800/60 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-lg space-y-4">
+        <div class="flex items-center justify-between">
+          <label for="formatInput" class="text-xs font-semibold uppercase tracking-wider text-slate-300">
+            Test Format String
+          </label>
+          <span id="modeLabel" class="text-xs font-mono font-semibold text-sky-400 bg-sky-500/10 border border-sky-500/25 px-2.5 py-0.5 rounded-full">
+            TimeSpan
+          </span>
+        </div>
 
-    <!-- Rules -->
-    <section class="space-y-4 text-sm text-zinc-400 leading-relaxed border-t border-zinc-800/80 pt-8">
-      <div>
-        <h2 class="text-zinc-100 font-medium mb-1">Playback Duration (<code class="text-xs text-zinc-300">TimeSpan</code>)</h2>
-        <p>Used when no date tokens (<code class="text-zinc-300">dd</code>, <code class="text-zinc-300">MM</code>, <code class="text-zinc-300">yy</code>) are present. Literal separators must be escaped with a backslash (<code class="text-zinc-300">\:</code> and <code class="text-zinc-300">\.</code>).</p>
-      </div>
-      <div>
-        <h2 class="text-zinc-100 font-medium mb-1">Date &amp; System Clock (<code class="text-xs text-zinc-300">DateTime</code>)</h2>
-        <p>Triggered automatically when <code class="text-zinc-300">dd</code>, <code class="text-zinc-300">MM</code>, or <code class="text-zinc-300">yy</code> is included. Backslashes are not needed. Use <code class="text-zinc-300">MM</code> for month and <code class="text-zinc-300">mm</code> for minutes.</p>
-      </div>
-    </section>
+        <div class="flex gap-2.5">
+          <input 
+            type="text" 
+            id="formatInput" 
+            value="hh\:mm\:ss\.fff" 
+            spellcheck="false"
+            class="flex-1 bg-slate-950/90 border border-slate-700 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 focus:outline-none rounded-xl px-4 py-2.5 font-mono text-sm text-sky-400 transition-all"
+          />
+          <button 
+            type="button" 
+            id="copyBtn" 
+            class="btn-interactive bg-slate-800 hover:bg-slate-700 hover:border-sky-500/40 text-slate-200 text-xs font-semibold px-4 py-2.5 rounded-xl border border-slate-700 shrink-0"
+          >
+            Copy
+          </button>
+        </div>
 
-    <!-- Presets -->
-    <section class="border-t border-zinc-800/80 pt-8">
-      <h2 class="text-xs font-medium uppercase tracking-wider text-zinc-500 mb-3">Examples (click to load)</h2>
-      <div class="divide-y divide-zinc-800/80 border border-zinc-800 rounded-lg bg-zinc-900/40 text-xs">
-        <button type="button" data-fmt="hh\:mm\:ss\.fff" class="preset w-full flex items-center justify-between px-4 py-2.5 hover:bg-zinc-900 text-left">
-          <code class="text-sky-400">hh\:mm\:ss\.fff</code>
-          <span class="text-zinc-500">01:23:45.678</span>
-        </button>
-        <button type="button" data-fmt="hh\:mm\:ss" class="preset w-full flex items-center justify-between px-4 py-2.5 hover:bg-zinc-900 text-left">
-          <code class="text-sky-400">hh\:mm\:ss</code>
-          <span class="text-zinc-500">01:23:45</span>
-        </button>
-        <button type="button" data-fmt="mm\:ss\.f" class="preset w-full flex items-center justify-between px-4 py-2.5 hover:bg-zinc-900 text-left">
-          <code class="text-sky-400">mm\:ss\.f</code>
-          <span class="text-zinc-500">23:45.6</span>
-        </button>
-        <button type="button" data-fmt="dd-MM-yyyy HH:mm:ss" class="preset w-full flex items-center justify-between px-4 py-2.5 hover:bg-zinc-900 text-left">
-          <code class="text-sky-400">dd-MM-yyyy HH:mm:ss</code>
-          <span class="text-zinc-500">12-11-2026 15:30:45</span>
-        </button>
-        <button type="button" data-fmt="yyyy-MM-dd HH:mm:ss.fff" class="preset w-full flex items-center justify-between px-4 py-2.5 hover:bg-zinc-900 text-left">
-          <code class="text-sky-400">yyyy-MM-dd HH:mm:ss.fff</code>
-          <span class="text-zinc-500">2026-11-12 15:30:45.678</span>
-        </button>
-      </div>
-    </section>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs bg-slate-900/70 border border-slate-800 rounded-xl px-4 py-2.5">
+          <div class="flex items-center gap-2">
+            <span id="statusDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span id="statusText" class="text-emerald-400 font-medium">Valid format</span>
+          </div>
+          <span class="font-mono text-slate-400">
+            Preview: <strong id="livePreview" class="text-slate-100 font-semibold">01:23:45.678</strong>
+          </span>
+        </div>
+      </section>
 
-    <!-- Footer -->
-    <footer class="border-t border-zinc-800/80 pt-6 flex items-center justify-between text-xs text-zinc-500">
-      <span>&copy; 2026 OceanCyan Tech</span>
-      <a href="feedback.html" class="hover:text-zinc-300">Report an issue</a>
-    </footer>
+      <!-- Syntax Rules Grid -->
+      <section class="stagger-3 grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="surface-card bg-slate-800/50 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-md space-y-2">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 class="text-sm font-bold text-slate-100">
+              Playback Duration (<code class="text-xs text-sky-400 font-mono">TimeSpan</code>)
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed pt-1">
+            Used when no date tokens (<code class="text-slate-200 bg-slate-900 px-1 py-0.5 rounded">dd</code>, <code class="text-slate-200 bg-slate-900 px-1 py-0.5 rounded">MM</code>, <code class="text-slate-200 bg-slate-900 px-1 py-0.5 rounded">yy</code>) are present. Literal separators must be escaped with a backslash (<code class="text-sky-300 bg-slate-900 px-1 py-0.5 rounded">\:</code> and <code class="text-sky-300 bg-slate-900 px-1 py-0.5 rounded">\.</code>).
+          </p>
+        </div>
 
+        <div class="surface-card bg-slate-800/50 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-md space-y-2">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h2 class="text-sm font-bold text-slate-100">
+              Date &amp; System Clock (<code class="text-xs text-sky-400 font-mono">DateTime</code>)
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed pt-1">
+            Triggered automatically when <code class="text-slate-200 bg-slate-900 px-1 py-0.5 rounded">dd</code>, <code class="text-slate-200 bg-slate-900 px-1 py-0.5 rounded">MM</code>, or <code class="text-slate-200 bg-slate-900 px-1 py-0.5 rounded">yy</code> is included. Backslashes are not needed. Use <code class="text-sky-300 bg-slate-900 px-1 py-0.5 rounded">MM</code> for month and <code class="text-sky-300 bg-slate-900 px-1 py-0.5 rounded">mm</code> for minutes.
+          </p>
+        </div>
+      </section>
+
+      <!-- Presets Table -->
+      <section class="stagger-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-sky-400">Presets &amp; Examples</h2>
+          <span class="text-xs text-slate-400">Click any row to load into tester</span>
+        </div>
+
+        <div class="surface-card divide-y divide-slate-700/70 border border-slate-700/80 rounded-2xl bg-slate-800/50 overflow-hidden shadow-lg text-xs sm:text-sm">
+          <button type="button" data-fmt="hh\:mm\:ss\.fff" class="preset w-full flex items-center justify-between px-4 sm:px-5 py-3 hover:bg-slate-800/90 text-left group">
+            <code class="font-mono text-sky-400 group-hover:text-sky-300">hh\:mm\:ss\.fff</code>
+            <span class="font-mono text-slate-400 group-hover:text-slate-200 transition-colors">01:23:45.678</span>
+          </button>
+          <button type="button" data-fmt="hh\:mm\:ss" class="preset w-full flex items-center justify-between px-4 sm:px-5 py-3 hover:bg-slate-800/90 text-left group">
+            <code class="font-mono text-sky-400 group-hover:text-sky-300">hh\:mm\:ss</code>
+            <span class="font-mono text-slate-400 group-hover:text-slate-200 transition-colors">01:23:45</span>
+          </button>
+          <button type="button" data-fmt="mm\:ss\.f" class="preset w-full flex items-center justify-between px-4 sm:px-5 py-3 hover:bg-slate-800/90 text-left group">
+            <code class="font-mono text-sky-400 group-hover:text-sky-300">mm\:ss\.f</code>
+            <span class="font-mono text-slate-400 group-hover:text-slate-200 transition-colors">23:45.6</span>
+          </button>
+          <button type="button" data-fmt="dd-MM-yyyy HH:mm:ss" class="preset w-full flex items-center justify-between px-4 sm:px-5 py-3 hover:bg-slate-800/90 text-left group">
+            <code class="font-mono text-sky-400 group-hover:text-sky-300">dd-MM-yyyy HH:mm:ss</code>
+            <span class="font-mono text-slate-400 group-hover:text-slate-200 transition-colors">12-11-2026 15:30:45</span>
+          </button>
+          <button type="button" data-fmt="yyyy-MM-dd HH:mm:ss.fff" class="preset w-full flex items-center justify-between px-4 sm:px-5 py-3 hover:bg-slate-800/90 text-left group">
+            <code class="font-mono text-sky-400 group-hover:text-sky-300">yyyy-MM-dd HH:mm:ss.fff</code>
+            <span class="font-mono text-slate-400 group-hover:text-slate-200 transition-colors">2026-11-12 15:30:45.678</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
   </main>
+
+  <!-- Footer (Matches Landing Page) -->
+  <footer class="border-t border-slate-800/90 py-8 px-4 mt-auto">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+      <div class="flex items-center gap-2.5 group">
+        <img 
+          src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/OceanCyan%20Logo.png" 
+          alt="OceanCyan Tech Logo" 
+          class="h-6 w-auto object-contain drop-shadow group-hover:scale-105 transition-transform"
+          onerror="this.style.display='none'"
+        />
+        <span class="font-medium">&copy; 2026 OceanCyan Tech. All rights reserved.</span>
+      </div>
+
+      <div class="flex items-center gap-5">
+        <a href="howtousevusicplayer.html" class="hover:text-sky-400 transition-colors">User Guide</a>
+        <a href="validtimestamps.html" class="text-sky-400 font-medium transition-colors">Timestamp Formats</a>
+        <a href="donate.html" class="hover:text-sky-400 transition-colors">Donate</a>
+        <a href="feedback.html" class="hover:text-sky-400 transition-colors">Feedback</a>
+        <a href="ms-windows-store://review/?ProductId=9MST111CFJPD" class="hover:text-sky-400 transition-colors">Rate App</a>
+      </div>
+    </div>
+  </footer>
 
   <script>
     const formatInput = document.getElementById('formatInput');
     const copyBtn = document.getElementById('copyBtn');
     const modeLabel = document.getElementById('modeLabel');
+    const statusDot = document.getElementById('statusDot');
     const statusText = document.getElementById('statusText');
     const livePreview = document.getElementById('livePreview');
 
@@ -179,13 +385,15 @@
     }
 
     function showValid(preview) {
-      statusText.className = 'text-emerald-400';
+      statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+      statusText.className = 'text-emerald-400 font-medium';
       statusText.textContent = 'Valid format';
       livePreview.textContent = preview;
     }
 
     function showError(msg) {
-      statusText.className = 'text-rose-400';
+      statusDot.className = 'w-2 h-2 rounded-full bg-rose-400 animate-pulse';
+      statusText.className = 'text-rose-400 font-medium';
       statusText.textContent = msg;
       livePreview.textContent = '—';
     }
@@ -194,16 +402,30 @@
 
     copyBtn.addEventListener('click', async () => {
       await navigator.clipboard.writeText(formatInput.value);
-      copyBtn.textContent = 'Copied';
-      setTimeout(() => (copyBtn.textContent = 'Copy'), 1200);
+      copyBtn.textContent = 'Copied!';
+      copyBtn.classList.add('text-sky-400', 'border-sky-500/50');
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy';
+        copyBtn.classList.remove('text-sky-400', 'border-sky-500/50');
+      }, 1200);
     });
 
     document.querySelectorAll('.preset').forEach(btn => {
       btn.addEventListener('click', () => {
         formatInput.value = btn.dataset.fmt;
         validate(formatInput.value);
+        formatInput.focus();
       });
     });
+
+    // Top scroll progress bar
+    const progressBar = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = `${progress}%`;
+    }, { passive: true });
 
     validate(formatInput.value);
   </script>
