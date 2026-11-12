@@ -1,1 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Use Vusic Player — User Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500/30 selection:text-sky-200">
 
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-30 bg-slate-900/85 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="https://github.com/OceanCyanTech/Vusic-Player" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 group">
+        <img 
+          src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/appicon.png" 
+          alt="Vusic Player Logo" 
+          class="w-9 h-9 object-contain drop-shadow group-hover:scale-105 transition-transform"
+          onerror="this.style.display='none'"
+        />
+        <div>
+          <span class="font-bold text-lg text-slate-100 tracking-tight">Vusic Player</span>
+          <span class="hidden sm:inline-block ml-2 text-xs font-medium text-sky-400 bg-sky-500/10 border border-sky-500/25 px-2 py-0.5 rounded-full">
+            Documentation
+          </span>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-4 text-xs sm:text-sm font-medium">
+        <a href="validtimestamps.html" class="text-slate-300 hover:text-sky-400 transition">
+          Timestamp Formats
+        </a>
+        <a href="https://apps.microsoft.com/detail/9MST111CFJPD" target="_blank" rel="noopener noreferrer" class="hidden sm:inline text-slate-300 hover:text-sky-400 transition">
+          Microsoft Store
+        </a>
+        <a href="feedback.html" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 px-3 py-1.5 rounded-lg transition">
+          Send Feedback
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-14">
+
+    <!-- Welcome Hero Section -->
+    <section class="bg-gradient-to-br from-slate-800/90 via-slate-800/60 to-slate-900 border border-slate-700/80 rounded-2xl p-6 sm:p-10 shadow-xl mb-12">
+      <div class="inline-flex items-center gap-2 text-xs font-semibold text-sky-400 bg-sky-500/10 border border-sky-500/25 px-3 py-1 rounded-full mb-4">
+        <span>Welcome to Vusic Player</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-100 tracking-tight mb-3">
+        Getting Started &amp; User Guide
+      </h1>
+      <p class="text-slate-300 text-base sm:text-lg max-w-3xl leading-relaxed mb-6">
+        Thank you for downloading <span class="text-sky-400 font-semibold">Vusic Player</span>! Powered by FFmpeg, SoX DSP, and XAudio2, Vusic Player is built for simultaneous multi-device audio routing, real-time audio &amp; video effects, and fast batch processing. Explore the guides below to get started.
+      </p>
+
+      <!-- Quick Jump Pills -->
+      <div class="flex flex-wrap items-center gap-2 pt-4 border-t border-slate-700/60 text-xs">
+        <span class="text-slate-400 font-medium mr-1">Jump to feature:</span>
+        <a href="#multi-device-output" class="bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 px-3 py-1.5 rounded-lg font-medium transition">
+          1. Multi-Device Output
+        </a>
+        <a href="#audio-reverb" class="bg-slate-700/70 hover:bg-sky-500/20 text-slate-200 hover:text-sky-300 border border-slate-600/70 hover:border-sky-500/40 px-3 py-1.5 rounded-lg transition">
+          2. Audio Reverb (Live &amp; Batch)
+        </a>
+        <a href="#pitch-control" class="bg-slate-700/70 hover:bg-sky-500/20 text-slate-200 hover:text-sky-300 border border-slate-600/70 hover:border-sky-500/40 px-3 py-1.5 rounded-lg transition">
+          3. Pitch Control (Audio &amp; Video)
+        </a>
+      </div>
+    </section>
+
+    <!-- Feature 1: Multi-Device Output (First Highlight) -->
+    <section id="multi-device-output" class="scroll-mt-24 space-y-8">
+      <div class="border-b border-slate-800 pb-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+          <span class="text-sky-400 text-xs font-bold uppercase tracking-wider">Featured Highlight &bull; XAudio2 Multi-Endpoint Routing</span>
+          <span class="text-xs font-medium bg-sky-500/15 text-sky-300 border border-sky-500/30 px-2.5 py-0.5 rounded-full">
+            Simultaneous Playback
+          </span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-100">
+          1. Multi-Device Audio Output
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base mt-1.5">
+          Play audio simultaneously across multiple speakers, Bluetooth headphones, and virtual audio devices at the exact same time—with independent volume control for every connected output.
+        </p>
+      </div>
+
+      <div class="bg-slate-800/70 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-lg">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Instructions Column -->
+          <div class="lg:col-span-7 space-y-5">
+            <div>
+              <span class="text-xs font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 px-2.5 py-1 rounded-md">
+                How It Works
+              </span>
+              <h3 class="text-xl font-bold text-slate-100 mt-3">
+                Stream to Multiple Audio Endpoints Simultaneously
+              </h3>
+              <p class="text-sm text-slate-400 mt-1 leading-relaxed">
+                Share music with someone on a second pair of headphones or output to both desk speakers and wireless earbuds without Windows audio switching.
+              </p>
+            </div>
+
+            <ol class="space-y-3.5 text-sm text-slate-200">
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <span>Open the <strong class="text-sky-300">Multi-Device Output</strong> panel from the player controls and toggle Multi-Device Output on.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <span>Vusic Player automatically detects all active playback endpoints (e.g., <em class="text-slate-100">Speakers</em>, <em class="text-slate-100">Bluetooth Headphones</em>, or <em class="text-slate-100">FxSound</em>) and lists them under <strong class="text-slate-100">Devices</strong>.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <span>Drag each device's individual <strong class="text-sky-300">Volume Slider</strong> (<code class="text-sky-300 bg-slate-950/70 px-1.5 py-0.5 rounded text-xs">0%–100%</code>) to balance audio levels independently per output.</span>
+              </li>
+            </ol>
+
+            <!-- Panel Controls Breakdown -->
+            <div class="bg-slate-900/70 border border-slate-700/70 rounded-xl p-4 space-y-2.5 text-xs text-slate-300">
+              <div class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-1.5 shrink-0"></span>
+                <span><strong class="text-slate-100">Refresh &amp; Search Devices:</strong> Plugged in a new headset mid-song? Click the <em>Refresh</em> icon next to <strong>Devices</strong> to re-scan endpoints, or use the <em>Search</em> icon to filter long device lists.</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-1.5 shrink-0"></span>
+                <span><strong class="text-slate-100">List Mode View:</strong> Toggle <strong class="text-sky-300">List Mode</strong> at the top of the panel for a compact view when managing multiple connected outputs.</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-1.5 shrink-0"></span>
+                <span><strong class="text-slate-100">Hot-Swap Safe:</strong> If a Bluetooth device disconnects during playback, Vusic Player automatically detaches that endpoint while keeping audio playing smoothly on your remaining devices.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screenshot Column -->
+          <div class="lg:col-span-5 flex flex-col items-center">
+            <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-700/80 shadow-2xl">
+              <img 
+                src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/docs/Assets/multidevice.png" 
+                alt="Multi-Device Output panel showing multiple connected audio devices with independent volume sliders" 
+                class="rounded-xl w-full max-w-[300px] sm:max-w-[320px] h-auto object-contain"
+              />
+            </div>
+            <span class="text-xs text-slate-400 mt-2.5 text-center">
+              Multi-Device Output routing audio to 3 devices simultaneously
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 2: Audio Reverb -->
+    <section id="audio-reverb" class="scroll-mt-24 space-y-8 mt-16">
+      <div class="border-b border-slate-800 pb-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+          <span class="text-sky-400 text-xs font-bold uppercase tracking-wider">Audio DSP Effects</span>
+          <span class="text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
+            Audio Files Only (As of Now)
+          </span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-100">
+          2. Using Audio Reverb
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base mt-1.5">
+          Add spacious room acoustics, hall ambience, or cathedral depth to your audio tracks—either live while a song is playing or across an entire folder of audio files at once.
+        </p>
+      </div>
+
+      <!-- Part A: Single Track / Live Playback Reverb -->
+      <div class="bg-slate-800/70 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-lg">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Instructions Column -->
+          <div class="lg:col-span-7 space-y-5">
+            <div>
+              <span class="text-xs font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 px-2.5 py-1 rounded-md">
+                Method 1 &bull; Now Playing
+              </span>
+              <h3 class="text-xl font-bold text-slate-100 mt-3">
+                Apply Reverb While Audio is Playing
+              </h3>
+              <p class="text-sm text-slate-400 mt-1 leading-relaxed">
+                Preview and apply reverb directly to your active audio track from the player controls without leaving your library.
+              </p>
+            </div>
+
+            <ol class="space-y-3.5 text-sm text-slate-200">
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <span>Start playing any audio track and open the <strong class="text-sky-300">Audio Reverb</strong> panel from the player toolbar.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <span>Choose an acoustic preset under <strong class="text-slate-100">Style</strong> (such as <em class="text-sky-300">Cathedral (Recommended)</em>) and click <strong class="text-sky-300">Apply Reverb</strong>.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <span>Check <strong class="text-slate-100">Show More Options</strong> to fine-tune individual acoustic parameters or switch output modes:</span>
+              </li>
+            </ol>
+
+            <!-- Parameter Breakdown Box -->
+            <div class="bg-slate-900/70 border border-slate-700/70 rounded-xl p-4 space-y-2.5 text-xs text-slate-300">
+              <div class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-1.5 shrink-0"></span>
+                <span><strong class="text-slate-100">Output Mode (Memory Stream vs. Export to File):</strong> Stream the reverb effect instantaneously in memory without creating extra files, or enable <em>Export to File</em> to save a processed copy to disk.</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-1.5 shrink-0"></span>
+                <span><strong class="text-slate-100">Acoustic Sliders:</strong> Customize <em>Reverberance %</em>, <em>HF Damping %</em>, <em>Room Scale %</em>, and <em>Stereo Depth %</em> to dial in your exact sound.</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0"></span>
+                <span><strong class="text-amber-300">Supported Media:</strong> Audio Reverb is currently supported exclusively for audio files.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screenshot Column (375x617 Portrait Panel) -->
+          <div class="lg:col-span-5 flex flex-col items-center">
+            <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-700/80 shadow-2xl">
+              <img 
+                src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/docs/Assets/audioreverb.png" 
+                alt="Audio Reverb panel showing Cathedral style preset, Memory Stream output, and acoustic sliders" 
+                width="375"
+                height="617"
+                class="rounded-xl w-full max-w-[300px] sm:max-w-[320px] h-auto object-contain"
+              />
+            </div>
+            <span class="text-xs text-slate-400 mt-2.5 text-center">
+              Live Audio Reverb panel with expanded acoustic controls
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Part B: Batch / Multiple Files Reverb -->
+      <div class="bg-slate-800/70 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-lg space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <span class="text-xs font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 px-2.5 py-1 rounded-md">
+              Method 2 &bull; Batch Processing
+            </span>
+            <h3 class="text-xl font-bold text-slate-100 mt-3">
+              Apply Reverb to Multiple Audio Files at Once
+            </h3>
+            <p class="text-sm text-slate-400 mt-1 leading-relaxed">
+              Need to convert an entire playlist or album? Click <strong class="text-sky-300">Apply Reverb to Multiple Files</strong> inside the Audio Reverb panel to open the dedicated batch processor.
+            </p>
+          </div>
+        </div>
+
+        <!-- Wide Screenshot Showcase -->
+        <div class="bg-slate-950/80 p-3 sm:p-4 rounded-2xl border border-slate-700/80 shadow-2xl">
+          <img 
+            src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/docs/Assets/audioreverbmultiplefiles.png" 
+            alt="Batch Audio Reverb workspace showing Add Audio Files, Reverb Options, and Export Directory settings" 
+            class="rounded-xl w-full h-auto object-contain"
+          />
+        </div>
+
+        <!-- Step-by-Step Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+          <div class="bg-slate-900/65 border border-slate-700/70 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center">1</span>
+              <h4 class="font-semibold text-sm text-slate-100">Add Your Tracks</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Click <strong class="text-sky-300">+ Add Audio Files</strong> to queue one or multiple songs. Vusic Player processes all added files in parallel across your CPU cores for fast conversion.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/65 border border-slate-700/70 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center">2</span>
+              <h4 class="font-semibold text-sm text-slate-100">Configure Reverb Options</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Select a <strong class="text-slate-100">Style</strong> preset or customize <em>Reverberance %</em>, <em>HF Damping %</em>, <em>Room Scale %</em>, <em>Stereo Depth %</em>, <em>Pre-Delay (ms)</em>, and <em>Wet Gain (dB)</em>.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/65 border border-slate-700/70 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center">3</span>
+              <h4 class="font-semibold text-sm text-slate-100">Choose Output &amp; Apply</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Save all tracks to your <strong class="text-slate-100">Default Music Folder</strong>, pick a shared export folder, or check <strong class="text-slate-100">Custom Directories for individual audio files</strong>, then click <strong class="text-sky-300">Apply Reverb</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 3: Pitch Control -->
+    <section id="pitch-control" class="scroll-mt-24 space-y-8 mt-16">
+      <div class="border-b border-slate-800 pb-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+          <span class="text-sky-400 text-xs font-bold uppercase tracking-wider">Real-Time &amp; Batch Pitch Shifting</span>
+          <span class="text-xs font-medium bg-sky-500/15 text-sky-300 border border-sky-500/30 px-2.5 py-0.5 rounded-full">
+            Live: Audio &amp; Video &bull; Batch: Audio Only
+          </span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-100">
+          3. Using Pitch Control
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base mt-1.5">
+          Shift playback pitch smoothly in real time while watching videos or listening to music, or batch-export pitch-shifted audio tracks using Rubberband DSP.
+        </p>
+      </div>
+
+      <!-- Part A: Live Playback Pitch (Audio & Video) -->
+      <div class="bg-slate-800/70 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-lg">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Instructions Column -->
+          <div class="lg:col-span-7 space-y-5">
+            <div>
+              <span class="text-xs font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 px-2.5 py-1 rounded-md">
+                Method 1 &bull; Live Audio &amp; Video Playback
+              </span>
+              <h3 class="text-xl font-bold text-slate-100 mt-3">
+                Adjust Pitch While Audio or Video is Playing
+              </h3>
+              <p class="text-sm text-slate-400 mt-1 leading-relaxed">
+                Fine-tune the key or tone of any playing song or video on the fly without altering playback speed.
+              </p>
+            </div>
+
+            <ol class="space-y-3.5 text-sm text-slate-200">
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <span>Start playing any <strong class="text-slate-100">audio</strong> or <strong class="text-slate-100">video</strong> file and open the <strong class="text-sky-300">Pitch Control</strong> popup from the player controls.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <span>Drag the <strong class="text-slate-100">Audio Pitch</strong> slider left or right to raise or lower the pitch instantaneously (default value is <code class="text-sky-300 bg-slate-950/70 px-1.5 py-0.5 rounded text-xs">1</code>).</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <span>Click <strong class="text-slate-100">Reset</strong> at any moment to snap back to the original pitch (<code class="text-sky-300 bg-slate-950/70 px-1.5 py-0.5 rounded text-xs">1</code>).</span>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Screenshot Column -->
+          <div class="lg:col-span-5 flex flex-col items-center">
+            <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-700/80 shadow-2xl">
+              <img 
+                src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/docs/Assets/pitch.png" 
+                alt="Pitch Control popup showing Audio Pitch slider, Reset button, and Apply Pitch To Multiple Audio Files button" 
+                class="rounded-xl w-full max-w-[300px] sm:max-w-[320px] h-auto object-contain"
+              />
+            </div>
+            <span class="text-xs text-slate-400 mt-2.5 text-center">
+              Live Pitch Control popup (works for both audio and video)
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Part B: Batch / Multiple Audio Files Pitch -->
+      <div class="bg-slate-800/70 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-lg space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 px-2.5 py-1 rounded-md">
+                Method 2 &bull; Batch Processing
+              </span>
+              <span class="text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30 px-2.5 py-0.5 rounded-md">
+                Audio Files Only
+              </span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-100 mt-3">
+              Apply Pitch Change to Multiple Audio Files at Once
+            </h3>
+            <p class="text-sm text-slate-400 mt-1 leading-relaxed">
+              Click <strong class="text-sky-300">Apply Pitch To Multiple Audio Files</strong> inside the Pitch Control popup to batch-export pitch-shifted audio tracks. <em>(Note: Multi-file batch pitch processing is available for audio files only.)</em>
+            </p>
+          </div>
+        </div>
+
+        <!-- Wide Screenshot Showcase -->
+        <div class="bg-slate-950/80 p-3 sm:p-4 rounded-2xl border border-slate-700/80 shadow-2xl">
+          <img 
+            src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/docs/Assets/pitchmultiple.jpg" 
+            alt="Batch Audio Pitch workspace showing Pitch Shift, Semitones Shift, Octaves Shift, and Export Directory settings" 
+            class="rounded-xl w-full h-auto object-contain"
+          />
+        </div>
+
+        <!-- Step-by-Step Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+          <div class="bg-slate-900/65 border border-slate-700/70 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center">1</span>
+              <h4 class="font-semibold text-sm text-slate-100">Add Audio Files</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Click <strong class="text-sky-300">+ Add Audio Files</strong> to queue one or more songs for parallel multi-core pitch shifting.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/65 border border-slate-700/70 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center">2</span>
+              <h4 class="font-semibold text-sm text-slate-100">Set Pitch, Semitones, or Octaves</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Enter your desired shift in <strong class="text-slate-100">Pitch Shift</strong> (ratio), <strong class="text-slate-100">Semitones Shift</strong>, or <strong class="text-slate-100">Octaves Shift</strong>—all three fields automatically stay in sync.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/65 border border-slate-700/70 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs flex items-center justify-center">3</span>
+              <h4 class="font-semibold text-sm text-slate-100">Export Processed Tracks</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Choose your <strong class="text-slate-100">Export Directory</strong> (or check <em>Custom Directories for individual audio files</em>) and click <strong class="text-sky-300">Apply Pitch Change</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom Help / Feedback Banner -->
+    <section class="mt-14 bg-slate-800/60 border border-slate-700/80 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h3 class="text-base font-bold text-slate-100">Have a question or feature request?</h3>
+        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">
+          Let us know how we can make Vusic Player even better for your workflow.
+        </p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="feedback.html" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition shadow-md">
+          Send Feedback
+        </a>
+        <a href="ms-windows-store://review/?ProductId=9MST111CFJPD" class="bg-slate-700 hover:bg-slate-600 text-slate-100 font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition">
+          Rate on Store
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/90 py-8 px-4 text-center">
+    <div class="flex items-center justify-center gap-2.5 text-xs text-slate-400">
+      <img 
+        src="https://raw.githubusercontent.com/OceanCyanTech/Vusic-Player/refs/heads/master/Vusic%20Player/Assets/OceanCyan%20Logo.png" 
+        alt="OceanCyan Tech Logo" 
+        class="h-6 w-auto object-contain drop-shadow"
+        onerror="this.style.display='none'"
+      />
+      <span class="font-medium">&copy; 2026 OceanCyan Tech. All rights reserved.</span>
+    </div>
+  </footer>
+
+</body>
+</html>
