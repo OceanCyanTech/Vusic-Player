@@ -32,7 +32,6 @@ namespace Vusic_Player.Configuration.Helper
         public static string HighlightErrorTitle = "";
         private static void ReopenPlayer()
         {
-            Debug.WriteLine("EVERY NIGHT");
             if (HaveToReopen == false) return;
             if (PlayerService.Masterplayer == null) return;
             if (PlayerService.Masterplayer.IsPlaying && PlayerService.CurrentPlayingPath != null)
@@ -42,7 +41,6 @@ namespace Vusic_Player.Configuration.Helper
         }
         public static bool SetFileInfo(string FilePath)
         {
-            Debug.WriteLine("NANA");
             if (File.Exists(FilePath))
             {
                 var filename = Path.GetFileNameWithoutExtension(FilePath);
@@ -781,7 +779,6 @@ namespace Vusic_Player.Configuration.Helper
             _isClosing = true;
             try
             {
-                Debug.WriteLine("DFUCKE");
                 SetFileInfo(filepathmaster);
 
             }

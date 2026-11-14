@@ -1,4 +1,4 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 091126) . All Rights Reserved.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 
 using CommunityToolkit.WinUI.Helpers;
@@ -19,6 +19,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.Configuration.Vusic_API_CORE;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views.Onboarding;
 using Vusic_Player.UI;
@@ -321,6 +322,15 @@ namespace Vusic_Player
         }
         public async void ShowFileInfo(string filepath)
         {
+            var metadata = VusicAPIMediaProperties.GetFileInfo(filepath);
+            txtInfo.Text = "TITLE: " + metadata.Title;
+            txtInfo.Text += Environment.NewLine + "Artist: " + metadata.Artist;
+            txtInfo.Text += Environment.NewLine + "Album: " + metadata.Album;
+            txtInfo.Text += Environment.NewLine + "Duration: " + metadata.DurationString;
+            Debug.WriteLine("----MEDIA METADATA-------");
+            Debug.WriteLine("TITLE: " + metadata.Title);
+            Debug.WriteLine("ARTIST: " + metadata.Artist);
+            Debug.WriteLine("ALBUM: " + metadata.Album);
             FileInfo.GetFileInfo(filepath, rootGrid.XamlRoot);
         }
         private void RootGrid_Loaded(object sender, RoutedEventArgs e)

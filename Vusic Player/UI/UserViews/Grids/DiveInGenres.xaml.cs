@@ -1,4 +1,4 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 091126) . All Rights Reserved.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 
 using Microsoft.UI.Xaml;
@@ -19,11 +19,11 @@ using Windows.Storage;
 namespace Vusic_Player.UI.UserViews.Grids
 {
     /*  OCEANCYAN TECH HEADER
- VUSIC PLAYER - VERSION v1.0.0.0
+ VUSIC PLAYER - VERSION v1.0.7.0
 © OCEANCYAN TECH 2026
 
 USERCONTROL - DIVEINGENRES
-BUILD 091126
+BUILD 131126
  */
     public sealed partial class DiveInGenres : UserControl
     {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 091126) . All Rights Reserved.\nLicensed under the MIT License. See LICENSE in the project root.-->
+<!--Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 131126) . All Rights Reserved.\nLicensed under the MIT License. See LICENSE in the project root.-->
 <Page
     x:Class="Vusic_Player.Pages.Views.HomeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

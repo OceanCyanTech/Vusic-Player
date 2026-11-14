@@ -69,7 +69,7 @@ namespace Vusic_Player.Configuration.ClassModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         [JsonIgnore]
-        private BitmapImage _thumbnail = new();
+        private BitmapImage? _thumbnail;
 
         public BitmapImage Thumbnail
         {

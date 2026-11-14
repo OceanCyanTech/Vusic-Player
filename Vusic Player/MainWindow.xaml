@@ -12,6 +12,8 @@
   
     <Grid Name="rootGrid">
         <Frame Name="frmMain"></Frame>
-
+        <TeachingTip IsOpen="True" Name="ttInfo">
+            <TextBlock Name="txtInfo"/>
+        </TeachingTip>
     </Grid>
 </Window>

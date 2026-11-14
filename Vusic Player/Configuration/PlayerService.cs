@@ -1,4 +1,4 @@
-﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 091126) . All Rights Reserved.
+﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 131126) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 
 using FlyleafLib;
@@ -44,7 +44,7 @@ namespace Vusic_Player.Configuration
         public static string currentvol = "0";
 
         public static DispatcherTimer? maintimer { get; set; }
-        public static FileStream? filestreamcurrent;
+        public static System.IO.Stream? filestreamcurrent;
         public static string CurrentPlayingPath { get; set; } = "";
 
         public static event Action? ErrorCalled;
@@ -232,33 +232,59 @@ namespace Vusic_Player.Configuration
                     Masterplayer = new Player();
                 }
                 CurrentPlayingPath = fiPath;
-                FileAttributes originalAttributes = File.GetAttributes(fiPath);
-                bool wasHidden = originalAttributes.HasFlag(FileAttributes.Hidden);
+				//FileAttributes originalAttributes = File.GetAttributes(fiPath);
+				//bool wasHidden = originalAttributes.HasFlag(FileAttributes.Hidden);
 
-                try
-                {
-                    if (wasHidden)
-                    {
-                        // Temporarily strip the Hidden flag so FFmpeg can open the handle
-                        File.SetAttributes(fiPath, originalAttributes & ~FileAttributes.Hidden);
-                    }
+				//try
+				//{
+				//    if (wasHidden)
+				//    {
+				//        // Temporarily strip the Hidden flag so FFmpeg can open the handle
+				//        File.SetAttributes(fiPath, originalAttributes & ~FileAttributes.Hidden);
+				//    }
 
-                    Masterplayer.Open(fiPath);
-                }
-                finally
-                {
-                    if (wasHidden)
-                    {
-                        // Re-apply the Hidden flag immediately after Flyleaf grabs the file handle
-                        File.SetAttributes(fiPath, originalAttributes);
-                    }
-                }
+				//    Masterplayer.Open(fiPath);
+				//}
+				//finally
+				//{
+				//    if (wasHidden)
+				//    {
+				//        // Re-apply the Hidden flag immediately after Flyleaf grabs the file handle
+				//        File.SetAttributes(fiPath, originalAttributes);
+				//    }
+				//}
 
-                // Open directly by path (recommended for Flyleaf)
+				FileAttributes originalAttributes = File.GetAttributes(fiPath);
+				bool wasHidden = originalAttributes.HasFlag(FileAttributes.Hidden);
 
+				try
+				{
+					if (wasHidden)
+					{
+						// Temporarily strip the Hidden flag so StorageFile, TagLib, and the stream open cleanly
+						File.SetAttributes(fiPath, originalAttributes & ~FileAttributes.Hidden);
+					}
 
+					filestreamcurrent?.Dispose();
+					filestreamcurrent = new FileStream(
+						fiPath,
+						FileMode.Open,
+						FileAccess.Read,
+						FileShare.ReadWrite | FileShare.Delete,
+						bufferSize: 65536,
+						useAsync: false);
 
-                QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
+					Masterplayer.Open(filestreamcurrent);
+				}
+				finally
+				{
+					if (wasHidden)
+					{
+						// Re-apply the Hidden flag
+						File.SetAttributes(fiPath, originalAttributes);
+					}
+				}
+				QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
 
                 QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
 

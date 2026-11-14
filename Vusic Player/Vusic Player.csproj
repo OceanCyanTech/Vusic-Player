@@ -1,851 +1,877 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-	  <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <RootNamespace>Vusic_Player</RootNamespace>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>x86;x64;ARM64</Platforms>
-    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-    <PublishProfile>win-$(Platform).pubxml</PublishProfile>
-    <UseWinUI>true</UseWinUI>
-    <WinUISDKReferences>false</WinUISDKReferences>
-    <EnableMsixTooling>true</EnableMsixTooling>
-    <Nullable>enable</Nullable>
-	  <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="DummyPage.xaml" />
-    <None Remove="FFmpeg\avcodec-62.dll" />
-    <None Remove="FFmpeg\avdevice-62.dll" />
-    <None Remove="FFmpeg\avfilter-11.dll" />
-    <None Remove="FFmpeg\avformat-62.dll" />
-    <None Remove="FFmpeg\avutil-60.dll" />
-    <None Remove="FFmpeg\ffmpeg.exe" />
-    <None Remove="FFmpeg\ffplay.exe" />
-    <None Remove="FFmpeg\ffprobe.exe" />
-    <None Remove="FFmpeg\swresample-6.dll" />
-    <None Remove="FFmpeg\swscale-9.dll" />
-    <None Remove="Pages\AppLockVerify.xaml" />
-    <None Remove="Pages\MainPage.xaml" />
-    <None Remove="Pages\SplashScreen.xaml" />
-    <None Remove="Pages\VideoPlayer.xaml" />
-    <None Remove="Pages\Views\AlbumView.xaml" />
-    <None Remove="Pages\Views\ArtistView.xaml" />
-    <None Remove="Pages\Views\EntireMusicLibrary.xaml" />
-    <None Remove="Pages\Views\EntireVideoLibrary.xaml" />
-    <None Remove="Pages\Views\FavouritesView.xaml" />
-    <None Remove="Pages\Views\FolderView.xaml" />
-    <None Remove="Pages\Views\FormatConverter.xaml" />
-    <None Remove="Pages\Views\GenreView.xaml" />
-    <None Remove="Pages\Views\HomeView.xaml" />
-    <None Remove="Pages\Views\LoggerPage.xaml" />
-    <None Remove="Pages\Views\LyricViewer.xaml" />
-    <None Remove="Pages\Views\MusicLibrary.xaml" />
-    <None Remove="Pages\Views\MusicPlayerFull.xaml" />
-    <None Remove="Pages\Views\NoSearchResultsPage.xaml" />
-    <None Remove="Pages\Views\Onboarding\OptimizeApp.xaml" />
-    <None Remove="Pages\Views\PictureInPictureView.xaml" />
-    <None Remove="Pages\Views\PitchExport.xaml" />
-    <None Remove="Pages\Views\PlaylistView.xaml" />
-    <None Remove="Pages\Views\QueuePage.xaml" />
-    <None Remove="Pages\Views\ReverbExpanded.xaml" />
-    <None Remove="Pages\Views\SearchResults.xaml" />
-    <None Remove="Pages\Views\SettingsPage.xaml" />
-    <None Remove="Pages\Views\ShowModel.xaml" />
-    <None Remove="Pages\Views\VideoLibrary.xaml" />
-    <None Remove="soxReverb\libflac-8.dll" />
-    <None Remove="soxReverb\libgcc_s_sjlj-1.dll" />
-    <None Remove="soxReverb\libgomp-1.dll" />
-    <None Remove="soxReverb\libid3tag-0.dll" />
-    <None Remove="soxReverb\libogg-0.dll" />
-    <None Remove="soxReverb\libpng16-16.dll" />
-    <None Remove="soxReverb\libsox-3.dll" />
-    <None Remove="soxReverb\libssp-0.dll" />
-    <None Remove="soxReverb\libvorbis-0.dll" />
-    <None Remove="soxReverb\libvorbisenc-2.dll" />
-    <None Remove="soxReverb\libvorbisfile-3.dll" />
-    <None Remove="soxReverb\libwavpack-1.dll" />
-    <None Remove="soxReverb\libwinpthread-1.dll" />
-    <None Remove="soxReverb\sox.exe" />
-    <None Remove="soxReverb\zlib1.dll" />
-    <None Remove="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml" />
-    <None Remove="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml" />
-    <None Remove="UI\Dialogs\SubtitleEditorWindow.xaml" />
-    <None Remove="UI\Dialogs\VideoOptionsWindow.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\AudioReverb.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\MultipleOutputMixer.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioEqualizer\Equalizer.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Delay.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Device.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\General.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Pitch.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Volume.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\PlayerSettingsHost.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleCustomize\Customize.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleEditorUI.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\Delay.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\General.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\SubtitleOnlineSearch.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatio.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatioCustom.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoFilters\Filters.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\PlaybackSpeed.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\Record.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\Snapshot.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\VideoStream.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoGeneral\View.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml" />
-    <None Remove="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml" />
-    <None Remove="UI\Experience\FirstLaunchExperience.xaml" />
-    <None Remove="UI\Experience\Pages\AppLockDuringExperience.xaml" />
-    <None Remove="UI\Experience\Pages\DefaultFormats.xaml" />
-    <None Remove="UI\Experience\Pages\DesktopShortcut.xaml" />
-    <None Remove="UI\Experience\Pages\DonateToVusicPlayer.xaml" />
-    <None Remove="UI\Experience\Pages\FolderSelection.xaml" />
-    <None Remove="UI\Experience\Pages\KeyFeaturesPage.xaml" />
-    <None Remove="UI\Experience\Pages\LicenseAgreement.xaml" />
-    <None Remove="UI\Experience\Pages\OceanCyanLogoIntro.xaml" />
-    <None Remove="UI\Experience\Pages\PrivacyAgreement.xaml" />
-    <None Remove="UI\Experience\Pages\ThemeSelection.xaml" />
-    <None Remove="UI\Experience\Pages\WelcomePage.xaml" />
-    <None Remove="UI\Experience\Pages\WhatIsVusicPlayerPage.xaml" />
-    <None Remove="UI\UserViews\Authentication\AppAuthVerify.xaml" />
-    <None Remove="UI\UserViews\Controls\GridViewAllRecentVideos.xaml" />
-    <None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
-    <None Remove="UI\UserViews\Controls\GridViewRecentVideos.xaml" />
-    <None Remove="UI\UserViews\Controls\GroupedCollectionView.xaml" />
-    <None Remove="UI\UserViews\Controls\KeyboardShortcutsGuide.xaml" />
-    <None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
-    <None Remove="UI\UserViews\Controls\LyricEditorUI.xaml" />
-    <None Remove="UI\UserViews\Controls\MasterSearchControl.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanDialogControls\MassEditor.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanDialogControls\MessagePanel.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanDialogControls\NewPlaylistCreation.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanDialogControls\OnlineArtistPicture.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanDialogControls\OnlineLyrics.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanDialogControls\ShowModelCreation.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanDialogControls\WhatsNew.xaml" />
-    <None Remove="UI\UserViews\Controls\OceanSlider.xaml" />
-    <None Remove="UI\UserViews\Controls\PanelControlsAudioPlayer.xaml" />
-    <None Remove="UI\UserViews\Controls\PlaybackMainControls.xaml" />
-    <None Remove="UI\UserViews\Controls\PlayPauseControls.xaml" />
-    <None Remove="UI\UserViews\Controls\SearchControl.xaml" />
-    <None Remove="UI\UserViews\Controls\VideoControls.xaml" />
-    <None Remove="UI\UserViews\Controls\VideoLibraryControls\RecommendedVideos.xaml" />
-    <None Remove="UI\UserViews\Controls\VideoLibraryControls\UserShows.xaml" />
-    <None Remove="UI\UserViews\Controls\VolumeSlider.xaml" />
-    <None Remove="UI\UserViews\Grids\ContinuePlayingRecentsVideo.xaml" />
-    <None Remove="UI\UserViews\Grids\DiveInGenres.xaml" />
-    <None Remove="UI\UserViews\Grids\Favourites.xaml" />
-    <None Remove="UI\UserViews\Grids\InstantPlaylists.xaml" />
-    <None Remove="UI\UserViews\Grids\MusicListHome.xaml" />
-    <None Remove="UI\UserViews\Grids\RecentMusicList.xaml" />
-    <None Remove="UI\UserViews\Grids\SetAppLock.xaml" />
-    <None Remove="UI\UserViews\Grids\TopTracks.xaml" />
-    <None Remove="UI\UserViews\Grids\UserPlaylists.xaml" />
-    <None Remove="UI\UserViews\PictureInPicture.xaml" />
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<RootNamespace>Vusic_Player</RootNamespace>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<Platforms>x86;x64;ARM64</Platforms>
+		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
+		<UseWinUI>true</UseWinUI>
+		<WinUISDKReferences>false</WinUISDKReferences>
+		<EnableMsixTooling>true</EnableMsixTooling>
+		<Nullable>enable</Nullable>
+		<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="DummyPage.xaml" />
+		<None Remove="FFmpeg\avcodec-62.dll" />
+		<None Remove="FFmpeg\avcodec-63.dll" />
+		<None Remove="FFmpeg\avdevice-62.dll" />
+		<None Remove="FFmpeg\avfilter-11.dll" />
+		<None Remove="FFmpeg\avformat-62.dll" />
+		<None Remove="FFmpeg\avformat-63.dll" />
+		<None Remove="FFmpeg\avutil-60.dll" />
+		<None Remove="FFmpeg\avutil-61.dll" />
+		<None Remove="FFmpeg\ffmpeg.exe" />
+		<None Remove="FFmpeg\ffplay.exe" />
+		<None Remove="FFmpeg\ffprobe.exe" />
+		<None Remove="FFmpeg\swresample-6.dll" />
+		<None Remove="FFmpeg\swresample-7.dll" />
+		<None Remove="FFmpeg\swscale-9.dll" />
+		<None Remove="FFmpeg\vusicapi\VusicMediaProperties.dll" />
+		<None Remove="FFmpeg\VusicMediaProperties.dll" />
+		<None Remove="Pages\AppLockVerify.xaml" />
+		<None Remove="Pages\MainPage.xaml" />
+		<None Remove="Pages\SplashScreen.xaml" />
+		<None Remove="Pages\VideoPlayer.xaml" />
+		<None Remove="Pages\Views\AlbumView.xaml" />
+		<None Remove="Pages\Views\ArtistView.xaml" />
+		<None Remove="Pages\Views\EntireMusicLibrary.xaml" />
+		<None Remove="Pages\Views\EntireVideoLibrary.xaml" />
+		<None Remove="Pages\Views\FavouritesView.xaml" />
+		<None Remove="Pages\Views\FolderView.xaml" />
+		<None Remove="Pages\Views\FormatConverter.xaml" />
+		<None Remove="Pages\Views\GenreView.xaml" />
+		<None Remove="Pages\Views\HomeView.xaml" />
+		<None Remove="Pages\Views\LoggerPage.xaml" />
+		<None Remove="Pages\Views\LyricViewer.xaml" />
+		<None Remove="Pages\Views\MusicLibrary.xaml" />
+		<None Remove="Pages\Views\MusicPlayerFull.xaml" />
+		<None Remove="Pages\Views\NoSearchResultsPage.xaml" />
+		<None Remove="Pages\Views\Onboarding\OptimizeApp.xaml" />
+		<None Remove="Pages\Views\PictureInPictureView.xaml" />
+		<None Remove="Pages\Views\PitchExport.xaml" />
+		<None Remove="Pages\Views\PlaylistView.xaml" />
+		<None Remove="Pages\Views\QueuePage.xaml" />
+		<None Remove="Pages\Views\ReverbExpanded.xaml" />
+		<None Remove="Pages\Views\SearchResults.xaml" />
+		<None Remove="Pages\Views\SettingsPage.xaml" />
+		<None Remove="Pages\Views\ShowModel.xaml" />
+		<None Remove="Pages\Views\VideoLibrary.xaml" />
+		<None Remove="soxReverb\libflac-8.dll" />
+		<None Remove="soxReverb\libgcc_s_sjlj-1.dll" />
+		<None Remove="soxReverb\libgomp-1.dll" />
+		<None Remove="soxReverb\libid3tag-0.dll" />
+		<None Remove="soxReverb\libogg-0.dll" />
+		<None Remove="soxReverb\libpng16-16.dll" />
+		<None Remove="soxReverb\libsox-3.dll" />
+		<None Remove="soxReverb\libssp-0.dll" />
+		<None Remove="soxReverb\libvorbis-0.dll" />
+		<None Remove="soxReverb\libvorbisenc-2.dll" />
+		<None Remove="soxReverb\libvorbisfile-3.dll" />
+		<None Remove="soxReverb\libwavpack-1.dll" />
+		<None Remove="soxReverb\libwinpthread-1.dll" />
+		<None Remove="soxReverb\sox.exe" />
+		<None Remove="soxReverb\zlib1.dll" />
+		<None Remove="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml" />
+		<None Remove="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml" />
+		<None Remove="UI\Dialogs\SubtitleEditorWindow.xaml" />
+		<None Remove="UI\Dialogs\VideoOptionsWindow.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\AudioReverb.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\MultipleOutputMixer.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Audio\AudioEqualizer\Equalizer.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Delay.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Device.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\General.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Pitch.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Volume.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\PlayerSettingsHost.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleCustomize\Customize.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleEditorUI.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\Delay.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\General.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\SubtitleOnlineSearch.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatio.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatioCustom.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoFilters\Filters.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoGeneral\PlaybackSpeed.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoGeneral\Record.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoGeneral\Snapshot.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoGeneral\VideoStream.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoGeneral\View.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml" />
+		<None Remove="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml" />
+		<None Remove="UI\Experience\FirstLaunchExperience.xaml" />
+		<None Remove="UI\Experience\Pages\AppLockDuringExperience.xaml" />
+		<None Remove="UI\Experience\Pages\DefaultFormats.xaml" />
+		<None Remove="UI\Experience\Pages\DesktopShortcut.xaml" />
+		<None Remove="UI\Experience\Pages\DonateToVusicPlayer.xaml" />
+		<None Remove="UI\Experience\Pages\FolderSelection.xaml" />
+		<None Remove="UI\Experience\Pages\KeyFeaturesPage.xaml" />
+		<None Remove="UI\Experience\Pages\LicenseAgreement.xaml" />
+		<None Remove="UI\Experience\Pages\OceanCyanLogoIntro.xaml" />
+		<None Remove="UI\Experience\Pages\PrivacyAgreement.xaml" />
+		<None Remove="UI\Experience\Pages\ThemeSelection.xaml" />
+		<None Remove="UI\Experience\Pages\WelcomePage.xaml" />
+		<None Remove="UI\Experience\Pages\WhatIsVusicPlayerPage.xaml" />
+		<None Remove="UI\UserViews\Authentication\AppAuthVerify.xaml" />
+		<None Remove="UI\UserViews\Controls\GridViewAllRecentVideos.xaml" />
+		<None Remove="UI\UserViews\Controls\GridViewRecentMusic.xaml" />
+		<None Remove="UI\UserViews\Controls\GridViewRecentVideos.xaml" />
+		<None Remove="UI\UserViews\Controls\GroupedCollectionView.xaml" />
+		<None Remove="UI\UserViews\Controls\KeyboardShortcutsGuide.xaml" />
+		<None Remove="UI\UserViews\Controls\ListViewMedia.xaml" />
+		<None Remove="UI\UserViews\Controls\LyricEditorUI.xaml" />
+		<None Remove="UI\UserViews\Controls\MasterSearchControl.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanDialogControls\MassEditor.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanDialogControls\MessagePanel.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanDialogControls\NewPlaylistCreation.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanDialogControls\OnlineArtistPicture.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanDialogControls\OnlineLyrics.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanDialogControls\ShowModelCreation.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanDialogControls\WhatsNew.xaml" />
+		<None Remove="UI\UserViews\Controls\OceanSlider.xaml" />
+		<None Remove="UI\UserViews\Controls\PanelControlsAudioPlayer.xaml" />
+		<None Remove="UI\UserViews\Controls\PlaybackMainControls.xaml" />
+		<None Remove="UI\UserViews\Controls\PlayPauseControls.xaml" />
+		<None Remove="UI\UserViews\Controls\SearchControl.xaml" />
+		<None Remove="UI\UserViews\Controls\VideoControls.xaml" />
+		<None Remove="UI\UserViews\Controls\VideoLibraryControls\RecommendedVideos.xaml" />
+		<None Remove="UI\UserViews\Controls\VideoLibraryControls\UserShows.xaml" />
+		<None Remove="UI\UserViews\Controls\VolumeSlider.xaml" />
+		<None Remove="UI\UserViews\Grids\ContinuePlayingRecentsVideo.xaml" />
+		<None Remove="UI\UserViews\Grids\DiveInGenres.xaml" />
+		<None Remove="UI\UserViews\Grids\Favourites.xaml" />
+		<None Remove="UI\UserViews\Grids\InstantPlaylists.xaml" />
+		<None Remove="UI\UserViews\Grids\MusicListHome.xaml" />
+		<None Remove="UI\UserViews\Grids\RecentMusicList.xaml" />
+		<None Remove="UI\UserViews\Grids\SetAppLock.xaml" />
+		<None Remove="UI\UserViews\Grids\TopTracks.xaml" />
+		<None Remove="UI\UserViews\Grids\UserPlaylists.xaml" />
+		<None Remove="UI\UserViews\PictureInPicture.xaml" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="FFmpeg\avcodec-62.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FFmpeg\avdevice-62.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FFmpeg\avfilter-11.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FFmpeg\avformat-62.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FFmpeg\avutil-60.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FFmpeg\ffmpeg.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FFmpeg\ffplay.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FFmpeg\ffprobe.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FFmpeg\swresample-6.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FFmpeg\swscale-9.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libflac-8.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libgcc_s_sjlj-1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libgomp-1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libid3tag-0.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libogg-0.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libpng16-16.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libsox-3.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libssp-0.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libvorbis-0.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libvorbisenc-2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libvorbisfile-3.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libwavpack-1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\libwinpthread-1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\sox.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="soxReverb\zlib1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Assets\SplashScreen.scale-200.png" />
+		<Content Include="Assets\LockScreenLogo.scale-200.png" />
+		<Content Include="Assets\Square150x150Logo.scale-200.png" />
+		<Content Include="Assets\Square44x44Logo.scale-200.png" />
+		<Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+		<Content Include="Assets\StoreLogo.png" />
+		<Content Include="Assets\Wide310x150Logo.scale-200.png" />
+		<Content Include="FFmpeg\avcodec-62.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\avcodec-63.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\avdevice-62.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\avformat-63.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\avutil-61.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\swresample-7.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\VusicMediaProperties.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 
-  <ItemGroup>
-    <Manifest Include="$(ApplicationManifest)" />
-  </ItemGroup>
+		<Content Include="FFmpeg\avfilter-11.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\avformat-62.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\avutil-60.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\ffmpeg.exe">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\ffplay.exe">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\ffprobe.exe">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\swresample-6.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\swscale-9.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="FFmpeg\VusicMediaProperties.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libflac-8.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libgcc_s_sjlj-1.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libgomp-1.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libid3tag-0.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libogg-0.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libpng16-16.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libsox-3.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libssp-0.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libvorbis-0.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libvorbisenc-2.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libvorbisfile-3.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libwavpack-1.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\libwinpthread-1.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\sox.exe">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="soxReverb\zlib1.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <!--
+	<ItemGroup>
+		<Manifest Include="$(ApplicationManifest)" />
+	</ItemGroup>
+
+	<!--
     Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK Nuget
     package has not yet been restored.
   -->
-  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <ProjectCapability Include="Msix" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
-    <PackageReference Include="Flyleaf.FFmpeg.Bindings" Version="8.1.0" />
-    <PackageReference Include="FlyleafLib.Controls.WinUI" Version="1.3.3" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2526" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.3.1" />
-    <PackageReference Include="NAudio" Version="2.2.1" />
-    <PackageReference Include="SharpDX.XAudio2" Version="4.2.0" />
-    <PackageReference Include="TagLibSharp" Version="2.3.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Vusic Player\Flyleaf\FlyleafLib\FlyleafLib.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="Assets\audiofile.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\AppLockVerify.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\SplashScreen.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Grids\SetAppLock.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\FormatConverter.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\PitchExport.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\FavouritesView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\LyricEditorUI.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleEditorUI.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\SubtitleEditorWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\ReverbExpanded.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\MultipleOutputMixer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\MasterSearchControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\GridViewAllRecentVideos.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\GridViewRecentVideos.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\EntireVideoLibrary.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="DummyPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\GenreView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\GroupedCollectionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\LyricViewer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanDialogControls\OnlineLyrics.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\PictureInPicture.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\SearchControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\SubtitleOnlineSearch.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\Delay.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Volume.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Device.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Delay.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Pitch.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatioCustom.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\View.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\VideoStream.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\Snapshot.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\Record.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\MusicPlayerFull.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\FolderView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\NoSearchResultsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\AlbumView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\ArtistView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\VideoPlayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\PlaylistView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Grids\TopTracks.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Grids\DiveInGenres.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Grids\InstantPlaylists.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Grids\UserPlaylists.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\GridViewRecentMusic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\ShowModel.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\ListViewMedia.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanDialogControls\ShowModelCreation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanDialogControls\MassEditor.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanDialogControls\MessagePanel.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanDialogControls\OnlineArtistPicture.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanDialogControls\NewPlaylistCreation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\VideoLibraryControls\RecommendedVideos.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\VideoLibraryControls\UserShows.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Grids\Favourites.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Grids\MusicListHome.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Grids\RecentMusicList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Grids\ContinuePlayingRecentsVideo.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\PanelControlsAudioPlayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\VolumeSlider.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\SearchResults.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\LoggerPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\SettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\QueuePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\EntireMusicLibrary.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\VideoLibrary.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\MusicLibrary.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\HomeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\PlayPauseControls.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptionsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\VideoControls.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanSlider.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\PlaybackMainControls.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\PlayerSettingsHost.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoGeneral\PlaybackSpeed.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoFilters\Filters.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatio.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\General.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioEqualizer\Equalizer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\AudioReverb.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\General.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleCustomize\Customize.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\Onboarding\OptimizeApp.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Authentication\AppAuthVerify.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<ProjectCapability Include="Msix" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
+		<PackageReference Include="Flyleaf.FFmpeg.Bindings" Version="8.1.0" />
+		<PackageReference Include="FlyleafLib.Controls.WinUI" Version="1.3.3" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2526" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="2.3.1" />
+		<PackageReference Include="NAudio" Version="2.2.1" />
+		<PackageReference Include="SharpDX.XAudio2" Version="4.2.0" />
+		<PackageReference Include="TagLibSharp" Version="2.3.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Vusic Player\Flyleaf\FlyleafLib\FlyleafLib.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Update="Assets\audiofile.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\AppLockVerify.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\SplashScreen.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Grids\SetAppLock.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\FormatConverter.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\PitchExport.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\FavouritesView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\LyricEditorUI.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleEditorUI.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\SubtitleEditorWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\ReverbExpanded.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\MultipleOutputMixer.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\MasterSearchControl.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\GridViewAllRecentVideos.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\GridViewRecentVideos.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\EntireVideoLibrary.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="DummyPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\GenreView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\GroupedCollectionView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\LyricViewer.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanDialogControls\OnlineLyrics.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\PictureInPicture.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\SearchControl.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\SubtitleOnlineSearch.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\Delay.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Volume.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Device.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Delay.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\Pitch.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatioCustom.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoOrientation\Flip.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoGeneral\View.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoGeneral\VideoStream.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoGeneral\Snapshot.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoGeneral\Record.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\MusicPlayerFull.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\FolderView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\NoSearchResultsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\AlbumView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\ArtistView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\VideoPlayer.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\PlaylistView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Grids\TopTracks.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Grids\DiveInGenres.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Grids\InstantPlaylists.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Grids\UserPlaylists.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\GridViewRecentMusic.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\ShowModel.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\ListViewMedia.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanDialogControls\ShowModelCreation.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanDialogControls\MassEditor.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanDialogControls\AlbumEditor.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanDialogControls\MessagePanel.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanDialogControls\OnlineArtistPicture.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanDialogControls\InfoBox.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanDialogControls\NewPlaylistCreation.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\OceanDialogConfig\OceanDialogWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\OceanDialogConfig\OceanPopup.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\VideoLibraryControls\RecommendedVideos.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\VideoLibraryControls\UserShows.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Grids\Favourites.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Grids\MusicListHome.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Grids\RecentMusicList.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Grids\ContinuePlayingRecentsVideo.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\PanelControlsAudioPlayer.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\VolumeSlider.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\SearchResults.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\LoggerPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\SettingsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\QueuePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\EntireMusicLibrary.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\VideoLibrary.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\MusicLibrary.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\HomeView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\MainPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\PlayPauseControls.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptionsWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\VideoControls.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanSlider.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\PlaybackMainControls.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\PlayerSettingsHost.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoGeneral\PlaybackSpeed.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoFilters\Filters.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoOrientation\Rotation.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoAspectRatio\AspectRatio.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Audio\AudioGeneral\General.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Audio\AudioEqualizer\Equalizer.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Audio\AudioAdvanced\AudioReverb.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleGeneral\General.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\Subtitle\SubtitleCustomize\Customize.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\Onboarding\OptimizeApp.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Dialogs\VideoOptions\VideoOverlay\WatermarkOverlay.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Authentication\AppAuthVerify.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <!--
+	<!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
     Explorer "Package and Publish" context menu entry to be enabled for this project even if
     the Windows App SDK Nuget package has not yet been restored.
   -->
-  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+	</PropertyGroup>
 
-  <!-- Publish Properties -->
-  <PropertyGroup>
-    <PublishReadyToRun>False</PublishReadyToRun>
-    <PublishTrimmed>False</PublishTrimmed>
-    <TrimMode>None</TrimMode>
-    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
-    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <GenerateTestArtifacts>False</GenerateTestArtifacts>
-    <AppxBundle>Always</AppxBundle>
-    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
-    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-	  
-  </PropertyGroup>
-  <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Coding\Vusic Player\Vusic Player\.editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Coding\Vusic Player\Vusic Player\.editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\DonateToVusicPlayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\OceanDialogControls\WhatsNew.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\DefaultFormats.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\AppLockDuringExperience.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\ThemeSelection.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\KeyFeaturesPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\WhatIsVusicPlayerPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\OceanCyanLogoIntro.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\PrivacyAgreement.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\LicenseAgreement.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\DesktopShortcut.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\FolderSelection.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\UserViews\Controls\KeyboardShortcutsGuide.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\FirstLaunchExperience.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="UI\Experience\Pages\WelcomePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Update="Package.appxmanifest">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AppxManifest>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Views\PictureInPictureView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<!-- Publish Properties -->
+	<PropertyGroup>
+		<PublishReadyToRun>False</PublishReadyToRun>
+		<PublishTrimmed>False</PublishTrimmed>
+		<TrimMode>None</TrimMode>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+		<GenerateTestArtifacts>False</GenerateTestArtifacts>
+		<AppxBundle>Always</AppxBundle>
+		<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<AppxBundlePlatforms>x64</AppxBundlePlatforms>
+
+	</PropertyGroup>
+	<ItemGroup>
+		<EditorConfigFiles Remove="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Coding\Vusic Player\Vusic Player\.editorconfig" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Coding\Vusic Player\Vusic Player\.editorconfig" />
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\DonateToVusicPlayer.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\OceanDialogControls\WhatsNew.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\DefaultFormats.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\AppLockDuringExperience.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\ThemeSelection.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\KeyFeaturesPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\WhatIsVusicPlayerPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\OceanCyanLogoIntro.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\PrivacyAgreement.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\LicenseAgreement.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\DesktopShortcut.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\FolderSelection.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\UserViews\Controls\KeyboardShortcutsGuide.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\FirstLaunchExperience.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="UI\Experience\Pages\WelcomePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<AppxManifest Update="Package.appxmanifest">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</AppxManifest>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Views\PictureInPictureView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 </Project>

@@ -11,4 +11,8 @@
     <Platform Solution="*|x86" Project="x86" />
     <Deploy />
   </Project>
+  <Project Path="VusicMediaProperties/VusicMediaProperties.vcxproj" Id="d823675d-220e-4c7c-b768-c627b1764354">
+    <BuildType Solution="Debug|x64" Project="Release" />
+    <Platform Solution="*|ARM64" Project="x64" />
+  </Project>
 </Solution>

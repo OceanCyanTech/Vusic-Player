@@ -1,11 +1,27 @@
-﻿using Microsoft.UI.Xaml;
+﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
+#region Namespaces
+using Microsoft.UI.Xaml;
+#endregion
 
 namespace Vusic_Player.Configuration.AppConfig
 {
+    /*  OCEANCYAN TECH HEADER
+VUSIC PLAYER - VERSION v1.0.7.0
+© OCEANCYAN TECH 2026
+
+CLASS - CENTERDIALOG - Helper method to center a secondary dialog corresponding to its parent dialog
+BUILD 131126
+*/
     public class CenterDialog
     {
+        #region Fields
         static Window? Parent;
         static Window? dlg;
+        #endregion
+
+        #region Functions
         public static void CenterDialogRec(Window dialog, Window Parentwind)
         {
             Parent = Parentwind;
@@ -37,5 +53,6 @@ namespace Vusic_Player.Configuration.AppConfig
             if (dlg == null || Parent == null) return;
             CenterDialogRec(dlg, Parent);
         }
+        #endregion
     }
 }
