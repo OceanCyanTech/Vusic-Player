@@ -785,12 +785,15 @@ namespace Vusic_Player.UI.UserViews.Controls
 
             }
         }
-
+        private IntPtr _hwnd;
         private void mnftMiniPlayer_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             PictureInPicture pictureinPicture = new PictureInPicture();
             pictureinPicture.Activate();
             MainWindow.HideWindow();
+   //         IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+       //     _hwnd = WindowNative.GetWindowHandle(this);
+
         }
 
         private void mnftGlowEffect_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

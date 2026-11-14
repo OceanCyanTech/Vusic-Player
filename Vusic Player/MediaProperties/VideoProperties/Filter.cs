@@ -1,4 +1,7 @@
-﻿using FlyleafLib;
+﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 091126) . All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root.
+
+using FlyleafLib;
 using Microsoft.UI.Xaml.Controls;
 using Vortice.Direct3D11;
 using Vusic_Player.Configuration;

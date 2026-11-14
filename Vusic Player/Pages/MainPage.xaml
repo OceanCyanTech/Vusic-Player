@@ -201,10 +201,10 @@ Stretch="UniformToFill"/>
             Click="btnCloseTutorial_Click"/>
             </Grid>
         </TeachingTip>
-        <TeachingTip Name="ttEXCEPTION" Title="Exception">
+        <TeachingTip Margin="0, 10" Name="ttEXCEPTION" Title="Exception">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Width="40" Source="{Binding SourceError ,Source={StaticResource GlobalIconHolder}}"/>
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"    Name="txtExceptionError"/>
+                <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" FontFamily="{StaticResource GlobalFontHolder}"    Name="txtExceptionError"/>
             </StackPanel>
         </TeachingTip>
     

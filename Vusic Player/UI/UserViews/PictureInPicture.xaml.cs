@@ -1,3 +1,4 @@
+using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -46,7 +47,13 @@ namespace Vusic_Player.UI.UserViews
         public PictureInPicture()
         {
             InitializeComponent();
+            Activated += PictureInPicture_Activated;
 
+            this.Closed += PictureInPicture_Closed;
+        }
+        Player player = new Player();
+        private void PictureInPicture_Activated(object sender, WindowActivatedEventArgs args)
+        {
             int width = 550;
             int height = 300;
             if (!File.Exists(PlayerService.CurrentPlayingPath)) return;
@@ -61,11 +68,15 @@ namespace Vusic_Player.UI.UserViews
             else if (Extensions.VideoExtensions.List.Contains(fileExtension))
             {
                 txtTitle.Visibility = Visibility.Collapsed;
+                //hostMedia.Player = player;
+                //player.OpenCompleted += Player_OpenCompleted;
+                //player.Open(PlayerService.CurrentPlayingPath);
 
                 if (PlayerService.Masterplayer != null)
                 {
                     hostMedia.Player = PlayerService.Masterplayer;
                 }
+
             }
             SetupSMTC();
             mediacontroller.IsPIP = true;
@@ -74,8 +85,8 @@ namespace Vusic_Player.UI.UserViews
             _hwnd = WindowNative.GetWindowHandle(this);
 
             // 2. Install a subclass callback to intercept window messages
-            _subclassProc = new WinUser.SubclassProc(WindowSubclassCallback);
-            WinUser.SetWindowSubclass(_hwnd, _subclassProc, 0, IntPtr.Zero);
+            //          _subclassProc = new WinUser.SubclassProc(WindowSubclassCallback);
+            //   WinUser.SetWindowSubclass(_hwnd, _subclassProc, 0, IntPtr.Zero);
             WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             AppWindow appWindow = AppWindow.GetFromWindowId(myWndId);
             appWindow.IsShownInSwitchers = false;
@@ -125,8 +136,18 @@ namespace Vusic_Player.UI.UserViews
             };
 
             InitializeSave();
-            this.Closed += PictureInPicture_Closed;
         }
+
+        private void Player_OpenCompleted(object? sender, OpenCompletedArgs e)
+        {
+            if (PlayerService.Masterplayer == null) return;
+            player.SeekAccurate((int)PlayerService.Masterplayer.CurTime);
+            if (PlayerService.Masterplayer.IsPlaying == false)
+            {
+                player.Pause();
+            }
+        }
+
         DispatcherTimer? SaveTimer;
 
         private async void InitializeSave()
@@ -348,13 +369,22 @@ namespace Vusic_Player.UI.UserViews
             }
             else
             {
-                PlayerService.Play();
+                //PlayerService.Masterplayer.Play();
+                //App.MainWindowInstance?.DispatcherQueue.TryEnqueue(() =>
+                //{
+                //    var bitm = new BitmapImage(new Uri(IconHolder.Instance.Pause));
+                //    mediacontroller.PlayPauseToolTip = "Pause";
+                //    mediacontroller.Thumbnail = IconHolder.Instance.Pause;
+                //    PlayerService.maintimer?.Start();
+                //});
+                PlayerService.Play(false);
                 ToolTipService.SetToolTip(btnPlayPause, "Pause");
             }
         }
 
         private void btnRestore_Click(object sender, RoutedEventArgs e)
         {
+            hostMedia.Player = null;
             MainWindow.ShowWindow();
             PlayerService.PIPRestoreAction();
             this.Close();

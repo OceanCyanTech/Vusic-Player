@@ -235,7 +235,8 @@ namespace Vusic_Player.UI.Experience.Pages
                     {
                         FolderName = folderName,
                         FolderPath = folderPath,
-                        IsHighLevelFolder = true
+                        IsHighLevelFolder = true,
+                        isChecked = true
                     });
                 }
                 else if (!isEnabled && existing != null)

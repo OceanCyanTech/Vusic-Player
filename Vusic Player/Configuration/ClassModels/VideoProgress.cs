@@ -72,7 +72,7 @@ namespace Vusic_Player.Configuration.ClassModels
         public string ShowAssociatedID { get; set; } = "";
         public int SeasonAssociated { get; set; } = 1;
         [JsonIgnore]
-        private BitmapImage _thumbnail = new();
+        private BitmapImage? _thumbnail;
 
         public BitmapImage Thumbnail
         {

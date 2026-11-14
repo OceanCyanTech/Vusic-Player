@@ -46,6 +46,7 @@
     <None Remove="Pages\Views\MusicPlayerFull.xaml" />
     <None Remove="Pages\Views\NoSearchResultsPage.xaml" />
     <None Remove="Pages\Views\Onboarding\OptimizeApp.xaml" />
+    <None Remove="Pages\Views\PictureInPictureView.xaml" />
     <None Remove="Pages\Views\PitchExport.xaml" />
     <None Remove="Pages\Views\PlaylistView.xaml" />
     <None Remove="Pages\Views\QueuePage.xaml" />
@@ -263,7 +264,7 @@
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Tes\Flyleaf\FlyleafLib\FlyleafLib.csproj" />
+    <ProjectReference Include="C:\Users\bnara\OneDrive\Documents\OceanCyan Tech\Projects\Vusic Player\Flyleaf\FlyleafLib\FlyleafLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Assets\audiofile.png">
@@ -746,7 +747,7 @@
     <PublishTrimmed>False</PublishTrimmed>
     <TrimMode>None</TrimMode>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>False</GenerateTestArtifacts>
@@ -754,7 +755,6 @@
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>09C503AC50737612ECF6EDA9F7C0E05E59B6A045</PackageCertificateThumbprint>
 	  
   </PropertyGroup>
   <ItemGroup>
@@ -842,5 +842,10 @@
     <AppxManifest Update="Package.appxmanifest">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Views\PictureInPictureView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

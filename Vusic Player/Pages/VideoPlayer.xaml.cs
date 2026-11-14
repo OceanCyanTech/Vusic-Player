@@ -1818,7 +1818,9 @@ namespace Vusic_Player.Pages
             if (PlayerService.Masterplayer == null) return;
             if (PlayerService.CurrentPlayingPath == null) return;
             FadeInOutStoryboardPanel.Begin();
-
+          //  PlayerService.Masterplayer.Config.Video.HDRtoSDRMethod = FlyleafLib.HDRtoSDRMethod.Hable;
+          ////  PlayerService.Masterplayer.Config.Video.SD = false;
+          //  PlayerService.Masterplayer.Config.Video.SDRDisplayNitsCustom = 300f;
             PointerTimer.Start();
 
             if (ShowInformationOpened)
@@ -2786,6 +2788,7 @@ namespace Vusic_Player.Pages
             {
                 if (PlayerService.InVideoPage == true)
                 {
+                    hostMedia.Player = null;
                     PlayerService.isEpisodeVid = isEpisodeVideo;
                     App.NavigationFrame.GoBack();
                     if (PlayerService.Masterplayer != null)
@@ -2794,6 +2797,7 @@ namespace Vusic_Player.Pages
                         {
                             PlayerService.Pause();
                         }
+
                     }
                     ManualNavigationVideoSettings.CallClearance();
                     PlayerService.InVideoPage = false;

@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -109,7 +110,7 @@ namespace Vusic_Player.UI.Experience
         {
             var step = _steps[index];
 
-            frmMain.Navigate(step.PageType);
+            frmMain.Navigate(step.PageType, null, new DrillInNavigationTransitionInfo());
             txtHeader.Text = step.Header;
 
             bool isLicenseStep = step.PageType == typeof(LicenseAgreement);

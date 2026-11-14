@@ -63,6 +63,10 @@ namespace Vusic_Player.Configuration.AppConfig
                                 {
                                     App.NavigationFrame.Navigate(typeof(VideoPlayer), filePath);
                                 }
+                                else
+                                {
+                                    PlayerService.OpenPath(filePath);
+                                }
                             }
                         }
                         else if (audioExtensions.Contains(extension))

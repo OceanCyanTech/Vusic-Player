@@ -980,7 +980,7 @@ namespace Vusic_Player.Pages.Views
                 var packageVersion = Package.Current.Id.Version;
                 Version currentVersion = new Version(packageVersion.Major, packageVersion.Minor, packageVersion.Build);
                 bool newversion = false;
-                if(remoteVersion.ToString() != "1.0.6.0")
+                if(remoteVersion.ToString() != "1.0.7.0")
                 {
                     newversion = true;
                 }

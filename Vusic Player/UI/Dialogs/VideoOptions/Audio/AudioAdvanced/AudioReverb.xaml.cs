@@ -3,11 +3,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.Playback;
+using System.Collections.Generic;
+
 using Vusic_Player.Pages.Views;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -134,11 +137,33 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
             Logger.Log(errorLog, "AudioReverb", Logger.LogLevelType.Error);
         }
         string ProcessErrorLog = "";
+        private static Process CreateDirectProcess(string exePath, IEnumerable<string> args, string workingDir, bool redirectStdin, bool redirectStdout)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = exePath,
+                WorkingDirectory = workingDir,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardInput = redirectStdin,
+                RedirectStandardOutput = redirectStdout,
+                RedirectStandardError = true
+            };
+
+            foreach (var arg in args)
+            {
+                psi.ArgumentList.Add(arg);
+            }
+
+            return new Process { StartInfo = psi };
+        }
+
         private async void btnApply_Click(object sender, RoutedEventArgs e)
         {
             if (PlayerService.CurrentPlayingPath == null || PlayerService.Masterplayer == null) return;
 
-            string? tempFileToClean = null;
+            string? tempOutputMp3 = null;
+            Microsoft.UI.Xaml.DispatcherTimer? progressTimer = null;
 
             try
             {
@@ -153,84 +178,79 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                     return;
                 }
 
+                string tempWorkDir = Path.Combine(Path.GetTempPath(), "VusicPlayer_Reverb");
+                Directory.CreateDirectory(tempWorkDir);
+
                 string inputMp3 = PlayerService.CurrentPlayingPath ?? "";
                 string outputMp3 = "";
-                bool isMemoryStream = false;
+                string finalFileName = "";
+                Windows.Storage.StorageFolder? destinationFolder = null;
+                bool isExportingToFile = chckExporttoFile.IsChecked == true;
+                bool isMemoryStream = !isExportingToFile && cmbOutput.SelectedIndex == 0;
 
                 prgApplyingReverb.Visibility = Visibility.Visible;
                 txtApplyReverbProgress.Visibility = Visibility.Visible;
                 prgApplyingReverb.ShowError = false;
                 prgApplyingReverb.Value = 0;
 
-                if (chckExporttoFile.IsChecked == false)
+                if (!isExportingToFile)
                 {
-                    if (cmbOutput.SelectedIndex == 0)
+                    if (!isMemoryStream)
                     {
-                        isMemoryStream = true;
-                    }
-                    else
-                    {
-                        // Write temp files to writable TempPath, NEVER to baseDir
-                        outputMp3 = Path.Combine(Path.GetTempPath(), $"vusic_temp_{Guid.NewGuid():N}.mp3");
-                        tempFileToClean = outputMp3;
-                        if (File.Exists(outputMp3))
-                        {
-                            File.Delete(outputMp3);
-                        }
+                        outputMp3 = Path.Combine(tempWorkDir, $"vusic_temp_{Guid.NewGuid():N}.mp3");
+                        tempOutputMp3 = outputMp3;
                     }
                 }
                 else
                 {
                     if (App.MainWindowInstance == null) return;
 
-                    var folder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Export", Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
-                    if (folder == null) return;
-
-                    if (string.IsNullOrEmpty(txtFileName.Text))
+                    if (string.IsNullOrWhiteSpace(txtFileName.Text))
                     {
                         txtEnterFileNameWarning.Visibility = Visibility.Visible;
                         return;
                     }
+                    txtEnterFileNameWarning.Visibility = Visibility.Collapsed;
+
+                    destinationFolder = await FilePickers.FolderPickerFunct.PickFolder(App.MainWindowInstance, "Export", Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
+                    if (destinationFolder == null) return;
 
                     string userFileName = txtFileName.Text.Trim();
-                    char[] invalidChars = Path.GetInvalidFileNameChars();
-                    foreach (char c in invalidChars)
+                    foreach (char c in Path.GetInvalidFileNameChars())
                     {
                         userFileName = userFileName.Replace(c, '_');
                     }
                     userFileName = userFileName.TrimEnd('.');
 
-                    outputMp3 = Path.Combine(folder.Path, userFileName + ".mp3");
+                    outputMp3 = Path.Combine(destinationFolder.Path, userFileName + ".mp3");
                     int counter = 1;
                     string nameWithoutExt = Path.GetFileNameWithoutExtension(outputMp3);
                     string extension = Path.GetExtension(outputMp3);
 
                     while (File.Exists(outputMp3))
                     {
-                        outputMp3 = Path.Combine(folder.Path, $"{nameWithoutExt} ({counter}){extension}");
+                        outputMp3 = Path.Combine(destinationFolder.Path, $"{nameWithoutExt} ({counter}){extension}");
                         counter++;
                     }
 
-                    txtFileName.Text = Path.GetFileName(outputMp3);
+                    finalFileName = Path.GetFileName(outputMp3);
+                    txtFileName.Text = finalFileName;
+
+                    // Write to writable %TEMP% first, then move into the picked folder
+                    tempOutputMp3 = Path.Combine(tempWorkDir, $"{Guid.NewGuid():N}_{finalFileName}");
                 }
 
-                string outTarget = isMemoryStream ? "-" : $"\"{outputMp3}\"";
+                // Sanitize parameters against NaN and comma-decimal locales
+                string reverberance = (double.IsNaN(numReverberance.Value) ? 50 : numReverberance.Value).ToString(CultureInfo.InvariantCulture);
+                string hfDamping = (double.IsNaN(numHfDamping.Value) ? 50 : numHfDamping.Value).ToString(CultureInfo.InvariantCulture);
+                string roomScale = (double.IsNaN(numRoomScale.Value) ? 100 : numRoomScale.Value).ToString(CultureInfo.InvariantCulture);
+                string stereoDepth = (double.IsNaN(numStereoDepth.Value) ? 100 : numStereoDepth.Value).ToString(CultureInfo.InvariantCulture);
+                string preDelay = (double.IsNaN(numPreDelay.Value) ? 0 : numPreDelay.Value).ToString(CultureInfo.InvariantCulture);
+                string wetGain = (double.IsNaN(numWetGain.Value) ? 0 : numWetGain.Value).ToString(CultureInfo.InvariantCulture);
 
-                // Double quote wrapping to ensure cmd.exe handles spaces in Program Files/WindowsApps correctly
-                string dynamicCommand = $"/s /c \"\"{ffmpegPath}\" -y -i \"{inputMp3}\" -f sox - | \"{soxExecutablePath}\" -p -p reverb {numReverberance.Value} {numHfDamping.Value} {numRoomScale.Value} {numStereoDepth.Value} {numPreDelay.Value} {numWetGain.Value} | \"{ffmpegPath}\" -y -i - -b:a 192k -f mp3 {outTarget}\"";
+                string encodeTarget = isMemoryStream ? "-" : tempOutputMp3!;
 
-                ProcessStartInfo startInfo = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = dynamicCommand,
-                    WorkingDirectory = Path.GetDirectoryName(soxExecutablePath), // Crucial for SoX to locate dependent DLLs
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = isMemoryStream, // Only redirect output if we are reading it into memory
-                    RedirectStandardError = true
-                };
-
-                var progressTimer = new Microsoft.UI.Xaml.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+                progressTimer = new Microsoft.UI.Xaml.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
                 progressTimer.Tick += (s, args) =>
                 {
                     if (prgApplyingReverb.Value < 95)
@@ -241,103 +261,219 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
                 };
                 progressTimer.Start();
 
-                using (Process process = new Process { StartInfo = startInfo })
+                var errorBuilder = new System.Text.StringBuilder();
+
+                // Stage 1: Decode input audio to raw SoX stream (no cmd.exe)
+                using var decodeProc = CreateDirectProcess(
+                    ffmpegPath,
+                    new[] { "-y", "-i", inputMp3, "-vn", "-f", "sox", "-" },
+                    tempWorkDir,
+                    redirectStdin: false,
+                    redirectStdout: true);
+
+                // Stage 2: Apply SoX reverb effect
+                using var soxProc = CreateDirectProcess(
+                    soxExecutablePath,
+                    new[] { "-p", "-p", "reverb", reverberance, hfDamping, roomScale, stereoDepth, preDelay, wetGain },
+                    tempWorkDir,
+                    redirectStdin: true,
+                    redirectStdout: true);
+
+                // Stage 3: Encode processed SoX stream to MP3 (stdout for MemoryStream, or temp file path)
+                using var encodeProc = CreateDirectProcess(
+                    ffmpegPath,
+                    new[] { "-y", "-i", "-", "-b:a", "192k", "-f", "mp3", encodeTarget },
+                    tempWorkDir,
+                    redirectStdin: true,
+                    redirectStdout: isMemoryStream);
+
+                void AttachErrorLogger(string stage, Process p)
                 {
-                    process.Start();
-
-                    Task? copyTask = null;
-                    MemoryStream? ms = null;
-
-                    if (isMemoryStream)
+                    p.ErrorDataReceived += (s, args) =>
                     {
-                        ms = PlayerService.msReverb ?? new MemoryStream();
-                        if (PlayerService.msReverb == null) PlayerService.msReverb = ms;
-                        else ms.SetLength(0);
-
-                        copyTask = process.StandardOutput.BaseStream.CopyToAsync(ms);
-                    }
-
-                    // Read error stream asynchronously to prevent deadlock
-                    Task<string> errorTask = process.StandardError.ReadToEndAsync();
-
-                    if (copyTask != null)
-                    {
-                        await Task.WhenAll(copyTask, errorTask, process.WaitForExitAsync());
-                    }
-                    else
-                    {
-                        await Task.WhenAll(errorTask, process.WaitForExitAsync());
-                    }
-
-                    string errorLog = await errorTask;
-                    progressTimer.Stop();
-
-                    if (process.ExitCode == 0)
-                    {
-                        prgApplyingReverb.Value = 100;
-                        txtApplyReverbProgress.Text = "Reverb Applied Successfully!";
-
-                        curtime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
-                        curtimetemp = PlayerService.Masterplayer.CurTime;
-
-                        PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
-                        PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
-
-                        if (isMemoryStream && ms != null)
+                        if (!string.IsNullOrEmpty(args.Data))
                         {
-                            ms.Position = 0;
-                            if (PlayerService.Masterplayer.IsPlaying == false)
+                            lock (errorBuilder)
                             {
-                                PlayerService.CurrentMemoryStream = ms;
-                                PlayerService.curtime = curtime;
-                                PlayerService.curtimetemp = curtimetemp;
-                                PlayerService.JustDisposed = true;
-                                PlayerService.filestreamcurrent?.Dispose();
+                                errorBuilder.AppendLine($"[{stage}] {args.Data}");
                             }
-                            else
-                            {
-                                PlayerService.Masterplayer.Open(ms);
-                            }
+                            System.Diagnostics.Debug.WriteLine($"[AudioReverb - {stage}] {args.Data}");
+                        }
+                    };
+                }
+
+                AttachErrorLogger("Decode", decodeProc);
+                AttachErrorLogger("SoX", soxProc);
+                AttachErrorLogger("Encode", encodeProc);
+
+                decodeProc.Start();
+                soxProc.Start();
+                encodeProc.Start();
+
+                decodeProc.BeginErrorReadLine();
+                soxProc.BeginErrorReadLine();
+                encodeProc.BeginErrorReadLine();
+
+                // Pipe Stage 1 stdout -> Stage 2 stdin
+                var pipe1To2 = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await decodeProc.StandardOutput.BaseStream.CopyToAsync(soxProc.StandardInput.BaseStream);
+                    }
+                    catch { }
+                    finally
+                    {
+                        try { soxProc.StandardInput.Close(); } catch { }
+                    }
+                });
+
+                // Pipe Stage 2 stdout -> Stage 3 stdin
+                var pipe2To3 = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await soxProc.StandardOutput.BaseStream.CopyToAsync(encodeProc.StandardInput.BaseStream);
+                    }
+                    catch { }
+                    finally
+                    {
+                        try { encodeProc.StandardInput.Close(); } catch { }
+                    }
+                });
+
+                // Optional Stage 3 stdout -> MemoryStream
+                Task? pipe3ToMemory = null;
+                MemoryStream? ms = null;
+
+                if (isMemoryStream)
+                {
+                    ms = PlayerService.msReverb ?? new MemoryStream();
+                    if (PlayerService.msReverb == null) PlayerService.msReverb = ms;
+                    else ms.SetLength(0);
+
+                    pipe3ToMemory = encodeProc.StandardOutput.BaseStream.CopyToAsync(ms);
+                }
+
+                var waitTasks = new System.Collections.Generic.List<Task>
+        {
+            pipe1To2,
+            pipe2To3,
+            decodeProc.WaitForExitAsync(),
+            soxProc.WaitForExitAsync(),
+            encodeProc.WaitForExitAsync()
+        };
+
+                if (pipe3ToMemory != null)
+                {
+                    waitTasks.Add(pipe3ToMemory);
+                }
+
+                await Task.WhenAll(waitTasks);
+
+                decodeProc.CancelErrorRead();
+                soxProc.CancelErrorRead();
+                encodeProc.CancelErrorRead();
+
+                progressTimer.Stop();
+
+                int exitCode = (decodeProc.ExitCode == 0 && soxProc.ExitCode == 0 && encodeProc.ExitCode == 0)
+                    ? 0
+                    : (encodeProc.ExitCode != 0 ? encodeProc.ExitCode : (soxProc.ExitCode != 0 ? soxProc.ExitCode : decodeProc.ExitCode));
+
+                if (exitCode == 0)
+                {
+                    if (isExportingToFile && destinationFolder != null && !string.IsNullOrEmpty(tempOutputMp3) && File.Exists(tempOutputMp3))
+                    {
+                        try
+                        {
+                            File.Move(tempOutputMp3, outputMp3, overwrite: true);
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                            var tempStorageFile = await Windows.Storage.StorageFile.GetFileFromPathAsync(tempOutputMp3);
+                            await tempStorageFile.MoveAsync(destinationFolder, finalFileName, Windows.Storage.NameCollisionOption.ReplaceExisting);
+                        }
+                    }
+
+                    prgApplyingReverb.Value = 100;
+                    txtApplyReverbProgress.Text = "Reverb Applied Successfully!";
+
+                    curtime = TimeSpan.FromTicks(PlayerService.Masterplayer.CurTime);
+                    curtimetemp = PlayerService.Masterplayer.CurTime;
+
+                    PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
+                    PlayerService.Masterplayer.OpenCompleted += Masterplayer_OpenCompleted1;
+
+                    if (isMemoryStream && ms != null)
+                    {
+                        ms.Position = 0;
+                        if (PlayerService.Masterplayer.IsPlaying == false)
+                        {
+                            PlayerService.CurrentMemoryStream = ms;
+                            PlayerService.curtime = curtime;
+                            PlayerService.curtimetemp = curtimetemp;
+                            PlayerService.JustDisposed = true;
+                            PlayerService.filestreamcurrent?.Dispose();
                         }
                         else
                         {
-                            if (PlayerService.Masterplayer.IsPlaying == false)
-                            {
-                                PlayerService.curtime = curtime;
-                                PlayerService.curtimetemp = curtimetemp;
-                                PlayerService.CurrentPlayingPath = outputMp3;
-                                if (chckExporttoFile.IsChecked == true)
-                                {
-                                    PlayerService.UIController.MediaDisplayName = Path.GetFileName(outputMp3);
-                                }
-                                PlayerService.JustDisposed = true;
-                                PlayerService.filestreamcurrent?.Dispose();
-                            }
-                            else
-                            {
-                                PlayerService.filestreamcurrent = new FileStream(outputMp3, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-                                PlayerService.Masterplayer.Open(PlayerService.filestreamcurrent);
-                            }
+                            PlayerService.Masterplayer.Open(ms);
                         }
                     }
                     else
                     {
-                        // Surface the real error from FFmpeg/SoX
-                        prgApplyingReverb.Value = 0;
-                        prgApplyingReverb.ShowError = true;
-                        txtApplyReverbProgress.Text = "Failed to process audio stream.";
-
-                        System.Diagnostics.Debug.WriteLine($"[AudioReverb Failure - ExitCode: {process.ExitCode}]");
-                        System.Diagnostics.Debug.WriteLine(errorLog);
-                        Logger.Log($"ExitCode {process.ExitCode}: {errorLog}", "AudioReverb", Logger.LogLevelType.Error);
+                        if (PlayerService.Masterplayer.IsPlaying == false)
+                        {
+                            PlayerService.curtime = curtime;
+                            PlayerService.curtimetemp = curtimetemp;
+                            PlayerService.CurrentPlayingPath = outputMp3;
+                            if (isExportingToFile)
+                            {
+                                PlayerService.UIController.MediaDisplayName = Path.GetFileName(outputMp3);
+                            }
+                            PlayerService.JustDisposed = true;
+                            PlayerService.filestreamcurrent?.Dispose();
+                        }
+                        else
+                        {
+                            PlayerService.filestreamcurrent = new FileStream(outputMp3, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                            PlayerService.Masterplayer.Open(PlayerService.filestreamcurrent);
+                        }
                     }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(tempOutputMp3) && File.Exists(tempOutputMp3))
+                    {
+                        try { File.Delete(tempOutputMp3); } catch { }
+                    }
+
+                    prgApplyingReverb.Value = 0;
+                    prgApplyingReverb.ShowError = true;
+                    txtApplyReverbProgress.Text = "Failed to process audio stream.";
+
+                    string errorLog;
+                    lock (errorBuilder)
+                    {
+                        errorLog = errorBuilder.ToString();
+                    }
+
+                    System.Diagnostics.Debug.WriteLine($"[AudioReverb Failure - ExitCode: {exitCode}]");
+                    System.Diagnostics.Debug.WriteLine(errorLog);
+                    Logger.Log($"ExitCode {exitCode}: {errorLog}", "AudioReverb", Logger.LogLevelType.Error);
                 }
             }
             catch (Exception ex)
             {
+                progressTimer?.Stop();
                 prgApplyingReverb.ShowError = true;
                 txtApplyReverbProgress.Text = "Error applying reverb.";
                 Logger.Log(ex.Message, "AudioReverb", Logger.LogLevelType.Error);
+            }
+            finally
+            {
+                progressTimer?.Stop();
             }
         }
         public void ClearProgress()

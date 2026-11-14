@@ -18,6 +18,7 @@ using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.FilePickers;
 using Windows.Storage;
+using System.Collections.Generic;
 using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -106,6 +107,27 @@ namespace Vusic_Player.Pages.Views
         {
             return (double.IsNaN(val) || double.IsInfinity(val)) ? defaultValue : val;
         }
+        // Helper method to launch a direct Win32 process with ArgumentList (no cmd.exe)
+        private static Process CreateDirectProcess(string exePath, IEnumerable<string> args, string workingDir, bool redirectStdin, bool redirectStdout)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = exePath,
+                WorkingDirectory = workingDir,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardInput = redirectStdin,
+                RedirectStandardOutput = redirectStdout,
+                RedirectStandardError = true
+            };
+
+            foreach (var arg in args)
+            {
+                psi.ArgumentList.Add(arg);
+            }
+
+            return new Process { StartInfo = psi };
+        }
         ObservableCollection<FilesToModifyAdded> ProcessedFiles = new ObservableCollection<FilesToModifyAdded>();
         private async void btnApplyReverb_Click(object sender, RoutedEventArgs e)
         {
@@ -137,7 +159,8 @@ namespace Vusic_Player.Pages.Views
             string baseDir = AppContext.BaseDirectory;
             string soxExecutablePath = Path.Combine(baseDir, "soxReverb", "sox.exe");
             string ffmpegPath = Path.Combine(baseDir, "FFmpeg", "ffmpeg.exe");
-            string soxWorkingDir = Path.GetDirectoryName(soxExecutablePath) ?? baseDir;
+            string tempWorkDir = Path.Combine(Path.GetTempPath(), "VusicPlayer_Reverb");
+            Directory.CreateDirectory(tempWorkDir);
 
             var dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
             var throttler = new SemaphoreSlim(Environment.ProcessorCount);
@@ -166,6 +189,8 @@ namespace Vusic_Player.Pages.Views
                 var tasks = AddedFiles.Select(async item =>
                 {
                     await throttler.WaitAsync();
+                    string tempOutputMp3 = string.Empty;
+
                     try
                     {
                         if (!File.Exists(item.FilePath))
@@ -180,7 +205,8 @@ namespace Vusic_Player.Pages.Views
                         }
 
                         string sanitizedTitle = string.Join("_", item.Title.Split(Path.GetInvalidFileNameChars())).TrimEnd('.');
-                        string outputMp3 = Path.Combine(baseDirOutput, $"{sanitizedTitle}_{Guid.NewGuid():N}.mp3");
+                        string finalFileName = $"{sanitizedTitle}_{Guid.NewGuid():N}.mp3";
+                        string targetDirectory = baseDirOutput;
 
                         if (item.IndividualDirectorySelBool)
                         {
@@ -194,7 +220,7 @@ namespace Vusic_Player.Pages.Views
                                 });
                                 return;
                             }
-                            outputMp3 = Path.Combine(item.DirectoryPath, $"{sanitizedTitle}_{Guid.NewGuid():N}.mp3");
+                            targetDirectory = item.DirectoryPath;
                         }
                         else if (txtOutputDirectory.Text != "Custom Directories" && !Directory.Exists(baseDirOutput))
                         {
@@ -207,86 +233,147 @@ namespace Vusic_Player.Pages.Views
                             return;
                         }
 
-                        // -y forces overwrite if needed; -vn strips embedded cover art so it never stalls the SoX pipe
-                        string commandPipeline = $"\"{ffmpegPath}\" -y -i \"{item.FilePath}\" -vn -f sox - | \"{soxExecutablePath}\" -p -p reverb {reverberance} {hfDamping} {roomScale} {stereoDepth} {preDelay} {wetGain} | \"{ffmpegPath}\" -y -i - -b:a 192k -f mp3 \"{outputMp3}\"";
+                        string outputMp3 = Path.Combine(targetDirectory, finalFileName);
+                        tempOutputMp3 = Path.Combine(tempWorkDir, finalFileName);
 
-                        ProcessStartInfo startInfo = new ProcessStartInfo
-                        {
-                            FileName = "cmd.exe",
-                            // /s preserves outer quotes properly when paths contain spaces (e.g., WindowsApps)
-                            Arguments = $"/s /c \"{commandPipeline}\"",
-                            UseShellExecute = false,
-                            CreateNoWindow = true,
-                            RedirectStandardOutput = false,
-                            RedirectStandardError = true,
-                            WorkingDirectory = soxWorkingDir // Crucial: lets sox.exe find its bundled DLLs on clean PCs
-                        };
-
-                        using var cts = new CancellationTokenSource();
-
-                        var progressTask = Task.Run(async () =>
-                        {
-                            while (!cts.Token.IsCancellationRequested)
-                            {
-                                await Task.Delay(50);
-                                if (cts.Token.IsCancellationRequested) break;
-
-                                dispatcherQueue.TryEnqueue(() =>
-                                {
-                                    if (item.Progress < 95)
-                                    {
-                                        item.Progress += 0.95;
-                                    }
-                                });
-                            }
-                        });
-
+                        // Write to %TEMP% first so child Win32 processes never get blocked by Controlled Folder Access or MSIX brokered paths
                         var errorBuilder = new System.Text.StringBuilder();
+                        int exitCode = -1;
 
-                        using (Process process = new Process { StartInfo = startInfo })
+                        // Stage 1: Decode input audio to raw SoX stream (no cmd.exe)
+                        using var decodeProc = CreateDirectProcess(
+                            ffmpegPath,
+                            new[] { "-y", "-i", item.FilePath, "-vn", "-f", "sox", "-" },
+                            tempWorkDir,
+                            redirectStdin: false,
+                            redirectStdout: true);
+
+                        // Stage 2: Apply SoX reverb effect
+                        using var soxProc = CreateDirectProcess(
+                            soxExecutablePath,
+                            new[] { "-p", "-p", "reverb", reverberance, hfDamping, roomScale, stereoDepth, preDelay, wetGain },
+                            tempWorkDir,
+                            redirectStdin: true,
+                            redirectStdout: true);
+
+                        // Stage 3: Encode processed SoX stream to MP3 in %TEMP%
+                        using var encodeProc = CreateDirectProcess(
+                            ffmpegPath,
+                            new[] { "-y", "-i", "-", "-b:a", "192k", "-f", "mp3", tempOutputMp3 },
+                            tempWorkDir,
+                            redirectStdin: true,
+                            redirectStdout: false);
+
+                        void AttachErrorLogger(string stage, Process p)
                         {
-                            process.ErrorDataReceived += (s, args) =>
+                            p.ErrorDataReceived += (s, args) =>
                             {
                                 if (!string.IsNullOrEmpty(args.Data))
                                 {
-                                    errorBuilder.AppendLine(args.Data);
-                                    Debug.WriteLine($"[{item.Title}] {args.Data}");
+                                    lock (errorBuilder)
+                                    {
+                                        errorBuilder.AppendLine($"[{stage}] {args.Data}");
+                                    }
+                                    Debug.WriteLine($"[{item.Title} - {stage}] {args.Data}");
                                 }
                             };
-
-                            process.Start();
-                            process.BeginErrorReadLine();
-
-                            await process.WaitForExitAsync();
-
-                            int exitCode = process.ExitCode;
-                            cts.Cancel();
-
-                            dispatcherQueue.TryEnqueue(() =>
-                            {
-                                item.DirectorySelectionEnabled = true;
-
-                                if (exitCode == 0 && File.Exists(outputMp3))
-                                {
-                                    item.Progress = 100;
-                                    item.ImageState = IconHolder.Instance.Success;
-                                    item.OutputPath = outputMp3;
-                                    item.VisibilityOfCompletedFileLocation = Visibility.Visible;
-                                    ProcessedFiles.Add(item);
-                                    stkOutputActions.Visibility = Visibility.Visible;
-                                }
-                                else
-                                {
-                                    item.Progress = 0;
-                                    item.ImageState = IconHolder.Instance.Error;
-                                    string errSummary = errorBuilder.ToString().Trim();
-                                    item.ErrorToolTip = string.IsNullOrEmpty(errSummary)
-                                        ? $"Processing failed (Exit Code {exitCode})."
-                                        : errSummary;
-                                    Logger.Log($"Batch Reverb failed for {item.Title} (Code {exitCode}): {errSummary}", "BatchReverb", Logger.LogLevelType.Error);
-                                }
-                            });
                         }
+
+                        AttachErrorLogger("Decode", decodeProc);
+                        AttachErrorLogger("SoX", soxProc);
+                        AttachErrorLogger("Encode", encodeProc);
+
+                        decodeProc.Start();
+                        soxProc.Start();
+                        encodeProc.Start();
+
+                        decodeProc.BeginErrorReadLine();
+                        soxProc.BeginErrorReadLine();
+                        encodeProc.BeginErrorReadLine();
+
+                        // Pipe Stage 1 stdout -> Stage 2 stdin, and Stage 2 stdout -> Stage 3 stdin
+                        var pipe1To2 = Task.Run(async () =>
+                        {
+                            try
+                            {
+                                await decodeProc.StandardOutput.BaseStream.CopyToAsync(soxProc.StandardInput.BaseStream);
+                            }
+                            catch { }
+                            finally
+                            {
+                                try { soxProc.StandardInput.Close(); } catch { }
+                            }
+                        });
+
+                        var pipe2To3 = Task.Run(async () =>
+                        {
+                            try
+                            {
+                                await soxProc.StandardOutput.BaseStream.CopyToAsync(encodeProc.StandardInput.BaseStream);
+                            }
+                            catch { }
+                            finally
+                            {
+                                try { encodeProc.StandardInput.Close(); } catch { }
+                            }
+                        });
+
+                        await Task.WhenAll(
+                            pipe1To2,
+                            pipe2To3,
+                            decodeProc.WaitForExitAsync(),
+                            soxProc.WaitForExitAsync(),
+                            encodeProc.WaitForExitAsync());
+
+                        decodeProc.CancelErrorRead();
+                        soxProc.CancelErrorRead();
+                        encodeProc.CancelErrorRead();
+
+                        //cts.Cancel();
+
+                        exitCode = (decodeProc.ExitCode == 0 && soxProc.ExitCode == 0 && encodeProc.ExitCode == 0)
+                            ? 0
+                            : (encodeProc.ExitCode != 0 ? encodeProc.ExitCode : (soxProc.ExitCode != 0 ? soxProc.ExitCode : decodeProc.ExitCode));
+
+                        if (exitCode == 0 && File.Exists(tempOutputMp3))
+                        {
+                            try
+                            {
+                                File.Move(tempOutputMp3, outputMp3, overwrite: true);
+                            }
+                            catch (UnauthorizedAccessException)
+                            {
+                                // Fallback via WinRT StorageFolder if the destination requires brokered MSIX access
+                                var destFolder = await Windows.Storage.StorageFolder.GetFolderFromPathAsync(targetDirectory);
+                                var tempStorageFile = await Windows.Storage.StorageFile.GetFileFromPathAsync(tempOutputMp3);
+                                await tempStorageFile.MoveAsync(destFolder, finalFileName, Windows.Storage.NameCollisionOption.ReplaceExisting);
+                            }
+                        }
+
+                        dispatcherQueue.TryEnqueue(() =>
+                        {
+                            item.DirectorySelectionEnabled = true;
+
+                            if (exitCode == 0 && File.Exists(outputMp3))
+                            {
+                                item.Progress = 100;
+                                item.ImageState = IconHolder.Instance.Success;
+                                item.OutputPath = outputMp3;
+                                item.VisibilityOfCompletedFileLocation = Visibility.Visible;
+                                ProcessedFiles.Add(item);
+                                stkOutputActions.Visibility = Visibility.Visible;
+                            }
+                            else
+                            {
+                                item.Progress = 0;
+                                item.ImageState = IconHolder.Instance.Error;
+                                string errSummary = errorBuilder.ToString().Trim();
+                                item.ErrorToolTip = string.IsNullOrEmpty(errSummary)
+                                    ? $"Processing failed (Exit Code {exitCode})."
+                                    : errSummary;
+                                Logger.Log($"Batch Reverb failed for {item.Title} (Code {exitCode}): {errSummary}", "BatchReverb", Logger.LogLevelType.Error);
+                            }
+                        });
                     }
                     catch (Exception ex)
                     {
@@ -301,6 +388,10 @@ namespace Vusic_Player.Pages.Views
                     }
                     finally
                     {
+                        if (!string.IsNullOrEmpty(tempOutputMp3) && File.Exists(tempOutputMp3))
+                        {
+                            try { File.Delete(tempOutputMp3); } catch { }
+                        }
                         throttler.Release();
                     }
                 }).ToList();
@@ -309,7 +400,6 @@ namespace Vusic_Player.Pages.Views
             }
             finally
             {
-                // Always restore UI controls even if every track failed or an early return occurred
                 btnAddAudioFiles.IsEnabled = true;
                 mnftAddFiles.IsEnabled = true;
                 btnApplyReverb.IsEnabled = true;

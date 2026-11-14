@@ -27,7 +27,7 @@
                 <CheckBox x:Name="chkDownloads" Content="Downloads" Checked="HighLevelFolder_CheckedChanged" Unchecked="HighLevelFolder_CheckedChanged"/>
             </StackPanel>
         </StackPanel>
-        <GridView ItemsSource="{x:Bind foldersListOpened,Mode=OneWay}" SelectionMode="None" VerticalAlignment="Stretch" Name="grdViewFolders" Grid.Row="2">
+        <GridView   ItemsSource="{x:Bind foldersListOpened,Mode=OneWay}" SelectionMode="None" VerticalAlignment="Stretch" Name="grdViewFolders" Grid.Row="3">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid Orientation="Horizontal" ItemWidth="NaN" />

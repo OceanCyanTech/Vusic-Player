@@ -20,6 +20,7 @@ using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
+using Vusic_Player.MediaProperties.VideoProperties;
 using Vusic_Player.Pages;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Vusic_Player.UI.UserViews.Controls;
@@ -338,46 +339,7 @@ namespace Vusic_Player.Configuration
                 {
                     SetupMultiAudioOutput();
                 }
-                //var devices = FlyleafNAudioMultiOutput.GetAvailableDevices();
-                //foreach (var device in devices)
-                //{
-                //    Debug.WriteLine($"Name: {device.FriendlyName}");
-                //    Debug.WriteLine($"ID: {device.ID}");
-
-                //    // Inspect physical connection state (jack detection)
-                //    var property = device.Properties;
-                //    Debug.WriteLine($"State: {device.State}\n-------------------");
-                //}
-                // Select two audio endpoints (e.g., Headphones and Speakers)
-                //var allDevices = FlyleafNAudioMultiOutput.GetAvailableDevices();
-
-                //// Find Speaker and Headphone endpoints explicitly
-                //var targetDevices = new List<MMDevice>();
-
-                //var speakerDevice = allDevices.FirstOrDefault(d => d.FriendlyName.Contains("Speaker"));
-                //var headphoneDevice = allDevices.FirstOrDefault(d => d.FriendlyName.Contains("Headphone"));
-
-                //if (speakerDevice != null) targetDevices.Add(speakerDevice);
-                //if (headphoneDevice != null) targetDevices.Add(headphoneDevice);
-
-                // Initialize NAudio multi-device player
-                // 2. Pass your Flyleaf Player instance to the multi-output handler
-
-                //var multiAudioService = new FlyleafNAudioMultiOutput(Masterplayer);
-
-                //// 3. Initialize NAudio outputs and silence Flyleaf's native output
-                //multiAudioService.InitializeOutputs(targetDevices, muteFlyleafNativeAudio: true);
-                //SecondaryPlayer.Audio.Device = headphonedevice;
-                //Masterplayer.Audio.Device = speakerdevice;
-                //if (headphonedevice != null)
-                //{
-                //    Engine.Audio.ToggleDevice(headphonedevice.Id, true);
-                //}Masterplayer.Config.Audio.Cus
-                //if (speakerdevice != null)
-                //{
-                //    Engine.Audio.ToggleDevice(speakerdevice.Id, true);
-                //}
-                //  SecondaryPlayer.Open(filestreamcurrent);
+            
 
                 PlayCalled?.Invoke();
 
@@ -423,18 +385,12 @@ namespace Vusic_Player.Configuration
                     image.UriSource = new Uri("ms-appx:///Assets/appicon.png");
                     UIController.CoverThumbnail = image;
                 }
+                ResetFilters();
                 MediaCompleted = false;
                 Masterplayer.PlaybackStopped -= Masterplayer_PlaybackStopped;
                 Masterplayer.PlaybackStopped += Masterplayer_PlaybackStopped;
                 SaveRecents();
-                if (Masterplayer.MainDemuxer.Status == FlyleafLib.MediaFramework.Status.Stopped)
-                {
-                    Debug.WriteLine("SJDHDH23hd");
-                }
-                else
-                {
-                    Debug.WriteLine("FSEC092" + Masterplayer.MainDemuxer.Status.ToString());
-                }
+            
 
 
 
@@ -467,6 +423,20 @@ namespace Vusic_Player.Configuration
                 return floatvolume;
             }
             return 0;
+        }
+        public static void ResetFilters()
+        {
+            try
+            {
+                Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Brightness].Value = 0;
+                Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Saturation].Value = 0;
+                Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Contrast].Value = 0;
+                Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Hue].Value = 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Error: " + ex.Message, "PlayerService.OpenPath.ResetFilters", LogLevelType.Error);
+            }
         }
         public static void MuteDevice(string deviceId)
         {
@@ -629,9 +599,9 @@ namespace Vusic_Player.Configuration
             //JustDisposed = true;
 
         }
-        public static Stream? CurrentMemoryStream { get; set; }
+        public static System.IO.Stream? CurrentMemoryStream { get; set; }
         public static bool IsMemoryStreamMode => CurrentMemoryStream != null;
-        public static void Play()
+        public static void Play(bool NavigateToVideoPageAlways = true)
         {
             if (JustDisposed == true)
             {
@@ -719,7 +689,10 @@ namespace Vusic_Player.Configuration
                 UIController.Thumbnail = IconHolder.Instance.Pause;
                 maintimer?.Start();
             });
-            NavigateToVideoPage();
+            if (NavigateToVideoPageAlways)
+            {
+                NavigateToVideoPage();
+            }
         }
 
         private static void OceanContentDialog_PrimaryRequested()

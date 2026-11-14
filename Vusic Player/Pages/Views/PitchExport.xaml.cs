@@ -15,6 +15,8 @@ using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
+using System.Collections.Generic;
+
 using Vusic_Player.FilePickers;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -249,7 +251,7 @@ namespace Vusic_Player.Pages.Views
         {
             if (AddedFiles.Count == 0) return;
 
-            if (string.IsNullOrWhiteSpace(numPitchValue.Text) || double.IsNaN(numPitchValue.Value))
+            if (string.IsNullOrWhiteSpace(numPitchValue.Text) || double.IsNaN(numPitchValue.Value) || numPitchValue.Value <= 0)
             {
                 numPitchValue.Value = 1;
             }
@@ -279,7 +281,8 @@ namespace Vusic_Player.Pages.Views
 
             string baseDir = AppContext.BaseDirectory;
             string ffmpegPath = Path.Combine(baseDir, "FFmpeg", "ffmpeg.exe");
-            string ffmpegWorkingDir = Path.GetDirectoryName(ffmpegPath) ?? baseDir;
+            string tempWorkDir = Path.Combine(Path.GetTempPath(), "VusicPlayer_Pitch");
+            Directory.CreateDirectory(tempWorkDir);
 
             var dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
             var throttler = new SemaphoreSlim(Environment.ProcessorCount);
@@ -304,6 +307,8 @@ namespace Vusic_Player.Pages.Views
                 var tasks = AddedFiles.Select(async item =>
                 {
                     await throttler.WaitAsync();
+                    string tempOutputMp3 = string.Empty;
+
                     try
                     {
                         if (!File.Exists(item.FilePath))
@@ -319,7 +324,8 @@ namespace Vusic_Player.Pages.Views
                         }
 
                         string sanitizedTitle = string.Join("_", item.Title.Split(Path.GetInvalidFileNameChars())).TrimEnd('.');
-                        string outputMp3 = Path.Combine(baseDirOutput, $"{sanitizedTitle}_{Guid.NewGuid():N}.mp3");
+                        string finalFileName = $"{sanitizedTitle}_{Guid.NewGuid():N}.mp3";
+                        string targetDirectory = baseDirOutput;
 
                         if (item.IndividualDirectorySelBool)
                         {
@@ -333,7 +339,7 @@ namespace Vusic_Player.Pages.Views
                                 });
                                 return;
                             }
-                            outputMp3 = Path.Combine(item.DirectoryPath, $"{sanitizedTitle}_{Guid.NewGuid():N}.mp3");
+                            targetDirectory = item.DirectoryPath;
                         }
                         else if (txtOutputDirectory.Text != "Custom Directories" && !Directory.Exists(baseDirOutput))
                         {
@@ -346,26 +352,8 @@ namespace Vusic_Player.Pages.Views
                             return;
                         }
 
-                        // Launch ffmpeg.exe directly with ArgumentList (no cmd.exe quote-escaping issues)
-                        ProcessStartInfo startInfo = new ProcessStartInfo
-                        {
-                            FileName = ffmpegPath,
-                            UseShellExecute = false,
-                            CreateNoWindow = true,
-                            RedirectStandardOutput = false,
-                            RedirectStandardError = true,
-                            WorkingDirectory = ffmpegWorkingDir
-                        };
-
-                        startInfo.ArgumentList.Add("-y");
-                        startInfo.ArgumentList.Add("-i");
-                        startInfo.ArgumentList.Add(item.FilePath);
-                        startInfo.ArgumentList.Add("-vn");
-                        startInfo.ArgumentList.Add("-af");
-                        startInfo.ArgumentList.Add($"rubberband=pitch={pitchValueStr}");
-                        startInfo.ArgumentList.Add("-b:a");
-                        startInfo.ArgumentList.Add("192k");
-                        startInfo.ArgumentList.Add(outputMp3);
+                        string outputMp3 = Path.Combine(targetDirectory, finalFileName);
+                        tempOutputMp3 = Path.Combine(tempWorkDir, finalFileName);
 
                         using var cts = new CancellationTokenSource();
 
@@ -387,8 +375,23 @@ namespace Vusic_Player.Pages.Views
                         });
 
                         var errorBuilder = new System.Text.StringBuilder();
+                        int exitCode;
 
-                        using (Process process = new Process { StartInfo = startInfo })
+                        // Launch ffmpeg.exe directly via CreateDirectProcess (no cmd.exe, writes to %TEMP% first)
+                        using (Process process = CreateDirectProcess(
+                            ffmpegPath,
+                            new[]
+                            {
+                        "-y",
+                        "-i", item.FilePath,
+                        "-vn",
+                        "-af", $"rubberband=pitch={pitchValueStr}",
+                        "-b:a", "192k",
+                        tempOutputMp3
+                            },
+                            tempWorkDir,
+                            redirectStdin: false,
+                            redirectStdout: false))
                         {
                             process.ErrorDataReceived += (s, args) =>
                             {
@@ -408,58 +411,73 @@ namespace Vusic_Player.Pages.Views
                             await process.WaitForExitAsync();
                             process.CancelErrorRead();
 
-                            int exitCode = process.ExitCode;
-                            cts.Cancel();
+                            exitCode = process.ExitCode;
+                        }
 
-                            string fullErrorOutput;
-                            lock (errorBuilder)
+                        cts.Cancel();
+
+                        if (exitCode == 0 && File.Exists(tempOutputMp3))
+                        {
+                            try
                             {
-                                fullErrorOutput = errorBuilder.ToString();
+                                File.Move(tempOutputMp3, outputMp3, overwrite: true);
                             }
-
-                            dispatcherQueue.TryEnqueue(() =>
+                            catch (UnauthorizedAccessException)
                             {
-                                item.DirectorySelectionEnabled = true;
+                                var destFolder = await Windows.Storage.StorageFolder.GetFolderFromPathAsync(targetDirectory);
+                                var tempStorageFile = await Windows.Storage.StorageFile.GetFileFromPathAsync(tempOutputMp3);
+                                await tempStorageFile.MoveAsync(destFolder, finalFileName, Windows.Storage.NameCollisionOption.ReplaceExisting);
+                            }
+                        }
 
-                                if (exitCode == 0 && File.Exists(outputMp3))
+                        string fullErrorOutput;
+                        lock (errorBuilder)
+                        {
+                            fullErrorOutput = errorBuilder.ToString();
+                        }
+
+                        dispatcherQueue.TryEnqueue(() =>
+                        {
+                            item.DirectorySelectionEnabled = true;
+
+                            if (exitCode == 0 && File.Exists(outputMp3))
+                            {
+                                item.Progress = 100;
+                                item.ImageState = IconHolder.Instance.Success;
+                                item.OutputPath = outputMp3;
+                                item.ErrorToolTip = "Completed successfully";
+                                Debug.WriteLine(outputMp3 + "  Post Processing");
+
+                                ProcessedFiles.Add(item);
+                                stkOutputActions.Visibility = Visibility.Visible;
+                                item.VisibilityOfCompletedFileLocation = Visibility.Visible;
+                            }
+                            else
+                            {
+                                item.Progress = 0;
+                                item.ImageState = IconHolder.Instance.Error;
+
+                                var errorLines = fullErrorOutput
+                                    .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Where(line => line.Contains("Error", StringComparison.OrdinalIgnoreCase) ||
+                                                   line.Contains("Invalid", StringComparison.OrdinalIgnoreCase) ||
+                                                   line.Contains("failed", StringComparison.OrdinalIgnoreCase))
+                                    .TakeLast(3)
+                                    .ToList();
+
+                                if (errorLines.Count > 0)
                                 {
-                                    item.Progress = 100;
-                                    item.ImageState = IconHolder.Instance.Success;
-                                    item.OutputPath = outputMp3;
-                                    item.ErrorToolTip = "Completed successfully";
-                                    Debug.WriteLine(outputMp3 + "  Post Processing");
-
-                                    ProcessedFiles.Add(item);
-                                    stkOutputActions.Visibility = Visibility.Visible;
-                                    item.VisibilityOfCompletedFileLocation = Visibility.Visible;
+                                    item.ErrorToolTip = string.Join(Environment.NewLine, errorLines);
                                 }
                                 else
                                 {
-                                    item.Progress = 0;
-                                    item.ImageState = IconHolder.Instance.Error;
-
-                                    var errorLines = fullErrorOutput
-                                        .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                                        .Where(line => line.Contains("Error", StringComparison.OrdinalIgnoreCase) ||
-                                                       line.Contains("Invalid", StringComparison.OrdinalIgnoreCase) ||
-                                                       line.Contains("failed", StringComparison.OrdinalIgnoreCase))
-                                        .TakeLast(3)
-                                        .ToList();
-
-                                    if (errorLines.Count > 0)
-                                    {
-                                        item.ErrorToolTip = string.Join(Environment.NewLine, errorLines);
-                                    }
-                                    else
-                                    {
-                                        string lastLine = fullErrorOutput.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault() ?? "Unknown error";
-                                        item.ErrorToolTip = $"Exit Code {exitCode}: {lastLine}";
-                                    }
-
-                                    Logger.Log($"Batch Pitch failed for {item.Title} (Code {exitCode}): {fullErrorOutput}", "BatchPitch", Logger.LogLevelType.Error);
+                                    string lastLine = fullErrorOutput.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault() ?? "Unknown error";
+                                    item.ErrorToolTip = $"Exit Code {exitCode}: {lastLine}";
                                 }
-                            });
-                        }
+
+                                Logger.Log($"Batch Pitch failed for {item.Title} (Code {exitCode}): {fullErrorOutput}", "BatchPitch", Logger.LogLevelType.Error);
+                            }
+                        });
                     }
                     catch (Exception ex)
                     {
@@ -474,6 +492,10 @@ namespace Vusic_Player.Pages.Views
                     }
                     finally
                     {
+                        if (!string.IsNullOrEmpty(tempOutputMp3) && File.Exists(tempOutputMp3))
+                        {
+                            try { File.Delete(tempOutputMp3); } catch { }
+                        }
                         throttler.Release();
                     }
                 }).ToList();
@@ -489,6 +511,27 @@ namespace Vusic_Player.Pages.Views
                 throttler.Dispose();
             }
         }
+        private static Process CreateDirectProcess(string exePath, IEnumerable<string> args, string workingDir, bool redirectStdin, bool redirectStdout)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = exePath,
+                WorkingDirectory = workingDir,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardInput = redirectStdin,
+                RedirectStandardOutput = redirectStdout,
+                RedirectStandardError = true
+            };
+
+            foreach (var arg in args)
+            {
+                psi.ArgumentList.Add(arg);
+            }
+
+            return new Process { StartInfo = psi };
+        }
+
         bool isValueChanging = false;
 
         private void numPitchValue_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
