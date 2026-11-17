@@ -124,12 +124,14 @@ namespace Vusic_Player.Pages.Views
 
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
+            List<string> Paths = new List<string>();
             foreach (var item in SongCollection)
             {
-                item.IsCompleted = false;
-                Debug.WriteLine("Check 1: " + item.Glyph);
+                Paths.Add(item.FilePath);
+           //     item.IsCompleted = false;
             }
-
+            QueueService.AddToQueueAndPlay(Paths, btnShuffle.IsChecked ?? false,  btnLoop.IsChecked ?? false);
+            return;
             QueueService.PlayMedia(SongCollection, btnShuffle.IsChecked ?? false, btnLoop.IsChecked ?? false);
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var playlists = currentSettings.SavedPlaylists;
@@ -618,8 +620,6 @@ namespace Vusic_Player.Pages.Views
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            //          Vusic_Player.Helper.FileInfo.RefreshValues -= FileInfo_RefreshValues;
-            //      lstViewUnified.ListViewRemoved -= LstViewUnified_ListViewRemoved;
 
             OceanContentDialog.PrimaryRequested -= OceanContentDialog_PrimaryRequested;
             base.OnNavigatedFrom(e);
@@ -771,7 +771,7 @@ namespace Vusic_Player.Pages.Views
                 existinmaster.PlaylistName = finalName;
             }
             await SettingsLoader.SaveSettingsAsync(currentSettings);
-            //   txtPlaylistName.Text = txtRenamePlaylist.Text;
+              txtPlaylistName.Text = txtRenamePlaylist.Text;
             ttRename.IsOpen = false;
         }
 

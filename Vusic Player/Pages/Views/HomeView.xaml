@@ -98,7 +98,7 @@
 
             </Expander>
             <StackPanel Orientation="Horizontal" Grid.Row="9" Spacing="10">
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Tapped="TextBlock_Tapped_1" Text="Folders Opened" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}" Text="Folders Opened" Grid.Row="3" Padding="15" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
             </StackPanel>
             <StackPanel Visibility="Collapsed" Name="stkFoldersOptions" Orientation="Horizontal" Spacing="20" Grid.Row="10">
                 <CheckBox Content="Select" Grid.Row="1" Margin="0, 5" Name="chkSelect" Checked="chkSelect_Checked" Unchecked="chkSelect_Checked">

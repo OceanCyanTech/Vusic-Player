@@ -2299,7 +2299,6 @@ namespace Vusic_Player.Pages
                     }
                 }
             }
-            Debug.WriteLine("Nanan5");
             Debug.WriteLine(episodeNumber);
 
             if (int.TryParse(episodeNumber, out int episode))

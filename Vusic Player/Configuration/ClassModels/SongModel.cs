@@ -4,19 +4,22 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.UserSettings;
 
 namespace Vusic_Player.Configuration.ClassModels
 {
+    [Microsoft.UI.Xaml.Data.Bindable]
     public class SongModel : INotifyPropertyChanged
     {
         private string _title = "";
         public TimeSpan? SongDuration { get; set; }
-
+        private bool _isplaying = false;
         private Brush? _titleColor;
         private int _year;
         private int seasonindexassociated;
@@ -80,7 +83,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 OnPropertyChanged();
             }
         }
-        public string Glyph => (PlayerService.CurrentPlayingPath == FilePath) ? (PlayerService.Masterplayer != null && PlayerService.Masterplayer.IsPlaying ? "\uE768" : "\uE769") : ((File.Exists(FilePath) && Extensions.VideoExtensions.List.Contains(Path.GetExtension(FilePath))) ? "\uE8B2" : "\uEC4F");
+        public string Glyph => (PlayerService.PlayerServiceInstance.CurrentPlayingMediaPath == FilePath) ? (PlayerService.Masterplayer != null && PlayerService.Masterplayer.IsPlaying ? "\uE769" : "\uE768") : ((File.Exists(FilePath) && ExtensionVerifier.FileTypeExtension(FilePath) == ExtensionVerifier.FileTypeEnum.Video ? "\uE8B2" : "\uEC4F"));
 
 
         private string mediatype = "Playlist";// Default color
@@ -149,25 +152,37 @@ namespace Vusic_Player.Configuration.ClassModels
         private string _filePath = "";
         private bool isCompleted = false;
 
-        public Visibility VisibilityOfStrikeThrough
-        {
-            get => visibilityofstrikethrough;
-            set
-            {
-                if (visibilityofstrikethrough != value)
-                {
-                    visibilityofstrikethrough = value;
-                    // This "notifies" the Button and the Menu to update their visuals
-                    OnPropertyChanged();
-                }
-            }
-        }
+        public Visibility VisibilityOfStrikeThrough => isCompleted ? Visibility.Visible : Visibility.Collapsed;
+        //{
+        //    get => visibilityofstrikethrough;
+        //    set
+        //    {
+        //        if (visibilityofstrikethrough != value)
+        //        {
+        //            visibilityofstrikethrough = value;
+        //            // This "notifies" the Button and the Menu to update their visuals
+        //            OnPropertyChanged();
+        //        }
+        //    }
+        //}
         public Visibility VisibilityofAudioMeta => (File.Exists(FilePath) && Extensions.AudioExtensions.List.Contains(Path.GetExtension(FilePath))) ? Visibility.Visible : Visibility.Collapsed;
         public Visibility VisibilityofVideoInfo => (File.Exists(FilePath) && Extensions.VideoExtensions.List.Contains(Path.GetExtension(FilePath))) ? Visibility.Visible : Visibility.Collapsed;
 
         public SongModel()
         {
             GlobalFavourites.Instance.FavouritesChanged += OnGlobalFavouritesChanged;
+            PlayerService.PlayerServiceInstance.PropertyChanged += PlayerServiceInstance_PropertyChanged
+                ;
+        }
+
+        private void PlayerServiceInstance_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PlayerService.CurrentPlayingMediaPath))
+            {
+                Debug.WriteLine("YES PATH CHANGED: " + PlayerService.PlayerServiceInstance.CurrentPlayingMediaPath);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsPlaying)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Glyph)));
+            }
         }
 
         private void OnGlobalFavouritesChanged(string changedPath)
@@ -194,6 +209,7 @@ namespace Vusic_Player.Configuration.ClassModels
             OnPropertyChanged(nameof(FavOpacity));
             OnPropertyChanged(nameof(FavString));
         }
+        public bool IsPlaying => !string.IsNullOrEmpty(FilePath) && string.Equals(FilePath, PlayerService.PlayerServiceInstance.CurrentPlayingMediaPath, StringComparison.OrdinalIgnoreCase);
         public bool IsCompleted
         {
             get => isCompleted;
@@ -203,6 +219,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 {
                     isCompleted = value;
                     OnPropertyChanged(nameof(IsCompleted));
+                    OnPropertyChanged(nameof(VisibilityOfStrikeThrough));
                 }
             }
         }

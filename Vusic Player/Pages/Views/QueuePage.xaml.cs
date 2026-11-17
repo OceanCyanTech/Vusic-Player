@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
@@ -29,6 +30,81 @@ using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 
 namespace Vusic_Player.Pages.Views
 {
+    public class QueueItemCount : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class QueueItemCountBack : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class QueueItemCountString : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return $"• {count} {(count == 1 ? "item" : "items")}";
+            }
+
+            return "• 0 items";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class QueueDurationString : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is ObservableCollection<SongModel> media)
+            {
+                TimeSpan? ts = TimeSpan.Zero;
+                foreach (var item in media)
+                {
+                    ts += item.SongDuration;
+                }
+                return $"• {(ts.Value.TotalHours >= 1 ? $"{(int)ts.Value.TotalHours}:{ts.Value:mm\\:ss}" : ts.Value.ToString(@"mm\:ss"))}";
+            }
+
+            return "• 00:00";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
     public sealed partial class QueuePage : Page
     {
@@ -36,16 +112,26 @@ namespace Vusic_Player.Pages.Views
         public QueuePage()
         {
             InitializeComponent();
-            //          frmNowPlaying.Navigate(typeof(MusicPlayerFull));
             FileSystemWatch.FileModified -= FileSystemWatch_FileModified;
             FileSystemWatch.FileModified += FileSystemWatch_FileModified;
+            QueueService.NextMediaInitiated += QueueService_NextMediaInitiated;
 
         }
+        private readonly QueueDurationString _durationConverter = new();
+
+        public string FormatQueueDuration(int count)
+        {
+            return (string)_durationConverter.Convert(VusicQueueList, typeof(string), null, string.Empty);
+        }
+        private void QueueService_NextMediaInitiated()
+        {
+            LoadQueue();
+        }
+
         private readonly ConcurrentDictionary<string, CancellationTokenSource> _debouncers = new();
 
         private void FileSystemWatch_FileModified(string filePath, string arg2, string arg3, string arg4, TimeSpan duration, string genre)
         {
-            // If an update is already pending for this file, cancel it and restart the timer
             if (_debouncers.TryRemove(filePath, out var existingCts))
             {
                 existingCts.Cancel();
@@ -132,14 +218,36 @@ namespace Vusic_Player.Pages.Views
                 Debug.WriteLine($"[Watcher] Queue updated: {filePath}");
             }
         }
-
+        public QueueObjects queueObjectsInstance => QueueObjects.QueueInstance;
         public ObservableCollection<SongModel> VusicQueueList => QueueService.VusicQueueNext;
+        private void LoadQueue()
+        {
 
+            VusicQueueList.Clear();
+            lstViewQueue.ItemsSource = VusicQueueList;
+            if (btnViewQueue.IsChecked == false)
+            {
+                var incompletequeueitems = queueObjectsInstance.QueueFull.Where(p => p.IsCompleted == false && p.FilePath != PlayerService.CurrentPlayingPath);
+                foreach (var item in incompletequeueitems)
+                {
+                    VusicQueueList.Add(item);
+                }
+            }
+            else
+            {
+                foreach (var item in queueObjectsInstance.QueueFull)
+                {
+                    VusicQueueList.Add(item);
+                }
+            }
+        }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            LoadQueue();
+
+            base.OnNavigatedTo(e);
+            return;
             QueueService.SyncQueueLists();
-            var currentsettings = await SettingsLoader.LoadSettingsAsync();
-            var favourites = currentsettings.Favourites;
             if (QueueService.IsShuffleTrue)
             {
                 tglShuffleQueue.IsChecked = true;
@@ -157,7 +265,6 @@ namespace Vusic_Player.Pages.Views
                 mediacontroller.ItemsCount = $"• {count} {(count == 1 ? "item" : "items")}";
             }
             lstViewQueue.UpdateGlyphs();
-            base.OnNavigatedTo(e);
         }
         private async void asbFindQueue_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
@@ -216,7 +323,7 @@ namespace Vusic_Player.Pages.Views
                 asbFindQueue.ItemsSource = null;
                 grdNoSearchResults.Visibility = Visibility.Collapsed;
 
-                lstViewQueue.ItemsSource = currentQueue;
+                // lstViewQueue.ItemsSource = currentQueue;
                 asbFindQueue.ItemsSource = null;
                 lstViewQueue.Visibility = Visibility.Visible;
             }
@@ -409,8 +516,8 @@ namespace Vusic_Player.Pages.Views
         private async void btnSaveQueue_Click(object sender, RoutedEventArgs e)
         {
             var currentQueue = (btnViewQueue.IsChecked == true)
-? QueueService.VusicQueue
-: QueueService.VusicQueueNext;
+    ? QueueService.VusicQueue
+    : QueueService.VusicQueueNext;
             Instance.MediaPaths.Clear();
             Instance.MediaSongModels.Clear();
 
@@ -523,22 +630,19 @@ namespace Vusic_Player.Pages.Views
 
         private void btnViewQueue_Checked(object sender, RoutedEventArgs e)
         {
+            LoadQueue();
+            var upnextstring = (btnViewQueue.IsChecked == true) ? "Full Queue" : "Up Next";
+            txtUpNext.Text = upnextstring;
+
+            return;
             QueueService.SyncQueueLists();
             var currentQueue = (btnViewQueue.IsChecked == true)
                 ? QueueService.VusicQueue
                 : QueueService.VusicQueueNext;
             btnRestartandPlay.Visibility = (btnViewQueue.IsChecked == true) ? Visibility.Visible : Visibility.Collapsed;
             mediacontroller.IsFullQueueMode = btnViewQueue.IsChecked ?? false;
-            lstViewQueue.ItemsSource = currentQueue;
+            //          lstViewQueue.ItemsSource = currentQueue;
             UpdateUI(currentQueue);
-
-            int count = currentQueue.Count;
-            mediacontroller.QueuePageEmptyVisibility = (count == 0)
-                   ? Visibility.Visible
-                   : Visibility.Collapsed;
-            mediacontroller.ItemsCount = $"• {count} {(count == 1 ? "item" : "items")}";
-            var upnextstring = (btnViewQueue.IsChecked == true) ? "Full Queue" : "Up Next";
-            txtUpNext.Text = upnextstring;
         }
         private void UpdateUI(ObservableCollection<SongModel> currentQueue)
         {
@@ -657,7 +761,6 @@ namespace Vusic_Player.Pages.Views
             foreach (var item in QueueService.VusicQueue.ToList())
             {
                 item.IsCompleted = false;
-                item.VisibilityOfStrikeThrough = Visibility.Collapsed;
                 refreshedobservablecoll.Add(item);
             }
 
@@ -667,6 +770,54 @@ namespace Vusic_Player.Pages.Views
         private void btnCancelEdit_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void lstViewQueue_DragItemsCompleted()
+        {
+            var currentmedia = VusicQueueList.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
+            Debug.WriteLine("YES DRAG CHANGING for " + currentmedia.FilePath);
+
+            if (currentmedia != null)
+            {
+                var index = VusicQueueList.IndexOf(currentmedia);
+                QueueObjects.QueueInstance.QueueIndex = index;
+                Debug.WriteLine("INDEX DRAG " + index);
+                //Every media prior
+                for (int i = 0; i < index; i++)
+                {
+                    var track = VusicQueueList[i];
+                    if (track != null)
+                    {
+                        track.IsCompleted = true;
+                    }
+                }
+                //Every media after
+                for (int i = index + 1; i < VusicQueueList.Count; i++)
+                {
+                    var track = VusicQueueList[i];
+                    if (track != null)
+                    {
+                        track.IsCompleted = false;
+                    }
+                }
+            }
+            if(btnViewQueue.IsChecked == false)
+            {
+                var completeditems = QueueObjects.QueueInstance.QueueFull.Where(p => p.IsCompleted == true);
+                QueueObjects.QueueInstance.QueueFull.Clear();
+                foreach(var item in completeditems)
+                {
+                    QueueObjects.QueueInstance.QueueFull.Add(item);
+                }
+                foreach (var item in VusicQueueList)
+                {
+                    QueueObjects.QueueInstance.QueueFull.Add(item);
+                }
+            }
+            else
+            {
+                PENDING
+            }
         }
     }
 

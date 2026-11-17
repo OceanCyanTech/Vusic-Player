@@ -154,7 +154,6 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36");
                 client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
                 client.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.5");
-                // This one is often the "magic" fix for DDG
                 client.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip, deflate, br");
                 var mainPageResponse = await client.GetStringAsync($"https://duckduckgo.com/?q={encodedQuery}");
                 Debug.WriteLine("mainres");

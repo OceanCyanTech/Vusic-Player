@@ -516,8 +516,8 @@ Genre TEXT,
 
                             if (normalizedPath.Contains(@"OneDrive\Pictures", StringComparison.OrdinalIgnoreCase))
                             {
-                                System.Diagnostics.Debug.WriteLine($"🚨 [LEAK DETECTED]: {normalizedPath}");
-                                System.Diagnostics.Debug.WriteLine($"🚨 [SCANNER CURRENT ROOT (path)]: {path}");
+                                System.Diagnostics.Debug.WriteLine($" [LEAK DETECTED]: {normalizedPath}");
+                                System.Diagnostics.Debug.WriteLine($"[SCANNER CURRENT ROOT (path)]: {path}");
                             }
                             if (existingPaths.Contains(normalizedPath)) continue;
 

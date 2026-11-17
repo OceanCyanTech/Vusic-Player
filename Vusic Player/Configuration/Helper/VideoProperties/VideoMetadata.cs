@@ -27,11 +27,8 @@ namespace Vusic_Player.Configuration.Helper.VideoProperties
 
             if (!process.Start()) return new VideoInfo();
 
-            // DRAIN BOTH STREAMS SIMULTANEOUSLY TO PREVENT BUFFER DEADLOCKS
             Task<string> readOutputTask = process.StandardOutput.ReadToEndAsync();
             Task<string> readErrorTask = process.StandardError.ReadToEndAsync();
-
-            // Use a strict 4-second timeout so it can never hang up your system/files forever
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(4));
             try
             {
@@ -80,7 +77,6 @@ namespace Vusic_Player.Configuration.Helper.VideoProperties
                 return new VideoInfo();
             }
         }
-        // Helper to safely convert "30000/1001" fractional strings into a double like 29.97
         private static double CalculateFps(string fraction)
         {
             if (string.IsNullOrEmpty(fraction) || !fraction.Contains("/")) return 0;
@@ -97,8 +93,6 @@ namespace Vusic_Player.Configuration.Helper.VideoProperties
             var videoinfo = await GetVideoMetadataAsync(ffprobePath, videoFilePath);
             return videoinfo;
         }
-
-        // Simple data carrier class
         public class VideoInfo
         {
             public string Codec { get; set; } = "";

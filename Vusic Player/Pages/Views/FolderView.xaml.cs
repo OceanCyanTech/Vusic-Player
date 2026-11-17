@@ -69,7 +69,8 @@ namespace Vusic_Player.Pages.Views
                 foreach (var sub in subFolders)
                 {
                     DirectoryInfo dirInfo = new DirectoryInfo(sub.Path);
-                    var totalsize2 = dirInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(file => file.Length);
+                    var options = new EnumerationOptions { IgnoreInaccessible = true, RecurseSubdirectories = true };
+                    var totalsize2 = dirInfo.EnumerateFiles("*", options).Sum(file => file.Length);
                     string[] units2 = { "Bytes", "KB", "MB", "GB", "TB" };
                     double readableSize2 = totalsize2;
                     int unitIndex2 = 0;

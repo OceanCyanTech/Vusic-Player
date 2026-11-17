@@ -4,14 +4,17 @@
 using FlyleafLib;
 using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 using Vusic_Player.Configuration.ClassModels;
@@ -32,7 +35,7 @@ using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 
 namespace Vusic_Player.Configuration
 {
-    public class PlayerService
+    public class PlayerService : INotifyPropertyChanged
     {
         public static Player? Masterplayer { get; set; }
         public static bool MediaCompleted { get; set; }
@@ -46,6 +49,19 @@ namespace Vusic_Player.Configuration
         public static DispatcherTimer? maintimer { get; set; }
         public static System.IO.Stream? filestreamcurrent;
         public static string CurrentPlayingPath { get; set; } = "";
+        private string _currentplayingpath = "";
+        public string CurrentPlayingMediaPath
+        {
+            get => _currentplayingpath;
+            set
+            {
+                if(value != _currentplayingpath)
+                {
+                    _currentplayingpath = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public static event Action? ErrorCalled;
         public static string ErrorString { get; set; } = "";
@@ -199,6 +215,7 @@ namespace Vusic_Player.Configuration
             //         UIController.CurrentPosition = targetTime.TotalSeconds;
             Configuration.Helper.UI.SeekInfoService.ShowSeek(-SeekServiceInstance.SkipBack);
         }
+        public static PlayerService PlayerServiceInstance = new PlayerService();
         public static SeekService SeekServiceInstance => SeekService.Instance;
         public static void SeekAhead()
         {
@@ -210,8 +227,6 @@ namespace Vusic_Player.Configuration
             // 2. Seek to the target (TotalMilliseconds handles the math safely)
             Masterplayer.SeekAccurate((int)targetTime.TotalMilliseconds);
             UIController.CurrentPosition = targetTime.TotalSeconds;
-            // 3. Update UI based on the intended target time
-            //  UIController.CurrentPosition = targetTime.TotalSeconds;
             Configuration.Helper.UI.SeekInfoService.ShowSeek(SeekServiceInstance.SkipAhead);
         }
         public static async void OpenPath(string fiPath)
@@ -232,6 +247,7 @@ namespace Vusic_Player.Configuration
                     Masterplayer = new Player();
                 }
                 CurrentPlayingPath = fiPath;
+                PlayerServiceInstance.CurrentPlayingMediaPath = fiPath;
 				//FileAttributes originalAttributes = File.GetAttributes(fiPath);
 				//bool wasHidden = originalAttributes.HasFlag(FileAttributes.Hidden);
 
@@ -287,7 +303,7 @@ namespace Vusic_Player.Configuration
 				QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
 
                 QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
-
+                QueueObjects.QueueInstance.QueueFull.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
                 QueueService.VusicQueue.CollectionChanged -= QueueService.VusicQueue_CollectionChanged;
                 QueueService.VusicQueue.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
                 Masterplayer.SeekCompleted += (sender, completedMs) =>
@@ -600,7 +616,11 @@ namespace Vusic_Player.Configuration
         {
 
             if (Masterplayer == null) return;
+
             Masterplayer.Pause();
+
+            PlayerServiceInstance.PropertyChanged?.Invoke(PlayerServiceInstance.CurrentPlayingMediaPath, new PropertyChangedEventArgs(nameof(CurrentPlayingMediaPath)));
+
             statsTimerRealTime.Stop();
             LoggedMessage?.Invoke("Pause", LogLevelType.Information);
 
@@ -629,6 +649,7 @@ namespace Vusic_Player.Configuration
         public static bool IsMemoryStreamMode => CurrentMemoryStream != null;
         public static void Play(bool NavigateToVideoPageAlways = true)
         {
+
             if (JustDisposed == true)
             {
                 GeneralInfoService.ShowInfo("Reloading video with updated properties...");
@@ -705,6 +726,9 @@ namespace Vusic_Player.Configuration
             PlayPauseChanged?.Invoke();
             statsTimerRealTime.Start();
             Masterplayer.Play();
+
+            PlayerServiceInstance.PropertyChanged?.Invoke(PlayerServiceInstance.CurrentPlayingMediaPath, new PropertyChangedEventArgs(nameof(CurrentPlayingMediaPath)));
+
             LoggedMessage?.Invoke("Player Status: Playing", LogLevelType.Information);
 
             PlayCalled?.Invoke();
@@ -759,15 +783,11 @@ namespace Vusic_Player.Configuration
         public static bool isEpisodeVid = false;
         private static void Masterplayer_OpenCompleted1(object? sender, OpenCompletedArgs e)
         {
-            Debug.WriteLine("SKHDHD");
             if (Masterplayer == null) return;
             Masterplayer.SeekAccurate((int)(curtimetemp / 10000));
-            Debug.WriteLine("DONGD " + curtime.TotalSeconds);
             var curTime = TimeSpan.FromTicks(Masterplayer.CurTime);
             UIController.CurrentPosition = curTime.TotalSeconds;
-            Debug.WriteLine("DONGDd " + TimeSpan.FromSeconds(curtime.TotalSeconds).ToString(@"hh\:mm\:ss"));
             GeneralInfoService.ShowInfo($"Opened playback of '{CurrentPlayingPath}' at {TimeSpan.FromSeconds(curTime.TotalSeconds).ToString(@"hh\:mm\:ss")}");
-
             curtime = TimeSpan.Zero;
             curtimetemp = 0;
 
@@ -781,7 +801,6 @@ namespace Vusic_Player.Configuration
             {
                 Masterplayer = new Player();
             }
-            Debug.WriteLine("Looking for video Progress");
             Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted1;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var videoprogress = currentSettings.SavedVideoProgress;
@@ -814,6 +833,7 @@ namespace Vusic_Player.Configuration
 
                         UIController.CurrentPosition = 0;
                         UIController.PlayPauseToolTip = "Play";
+                        PlayerServiceInstance.PropertyChanged?.Invoke(PlayerServiceInstance.CurrentPlayingMediaPath, new PropertyChangedEventArgs(nameof(CurrentPlayingMediaPath)));
                         UIController.Thumbnail = IconHolder.Instance.Play;
                         maintimer?.Stop();
 
@@ -835,6 +855,15 @@ namespace Vusic_Player.Configuration
             if (Masterplayer == null) return;
             _isDragging = true;
             maintimer?.Stop();
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
+        {
+            DispatcherQueue.GetForCurrentThread()?.TryEnqueue(() =>
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            });
         }
         public static event Action<int>? SeekCompleted;
         public static void SldMain_DragCompleted(OceanSlider slider)

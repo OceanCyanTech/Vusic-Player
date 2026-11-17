@@ -187,7 +187,7 @@
                    HorizontalAlignment="Center" />
                         <TextBlock Text="&#xE823;" FontFamily="Segoe Fluent Icons" 
 Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="25, 3" />
-                        <TextBlock Margin="-22, 0" Text="00:00" ToolTipService.ToolTip="Total Runtime of playlist" 
+                        <TextBlock Margin="-22, 0" Text="00:00" ToolTipService.ToolTip="Total Runtime of playlist"  FontFamily="{StaticResource GlobalFontHolder}" 
 Name="txtTotalDuration" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
                 </StackPanel>

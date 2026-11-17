@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <converters:FavoriteToGlyphConverter x:Key="FavoritetoGlyphConv"/>
         <converters:FavoriteToColorConverter x:Key="FavoritetoColorConv"/>
+        <local:CurrentTrackForegroundUpdater x:Key="CurrentTrackForegroundConverter"/>
         <usersettings:IsFavouriteConverter x:Key="IsFavouriteConverter"/>
         <MenuFlyout x:Key="mnftMainContext" Opened="mnftContext_Opened"  x:Name="mnftContext" >
             <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Title}"  IsEnabled="False" Name="txtHeaderContext"></MenuFlyoutItem>
@@ -515,7 +516,7 @@ BorderThickness="0"
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <ListView   Margin="0, 0" Grid.Row="3" CanDragItems="True" Visibility="Visible" CanReorderItems="True" AllowDrop="True"
+        <ListView DragItemsCompleted="lstViewPlaylist_DragItemsCompleted"   Margin="0, 0" Grid.Row="3" CanDragItems="True" Visibility="Visible" CanReorderItems="True" AllowDrop="True"
 SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   Name="lstViewPlaylist" ItemsSource="{Binding ItemsSource}" MaxHeight="500">
 
             <ListView.ItemTemplate>
@@ -531,11 +532,11 @@ SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   N
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <HyperlinkButton ToolTipService.ToolTip="{Binding FilePath}" Padding="0" Name="btnGlyph" MinHeight="0" MinWidth="0" Margin="0, 0" Width="35" Grid.Column="0"  Click="btnGlyph_Click" Visibility="Visible" BorderThickness="0" >
-                            <TextBlock  Text="{Binding Glyph}" Foreground="{Binding TitleColor, Mode=OneWay}"  FontFamily="Segoe Fluent Icons"></TextBlock>
+                            <TextBlock  Text="{Binding Glyph}" Foreground="{Binding  IsPlaying, Converter={StaticResource CurrentTrackForegroundConverter}}"  FontFamily="Segoe Fluent Icons"></TextBlock>
                         </HyperlinkButton>
                         <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle"   Visibility="Visible"  Margin="0, 0">
                             <Grid>
-                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Title}"    ToolTipService.ToolTip="{Binding Title}" Foreground="{Binding TitleColor, Mode=OneWay}"></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Title}"    ToolTipService.ToolTip="{Binding Title}" Foreground="{Binding  IsPlaying, Converter={StaticResource CurrentTrackForegroundConverter}}" ></TextBlock>
                                 <Border Height="2" 
             Background="{StaticResource GlobalAccentColor}" 
             VerticalAlignment="Center" 

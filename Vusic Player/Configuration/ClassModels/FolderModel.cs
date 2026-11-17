@@ -10,7 +10,7 @@ namespace Vusic_Player.Configuration.ClassModels
     {
         private string _folderName = "Unknown Folder";
         private string _folderPath = "";
-        private BitmapImage? _thumbnail = new();
+        private BitmapImage? _thumbnail;
 
         public string FolderName
         {

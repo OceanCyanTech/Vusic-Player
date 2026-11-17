@@ -21,6 +21,7 @@ using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
+using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages;
@@ -33,6 +34,24 @@ using Windows.Storage;
 
 namespace Vusic_Player.UI.UserViews.Controls
 {
+    public class CurrentTrackForegroundUpdater : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is bool isplaying)
+            {
+                return isplaying ? new SolidColorBrush(ThemeManager.Instance.AccentColor) : new SolidColorBrush(Microsoft.UI.Colors.White);
+            }
+
+            return new SolidColorBrush(Microsoft.UI.Colors.White);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public sealed partial class ListViewMedia : UserControl
     {
         public bool AllowRearranging
@@ -222,6 +241,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         public async void UpdateGlyphs()
         {
+            return;
             Debug.WriteLine("Called 1");
 
             if (this.IsLoaded == false || ItemsSource == null) return;
@@ -905,6 +925,30 @@ namespace Vusic_Player.UI.UserViews.Controls
 
             try
             {
+                int clickedMediaIndex = QueueObjects.QueueInstance.QueueFull.IndexOf(selectedSong);
+                selectedSong.IsCompleted = false;
+                //Every media prior
+                for (int i = 0; i < clickedMediaIndex; i++)
+                {
+                    var track = QueueObjects.QueueInstance.QueueFull[i];
+                    if (track != null)
+                    {
+                        track.IsCompleted = true;
+                    }
+                }
+                //Every media after
+                for(int i = clickedMediaIndex + 1; i <QueueObjects.QueueInstance.QueueFull.Count; i++)
+                {
+                    var track = QueueObjects.QueueInstance.QueueFull[i];
+                    if (track != null)
+                    {
+                        track.IsCompleted = false;
+                    }
+                }
+                PlayerService.OpenPath(selectedSong.FilePath);
+                QueueService.ReloadQueue();
+                QueueObjects.QueueInstance.QueueIndex = clickedMediaIndex;
+                return;
                 // 1. FREEZE HANDLERS: Lock mutations to prevent layout recalculation mid-click
                 QueueService.IsLooping = true;
 
@@ -921,21 +965,18 @@ namespace Vusic_Player.UI.UserViews.Controls
                     {
                         // Everything before the clicked song becomes historical past
                         track.IsCompleted = true;
-                        track.VisibilityOfStrikeThrough = Visibility.Visible;
                         track.QueueControls = Visibility.Collapsed;
                     }
                     else if (i == targetIndex)
                     {
                         // The clicked song is now active playing
                         track.IsCompleted = false;
-                        track.VisibilityOfStrikeThrough = Visibility.Collapsed;
                         track.QueueControls = Visibility.Collapsed;
                     }
                     else
                     {
                         // Everything after the clicked song becomes clean upcoming future tracks
                         track.IsCompleted = false;
-                        track.VisibilityOfStrikeThrough = Visibility.Collapsed;
                         track.QueueControls = Visibility.Collapsed;
                     }
                 }
@@ -1121,7 +1162,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().ToList();
             if (isViewList == false)
             {
-                selected = grdViewMain.SelectedItems.Cast<SongModel>().ToList(); 
+                selected = grdViewMain.SelectedItems.Cast<SongModel>().ToList();
             }
             var observable = new ObservableCollection<SongModel>();
             foreach (var item in selected)
@@ -1762,6 +1803,10 @@ namespace Vusic_Player.UI.UserViews.Controls
                 CopyToClipboard.CopyStringToClipboard(song.FilePath);
             }
         }
-
+        public event Action? DragItemsCompleted;
+        private void lstViewPlaylist_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        {
+            DragItemsCompleted?.Invoke();
+        }
     }
 }

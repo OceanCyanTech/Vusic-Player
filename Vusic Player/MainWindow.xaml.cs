@@ -171,6 +171,7 @@ namespace Vusic_Player
                 GlowService.Instance.GlowEffectVisibility = currentSettings.GlowEffect ? Visibility.Visible : Visibility.Collapsed;
                 GlowService.Instance.GlowColor = currentSettings.GlowColorHex.ToColor();
                 ThemeManager.Instance.GlobalTheme = theme;
+       
                 IconHolder.Instance.Play = $"ms-appx:///Assets/Themes/{theme}/play.png";
                 IconHolder.Instance.Pause = $"ms-appx:///Assets/Themes/{theme}/pause.png";
                 IconHolder.Instance.PlaylistIcon = $"ms-appx:///Assets/Themes/{theme}/playlisticon.png";
@@ -183,6 +184,7 @@ namespace Vusic_Player
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 0, 255, 255);
                     Application.Current.Resources["GlobalAccentColorPointerOver"] = Windows.UI.Color.FromArgb(255, 3, 234, 255);
                     Application.Current.Resources["GlobalAccentColorPointerPressed"] = Windows.UI.Color.FromArgb(255, 6, 180, 255);
+                    ThemeManager.Instance.AccentColor = Windows.UI.Color.FromArgb(255, 0, 255, 255);
 
                 }
                 else if (theme == "NeonGlow")
@@ -190,13 +192,14 @@ namespace Vusic_Player
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 7, 177, 35);
                     Application.Current.Resources["GlobalAccentColorPointerOver"] = Windows.UI.Color.FromArgb(255, 2, 119, 21);
                     Application.Current.Resources["GlobalAccentColorPointerPressed"] = Windows.UI.Color.FromArgb(255, 7, 190, 37);
+                    ThemeManager.Instance.AccentColor = Windows.UI.Color.FromArgb(255, 7, 177, 35);
                 }
                 else if (theme == "Space")
                 {
                     Application.Current.Resources["GlobalAccentColor"] = Windows.UI.Color.FromArgb(255, 206, 206, 206);
                     Application.Current.Resources["GlobalAccentColorPointerOver"] = Windows.UI.Color.FromArgb(255, 230, 230, 230);
                     Application.Current.Resources["GlobalAccentColorPointerPressed"] = Windows.UI.Color.FromArgb(255, 200, 200, 200);
-
+                    ThemeManager.Instance.AccentColor = Windows.UI.Color.FromArgb(255, 206, 206, 206);
                 }
                 Application.Current.Resources["GlobalFontHolder"] = new FontFamily(font);
 
@@ -322,11 +325,26 @@ namespace Vusic_Player
         }
         public async void ShowFileInfo(string filepath)
         {
-            var metadata = VusicAPIMediaProperties.GetFileInfo(filepath);
+            var metadata =  await VusicAPIMediaProperties.GetFileInfo(filepath);
+            imgCover.Source = metadata.Cover;
             txtInfo.Text = "TITLE: " + metadata.Title;
             txtInfo.Text += Environment.NewLine + "Artist: " + metadata.Artist;
             txtInfo.Text += Environment.NewLine + "Album: " + metadata.Album;
             txtInfo.Text += Environment.NewLine + "Duration: " + metadata.DurationString;
+            txtInfo.Text += Environment.NewLine + "Comment: " + metadata.Comment;
+            txtInfo.Text += Environment.NewLine + "Audio Bitrate: " + metadata.AudioBitrate;
+            txtInfo.Text += Environment.NewLine + "Sample Rate: " + metadata.SampleRate;
+            txtInfo.Text += Environment.NewLine + "Audio Codec: " + metadata.AudioCodec;
+            txtInfo.Text += Environment.NewLine + "Copyright: " + metadata.Copyright;
+            txtInfo.Text += Environment.NewLine + "Composer: " + metadata.Composer;
+            txtInfo.Text += Environment.NewLine + "Publisher: " + metadata.Publisher;
+            txtInfo.Text += Environment.NewLine + "File Format: " + metadata.FileFormat;
+            txtInfo.Text += Environment.NewLine + "File Size: " + metadata.FileSize;
+            txtInfo.Text += Environment.NewLine + "Year: " + metadata.Year;
+            txtInfo.Text += Environment.NewLine + "Track: " + metadata.TrackNumber;
+            txtInfo.Text += Environment.NewLine + "Channels: " + metadata.Channels;
+            txtInfo.Text += Environment.NewLine + "Contributing Artists: " + metadata.ContributingArtists;
+            txtInfo.Text += Environment.NewLine + "Genre: " + metadata.Genre;
             Debug.WriteLine("----MEDIA METADATA-------");
             Debug.WriteLine("TITLE: " + metadata.Title);
             Debug.WriteLine("ARTIST: " + metadata.Artist);

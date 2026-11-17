@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
 
 namespace Vusic_Player.Configuration.Helper.UI.Customization
 {
@@ -16,6 +17,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         #region Back Properties
         private string _globaltheme = "Ocean";
         private string _hyperlinkForeground = "Cyan";
+        private Color _accentcolor = Color.FromArgb(255, 0, 255, 255);
         #endregion
         public static ThemeManager Instance { get; } = new ThemeManager();
         #region Main Properties
@@ -27,6 +29,18 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
                 if (_globaltheme != value)
                 {
                     _globaltheme = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public Color AccentColor
+        {
+            get => _accentcolor;
+            set
+            {
+                if(_accentcolor != value)
+                {
+                    _accentcolor = value;
                     OnPropertyChanged();
                 }
             }

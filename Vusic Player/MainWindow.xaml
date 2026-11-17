@@ -13,7 +13,10 @@
     <Grid Name="rootGrid">
         <Frame Name="frmMain"></Frame>
         <TeachingTip IsOpen="True" Name="ttInfo">
-            <TextBlock Name="txtInfo"/>
+            <StackPanel Orientation="Vertical" Spacing="20">
+                <Image Width="300" Name="imgCover"/>
+                <TextBlock Name="txtInfo"/>
+            </StackPanel>
         </TeachingTip>
     </Grid>
 </Window>

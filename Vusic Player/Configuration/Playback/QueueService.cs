@@ -9,13 +9,13 @@ using System.IO;
 using System.Linq;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Pages;
 
 namespace Vusic_Player.Configuration.Playback
 {
     public class QueueService
     {
-
         private static Random rng = new Random();
         public static int videoindex = -1;
         public static ObservableCollection<SongModel> VusicQueue { get; } = new();
@@ -63,20 +63,57 @@ namespace Vusic_Player.Configuration.Playback
                 IsVusicQueueNextChanging = false;
             }
         }
+        public static void AddToQueue(string FilePath)
+        {
 
+        }
+
+        public static void AddToQueue(List<string> FilePaths)
+        {
+
+        }
+        public static void AddToQueue(ObservableCollection<SongModel> SongModels)
+        {
+
+        }
         public static void VusicQueue_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             // 1. Guard clauses to completely ignore internal updates or resets
-            if (IsVusicQueueNextChanging) return;
+       //     if (IsVusicQueueNextChanging) return;
             if (e.Action != NotifyCollectionChangedAction.Add && e.Action != NotifyCollectionChangedAction.Move) return;
 
-            // 2. Safely defer execution so we don't lock the UI collection thread
             Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().TryEnqueue(() =>
             {
                 try
                 {
-                    IsVusicQueueNextChanging = true;
+                    //        IsVusicQueueNextChanging = true;
+                    var currentmedia = QueueObjects.QueueInstance.QueueFull.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
+                    Debug.WriteLine("YES CHANGING for " + currentmedia.FilePath);
 
+                    if (currentmedia != null)
+                    {
+                        var index = QueueObjects.QueueInstance.QueueFull.IndexOf(currentmedia);
+                        Debug.WriteLine("INDEX " + index);
+                        //Every media prior
+                        for (int i = 0; i < index; i++)
+                        {
+                            var track = QueueObjects.QueueInstance.QueueFull[i];
+                            if (track != null)
+                            {
+                                track.IsCompleted = true;
+                            }
+                        }
+                        //Every media after
+                        for (int i = index + 1; i < QueueObjects.QueueInstance.QueueFull.Count; i++)
+                        {
+                            var track = QueueObjects.QueueInstance.QueueFull[i];
+                            if (track != null)
+                            {
+                                track.IsCompleted = false;
+                            }
+                        }
+                    }
+                    return;
                     // Step A: Categorize everything while maintaining their current order
                     var completedTracks = VusicQueue.Where(s => s.VisibilityOfStrikeThrough == Visibility.Visible).ToList();
 
@@ -111,413 +148,140 @@ namespace Vusic_Player.Configuration.Playback
                 }
             });
         }
-        public static void PlayMedia(ObservableCollection<SongModel> media, bool IsShuffleEnabled, bool IsLoopEnabled)
+        public static void ClearQueue()
         {
-            if (media == null || media.Count == 0) return;
+            QueueObjects.QueueInstance.QueueFull.Clear();
+            QueueObjects.QueueInstance.QueueIndex = 0;
+        }
+        public static async void AddToQueueAndPlay(List<string> Paths, bool IsShuffleTrue, bool IsLoopTrue)
+        {
+            //OCEANCYAN REVISION
+            if (Paths.Count == 0) return;
+            ClearQueue();
+
+            foreach (var path in Paths)
+            {
+                var songmodel = await MetadataFetcher.GetSongModel(path);
+                Debug.WriteLine("SONG MODEL FETCHED FOR " + path + " ARTIST IS " + songmodel.Artist);
+                QueueObjects.QueueInstance.QueueFull.Add(await MetadataFetcher.GetSongModel(path));
+            }
+            PlayerService.OpenPath(Paths[0]);
+            QueueObjects.QueueInstance.IsLoop = IsLoopTrue;
+        }
+        public static void PlayMediaAtIndex(int index)
+        {
+            var media = QueueObjects.QueueInstance.QueueFull[index];
+            if (File.Exists(media.FilePath))
+            {
+                PlayerService.OpenPath(media.FilePath);
+                NextMediaInitiated?.Invoke();
+            }
+        }
+        public static void PlayPrevious()
+        {
+            //OCEANCYAN REVISION PENDING
+            if (QueueObjects.QueueInstance.QueueIndex != 0)
+            {
+                var prevmedia = QueueObjects.QueueInstance.QueueFull[QueueObjects.QueueInstance.QueueIndex - 1];
+                if (prevmedia != null)
+                {
+                    prevmedia.IsCompleted = false;
+                    QueueObjects.QueueInstance.QueueIndex--;
+                    PlayMediaAtIndex(QueueObjects.QueueInstance.QueueIndex);
+                }
+            }
+            else
+            {
+                if (PlayerService.Masterplayer != null)
+                {
+                    PlayerService.Masterplayer.SeekAccurate(0);
+                }
+            }
+            return;
+            var queue = VusicQueue;
+            var currentPath = PlayerService.CurrentPlayingPath;
+
+            if (queue == null || queue.Count == 0 || string.IsNullOrEmpty(currentPath)) return;
+
+            // 1. Find where we currently are in the master queue
+            int index = queue.ToList().FindIndex(p => p.FilePath == currentPath);
+
+            // If we're at the very first song (index 0), there is no previous track!
+            if (index <= 0) return;
 
             try
             {
-                // 1. SILENCE HANDLERS: Stop collection cross-talk during global initialization
-                IsVusicQueueNextChanging = true;
-                IsShuffleTrue = IsShuffleEnabled;
+                // 2. SILENCE HANDLERS: Lock down notifications while we manipulate the history state
+                IsLooping = true;
 
-                // 2. Reset master queue state flags cleanly
-                PlayerService.CurrentPlayingPath = "";
-                VusicQueue.Clear();
-                VusicQueueNext.Clear();
-                OriginalVusicQueueNext.Clear();
+                var currentItem = queue[index];
+                var prevItem = queue[index - 1];
 
-                // 3. Populate Master Queue and reset item states
-                foreach (var item in media)
+                if (prevItem == null || string.IsNullOrEmpty(prevItem.FilePath)) return;
+
+                // 3. Reset states: Bring BOTH songs back to life from the history "strikethrough" zone
+                currentItem.IsCompleted = false;
+
+                prevItem.IsCompleted = false;
+
+                // 4. Update Upcoming Views: Put the current item back at the top of the future queue
+                var existInNext = VusicQueueNext.FirstOrDefault(p => p.FilePath == currentItem.FilePath);
+                if (existInNext == null)
                 {
-                    item.IsCompleted = false;
-                    item.VisibilityOfStrikeThrough = Visibility.Collapsed;
-                    item.QueueControls = Visibility.Collapsed;
-                    VusicQueue.Add(item);
+                    VusicQueueNext.Insert(0, currentItem);
                 }
 
-                // 4. Handle Shuffle Scenario
+                // 5. CRITICAL FIX: Keep the shuffle backup pristine if shuffle is currently active
                 if (IsShuffleTrue)
                 {
-                    // Shuffle the master list completely
-                    ShuffleList();
-                }
-
-                // 5. Select the first track to start playback
-                var firstTrack = VusicQueue[0];
-                PlayerService.CurrentPlayingPath = firstTrack.FilePath;
-
-                // 6. Populate upcoming queues with everything AFTER the first song
-                for (int i = 1; i < VusicQueue.Count; i++)
-                {
-                    VusicQueueNext.Add(VusicQueue[i]);
-                    OriginalVusicQueueNext.Add(VusicQueue[i]); // Keep backup pristine
-                }
-
-                // 7. Fire up the audio stream engine for the first track
-                PlayerService.OpenPath(firstTrack.FilePath);
-            }
-            finally
-            {
-                // 8. Re-open event notifications
-                IsVusicQueueNextChanging = false;
-            }
-
-            // 9. Sync UI layouts immediately
-            SyncFullQueueFromNext();
-        }
-        public static void ShuffleAll()
-        {
-            OriginalVusicQueue.Clear();
-
-            var itemsToAdd = VusicQueue.ToList();
-
-            foreach (var item in itemsToAdd)
-            {
-                OriginalVusicQueue.Add(item);
-            }
-            foreach (var item in VusicQueue)
-            {
-                item.IsCompleted = false;
-                item.VisibilityOfStrikeThrough = Microsoft.UI.Xaml.Visibility.Collapsed;
-            }
-            var shuffledlist = ShuffleItems(VusicQueue.ToList());
-            foreach (var item in shuffledlist)
-            {
-                VusicQueue.Add(item);
-            }
-
-        }
-        public static void ShuffleNext()
-        {
-            if (VusicQueueNext.Count <= 1) return;
-
-            try
-            {
-                // 1. SILENCE HANDLERS: Stop collection cross-talk immediately
-                IsLooping = true;
-
-                // 2. Safely capture the original sequence baseline before shuffling
-                OriginalVusicQueueNext.Clear();
-                foreach (var item in VusicQueueNext)
-                {
-                    OriginalVusicQueueNext.Add(item);
-                }
-
-                // 3. Shuffle our localized memory list copy
-                var shuffledList = ShuffleItems(VusicQueueNext.ToList());
-
-                // 4. IN-PLACE MOVE: Reorder elements cleanly without clearing the collection
-                for (int i = 0; i < shuffledList.Count; i++)
-                {
-                    var targetItem = shuffledList[i];
-                    targetItem.QueueControls = Visibility.Collapsed;
-
-                    int currentLiveIndex = VusicQueueNext.IndexOf(targetItem);
-                    if (currentLiveIndex >= 0 && currentLiveIndex != i)
+                    var existInBackup = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == currentItem.FilePath);
+                    if (existInBackup == null)
                     {
-                        VusicQueueNext.Move(currentLiveIndex, i);
+                        OriginalVusicQueueNext.Insert(0, currentItem);
                     }
                 }
+
+                // 6. Set the player path and fire off the audio stream initialization
+                PlayerService.CurrentPlayingPath = prevItem.FilePath;
+                PlayerService.OpenPath(prevItem.FilePath);
             }
             finally
             {
                 IsLooping = false;
             }
+
+            // 7. Force the master queue layouts to smoothly update and mirror these changes instantly
             SyncFullQueueFromNext();
         }
-
-        public static void RestoreNext()
+        public static async void ReloadQueue()
         {
-            if (OriginalVusicQueueNext.Count == 0) return;
-
-            try
-            {
-                // 1. SILENCE HANDLERS: Freeze layout syncing while we restore order
-                IsLooping = true;
-
-                // 2. IN-PLACE RESTORE: Match the original backup index order exactly
-                for (int i = 0; i < OriginalVusicQueueNext.Count; i++)
-                {
-                    var targetItem = OriginalVusicQueueNext[i];
-                    targetItem.QueueControls = Visibility.Collapsed;
-
-                    int currentLiveIndex = VusicQueueNext.IndexOf(targetItem);
-                    if (currentLiveIndex >= 0 && currentLiveIndex != i)
-                    {
-                        VusicQueueNext.Move(currentLiveIndex, i);
-                    }
-                }
-            }
-            finally
-            {
-                IsLooping = false;
-            }
-            SyncFullQueueFromNext();
+            NextMediaInitiated?.Invoke();
         }
-        public static void RestoreAll()
-        {
-            VusicQueue.Clear();
-            foreach (var item in OriginalVusicQueue)
-            {
-                VusicQueue.Add(item);
-            }
-        }
-        public static List<SongModel> ShuffleItems(List<SongModel> list)
-        {
-            var items = list;
-            int n = items.Count;
-
-
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                var value = items[k];
-                items[k] = items[n];
-                items[n] = value;
-            }
-            return items;
-        }
-        public static void ShuffleList()
-        {
-            try
-            {
-                var items = VusicQueue.ToList();
-                int n = items.Count;
-
-
-                while (n > 1)
-                {
-                    n--;
-                    int k = rng.Next(n + 1);
-                    var value = items[k];
-                    items[k] = items[n];
-                    items[n] = value;
-                }
-                VusicQueue.Clear();
-                foreach (var item in items)
-                {
-                    VusicQueue.Add(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Error occured: " + ex.Message, "Shuffle Queue", Logger.LogLevelType.Error);
-            }
-        }
-        private static void RemoveSong()
-        {
-            var song = VusicQueue.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
-            //int index = VusicQueueNext.IndexOf(song);
-            //VusicQueueNext.RemoveAt(index +1);
-            if (song != null)
-            {
-                VusicQueueNext.Remove(song);
-            }
-            //VusicQueueView.Filter = x => VusicQueue.IndexOf((SongModel)x) > videoindex;
-        }
-        public static void MarkSongCompleted()
-        {
-            var song2 = VusicQueue.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
-
-            if (song2 != null)
-            {
-                song2.IsCompleted = true;
-                song2.VisibilityOfStrikeThrough = Microsoft.UI.Xaml.Visibility.Visible;
-                Debug.WriteLine(song2.FilePath + " is to be removed now");
-
-            }
-        }
-
-
-        //}
-        //private static async Task PlayMediaAtIndex()
-        //{
-        //    var queue = VusicQueueNext;
-        //    if (queue == null || queue.Count == 0) return;
-
-
-        //    var item = queue[0];
-        //    Debug.WriteLine(item.FilePath + " is to be played now");
-        //    if (string.IsNullOrEmpty(item.FilePath)) return;
-
-        //    // 3. Update state and play
-        //    //    videoindex = targetIndex;
-        //    var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-
-        //    string fileExtension = file.FileType.ToLowerInvariant();
-        //    bool isVideo = false;
-        //    if (Extensions.VideoExtensions.List.Contains(fileExtension))
-        //    {
-        //        isVideo = true;
-        //    }
-        //    if (isVideo)
-        //    {
-        //        Debug.WriteLine("True");
-        //        if(App.NavigationFrame != null)
-        //        {
-        //            if (PlayerService.InVideoPage == false)
-        //            {
-        //                App.NavigationFrame.Navigate(typeof(VideoPlayer), item.FilePath);
-        //            }
-
-        //        }
-
-
-        //    }
-        //    PlayerService.OpenPath(item.FilePath);
-        //}
-        //private static async Task PlayandRemoveAsync()
-        //{
-        //    if (VusicQueueNext == null || VusicQueueNext.Count == 0) return;
-
-        //    // Capture the target item BEFORE we do anything asynchronous
-        //    var firstitem2 = VusicQueueNext[0];
-
-        //    // Await the media player initialization completely
-        //    await PlayMediaAtIndex();
-
-        //    Debug.WriteLine("Supposed to get removed is " + firstitem2.FilePath);
-        //    if (firstitem2 != null)
-        //    {
-        //        Debug.WriteLine("Supposed to get removed is2 " + firstitem2.FilePath);
-        //        VusicQueueNext.Remove(firstitem2);
-        //    }
-
-        //    foreach (var item in VusicQueueNext)
-        //    {
-        //        Debug.WriteLine(item.FilePath + " is new list");
-        //    }
-
-        //    if (IsShuffleTrue && firstitem2 != null)
-        //    {
-        //        var itemtoremove = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == firstitem2.FilePath);
-        //        if (itemtoremove != null)
-        //        {
-        //            OriginalVusicQueueNext.Remove(itemtoremove);
-        //        }
-        //    }
-        //}
-        //      REWRITE WHOLE CODE AGAIN FOR NEXT, MEDIA AT INDEX AND REMOVAL
-        //public static async void PlayNext()
-        //{
-        //    if (VusicQueueNext.Count != 0)
-        //    {
-        //        MarkSongCompleted();
-        //        var firstitem = VusicQueueNext[0];
-        //        var FileToBePlayed = firstitem.FilePath;
-        //        if (FileToBePlayed == null) return;
-        //        VusicQueueNext.Remove(firstitem);
-        //        var file = await StorageFile.GetFileFromPathAsync(FileToBePlayed);
-
-        //        string fileExtension = file.FileType.ToLowerInvariant();
-        //        bool isVideo = false;
-        //        if (Extensions.VideoExtensions.List.Contains(fileExtension))
-        //        {
-        //            isVideo = true;
-        //        }
-        //        if (isVideo)
-        //        {
-        //            Debug.WriteLine("True");
-        //            if (App.NavigationFrame != null)
-        //            {
-        //                if (PlayerService.InVideoPage == false)
-        //                {
-        //                    App.NavigationFrame.Navigate(typeof(VideoPlayer), FileToBePlayed);
-        //                }
-
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (App.NavigationFrame != null)
-        //            {
-        //                if (PlayerService.InVideoPage == true)
-        //                {
-        //                    App.NavigationFrame.GoBack();
-        //                    PlayerService.InVideoPage = false;
-        //                }
-
-        //            }
-        //        }
-
-        //        PlayerService.OpenPath(FileToBePlayed);
-
-        //    }
-        //}
-        public static void AddToQueue()
-        {
-
-        }
-        public static void SyncFullQueueFromNext()
-        {
-            try
-            {
-                IsLooping = true; // Lock to protect VusicQueue modifications
-
-                // 1. Separate the full queue into its macro groups
-                var completedTracks = VusicQueue.Where(s => s.VisibilityOfStrikeThrough == Visibility.Visible).ToList();
-                var currentlyPlaying = VusicQueue.Where(s => s.FilePath == PlayerService.CurrentPlayingPath
-                                                          && s.VisibilityOfStrikeThrough != Visibility.Visible).ToList();
-
-                // 2. Take the unplayed upcoming tracks EXACTLY as they were just shuffled
-                var upcomingTracks = VusicQueueNext.ToList();
-
-                // 3. Combine them into the target master blueprint sequence
-                var sortedTargetList = completedTracks
-                    .Concat(currentlyPlaying)
-                    .Concat(upcomingTracks)
-                    .ToList();
-
-                // 4. Smoothly mirror the layout onto VusicQueue using Move
-                for (int i = 0; i < sortedTargetList.Count; i++)
-                {
-                    var targetItem = sortedTargetList[i];
-                    int currentLiveIndex = VusicQueue.IndexOf(targetItem);
-
-                    if (currentLiveIndex >= 0 && currentLiveIndex != i)
-                    {
-                        VusicQueue.Move(currentLiveIndex, i);
-                    }
-                }
-            }
-            finally
-            {
-                IsLooping = false;
-            }
-        }
-        public static void SyncQueueLists()
-        {
-            //Update VusicQueueNext:
-            var completedItems = VusicQueue.Where(i => i.IsCompleted == true && i.VisibilityOfStrikeThrough == Visibility.Visible).ToList();
-            foreach (var item in completedItems)
-            {
-                var exist = VusicQueueNext.FirstOrDefault(p => p.FilePath == item.FilePath);
-                if (exist != null)
-                {
-                    VusicQueueNext.Remove(exist);
-                }
-                var backupExist = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == item.FilePath);
-                if (backupExist != null)
-                {
-                    OriginalVusicQueueNext.Remove(backupExist);
-                }
-            }
-            var currentpath = VusicQueueNext.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
-            if (currentpath != null)
-            {
-                VusicQueueNext.Remove(currentpath);
-            }
-            var backupCurrent = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
-            if (backupCurrent != null)
-            {
-                OriginalVusicQueueNext.Remove(backupCurrent);
-            }
-        }
+        public static event Action? NextMediaInitiated;
         public static async void PlayNext()
         {
+            //OCEANCYAN REVISION PENDING
 
+            var currentindexmedia = QueueObjects.QueueInstance.QueueFull[QueueObjects.QueueInstance.QueueIndex];
+            if (currentindexmedia != null)
+            {
+                currentindexmedia.IsCompleted = true;
+                if (QueueObjects.QueueInstance.QueueIndex == QueueObjects.QueueInstance.QueueFull.Count - 1)
+                {
+                    if (QueueObjects.QueueInstance.IsLoop)
+                    {
+                        QueueObjects.QueueInstance.QueueIndex = 0;
+                        PlayMediaAtIndex(0);
+                    }
+                    return;
+                }
+                else
+                {
+                    QueueObjects.QueueInstance.QueueIndex++;
+                    PlayMediaAtIndex(QueueObjects.QueueInstance.QueueIndex);
+                }
+            }
+            return;
             MarkSongCompleted();
             if (IsLoopTrue)
             {
@@ -531,7 +295,6 @@ namespace Vusic_Player.Configuration.Playback
                         foreach (var item in VusicQueue.ToList())
                         {
                             item.IsCompleted = false;
-                            item.VisibilityOfStrikeThrough = Visibility.Collapsed;
                             VusicQueueNext.Add(item);
                         }
 
@@ -691,106 +454,273 @@ namespace Vusic_Player.Configuration.Playback
             }
             SyncQueueLists();
         }
-        public static void PlayMediaAtIndex()
+
+        public static void PlayMedia(ObservableCollection<SongModel> media, bool IsShuffleEnabled, bool IsLoopEnabled)
         {
-
-        }
-        //public static async void PlayNext()
-        //{
-        //    if (VusicQueueNext == null) return;
-
-        //    if (VusicQueueNext.Count == 0)
-        //    {
-        //        if (IsLoopTrue)
-        //        {
-        //            var refreshedobservablecoll = new ObservableCollection<SongModel>();
-        //            foreach (var item in VusicQueue.ToList())
-        //            {
-        //                item.IsCompleted = false;
-        //                item.VisibilityOfStrikeThrough = Visibility.Collapsed;
-        //                refreshedobservablecoll.Add(item);
-        //            }
-
-        //            VusicQueue.Clear();
-        //            foreach (var items in refreshedobservablecoll)
-        //            {
-        //                VusicQueue.Add(items);
-        //            }
-        //            foreach (var items in VusicQueue)
-        //            {
-        //                items.QueueControls = Visibility.Collapsed;
-        //                VusicQueueNext.Add(items);
-        //            }
-
-        //            await PlayandRemoveAsync();
-        //            return;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Debug.WriteLine("Is true");
-        //    }
-        //    MarkSongCompleted();
-        //    await PlayandRemoveAsync();
-        //}
-        public static void PlayPrevious()
-        {
-            var queue = VusicQueue;
-            var currentPath = PlayerService.CurrentPlayingPath;
-
-            if (queue == null || queue.Count == 0 || string.IsNullOrEmpty(currentPath)) return;
-
-            // 1. Find where we currently are in the master queue
-            int index = queue.ToList().FindIndex(p => p.FilePath == currentPath);
-
-            // If we're at the very first song (index 0), there is no previous track!
-            if (index <= 0) return;
+            if (media == null || media.Count == 0) return;
 
             try
             {
-                // 2. SILENCE HANDLERS: Lock down notifications while we manipulate the history state
-                IsLooping = true;
-
-                var currentItem = queue[index];
-                var prevItem = queue[index - 1];
-
-                if (prevItem == null || string.IsNullOrEmpty(prevItem.FilePath)) return;
-
-                // 3. Reset states: Bring BOTH songs back to life from the history "strikethrough" zone
-                currentItem.IsCompleted = false;
-                currentItem.VisibilityOfStrikeThrough = Visibility.Collapsed;
-
-                prevItem.IsCompleted = false;
-                prevItem.VisibilityOfStrikeThrough = Visibility.Collapsed;
-
-                // 4. Update Upcoming Views: Put the current item back at the top of the future queue
-                var existInNext = VusicQueueNext.FirstOrDefault(p => p.FilePath == currentItem.FilePath);
-                if (existInNext == null)
+                IsVusicQueueNextChanging = true;
+                IsShuffleTrue = IsShuffleEnabled;
+                PlayerService.CurrentPlayingPath = "";
+                VusicQueue.Clear();
+                VusicQueueNext.Clear();
+                OriginalVusicQueueNext.Clear();
+                foreach (var item in media)
                 {
-                    VusicQueueNext.Insert(0, currentItem);
+                    item.IsCompleted = false;
+                    item.QueueControls = Visibility.Collapsed;
+                    VusicQueue.Add(item);
                 }
 
-                // 5. CRITICAL FIX: Keep the shuffle backup pristine if shuffle is currently active
                 if (IsShuffleTrue)
                 {
-                    var existInBackup = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == currentItem.FilePath);
-                    if (existInBackup == null)
-                    {
-                        OriginalVusicQueueNext.Insert(0, currentItem);
-                    }
+                    ShuffleList();
                 }
 
-                // 6. Set the player path and fire off the audio stream initialization
-                PlayerService.CurrentPlayingPath = prevItem.FilePath;
-                PlayerService.OpenPath(prevItem.FilePath);
+                var firstTrack = VusicQueue[0];
+                PlayerService.CurrentPlayingPath = firstTrack.FilePath;
+                for (int i = 1; i < VusicQueue.Count; i++)
+                {
+                    VusicQueueNext.Add(VusicQueue[i]);
+                    OriginalVusicQueueNext.Add(VusicQueue[i]);
+                }
+                PlayerService.OpenPath(firstTrack.FilePath);
+            }
+            finally
+            {
+                IsVusicQueueNextChanging = false;
+            }
+
+            SyncFullQueueFromNext();
+        }
+        public static void ShuffleAll()
+        {
+            OriginalVusicQueue.Clear();
+
+            var itemsToAdd = VusicQueue.ToList();
+
+            foreach (var item in itemsToAdd)
+            {
+                OriginalVusicQueue.Add(item);
+            }
+            foreach (var item in VusicQueue)
+            {
+                item.IsCompleted = false;
+            }
+            var shuffledlist = ShuffleItems(VusicQueue.ToList());
+            foreach (var item in shuffledlist)
+            {
+                VusicQueue.Add(item);
+            }
+
+        }
+        public static void ShuffleNext()
+        {
+            if (VusicQueueNext.Count <= 1) return;
+
+            try
+            {
+                IsLooping = true;
+
+                // 2. Safely capture the original sequence baseline before shuffling
+                OriginalVusicQueueNext.Clear();
+                foreach (var item in VusicQueueNext)
+                {
+                    OriginalVusicQueueNext.Add(item);
+                }
+
+                // 3. Shuffle our localized memory list copy
+                var shuffledList = ShuffleItems(VusicQueueNext.ToList());
+
+                // 4. IN-PLACE MOVE: Reorder elements cleanly without clearing the collection
+                for (int i = 0; i < shuffledList.Count; i++)
+                {
+                    var targetItem = shuffledList[i];
+                    targetItem.QueueControls = Visibility.Collapsed;
+
+                    int currentLiveIndex = VusicQueueNext.IndexOf(targetItem);
+                    if (currentLiveIndex >= 0 && currentLiveIndex != i)
+                    {
+                        VusicQueueNext.Move(currentLiveIndex, i);
+                    }
+                }
             }
             finally
             {
                 IsLooping = false;
             }
-
-            // 7. Force the master queue layouts to smoothly update and mirror these changes instantly
             SyncFullQueueFromNext();
+        }
+
+        public static void RestoreNext()
+        {
+            if (OriginalVusicQueueNext.Count == 0) return;
+
+            try
+            {
+                // 1. SILENCE HANDLERS: Freeze layout syncing while we restore order
+                IsLooping = true;
+
+                // 2. IN-PLACE RESTORE: Match the original backup index order exactly
+                for (int i = 0; i < OriginalVusicQueueNext.Count; i++)
+                {
+                    var targetItem = OriginalVusicQueueNext[i];
+                    targetItem.QueueControls = Visibility.Collapsed;
+
+                    int currentLiveIndex = VusicQueueNext.IndexOf(targetItem);
+                    if (currentLiveIndex >= 0 && currentLiveIndex != i)
+                    {
+                        VusicQueueNext.Move(currentLiveIndex, i);
+                    }
+                }
+            }
+            finally
+            {
+                IsLooping = false;
+            }
+            SyncFullQueueFromNext();
+        }
+        public static void RestoreAll()
+        {
+            VusicQueue.Clear();
+            foreach (var item in OriginalVusicQueue)
+            {
+                VusicQueue.Add(item);
+            }
+        }
+        public static List<SongModel> ShuffleItems(List<SongModel> list)
+        {
+            var items = list;
+            int n = items.Count;
+
+
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                var value = items[k];
+                items[k] = items[n];
+                items[n] = value;
+            }
+            return items;
+        }
+        public static void ShuffleList()
+        {
+            try
+            {
+                var items = VusicQueue.ToList();
+                int n = items.Count;
+
+
+                while (n > 1)
+                {
+                    n--;
+                    int k = rng.Next(n + 1);
+                    var value = items[k];
+                    items[k] = items[n];
+                    items[n] = value;
+                }
+                VusicQueue.Clear();
+                foreach (var item in items)
+                {
+                    VusicQueue.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Error occured: " + ex.Message, "Shuffle Queue", Logger.LogLevelType.Error);
+            }
+        }
+        private static void RemoveSong()
+        {
+            var song = VusicQueue.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
+            if (song != null)
+            {
+                VusicQueueNext.Remove(song);
+            }
+        }
+        public static void MarkSongCompleted()
+        {
+            var song2 = VusicQueue.FirstOrDefault(x => x.FilePath == PlayerService.CurrentPlayingPath);
+
+            if (song2 != null)
+            {
+                song2.IsCompleted = true; Debug.WriteLine(song2.FilePath + " is to be removed now");
+
+            }
+        }
+
+
+        public static void AddToQueue()
+        {
+
+        }
+        public static void SyncFullQueueFromNext()
+        {
+            try
+            {
+                IsLooping = true; // Lock to protect VusicQueue modifications
+
+                // 1. Separate the full queue into its macro groups
+                var completedTracks = VusicQueue.Where(s => s.VisibilityOfStrikeThrough == Visibility.Visible).ToList();
+                var currentlyPlaying = VusicQueue.Where(s => s.FilePath == PlayerService.CurrentPlayingPath
+                                                          && s.VisibilityOfStrikeThrough != Visibility.Visible).ToList();
+
+                // 2. Take the unplayed upcoming tracks EXACTLY as they were just shuffled
+                var upcomingTracks = VusicQueueNext.ToList();
+
+                // 3. Combine them into the target master blueprint sequence
+                var sortedTargetList = completedTracks
+                    .Concat(currentlyPlaying)
+                    .Concat(upcomingTracks)
+                    .ToList();
+
+                // 4. Smoothly mirror the layout onto VusicQueue using Move
+                for (int i = 0; i < sortedTargetList.Count; i++)
+                {
+                    var targetItem = sortedTargetList[i];
+                    int currentLiveIndex = VusicQueue.IndexOf(targetItem);
+
+                    if (currentLiveIndex >= 0 && currentLiveIndex != i)
+                    {
+                        VusicQueue.Move(currentLiveIndex, i);
+                    }
+                }
+            }
+            finally
+            {
+                IsLooping = false;
+            }
+        }
+        public static void SyncQueueLists()
+        {
+            //Update VusicQueueNext:
+            var completedItems = VusicQueue.Where(i => i.IsCompleted == true && i.VisibilityOfStrikeThrough == Visibility.Visible).ToList();
+            foreach (var item in completedItems)
+            {
+                var exist = VusicQueueNext.FirstOrDefault(p => p.FilePath == item.FilePath);
+                if (exist != null)
+                {
+                    VusicQueueNext.Remove(exist);
+                }
+                var backupExist = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == item.FilePath);
+                if (backupExist != null)
+                {
+                    OriginalVusicQueueNext.Remove(backupExist);
+                }
+            }
+            var currentpath = VusicQueueNext.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
+            if (currentpath != null)
+            {
+                VusicQueueNext.Remove(currentpath);
+            }
+            var backupCurrent = OriginalVusicQueueNext.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
+            if (backupCurrent != null)
+            {
+                OriginalVusicQueueNext.Remove(backupCurrent);
+            }
         }
     }
 }

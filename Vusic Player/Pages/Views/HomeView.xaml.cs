@@ -379,5 +379,7 @@ BUILD 131126
             Frame.Navigate(typeof(FavouritesView));
         }
         #endregion
+
+       
     }
 }

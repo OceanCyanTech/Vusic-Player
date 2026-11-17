@@ -15,14 +15,15 @@
 
 typedef struct
 {
-	int64_t duration_microseconds;
-	int width;
-	int height;
-	int tracknumber;	
-	int totaltracks;	
-	int64_t bitrate;	
-	int64_t channels;	
-	int64_t samplerate;	
+	int64_t duration_microseconds;//
+	int width;//
+	int height;//
+	int tracknumber;	//
+	int totaltracks;	//
+	int64_t audiobitrate;	//
+	int64_t videobitrate;	//
+	int64_t channels;	//
+	int64_t samplerate;		//
 	int64_t filesize;	//
 	char title[512]; //
 	char artist[512]; //
@@ -38,9 +39,9 @@ typedef struct
 	char performer[512];//
 	char genre[512];//
 	char comment[512];//
-	char video_codec[64];
-	char audio_codec[64];
-	int64_t totalframes;
+	char video_codec[64];//
+	char audio_codec[64];//
+	int64_t totalframes;//
 	uint8_t* cover_data;//
 	int cover_size;//
 } MediaProperties;

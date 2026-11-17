@@ -7,7 +7,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:playback_views="using:Vusic_Player.UI.UserViews.Controls" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:media="using:CommunityToolkit.WinUI.Media" xmlns:oceandialogcontrols="using:Vusic_Player.UI.UserViews.Controls.OceanDialogControls"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <local:QueueItemCount x:Key="ForwardItemVisibilityConverter"/>
+        <local:QueueItemCountBack x:Key="BackwardItemVisibilityConverter"/>
+        <local:QueueItemCountString x:Key="ItemCountStringConverter"/>
+    </Page.Resources>
     <Grid Margin="40, 0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MaxWidth="450"></ColumnDefinition>
@@ -224,14 +228,14 @@ AlwaysUseFallback="False"/>
 
                             <!-- Queue information -->
                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind mediacontroller.ItemsCount, Mode=OneWay}"
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind VusicQueueList.Count, Converter={StaticResource ItemCountStringConverter}, Mode=OneWay}"
                        Name="txtCount"
                        Style="{StaticResource BaseTextBlockStyle}"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
-                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind mediacontroller.TotalQueueRuntime, Mode=OneWay}"
+                                <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="{x:Bind FormatQueueDuration(VusicQueueList.Count), Mode=OneWay}"
                        Name="txtTotalDurQueue"
-                       ToolTipService.ToolTip="Runtime Duration of queue"
+                       ToolTipService.ToolTip="Runtime Duration of Queue"
                        Style="{StaticResource BaseTextBlockStyle}"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
@@ -442,7 +446,7 @@ ToolTipService.ToolTip="Play all from start">
                             </StackPanel>
                         </ScrollView>
 
-                        <playback_views:ListViewMedia SearchVisibility="Collapsed"  MediaSource="QueueList" ItemsSource="{x:Bind VusicQueueList}" Margin="30, 10" x:Name="lstViewQueue" Grid.Row="4"></playback_views:ListViewMedia>
+                        <playback_views:ListViewMedia DragItemsCompleted="lstViewQueue_DragItemsCompleted"   Visibility="{x:Bind VusicQueueList.Count, Converter={StaticResource ForwardItemVisibilityConverter}, Mode=OneWay}"  SearchVisibility="Collapsed"  MediaSource="QueueList" Margin="30, 10" x:Name="lstViewQueue" Grid.Row="4"></playback_views:ListViewMedia>
                         <Grid  Grid.Row="3"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"></RowDefinition>
@@ -455,7 +459,7 @@ ToolTipService.ToolTip="Play all from start">
 
                         </Grid>
 
-                        <StackPanel Visibility="{x:Bind mediacontroller.QueuePageEmptyVisibility, Mode=OneWay}" Orientation="Vertical" Grid.Row="3" Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center" Name="grdEmptyQueue">
+                        <StackPanel Visibility="{x:Bind VusicQueueList.Count, Converter={StaticResource BackwardItemVisibilityConverter}, Mode=OneWay}" Orientation="Vertical" Grid.Row="3" Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center" Name="grdEmptyQueue">
                             <StackPanel Spacing="20" Orientation="Horizontal">
                                 <Image Source="{Binding EmptyQueue, Source={StaticResource GlobalIconHolder}}" Width="100"></Image>
                                 <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="Your play queue is empty!" VerticalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
