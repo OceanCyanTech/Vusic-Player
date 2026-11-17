@@ -79,7 +79,8 @@ namespace Vusic_Player.Configuration.Playback
         public static void VusicQueue_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             // 1. Guard clauses to completely ignore internal updates or resets
-       //     if (IsVusicQueueNextChanging) return;
+            //     if (IsVusicQueueNextChanging) return;
+            return;
             if (e.Action != NotifyCollectionChangedAction.Add && e.Action != NotifyCollectionChangedAction.Move) return;
 
             Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().TryEnqueue(() =>

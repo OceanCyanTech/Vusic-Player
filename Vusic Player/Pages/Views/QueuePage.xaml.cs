@@ -771,11 +771,10 @@ namespace Vusic_Player.Pages.Views
         {
 
         }
-
+        private bool _isofficiallyqueuemodifying = false;
         private void lstViewQueue_DragItemsCompleted()
         {
             var currentmedia = VusicQueueList.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
-            Debug.WriteLine("YES DRAG CHANGING for " + currentmedia.FilePath);
 
             if (currentmedia != null)
             {
@@ -804,19 +803,61 @@ namespace Vusic_Player.Pages.Views
             if(btnViewQueue.IsChecked == false)
             {
                 var completeditems = QueueObjects.QueueInstance.QueueFull.Where(p => p.IsCompleted == true);
-                QueueObjects.QueueInstance.QueueFull.Clear();
-                foreach(var item in completeditems)
+
+                if (_isofficiallyqueuemodifying == true) return;
+                try
                 {
-                    QueueObjects.QueueInstance.QueueFull.Add(item);
+                    _isofficiallyqueuemodifying = true;
+                    // 1. Capture the current item safely
+                    var currentmediaplaying = QueueObjects.QueueInstance.QueueFull
+                        .FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
+
+                    // 2. Build your new sequence in a standard List first (zero UI overhead)
+                    var newQueue = new List<SongModel>();
+                    newQueue.AddRange(completeditems);
+                    if (currentmediaplaying != null)
+                    {
+                        newQueue.Add(currentmediaplaying);
+                    }
+                    newQueue.AddRange(VusicQueueList);
+
+                    // 3. Clear and reload the ObservableCollection efficiently
+                    QueueObjects.QueueInstance.QueueFull.Clear();
+                    foreach (var item in newQueue)
+                    {
+                        QueueObjects.QueueInstance.QueueFull.Add(item);
+                    }
+
+                    // 4. Set your index directly without another linear O(N) search lookup
+                    if (currentmediaplaying != null)
+                    {
+                        QueueObjects.QueueInstance.QueueIndex = newQueue.IndexOf(currentmediaplaying);
+                    }
+                    else
+                    {
+                        QueueObjects.QueueInstance.QueueIndex = -1;
+                    }
                 }
-                foreach (var item in VusicQueueList)
+                finally
                 {
-                    QueueObjects.QueueInstance.QueueFull.Add(item);
+                    _isofficiallyqueuemodifying = false;
                 }
             }
             else
             {
-                PENDING
+                if (_isofficiallyqueuemodifying == true) return;
+                try
+                {
+                    QueueObjects.QueueInstance.QueueFull.Clear();
+                foreach (var item in VusicQueueList)
+                {
+                    QueueObjects.QueueInstance.QueueFull.Add(item);
+                }
+                }
+                finally
+                {
+                    _isofficiallyqueuemodifying = false;
+                }
             }
         }
     }
