@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
@@ -30,6 +31,55 @@ namespace Vusic_Player.Configuration.Playback
         public static bool IsShuffleTrue = false;
         private static bool IsVusicQueueNextChanging = false;
         public static bool IsLooping = false;
+        public static async Task ShuffleQueue()
+        {
+            var originalitems = QueueObjects.QueueInstance.QueueFull.ToList();
+            foreach (var item in originalitems)
+            {
+                QueueObjects.QueueInstance.QueueTemporary.Add(item);
+            }
+            var incompleteitems = QueueObjects.QueueInstance.QueueFull.Where(p => p.IsCompleted == false && p.FilePath != PlayerService.CurrentPlayingPath).ToList();
+
+            var completeitems = QueueObjects.QueueInstance.QueueFull.Where(p => p.IsCompleted == true);
+            var currentmedia = QueueObjects.QueueInstance.QueueFull.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
+            var tempsongmodel = new SongModel();
+            if (currentmedia != null)
+            {
+                tempsongmodel = currentmedia;   
+            }
+            var shuffled = ShuffleItems(incompleteitems);
+            QueueObjects.QueueInstance.QueueFull.Clear();
+            foreach (var item in completeitems)
+            {
+                var exist = QueueObjects.QueueInstance.QueueFull.FirstOrDefault(p => p.FilePath == item.FilePath);
+                if (exist == null)
+                {
+                    QueueObjects.QueueInstance.QueueFull.Add(item);
+                }
+            }
+            var exist2 = QueueObjects.QueueInstance.QueueFull.FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
+            if (exist2 == null)
+            {
+                QueueObjects.QueueInstance.QueueFull.Add(tempsongmodel);
+            }
+            foreach (var item in shuffled)
+            {
+                var exist = QueueObjects.QueueInstance.QueueFull.FirstOrDefault(p => p.FilePath == item.FilePath);
+                if (exist == null)
+                {
+                    QueueObjects.QueueInstance.QueueFull.Add(item);
+                }
+            }
+        }
+        public static async Task RestoreQueueItems()
+        {
+            var originalitems = QueueObjects.QueueInstance.QueueTemporary.ToList();
+            QueueObjects.QueueInstance.QueueFull.Clear();
+            foreach (var item in originalitems)
+            {
+                QueueObjects.QueueInstance.QueueFull.Add(item);
+            }
+        }
 
         public static void VusicQueueNext_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {

@@ -72,7 +72,7 @@
 
                             <!-- 5. Disabled State -->
                             <SolidColorBrush x:Key="ProgressRingForegroundDisabled" Color="#404040"/>
-                            <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
                             <SolidColorBrush x:Key="ProgressRingBorderBrushDisabled" Color="Transparent"/>
                         </ProgressRing.Resources>
                     </ProgressRing>

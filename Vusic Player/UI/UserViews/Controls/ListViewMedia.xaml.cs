@@ -846,6 +846,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             int index = ItemsSource.IndexOf(song);
             if (index <= 0) return;
             ItemsSource.Move(index, index - 1);
+            DragItemsCompleted?.Invoke();
         }
 
         private void mnftMovedown_Click(object sender, RoutedEventArgs e)
@@ -857,6 +858,8 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (index >= ItemsSource.Count - 1) return;
 
             ItemsSource.Move(index, index + 1);
+            DragItemsCompleted?.Invoke();
+
         }
 
         private void mnftMovetotop_Click(object sender, RoutedEventArgs e)
@@ -869,6 +872,8 @@ namespace Vusic_Player.UI.UserViews.Controls
 
 
             ItemsSource.Move(index, 0);
+            DragItemsCompleted?.Invoke();
+
 
 
 
@@ -883,6 +888,8 @@ namespace Vusic_Player.UI.UserViews.Controls
             if (index == ItemsSource.Count - 1) return;
 
             ItemsSource.Move(index, ItemsSource.Count - 1);
+            DragItemsCompleted?.Invoke();
+
         }
 
         private void btnGlyph_Click(object sender, RoutedEventArgs e)
@@ -1286,6 +1293,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                     this.ItemsSource.Move(oldIndex, newIndex);
                 }
             }
+            DragItemsCompleted?.Invoke();
+
         }
 
         private void mnftSortDuration_Click(object sender, RoutedEventArgs e)
@@ -1301,6 +1310,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     this.ItemsSource.Move(oldIndex, newIndex);
                 }
             }
+            DragItemsCompleted?.Invoke();
         }
 
         private void mnftSortbyArtist_Click(object sender, RoutedEventArgs e)
@@ -1317,6 +1327,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                     this.ItemsSource.Move(oldIndex, newIndex);
                 }
             }
+            DragItemsCompleted?.Invoke();
+
         }
 
         private void mnftSortbyAlbum_Click(object sender, RoutedEventArgs e)
@@ -1333,6 +1345,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                     this.ItemsSource.Move(oldIndex, newIndex);
                 }
             }
+            DragItemsCompleted?.Invoke();
+
         }
         private void mnftSortbyDateMod_Click(object sender, RoutedEventArgs e)
         {
@@ -1355,6 +1369,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                     this.ItemsSource.Move(oldIndex, newIndex);
                 }
             }
+            DragItemsCompleted?.Invoke();
+
         }
 
         private void mnftSortbyDateCreated_Click(object sender, RoutedEventArgs e)
@@ -1378,7 +1394,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     this.ItemsSource.Move(oldIndex, newIndex);
                 }
             }
-
+            DragItemsCompleted?.Invoke();
         }
 
         private void hypPlaylistAdded_Click(object sender, RoutedEventArgs e)
@@ -1738,6 +1754,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                 }
 
             }
+            DragItemsCompleted?.Invoke();
+
         }
 
         private void mnftRenameFile_Click(object sender, RoutedEventArgs e)

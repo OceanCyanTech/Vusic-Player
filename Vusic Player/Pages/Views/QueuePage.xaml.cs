@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -47,6 +50,24 @@ namespace Vusic_Player.Pages.Views
             throw new NotImplementedException();
         }
     }
+    public class ControlEnabled : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? false : true;
+            }
+
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class QueueItemCountBack : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -88,12 +109,13 @@ namespace Vusic_Player.Pages.Views
         {
             if (value is ObservableCollection<SongModel> media)
             {
-                TimeSpan? ts = TimeSpan.Zero;
+                TimeSpan? ts = new TimeSpan();
+                ts = TimeSpan.Zero;
                 foreach (var item in media)
                 {
                     ts += item.SongDuration;
                 }
-                return $"• {(ts.Value.TotalHours >= 1 ? $"{(int)ts.Value.TotalHours}:{ts.Value:mm\\:ss}" : ts.Value.ToString(@"mm\:ss"))}";
+                return $"• {(ts!.Value.TotalHours >= 1 ? $"{(int)ts.Value.TotalHours}:{ts.Value:mm\\:ss}" : ts.Value.ToString(@"mm\:ss"))}";
             }
 
             return "• 00:00";
@@ -108,7 +130,75 @@ namespace Vusic_Player.Pages.Views
 
     public sealed partial class QueuePage : Page
     {
+        #region Fields
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
+        private readonly QueueDurationString _durationConverter = new();
+        private readonly ConcurrentDictionary<string, CancellationTokenSource> _debouncers = new();
+
+
+        #endregion
+        #region Helper
+        public string FormatQueueDuration(int count)
+        {
+            return (string)_durationConverter.Convert(VusicQueueList, typeof(string), null!, string.Empty);
+        }
+        private void QueueService_NextMediaInitiated()
+        {
+            LoadQueue();
+        }
+        #endregion
+
+        #region Button Click Events
+        private void btnClearQueue_Click(object sender, RoutedEventArgs e)
+        {
+            QueueService.ClearQueue();
+            VusicQueueList.Clear();
+        }
+        private bool _isshuffling = false;
+        private async void tglShuffleQueue_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_isshuffling) return;
+            try
+            {
+                _isshuffling = true;
+                VusicQueueList.Clear();
+                if (tglShuffleQueue.IsChecked == true)
+                {
+                    await QueueService.ShuffleQueue();
+                }
+                else
+                {
+                    await QueueService.RestoreQueueItems();
+                }
+                var incompletequeueitems = queueObjectsInstance.QueueFull.Where(p => p.IsCompleted == false && p.FilePath != PlayerService.CurrentPlayingPath);
+                foreach (var item in incompletequeueitems)
+                {
+                    var exist = QueueObjects.QueueInstance.QueueFull.FirstOrDefault(p => p.FilePath == item.FilePath);
+                    if (exist == null)
+                    {
+                        VusicQueueList.Add(item);
+                    }
+                }
+                foreach (var item in queueObjectsInstance.QueueFull)
+                {
+                    var exist = QueueObjects.QueueInstance.QueueFull.FirstOrDefault(p => p.FilePath == item.FilePath);
+                    if (exist == null)
+                    {
+                        VusicQueueList.Add(item);
+                    }
+                }
+                var currentmedia = queueObjectsInstance.QueueFull.FirstOrDefault(P => P.FilePath == PlayerService.CurrentPlayingPath);
+                if (currentmedia != null)
+                {
+                    queueObjectsInstance.QueueIndex = queueObjectsInstance.QueueFull.IndexOf(currentmedia);
+                }
+            }
+            finally
+            {
+                _isshuffling = false;
+            }
+        }
+        #endregion
         public QueuePage()
         {
             InitializeComponent();
@@ -116,19 +206,11 @@ namespace Vusic_Player.Pages.Views
             FileSystemWatch.FileModified += FileSystemWatch_FileModified;
             QueueService.NextMediaInitiated += QueueService_NextMediaInitiated;
 
-        }
-        private readonly QueueDurationString _durationConverter = new();
-
-        public string FormatQueueDuration(int count)
-        {
-            return (string)_durationConverter.Convert(VusicQueueList, typeof(string), null, string.Empty);
-        }
-        private void QueueService_NextMediaInitiated()
-        {
-            LoadQueue();
+            lstViewQueue.ItemsSource = VusicQueueList;
         }
 
-        private readonly ConcurrentDictionary<string, CancellationTokenSource> _debouncers = new();
+
+
 
         private void FileSystemWatch_FileModified(string filePath, string arg2, string arg3, string arg4, TimeSpan duration, string genre)
         {
@@ -224,12 +306,12 @@ namespace Vusic_Player.Pages.Views
         {
 
             VusicQueueList.Clear();
-            lstViewQueue.ItemsSource = VusicQueueList;
             if (btnViewQueue.IsChecked == false)
             {
                 var incompletequeueitems = queueObjectsInstance.QueueFull.Where(p => p.IsCompleted == false && p.FilePath != PlayerService.CurrentPlayingPath);
                 foreach (var item in incompletequeueitems)
                 {
+
                     VusicQueueList.Add(item);
                 }
             }
@@ -390,34 +472,12 @@ namespace Vusic_Player.Pages.Views
 
         private void btnRemoveSelectionFromQueue_Click(object sender, RoutedEventArgs e)
         {
-
             var itemsToRemove = lstViewQueue.SelectedItems.Cast<SongModel>().ToList();
+
             foreach (var song in itemsToRemove)
             {
-                QueueService.VusicQueueNext.Remove(song);
-                QueueService.VusicQueue.Remove(song);
-            }
-            var currentQueue = (mediacontroller.IsFullQueueMode == true) ? QueueService.VusicQueue : QueueService.VusicQueueNext;
-
-            int count = currentQueue.Count;
-            mediacontroller.QueuePageEmptyVisibility = (count == 0)
-                   ? Visibility.Visible
-                   : Visibility.Collapsed;
-            mediacontroller.ItemsCount = $"• {count} {(count == 1 ? "item" : "items")}";
-            TimeSpan totalDuration = TimeSpan.Zero;
-
-            foreach (var item in currentQueue)
-            {
-                totalDuration += item.SongDuration ?? TimeSpan.Zero;
-            }
-
-            if (totalDuration.TotalHours < 1)
-            {
-                mediacontroller.TotalQueueRuntime = $"• {totalDuration.ToString(@"mm\:ss")}";
-            }
-            else
-            {
-                mediacontroller.TotalQueueRuntime = $"• {totalDuration.ToString(@"h\:mm\:ss")}";
+                VusicQueueList.Remove(song);
+                queueObjectsInstance.QueueFull.Remove(song);
             }
         }
 
@@ -458,27 +518,27 @@ namespace Vusic_Player.Pages.Views
                 }
             }
         }
-        private void tglShuffleQueue_Checked(object sender, RoutedEventArgs e)
-        {
-            if (tglShuffleQueue.IsChecked == true)
-            {
-                QueueService.IsShuffleTrue = true;
+        //private void tglShuffleQueue_Checked(object sender, RoutedEventArgs e)
+        //{
+        //    if (tglShuffleQueue.IsChecked == true)
+        //    {
+        //        QueueService.IsShuffleTrue = true;
 
-                QueueService.ShuffleNext();
-
-
-            }
-            else
-            {
-                QueueService.IsShuffleTrue = false;
-
-                QueueService.RestoreNext();
+        //        QueueService.ShuffleNext();
 
 
-            }
-            //      UpdateViews();
-            UpdateAddonText();
-        }
+        //    }
+        //    else
+        //    {
+        //        QueueService.IsShuffleTrue = false;
+
+        //        QueueService.RestoreNext();
+
+
+        //    }
+        //    //      UpdateViews();
+        //    UpdateAddonText();
+        //}
 
         private void tglLoopQueue_Checked(object sender, RoutedEventArgs e)
         {
@@ -488,29 +548,7 @@ namespace Vusic_Player.Pages.Views
 
 
 
-        private void btnClearQueue_Click(object sender, RoutedEventArgs e)
-        {
-            var currentQueue = (btnViewQueue.IsChecked == true)
-               ? QueueService.VusicQueue
-               : QueueService.VusicQueueNext;
-            if (btnViewQueue.IsChecked == false)
-            {
-                QueueService.VusicQueueNext.Clear();
-            }
-            else
-            {
-                QueueService.VusicQueue.Clear();
-                QueueService.VusicQueueNext.Clear();
-            }
-            mediacontroller.ItemsCount = "• 0 items";
 
-
-            mediacontroller.TotalQueueRuntime = "• 00:00";
-            mediacontroller.QueuePageEmptyVisibility = Visibility.Visible;
-
-
-
-        }
         PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
 
         private async void btnSaveQueue_Click(object sender, RoutedEventArgs e)
@@ -800,7 +838,7 @@ namespace Vusic_Player.Pages.Views
                     }
                 }
             }
-            if(btnViewQueue.IsChecked == false)
+            if (btnViewQueue.IsChecked == false)
             {
                 var completeditems = QueueObjects.QueueInstance.QueueFull.Where(p => p.IsCompleted == true);
 
@@ -808,11 +846,8 @@ namespace Vusic_Player.Pages.Views
                 try
                 {
                     _isofficiallyqueuemodifying = true;
-                    // 1. Capture the current item safely
                     var currentmediaplaying = QueueObjects.QueueInstance.QueueFull
                         .FirstOrDefault(p => p.FilePath == PlayerService.CurrentPlayingPath);
-
-                    // 2. Build your new sequence in a standard List first (zero UI overhead)
                     var newQueue = new List<SongModel>();
                     newQueue.AddRange(completeditems);
                     if (currentmediaplaying != null)
@@ -820,15 +855,11 @@ namespace Vusic_Player.Pages.Views
                         newQueue.Add(currentmediaplaying);
                     }
                     newQueue.AddRange(VusicQueueList);
-
-                    // 3. Clear and reload the ObservableCollection efficiently
                     QueueObjects.QueueInstance.QueueFull.Clear();
                     foreach (var item in newQueue)
                     {
                         QueueObjects.QueueInstance.QueueFull.Add(item);
                     }
-
-                    // 4. Set your index directly without another linear O(N) search lookup
                     if (currentmediaplaying != null)
                     {
                         QueueObjects.QueueInstance.QueueIndex = newQueue.IndexOf(currentmediaplaying);
@@ -849,10 +880,10 @@ namespace Vusic_Player.Pages.Views
                 try
                 {
                     QueueObjects.QueueInstance.QueueFull.Clear();
-                foreach (var item in VusicQueueList)
-                {
-                    QueueObjects.QueueInstance.QueueFull.Add(item);
-                }
+                    foreach (var item in VusicQueueList)
+                    {
+                        QueueObjects.QueueInstance.QueueFull.Add(item);
+                    }
                 }
                 finally
                 {

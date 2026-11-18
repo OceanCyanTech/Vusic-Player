@@ -32,10 +32,10 @@
                     <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedDisabled" Color="Transparent"/>
 
                     <!-- 4. Background Fill when UNCHECKED -->
-                    <SolidColorBrush x:Key="ToggleButtonBackground" Color="#202020"/>
-                    <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#2D2D2D"/>
-                    <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="#181818"/>
-                    <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="#1E1E1E"/>
+                    <SolidColorBrush x:Key="ToggleButtonBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
+                    <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="{ThemeResource CardBackgroundFillColorSecondary}"/>
+                    <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
+                    <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
 
                     <!-- 5. Text / Icon Foreground when UNCHECKED -->
                     <SolidColorBrush x:Key="ToggleButtonForeground" Color="#FFFFFF"/>
@@ -71,10 +71,10 @@
                     <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedDisabled" Color="Transparent"/>
 
                     <!-- 4. Background Fill when UNCHECKED -->
-                    <SolidColorBrush x:Key="ToggleButtonBackground" Color="#202020"/>
-                    <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#2D2D2D"/>
-                    <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="#181818"/>
-                    <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="#1E1E1E"/>
+                    <SolidColorBrush x:Key="ToggleButtonBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
+                    <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="{ThemeResource CardBackgroundFillColorSecondary}"/>
+                    <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
+                    <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
 
                     <!-- 5. Text / Icon Foreground when UNCHECKED -->
                     <SolidColorBrush x:Key="ToggleButtonForeground" Color="#FFFFFF"/>

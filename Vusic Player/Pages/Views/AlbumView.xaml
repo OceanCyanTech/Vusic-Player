@@ -29,7 +29,7 @@
 
                 <!-- 5. Disabled State -->
                 <SolidColorBrush x:Key="ProgressRingForegroundDisabled" Color="#404040"/>
-                <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="#1E1E1E"/>
+                <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
                 <SolidColorBrush x:Key="ProgressRingBorderBrushDisabled" Color="Transparent"/>
             </ProgressRing.Resources>
         </ProgressRing>
@@ -92,7 +92,7 @@
 
                             <!-- 7. Disabled State -->
                             <SolidColorBrush x:Key="ProgressBarForegroundDisabled" Color="#404040"/>
-                            <SolidColorBrush x:Key="ProgressBarBackgroundDisabled" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="ProgressBarBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
                             <SolidColorBrush x:Key="ProgressBarBorderBrushDisabled" Color="Transparent"/>
 
                             <!-- 8. Corner Radius (Geometry rounding for both track and indicator) -->
@@ -148,12 +148,12 @@ CornerRadius="16"
                                         <TextBox.Resources>
                                             <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
                                             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
-                                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource ControlFillColorDisabled}"/>
                                             <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
                                             <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
 
                                             <!-- 2. Resting / Unfocused State -->
-                                            <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                            <SolidColorBrush x:Key="TextControlBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
                                             <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
                                             <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
                                             <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
@@ -176,7 +176,7 @@ CornerRadius="16"
                                             <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
 
                                             <!-- 6. Disabled State -->
-                                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
                                             <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
                                             <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
                                             <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
@@ -221,10 +221,10 @@ CornerRadius="16"
                             <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedDisabled" Color="Transparent"/>
 
                             <!-- 4. Background Fill when UNCHECKED -->
-                            <SolidColorBrush x:Key="ToggleButtonBackground" Color="#202020"/>
-                            <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#2D2D2D"/>
-                            <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="#181818"/>
-                            <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="{ThemeResource CardBackgroundFillColorSecondary}"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
 
                             <!-- 5. Text / Icon Foreground when UNCHECKED -->
                             <SolidColorBrush x:Key="ToggleButtonForeground" Color="#FFFFFF"/>

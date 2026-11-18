@@ -26,11 +26,11 @@
                         <NumberBox.Resources>
                             <!-- 1. Focused State (Accent Border & Caret) -->
                             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
-                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource ControlFillColorDisabled}"/>
                             <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
 
                             <!-- 2. Resting / Unfocused State -->
-                            <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                            <SolidColorBrush x:Key="TextControlBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
                             <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
                             <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
                             <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
@@ -68,7 +68,7 @@
                             <SolidColorBrush x:Key="NumberBoxHeaderForegroundDisabled" Color="#707070"/>
 
                             <!-- 10. Disabled NumberBox State -->
-                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
                             <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
                             <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
                         </NumberBox.Resources>
@@ -87,11 +87,11 @@
                         <NumberBox.Resources>
                             <!-- 1. Focused State (Accent Border & Caret) -->
                             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
-                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource ControlFillColorDisabled}"/>
                             <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
 
                             <!-- 2. Resting / Unfocused State -->
-                            <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                            <SolidColorBrush x:Key="TextControlBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
                             <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
                             <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
                             <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
@@ -129,7 +129,7 @@
                             <SolidColorBrush x:Key="NumberBoxHeaderForegroundDisabled" Color="#707070"/>
 
                             <!-- 10. Disabled NumberBox State -->
-                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
                             <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
                             <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
                         </NumberBox.Resources>

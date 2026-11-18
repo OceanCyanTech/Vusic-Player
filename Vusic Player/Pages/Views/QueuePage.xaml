@@ -11,6 +11,7 @@
         <local:QueueItemCount x:Key="ForwardItemVisibilityConverter"/>
         <local:QueueItemCountBack x:Key="BackwardItemVisibilityConverter"/>
         <local:QueueItemCountString x:Key="ItemCountStringConverter"/>
+        <local:ControlEnabled x:Key="ControlEnabledBasedonCountConverter"/>
     </Page.Resources>
     <Grid Margin="40, 0">
         <Grid.ColumnDefinitions>
@@ -161,24 +162,24 @@ AlwaysUseFallback="False"/>
                    Style="{StaticResource TitleTextBlockStyle}"/>
                                 <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Margin="10,10" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Playlist will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                             </StackPanel>
-                            <AutoSuggestBox FontFamily="{StaticResource GlobalFontHolder}"   QuerySubmitted="asbFindQueue_QuerySubmitted"  IsEnabled="True" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"  Grid.Column="1" Name="asbFindQueue" TextChanged="asbFindQueue_TextChanged"
+                            <AutoSuggestBox  IsEnabled="{x:Bind VusicQueueList.Count, Mode=OneWay, Converter={StaticResource ControlEnabledBasedonCountConverter}}"  FontFamily="{StaticResource GlobalFontHolder}"   QuerySubmitted="asbFindQueue_QuerySubmitted"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"  Grid.Column="1" Name="asbFindQueue" TextChanged="asbFindQueue_TextChanged"
                         QueryIcon="Find"
                         PlaceholderText="Find in queue..."
                         HorizontalAlignment="Stretch" Height="35" Width="300">
                                 <AutoSuggestBox.Resources>
                                     <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
                                     <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
-                                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource ControlFillColorDisabled}"/>
                                     <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
 
                                     <!-- 2. Resting / Unfocused State -->
-                                    <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                    <SolidColorBrush x:Key="TextControlBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
                                     <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
                                     <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
                                     <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
 
                                     <!-- 3. Pointer Over (Hover) State -->
-                                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#2A2A2A"/>
+                                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="{ThemeResource CardBackgroundFillColorSecondary}"/>
                                     <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#FFFFFF"/>
                                     <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555555"/>
                                     <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#999999"/>
@@ -195,7 +196,7 @@ AlwaysUseFallback="False"/>
 
                                     <!-- 6. Suggestions Dropdown Popup (ListView items) -->
                                     <!-- Background surface of the dropdown overlay -->
-                                    <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="#1E1E1E"/>
+                                    <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="{ThemeResource ControlFillColorDisabled}"/>
 
                                     <!-- Hovered suggestion item -->
                                     <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#2C2C2C"/>
@@ -211,7 +212,7 @@ AlwaysUseFallback="False"/>
                                     <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFillPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
 
                                     <!-- 7. Disabled State -->
-                                    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
                                     <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
                                     <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
                                 </AutoSuggestBox.Resources>
@@ -246,45 +247,43 @@ AlwaysUseFallback="False"/>
                     Orientation="Horizontal"
                     Spacing="10">
 
-                                <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" IsEnabled="True" Name="btnRemoveSelectionFromQueue" Click="btnRemoveSelectionFromQueue_Click"
-                    ToolTipService.ToolTip="Remove selection from queue">
+                                <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" IsEnabled="{x:Bind lstViewQueue.SelectedItems.Count, Mode=OneWay, Converter={StaticResource ControlEnabledBasedonCountConverter}}" Name="btnRemoveSelectionFromQueue" Click="btnRemoveSelectionFromQueue_Click"
+                    ToolTipService.ToolTip="Remove selection from Queue">
                                     <Image Width="20" Source="{Binding DeleteIcon, Source={StaticResource GlobalIconHolder}}"/>
                                 </Button>
 
-                                <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Checked="tglShuffleQueue_Checked" Unchecked="tglShuffleQueue_Checked" Name="tglShuffleQueue"
+                                <ToggleButton  IsEnabled="{x:Bind VusicQueueList.Count, Mode=OneWay, Converter={StaticResource ControlEnabledBasedonCountConverter}}"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Checked="tglShuffleQueue_Checked" Unchecked="tglShuffleQueue_Checked" Name="tglShuffleQueue"
                           ToolTipService.ToolTip="Shuffle Play Queue">
                                     <ToggleButton.Resources>
-                                        <!-- 1. Background Fill when CHECKED -->
                                         <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="{StaticResource GlobalAccentColor}"/>
                                         <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
                                         <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPressed" Color="{StaticResource GlobalAccentColorPointerPressed}"/>
                                         <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedDisabled" Color="#2A2A2A"/>
 
-                                        <!-- 2. Text / Icon Foreground when CHECKED -->
                                         <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="#000000"/>
                                         <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="#000000"/>
                                         <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="#000000"/>
                                         <SolidColorBrush x:Key="ToggleButtonForegroundCheckedDisabled" Color="#707070"/>
 
-                                        <!-- 3. Border Stroke when CHECKED -->
+                                   
                                         <SolidColorBrush x:Key="ToggleButtonBorderBrushChecked" Color="Transparent"/>
                                         <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedPointerOver" Color="Transparent"/>
                                         <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedPressed" Color="Transparent"/>
                                         <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedDisabled" Color="Transparent"/>
 
-                                        <!-- 4. Background Fill when UNCHECKED -->
-                                        <SolidColorBrush x:Key="ToggleButtonBackground" Color="#202020"/>
-                                        <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#2D2D2D"/>
-                                        <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="#181818"/>
-                                        <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="#1E1E1E"/>
+                                       
+                                        <SolidColorBrush x:Key="ToggleButtonBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="{ThemeResource CardBackgroundFillColorSecondary}"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
 
-                                        <!-- 5. Text / Icon Foreground when UNCHECKED -->
+                                      
                                         <SolidColorBrush x:Key="ToggleButtonForeground" Color="#FFFFFF"/>
                                         <SolidColorBrush x:Key="ToggleButtonForegroundPointerOver" Color="#FFFFFF"/>
                                         <SolidColorBrush x:Key="ToggleButtonForegroundPressed" Color="#CCCCCC"/>
                                         <SolidColorBrush x:Key="ToggleButtonForegroundDisabled" Color="#505050"/>
 
-                                        <!-- 6. Border Stroke when UNCHECKED -->
+                   
                                         <SolidColorBrush x:Key="ToggleButtonBorderBrush" Color="#404040"/>
                                         <SolidColorBrush x:Key="ToggleButtonBorderBrushPointerOver" Color="#555555"/>
                                         <SolidColorBrush x:Key="ToggleButtonBorderBrushPressed" Color="#303030"/>
@@ -303,7 +302,7 @@ AlwaysUseFallback="False"/>
                                     </ToggleButton.ContextFlyout>
                                 </ToggleButton>
 
-                                <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" IsEnabled="True"  Background="Transparent" Name="tglLoopQueue" Checked="tglLoopQueue_Checked" Unchecked="tglLoopQueue_Checked"
+                                <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  IsEnabled="{x:Bind VusicQueueList.Count, Mode=OneWay, Converter={StaticResource ControlEnabledBasedonCountConverter}}"   Name="tglLoopQueue" Checked="tglLoopQueue_Checked" Unchecked="tglLoopQueue_Checked"
                           ToolTipService.ToolTip="Loop list">
                                     <ToggleButton.Resources>
                                         <!-- 1. Background Fill when CHECKED -->
@@ -325,10 +324,10 @@ AlwaysUseFallback="False"/>
                                         <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedDisabled" Color="Transparent"/>
 
                                         <!-- 4. Background Fill when UNCHECKED -->
-                                        <SolidColorBrush x:Key="ToggleButtonBackground" Color="#202020"/>
-                                        <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#2D2D2D"/>
-                                        <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="#181818"/>
-                                        <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="#1E1E1E"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="{ThemeResource CardBackgroundFillColorSecondary}"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
+                                        <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
 
                                         <!-- 5. Text / Icon Foreground when UNCHECKED -->
                                         <SolidColorBrush x:Key="ToggleButtonForeground" Color="#FFFFFF"/>
@@ -346,15 +345,15 @@ AlwaysUseFallback="False"/>
                                     <Image Width="20" Source="{Binding LoopIcon, Source={StaticResource GlobalIconHolder}}"/>
                                 </ToggleButton>
 
-                                <Button  IsEnabled="True"  Background="Transparent" Name="btnClearQueue" Click="btnClearQueue_Click"
-                    ToolTipService.ToolTip="Clear Queue">
+                                <Button Name="btnClearQueue" Click="btnClearQueue_Click"  IsEnabled="{x:Bind VusicQueueList.Count, Mode=OneWay, Converter={StaticResource ControlEnabledBasedonCountConverter}}" 
+                    ToolTipService.ToolTip="Clear Queue"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" >
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <Image Width="20" Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}"/>
-                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtClearQueue" Text="Clear queue"/>
+                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtClearQueue" Text="Clear Queue"/>
                                     </StackPanel>
                                 </Button>
 
-                                <Button  IsEnabled="True"  Background="Transparent" Name="btnSaveQueue" Click="btnSaveQueue_Click"
+                                <Button   IsEnabled="{x:Bind VusicQueueList.Count, Mode=OneWay, Converter={StaticResource ControlEnabledBasedonCountConverter}}"    CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Name="btnSaveQueue" Click="btnSaveQueue_Click"
                     ToolTipService.ToolTip="Save Queue to Playlist">
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <Image Width="20" Source="{Binding SaveIcon, Source={StaticResource GlobalIconHolder}}"/>
@@ -375,7 +374,7 @@ AlwaysUseFallback="False"/>
                FontWeight="SemiBold"
                Opacity="0.85"/>
 
-                            <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Checked="btnViewQueue_Checked" Unchecked="btnViewQueue_Checked"  Name="btnViewQueue"
+                            <ToggleButton CornerRadius="12" IsEnabled="{x:Bind queueObjectsInstance.QueueFull.Count, Converter={StaticResource ControlEnabledBasedonCountConverter}}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Checked="btnViewQueue_Checked" Unchecked="btnViewQueue_Checked"  Name="btnViewQueue"
 >
                                 <ToggleButton.Resources>
                                     <!-- 1. Background Fill when CHECKED -->
@@ -397,10 +396,10 @@ AlwaysUseFallback="False"/>
                                     <SolidColorBrush x:Key="ToggleButtonBorderBrushCheckedDisabled" Color="Transparent"/>
 
                                     <!-- 4. Background Fill when UNCHECKED -->
-                                    <SolidColorBrush x:Key="ToggleButtonBackground" Color="#202020"/>
-                                    <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="#2D2D2D"/>
-                                    <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="#181818"/>
-                                    <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="#1E1E1E"/>
+                                    <SolidColorBrush x:Key="ToggleButtonBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
+                                    <SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="{ThemeResource CardBackgroundFillColorSecondary}"/>
+                                    <SolidColorBrush x:Key="ToggleButtonBackgroundPressed" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
+                                    <SolidColorBrush x:Key="ToggleButtonBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
 
                                     <!-- 5. Text / Icon Foreground when UNCHECKED -->
                                     <SolidColorBrush x:Key="ToggleButtonForeground" Color="#FFFFFF"/>
@@ -417,7 +416,7 @@ AlwaysUseFallback="False"/>
 
                                 <StackPanel Orientation="Horizontal" Spacing="5">
                                     <Image Width="20" Source="{Binding ViewFullQueue, Source={StaticResource GlobalIconHolder}}"/>
-                                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="View full queue"/>
+                                    <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  Text="View Full Queue"/>
                                 </StackPanel>
                             </ToggleButton>
                             <Button IsEnabled="True" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnAddtoQueue" Click="btnAddtoQueue_Click"

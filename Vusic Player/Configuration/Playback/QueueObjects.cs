@@ -19,6 +19,7 @@ namespace Vusic_Player.Configuration.Playback
         public static QueueObjects QueueInstance = new QueueObjects();
         #region Back Properties
         private ObservableCollection<SongModel> _queuefull = new ObservableCollection<SongModel>();
+        private ObservableCollection<SongModel> _queuetemporary = new ObservableCollection<SongModel>();
         private bool _isloop = false;
         private ObservableCollection<SongModel> _queuenext = new ObservableCollection<SongModel>();
         private int _queueindex = 0;
@@ -56,6 +57,18 @@ namespace Vusic_Player.Configuration.Playback
                 if (_queuefull != value)
                 {
                     _queuefull = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public ObservableCollection<SongModel> QueueTemporary
+        {
+            get => _queuetemporary;
+            set
+            {
+                if (_queuetemporary != value)
+                {
+                    _queuetemporary = value;
                     OnPropertyChanged();
                 }
             }

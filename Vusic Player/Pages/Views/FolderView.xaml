@@ -70,12 +70,12 @@
                         <TextBox.Resources>
                             <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
                             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
-                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource ControlFillColorDisabled}"/>
                             <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
                             <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
 
                             <!-- 2. Resting / Unfocused State -->
-                            <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                            <SolidColorBrush x:Key="TextControlBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
                             <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
                             <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
                             <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
@@ -98,7 +98,7 @@
                             <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
 
                             <!-- 6. Disabled State -->
-                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
                             <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
                             <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
                             <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
@@ -147,11 +147,11 @@
                 <AutoSuggestBox.Resources>
                     <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
                     <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
-                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource ControlFillColorDisabled}"/>
                     <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
 
                     <!-- 2. Resting / Unfocused State -->
-                    <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                    <SolidColorBrush x:Key="TextControlBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
                     <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
                     <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
                     <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
@@ -174,7 +174,7 @@
 
                     <!-- 6. Suggestions Dropdown Popup (ListView items) -->
                     <!-- Background surface of the dropdown overlay -->
-                    <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="#1E1E1E"/>
+                    <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="{ThemeResource ControlFillColorDisabled}"/>
 
                     <!-- Hovered suggestion item -->
                     <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#2C2C2C"/>
@@ -190,7 +190,7 @@
                     <SolidColorBrush x:Key="ListViewItemSelectionIndicatorFillPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
 
                     <!-- 7. Disabled State -->
-                    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                    <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
                     <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
                     <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
                 </AutoSuggestBox.Resources>
@@ -357,7 +357,7 @@ BorderThickness="0"
 
                     <!-- 5. Disabled State -->
                     <SolidColorBrush x:Key="ProgressRingForegroundDisabled" Color="#404040"/>
-                    <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="#1E1E1E"/>
+                    <SolidColorBrush x:Key="ProgressRingBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
                     <SolidColorBrush x:Key="ProgressRingBorderBrushDisabled" Color="Transparent"/>
                 </ProgressRing.Resources>
             </ProgressRing>
@@ -379,12 +379,12 @@ BorderThickness="0"
                         <TextBox.Resources>
                             <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
                             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
-                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource ControlFillColorDisabled}"/>
                             <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
                             <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
 
                             <!-- 2. Resting / Unfocused State -->
-                            <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                            <SolidColorBrush x:Key="TextControlBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
                             <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
                             <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
                             <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
@@ -407,7 +407,7 @@ BorderThickness="0"
                             <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
 
                             <!-- 6. Disabled State -->
-                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
                             <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
                             <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
                             <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
@@ -506,12 +506,12 @@ BorderThickness="0"
                         <TextBox.Resources>
                             <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
                             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
-                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource ControlFillColorDisabled}"/>
                             <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
                             <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
 
                             <!-- 2. Resting / Unfocused State -->
-                            <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                            <SolidColorBrush x:Key="TextControlBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
                             <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
                             <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
                             <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
@@ -534,7 +534,7 @@ BorderThickness="0"
                             <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
 
                             <!-- 6. Disabled State -->
-                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
                             <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
                             <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
                             <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>
@@ -572,12 +572,12 @@ BorderThickness="0"
                             <TextBox.Resources>
                                 <!-- 1. Focused State (Accent Highlight on Border & Caret) -->
                                 <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource GlobalAccentColor}"/>
-                                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1E1E1E"/>
+                                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{ThemeResource ControlFillColorDisabled}"/>
                                 <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#FFFFFF"/>
                                 <SolidColorBrush x:Key="TextControlButtonForegroundFocused" Color="{StaticResource GlobalAccentColor}"/>
 
                                 <!-- 2. Resting / Unfocused State -->
-                                <SolidColorBrush x:Key="TextControlBackground" Color="#202020"/>
+                                <SolidColorBrush x:Key="TextControlBackground" Color="{ThemeResource CardBackgroundFillColorDefault}"/>
                                 <SolidColorBrush x:Key="TextControlForeground" Color="#FFFFFF"/>
                                 <SolidColorBrush x:Key="TextControlBorderBrush" Color="#404040"/>
                                 <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#808080"/>
@@ -600,7 +600,7 @@ BorderThickness="0"
                                 <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#FFFFFF"/>
 
                                 <!-- 6. Disabled State -->
-                                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#181818"/>
+                                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{ThemeResource CardBackgroundFillColorTertiary}"/>
                                 <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#505050"/>
                                 <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="#2A2A2A"/>
                                 <SolidColorBrush x:Key="TextControlPlaceholderForegroundDisabled" Color="#404040"/>

@@ -38,7 +38,7 @@
 
                 <!-- 7. Disabled State -->
                 <SolidColorBrush x:Key="ProgressBarForegroundDisabled" Color="#404040"/>
-                <SolidColorBrush x:Key="ProgressBarBackgroundDisabled" Color="#1E1E1E"/>
+                <SolidColorBrush x:Key="ProgressBarBackgroundDisabled" Color="{ThemeResource ControlFillColorDisabled}"/>
                 <SolidColorBrush x:Key="ProgressBarBorderBrushDisabled" Color="Transparent"/>
 
                 <!-- 8. Corner Radius (Geometry rounding for both track and indicator) -->
