@@ -15,8 +15,7 @@ namespace Vusic_Player.Configuration.Playback
     {
         public MediaPlaybackController()
         {
-            QueueService.VusicQueueNext.CollectionChanged -= VusicQueueNext_CollectionChanged;
-            QueueService.VusicQueueNext.CollectionChanged += VusicQueueNext_CollectionChanged;
+           
             IconHolder.Instance.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(IconHolder.Play) || e.PropertyName == "GlobalTheme")
@@ -37,37 +36,6 @@ namespace Vusic_Player.Configuration.Playback
             //Thumbnail = new BitmapImage(new Uri(iconUri));
         }
 
-        private void VusicQueueNext_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add ||
-            e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove ||
-          e.Action == NotifyCollectionChangedAction.Move
-                )
-            {
-                var currentQueue = (IsFullQueueMode == true) ? QueueService.VusicQueue : QueueService.VusicQueueNext;
-
-                int count = currentQueue.Count;
-                QueuePageEmptyVisibility = (count == 0)
-                       ? Visibility.Visible
-                       : Visibility.Collapsed;
-                ItemsCount = $"• {count} {(count == 1 ? "item" : "items")}";
-                TimeSpan totalDuration = TimeSpan.Zero;
-
-                foreach (var item in currentQueue)
-                {
-                    totalDuration += item.SongDuration ?? TimeSpan.Zero;
-                }
-
-                if (totalDuration.TotalHours < 1)
-                {
-                    TotalQueueRuntime = $"• {totalDuration.ToString(@"mm\:ss")}";
-                }
-                else
-                {
-                    TotalQueueRuntime = $"• {totalDuration.ToString(@"h\:mm\:ss")}";
-                }
-            }
-        }
 
 
 

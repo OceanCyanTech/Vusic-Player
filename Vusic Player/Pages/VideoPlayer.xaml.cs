@@ -55,8 +55,8 @@ using Logger = Vusic_Player.Configuration.AppConfig.Logger;
 using Orientation = Vusic_Player.MediaProperties.VideoProperties.Orientation;
 using Stream = Vusic_Player.Configuration.Helper.SubtitlesProperties.Stream;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.Pages
 {
@@ -1308,12 +1308,7 @@ namespace Vusic_Player.Pages
                                 PlayerService.InVideoPage = false;
                             }
 
-
-                            ObservableCollection<SongModel> single = new();
-                            string Title = Path.GetFileNameWithoutExtension(media.Path);
-
-                            single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
-                            QueueService.PlayMedia(single, false, false);
+                            QueueService.AddToQueueAndPlay(media.Path);
                         }
                     }
                 }
@@ -1436,34 +1431,12 @@ namespace Vusic_Player.Pages
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var shows = currentSettings.Shows;
             var listofotherepisodes = EpisodeDirectory.GetEpisodeShowInfo(vdprg.FilePath);
-            var observablesongcollection = new ObservableCollection<SongModel>();
+            var listofpaths = new List<string>();
             foreach (var item in listofotherepisodes)
             {
-
-                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), FilePath = item.FilePath });
+                listofpaths.Add(item.FilePath);
             }
-            foreach (var item in observablesongcollection)
-            {
-                QueueService.VusicQueue.Add(item);
-            }
-            foreach (var item in observablesongcollection)
-            {
-                QueueService.VusicQueueNext.Add(item);
-            }
-            var existingitem = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == vdprg.FilePath);
-            if (existingitem != null)
-            {
-                int index = QueueService.VusicQueueNext.IndexOf(existingitem);
-                if (index > 0)
-                {
-                    for (int i = 0; i < index; i++)
-                    {
-                        QueueService.VusicQueueNext.RemoveAt(0);
-                    }
-                }
-
-                QueueService.VusicQueueNext.Remove(existingitem);
-            }
+            QueueService.AddToQueue(listofpaths);
             var seasonstosend = new ObservableCollection<PlaylistItem>();
             foreach (var show in shows)
             {
@@ -1473,7 +1446,6 @@ namespace Vusic_Player.Pages
 
                 if (directorypath != null)
                 {
-                    Debug.WriteLine("not null " + directorypath);
 
                     bool isInsideAndExists = ShowManager.IsFileInDirectory(directorypath, vdprg.FilePath)
                                 && File.Exists(vdprg.FilePath);
@@ -1482,7 +1454,6 @@ namespace Vusic_Player.Pages
 
                         if (Directory.Exists(directorypath))
                         {
-                            // 1. Only get the top-level folders (e.g., "Season 1", "Season 2", "Season 3")
                             var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
                             primaryFolders.Insert(0, rootPath);
 
@@ -2035,14 +2006,10 @@ namespace Vusic_Player.Pages
         {
             if (btnNextEpisode.Content.ToString() == "Next Episode")
             {
-                Debug.WriteLine("Nanan0");
-
                 if (PlayerService.Masterplayer == null) return;
                 PlayerService.Masterplayer.OpenCompleted -= Masterplayer_OpenCompleted;
-                Debug.WriteLine(QueueService.VusicQueueNext.Count + " is the count");
-                var nextindex = QueueService.VusicQueueNext[0];
-                if (nextindex == null) return;
-                Debug.WriteLine("Nanan1");
+                var nextindex = QueueObjects.QueueInstance.QueueFull[QueueObjects.QueueInstance.QueueIndex + 1];
+
                 UpdateNextEpisodeButtonContent(nextindex.FilePath ?? "");
 
                 PlayerService.LookForProgressForNextVideo(nextindex.FilePath ?? "");
@@ -2052,9 +2019,6 @@ namespace Vusic_Player.Pages
             else if (btnNextEpisode.Content.ToString() == "Next Season")
             {
                 LoadNextSeason();
-
-                Debug.WriteLine("TEST1");
-
             }
         }
         private async void LoadNextSeason()
@@ -2072,174 +2036,20 @@ namespace Vusic_Player.Pages
                 var enumeratedepisodes = EpisodeDirectory.EnumerateEpisodes(nextseason.PlaylistId);
                 ShowManager.mainShowPlayable.CurrentSeasonNumber++;
                 if (enumeratedepisodes.Count == 0) return;
-                var observablesongcollection = new ObservableCollection<SongModel>();
+                var liststring = new List<string>();
                 foreach (var item in enumeratedepisodes)
                 {
-                    observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), FilePath = item.FilePath });
+                    liststring.Add(item.FilePath);
                 }
-                foreach (var item in observablesongcollection)
-                {
-                    QueueService.VusicQueue.Add(item);
-                }
-                foreach (var item in observablesongcollection)
-                {
-                    QueueService.VusicQueueNext.Add(item);
-                }
+               
+              
                 ShowManager.mainShowPlayable.episodes = enumeratedepisodes;
                 ShowManager.mainShowPlayable.CurrentSeasonDirectory = nextseason.PlaylistId;
                 var firstitem = enumeratedepisodes[0];
                 UpdateNextEpisodeButtonContent(firstitem.FilePath);
 
-                var existingitem = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == firstitem.FilePath);
-                if (existingitem != null)
-                {
-                    QueueService.VusicQueueNext.Remove(existingitem);
-                }
-                QueueService.PlayNext();
+                QueueService.AddToQueueAndPlay(liststring, false, false);
             }
-            //   if (Directory.Exists(rootPath))
-            //   {
-            //       Debug.WriteLine("TEST3");
-
-            //       // 1. Only get the top-level folders (e.g., "Season 1", "Season 2", "Season 3")
-            //       var primaryFolders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly).ToList();
-            //       primaryFolders.Insert(0, rootPath);
-
-            //       string pattern = @"\b(season\s*|s)(\d+)\b";
-
-            //       foreach (string path in primaryFolders)
-            //       {
-            //           string folderName = Path.GetFileName(path);
-            //           Match match = Regex.Match(folderName, pattern, RegexOptions.IgnoreCase);
-
-            //           if (path == rootPath) match = Regex.Match(new DirectoryInfo(rootPath).Name, pattern, RegexOptions.IgnoreCase);
-
-            //           if (match.Success)
-            //           {
-            //               int seasonNum = Convert.ToInt32(match.Groups[2].Value);
-            //               string seasonName = $"Season {seasonNum}";
-
-            //               int episodeCount = 0;
-
-            //               // This variable will track the actual deep folder where files are found!
-            //               string actualContentPath = path;
-
-            //               foreach (var ext in Extensions.VideoExtensions.List)
-            //               {
-            //                   string searchPattern = $"*{ext.ToLower()}";
-
-            //                   // Get the full path details of any matching video files inside
-            //                   var foundFiles = Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
-
-            //                   if (foundFiles.Any())
-            //                   {
-            //                       episodeCount += foundFiles.Count;
-
-            //                       // Grab the directory name of the first video file found. 
-            //                       // This is guaranteed to be the real folder containing the episodes!
-            //                       actualContentPath = Path.GetDirectoryName(foundFiles.First())!;
-            //                   }
-            //               }
-
-            //               string episodeCountString = $"{episodeCount} {(episodeCount == 1 ? "episode" : "episodes")}";
-
-            //               var existingSeason = seasons.FirstOrDefault(p => p.PlaylistName == seasonName);
-            //               if (existingSeason == null)
-            //               {
-            //                   Debug.WriteLine("TEST5");
-
-            //                   seasons.Add(new PlaylistItem
-            //                   {
-            //                       PlaylistName = seasonName,
-            //                       PlaylistCount = episodeCountString,
-
-            //                       // SAVE THIS: Points exactly to "Season 3\Extra Subfolder" if files are deep
-            //                       PlaylistId = actualContentPath,
-
-            //                       SeasonNumber = seasonNum
-            //                   });
-            //               }
-            //               else
-            //               {
-            //                   existingSeason.PlaylistCount = episodeCountString;
-            //                   existingSeason.PlaylistId = actualContentPath; // Update path if found
-            //               }
-            //           }
-            //       }
-
-            //       if (seasons.Count != 0)
-            //       {
-            //           if (PlayerService.CurrentPlayingPath == null) return;
-            //           Debug.WriteLine("TEST6");
-            //           var seasonsRearranged = seasons.OrderBy(p => p.SeasonNumber).ToList();
-
-            //           foreach (var seas in seasonsRearranged)
-            //           {
-            //               var path = seas.PlaylistId;
-            //               if (path != null)
-            //               {
-            //                   // Check if the current file path starts with the season's directory path
-            //                   if (PlayerService.CurrentPlayingPath.StartsWith(path, StringComparison.OrdinalIgnoreCase))
-            //                   {
-            //                       var curindex = seasonsRearranged.IndexOf(seas);
-            //                       ShowManager.currentseason = curindex;
-            //                       break; // Found it, no need to keep looping
-            //                   }
-            //               }
-            //           }
-            //           ShowManager.currentseason++;
-            //           Debug.WriteLine(ShowManager.currentseason + " is the current season now");
-            //           foreach (var item in seasonsRearranged)
-            //           {
-            //               Debug.WriteLine(item.PlaylistName);
-            //           }
-            //           var nextseason = seasonsRearranged[ShowManager.currentseason];
-            //           Debug.WriteLine(nextseason.PlaylistName + " is the next season");
-            //           if (nextseason != null)
-            //           {
-            //               if (nextseason.PlaylistId == null) return;
-            //               var listofotherepisodes = EpisodeDirectory.EnumerateEpisodes(nextseason.PlaylistId);
-            //               var sorted = listofotherepisodes
-            //.OrderBy(p => int.Parse(p.EpisodeName?.Replace("Episode ", "") ?? "0"));
-            //               ShowManager.totalepisodecount = listofotherepisodes.Count;
-            //               // Optimize VusicQueue removal
-
-
-            //               // Optimize VusicQueueNext removal
-
-            //               QueueService.VusicQueue.Clear();
-            //               QueueService.VusicQueueNext.Clear();
-            //               foreach (var item in sorted)
-            //               {
-            //                   var file = await StorageFile.GetFileFromPathAsync(item.FilePath);
-            //                   var vidprops = await file.Properties.GetVideoPropertiesAsync();
-            //                   var title = vidprops.Title;
-            //                   if (title == "")
-            //                   {
-            //                       title = Path.GetFileName(item.FilePath);
-            //                   }
-            //                   if (item.FilePath != null)
-            //                   {
-            //                       QueueService.VusicQueue.Add(new SongModel { Title = title, FilePath = item.FilePath });
-            //                   }
-            //               }
-            //               foreach (var item in QueueService.VusicQueue)
-            //               {
-            //                   QueueService.VusicQueueNext.Add(new SongModel { Title = item.Title, FilePath = item.FilePath });
-            //               }
-            //               foreach (var item in QueueService.VusicQueueNext)
-            //               {
-            //                   Debug.WriteLine(item.FilePath + " Next");
-
-            //               }
-            //               var firstitem = QueueService.VusicQueueNext[0];
-
-            //               QueueService.PlayNext();
-            //               if (firstitem.FilePath != null)
-            //                   UpdateNextEpisodeButtonContent(firstitem.FilePath);
-            //           }
-            //       }
-            //   }
 
         }
         ObservableCollection<PlaylistItem> seasons = new();

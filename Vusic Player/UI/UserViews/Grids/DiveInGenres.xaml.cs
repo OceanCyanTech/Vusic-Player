@@ -1,11 +1,11 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
-// Licensed under the MIT License. See LICENSE in the project root.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Vusic_Player.Configuration.ClassModels;
@@ -13,7 +13,6 @@ using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Pages.Views;
-using Windows.Storage;
 
 
 namespace Vusic_Player.UI.UserViews.Grids
@@ -46,22 +45,12 @@ BUILD 131126
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                foreach (var path in genre.Songs)
+                var liststring = new List<string>();
+                foreach (var item in genre.Songs)
                 {
-                    if (File.Exists(path.FilePath))
-                    {
-                        Debug.WriteLine("SHD " + path);
-                        var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
-                        var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                        string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
-                        string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                        string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                        observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
-                    }
+                    liststring.Add(item.FilePath);
                 }
-                QueueService.PlayMedia(observabletemp, false, false);
+                QueueService.AddToQueueAndPlay(liststring, false, false);
             }
 
         }
@@ -69,60 +58,36 @@ BUILD 131126
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                foreach (var path in genre.Songs)
+                var liststring = new List<string>();
+                foreach (var item in genre.Songs)
                 {
-                    if (!File.Exists(path.FilePath)) continue;
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
-                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
-                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                    liststring.Add(item.FilePath);
                 }
-                QueueService.PlayMedia(observabletemp, true, false);
+                QueueService.AddToQueueAndPlay(liststring, true, false);
             }
         }
         private async void mnftPlayGenreLoop_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                foreach (var path in genre.Songs)
+                var liststring = new List<string>();
+                foreach (var item in genre.Songs)
                 {
-                    if (!File.Exists(path.FilePath)) continue;
-
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
-                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
-                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                    liststring.Add(item.FilePath);
                 }
-                QueueService.PlayMedia(observabletemp, false, true);
+                QueueService.AddToQueueAndPlay(liststring, false, true);
             }
-
         }
         private async void mnftPlayGenreLoopShuffle_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                foreach (var path in genre.Songs)
+                var liststring = new List<string>();
+                foreach (var item in genre.Songs)
                 {
-                    if (!File.Exists(path.FilePath)) continue;
-
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
-                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
-                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                    liststring.Add(item.FilePath);
                 }
-                QueueService.PlayMedia(observabletemp, true, true);
+                QueueService.AddToQueueAndPlay(liststring, true, true);
             }
         }
         #endregion
@@ -163,7 +128,7 @@ BUILD 131126
                     Artist = !string.IsNullOrWhiteSpace(t.Artist) ? t.Artist : "Unknown Artist",
                     AlbumName = !string.IsNullOrWhiteSpace(t.AlbumName) ? t.AlbumName : "Unknown Album",
                     FilePath = t.FilePath,
-                    SongDuration = t.SongDuration 
+                    SongDuration = t.SongDuration
                 }).ToList();
                 string coverPath = IconHolder.Instance.MusicNoteIcon;
                 int trackCount = songModels.Count;

@@ -65,6 +65,7 @@ namespace Vusic_Player.Configuration.AppConfig
                                 }
                                 else
                                 {
+                                  
                                     PlayerService.OpenPath(filePath);
                                 }
                             }
@@ -72,6 +73,7 @@ namespace Vusic_Player.Configuration.AppConfig
                         else if (audioExtensions.Contains(extension))
                         {
                             //   MainWindow.ShowWindow();
+                            App.NavigationFrame.GoBack();
                             PlayerService.OpenPath(filePath);
                             return;
                         }

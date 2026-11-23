@@ -292,7 +292,7 @@ CornerRadius="16"
                         </StackPanel>
                     </Button>
 
-                    <ToggleButton Background="Transparent" BorderBrush="Transparent" Name="btnShuffle" Checked="btnShuffle_Checked" Unchecked="btnShuffle_Unchecked" Margin="5"
+                    <ToggleButton Background="Transparent" BorderBrush="Transparent" Name="btnShuffle" Checked="btnShuffle_Checked" Unchecked="btnShuffle_Checked" Margin="5"
                   ToolTipService.ToolTip="Shuffle playlist">
                         <ToggleButton.Resources>
                             <!-- 1. Background Fill when CHECKED -->

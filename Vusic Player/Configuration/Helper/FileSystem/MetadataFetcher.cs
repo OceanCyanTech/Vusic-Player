@@ -38,7 +38,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
 
             return string.IsNullOrEmpty(mediametadata.Artist) ? "Unknown Artist" : mediametadata.Artist;
         }
-        public static async Task<SongModel> GetSongModel(string FilePathFetch)
+        public static async Task<SongModel> GetSongModel(string FilePathFetch, bool isQueueItem =false)
         {
             Debug.WriteLine("SONG MODEL CALLED FOR  " + FilePathFetch);
 
@@ -60,7 +60,8 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
                     Title = title,
                     Artist = artist,
                     AlbumName = album,
-                    SongDuration = duration
+                    SongDuration = duration,
+                    IsQueueItem = isQueueItem
                 };
             }
 
@@ -68,7 +69,8 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             {
                 FilePath = FilePathFetch,
                 Title = title,
-                SongDuration = duration
+                SongDuration = duration,
+                IsQueueItem = isQueueItem
             };
         }
         public static async Task<SongModel>GetSongModelAudio(string FilePathFetch)

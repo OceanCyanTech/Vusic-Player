@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -262,26 +265,42 @@ namespace Vusic_Player.Pages.Views
         //Play All Btn
         private void btnPlayAllVideos_Click(object sender, RoutedEventArgs e)
         {
-            //Play all videos displayed in Video Library
-            QueueService.PlayMedia(AllAvailableVideos, false, false);
+            var liststring = new List<string>();
+            foreach (var item in AllAvailableVideos)
+            {
+                liststring.Add(item.FilePath);
+            }
+            QueueService.AddToQueueAndPlay(liststring, false, false);
         }
 
         private void mnftPlayShuffled_Click(object sender, RoutedEventArgs e)
         {
-            //Play Shuffled
-            QueueService.PlayMedia(AllAvailableVideos, true, false);
+            var liststring = new List<string>();
+            foreach (var item in AllAvailableVideos)
+            {
+                liststring.Add(item.FilePath);
+            }
+            QueueService.AddToQueueAndPlay(liststring, true, false);
         }
 
         private void mnftPlayOnLoop_Click(object sender, RoutedEventArgs e)
         {
-            //Play on Loop
-            QueueService.PlayMedia(AllAvailableVideos, false, true);
+            var liststring = new List<string>();
+            foreach (var item in AllAvailableVideos)
+            {
+                liststring.Add(item.FilePath);
+            }
+            QueueService.AddToQueueAndPlay(liststring, false, true);
         }
 
         private void mnftPlayOnLoopShuffled_Click(object sender, RoutedEventArgs e)
         {
-            //Play on Loop and Shuffled
-            QueueService.PlayMedia(AllAvailableVideos, true, true);
+            var liststring = new List<string>();
+            foreach (var item in AllAvailableVideos)
+            {
+                liststring.Add(item.FilePath);
+            }
+            QueueService.AddToQueueAndPlay(liststring, true, true);
         }
         #endregion
 
@@ -642,21 +661,12 @@ namespace Vusic_Player.Pages.Views
             //Play all Videos in Video History
             var videohistory = recentVideo;
             if (videohistory.Count == 0) return;
-            ObservableCollection<SongModel> tempTransfer = new();
-
+            var liststring = new List<string>();
             foreach (var item in videohistory)
             {
-                var existingvideo = AllAvailableVideos.FirstOrDefault(p => p.FilePath == item.FilePath);
-                if (existingvideo != null)
-                {
-                    Debug.WriteLine("ITEM FILE APTHS " + item.FilePath);
-                    if (File.Exists(item.FilePath))
-                    {
-                        tempTransfer.Add(new SongModel { Title = existingvideo.Title, SongDuration = existingvideo.SongDuration, FilePath = existingvideo.FilePath });
-                    }
-                }
+                liststring.Add(item.FilePath);
             }
-            QueueService.PlayMedia(tempTransfer, false, false);
+            QueueService.AddToQueueAndPlay(liststring, false, false);
         }
 
         private async void btnClearHistory_Click(object sender, RoutedEventArgs e)

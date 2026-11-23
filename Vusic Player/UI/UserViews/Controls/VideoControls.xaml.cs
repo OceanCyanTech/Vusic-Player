@@ -1,5 +1,5 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
-// Licensed under the MIT License. See LICENSE in the project root.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
 
 using FlyleafLib;
 using FlyleafLib.MediaFramework.MediaStream;
@@ -8,13 +8,10 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Vusic_Player.Configuration;
-using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.SubtitlesProperties.ExternalSubtitles;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
@@ -29,8 +26,8 @@ using Vusic_Player.UI.Dialogs;
 using WinRT.Interop;
 using UserControl = Microsoft.UI.Xaml.Controls.UserControl;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.UI.UserViews.Controls
 {
@@ -72,28 +69,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
                     if (File.Exists(media.Path))
                     {
-                        if (App.NavigationFrame != null)
-                        {
-                            if (PlayerService.InVideoPage == true)
-                            {
-                                App.NavigationFrame.GoBack();
-                                if (PlayerService.Masterplayer != null)
-                                {
-                                    if (PlayerService.Masterplayer.IsPlaying)
-                                    {
-                                        PlayerService.Pause();
-                                    }
-                                }
-                                PlayerService.InVideoPage = false;
-                            }
-
-
-                            ObservableCollection<SongModel> single = new();
-                            string Title = Path.GetFileNameWithoutExtension(media.Path);
-
-                            single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
-                            QueueService.PlayMedia(single, false, false);
-                        }
+                        QueueService.AddToQueueAndPlay(media.Path);
                     }
                 }
                 else if (isVideo)
@@ -791,8 +767,8 @@ namespace Vusic_Player.UI.UserViews.Controls
             PictureInPicture pictureinPicture = new PictureInPicture();
             pictureinPicture.Activate();
             MainWindow.HideWindow();
-   //         IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-       //     _hwnd = WindowNative.GetWindowHandle(this);
+            //         IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            //     _hwnd = WindowNative.GetWindowHandle(this);
 
         }
 
@@ -886,7 +862,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void btnLoopToggle_Checked(object sender, RoutedEventArgs e)
         {
-            QueueService.IsLoopTrue = btnLoopToggle.IsChecked ?? false;
+            QueueObjects.QueueInstance.IsLoop = btnLoopToggle.IsChecked ?? false;
 
         }
 

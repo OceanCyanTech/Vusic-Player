@@ -176,26 +176,6 @@ namespace Vusic_Player.Configuration
 
         public static void PlayPause()
         {
-            if (CurrentPlayingPath == "" || CurrentPlayingPath == null)
-            {
-                Debug.WriteLine("ssh");
-                if (QueueService.VusicQueueNext.Count != 0)
-                {
-                    Debug.WriteLine("ssh2");
-
-                    //     QueueService.PlayNext();
-                    return;
-                }
-            }
-            else
-            {
-                Debug.WriteLine("jd" + CurrentPlayingPath);
-                Debug.WriteLine("shsh");
-                if (CurrentPlayingPath == null)
-                {
-                    Debug.WriteLine("null");
-                }
-            }
             if (Masterplayer == null) return;
 
             if (Masterplayer.IsPlaying) Pause();
@@ -300,12 +280,6 @@ namespace Vusic_Player.Configuration
 						File.SetAttributes(fiPath, originalAttributes);
 					}
 				}
-				QueueService.VusicQueueNext.CollectionChanged -= QueueService.VusicQueueNext_CollectionChanged;
-
-                QueueService.VusicQueueNext.CollectionChanged += QueueService.VusicQueueNext_CollectionChanged;
-                QueueObjects.QueueInstance.QueueFull.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
-                QueueService.VusicQueue.CollectionChanged -= QueueService.VusicQueue_CollectionChanged;
-                QueueService.VusicQueue.CollectionChanged += QueueService.VusicQueue_CollectionChanged;
                 Masterplayer.SeekCompleted += (sender, completedMs) =>
                 {
                     if (completedMs != -1)
@@ -470,10 +444,13 @@ namespace Vusic_Player.Configuration
         {
             try
             {
-                Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Brightness].Value = 0;
-                Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Saturation].Value = 0;
-                Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Contrast].Value = 0;
-                Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Hue].Value = 0;
+                if (Masterplayer != null)
+                {
+                    Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Brightness].Value = 0;
+                    Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Saturation].Value = 0;
+                    Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Contrast].Value = 0;
+                    Masterplayer.Config.Video.D3Filters[Vortice.Direct3D11.VideoProcessorFilter.Hue].Value = 0;
+                }
             }
             catch (Exception ex)
             {

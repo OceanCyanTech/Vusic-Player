@@ -266,6 +266,10 @@ namespace Vusic_Player.Pages
                     }
                     else if (audioExtensions.Contains(extension))
                     {
+                        if(PlayerService.InVideoPage == true)
+                        {
+                            frmMain.GoBack();
+                        }
                         PlayerService.OpenPath(filePath);
                         return;
                     }
@@ -355,11 +359,7 @@ namespace Vusic_Player.Pages
                     {
                         if (File.Exists(media.Path))
                         {
-                            ObservableCollection<SongModel> single = new();
-                            string Title = Path.GetFileNameWithoutExtension(media.Path);
-
-                            single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
-                            QueueService.PlayMedia(single, false, false);
+                            QueueService.AddToQueueAndPlay(media.Path);
                         }
                     }
                     else if (isVideo)

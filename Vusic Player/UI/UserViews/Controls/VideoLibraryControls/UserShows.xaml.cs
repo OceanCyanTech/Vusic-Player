@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -22,8 +25,8 @@ using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 {
@@ -372,8 +375,6 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 
                 if (data.Episodes == null || data.Episodes.Count == 0) return;
 
-
-                // 3. Batch queue additions to avoid redundant O(N) loops
                 var songModels = data.Episodes.Select(item => new SongModel
                 {
                     Title = Path.GetFileName(item.FilePath),
@@ -382,14 +383,10 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 
                 foreach (var song in songModels)
                 {
-                    QueueService.VusicQueue.Add(song);
-                    QueueService.VusicQueueNext.Add(song);
+                    QueueService.AddToQueue(song.FilePath);
                 }
-
-                // 4. Navigate
                 if (data.Seasons.Count > 0 && App.NavigationFrame != null)
                 {
-                    QueueService.VusicQueueNext.RemoveAt(0);
                     App.NavigationFrame.Navigate(typeof(VideoPlayer), new ShowData
                     {
                         ShowName = showNameText,
@@ -413,7 +410,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
         private async void mnftEditShow_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is Show show)
-            { 
+            {
                 ttEditShow.IsOpen = true;
                 imgShowPoster.Source = new BitmapImage(new Uri(show.Poster));
                 txtShowName.Text = show.Name;
@@ -666,8 +663,7 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 
                 foreach (var song in songModels)
                 {
-                    QueueService.VusicQueue.Add(song);
-                    QueueService.VusicQueueNext.Add(song);
+                    QueueService.AddToQueue(song.FilePath);
                 }
             }
             catch (Exception ex)

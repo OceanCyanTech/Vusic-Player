@@ -9,6 +9,12 @@
     mc:Ignorable="d">
     <Page.Resources>
         <local:CountToItemConverter x:Key="CountToItem"/>
+        <local:PlaylistDurationString x:Key="ItemsDurationTotalString"/>
+        <local:QueueItemCount x:Key="ForwardItemVisibilityConverter"/>
+        <local:QueueItemCountBack x:Key="BackwardItemVisibilityConverter"/>
+        <local:QueueItemCountString x:Key="ItemCountStringConverter"/>
+        <local:MissingItemCount x:Key="MissingItemConverter"/>
+        <local:MissingItemCountString x:Key="MissingItemStringConverter"/>
     </Page.Resources>
     <Grid Margin="50, 20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid HorizontalAlignment="Center"  VerticalAlignment="Center" RowSpacing="20" Name="grdDeletedPlaylist" Visibility="Collapsed">
@@ -187,7 +193,7 @@
                    HorizontalAlignment="Center" />
                         <TextBlock Text="&#xE823;" FontFamily="Segoe Fluent Icons" 
 Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="25, 3" />
-                        <TextBlock Margin="-22, 0" Text="00:00" ToolTipService.ToolTip="Total Runtime of playlist"  FontFamily="{StaticResource GlobalFontHolder}" 
+                        <TextBlock Margin="-22, 0" ToolTipService.ToolTip="Total Runtime of Playlist" Text="{x:Bind FormatTotalDuration(SongCollection.Count), Mode=OneWay}"  FontFamily="{StaticResource GlobalFontHolder}" 
 Name="txtTotalDuration" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
                 </StackPanel>
@@ -320,7 +326,6 @@ CornerRadius="16"
                         </Button>
                     </ItemsControl>
                 </Border>
-                <ContentDialog Title="Are you sure you want to delete this playlist?" Content="This cannot be undone!" Name="dlgDeleteConfirmPlaylist" PrimaryButtonText="Delete" DefaultButton="Primary" CloseButtonText="Cancel" PrimaryButtonClick="dlgDeleteConfirmPlaylist_PrimaryButtonClick"></ContentDialog>
 
                 <Button FontFamily="{StaticResource GlobalFontHolder}"   Name="btnEditPlaylistInfo" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="3" Margin="0, 20" HorizontalAlignment="Center" Content="Edit Playlist Info" Click="btnEditPlaylistInfo_Click"></Button>
                 <Button FontFamily="{StaticResource GlobalFontHolder}"   Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="4" Margin="0, 20" HorizontalAlignment="Center" Content="Add Playlist to Queue" Click="btnAddtoQueue_Click"></Button>
@@ -349,9 +354,9 @@ CornerRadius="16"
                 </ProgressRing>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Loading..." Style="{StaticResource TitleTextBlockStyle}"/>
             </StackPanel>
-            <StackPanel Visibility="Collapsed" VerticalAlignment="Center" Orientation="Vertical" Grid.Column="1" Name="panelEmptyplaylists">
+            <StackPanel Visibility="{x:Bind SongCollection.Count, Converter={StaticResource BackwardItemVisibilityConverter}, Mode=OneWay}" VerticalAlignment="Center" Orientation="Vertical" Grid.Column="1" Name="panelEmptyplaylists">
                 <Image Source="{Binding PlaylistIcon, Source={StaticResource GlobalIconHolder}}" Width="100"></Image>
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="0, 40" HorizontalAlignment="Center" Name="txtEmptyPlaylist" Text="You have no songs in this playlist" VerticalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="0, 40" HorizontalAlignment="Center" Name="txtEmptyPlaylist" Text="You have no media in this playlist" VerticalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"></TextBlock>
                 <Button Name="btnAdd" HorizontalAlignment="Center" Click="btnAdd_Click" Style="{StaticResource AccentButtonStyle}"
                     Background="{StaticResource GlobalAccentColor}" >
                     <Button.Resources>
@@ -399,7 +404,7 @@ Severity="Error"
 Message="Hidden files cannot be shown"
 IsClosable="True"
 Margin="0,0,0,10" />
-            <Grid VerticalAlignment="Stretch" Margin="10, 0" Name="ListPanel" Grid.Column="1">
+            <Grid VerticalAlignment="Stretch"  Visibility="{x:Bind SongCollection.Count, Converter={StaticResource ForwardItemVisibilityConverter}, Mode=OneWay}"  Margin="10, 0" Name="ListPanel" Grid.Column="1">
                 
                 <Grid  >
                     <Grid.RowDefinitions>
@@ -407,21 +412,47 @@ Margin="0,0,0,10" />
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <InfoBar Grid.Row="0" IsOpen="False" Severity="Warning" Name="iBMissingFiles" Title="Missing files">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   x:Name="infoBarMessage" Text="Some files could not be located." Margin="0,0,8,0"/>
-                            <Button Content="Relocate" Click="Button_Click"/>
+                    <InfoBar Grid.Row="0" IsOpen="{x:Bind MissingFilePaths.Count, Converter={StaticResource MissingItemConverter}, Mode=OneWay}" Severity="Error" Name="iBMissingFiles" Title="Missing files">
+                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="5">
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}" VerticalAlignment="Center"   x:Name="infoBarMessage" Text="{x:Bind MissingFilePaths.Count, Mode=OneWay, Converter={StaticResource MissingItemStringConverter}}" Margin="0,0,8,0"/>
+                            <Button Content="View Files"  Name="btnViewMissingFiles" Click="btnViewMissingFiles_Click"/>
                         </StackPanel>
                     </InfoBar>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 20">
-                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Name="txtPlaylistContentHeader" Style="{StaticResource SubtitleTextBlockStyle}" Text="Playlist Content"></TextBlock>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Visibility="{x:Bind SongCollection.Count, Converter={StaticResource ForwardItemVisibilityConverter}, Mode=OneWay}"   Name="txtPlaylistContentHeader" Style="{StaticResource SubtitleTextBlockStyle}" Text="Playlist Content"></TextBlock>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="10,5" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Playlist will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                     </StackPanel>
 
-                    <vusic:ListViewMedia Grid.Row="2" VisiblityofViewButton="Visible" ItemsSource="{x:Bind SongCollection, Mode=OneWay}" x:Name="lstViewUnified"></vusic:ListViewMedia>
+                    <vusic:ListViewMedia MissingFileRemoved="MissingFileRemovedInvoked"  Grid.Row="2" VisiblityofViewButton="Visible" ItemsSource="{x:Bind SongCollection, Mode=OneWay}" x:Name="lstViewUnified"></vusic:ListViewMedia>
 
                 </Grid>
             </Grid>
+            <TeachingTip Name="ttMissingFilesView" IsOpen="False" Title="Missing Media">
+                <Grid Margin="0, 30" RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  TextWrapping="Wrap" Text="Some Media in this playlist could not be found on your computer. You could either relocate or remove them from the playlist." Grid.Row="0"/>
+                    
+                    <ListView Grid.Row="1" Name="lstViewMissingFiles" ItemsSource="{x:Bind MissingFilePaths, Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid  ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding FilePath}" FontFamily="{StaticResource GlobalFontHolder}" ToolTipService.ToolTip="{Binding FilePath}"/>
+                                    <Button Name="btnRelocate" Click="btnRelocate_Click" Content="Relocate" FontFamily="{StaticResource GlobalFontHolder}" Grid.Column="1"/>
+                                    <Button Name="btnRemove" Click="btnRemove_Click" Content="Remove" FontFamily="{StaticResource GlobalFontHolder}" Grid.Column="2"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TeachingTip>
         </Grid>
     </Grid>
 

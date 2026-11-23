@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -24,9 +27,10 @@ using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Storage;
+using File = System.IO.File;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.Pages.Views
 {
@@ -197,7 +201,7 @@ namespace Vusic_Player.Pages.Views
             foreach (var playlist in playlists)
             {
                 Debug.WriteLine("PLAYLIST BEING ADDED IS :" + playlist.PlaylistName);
-       //         playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
+                //         playlistsAll.Add(new PlaylistItem { PlaylistId = playlist.PlaylistId, PlaylistName = playlist.PlaylistName, Thumbnail = playlist.Thumbnail, SongsPaths = playlist.SongsPaths });
             }
             Debug.WriteLine("Playlst3");
             if (playlistsAll.Count > 0)
@@ -584,7 +588,7 @@ namespace Vusic_Player.Pages.Views
 
         private void GenresAll_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-      
+
             grdViewGenres.Visibility = genresAll.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
             stkNoGenres.Visibility = genresAll.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             asbSearchGenres.Visibility = genresAll.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
@@ -814,7 +818,7 @@ namespace Vusic_Player.Pages.Views
             }
 
             AllAvailableSongs.Clear();
-         await LoadAllFilesAsync();
+            await LoadAllFilesAsync();
             stkLoading.Visibility = Visibility.Collapsed;
         }
         //private async void LoadAllFiles()
@@ -1070,25 +1074,12 @@ namespace Vusic_Player.Pages.Views
             Debug.WriteLine("PALSY");
             var recentmusic = recentMusics;
             if (recentmusic.Count == 0) return;
-            ObservableCollection<SongModel> tempTransfer = new();
+            var liststring = new List<string>();
             foreach (var item in recentmusic)
             {
-                Debug.WriteLine("ITEM FILE APTHS " + item.SongPath);
-                if (File.Exists(item.SongPath))
-                {
-                    var file = await StorageFile.GetFileFromPathAsync(item.SongPath);
-                    var props = await file.Properties.GetMusicPropertiesAsync();
-                    string Title = props.Title;
-                    if (Title == "")
-                    {
-                        Title = Path.GetFileNameWithoutExtension(file.Path);
-                    }
-                    string AlbumName = props.Album;
-                    string Artist = props.Artist;
-                    tempTransfer.Add(new SongModel { Title = Title, AlbumName = AlbumName, Artist = Artist, SongDuration = props.Duration, FilePath = file.Path });
-                }
+                liststring.Add(item.SongPath);
             }
-            QueueService.PlayMedia(tempTransfer, false, false);
+            QueueService.AddToQueueAndPlay(liststring, false, false);
 
         }
         ObservableCollection<RecentMusicModel> searchresults = new();
@@ -1339,44 +1330,55 @@ namespace Vusic_Player.Pages.Views
 
         private void btnPlayAllMusic_Click(object sender, RoutedEventArgs e)
         {
-            QueueService.PlayMedia(AllAvailableSongs, false, false);
+            var liststring = new List<string>();
+            foreach (var item in AllAvailableSongs)
+            {
+                liststring.Add(item.FilePath);
+            }
+            QueueService.AddToQueueAndPlay(liststring, false, false);
         }
 
         private void mnftPlayShuffled_Click(object sender, RoutedEventArgs e)
         {
-            QueueService.PlayMedia(AllAvailableSongs, true, false);
-
+            var liststring = new List<string>();
+            foreach (var item in AllAvailableSongs)
+            {
+                liststring.Add(item.FilePath);
+            }
+            QueueService.AddToQueueAndPlay(liststring, true, false);
         }
 
         private void mnftPlayOnLoop_Click(object sender, RoutedEventArgs e)
         {
-            QueueService.PlayMedia(AllAvailableSongs, false, true);
+            var liststring = new List<string>();
+            foreach (var item in AllAvailableSongs)
+            {
+                liststring.Add(item.FilePath);
+            }
+            QueueService.AddToQueueAndPlay(liststring, false, true);
 
         }
 
         private void mnftPlayOnLoopShuffled_Click(object sender, RoutedEventArgs e)
         {
-            QueueService.PlayMedia(AllAvailableSongs, true, true);
+            var liststring = new List<string>();
+            foreach (var item in AllAvailableSongs)
+            {
+                liststring.Add(item.FilePath);
+            }
+            QueueService.AddToQueueAndPlay(liststring, true, true);
         }
 
         private async void mnftPlayGenre_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                Debug.WriteLine(genre.Songs.Count + " is hthe cout");
-                foreach (var path in genre.Songs)
+                var liststring = new List<string>();
+                foreach (var item in genre.Songs)
                 {
-                    Debug.WriteLine("SHD " + path);
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
-                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
-                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                    liststring.Add(item.FilePath);
                 }
-                QueueService.PlayMedia(observabletemp, false, false);
+                QueueService.AddToQueueAndPlay(liststring, false, false);
             }
 
         }
@@ -1385,18 +1387,12 @@ namespace Vusic_Player.Pages.Views
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                foreach (var path in genre.Songs)
+                var liststring = new List<string>();
+                foreach (var item in genre.Songs)
                 {
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
-                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
-                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                    liststring.Add(item.FilePath);
                 }
-                QueueService.PlayMedia(observabletemp, true, false);
+                QueueService.AddToQueueAndPlay(liststring, true, false);
             }
         }
 
@@ -1404,18 +1400,12 @@ namespace Vusic_Player.Pages.Views
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                foreach (var path in genre.Songs)
+                var liststring = new List<string>();
+                foreach (var item in genre.Songs)
                 {
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
-                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
-                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                    liststring.Add(item.FilePath);
                 }
-                QueueService.PlayMedia(observabletemp, false, true);
+                QueueService.AddToQueueAndPlay(liststring, false, true);
             }
 
         }
@@ -1424,18 +1414,12 @@ namespace Vusic_Player.Pages.Views
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is GenreModel genre)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                foreach (var path in genre.Songs)
+                var liststring = new List<string>();
+                foreach (var item in genre.Songs)
                 {
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path.FilePath);
-                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path.FilePath) : musicproperties.Title;
-                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                    observabletemp.Add(new SongModel { FilePath = path.FilePath, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                    liststring.Add(item.FilePath);
                 }
-                QueueService.PlayMedia(observabletemp, true, true);
+                QueueService.AddToQueueAndPlay(liststring, true, true);
             }
         }
 

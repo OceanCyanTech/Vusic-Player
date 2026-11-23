@@ -19,8 +19,8 @@ using Vusic_Player.Pages;
 using Windows.Storage;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
 {
@@ -315,42 +315,14 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
             RecommendedVideoList.Clear();
             LoadSettings();
         }
-        private async Task<ObservableCollection<SongModel>> AddToSongModelObservable()
+        private async Task<List<string>> AddToSongModelObservable()
         {
-            var observablecollection = new ObservableCollection<SongModel>();
+            var observablecollection = new List<string>();
             foreach (var item in RecommendedVideoList)
             {
                 if (File.Exists(item.FilePath))
                 {
-                    var currentfile = await StorageFile.GetFileFromPathAsync(item.FilePath);
-                    string extension = Path.GetExtension(item.FilePath);
-                    bool isVideo = VideoExtensions.List.Contains(extension, StringComparer.OrdinalIgnoreCase);
-
-                    string album = "Unknown Album";
-                    string artist = "Unknown Artist";
-                    TimeSpan duration = TimeSpan.Zero;
-
-                    if (isVideo)
-                    {
-                        var videoProps = await currentfile.Properties.GetVideoPropertiesAsync();
-                        duration = videoProps.Duration;
-                    }
-                    else
-                    {
-                        var musicProps = await currentfile.Properties.GetMusicPropertiesAsync();
-                        album = !string.IsNullOrWhiteSpace(musicProps.Album) ? musicProps.Album : "Unknown Album";
-                        artist = !string.IsNullOrWhiteSpace(musicProps.Artist) ? musicProps.Artist : "Unknown Artist";
-                        duration = musicProps.Duration;
-                    }
-
-                    observablecollection.Add(new SongModel
-                    {
-                        Title = item.FileName,
-                        FilePath = item.FilePath,
-                        AlbumName = album,
-                        Artist = artist,
-                        SongDuration = duration
-                    });
+                    observablecollection.Add(item.FilePath);
                 }
             }
             return observablecollection;
@@ -359,31 +331,30 @@ namespace Vusic_Player.UI.UserViews.Controls.VideoLibraryControls
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
             var observablecollection = await AddToSongModelObservable();
-            QueueService.PlayMedia(observablecollection, false, false);
+            QueueService.AddToQueueAndPlay(observablecollection, true, true);
         }
         private async void mnftShufflePlay_Click(object sender, RoutedEventArgs e)
         {
             var observablecollection = await AddToSongModelObservable();
-            QueueService.PlayMedia(observablecollection, true, false);
+            QueueService.AddToQueueAndPlay(observablecollection, true, true);
         }
 
         private async void mnftLoopPlay_Click(object sender, RoutedEventArgs e)
         {
             var observablecollection = await AddToSongModelObservable();
-            QueueService.PlayMedia(observablecollection, false, true);
+            QueueService.AddToQueueAndPlay(observablecollection, true, true);
         }
 
         private async void mnftLoopShufflePlay_Click(object sender, RoutedEventArgs e)
         {
             var observablecollection = await AddToSongModelObservable();
-            QueueService.PlayMedia(observablecollection, true, true);
+            QueueService.AddToQueueAndPlay(observablecollection, true, true);
         }
         private void mnftAddtoQueue_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress vd)
             {
-                QueueService.VusicQueue.Add(new SongModel { FilePath = vd.FilePath, Title = vd.FileName });
-                QueueService.VusicQueueNext.Add(new SongModel { FilePath = vd.FilePath, Title = vd.FileName });
+                QueueService.AddToQueue(vd.FilePath);
             }
         }
 

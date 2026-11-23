@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -9,7 +12,6 @@ using System.IO;
 using System.Linq;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.UI.Navig;
@@ -18,10 +20,9 @@ using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.FilePickers;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Vusic_Player.UI.UserViews.Grids;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.Pages.Views
 {
@@ -136,8 +137,7 @@ namespace Vusic_Player.Pages.Views
 
                     if (File.Exists(media.Path))
                     {
-                        var single = await MediaListCreate.GetSongModelsAsync(new List<string>() { media.Path });
-                        QueueService.PlayMedia(single, false, false);
+                        QueueService.AddToQueueAndPlay(media.Path);
                     }
                 }
 

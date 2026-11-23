@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -358,7 +361,6 @@ namespace Vusic_Player.Pages.Views
                             int seasonNum = Convert.ToInt32(match.Groups[2].Value);
                             string seasonName = $"Season {seasonNum}";
 
-                            int episodeCount = 0;
 
                             // This variable will track the actual deep folder where files are found!
                             string actualContentPath = path;
@@ -686,45 +688,21 @@ namespace Vusic_Player.Pages.Views
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
 
-            var observablesongcollection = new ObservableCollection<SongModel>();
+            var observablesongcollection = new List<string>();
             if (currentshow == null) return;
             foreach (var item in EpisodesList)
             {
-                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), FilePath = item.FilePath });
+                observablesongcollection.Add(item.FilePath);
             }
-            foreach (var item in observablesongcollection)
-            {
-                QueueService.VusicQueue.Add(item);
-            }
-            foreach (var item in observablesongcollection)
-            {
-                QueueService.VusicQueueNext.Add(item);
-            }
+            QueueService.AddToQueue(observablesongcollection);
 
             if (SeasonsToSend != null)
             {
-                QueueService.VusicQueueNext.RemoveAt(0);
                 if (App.NavigationFrame != null)
-
                 {
-
-                    Logger.Log(SeasonsToSend.Count + "  SEASONSS COUTNTT", "ShowModel.PlayAll", Logger.LogLevelType.Information);
-                    Logger.Log("CURRENTTTTTT SEASHSHD: " + currentSeason.SeasonNumber, "SHOWMODEL.BTNPLAYALL", Logger.LogLevelType.Success);
                     App.NavigationFrame.Navigate(typeof(VideoPlayer), new ShowData { ShowName = txtShowName.Text, episodes = EpisodesList.ToList(), ShowID = currentshow.ShowID, seasons = SeasonsToSend.ToList(), CurrentSeasonNumber = currentSeason.SeasonNumber, CurrentSeasonDirectory = CurrentSeasonDirectory, ReleaseDate = currentshow.ReleaseDate, MainShowDirectory = currentshow.Directory });
                 }
             }
-            else
-            {
-                Debug.WriteLine("SEASONS TO SEND IS NULL");
-            }
-            //var first = EpisodesList[0];
-            //if (first.FilePath != null)
-            //{
-            //    Debug.WriteLine("Yesa");
-            //    Debug.WriteLine(first.FilePath);
-            //    ShowManager.LoadAvailableShow(first.FilePath);
-            //    ShowManager.totalepisodecount = EpisodesList.Count;
-            //}
         }
         private void PlaySingleItem(FrameworkElement sender)
         {
@@ -732,59 +710,7 @@ namespace Vusic_Player.Pages.Views
             {
                 if (App.NavigationFrame != null)
                 {
-                    //if (episode.FilePath == null) return;
-                    //ShowManager.LoadAvailableShow(episode.FilePath);
-
-                    //QueueService.VusicQueue.Clear();
-                    //QueueService.VusicQueueNext.Clear();
-                    //var observablesongcollection = new ObservableCollection<SongModel>();
-
-                    //foreach (var item in EpisodesList)
-                    //{
-                    //    observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), VisibilityofVideoInfo = Visibility.Visible, VisibilityofAudioMeta = Visibility.Collapsed, Glyph = "\uE8B2", IsAudioItem = false, FilePath = item.FilePath });
-                    //}
-                    //foreach (var item in observablesongcollection)
-                    //{
-                    //    QueueService.VusicQueue.Add(item);
-                    //}
-                    //foreach (var item in observablesongcollection)
-                    //{
-                    //    QueueService.VusicQueueNext.Add(item);
-                    //}
-
-                    //var exist = QueueService.VusicQueueNext.FirstOrDefault(p => p.FilePath == episode.FilePath);
-                    //if (exist != null)
-                    //{
-                    //    int indexbefore = QueueService.VusicQueueNext.IndexOf(exist);
-
-
-                    //    if (indexbefore == QueueService.VusicQueueNext.Count - 1)
-                    //    {
-                    //        ShowManager.isLastEpisode = true;
-                    //    }
-
-                    //    // Ensure the item was actually found (-1 means not found)
-                    //    if (indexbefore != -1)
-                    //    {
-                    //        // Loop indexbefore + 1 times to include the 'exist' item itself
-                    //        int itemsToRemove = indexbefore + 1;
-
-                    //        for (int i = 0; i < itemsToRemove; i++)
-                    //        {
-                    //            if (QueueService.VusicQueueNext.Count > 0)
-                    //            {
-                    //                QueueService.VusicQueueNext.RemoveAt(0);
-                    //            }
-                    //        }
-                    //    }
-                    //    //   QueueService.VusicQueueNext.Remove(exist);
-                    //}
-
-                    //ShowManager.totalepisodecount = EpisodesList.Count;
-                    //   ShowManager.currentseason = currentseasonindex;
-
                     App.NavigationFrame.Navigate(typeof(VideoPlayer), new VideoProgress { FilePath = episode.FilePath, IsEpisode = true });
-                    //  Debug.WriteLine("Current Season index are " + ShowManager.currentseason);
                 }
             }
         }
@@ -1242,20 +1168,13 @@ namespace Vusic_Player.Pages.Views
 
         private void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
         {
-            var observablesongcollection = new ObservableCollection<SongModel>();
+            var observablesongcollection = new List<string>();
             if (currentshow == null) return;
             foreach (var item in EpisodesList)
             {
-                observablesongcollection.Add(new SongModel { Title = Path.GetFileName(item.FilePath), FilePath = item.FilePath, SongDuration = item.DurationTimeSpan });
+                observablesongcollection.Add(item.FilePath);
             }
-            foreach (var item in observablesongcollection)
-            {
-                QueueService.VusicQueue.Add(item);
-            }
-            foreach (var item in observablesongcollection)
-            {
-                QueueService.VusicQueueNext.Add(item);
-            }
+            QueueService.AddToQueue(observablesongcollection);
         }
     }
 

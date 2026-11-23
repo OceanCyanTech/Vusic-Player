@@ -1,20 +1,18 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
-// Licensed under the MIT License. See LICENSE in the project root.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
-using Windows.Storage;
 
 
 
@@ -165,24 +163,22 @@ namespace Vusic_Player.UI.UserViews.Grids
                 App.NavigationFrame.Navigate(typeof(EntireMusicLibrary), "EntireHistory");
             }
         }
-        private async Task<ObservableCollection<SongModel>> AddToSongModelObservable()
+        private List<string> AddToSongModelObservable()
         {
-            var observablecollection = new ObservableCollection<SongModel>();
+            var observablecollection = new List<string>();
             foreach (var item in recentMusics)
             {
                 if (File.Exists(item.SongPath))
                 {
-                    var currentfile = await StorageFile.GetFileFromPathAsync(item.SongPath);
-                    var musicprops = await currentfile.Properties.GetMusicPropertiesAsync();
-                    observablecollection.Add(new SongModel { Title = item.SongName, FilePath = item.SongPath, AlbumName = musicprops.Album, Artist = musicprops.Artist, SongDuration = musicprops.Duration });
+                    observablecollection.Add(item.SongPath);
                 }
             }
             return observablecollection;
         }
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
-            var observablecollection = await AddToSongModelObservable();
-            QueueService.PlayMedia(observablecollection, false, false);
+            var observablecollection = AddToSongModelObservable();
+            QueueService.AddToQueueAndPlay(observablecollection, false, false);
         }
 
         private async void btnDisableRecents_Click(object sender, RoutedEventArgs e)
@@ -217,20 +213,20 @@ namespace Vusic_Player.UI.UserViews.Grids
 
         private async void mnftShufflePlay_Click(object sender, RoutedEventArgs e)
         {
-            var observablecollection = await AddToSongModelObservable();
-            QueueService.PlayMedia(observablecollection, true, false);
+            var observablecollection = AddToSongModelObservable();
+            QueueService.AddToQueueAndPlay(observablecollection, true, false);
         }
 
         private async void mnftLoopPlay_Click(object sender, RoutedEventArgs e)
         {
-            var observablecollection = await AddToSongModelObservable();
-            QueueService.PlayMedia(observablecollection, false, true);
+            var observablecollection = AddToSongModelObservable();
+            QueueService.AddToQueueAndPlay(observablecollection, false, true);
         }
 
         private async void mnftLoopShufflePlay_Click(object sender, RoutedEventArgs e)
         {
-            var observablecollection = await AddToSongModelObservable();
-            QueueService.PlayMedia(observablecollection, true, true);
+            var observablecollection = AddToSongModelObservable();
+            QueueService.AddToQueueAndPlay(observablecollection, true, true);
         }
     }
 }

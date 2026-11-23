@@ -1,21 +1,27 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TagLib;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using File = System.IO.File;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.Pages.Views
 {
@@ -99,21 +105,22 @@ namespace Vusic_Player.Pages.Views
         }
         private void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
+            var liststring = new List<string>();
             foreach (var item in FavouritesItemsCol)
             {
-                item.IsCompleted = false;
+                liststring.Add(item.FilePath);
             }
-
-            QueueService.PlayMedia(FavouritesItemsCol, false, false);
+            QueueService.AddToQueueAndPlay(liststring, false, false);
         }
 
         private async void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
         {
+            var liststring = new List<string>();
             foreach (var item in FavouritesItemsCol)
             {
-                QueueService.VusicQueue.Add(item);
-                QueueService.VusicQueueNext.Add(item);
+                liststring.Add(item.FilePath);
             }
+            QueueService.AddToQueue(liststring);
             ttAddedtoQueue.IsOpen = true;
             await Task.Delay(2000);
             ttAddedtoQueue.IsOpen = false;

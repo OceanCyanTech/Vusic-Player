@@ -21,6 +21,7 @@ namespace Vusic_Player.Configuration.Playback
         private ObservableCollection<SongModel> _queuefull = new ObservableCollection<SongModel>();
         private ObservableCollection<SongModel> _queuetemporary = new ObservableCollection<SongModel>();
         private bool _isloop = false;
+        private bool _isQueuePageShuffleEnabled = false;
         private ObservableCollection<SongModel> _queuenext = new ObservableCollection<SongModel>();
         private int _queueindex = 0;
         #endregion
@@ -45,6 +46,18 @@ namespace Vusic_Player.Configuration.Playback
                 if(_isloop != value)
                 {
                     _isloop = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public bool IsQueuePageShuffleEnabled
+        {
+            get => _isQueuePageShuffleEnabled;
+            set
+            {
+                if (_isQueuePageShuffleEnabled != value)
+                {
+                    _isQueuePageShuffleEnabled = value;
                     OnPropertyChanged();
                 }
             }

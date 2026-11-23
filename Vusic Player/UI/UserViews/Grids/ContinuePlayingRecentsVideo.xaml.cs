@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -494,32 +497,12 @@ namespace Vusic_Player.UI.UserViews.Grids
 
             if (File.Exists(ContinuePlaying.Instance.VideoProgressMain.FilePath))
             {
-                try
-                {
-                    var storagefile = await StorageFile.GetFileFromPathAsync(ContinuePlaying.Instance.VideoProgressMain.FilePath);
-                    var vidprops = await storagefile.Properties.GetVideoPropertiesAsync();
-                    var title = ContinuePlaying.Instance.VideoProgressMain.FileName;
-                    if (string.IsNullOrEmpty(title))
-                    {
-                        title = Path.GetFileName(ContinuePlaying.Instance.VideoProgressMain.FilePath);
-                    }
-                    var newsong = new SongModel { Title = title, FilePath = ContinuePlaying.Instance.VideoProgressMain.FilePath, IsEpisode = ContinuePlaying.Instance.VideoProgressMain.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
-                    QueueService.VusicQueue.Add(newsong);
-                    QueueService.VusicQueueNext.Add(newsong);
-                    ttAddedToQueue.IsOpen = true;
-                    await Task.Delay(3000);
-                    ttAddedToQueue.IsOpen = false;
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log("Error: " + ex.Message, "ContinuePlaying.MnftAddToQueueHighlightVideo", Logger.LogLevelType.Error);
-                }
+                QueueService.AddToQueue(ContinuePlaying.Instance.VideoProgressMain.FilePath);
             }
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("US");
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var savedRecents = currentSettings.SavedVideoProgress;
             savedRecents.Clear();
@@ -773,26 +756,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 if (File.Exists(vdprg.FilePath))
                 {
-                    try
-                    {
-                        var storagefile = await StorageFile.GetFileFromPathAsync(vdprg.FilePath);
-                        var vidprops = await storagefile.Properties.GetVideoPropertiesAsync();
-                        var title = vdprg.FileName;
-                        if (string.IsNullOrEmpty(title))
-                        {
-                            title = Path.GetFileName(vdprg.FilePath);
-                        }
-                        var newsong = new SongModel { Title = title, FilePath = vdprg.FilePath, IsEpisode = vdprg.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
-                        QueueService.VusicQueue.Add(newsong);
-                        QueueService.VusicQueueNext.Add(newsong);
-                        ttAddedToQueue.IsOpen = true;
-                        await Task.Delay(3000);
-                        ttAddedToQueue.IsOpen = false;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log("An unexpected error occured: " + ex.Message, "ContinuePlayingGrid.MnftAddToQueue", Logger.LogLevelType.Error);
-                    }
+                    QueueService.AddToQueue(vdprg.FilePath);
                 }
             }
         }
@@ -805,16 +769,8 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 try
                 {
-                    var storagefile = await StorageFile.GetFileFromPathAsync(ContinuePlaying.Instance.VideoProgressMain.FilePath);
-                    var vidprops = await storagefile.Properties.GetVideoPropertiesAsync();
-                    var title = ContinuePlaying.Instance.VideoProgressMain.FileName;
-                    if (string.IsNullOrEmpty(title))
-                    {
-                        title = Path.GetFileName(ContinuePlaying.Instance.VideoProgressMain.FilePath);
-                    }
-                    var newsong = new SongModel { Title = title, FilePath = ContinuePlaying.Instance.VideoProgressMain.FilePath, IsEpisode = ContinuePlaying.Instance.VideoProgressMain.IsEpisode, MediaType = "Video", SongDuration = vidprops.Duration };
-                    QueueService.VusicQueue.Add(newsong);
-                    QueueService.VusicQueueNext.Add(newsong);
+                    var path = ContinuePlaying.Instance.VideoProgressMain.FilePath;
+                    QueueService.AddToQueue(path);
                     ttAddedToQueue.IsOpen = true;
                     await Task.Delay(3000);
                     ttAddedToQueue.IsOpen = false;

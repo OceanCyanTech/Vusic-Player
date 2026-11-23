@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -6,16 +9,10 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Storage;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Vusic_Player.UI.UserViews.Controls
 {
@@ -83,20 +80,7 @@ namespace Vusic_Player.UI.UserViews.Controls
             {
                 if (File.Exists(selectedSong.FilePath))
                 {
-                    try
-                    {
-                        ObservableCollection<SongModel> single = new();
-                        var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
-                        var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                        string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
-                        single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
-                        QueueService.PlayMedia(single, false, false);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log("Error Occured: " + ex.Message, "RecentMusicGridView.PlayRecents", Logger.LogLevelType.Error);
-                    }
-
+                    QueueService.AddToQueueAndPlay(selectedSong.FilePath);
                 }
                 else
                 {
@@ -116,26 +100,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                             if (exist != null)
                             {
                                 exist.FilePath = file.Path;
-                                var musicproperties = await file.Properties.GetVideoPropertiesAsync();
-                                await SettingsLoader.SaveSettingsAsync(currentSettings);
-
-                                string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(file.Path) : musicproperties.Title;
-                                selectedSong.FilePath = file.Path;
-                                selectedSong.FileName = title;
-                                selectedSong.Thumbnail = await FileThumbnailObtain.GetFileThumbnailAsync(file.Path);
-                                try
-                                {
-                                    ObservableCollection<SongModel> single = new();
-                                    var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
-                                    var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                                    string Title = Path.GetFileNameWithoutExtension(selectedSong.FilePath);
-                                    single.Add(new SongModel { FilePath = selectedSong.FilePath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
-                                    QueueService.PlayMedia(single, false, false);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.Log("Error Occured: " + ex.Message, "RecentMusicGridView.PlayRecents", Logger.LogLevelType.Error);
-                                }
+                                QueueService.AddToQueueAndPlay(selectedSong.FilePath);
 
                                 OceanContentDialog.HideDlg();
                                 MainWindow.ShowWindow();
@@ -226,23 +191,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is VideoProgress selectedSong)
             {
-                var exist = QueueService.VusicQueue.FirstOrDefault(p => p.FilePath == selectedSong.FilePath);
-                if (exist == null)
-                {
-                    if (!File.Exists(selectedSong.FilePath)) return;
-
-                    var file = await StorageFile.GetFileFromPathAsync(selectedSong.FilePath);
-                    var props = await file.Properties.GetVideoPropertiesAsync();
-
-                    string Title = props.Title ?? file.DisplayName;
-                    if (Title == "")
-                    {
-                        Title = Path.GetFileNameWithoutExtension(file.Path);
-                    }
-
-                    QueueService.VusicQueueNext.Add(new SongModel { Title = Title, SongDuration = props.Duration, FilePath = file.Path });
-                    QueueService.VusicQueue.Add(new SongModel { Title = Title, SongDuration = props.Duration, FilePath = file.Path });
-                }
+                QueueService.AddToQueue(selectedSong.FilePath);
             }
         }
 

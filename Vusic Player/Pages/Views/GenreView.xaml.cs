@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -21,9 +24,10 @@ using Vusic_Player.Configuration.Internet;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
+using TextBox = Microsoft.UI.Xaml.Controls.TextBox;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.Pages.Views
 {
@@ -275,30 +279,25 @@ namespace Vusic_Player.Pages.Views
 
         private void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
+            var liststring = new List<string>();
             foreach (var item in FoundSongs)
             {
-                item.IsCompleted = false;
+                liststring.Add(item.FilePath);
             }
-            QueueService.PlayMedia(FoundSongs, btnShuffle.IsChecked ?? false, false);
+            QueueService.AddToQueueAndPlay(liststring, false, false);
         }
 
         private void btnShuffle_Checked(object sender, RoutedEventArgs e)
         {
             if (btnShuffle.IsChecked == true)
             {
-                QueueService.IsShuffleTrue = true;
-
-                QueueService.ShuffleNext();
-
-
+                QueueService.ToggleShuffle(true);
+                QueueService.ShuffleQueue();
             }
             else
             {
-                QueueService.IsShuffleTrue = false;
-
-                QueueService.RestoreNext();
-
-
+                QueueService.ToggleShuffle(false);
+                QueueService.RestoreQueueItems();
             }
         }
 
@@ -444,8 +443,7 @@ namespace Vusic_Player.Pages.Views
         {
             foreach (var item in FoundSongs)
             {
-                QueueService.VusicQueue.Add(item);
-                QueueService.VusicQueueNext.Add(item);
+                QueueService.AddToQueue(item.FilePath);
             }
             ttAddedtoQueue.IsOpen = true;
             await Task.Delay(2000);

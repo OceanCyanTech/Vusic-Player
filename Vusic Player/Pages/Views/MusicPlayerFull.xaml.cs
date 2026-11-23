@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -13,7 +16,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
@@ -75,11 +77,7 @@ namespace Vusic_Player.Pages.Views
 
                     if (File.Exists(media.Path))
                     {
-                        ObservableCollection<SongModel> single = new();
-                        string Title = Path.GetFileNameWithoutExtension(media.Path);
-
-                        single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
-                        QueueService.PlayMedia(single, false, false);
+                        QueueService.AddToQueueAndPlay(media.Path);
                     }
                 }
                 else if (isVideo)

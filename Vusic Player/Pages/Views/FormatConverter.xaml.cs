@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,18 +14,15 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Vusic_Player.Configuration;
-using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Extensions;
-using Windows.Storage;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.Pages.Views
 {
@@ -242,9 +242,9 @@ namespace Vusic_Player.Pages.Views
 
         private void asbSearchFormats_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (sender.DataContext is FileFormatConverterModel model)
+            if (sender.DataContext is FileFormatConverterModel model && args.ChosenSuggestion is string chosenFormat)
             {
-                string chosenFormat = args.ChosenSuggestion as string;
+                chosenFormat = args.ChosenSuggestion as string ?? ".mp3";
 
                 if (string.IsNullOrWhiteSpace(chosenFormat) && !string.IsNullOrWhiteSpace(args.QueryText))
                 {
@@ -254,7 +254,7 @@ namespace Vusic_Player.Pages.Views
 
                     // Match if it exists in the extension list
                     chosenFormat = model.AudioExtensionsList.FirstOrDefault(ext =>
-                        string.Equals(ext, query, StringComparison.OrdinalIgnoreCase));
+                        string.Equals(ext, query, StringComparison.OrdinalIgnoreCase)) ?? "";
                 }
 
                 if (!string.IsNullOrEmpty(chosenFormat))
@@ -588,10 +588,7 @@ namespace Vusic_Player.Pages.Views
             {
                 if (File.Exists(file.OutputPath))
                 {
-                    var stfile = await StorageFile.GetFileFromPathAsync(file.OutputPath);
-                    var musicprops = await stfile.Properties.GetMusicPropertiesAsync();
-                    QueueService.VusicQueue.Add(new SongModel { FilePath = file.OutputPath, Title = Path.GetFileNameWithoutExtension(file.OutputPath), SongDuration = musicprops.Duration });
-                    QueueService.VusicQueueNext.Add(new SongModel { FilePath = file.OutputPath, SongDuration = musicprops.Duration, Title = Path.GetFileNameWithoutExtension(file.OutputPath) });
+                    QueueService.AddToQueue(file.OutputPath);
                 }
             }
 
@@ -616,41 +613,7 @@ namespace Vusic_Player.Pages.Views
             {
                 if (File.Exists(selectedSong.OutputPath))
                 {
-                    var file = await StorageFile.GetFileFromPathAsync(selectedSong.OutputPath);
-                    string fileExtension = file.FileType.ToLowerInvariant();
-                    bool isVideo = false;
-                    if (Extensions.VideoExtensions.List.Contains(fileExtension))
-                    {
-                        isVideo = true;
-                    }
-                    if (isVideo == false)
-                    {
-                        try
-                        {
-                            ObservableCollection<SongModel> single = new();
-                            var storagefile = await StorageFile.GetFileFromPathAsync(selectedSong.OutputPath);
-                            var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                            string Title = Path.GetFileNameWithoutExtension(selectedSong.OutputPath);
-                            single.Add(new SongModel { FilePath = selectedSong.OutputPath, Title = Title, SongDuration = musicprops.Duration, Artist = musicprops.Artist, AlbumName = musicprops.Album });
-                            QueueService.PlayMedia(single, false, false);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log("Error Occured: " + ex.Message, "ListViewMedia.PlaySelection", Logger.LogLevelType.Error);
-                        }
-                    }
-                    else
-                    {
-                        if (App.NavigationFrame == null) return;
-                        if (PlayerService.InVideoPage == false)
-                        {
-                            App.NavigationFrame.Navigate(typeof(VideoPlayer), selectedSong.OutputPath);
-                        }
-                        else
-                        {
-                            PlayerService.OpenPath(selectedSong.OutputPath);
-                        }
-                    }
+                    QueueService.AddToQueueAndPlay(selectedSong.FilePath);
                 }
             }
         }

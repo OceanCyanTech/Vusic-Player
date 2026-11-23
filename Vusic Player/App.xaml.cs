@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Vusic_Player.Configuration;
+using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI.Customization;
@@ -17,8 +18,8 @@ using Vusic_Player.UI.Experience;
 using Windows.ApplicationModel.Activation;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player
 {
@@ -44,6 +45,7 @@ namespace Vusic_Player
                 e.Handled = true;
                 try
                 {
+                    Logger.Log("CRITICAL ERROR: " + e.Exception,"VusicPlayer.Unhandled", Logger.LogLevelType.Error);
                     string logPath = System.IO.Path.Combine(
                         Windows.Storage.ApplicationData.Current.LocalFolder.Path,
                         "crash.log");

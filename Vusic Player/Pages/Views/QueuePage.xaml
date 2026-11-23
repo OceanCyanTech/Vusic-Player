@@ -115,7 +115,7 @@
             </Border>
         </Grid>
 
-        <Grid Grid.Column="1" HorizontalAlignment="Stretch">
+        <Grid Grid.Column="1" Margin="0, 20" HorizontalAlignment="Stretch">
 
             <Border x:Name="ShadowTarget2" />
             <Grid 
@@ -196,7 +196,7 @@ AlwaysUseFallback="False"/>
 
                                     <!-- 6. Suggestions Dropdown Popup (ListView items) -->
                                     <!-- Background surface of the dropdown overlay -->
-                                    <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="{ThemeResource ControlFillColorDisabled}"/>
+                                    <SolidColorBrush x:Key="AutoSuggestBoxSuggestionsListBackground" Color="{ThemeResource SolidBackgroundFillColorBase}"/>
 
                                     <!-- Hovered suggestion item -->
                                     <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#2C2C2C"/>
@@ -252,7 +252,7 @@ AlwaysUseFallback="False"/>
                                     <Image Width="20" Source="{Binding DeleteIcon, Source={StaticResource GlobalIconHolder}}"/>
                                 </Button>
 
-                                <ToggleButton  IsEnabled="{x:Bind VusicQueueList.Count, Mode=OneWay, Converter={StaticResource ControlEnabledBasedonCountConverter}}"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Checked="tglShuffleQueue_Checked" Unchecked="tglShuffleQueue_Checked" Name="tglShuffleQueue"
+                                <ToggleButton  IsEnabled="{x:Bind VusicQueueList.Count, Mode=OneWay, Converter={StaticResource ControlEnabledBasedonCountConverter}}"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" IsChecked="{x:Bind queueObjectsInstance.IsQueuePageShuffleEnabled,Mode=TwoWay}" Checked="tglShuffleQueue_Checked" Unchecked="tglShuffleQueue_Checked" Name="tglShuffleQueue"
                           ToolTipService.ToolTip="Shuffle Play Queue">
                                     <ToggleButton.Resources>
                                         <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="{StaticResource GlobalAccentColor}"/>
@@ -303,7 +303,7 @@ AlwaysUseFallback="False"/>
                                 </ToggleButton>
 
                                 <ToggleButton CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  IsEnabled="{x:Bind VusicQueueList.Count, Mode=OneWay, Converter={StaticResource ControlEnabledBasedonCountConverter}}"   Name="tglLoopQueue" Checked="tglLoopQueue_Checked" Unchecked="tglLoopQueue_Checked"
-                          ToolTipService.ToolTip="Loop list">
+                          ToolTipService.ToolTip="Loop List">
                                     <ToggleButton.Resources>
                                         <!-- 1. Background Fill when CHECKED -->
                                         <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="{StaticResource GlobalAccentColor}"/>
@@ -423,29 +423,14 @@ AlwaysUseFallback="False"/>
 ToolTipService.ToolTip="Add media to queue">
                                 <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"/>
                             </Button>
-                            <Button IsEnabled="True" Visibility="Collapsed" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnRestartandPlay" Click="btnRestartandPlay_Click"
+                            <Button IsEnabled="True" Visibility="Visible" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Name="btnRestartandPlay" Click="btnRestartandPlay_Click"
 ToolTipService.ToolTip="Play all from start">
-                                <Image Width="20" Source="/Assets/appicon.png"/>
+                                <Image Width="20" Source="{Binding Refresh, Source={StaticResource GlobalIconHolder}}"/>
                             </Button>
                         </StackPanel>
 
 
-                        <!-- QUEUE LIST -->
-
-                        <ScrollView VerticalAlignment="Stretch" Margin="10, 0" Name="ListPanel"  Grid.Row="4">
-                            <StackPanel  Orientation="Vertical">
-
-                                <InfoBar FontFamily="{StaticResource GlobalFontHolder}"   IsOpen="False" Severity="Warning" Name="iBMissingFiles" Title="Missing files">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock  FontFamily="{StaticResource GlobalFontHolder}"  x:Name="infoBarMessage" Text="Some files could not be located." Margin="0,0,8,0"/>
-                                        <Button Content="Relocate" Name="btnRelocate" Click="btnRelocate_Click"/>
-                                    </StackPanel>
-                                </InfoBar>
-
-                            </StackPanel>
-                        </ScrollView>
-
-                        <playback_views:ListViewMedia DragItemsCompleted="lstViewQueue_DragItemsCompleted"   Visibility="{x:Bind VusicQueueList.Count, Converter={StaticResource ForwardItemVisibilityConverter}, Mode=OneWay}"  SearchVisibility="Collapsed"  MediaSource="QueueList" Margin="30, 10" x:Name="lstViewQueue" Grid.Row="4"></playback_views:ListViewMedia>
+                        <playback_views:ListViewMedia RemoveSingleFromQueue="lstViewQueue_RemoveSingleFromQueue"  RemoveSelectionFromQueue="lstViewQueue_RemoveSelectionFromQueue" DragItemsCompleted="lstViewQueue_DragItemsCompleted"   Visibility="{x:Bind VusicQueueList.Count, Converter={StaticResource ForwardItemVisibilityConverter}, Mode=OneWay}"  SearchVisibility="Collapsed"  MediaSource="QueueList" Margin="30, 10" x:Name="lstViewQueue" Grid.Row="4"></playback_views:ListViewMedia>
                         <Grid  Grid.Row="3"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="grdNoSearchResults" Visibility="Collapsed">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"></RowDefinition>
@@ -530,6 +515,14 @@ AlwaysUseFallback="False"/>
                 </Grid>
             </Grid>
         </TeachingTip>
-
+        <TeachingTip Name="ttPlaylistCreated" FontFamily="{StaticResource GlobalFontHolder}"   IsOpen="False" Title="Success">
+            <StackPanel Margin="0, 20" Orientation="Vertical" Spacing="30">
+                <StackPanel Orientation="Horizontal" Spacing="15">
+                    <Image Name="imgState" Width="20" Source="{Binding Success, Source={StaticResource GlobalIconHolder}}"/>
+                    <TextBlock Width="250" TextWrapping="Wrap"  FontFamily="{StaticResource GlobalFontHolder}"  Name="txtPlaylistCreationStatus"  Text="Queue saved to new playlist successfully! Open below."/>
+                </StackPanel>
+                <HyperlinkButton HorizontalAlignment="Center"  FontFamily="{StaticResource GlobalFontHolder}"  Name="hypPlaylistCreated" Click="hypPlaylistCreated_Click"/>
+            </StackPanel>
+        </TeachingTip>
     </Grid>
 </Page>

@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using FlyleafLib.MediaPlayer;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -6,7 +9,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,7 +16,6 @@ using System.Threading.Tasks;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
@@ -30,8 +31,8 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using WinRT.Interop;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.UI.UserViews
 {
@@ -409,15 +410,7 @@ namespace Vusic_Player.UI.UserViews
                     {
                         if (App.NavigationFrame != null)
                         {
-
-
-
-                            ObservableCollection<SongModel> single = new();
-                            string Title = Path.GetFileNameWithoutExtension(media.Path);
-
-                            single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
-                            QueueService.PlayMedia(single, false, false);
-
+                            QueueService.AddToQueueAndPlay(media.Path);
                         }
                     }
                 }

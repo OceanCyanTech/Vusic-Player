@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -15,10 +18,9 @@ using Vusic_Player.Configuration.Playback;
 using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Pages.Views;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
-using Windows.Storage;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.UI.UserViews.Grids
 {
@@ -243,20 +245,12 @@ namespace Vusic_Player.UI.UserViews.Grids
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is PlaylistItem playlist)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                foreach (var path in playlist.SongsPaths)
+                var liststring = new List<string>();
+                foreach (var item in playlist.SongsPaths)
                 {
-                    if (!File.Exists(path)) continue;
-
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path);
-                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path) : musicproperties.Title;
-                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                    observabletemp.Add(new SongModel { FilePath = path, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                    liststring.Add(item);
                 }
-                QueueService.PlayMedia(observabletemp, false, false);
+                QueueService.AddToQueueAndPlay(liststring, false, false);
             }
         }
 
@@ -264,20 +258,12 @@ namespace Vusic_Player.UI.UserViews.Grids
         {
             if (sender is MenuFlyoutItem hyp && hyp.DataContext is PlaylistItem playlist)
             {
-                var observabletemp = new ObservableCollection<SongModel>();
-                foreach (var path in playlist.SongsPaths)
+                var liststring = new List<string>();
+                foreach (var item in playlist.SongsPaths)
                 {
-                    if (!File.Exists(path)) continue;
-
-                    var storagefile = await StorageFile.GetFileFromPathAsync(path);
-                    var musicproperties = await storagefile.Properties.GetMusicPropertiesAsync();
-                    string title = string.IsNullOrWhiteSpace(musicproperties.Title) ? Path.GetFileNameWithoutExtension(path) : musicproperties.Title;
-                    string AlbumName = string.IsNullOrWhiteSpace(musicproperties.Album) ? "Unknown Album" : musicproperties.Album;
-                    string Artist = string.IsNullOrWhiteSpace(musicproperties.Artist) ? "Unknown Artist" : musicproperties.Artist;
-
-                    observabletemp.Add(new SongModel { FilePath = path, Title = title, AlbumName = AlbumName, Artist = Artist, SongDuration = musicproperties.Duration, Year = (int)musicproperties.Year });
+                    liststring.Add(item);
                 }
-                QueueService.PlayMedia(observabletemp, true, false);
+                QueueService.AddToQueueAndPlay(liststring, true, false);
             }
         }
 
@@ -288,20 +274,7 @@ namespace Vusic_Player.UI.UserViews.Grids
             {
                 foreach (var item in playlist.SongsPaths)
                 {
-                    var exist = FilesInDatabase.rawSongs.FirstOrDefault(p => p.FilePath == item);
-                    string Title = Path.GetFileNameWithoutExtension(item);
-                    string Artist = "Unknown Artist";
-                    string Album = "Unknown Album";
-                    TimeSpan? Duration = TimeSpan.Zero;
-                    if (exist != null)
-                    {
-                        Title = exist.Title;
-                        Artist = exist.Artist;
-                        Album = exist.AlbumName;
-                        Duration = exist.SongDuration;
-                    }
-                    QueueService.VusicQueue.Add(new SongModel { Title = Title, FilePath = item, Artist = Artist, AlbumName = Album, SongDuration = Duration });
-                    QueueService.VusicQueueNext.Add(new SongModel { Title = Title, FilePath = item, Artist = Artist, AlbumName = Album, SongDuration = Duration });
+                    QueueService.AddToQueue(item);
                 }
             }
 

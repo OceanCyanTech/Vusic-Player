@@ -1,4 +1,7 @@
-﻿using Microsoft.UI.Dispatching;
+﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -9,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.UserSettings;
 
@@ -26,14 +30,37 @@ namespace Vusic_Player.Configuration.ClassModels
         private Visibility visibilityofstrikethrough = Visibility.Collapsed;
         private string _artist = "";
         private string _genre = "";
+        private bool _ismissing = false;
         private string _albumName = "";
         private string? _fileTypeName = "Video File";
         private bool? _isEpisode;
         private Visibility _isQueueItem = Visibility.Visible;
+        private bool _isqueueitem = false;
+        private bool _iscurrentactiveitem = false;
         public int Year
         {
             get => _year;
             set { _year = value; OnPropertyChanged(); }
+        }
+        public bool IsQueueItem
+        {
+            get => _isqueueitem;
+            set
+            {
+                _isqueueitem = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool IsCurrentQueueItem
+        {
+            get => _iscurrentactiveitem;
+            set { _iscurrentactiveitem = value; OnPropertyChanged(); }
+        }
+        public bool IsFileMissing
+        {
+            get => _ismissing;
+            set { _ismissing = value; OnPropertyChanged(); OnPropertyChanged(nameof(VisibilityOfMissingAttributes)); OnPropertyChanged(nameof(VisibilityOfMissingAttributesReverse));
+            }
         }
         public int SeasonIndexAssoc
         {
@@ -83,7 +110,7 @@ namespace Vusic_Player.Configuration.ClassModels
                 OnPropertyChanged();
             }
         }
-        public string Glyph => (PlayerService.PlayerServiceInstance.CurrentPlayingMediaPath == FilePath) ? (PlayerService.Masterplayer != null && PlayerService.Masterplayer.IsPlaying ? "\uE769" : "\uE768") : ((File.Exists(FilePath) && ExtensionVerifier.FileTypeExtension(FilePath) == ExtensionVerifier.FileTypeEnum.Video ? "\uE8B2" : "\uEC4F"));
+        public string Glyph => IsQueueItem ? (IsCurrentQueueItem ? (PlayerService.Masterplayer != null && PlayerService.Masterplayer.IsPlaying ? "\uE769" : "\uE768") : (File.Exists(FilePath) && ExtensionVerifier.FileTypeExtension(FilePath) == ExtensionVerifier.FileTypeEnum.Video ? "\uE8B2" : "\uEC4F")) : (PlayerService.PlayerServiceInstance.CurrentPlayingMediaPath == FilePath) ? (PlayerService.Masterplayer != null && PlayerService.Masterplayer.IsPlaying ? "\uE769" : "\uE768") : ((File.Exists(FilePath) && ExtensionVerifier.FileTypeExtension(FilePath) == ExtensionVerifier.FileTypeEnum.Video ? "\uE8B2" : "\uEC4F"));
 
 
         private string mediatype = "Playlist";// Default color
@@ -153,6 +180,8 @@ namespace Vusic_Player.Configuration.ClassModels
         private bool isCompleted = false;
 
         public Visibility VisibilityOfStrikeThrough => isCompleted ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility VisibilityOfMissingAttributes => IsFileMissing ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility VisibilityOfMissingAttributesReverse => IsFileMissing ? Visibility.Collapsed : Visibility.Visible;
         //{
         //    get => visibilityofstrikethrough;
         //    set
@@ -209,7 +238,7 @@ namespace Vusic_Player.Configuration.ClassModels
             OnPropertyChanged(nameof(FavOpacity));
             OnPropertyChanged(nameof(FavString));
         }
-        public bool IsPlaying => !string.IsNullOrEmpty(FilePath) && string.Equals(FilePath, PlayerService.PlayerServiceInstance.CurrentPlayingMediaPath, StringComparison.OrdinalIgnoreCase);
+        public bool IsPlaying => IsQueueItem ? (IsCurrentQueueItem) : !string.IsNullOrEmpty(FilePath) && string.Equals(FilePath, PlayerService.PlayerServiceInstance.CurrentPlayingMediaPath, StringComparison.OrdinalIgnoreCase);
         public bool IsCompleted
         {
             get => isCompleted;
@@ -235,16 +264,83 @@ namespace Vusic_Player.Configuration.ClassModels
                 OnPropertyChanged(nameof(Title));
             }
         }
+        private FileSystemWatcher? _watcher;
         public string FilePath
         {
             get => _filePath;
             set
             {
-                _filePath = value;
+                if (_filePath == value)
+                    return;
 
+                _filePath = value;
                 OnPropertyChanged(nameof(FilePath));
+                WatchFile();
             }
         }
+        private void WatchFile()
+        {
+            _dispatcherQueue ??= DispatcherQueue.GetForCurrentThread();
+            _watcher?.Dispose();
+            _watcher = null;
+            if (!File.Exists(_filePath)) return;
+            var fileDirectory = Path.GetDirectoryName(_filePath);
+            var filename = Path.GetFileName(_filePath);
+            if (fileDirectory == null) return;
+            _watcher = new FileSystemWatcher(fileDirectory, filename)
+            {
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.FileName,
+                EnableRaisingEvents = true
+            };
+            _watcher.Changed += _watcher_Changed;
+        }
+        private DispatcherQueue? _dispatcherQueue;
+        private async void _watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            if (!File.Exists(e.FullPath)) return;
+            try
+            {
+                Debug.WriteLine("ALELR4");
+
+                await Task.Delay(150); // Allow file writer to release exclusive lock
+                Debug.WriteLine("ALEL5");
+
+                if (_dispatcherQueue is null)
+                {
+                    Debug.WriteLine("WATCHER: _dispatcherQueue is null.");
+                    return;
+                }
+
+                _dispatcherQueue.TryEnqueue(async () =>
+                {
+                    try
+                    {
+                        var metadata = await MetadataFetcher.GetSongModel(e.FullPath);
+                        Debug.WriteLine("ALELR3");
+                        Debug.WriteLine("aLBUM: " + metadata.AlbumName);
+                        AlbumName = metadata.AlbumName;
+                        Artist = metadata.Artist;
+                        Title = metadata.Title;
+                        SongDuration = metadata.SongDuration;
+                        OnPropertyChanged(nameof(AlbumName));
+                        OnPropertyChanged(nameof(Artist));
+                        OnPropertyChanged(nameof(Title));
+                        OnPropertyChanged(nameof(SongDuration));
+                        OnPropertyChanged(nameof(FormattedDuration));
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("WATCHER UI ERROR: " + ex);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("WATCHER ERROR: " + ex);
+            }
+
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
         {
             DispatcherQueue.GetForCurrentThread()?.TryEnqueue(() =>

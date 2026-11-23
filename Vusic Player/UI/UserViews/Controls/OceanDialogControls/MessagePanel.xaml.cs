@@ -3,8 +3,8 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
 {

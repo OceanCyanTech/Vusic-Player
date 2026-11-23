@@ -1,3 +1,6 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -28,6 +31,7 @@ using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Storage;
+using File = System.IO.File;
 
 
 namespace Vusic_Player.Pages.Views
@@ -419,59 +423,18 @@ namespace Vusic_Player.Pages.Views
             if (currentFolder == null) return;
             if (Directory.Exists(currentFolder.FolderPath))
             {
-
                 Process.Start("explorer.exe", $"\"{currentFolder.FolderPath}\"");
-            }
-        }
-        private async void AddtoQueue()
-        {
-            var selecteditems = grdViewMain.SelectedItems.Cast<FileItem>();
-            if (selecteditems != null)
-            {
-                foreach (var item in selecteditems)
-                {
-                    if (!File.Exists(item.Path)) continue;
-                    var storagefile = await StorageFile.GetFileFromPathAsync(item.Path);
-
-                    string fileExtension = Path.GetExtension(item.Path).ToLower();
-
-                    if (AudioExtensions.List.Contains(fileExtension))
-                    {
-                        var props = await storagefile.Properties.GetMusicPropertiesAsync();
-                        QueueService.VusicQueue.Add(new SongModel { FilePath = item.Path, Title = item.Name, AlbumName = props.Album, Artist = props.Artist, SongDuration = props.Duration });
-                        QueueService.VusicQueueNext.Add(new SongModel { FilePath = item.Path, Title = item.Name, AlbumName = props.Album, Artist = props.Artist, SongDuration = props.Duration });
-
-                    }
-                    else if (VideoExtensions.List.Contains(fileExtension))
-                    {
-                        var props = await storagefile.Properties.GetVideoPropertiesAsync();
-                        QueueService.VusicQueue.Add(new SongModel { FilePath = item.Path, Title = item.Name, SongDuration = props.Duration });
-                        QueueService.VusicQueueNext.Add(new SongModel { FilePath = item.Path, Title = item.Name, SongDuration = props.Duration });
-                    }
-
-
-
-                }
             }
         }
         private async void btnPlay_Click(object sender, RoutedEventArgs e)
         {
-            QueueService.VusicQueueNext.Clear();
-            AddtoQueue();
-            if (QueueService.VusicQueue.Count != 0)
+            var selecteditems = grdViewMain.SelectedItems.Cast<FileItem>();
+            var liststring = new List<string>();
+            foreach (var item in selecteditems)
             {
-                var firstitem = QueueService.VusicQueueNext[0];
-                if (firstitem.FilePath != null)
-                {
-                    PlayerService.OpenPath(firstitem.FilePath);
-                    QueueService.VusicQueueNext.Remove(firstitem);
-                }
+                liststring.Add(item.Path);
             }
-            foreach (var item in QueueService.VusicQueueNext)
-            {
-                Debug.WriteLine("ot: " + item.FilePath);
-            }
-
+            QueueService.AddToQueueAndPlay(liststring, false, false);
         }
 
         private void btnRenameFiles_Click(object sender, RoutedEventArgs e)
@@ -808,7 +771,13 @@ namespace Vusic_Player.Pages.Views
 
         private void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
         {
-            AddtoQueue();
+            var selecteditems = grdViewMain.SelectedItems.Cast<FileItem>();
+            var liststring = new List<string>();
+            foreach (var item in selecteditems)
+            {
+                liststring.Add(item.Path);
+            }
+            QueueService.AddToQueue(liststring);
         }
 
         private void grdViewMain_SelectionChanged(object sender, SelectionChangedEventArgs e)

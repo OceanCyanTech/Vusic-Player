@@ -814,54 +814,22 @@ public sealed partial class ArtistView : Page
 
     private void btnPlayAll_Click(object sender, RoutedEventArgs e)
     {
+        var liststring = new List<string>();
         foreach (var item in FoundSongs)
         {
-            item.IsCompleted = false;
+            liststring.Add(item.FilePath);
         }
-        QueueService.PlayMedia(FoundSongs, btnShuffle.IsChecked ?? false, false);
+        QueueService.AddToQueueAndPlay(liststring, false, false);
 
     }
 
     private void btnShuffle_Checked(object sender, RoutedEventArgs e)
     {
-        if (btnShuffle.IsChecked == true)
-        {
-            QueueService.IsShuffleTrue = true;
-
-            QueueService.ShuffleNext();
-
-
-        }
-        else
-        {
-            QueueService.IsShuffleTrue = false;
-
-            QueueService.RestoreNext();
-
-
-        }
+        QueueObjects.QueueInstance.IsQueuePageShuffleEnabled = btnShuffle.IsChecked ??false;
+        QueueService.ToggleShuffle(btnShuffle.IsChecked ?? false);
     }
 
-    private void btnShuffle_Unchecked(object sender, RoutedEventArgs e)
-    {
-        if (btnShuffle.IsChecked == true)
-        {
-            QueueService.IsShuffleTrue = true;
-
-            QueueService.ShuffleNext();
-
-
-        }
-        else
-        {
-            QueueService.IsShuffleTrue = false;
-
-            QueueService.RestoreNext();
-
-
-        }
-    }
-
+ 
     private async void btnAddSongs_Click(object sender, RoutedEventArgs e)
     {
         if (App.MainWindowInstance == null) return;
@@ -1042,7 +1010,7 @@ public sealed partial class ArtistView : Page
     {
         OceanContentDialog.HideDlg();
         MainWindow.ShowWindow();
-        LoadAlbums();
+       await LoadAlbums();
     }
 
 
@@ -1520,20 +1488,22 @@ public sealed partial class ArtistView : Page
     }
     private void btnPlayAllMostPlayed_Click(object sender, RoutedEventArgs e)
     {
+        var liststring = new List<string>();
         foreach (var item in mostplayedsongs)
         {
-            item.IsCompleted = false;
+            liststring.Add(item.FilePath);
         }
-        QueueService.PlayMedia(mostplayedsongs, btnShuffle.IsChecked ?? false, false);
+        QueueService.AddToQueueAndPlay(liststring, false, false);
     }
 
     private void btnPlayAllSingles_Click(object sender, RoutedEventArgs e)
     {
+        var liststring = new List<string>();
         foreach (var item in Singles)
         {
-            item.IsCompleted = false;
+            liststring.Add(item.FilePath);
         }
-        QueueService.PlayMedia(Singles, btnShuffle.IsChecked ?? false, false);
+        QueueService.AddToQueueAndPlay(liststring, false, false);
     }
 
     private void HoverOverlay_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -1675,11 +1645,7 @@ public sealed partial class ArtistView : Page
 
     private async void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
     {
-        foreach (var item in FoundSongs)
-        {
-            QueueService.VusicQueue.Add(item);
-            QueueService.VusicQueueNext.Add(item);
-        }
+        QueueService.AddToQueue(FoundSongs);
         ttAddedtoQueue.IsOpen = true;
         await Task.Delay(2000);
         ttAddedtoQueue.IsOpen = false;
@@ -1687,11 +1653,7 @@ public sealed partial class ArtistView : Page
 
     private async void btnAddtoQueueMostPlayed_Click(object sender, RoutedEventArgs e)
     {
-        foreach (var item in mostplayedsongs)
-        {
-            QueueService.VusicQueue.Add(item);
-            QueueService.VusicQueueNext.Add(item);
-        }
+        QueueService.AddToQueue(mostplayedsongs);
         ttAddedtoQueue.IsOpen = true;
         await Task.Delay(2000);
         ttAddedtoQueue.IsOpen = false;

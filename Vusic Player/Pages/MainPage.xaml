@@ -22,7 +22,7 @@
                     <ImageBrush x:Name="imgSourceBackground" ImageSource="{Binding BackgroundBlur, Source={StaticResource GlobalIconHolder}}"
 Stretch="UniformToFill"/>
                 </Grid.Background>
-                <Border CornerRadius="20" x:Name="Bordermain">
+                <Border  x:Name="Bordermain">
                     <Border.Background>
                         <media:BackdropBlurBrush Amount="7.0" x:Name="BackdropBlur"/>
                     </Border.Background>

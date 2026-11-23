@@ -191,13 +191,13 @@
                 <MenuFlyout Opened="MenuFlyout_Opened">
                     <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftOpenVideo" Text="Open Another Media" Click="mnftOpenVideo_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Name="fntIconVolume"  Glyph="&#xE8E5;"/>
+                            <FontIcon Glyph="&#xE838;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 
                     <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}"  x:Name="mnftVolume" Text="Volume" Click="mnftVolume_Click">
                         <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="&#xE767;"/>
+                            <FontIcon Name="fntIconVolume"  Glyph="&#xE8E5;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
 

@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TagLib;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
@@ -15,14 +17,13 @@ using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
-using System.Collections.Generic;
-
 using Vusic_Player.FilePickers;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using File = System.IO.File;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.Pages.Views
 {
@@ -50,35 +51,19 @@ namespace Vusic_Player.Pages.Views
         }
         private async void btnPlayAllOutput_Click(object sender, RoutedEventArgs e)
         {
-            var tempobservable = new ObservableCollection<SongModel>();
+            var liststring = new List<string>();
             foreach (var item in ProcessedFiles)
             {
-                if (File.Exists(item.OutputPath))
-                {
-                    try
-                    {
-                        var storagefile = await StorageFile.GetFileFromPathAsync(item.OutputPath);
-                        var musicprops = await storagefile.Properties.GetMusicPropertiesAsync();
-                        tempobservable.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath, SongDuration = musicprops.Duration });
-                    }
-                    catch
-                    {
-                        continue;
-                    }
-                }
+                liststring.Add(item.FilePath);
             }
-            QueueService.PlayMedia(tempobservable, false, false);
+            QueueService.AddToQueueAndPlay(liststring, false, false);
         }
         private async void btnAddtoQueueAllOutput_Click(object sender, RoutedEventArgs e)
         {
             foreach (var item in ProcessedFiles)
             {
                 if (!File.Exists(item.OutputPath)) return;
-
-                var file = await StorageFile.GetFileFromPathAsync(item.OutputPath);
-                var musicprops = await file.Properties.GetMusicPropertiesAsync();
-                QueueService.VusicQueue.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath, SongDuration = musicprops.Duration });
-                QueueService.VusicQueueNext.Add(new SongModel { Title = Path.GetFileNameWithoutExtension(item.OutputPath), FilePath = item.OutputPath, SongDuration = musicprops.Duration });
+                QueueService.AddToQueue(item.OutputPath);
             }
         }
         private async void btnExportDirectory_Click(object sender, RoutedEventArgs e)
@@ -132,10 +117,7 @@ namespace Vusic_Player.Pages.Views
             if (sender is MenuFlyoutItem mnft && mnft.DataContext is FilesToModifyAdded file)
             {
                 if (!File.Exists(file.OutputPath)) return;
-                var stfile = await StorageFile.GetFileFromPathAsync(file.OutputPath);
-                var musicprops = await stfile.Properties.GetMusicPropertiesAsync();
-                QueueService.VusicQueue.Add(new SongModel { FilePath = file.OutputPath, Title = Path.GetFileNameWithoutExtension(file.OutputPath), SongDuration = musicprops.Duration });
-                QueueService.VusicQueueNext.Add(new SongModel { FilePath = file.OutputPath, SongDuration = musicprops.Duration, Title = Path.GetFileNameWithoutExtension(file.OutputPath) });
+                QueueService.AddToQueue(file.OutputPath);
             }
         }
         private async void mnftChangeExportDir_Click(object sender, RoutedEventArgs e)

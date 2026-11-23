@@ -13,8 +13,8 @@ using Vusic_Player.Configuration.UserSettings;
 using Vusic_Player.Extensions;
 using Vusic_Player.Pages.Views;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.UI.UserViews.Controls
 {
@@ -288,7 +288,7 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private void btnLoopToggle_Checked(object sender, RoutedEventArgs e)
         {
-            QueueService.IsLoopTrue = btnLoopToggle.IsChecked ?? false;
+            QueueObjects.QueueInstance.IsLoop = btnLoopToggle.IsChecked ?? false;
         }
         private void btnJumpToTime_Click(object sender, RoutedEventArgs e)
         {

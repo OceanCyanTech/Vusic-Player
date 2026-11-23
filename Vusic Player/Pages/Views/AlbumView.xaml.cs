@@ -450,55 +450,21 @@ public sealed partial class AlbumView : Page
 
     private void btnPlayAll_Click(object sender, RoutedEventArgs e)
     {
+        var liststring = new List<string>();
         foreach (var item in FoundSongs)
         {
-            item.IsCompleted = false;
+            liststring.Add(item.FilePath);
         }
-        QueueService.PlayMedia(FoundSongs, btnShuffle.IsChecked ?? false, false);
+        QueueService.AddToQueueAndPlay(liststring, btnShuffle.IsChecked ?? false, false);
     }
 
     private void btnShuffle_Checked(object sender, RoutedEventArgs e)
     {
-        if (btnShuffle.IsChecked == true)
-        {
-            QueueService.IsShuffleTrue = true;
-
-            QueueService.ShuffleNext();
-
-
-        }
-        else
-        {
-            QueueService.IsShuffleTrue = false;
-
-            QueueService.RestoreNext();
-
-
-        }
+        QueueService.ToggleShuffle(btnShuffle.IsChecked ?? false);
     }
 
     private async void btnAddSongs_Click(object sender, RoutedEventArgs e)
     {
-        //if (App.MainWindowInstance == null) return;
-        //var files = await FilePickers.MediaPicker.PickMultipleAudioFilesAsync(App.MainWindowInstance, "Choose files");
-
-        //if (files == null) return;
-        //prgActiveProgress.Visibility = Visibility.Visible;
-
-        //ObservableCollection<string> existingPaths = new();
-        //foreach (var file in files)
-        //{
-        //    var alreadyexist = FoundSongs.FirstOrDefault(s => s.FilePath == file.Path);
-        //    if (alreadyexist == null)
-        //    {
-        //        var tagFile = TagLib.File.Create(file.Path);
-        //        tagFile.Tag.Album = txtAlbumName.Text;
-        //        tagFile.Save();
-        //    }
-        //}
-        //await Task.Delay(1500);
-        //await SearchFiles();
-
         if (App.MainWindowInstance == null) return;
 
         var files = await FilePickers.MediaPicker.PickMultipleAudioFilesAsync(App.MainWindowInstance, "Choose files");
@@ -653,11 +619,12 @@ public sealed partial class AlbumView : Page
 
     private async void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
     {
+        var liststring = new List<string>();
         foreach (var item in FoundSongs)
         {
-            QueueService.VusicQueue.Add(item);
-            QueueService.VusicQueueNext.Add(item);
+            liststring.Add(item.FilePath);
         }
+        QueueService.AddToQueueAndPlay(liststring, false, false);
         ttAddedtoQueue.IsOpen = true;
         await Task.Delay(2000);
         ttAddedtoQueue.IsOpen = false;

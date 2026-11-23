@@ -1,4 +1,4 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
 // Licensed under the GNU License. See LICENSE in the project root.
 
 #region Namespaces
@@ -15,7 +15,6 @@ using System.Linq;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.AppConfig;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
@@ -127,11 +126,7 @@ BUILD 131126
                     {
                         if (File.Exists(media.Path))
                         {
-                            ObservableCollection<SongModel> single = new();
-                            string Title = Path.GetFileNameWithoutExtension(media.Path);
-
-                            single.Add(new SongModel { FilePath = media.Path, Title = Title, AlbumName = AudioMetadata.Album(media.Path), Artist = AudioMetadata.Artist(media.Path), SongDuration = await AudioMetadata.GetTimeSpanDuration(media.Path) });
-                            QueueService.PlayMedia(single, false, false);
+                            QueueService.AddToQueueAndPlay(media.Path);
                         }
                     }
                     else if (isVideo)
@@ -380,6 +375,6 @@ BUILD 131126
         }
         #endregion
 
-       
+
     }
 }

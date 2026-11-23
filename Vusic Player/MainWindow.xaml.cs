@@ -32,8 +32,8 @@ using WinRT.Interop;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 using FileInfo = Vusic_Player.Configuration.Helper.FileInfo;
 using uint_ptr = System.UIntPtr;
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player
 {
@@ -274,17 +274,14 @@ namespace Vusic_Player
                                 }
                                 else if (audioExtensions.Contains(extension))
                                 {
-                                    //   MainWindow.ShowWindow();
                                     PlayerService.OpenPath(filePath);
                                     return;
                                 }
                             }
                         }
                     }
-                    // Case 2: App was activated via Command Line arguments / Standard launch
                     else if (activatedArgs.Kind == ExtendedActivationKind.Launch)
                     {
-                        // Environment.GetCommandLineArgs() works beautifully across standard execution
                         string[] args = Environment.GetCommandLineArgs();
 
                         // Index 0 is always the application executable path, arguments start at Index 1
@@ -325,44 +322,16 @@ namespace Vusic_Player
         }
         public async void ShowFileInfo(string filepath)
         {
-            var metadata =  await VusicAPIMediaProperties.GetFileInfo(filepath);
-            imgCover.Source = metadata.Cover;
-            txtInfo.Text = "TITLE: " + metadata.Title;
-            txtInfo.Text += Environment.NewLine + "Artist: " + metadata.Artist;
-            txtInfo.Text += Environment.NewLine + "Album: " + metadata.Album;
-            txtInfo.Text += Environment.NewLine + "Duration: " + metadata.DurationString;
-            txtInfo.Text += Environment.NewLine + "Comment: " + metadata.Comment;
-            txtInfo.Text += Environment.NewLine + "Audio Bitrate: " + metadata.AudioBitrate;
-            txtInfo.Text += Environment.NewLine + "Sample Rate: " + metadata.SampleRate;
-            txtInfo.Text += Environment.NewLine + "Audio Codec: " + metadata.AudioCodec;
-            txtInfo.Text += Environment.NewLine + "Copyright: " + metadata.Copyright;
-            txtInfo.Text += Environment.NewLine + "Composer: " + metadata.Composer;
-            txtInfo.Text += Environment.NewLine + "Publisher: " + metadata.Publisher;
-            txtInfo.Text += Environment.NewLine + "File Format: " + metadata.FileFormat;
-            txtInfo.Text += Environment.NewLine + "File Size: " + metadata.FileSize;
-            txtInfo.Text += Environment.NewLine + "Year: " + metadata.Year;
-            txtInfo.Text += Environment.NewLine + "Track: " + metadata.TrackNumber;
-            txtInfo.Text += Environment.NewLine + "Channels: " + metadata.Channels;
-            txtInfo.Text += Environment.NewLine + "Contributing Artists: " + metadata.ContributingArtists;
-            txtInfo.Text += Environment.NewLine + "Genre: " + metadata.Genre;
-            Debug.WriteLine("----MEDIA METADATA-------");
-            Debug.WriteLine("TITLE: " + metadata.Title);
-            Debug.WriteLine("ARTIST: " + metadata.Artist);
-            Debug.WriteLine("ALBUM: " + metadata.Album);
             FileInfo.GetFileInfo(filepath, rootGrid.XamlRoot);
         }
         private void RootGrid_Loaded(object sender, RoutedEventArgs e)
         {
             LoadThemes();
-            //var island = rootGrid.XamlRoot?.ContentIsland;
-
-            //if (island != null)
-            //{
-            //    _keyboardSource = InputPreTranslateKeyboardSource.GetForIsland(island);
-            //    _keyboardSource.PreTranslateMessage += OnKeyboardPreTranslateMessage;
-            //}
         }
 
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            throw new InvalidOperationException("Intentional test crash for UnhandledException");
+        }
     }
 }

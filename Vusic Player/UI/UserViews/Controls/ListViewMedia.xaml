@@ -224,14 +224,14 @@ ToolTipService.ToolTip="Sort items">
                 </StackPanel>
             </Button>
             <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="Collapsed" Spacing="10" Name="stkMultiOptions">
-                <Button Name="btnRemoveSelections" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Remove from playlist" Margin="0, 10" >
+                <Button Name="btnRemoveSelections" Visibility="{x:Bind ExtraOptions, Mode=OneWay}" ToolTipService.ToolTip="Remove selected" Margin="0, 10" >
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
+                        <Image Source="{Binding RemoveSelection, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                     <Button.Flyout>
                         <Flyout x:Name="flyoutDelete">
                             <StackPanel Orientation="Vertical" Spacing="10">
-                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Confirm removing the selected items from the playlist."></TextBlock>
+                                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Confirm removing the selected items from the list?."></TextBlock>
                                 <Button Content="Remove" FontFamily="{StaticResource GlobalFontHolder}"  Click="btnRemoveSelectionsConfirm_Click" Name="btnRemoveSelectionsConfirm"></Button>
                             </StackPanel>
                         </Flyout>
@@ -252,7 +252,7 @@ ToolTipService.ToolTip="Sort items">
                         <Image Source="{Binding AddToPlaylistMass, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
                 </Button>
-                <Button Name="btnAddtoQueueMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Add selected items to Queue" Margin="0, 10" Click="btnAddtoQueueMass_Click">
+                <Button Name="btnAddtoQueueMass" Visibility="{x:Bind ExtraOptions}" ToolTipService.ToolTip="Add Selected items to Queue" Margin="0, 10" Click="btnAddtoQueueMass_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding AddToQueueMass, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                     </StackPanel>
@@ -435,6 +435,13 @@ ToolTipService.ToolTip="View Mode">
 
                         </Grid.RowDefinitions>
                         <Image Grid.Row="0" Width="120" Height="120" Source="{Binding VideoThumbnail}"/>
+                        <Image ToolTipService.ToolTip="Missing File" Grid.Row="0" Width="40" Source="{Binding Error, Source={StaticResource GlobalIconHolder}}" Visibility="{Binding VisibilityOfMissingAttributes}"/>
+                        <TextBlock Text="{Binding FilePath}" Visibility="{Binding VisibilityOfMissingAttributes}" FontFamily="{StaticResource GlobalFontHolder}"   Grid.Row="1"/>
+
+                        <StackPanel Orientation="Horizontal" Spacing="20" Grid.Row="2">
+                            <Button Content="Relocate" Grid.Column="2" Visibility="{Binding VisibilityOfMissingAttributes}"  Click="btnRelocate_Click"/>
+                            <Button Content="Remove" Grid.Column="3" Visibility="{Binding VisibilityOfMissingAttributes}"  Click="btnRemove_Click"/>
+                        </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" >
                             <HyperlinkButton Padding="0" Name="btnGlyphVideo" MinHeight="0" MinWidth="0" Margin="0, 0" Width="35" Grid.Column="0"  Click="btnGlyph_Click" Visibility="Visible" BorderThickness="0" >
                                 <TextBlock  Text="{Binding Glyph}" Foreground="{Binding TitleColor, Mode=OneWay}"  FontFamily="Segoe Fluent Icons"></TextBlock>
@@ -518,7 +525,24 @@ BorderThickness="0"
         </GridView>
         <ListView DragItemsCompleted="lstViewPlaylist_DragItemsCompleted"   Margin="0, 0" Grid.Row="3" CanDragItems="True" Visibility="Visible" CanReorderItems="True" AllowDrop="True"
 SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   Name="lstViewPlaylist" ItemsSource="{Binding ItemsSource}" MaxHeight="500">
+            <ListView.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Default">
+                            <!-- Checkmark icon color when selected -->
+                            <SolidColorBrush x:Key="ListViewItemCheckBrush" Color="White" />
+                            <!-- Checkbox border / outline color (unselected / default) -->
+                            <SolidColorBrush x:Key="ListViewItemCheckBoxBrush" Color="Transparent" />
+                            <!-- Checked box fill color -->
+                            <SolidColorBrush x:Key="ListViewItemCheckBoxSelectedBrush" Color="{StaticResource GlobalAccentColor}" />
+                            <SolidColorBrush x:Key="ListViewItemCheckBoxSelectedPointerOverBrush" Color="{StaticResource GlobalAccentColorPointerOver}" />
+                            <SolidColorBrush x:Key="ListViewItemCheckBoxSelectedPressedBrush" Color="{StaticResource GlobalAccentColorPointerPressed}" />
+                        </ResourceDictionary>
 
+                    
+                    </ResourceDictionary.ThemeDictionaries>
+                </ResourceDictionary>
+            </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate >
                     <Grid ContextFlyout="{StaticResource mnftMainContext}" Margin="0, 5" VerticalAlignment="Stretch" Background="Transparent" HorizontalAlignment="Stretch">
@@ -532,8 +556,10 @@ SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   N
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <HyperlinkButton ToolTipService.ToolTip="{Binding FilePath}" Padding="0" Name="btnGlyph" MinHeight="0" MinWidth="0" Margin="0, 0" Width="35" Grid.Column="0"  Click="btnGlyph_Click" Visibility="Visible" BorderThickness="0" >
-                            <TextBlock  Text="{Binding Glyph}" Foreground="{Binding  IsPlaying, Converter={StaticResource CurrentTrackForegroundConverter}}"  FontFamily="Segoe Fluent Icons"></TextBlock>
+                            <TextBlock  Text="{Binding Glyph}" Foreground="{Binding  IsPlaying, Mode=OneWay, Converter={StaticResource CurrentTrackForegroundConverter}}"  FontFamily="Segoe Fluent Icons"></TextBlock>
                         </HyperlinkButton>
+                        <Image ToolTipService.ToolTip="Missing File" Width="20" Source="{Binding Error, Source={StaticResource GlobalIconHolder}}" Visibility="{Binding VisibilityOfMissingAttributes}"/>
+                        
                         <HyperlinkButton Click="hypTitle_Click" Grid.Column="1" Name="hypTitle"   Visibility="Visible"  Margin="0, 0">
                             <Grid>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Title}"    ToolTipService.ToolTip="{Binding Title}" Foreground="{Binding  IsPlaying, Converter={StaticResource CurrentTrackForegroundConverter}}" ></TextBlock>
@@ -545,7 +571,10 @@ SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   N
             Visibility="{Binding VisibilityOfStrikeThrough}" />
                             </Grid>
                         </HyperlinkButton>
-                        <StackPanel Visibility="{Binding VisibilityofAudioMeta}" Orientation="Horizontal" Grid.Column="2">
+                        <TextBlock VerticalAlignment="Center"  ToolTipService.ToolTip="{Binding FilePath}" Text="{Binding FilePath}" Visibility="{Binding VisibilityOfMissingAttributes}" FontFamily="{StaticResource GlobalFontHolder}"   Grid.Column="1"/>
+                        <HyperlinkButton Content="Relocate" Name="btnRelocate" Grid.Column="2" Visibility="{Binding VisibilityOfMissingAttributes}"  Click="btnRelocate_Click"/>
+                        <HyperlinkButton Content="Remove" Name="btnRemove" Grid.Column="3" Visibility="{Binding VisibilityOfMissingAttributes}"  Click="btnRemove_Click"/>
+                        <StackPanel  Visibility="{Binding VisibilityofAudioMeta}" Orientation="Horizontal" Grid.Column="2">
                             <Image ToolTipService.ToolTip="Artist" Width="25" Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}" ></Image>
                             <HyperlinkButton Grid.Column="2" Name="hypArtist" ToolTipService.ToolTip="{Binding Artist}" Click="hypArtist_Click"   Visibility="Visible"  Margin="0, 0">
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding Artist}"  FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
@@ -562,8 +591,8 @@ SelectionMode="Multiple" SelectionChanged="lstViewPlaylist_SelectionChanged"   N
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="{Binding AlbumName}"   FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                             </HyperlinkButton>
                         </StackPanel>
-                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  ToolTipService.ToolTip="{Binding FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{Binding FormattedDuration}" Visibility="Visible" TextWrapping="Wrap" Margin="0, 20"/>
-                        <Button ToolTipService.ToolTip="{Binding FavString}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite" 
+                        <TextBlock Visibility="{Binding VisibilityOfMissingAttributesReverse}" FontFamily="{StaticResource GlobalFontHolder}"  ToolTipService.ToolTip="{Binding FormattedDuration}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Grid.Column="4" Text="{Binding FormattedDuration}"  TextWrapping="Wrap" Margin="0, 20"/>
+                        <Button ToolTipService.ToolTip="{Binding FavString}" Grid.Column="5" Margin="30, 0" x:Name="btnFavourite"  Visibility="{Binding VisibilityOfMissingAttributesReverse}" 
 Click="btnFavourite_Click"
 Background="Transparent" 
 BorderThickness="0"

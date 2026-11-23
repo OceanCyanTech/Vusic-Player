@@ -1,5 +1,5 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
-// Licensed under the MIT License. See LICENSE in the project root.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -13,7 +13,6 @@ using System.IO;
 using System.Linq;
 using Vusic_Player.Configuration;
 using Vusic_Player.Configuration.ClassModels;
-using Vusic_Player.Configuration.Helper.AudioProperties;
 using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI.Creation;
 using Vusic_Player.Configuration.Helper.UI.Customization;
@@ -23,8 +22,8 @@ using Vusic_Player.Extensions;
 using Vusic_Player.Pages;
 using Vusic_Player.Pages.Views;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Vusic_Player.UI.UserViews.Controls
 {
@@ -232,11 +231,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     Debug.WriteLine("ARTISARTHUR " + selected.ResultMain);
                     if (File.Exists(selected.FilePath))
                     {
-                        ObservableCollection<SongModel> single = new();
-                        string Title = Path.GetFileNameWithoutExtension(selected.FilePath);
-
-                        single.Add(new SongModel { FilePath = selected.FilePath, Title = Title, AlbumName = AudioMetadata.Album(selected.FilePath), Artist = AudioMetadata.Artist(selected.FilePath), SongDuration = await AudioMetadata.GetTimeSpanDuration(selected.FilePath) });
-                        QueueService.PlayMedia(single, false, false);
+                        QueueService.AddToQueueAndPlay(selected.FilePath);
                     }
                 }
                 else if (selected.SubInformation == "Video")
@@ -357,13 +352,13 @@ namespace Vusic_Player.UI.UserViews.Controls
                         }
                     }
                 }
-                else if(selected.SubInformation == "Setting")
+                else if (selected.SubInformation == "Setting")
                 {
                     if (App.NavigationFrame != null)
                     {
-                        if(SearchResultsPageState.Instance.alreadyNavigatedtoSettingsPage == true)
+                        if (SearchResultsPageState.Instance.alreadyNavigatedtoSettingsPage == true)
                         {
-                          if(App.NavigationFrame.Content is SettingsPage settingsPage)
+                            if (App.NavigationFrame.Content is SettingsPage settingsPage)
                             {
                                 settingsPage.SettingsPageNavigate(selected.ResultMain);
                             }
@@ -389,8 +384,8 @@ namespace Vusic_Player.UI.UserViews.Controls
                 // Just return so default textbox input handling processes the space character
                 return;
             }
-           
-          
+
+
 
             if (e.Key == Windows.System.VirtualKey.Down)
             {

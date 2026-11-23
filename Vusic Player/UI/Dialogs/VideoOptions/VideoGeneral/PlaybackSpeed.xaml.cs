@@ -54,7 +54,7 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.VideoGeneral
 
         private void tsLoop_Toggled(object sender, RoutedEventArgs e)
         {
-            QueueService.IsLoopTrue = tsLoop.IsOn;
+            QueueObjects.QueueInstance.IsLoop = tsLoop.IsOn;
         }
         public MediaPlaybackController mediacontroller => MediaPlaybackController.Instance;
 
