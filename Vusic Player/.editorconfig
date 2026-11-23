@@ -3,7 +3,7 @@ root = true
 
 # C# files
 [*.cs]
-file_header_template= Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.\nLicensed under the GNU License. See LICENSE in the project root.
+file_header_template= Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 241126) . All Rights Reserved.\nLicensed under the GNU License. See LICENSE in the project root.
 
 dotnet_diagnostic.IDE0073.severity = warning
 #### Core EditorConfig Options ####

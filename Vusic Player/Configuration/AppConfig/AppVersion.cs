@@ -10,16 +10,16 @@ using Vusic_Player.Configuration.UserSettings;
 namespace Vusic_Player.Configuration.AppConfig
 {
     /*  OCEANCYAN TECH HEADER
-VUSIC PLAYER - VERSION v1.0.7.0
+VUSIC PLAYER - VERSION v1.0.8.0
 © OCEANCYAN TECH 2026
 
 CLASS - APPVERSION - For Development Build Distinction
-BUILD 131126
+BUILD 241126
 */
     public class AppVersion
     {
         #region Fields
-        public static string VersionString = "1.0.7.0";
+        public static string VersionString = "1.0.8.0";
         static int counter2;
         public static string BuildNumber = "";
         public static string VersionType = "RTM";

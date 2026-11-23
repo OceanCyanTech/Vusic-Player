@@ -33,11 +33,11 @@ namespace Vusic_Player.Pages.Views
 {
     #region OceanCyan Header
     /*  OCEANCYAN TECH HEADER
-VUSIC PLAYER - VERSION v1.0.7.0
+VUSIC PLAYER - VERSION v1.0.8.0
 © OCEANCYAN TECH 2026
 
 PAGE - PLAYLISTVIEW
-BUILD 131126
+BUILD 241126
 */
     #endregion
 

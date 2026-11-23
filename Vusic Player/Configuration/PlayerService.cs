@@ -1,4 +1,4 @@
-﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 131126) . All Rights Reserved.
+﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.0.0 (Build 241126) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 
 using FlyleafLib;
@@ -349,9 +349,6 @@ namespace Vusic_Player.Configuration
                     //}
 
                 }
-
-                var headphonedevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Headphone"));
-                var speakerdevice = Engine.Audio.Devices.FirstOrDefault(p => p.Name.Contains("Speaker"));
                 if (UIController.MultiDeviceOutputFeature)
                 {
                     SetupMultiAudioOutput();

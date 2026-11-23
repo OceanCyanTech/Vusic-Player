@@ -1,4 +1,4 @@
-﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
+﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 241126) . All Rights Reserved.
 // Licensed under the GNU License. See LICENSE in the project root.
 
 #region Namespaces
@@ -8,11 +8,11 @@ using Microsoft.UI.Xaml;
 namespace Vusic_Player.Configuration.AppConfig
 {
     /*  OCEANCYAN TECH HEADER
-VUSIC PLAYER - VERSION v1.0.7.0
+VUSIC PLAYER - VERSION v1.0.8.0
 © OCEANCYAN TECH 2026
 
 CLASS - CENTERDIALOG - Helper method to center a secondary dialog corresponding to its parent dialog
-BUILD 131126
+BUILD 241126
 */
     public class CenterDialog
     {

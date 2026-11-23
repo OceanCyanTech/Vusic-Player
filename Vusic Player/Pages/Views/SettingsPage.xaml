@@ -297,8 +297,8 @@
                                 <Image VerticalAlignment="Center" Width="50" Source="/Assets/appicon.png"></Image>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" VerticalAlignment="Center" Style="{StaticResource TitleLargeTextBlockStyle}" Text="Vusic Player"></TextBlock>
                             </StackPanel>
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.7.0"></TextBlock>
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="RTM (Build 131126)"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="Version 1.0.8.0"></TextBlock>
+                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Name="txtBuildType" Style="{StaticResource SubtitleTextBlockStyle}" Text="RTM (Build 241126)"></TextBlock>
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  IsTextSelectionEnabled="True" Style="{StaticResource SubtitleTextBlockStyle}" Text="© OceanCyan Tech 2026" Name="txtCompanyCopyright"></TextBlock>
 
                             <Image Margin="0, 30" HorizontalAlignment="Left" Width="300" Source="/Assets/OceanCyan Logo High.png"/>

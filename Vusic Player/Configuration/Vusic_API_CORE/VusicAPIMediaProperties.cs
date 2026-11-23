@@ -1,4 +1,4 @@
-﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
+﻿// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 241126) . All Rights Reserved.
 // Licensed under the GNU License. See LICENSE in the project root.
 
 using Microsoft.UI.Xaml.Media.Imaging;

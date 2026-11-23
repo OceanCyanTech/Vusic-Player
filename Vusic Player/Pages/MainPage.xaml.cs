@@ -1,4 +1,4 @@
-// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.7.0 (Build 131126) . All Rights Reserved.
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 241126) . All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root.
 
 using Microsoft.UI.Input;
@@ -219,7 +219,7 @@ namespace Vusic_Player.Pages
             //    OceanContentDialog.Show("What's New?", "", "", "Close", OceanDialogWindow.ContentType.WhatsNew, OceanContentDialogDefault.Close, XamlRoot, 700, 700, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new System.Collections.ObjectModel.ObservableCollection<Configuration.ClassModels.SongModel>(), "");
 
             //}
-            currentSettings.LastSeenVersion = "1.0.7.0";
+            currentSettings.LastSeenVersion = "1.0.8.0";
             await SettingsLoader.SaveSettingsAsync(currentSettings);
             //var counter = currentSettings.VersionCounter;
             //if (counter.Count == 0)
