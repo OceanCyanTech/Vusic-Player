@@ -157,6 +157,8 @@ namespace Vusic_Player.UI.UserViews.Controls.OceanDialogControls
         {
             var selected = lstViewDisplay.SelectedItems.Cast<SongModel>().ToList();
             var selectedplaylists = lstViewPlaylists.SelectedItems.ToList();
+            if (selectedplaylists.Count == 0) return;
+            if (selected.Count == 0) return;
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var playlists = currentSettings.SavedPlaylists;
             foreach (var item in selected)

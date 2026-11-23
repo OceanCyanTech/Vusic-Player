@@ -201,7 +201,7 @@ Margin="8,0,0,4">
                         <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
                         <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
 
-                        <!-- Pointer Over (Hover) -->
+                      
                         <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
                         <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
                         <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>

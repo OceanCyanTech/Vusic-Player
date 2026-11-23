@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Input;
 using Vusic_Player.Configuration.ClassModels;
 using Vusic_Player.Configuration.Helper;
+using Vusic_Player.Configuration.Helper.FileSystem;
 using Vusic_Player.Configuration.Helper.UI;
 using Vusic_Player.Configuration.Helper.UI.Customization;
 using Vusic_Player.Configuration.Playback;
@@ -540,18 +541,14 @@ namespace Vusic_Player.Configuration
         {
             if (CurrentPlayingPath == null) return;
             if (!File.Exists(CurrentPlayingPath)) return;
-            StorageFile file = await StorageFile.GetFileFromPathAsync(CurrentPlayingPath);
-
-            string fileExtension = file.FileType.ToLowerInvariant();
 
 
-            if (Extensions.VideoExtensions.List.Contains(fileExtension))
+            if (ExtensionVerifier.FileTypeExtension(CurrentPlayingPath) == ExtensionVerifier.FileTypeEnum.Video)
             {
                 return;
             }
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
             var recents = currentSettings.RecentMusic;
-            var musicProps = await file.Properties.GetMusicPropertiesAsync();
             var existing = recents.FirstOrDefault(p => p.SongPath == CurrentPlayingPath);
             var favourites = currentSettings.Favourites;
             var existingfav = favourites.FirstOrDefault(p => p.FilePath == CurrentPlayingPath);
@@ -569,11 +566,7 @@ namespace Vusic_Player.Configuration
             }
             if (existing == null)
             {
-                string songname = musicProps.Title;
-                if (songname == "")
-                {
-                    songname = Path.GetFileNameWithoutExtension(CurrentPlayingPath);
-                }
+                string songname = await MetadataFetcher.GetMediaTitle(CurrentPlayingPath);
                 recents.Insert(0, new Configuration.ClassModels.RecentMusicModel { SongPath = CurrentPlayingPath, LastPlayed = "(Last Played)", PlayCount = 1, SongName = songname });
             }
             else

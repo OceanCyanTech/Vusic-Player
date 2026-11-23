@@ -298,7 +298,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         public void UpdateAlbumNameForSelected(string name)
         {
-            var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().ToList();
+            var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().Where(p => p.IsFileMissing == false).ToList();
             foreach (var item in selected)
             {
                 if (item.IsFileMissing) continue;
@@ -307,7 +307,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         }
         public void UpdateArtistNameForSelected(string name)
         {
-            var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().ToList();
+            var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().Where(p => p.IsFileMissing == false).ToList();
             foreach (var item in selected)
             {
                 if (item.IsFileMissing) continue;
@@ -520,7 +520,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log(ex.Message, "ArtistPage.RenameArtist", Logger.LogLevelType.Error);
+                        Logger.Log(ex.Message, "ListViewMedia.RenameAlbum", Logger.LogLevelType.Error);
                     }
                 }
             }
@@ -588,7 +588,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                                             }
                                             catch (Exception ex)
                                             {
-                                                Logger.Log(ex.Message, "ArtistPage.Remove", Logger.LogLevelType.Error);
+                                                Logger.Log(ex.Message, "ListViewMedia.RemoveArtist", Logger.LogLevelType.Error);
                                             }
                                         }
                                     }
@@ -606,7 +606,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log(ex.Message, "ArtistPage.RemoveItem", Logger.LogLevelType.Error);
+                        Logger.Log(ex.Message, "ListViewMedia.RemoveItem", Logger.LogLevelType.Error);
                     }
                 }
 
@@ -675,7 +675,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                                             }
                                             catch (Exception ex)
                                             {
-                                                Logger.Log(ex.Message, "ArtistPage.Remove", Logger.LogLevelType.Error);
+                                                Logger.Log(ex.Message, "ListViewMedia.Remove", Logger.LogLevelType.Error);
                                             }
                                         }
                                     }
@@ -693,7 +693,7 @@ namespace Vusic_Player.UI.UserViews.Controls
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log(ex.Message, "AlbumPage.RemoveItem", Logger.LogLevelType.Error);
+                        Logger.Log(ex.Message, "ListViewMedia.Remove", Logger.LogLevelType.Error);
                     }
                 }
 
@@ -1042,7 +1042,7 @@ namespace Vusic_Player.UI.UserViews.Controls
         private void btnEditAlbumMass_Click(object sender, RoutedEventArgs e)
         {
 
-            var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().ToList();
+            var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().Where(p=>p.IsFileMissing == false).ToList();
             if (isViewList == false)
             {
                 selected = grdViewMain.SelectedItems.Cast<SongModel>().ToList();
@@ -1098,10 +1098,9 @@ namespace Vusic_Player.UI.UserViews.Controls
         private async void btnRemoveSelectionsFromFavourites_Click(object sender, RoutedEventArgs e)
         {
 
-            var selectedSongs = SelectedItems.OfType<SongModel>().ToList();
+            var selectedSongs = lstViewPlaylist.SelectedItems.Cast<SongModel>().Where(p => p.IsFileMissing == false).ToList();
             if (!selectedSongs.Any()) return;
 
-            // If any selected song is a favorite, unfavorite all of them; otherwise, favorite all of them.
             bool removeFavorites = selectedSongs.Any(s => s.IsFavourite);
             var paths = selectedSongs.Select(s => s.FilePath);
 
@@ -1515,7 +1514,8 @@ namespace Vusic_Player.UI.UserViews.Controls
         {
             try
             {
-                var selected = SelectedItems.Cast<SongModel>().ToList();
+                var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().Where(p => p.IsFileMissing == false).ToList();
+
                 var selectedplaylists = lstViewPlaylists.SelectedItems.ToList();
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 var playlists = currentSettings.SavedPlaylists;
@@ -1674,7 +1674,8 @@ namespace Vusic_Player.UI.UserViews.Controls
 
         private async void btnAddtoQueueMass_Click(object sender, RoutedEventArgs e)
         {
-            var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().ToList();
+            var selected = lstViewPlaylist.SelectedItems.Cast<SongModel>().Where(p => p.IsFileMissing == false).ToList();
+
             var liststring = new List<string>();
             foreach (var item in selected)
             {

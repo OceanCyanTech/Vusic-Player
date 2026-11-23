@@ -1,6 +1,7 @@
 // Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 161126) . All Rights Reserved.
 // Licensed under the GNU License. See LICENSE in the project root.
 
+#region Namespaces
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -26,16 +27,28 @@ using Vusic_Player.FilePickers;
 using Vusic_Player.UI.Dialogs.OceanDialogConfig;
 using Windows.Storage;
 using RoutedEventArgs = Microsoft.UI.Xaml.RoutedEventArgs;
+#endregion
 
 namespace Vusic_Player.Pages.Views
 {
+    #region OceanCyan Header
+    /*  OCEANCYAN TECH HEADER
+VUSIC PLAYER - VERSION v1.0.7.0
+© OCEANCYAN TECH 2026
+
+PAGE - PLAYLISTVIEW
+BUILD 131126
+*/
+    #endregion
+
+    #region Value Converters
     public class CountToItemConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is int count)
             {
-                return "• "+ (count == 1 ? $"{count} item" : $"{count} items");
+                return "• " + (count == 1 ? $"{count} item" : $"{count} items");
             }
 
             return "• 0 items";
@@ -46,6 +59,7 @@ namespace Vusic_Player.Pages.Views
             throw new NotImplementedException();
         }
     }
+
     public class PlaylistDurationString : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -75,6 +89,7 @@ namespace Vusic_Player.Pages.Views
             throw new NotImplementedException();
         }
     }
+
     public class MissingItemCount : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -92,6 +107,7 @@ namespace Vusic_Player.Pages.Views
             throw new NotImplementedException();
         }
     }
+
     public class MissingItemCountString : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -109,11 +125,23 @@ namespace Vusic_Player.Pages.Views
             throw new NotImplementedException();
         }
     }
-
+    #endregion
 
     public sealed partial class PlaylistView : Page
     {
-      public  ObservableCollection<SongModel> SongCollection = new();
+        #region Fields & Properties
+        public ObservableCollection<SongModel> SongCollection = new();
+        ObservableCollection<SongModel> MissingFilePaths = new ObservableCollection<SongModel>();
+        ObservableCollection<GenreModel> genreList = new();
+
+        private readonly PlaylistDurationString _durationConverter = new();
+        private bool _isLoadingData = false;
+        private PlaylistItem? currentPlaylist;
+
+        private PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
+        #endregion
+
+        #region Constructor
         public PlaylistView()
         {
             InitializeComponent();
@@ -121,25 +149,153 @@ namespace Vusic_Player.Pages.Views
             lstViewUnified.ListViewRemoved += LstViewUnified_ListViewRemoved;
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
+        #endregion
 
+        #region Navigation
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter is PlaylistItem playlist)
+            {
+                currentPlaylist = playlist;
+                txtPlaylistName.Text = playlist.PlaylistName;
+                genreList.Clear();
+                if (playlist.PlaylistGenre != null)
+                {
+                    txtGenreCov.Text = "Genre";
+                    var parts = playlist.PlaylistGenre.Split(',');
+                    foreach (var part in parts)
+                    {
+                        var cleanedGenre = part.Trim();
+                        if (!string.IsNullOrWhiteSpace(cleanedGenre))
+                        {
+                            var exist = genreList.FirstOrDefault(p => p.GenreTag == cleanedGenre);
+                            if (exist == null)
+                            {
+                                genreList.Add(new GenreModel { GenreTag = cleanedGenre });
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    txtGenreCov.Text = "";
+                }
+                grdViewGenres.ItemsSource = genreList;
+                //           txtGenreCov.Text = "Genre: " + playlist.PlaylistGenre;
+                if (playlist.PlaylistGenre == "") { txtGenreCov.Text = ""; }
+                txtDateCreation.Text = playlist.DateCreation.ToString("dd MMMM yyyy");
+                imgPlaylistCover.Source = new BitmapImage(playlist.Thumbnail);
+                LoadItemsOnly(playlist);
+            }
+            base.OnNavigatedTo(e);
+        }
+        #endregion
+
+        #region Helpers
+        public string FormatTotalDuration(int count)
+        {
+            return (string)_durationConverter.Convert(SongCollection, typeof(string), null!, string.Empty);
+        }
+
+        private async void UpdateUI()
+        {
+            if (_isLoadingData) return;
+            try
+            {
+                if (currentPlaylist == null) return;
+                _isLoadingData = true;
+                if (currentPlaylist.isPlaylistVideo)
+                {
+                    lstViewUnified.VideoPlaylistUI();
+                    lstViewUnified.VisiblityofViewButton = Microsoft.UI.Xaml.Visibility.Visible;
+                }
+                stkLoading.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+            }
+            finally
+            {
+                _isLoadingData = false;
+            }
+        }
+
+        private async void LoadItemsOnly(PlaylistItem playlist)
+        {
+            if (_isLoadingData) return;
+            try
+            {
+                _isLoadingData = true;
+                SongCollection.Clear();
+                var settings = await SettingsLoader.LoadSettingsAsync();
+                var favourites = settings.Favourites;
+                bool hasHiddenFiles = false;
+                foreach (string path in playlist.SongsPaths)
+                {
+                    try
+                    {
+                        if (File.Exists(path))
+                        {
+                            SongCollection.Add(await MetadataFetcher.GetSongModel(path));
+                        }
+                        else
+                        {
+                            SongCollection.Add(new SongModel { IsFileMissing = true, FilePath = path });
+                            MissingFilePaths.Add(new SongModel { IsFileMissing = true, FilePath = path });
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+                if (hasHiddenFiles)
+                {
+                    infoBarHiddenFiles.Severity = InfoBarSeverity.Informational;
+                    infoBarHiddenFiles.Message = "Hidden files cannot be shown";
+                    infoBarHiddenFiles.IsOpen = true;
+                }
+                else
+                {
+                    infoBarHiddenFiles.IsOpen = false;
+                }
+                bool hasVideo = SongCollection.Any(song =>
+                    !string.IsNullOrEmpty(song.FilePath) && File.Exists(song.FilePath) &&
+                    Extensions.VideoExtensions.List.Contains(Path.GetExtension(song.FilePath).ToLowerInvariant())
+                );
+                if (hasVideo)
+                {
+                    lstViewUnified.VideoPlaylistUI();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, "PlaylistLoad", Logger.LogLevelType.Error);
+            }
+            finally
+            {
+                stkLoading.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+
+                _isLoadingData = false;
+            }
+        }
+        #endregion
+
+        #region Collection & ListView Events
         private async void LstViewUnified_ListViewRemoved(object? sender, RoutedEventArgs e)
         {
             await Task.Delay(300);
             UpdateUI();
         }
-        private readonly PlaylistDurationString _durationConverter = new();
 
-        public string FormatTotalDuration(int count)
-        {
-            return (string)_durationConverter.Convert(SongCollection, typeof(string), null!, string.Empty);
-        }
-        bool _isLoadingData = false;
         private async void SongCollection_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (_isLoadingData) return;
             if (e.Action == NotifyCollectionChangedAction.Remove ||
-          e.Action == NotifyCollectionChangedAction.Add ||
-          e.Action == NotifyCollectionChangedAction.Move)
+                e.Action == NotifyCollectionChangedAction.Add ||
+                e.Action == NotifyCollectionChangedAction.Move)
             {
                 var currentSettings = await SettingsLoader.LoadSettingsAsync();
                 var playl = currentSettings.SavedPlaylists;
@@ -171,16 +327,11 @@ namespace Vusic_Player.Pages.Views
                     }
                 }
                 await SettingsLoader.SaveSettingsAsync(currentSettings);
-
             }
         }
+        #endregion
 
-        private void imgPlaylistCover_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-
-        }
-
-
+        #region Playback & Queue 
         private async void btnPlayAll_Click(object sender, RoutedEventArgs e)
         {
             List<string> Paths = new List<string>();
@@ -191,47 +342,64 @@ namespace Vusic_Player.Pages.Views
             QueueService.AddToQueueAndPlay(Paths, btnShuffle.IsChecked ?? false, btnLoop.IsChecked ?? false);
         }
 
-
         private void btnLoop_Checked(object sender, RoutedEventArgs e)
         {
             QueueObjects.QueueInstance.IsLoop = btnLoop.IsChecked ?? false;
         }
 
-        private async void btnDeletePlaylist_Click(object sender, RoutedEventArgs e)
+        private void btnShuffle_Checked(object sender, RoutedEventArgs e)
         {
-            if (currentPlaylist == null) return;
-            if (App.MainWindowInstance == null) return;
-            OceanContentDialog.Show("Confirm Delete", "Confirm", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 600, 300, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", $"Are you sure you want the playlist '{currentPlaylist.PlaylistName}' to be deleted? This cannot be undone.", "warning");
-            OceanContentDialog.PrimaryRequested += (async () =>
+            if (btnShuffle.IsChecked == true)
             {
-                if (currentPlaylist == null) return;
-
-                var currentSettings = await SettingsLoader.LoadSettingsAsync();
-                var playlists = currentSettings.SavedPlaylists;
-
-                var exist = playlists.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
-                if (exist != null)
-                {
-
-                    playlists.Remove(exist);
-
-                    await SettingsLoader.SaveSettingsAsync(currentSettings);
-                    grdRoot.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-                    grdDeletedPlaylist.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-                    txtPlaylistDeleted.Text = $"The playlist '{currentPlaylist.PlaylistName}' has been deleted.";
-
-                    OceanContentDialog.HideDlg();
-                    MainWindow.ShowWindow();
-                }
-                var existingplaylistinmasterlist = MasterSearchIndex.PlaylistsMaster.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
-                if (existingplaylistinmasterlist != null)
-                {
-                    MasterSearchIndex.PlaylistsMaster.Remove(existingplaylistinmasterlist);
-                }
-            });
+                QueueService.ToggleShuffle(true);
+                QueueService.ShuffleQueue();
+            }
+            else
+            {
+                QueueService.ToggleShuffle(false);
+                QueueService.RestoreQueueItems();
+            }
         }
 
+        private async void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in SongCollection)
+            {
+                QueueService.AddToQueue(item.FilePath);
+            }
+            ttAddedtoQueue.IsOpen = true;
+            await Task.Delay(2000);
+            ttAddedtoQueue.IsOpen = false;
+        }
+        #endregion
 
+        #region Playlist  
+        private async void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.MainWindowInstance == null) return;
+            if (currentPlaylist == null) return;
+
+            IReadOnlyList<StorageFile> files;
+            try
+            {
+                files = await FilePickers.MediaPicker.PickMultipleMediaFilesAsync(App.MainWindowInstance, "Add media");
+                if (files != null)
+                {
+                    foreach (var file in files)
+                    {
+                        var existing = SongCollection.FirstOrDefault(p => p.FilePath == file.Path);
+                        if (existing == null)
+                        {
+                            SongCollection.Add(await MetadataFetcher.GetSongModel(file.Path));
+                        }
+                    }
+                    UpdateUI();
+                }
+            }
+            finally
+            {
+            }
+        }
 
         private async void btnEditPlaylistInfo_Click(object sender, RoutedEventArgs e)
         {
@@ -268,7 +436,6 @@ namespace Vusic_Player.Pages.Views
 
                 if (Instance.PlaylistName.Trim() != currentPlaylist.PlaylistName.Trim())
                 {
-
                     if (string.IsNullOrEmpty(baseName)) baseName = "Playlist";
 
                     int counter = 1;
@@ -322,222 +489,13 @@ namespace Vusic_Player.Pages.Views
                     await SettingsLoader.SaveSettingsAsync(currentSettings);
                     ttEditPlaylist.IsOpen = false;
                     Instance.IsAppInstanceOceanDialog = true;
-
                 }
             });
-
         }
 
-
-        private async void UpdateUI()
+        private void btnCancelEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (_isLoadingData) return;
-            try
-            {
-                if (currentPlaylist == null) return;
-                _isLoadingData = true;
-                if (currentPlaylist.isPlaylistVideo)
-                {
-                    lstViewUnified.VideoPlaylistUI();
-                    lstViewUnified.VisiblityofViewButton = Microsoft.UI.Xaml.Visibility.Visible;
-
-                }
-                stkLoading.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-            }
-            finally
-            {
-                _isLoadingData = false;
-            }
-
-        }
-        TimeSpan ts = new TimeSpan();
-        private async void btnAdd_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (App.MainWindowInstance == null) return;
-            if (currentPlaylist == null) return;
-
-            IReadOnlyList<StorageFile> files;
-            try
-            {
-                files = await FilePickers.MediaPicker.PickMultipleMediaFilesAsync(App.MainWindowInstance, "Add media");
-                if (files != null)
-                {
-                    foreach (var file in files)
-                    {
-                        var existing = SongCollection.FirstOrDefault(p => p.FilePath == file.Path);
-                        if (existing == null)
-                        {
-                            SongCollection.Add(await MetadataFetcher.GetSongModel(file.Path));
-                        }
-                    }
-                    UpdateUI();
-                }
-            }
-            finally
-            {
-            }
-        }
-
-
-        ObservableCollection<SongModel> MissingFilePaths = new ObservableCollection<SongModel>();
-        private async void LoadItemsOnly(PlaylistItem playlist)
-        {
-            if (_isLoadingData) return;
-            try
-            {
-                _isLoadingData = true;
-                SongCollection.Clear();
-                var settings = await SettingsLoader.LoadSettingsAsync();
-                var favourites = settings.Favourites;
-                bool hasHiddenFiles = false;
-                foreach (string path in playlist.SongsPaths)
-                {
-                    try
-                    {
-                        if (File.Exists(path))
-                        {
-                            SongCollection.Add(await MetadataFetcher.GetSongModel(path));
-                        }
-                        else
-                        {
-                            SongCollection.Add(new SongModel { IsFileMissing = true, FilePath = path });
-                            MissingFilePaths.Add(new SongModel { IsFileMissing = true, FilePath = path });
-                        }
-                    }
-                    catch
-                    {
-                        continue;
-                    }
-                }
-                if (hasHiddenFiles)
-                {
-                    infoBarHiddenFiles.Severity = InfoBarSeverity.Informational;
-                    infoBarHiddenFiles.Message = "Hidden files cannot be shown";
-                    infoBarHiddenFiles.IsOpen = true;
-                }
-                else
-                {
-                    infoBarHiddenFiles.IsOpen = false;
-                }
-                bool hasVideo = SongCollection.Any(song =>
-          !string.IsNullOrEmpty(song.FilePath) && File.Exists(song.FilePath) &&
-          Extensions.VideoExtensions.List.Contains(Path.GetExtension(song.FilePath).ToLowerInvariant())
-      );
-                if (hasVideo)
-                {
-                    lstViewUnified.VideoPlaylistUI();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex.Message, "PlaylistLoad", Logger.LogLevelType.Error);
-            }
-            finally
-            {
-                stkLoading.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-
-                _isLoadingData = false;
-            }
-        }
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-        }
-        PlaylistItem? currentPlaylist;
-        ObservableCollection<GenreModel> genreList = new();
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            if (e.Parameter is PlaylistItem playlist)
-            {
-                currentPlaylist = playlist;
-                txtPlaylistName.Text = playlist.PlaylistName;
-                genreList.Clear();
-                if (playlist.PlaylistGenre != null)
-                {
-                    txtGenreCov.Text = "Genre";
-                    var parts = playlist.PlaylistGenre.Split(',');
-                    foreach (var part in parts)
-                    {
-                        var cleanedGenre = part.Trim();
-                        if (!string.IsNullOrWhiteSpace(cleanedGenre))
-                        {
-                            var exist = genreList.FirstOrDefault(p => p.GenreTag == cleanedGenre);
-                            if (exist == null)
-                            {
-                                genreList.Add(new GenreModel { GenreTag = cleanedGenre });
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    txtGenreCov.Text = "";
-                }
-                grdViewGenres.ItemsSource = genreList;
-                //           txtGenreCov.Text = "Genre: " + playlist.PlaylistGenre;
-                if (playlist.PlaylistGenre == "") { txtGenreCov.Text = ""; }
-                txtDateCreation.Text = playlist.DateCreation.ToString("dd MMMM yyyy");
-                imgPlaylistCover.Source = new BitmapImage(playlist.Thumbnail);
-                LoadItemsOnly(playlist);
-                //    UpdateUI();
-            }
-            base.OnNavigatedTo(e);
-        }
-
-
-        private void btnGenre_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.DataContext is GenreModel genre)
-            {
-                if (App.NavigationFrame != null)
-                {
-                    App.NavigationFrame.Navigate(typeof(GenreView), genre);
-                }
-            }
-        }
-
-        private void btnShuffle_Checked(object sender, RoutedEventArgs e)
-        {
-            if (btnShuffle.IsChecked == true)
-            {
-                QueueService.ToggleShuffle(true);
-                QueueService.ShuffleQueue();
-            }
-            else
-            {
-                QueueService.ToggleShuffle(false);
-                QueueService.RestoreQueueItems();
-            }
-        }
-
-        private void btnGoToHome_Click(object sender, RoutedEventArgs e)
-        {
-            if (App.NavigationFrame != null)
-            {
-                App.NavigationFrame.Navigate(typeof(HomeView));
-            }
-        }
-
-        private async void mnftChangeCover_Click(object sender, RoutedEventArgs e)
-        {
-            if (App.MainWindowInstance == null) return;
-            if (currentPlaylist == null) return;
-            var image = await FilePickers.MediaPicker.PickSingleImageFileAsync(App.MainWindowInstance, "Choose Cover");
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-            var playlists = currentSettings.SavedPlaylists;
-            var exist = playlists.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
-            if (image != null)
-            {
-                imgPlaylistCover.Source = new BitmapImage(new Uri(image.Path));
-                if (exist != null)
-                {
-                    exist.ThumbnailString = image.Path;
-                    exist.Thumbnail = new Uri(image.Path);
-                    exist.plthumb = new BitmapImage(new Uri(image.Path));
-                }
-            }
-            await SettingsLoader.SaveSettingsAsync(currentSettings);
+            ttEditPlaylist.IsOpen = false;
         }
 
         private void btnRenamePlaylist_Click(object sender, RoutedEventArgs e)
@@ -545,7 +503,6 @@ namespace Vusic_Player.Pages.Views
             ttRename.IsOpen = true;
             txtRenamePlaylist.Text = txtPlaylistName.Text;
         }
-        PlaylistCreationValues Instance => PlaylistCreationValues.Instance;
 
         private async void btnOfficialRename_Click(object sender, RoutedEventArgs e)
         {
@@ -589,20 +546,65 @@ namespace Vusic_Player.Pages.Views
             ttRename.IsOpen = false;
         }
 
-        private void btnCancelEdit_Click(object sender, RoutedEventArgs e)
+        private async void mnftChangeCover_Click(object sender, RoutedEventArgs e)
         {
-            ttEditPlaylist.IsOpen = false;
+            if (App.MainWindowInstance == null) return;
+            if (currentPlaylist == null) return;
+            var image = await FilePickers.MediaPicker.PickSingleImageFileAsync(App.MainWindowInstance, "Choose Cover");
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var playlists = currentSettings.SavedPlaylists;
+            var exist = playlists.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+            if (image != null)
+            {
+                imgPlaylistCover.Source = new BitmapImage(new Uri(image.Path));
+                if (exist != null)
+                {
+                    exist.ThumbnailString = image.Path;
+                    exist.Thumbnail = new Uri(image.Path);
+                    exist.plthumb = new BitmapImage(new Uri(image.Path));
+                }
+            }
+            await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
 
-        private async void btnAddtoQueue_Click(object sender, RoutedEventArgs e)
+        private async void btnDeletePlaylist_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in SongCollection)
+            if (currentPlaylist == null) return;
+            if (App.MainWindowInstance == null) return;
+            OceanContentDialog.Show("Confirm Delete", "Confirm", "", "Cancel", OceanDialogWindow.ContentType.MessageShow, OceanContentDialogDefault.Primary, XamlRoot, 600, 300, OceanContentDialogType.Elevated, App.MainWindowInstance, "", "", "", new ObservableCollection<SongModel>(), "", $"Are you sure you want the playlist '{currentPlaylist.PlaylistName}' to be deleted? This cannot be undone.", "warning");
+            OceanContentDialog.PrimaryRequested += (async () =>
             {
-                QueueService.AddToQueue(item.FilePath);
-            }
-            ttAddedtoQueue.IsOpen = true;
-            await Task.Delay(2000);
-            ttAddedtoQueue.IsOpen = false;
+                if (currentPlaylist == null) return;
+
+                var currentSettings = await SettingsLoader.LoadSettingsAsync();
+                var playlists = currentSettings.SavedPlaylists;
+
+                var exist = playlists.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+                if (exist != null)
+                {
+                    playlists.Remove(exist);
+
+                    await SettingsLoader.SaveSettingsAsync(currentSettings);
+                    grdRoot.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                    grdDeletedPlaylist.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+                    txtPlaylistDeleted.Text = $"The playlist '{currentPlaylist.PlaylistName}' has been deleted.";
+
+                    OceanContentDialog.HideDlg();
+                    MainWindow.ShowWindow();
+                }
+                var existingplaylistinmasterlist = MasterSearchIndex.PlaylistsMaster.FirstOrDefault(p => p.PlaylistId == currentPlaylist.PlaylistId);
+                if (existingplaylistinmasterlist != null)
+                {
+                    MasterSearchIndex.PlaylistsMaster.Remove(existingplaylistinmasterlist);
+                }
+            });
+        }
+        #endregion
+
+        #region Missing Files 
+        private void btnViewMissingFiles_Click(object sender, RoutedEventArgs e)
+        {
+            ttMissingFilesView.IsOpen = true;
         }
 
         private async void btnRelocate_Click(object sender, RoutedEventArgs e)
@@ -623,21 +625,16 @@ namespace Vusic_Player.Pages.Views
                         var index = SongCollection.IndexOf(item);
                         SongCollection.Remove(item);
                         var newsongmodel = await MetadataFetcher.GetSongModel(mediapicker.Path);
-                       SongCollection.Insert(index, newsongmodel);
+                        SongCollection.Insert(index, newsongmodel);
                     }
                 }
 
                 MissingFilePaths.Remove(tempsongmodel);
-                if(MissingFilePaths.Count == 0)
+                if (MissingFilePaths.Count == 0)
                 {
                     ttMissingFilesView.IsOpen = false;
                 }
             }
-        }
-
-        private void btnViewMissingFiles_Click(object sender, RoutedEventArgs e)
-        {
-            ttMissingFilesView.IsOpen = true;
         }
 
         private void MissingFileRemovedInvoked(string filepath)
@@ -652,6 +649,7 @@ namespace Vusic_Player.Pages.Views
                 ttMissingFilesView.IsOpen = false;
             }
         }
+
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is SongModel media)
@@ -668,6 +666,32 @@ namespace Vusic_Player.Pages.Views
                 }
             }
         }
-    }
+        #endregion
 
+        #region Navigation & Misc 
+        private void imgPlaylistCover_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+
+        }
+
+        private void btnGenre_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is GenreModel genre)
+            {
+                if (App.NavigationFrame != null)
+                {
+                    App.NavigationFrame.Navigate(typeof(GenreView), genre);
+                }
+            }
+        }
+
+        private void btnGoToHome_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.NavigationFrame != null)
+            {
+                App.NavigationFrame.Navigate(typeof(HomeView));
+            }
+        }
+        #endregion
+    }
 }

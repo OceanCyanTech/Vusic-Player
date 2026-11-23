@@ -21,13 +21,13 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
-                <Button CornerRadius="12"   Grid.Column="0" Name="btnNewPlaylist" Click="btnNewPlaylist_Click">
+                <Button   CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Grid.Column="0" Name="btnNewPlaylist" Click="btnNewPlaylist_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="20" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}"></Image>
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Margin="5, 0" Text="New Playlist" Style="{StaticResource BodyTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </Button>
-                <Button   BorderThickness="1" BorderBrush="Transparent" HorizontalAlignment="Left" CornerRadius="12"   Margin="0, 0" Name="btnOpenMusic" Click="btnOpenMusic_Click">
+                <Button   BorderThickness="1" HorizontalAlignment="Left"   CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"    Margin="0, 0" Name="btnOpenMusic" Click="btnOpenMusic_Click">
                     <Button.Background>
                         <AcrylicBrush TintColor="Transparent" 
 TintOpacity="00" 

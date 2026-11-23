@@ -17,7 +17,7 @@
         <local:MissingItemCountString x:Key="MissingItemStringConverter"/>
     </Page.Resources>
     <Grid Margin="50, 20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <Grid HorizontalAlignment="Center"  VerticalAlignment="Center" RowSpacing="20" Name="grdDeletedPlaylist" Visibility="Collapsed">
+        <Grid HorizontalAlignment="Center"  VerticalAlignment="Center" RowSpacing="30" Name="grdDeletedPlaylist" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
@@ -27,8 +27,8 @@
             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Playlist has been deleted." Grid.Row="1" Name="txtPlaylistDeleted" Style="{StaticResource TitleTextBlockStyle}"/>
             <Button Name="btnGoToHome" Click="btnGoToHome_Click" HorizontalAlignment="Center" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Grid.Row="2">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Source="{Binding Home, Source={StaticResource GlobalIconHolder}}" Width="30"></Image>
-                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Text="Go to Home" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                    <Image Source="{Binding Home, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
+                    <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}"   Text="Go to Home"></TextBlock>
                 </StackPanel>
             </Button>
         </Grid>
@@ -98,13 +98,13 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Button FontFamily="{StaticResource GlobalFontHolder}"   Name="btnSavePlaylistEdited" Content="Save" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
+                        <Button CornerRadius="12" FontFamily="{StaticResource GlobalFontHolder}"   Name="btnSavePlaylistEdited" Content="Save" Style="{StaticResource AccentButtonStyle}" Background="{StaticResource GlobalAccentColor}" >
                             <Button.Resources>
                                 <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
                                 <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
                                 <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
 
-                                <!-- Pointer Over (Hover) -->
+                              
                                 <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
                                 <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
                                 <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
@@ -120,7 +120,7 @@
                                 <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="Transparent"/>
                             </Button.Resources>
                         </Button>
-                        <Button FontFamily="{StaticResource GlobalFontHolder}"   Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
+                        <Button  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  FontFamily="{StaticResource GlobalFontHolder}"   Name="btnCancelEdit" Click="btnCancelEdit_Click" Content="Cancel" Grid.Column="1"/>
                     </Grid>
                 </Grid>
             </TeachingTip>
@@ -364,7 +364,7 @@ CornerRadius="16"
                         <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
                         <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
 
-                        <!-- Pointer Over (Hover) -->
+                      
                         <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
                         <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
                         <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
@@ -415,7 +415,7 @@ Margin="0,0,0,10" />
                     <InfoBar Grid.Row="0" IsOpen="{x:Bind MissingFilePaths.Count, Converter={StaticResource MissingItemConverter}, Mode=OneWay}" Severity="Error" Name="iBMissingFiles" Title="Missing files">
                         <StackPanel Orientation="Horizontal" Spacing="10" Margin="5">
                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}" VerticalAlignment="Center"   x:Name="infoBarMessage" Text="{x:Bind MissingFilePaths.Count, Mode=OneWay, Converter={StaticResource MissingItemStringConverter}}" Margin="0,0,8,0"/>
-                            <Button Content="View Files"  Name="btnViewMissingFiles" Click="btnViewMissingFiles_Click"/>
+                            <Button  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Content="View Files"  Name="btnViewMissingFiles" Click="btnViewMissingFiles_Click"/>
                         </StackPanel>
                     </InfoBar>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 20">

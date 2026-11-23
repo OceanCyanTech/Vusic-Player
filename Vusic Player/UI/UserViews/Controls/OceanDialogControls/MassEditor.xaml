@@ -35,7 +35,7 @@
                         <RowDefinition  Height="Auto"></RowDefinition>
                         <RowDefinition Height="170"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <InfoBar FontFamily="{StaticResource GlobalFontHolder}"  IsOpen="False" Name="ifbInformation" Severity="Success" Grid.Row="0"></InfoBar>
+                    <InfoBar ToolTipService.ToolTip="{x:Bind ifbInformation.Message, Mode=OneWay}" FontFamily="{StaticResource GlobalFontHolder}"  IsOpen="False" Name="ifbInformation" Severity="Success" Grid.Row="0"></InfoBar>
                     <TextBlock  FontFamily="{StaticResource GlobalFontHolder}" Text="0 items selected" Name="txtItemCount" Grid.Row="1" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                     <TextBox FontFamily="{StaticResource GlobalFontHolder}"  PlaceholderText="Type an album name..." CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Header="Album Name" Name="txtAlbum" Grid.Row="2">
                         <TextBox.Resources>
