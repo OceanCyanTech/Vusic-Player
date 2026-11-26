@@ -96,6 +96,12 @@ namespace Vusic_Player.Configuration
                 }
             }
         }
+        public static void DisposePlayerSafe()
+        {
+            Masterplayer.Stop();
+            Masterplayer.Dispose();
+            maintimer?.Stop();
+        }
         private const uint SHARD_PATHW = 0x00000003;
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
@@ -196,7 +202,8 @@ namespace Vusic_Player.Configuration
             //         UIController.CurrentPosition = targetTime.TotalSeconds;
             Configuration.Helper.UI.SeekInfoService.ShowSeek(-SeekServiceInstance.SkipBack);
         }
-        public static PlayerService PlayerServiceInstance = new PlayerService();
+        private static readonly Lazy<PlayerService> _instance = new(() => new PlayerService());
+        public static PlayerService PlayerServiceInstance => _instance.Value;
         public static SeekService SeekServiceInstance => SeekService.Instance;
         public static void SeekAhead()
         {
@@ -577,8 +584,33 @@ namespace Vusic_Player.Configuration
 
             await SettingsLoader.SaveSettingsAsync(currentSettings);
         }
-        public static DispatcherTimer statsTimerRealTime = new DispatcherTimer();
+        private static DispatcherTimer? _statsTimerRealTime;
 
+        public static DispatcherTimer statsTimerRealTime
+        {
+            get
+            {
+                if (_statsTimerRealTime == null)
+                {
+                    var dispatcherQueue = App.MainWindowInstance?.DispatcherQueue ?? DispatcherQueue.GetForCurrentThread();
+                    if (dispatcherQueue == null)
+                    {
+                        throw new InvalidOperationException("No DispatcherQueue available to create statsTimerRealTime.");
+                    }
+
+                    if (!dispatcherQueue.HasThreadAccess)
+                    {
+                        DispatcherTimer? created = null;
+                        dispatcherQueue.TryEnqueue(() => created = new DispatcherTimer());
+                        return created!;
+                    }
+
+                    _statsTimerRealTime = new DispatcherTimer();
+                }
+
+                return _statsTimerRealTime;
+            }
+        }
         public static void Pause()
         {
 

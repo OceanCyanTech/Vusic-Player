@@ -31,7 +31,6 @@ namespace Vusic_Player
         public static Window? OceanDialogInstance;
         public static Window? VideoDialogInstance;
         public static Window? SubtitleEditorDialogInstance;
-        //public AlbumContext? SelectedAlbum { get; set; }
         public static Frame? NavigationFrame { get; set; }
         public static Frame? MasterFrame { get; set; }
         public static Frame? VideoPlayerFrame { get; set; }

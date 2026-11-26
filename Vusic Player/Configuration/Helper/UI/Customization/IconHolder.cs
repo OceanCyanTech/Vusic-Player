@@ -88,7 +88,7 @@ namespace Vusic_Player.Configuration.Helper.UI.Customization
         private string _refreshimageicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/refreshimg.png";
         private string _defaultalbum = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/defaultalbum.png";
         private string _removeimage = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/removeimg.png";
-        private string _defaultartist = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/defaultartist.png";
+        private string _defaultartist = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/defaultartisthigh.png";
         private string _editicon = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/editicon.png";
         private string _instantplaylists = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/instantplaylists.png";
         private string _artistpictureonline = $"ms-appx:///Assets/Themes/{ThemeManager.Instance.GlobalTheme}/artistpictureonline.png";

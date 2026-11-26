@@ -22,11 +22,8 @@ namespace Vusic_Player.Configuration.ClassModels
             set => SetProperty(ref _albumName, value);
         }
 
-        public string AlbumCount
-        {
-            get => _albumCount;
-            set => SetProperty(ref _albumCount, value);
-        }
+        public string AlbumCount => $"{Songs.Count} {(Songs.Count == 1 ? "item" : "items")}";
+
 
         public string AlbumYear
         {

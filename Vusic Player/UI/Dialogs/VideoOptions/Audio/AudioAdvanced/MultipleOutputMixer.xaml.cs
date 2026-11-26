@@ -87,6 +87,12 @@ namespace Vusic_Player.UI.Dialogs.VideoOptions.Audio.AudioAdvanced
         public MultipleOutputMixer()
         {
             InitializeComponent();
+            this.Loaded += MultipleOutputMixer_Loaded;
+           
+        }
+
+        private void MultipleOutputMixer_Loaded(object sender, RoutedEventArgs e)
+        {
             if (PlayerService._multiAudioEngine != null)
             {
                 PlayerService._multiAudioEngine.DeviceDisconnected -= _multiAudioEngine_DeviceDisconnected;

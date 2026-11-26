@@ -459,7 +459,7 @@ namespace Vusic_Player.Pages.Views
                     }
 
                     var artistsongcount = $"• {artist.SongCount} {(artist.SongCount == 1 ? "item" : "items")}";
-                    albumsAll.Add(new ArtistDiscAlbumModel { AlbumName = artist.AlbumName, AlbumCount = artistsongcount, Thumbnail = fallbackUri, AlbumYear = $"• {artist.CalculatedYear.ToString()}", AlbumArtists = artist.Artists, Songs = artist.Songs });
+                    albumsAll.Add(new ArtistDiscAlbumModel { AlbumName = artist.AlbumName, Thumbnail = fallbackUri, AlbumYear = $"• {artist.CalculatedYear.ToString()}", AlbumArtists = artist.Artists, Songs = artist.Songs });
                 }
                 stkNoAlbums.Visibility = Visibility.Collapsed;
                 AlbumsGroupedCollection.Visibility = Visibility.Visible;

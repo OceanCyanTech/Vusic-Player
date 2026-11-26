@@ -30,6 +30,11 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
             var mediametadata = await VusicAPIMediaProperties.GetFileInfo(FilePath);
             return string.IsNullOrEmpty(mediametadata.Title) ? Path.GetFileNameWithoutExtension(FilePath) : mediametadata.Title;
         }
+        public static async Task<int> GetMediaYear(string FilePath)
+        {
+            var mediametadata = await VusicAPIMediaProperties.GetFileInfo(FilePath);
+            return mediametadata.Year;
+        }
         public static async Task<string> GetAudioArtist(string FilePath)
         {
             Debug.WriteLine("Audio  ARTIST Called for : " + FilePath);

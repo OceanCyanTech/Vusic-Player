@@ -7,7 +7,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vusic="using:Vusic_Player.UI.UserViews.Controls"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <local:ArtistItemCountString x:Key="ItemCountStringConverter"/>
+        <local:QueueItemCount x:Key="VisibilityOfMainContent"/>
+        <local:QueueItemCountBack x:Key="VisibilityOfEmptyContent"/>
+        <local:ControlEnabled x:Key="ControlEnabledBasedonCountConverter"/>
+        <local:ArtistAlbumCountString x:Key="AlbumCountStringConverter"/>
+    </Page.Resources>
     <Grid Margin="50, 20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MaxWidth="400"></ColumnDefinition>
@@ -84,10 +90,7 @@
                      Width="300"
                      Height="300"
                      Stroke="White"
-                     StrokeThickness="3"
-                     PointerPressed="cropCircle_PointerPressed"
-                     PointerMoved="cropCircle_PointerMoved"
-                     PointerReleased="cropCircle_PointerReleased"/>
+                  />
                     </Canvas>
                 </Grid>
             </ContentDialog>
@@ -171,7 +174,7 @@ Stretch="UniformToFill"/>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition/>
-                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
@@ -180,7 +183,7 @@ Stretch="UniformToFill"/>
                                         </Grid.ContextFlyout>
                                         <FontIcon FontSize="12" Glyph="{Binding Glyph}"/>
                                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="10, 0" Grid.Column="1" FontSize="16"  Text="{Binding Title}"/>
-                                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="2" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Artist}"/>
+                                        <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="2" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Artist}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -201,13 +204,13 @@ Stretch="UniformToFill"/>
                TextWrapping="Wrap" />
                 <StackPanel Margin="0, 20" Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="• Artist" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="10, 0" Text="• 0 Albums" Name="txtAlbumCount" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="0, 0" Text="• 0 Songs" Name="txtSongCount" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="10, 0" Text="{x:Bind albumCollection.Count, Mode=OneWay, Converter={StaticResource AlbumCountStringConverter }}" Name="txtAlbumCount" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="0, 0" Text="{x:Bind FoundSongs.Count, Mode=OneWay,Converter={StaticResource ItemCountStringConverter}}" Name="txtSongCount" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock   Text="&#xE823;" FontFamily="Segoe Fluent Icons" 
 Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0, 3" />
-                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="5, 0" Text="00:00" ToolTipService.ToolTip="Total Runtime of Artist" 
+                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="5, 0" ToolTipService.ToolTip="Total Runtime of Artist"  Text="{x:Bind FormatTotalDuration(FoundSongs.Count), Mode=OneWay}"
 Name="txtTotalDuration" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
             </StackPanel>
@@ -228,7 +231,7 @@ CornerRadius="16"
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 
-                    <Button Background="Transparent" BorderBrush="Transparent" Margin="5" Click="Button_Click_1" ToolTipService.ToolTip="Rename Artist" >
+                    <Button CornerRadius="12"  Background="Transparent" BorderBrush="Transparent" Margin="5" Click="btnOpenRenameTT_Click" ToolTipService.ToolTip="Rename Artist" >
                         <Button.Flyout>
                             <Flyout x:Name="flyoutRename">
                                 <Grid>
@@ -284,7 +287,7 @@ CornerRadius="16"
                         <Image Width="25" Source="{Binding EditIcon, Source={StaticResource GlobalIconHolder}}" />
                     </Button>
 
-                    <Button Background="Transparent" BorderBrush="Transparent" Name="btnPlayAll" Click="btnPlayAll_Click" Margin="5"
+                    <Button CornerRadius="12" Background="Transparent" BorderBrush="Transparent" Name="btnPlayAll" Click="btnPlayAll_Click" Margin="5"
             ToolTipService.ToolTip="Play all songs of Artist">
                         <StackPanel Orientation="Horizontal">
                             <Image Width="25" Source="{Binding Play, Source={StaticResource GlobalIconHolder}}" />
@@ -292,7 +295,7 @@ CornerRadius="16"
                         </StackPanel>
                     </Button>
 
-                    <ToggleButton Background="Transparent" BorderBrush="Transparent" Name="btnShuffle" Checked="btnShuffle_Checked" Unchecked="btnShuffle_Checked" Margin="5"
+                    <ToggleButton CornerRadius="12"  Background="Transparent" BorderBrush="Transparent" Name="btnShuffle" Checked="btnShuffle_Checked" Unchecked="btnShuffle_Checked" Margin="5"
                   ToolTipService.ToolTip="Shuffle playlist">
                         <ToggleButton.Resources>
                             <!-- 1. Background Fill when CHECKED -->
@@ -335,7 +338,7 @@ CornerRadius="16"
                         <Image Width="25" Source="{Binding ShuffleIcon, Source={StaticResource GlobalIconHolder}}" />
                     </ToggleButton>
 
-                    <Button Name="btnAddSongs" Margin="5" Background="Transparent" BorderBrush="Transparent" 
+                    <Button CornerRadius="12"  Name="btnAddSongs" Margin="5" Background="Transparent" BorderBrush="Transparent" 
             ToolTipService.ToolTip="Add songs to this Artist" Click="btnAddSongs_Click">
                         <StackPanel Orientation="Horizontal">
                             <Image Width="25" Source="{Binding AddIcon, Source={StaticResource GlobalIconHolder}}" />
@@ -343,7 +346,7 @@ CornerRadius="16"
                         </StackPanel>
 
                     </Button>
-                    <Button Name="btnSetArtistProfilePicture" Margin="5" Background="Transparent" BorderBrush="Transparent" 
+                    <Button  CornerRadius="12"  Name="btnSetArtistProfilePicture" Margin="5" Background="Transparent" BorderBrush="Transparent" 
 ToolTipService.ToolTip="Set Artist Cover">
                         <Button.Flyout>
                             <Flyout>
@@ -370,7 +373,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                     </Button>
                 </ItemsControl>
             </Border>
-            <Button Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="3" Margin="0, 20" HorizontalAlignment="Center" Content="Add all Artist Songs to Queue" Click="btnAddtoQueue_Click"></Button>
+            <Button Name="btnAddtoQueue" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"  Grid.Row="3" Margin="0, 20" HorizontalAlignment="Center" Content="Add All Artist's Songs to Queue" Click="btnAddtoQueue_Click"></Button>
 
         </Grid>
         <TeachingTip Name="ttAddedtoQueue" IsOpen="False">
@@ -392,7 +395,7 @@ ToolTipService.ToolTip="Set Artist Cover">
 
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleLargeTextBlockStyle}" Text="Artist Discography" ></TextBlock>
-                    <Button Margin="20, 0" Background="Transparent" BorderBrush="Transparent" Name="btnRefresh" Click="btnRefresh_Click" ToolTipService.ToolTip="Refresh Discography">
+                    <Button CornerRadius="12"  Margin="20, 0" Background="Transparent" BorderBrush="Transparent" Name="btnRefresh" Click="btnRefresh_Click" ToolTipService.ToolTip="Refresh Discography">
                         <FontIcon Glyph="&#xE72C;" FontSize="16"></FontIcon>
                     </Button>
                 </StackPanel>
@@ -418,10 +421,10 @@ ToolTipService.ToolTip="Set Artist Cover">
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0" Text="Your most played"></TextBlock>
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtMostPlayedCount" Text="• 0 items"></TextBlock>
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtMostPlayedDuration" Text="• 00:00"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtMostPlayedCount" Text="{x:Bind mostplayedsongs.Count, Mode=OneWay, Converter={StaticResource ItemCountStringConverter}}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtMostPlayedDuration" Text="{x:Bind FormatMostPlayedDuration(mostplayedsongs.Count), Mode=OneWay}"></TextBlock>
                 <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="10">
-                    <Button Click="btnPlayAllMostPlayed_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllMostPlayed" Grid.Row="3" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                    <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"   Click="btnPlayAllMostPlayed_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllMostPlayed" Grid.Row="3" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
                         <Button.Resources>
                             <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
                             <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
@@ -444,18 +447,18 @@ ToolTipService.ToolTip="Set Artist Cover">
                         </Button.Resources>
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <FontIcon Glyph="&#xE768;"/>
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play All"/>
+                            <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}"  Text="Play All"/>
                         </StackPanel>
                     </Button>
-                    <Button Click="btnAddtoQueueMostPlayed_Click" ToolTipService.ToolTip="Add all songs in list to Queue" Name="btnAddtoQueueMostPlayed" Grid.Row="3" >
+                    <Button CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Click="btnAddtoQueueMostPlayed_Click" ToolTipService.ToolTip="Add all songs in list to Queue" Name="btnAddtoQueueMostPlayed" Grid.Row="3" >
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <ImageIcon  Width="20"    Source="/Assets/addtoqueuefonticon.png"/>
-                            <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Add to Queue"/>
+                            <ImageIcon  Width="20"    Source="{Binding AddToQueue , Source={StaticResource GlobalIconHolder}}"/>
+                            <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}"  Text="Add to Queue"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play songs of this artist to show them here!" Grid.Row="4" Name="txtEmptyMostPlayed" Visibility="Visible"></TextBlock>
-                <vusic:ListViewMedia MediaSource="ArtistNoRearrange" Grid.Row="4" Visibility="Collapsed" AllowRearranging="False" x:Name="lstViewMasterMostPlayed"></vusic:ListViewMedia>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play songs of this artist to show them here!" Grid.Row="4" Name="txtEmptyMostPlayed" Visibility="{x:Bind mostplayedsongs.Count, Mode=OneWay, Converter={StaticResource VisibilityOfEmptyContent}}"></TextBlock>
+                <vusic:ListViewMedia MediaSource="ArtistNoRearrange" Grid.Row="4" ItemsSource="{x:Bind mostplayedsongs, Mode=OneWay}" Visibility="{x:Bind mostplayedsongs.Count, Mode=OneWay, Converter={StaticResource VisibilityOfMainContent}}" AllowRearranging="False" x:Name="lstViewMasterMostPlayed"></vusic:ListViewMedia>
             </Grid>
             <Grid Name="grdAlbums" Grid.Row="2" Visibility="Collapsed" RowSpacing="20">
                 <Grid.RowDefinitions>
@@ -464,7 +467,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Spacing="20">
-                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleTextBlockStyle}" Text="Albums"></TextBlock>
+                    <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource TitleTextBlockStyle}" Text="Albums"></TextBlock>
                     <CheckBox FontFamily="{StaticResource GlobalFontHolder}"  Content="Select" Margin="0, 5" Checked="chckSelectAlbums_Checked" Unchecked="chckSelectAlbums_Checked" Name="chckSelectAlbums">
                         <CheckBox.Resources>
                             <!-- Checked State (Background box fill) -->
@@ -494,27 +497,27 @@ ToolTipService.ToolTip="Set Artist Cover">
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Visibility="Collapsed" Spacing="10" Name="stkMultiOptionsAlbums">
-                    <Button Name="btnRemoveSelections" Click="btnRemoveSelections_Click" ToolTipService.ToolTip="Remove Albums" Margin="0, 10" >
+                    <Button IsEnabled="False"  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Name="btnRemoveSelections" Click="btnRemoveSelections_Click" ToolTipService.ToolTip="Remove Albums" Margin="0, 10" >
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
+                            <Image Source="{Binding DeleteAlbum, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                         </StackPanel>
                     </Button>
 
-                    <Button Name="btnSelectAll" ToolTipService.ToolTip="Select All" Margin="0, 10" Click="btnSelectAll_Click">
+                    <Button  CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Name="btnSelectAll" ToolTipService.ToolTip="Select All" Margin="0, 10" Click="btnSelectAll_Click">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="{Binding SelectAll, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                         </StackPanel>
                     </Button>
 
-                    <Button Name="btnClearSelection" ToolTipService.ToolTip="Clear Selection" Margin="0, 10" Click="btnClearSelection_Click">
+                    <Button  IsEnabled="False" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  Name="btnClearSelection" ToolTipService.ToolTip="Clear Selection" Margin="0, 10" Click="btnClearSelection_Click">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="{Binding Removeicon, Source={StaticResource GlobalIconHolder}}" Width="20"></Image>
                         </StackPanel>
                     </Button>
                 </StackPanel>
 
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyLargeTextBlockStyle}" Text="There are no albums for this artist." Name="txtEmptyAlbums" Visibility="Visible" Grid.Row="2"></TextBlock>
-                <GridView Visibility="Collapsed" SelectionMode="Single" Grid.Row="2" SelectionChanged="grdViewAlbums_SelectionChanged" Name="grdViewAlbums" IsItemClickEnabled="True" CanReorderItems="True" AllowDrop="True" CanDragItems="True" ItemClick="grdViewAlbums_ItemClick">
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Style="{StaticResource BodyLargeTextBlockStyle}" Text="There are no albums for this artist." Name="txtEmptyAlbums" Visibility="{x:Bind albumCollection.Count, Converter={StaticResource VisibilityOfEmptyContent}, Mode=OneWay}" Grid.Row="2"></TextBlock>
+                <GridView SelectionChanged="grdViewAlbums_SelectionChanged" Visibility="{x:Bind albumCollection.Count, Converter={StaticResource VisibilityOfMainContent}, Mode=OneWay}" SelectionMode="Single" Grid.Row="2" ItemsSource="{x:Bind albumCollection, Mode=OneWay}"  Name="grdViewAlbums" IsItemClickEnabled="True" CanReorderItems="True" AllowDrop="True" CanDragItems="True" ItemClick="grdViewAlbums_ItemClick">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel ToolTipService.ToolTip="{Binding AlbumName}" Width="150">
@@ -530,11 +533,13 @@ ToolTipService.ToolTip="Set Artist Cover">
                                                 <FontIcon Glyph="&#xE8AC;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="View Album Info" Name="mnftAlbumInfo" Click="mnftAlbumInfo_Click" >
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE90B;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Change Album Cover" Name="mnftChangeAlbumCover" Click="mnftChangeAlbumCover_Click" >
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE93C;"></FontIcon>
@@ -592,9 +597,9 @@ ToolTipService.ToolTip="Set Artist Cover">
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}" Text="Singles"></TextBlock>
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtSinglesCount" Text="• 0 items"></TextBlock>
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtSinglesDuration" Text="• 00:00"></TextBlock>
-                <Button Click="btnPlayAllSingles_Click" ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllSingles" Grid.Row="3" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}" ToolTipService.ToolTip="Total number of singles"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="1" Name="txtSinglesCount" Text="{x:Bind Singles.Count, Mode=OneWay, Converter={StaticResource ItemCountStringConverter }}"></TextBlock>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"   Foreground="{ThemeResource TextFillColorSecondaryBrush}" ToolTipService.ToolTip="Total duration of singles"  Style="{StaticResource BodyTextBlockStyle}" Grid.Row="2" Name="txtSinglesDuration" Text="{x:Bind FormatSinglesDuration(Singles.Count), Mode=OneWay}"></TextBlock>
+                <Button Click="btnPlayAllSingles_Click" CornerRadius="12" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"  ToolTipService.ToolTip="Play All Songs in List" Name="btnPlayAllSingles" Grid.Row="3" Style="{StaticResource AccentButtonStyle}"  Background="{StaticResource GlobalAccentColor}" >
                     <Button.Resources>
                         <SolidColorBrush x:Key="AccentButtonBackground" Color="{StaticResource GlobalAccentColor}"/>
                         <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
@@ -620,8 +625,8 @@ ToolTipService.ToolTip="Set Artist Cover">
                         <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Text="Play All"/>
                     </StackPanel>
                 </Button>
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="4" Text="There are no singles for this artist." Style="{StaticResource BodyLargeTextBlockStyle}" Visibility="Visible" Name="txtEmptySingles"></TextBlock>
-                <vusic:ListViewMedia x:Name="lstViewSingles" Visibility="Collapsed" MediaSource="Artist" Grid.Row="4"></vusic:ListViewMedia>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="4" Text="There are no singles for this artist." Style="{StaticResource BodyLargeTextBlockStyle}" Visibility="{x:Bind Singles.Count, Mode=OneWay, Converter={StaticResource VisibilityOfEmptyContent}}" Name="txtEmptySingles"></TextBlock>
+                <vusic:ListViewMedia ItemsSource="{x:Bind Singles, Mode=OneWay}" x:Name="lstViewSingles" Visibility="{x:Bind Singles.Count, Mode=OneWay, Converter={StaticResource VisibilityOfMainContent}}" MediaSource="Artist" Grid.Row="4"></vusic:ListViewMedia>
             </Grid>
             <Grid Name="grdAllSongs" Grid.Row="2" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -632,7 +637,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtPlaylistContentHeader" Style="{StaticResource TitleTextBlockStyle}" Text="All Songs"></TextBlock>
                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="10,5" Style="{StaticResource BaseTextBlockStyle}" ToolTipService.ToolTip="Media will play shuffled" Text="shuffled" Name="txtShuffled" Visibility="Collapsed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"></TextBlock>
                 </StackPanel>
-                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1" Text="There are no songs for this artist." Style="{StaticResource BodyLargeTextBlockStyle}" Name="txtEmptySongs" Visibility="Collapsed"/>
+                <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="1" Text="There are no songs for this artist." Style="{StaticResource BodyLargeTextBlockStyle}" Name="txtEmptySongs" Visibility="{x:Bind FoundSongs.Count, Mode=OneWay, Converter={StaticResource VisibilityOfEmptyContent}}"/>
 
                 <TeachingTip Name="ttRenameAlbum" Visibility="Collapsed" Title="Rename Album">
                     <Grid RowSpacing="15" Margin="0,10">
@@ -702,8 +707,8 @@ ToolTipService.ToolTip="Set Artist Cover">
                         </Button>
                     </Grid>
                 </TeachingTip>
-                <vusic:ListViewMedia 
-Grid.Row="1"
+                <vusic:ListViewMedia Visibility="{x:Bind FoundSongs.Count, Mode=OneWay, Converter={StaticResource VisibilityOfMainContent}}"
+Grid.Row="1" ItemsSource="{x:Bind FoundSongs, Mode=OneWay}"
                  
 x:Name="lstViewAllSongs" 
 MediaSource="Artist">

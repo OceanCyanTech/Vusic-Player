@@ -117,8 +117,6 @@ namespace Vusic_Player.Configuration.ClassModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
-        // Maintained for backward compatibility or explicit recalculations
         public void NotifyCountChanged()
         {
             OnPropertyChanged(nameof(PlaylistCount));

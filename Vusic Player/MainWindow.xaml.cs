@@ -119,12 +119,12 @@ namespace Vusic_Player
             // Clean up on window closed
             this.Closed += (s, e) =>
             {
+                PlayerService.DisposePlayerSafe();
                 MediaControlSystem.Unregister(_hwnd);
                 RemoveWindowSubclass(_hwnd, _subclassProc, 0);
                 OceanContentDialog.KillDlg();
                 VideoOptionsWindow.KillDialog();
                 SubtitleEditorWindow.KillDialog();
-
             };
 
 

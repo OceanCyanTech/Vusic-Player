@@ -1,7 +1,10 @@
+// Copyright © OceanCyan Tech 2026 - Vusic Player Version 1.0.8.0 (Build 241126) . All Rights Reserved.
+// Licensed under the GNU License. See LICENSE in the project root.
+
 using CommunityToolkit.WinUI;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -11,10 +14,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Vusic_Player.Configuration.AppConfig;
@@ -33,16 +36,105 @@ using Windows.Storage;
 
 namespace Vusic_Player.Pages.Views;
 
-public sealed partial class ArtistView : Page
+public class ArtistItemCountString : IValueConverter
 {
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value is int count)
+        {
+            return $"• {count} {(count == 1 ? "song" : "songs")}";
+        }
+
+        return "• 0 songs";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+public class ArtistAlbumCountString : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value is int count)
+        {
+            return $"• {count} {(count == 1 ? "album" : "albums")}";
+        }
+
+        return "• 0 albums";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+
+public sealed partial class ArtistView : Page, INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private readonly PlaylistDurationString _durationConverter = new();
+    private readonly QueueDurationString _durationConverterWithBulletPoint = new();
     public ArtistView()
     {
         InitializeComponent();
 
-        FileSystemWatch.FileModified -= FileSystemWatch_FileModified;
-        FileSystemWatch.FileModified += FileSystemWatch_FileModified;
         albumCollection.CollectionChanged -= AlbumCollection_CollectionChanged;
         albumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
+    }
+    private ObservableCollection<SongModel> _foundSongs = new();
+    public ObservableCollection<SongModel> FoundSongs
+    {
+        get => _foundSongs;
+        set
+        {
+            if (_foundSongs != value)
+            {
+                _foundSongs = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FoundSongs)));
+            }
+        }
+    }
+    private ObservableCollection<SongModel> _singles = new();
+    public ObservableCollection<SongModel> Singles
+    {
+        get => _singles;
+        set
+        {
+            if (_singles != value)
+            {
+                _singles = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Singles)));
+            }
+        }
+    }
+    private ObservableCollection<SongModel> _mostplayed = new();
+    public ObservableCollection<SongModel> MostPlayed
+    {
+        get => _mostplayed;
+        set
+        {
+            if (_mostplayed != value)
+            {
+                _mostplayed = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MostPlayed)));
+            }
+        }
+    }
+    public string FormatTotalDuration(int count)
+    {
+        return (string)_durationConverter.Convert(FoundSongs, typeof(string), null!, string.Empty);
+    }
+
+    public string FormatSinglesDuration(int count)
+    {
+        return (string)_durationConverterWithBulletPoint.Convert(Singles, typeof(string), null!, string.Empty);
+    }
+    public string FormatMostPlayedDuration(int count)
+    {
+        return (string)_durationConverterWithBulletPoint.Convert(mostplayedsongs, typeof(string), null!, string.Empty);
     }
 
     private void AlbumCollection_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -55,190 +147,11 @@ public sealed partial class ArtistView : Page
 
     private readonly ConcurrentDictionary<string, CancellationTokenSource> _debouncers = new();
 
-    private void FileSystemWatch_FileModified(string filePath, string arg2, string arg3, string arg4, TimeSpan duration, string genre)
-    {
-        // If an update is already pending for this file, cancel it and restart the timer
-        if (_debouncers.TryRemove(filePath, out var existingCts))
-        {
-            existingCts.Cancel();
-            existingCts.Dispose();
-        }
-
-        var cts = new CancellationTokenSource();
-        _debouncers[filePath] = cts;
-
-        Task.Run(async () =>
-        {
-            try
-            {
-                // Wait 300ms for Windows Explorer to finish writing and close the file
-                await Task.Delay(300, cts.Token);
-
-                if (cts.Token.IsCancellationRequested) return;
-
-                // Retry reading tags in case File Explorer still holds a brief lock
-                for (int attempt = 0; attempt < 5; attempt++)
-                {
-                    try
-                    {
-                        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        var abstraction = new SimpleStreamAbstraction(filePath, stream);
-                        using var tagFile = TagLib.File.Create(abstraction);
-
-                        string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
-                            ? Path.GetFileNameWithoutExtension(filePath)
-                            : tagFile.Tag.Title;
-                        var tag = tagFile.Tag;
-                        string artist = string.IsNullOrWhiteSpace(string.Join(", ", tag.AlbumArtists))
-                              ? (string.IsNullOrWhiteSpace(tag.FirstPerformer) ? "Unknown Artist" : tag.FirstPerformer)
-                              : string.Join(", ", tag.AlbumArtists);
-
-                        string album = string.IsNullOrWhiteSpace(tagFile.Tag.Album)
-                            ? "Unknown Album"
-                            : tagFile.Tag.Album;
-
-                        TimeSpan duration = tagFile.Properties.Duration;
-
-                        // Update SQLite Database
-                        await DatabaseService.UpdateSongMetadataAsync(filePath, title, artist, album);
-
-                        // Safely dispatch to UI Thread once
-                        DispatcherQueue.TryEnqueue(() =>
-                        {
-                            UpdateSongInCollections(filePath, album, artist, title, duration);
-                        });
-
-                        break; // Success! Exit retry loop
-                    }
-                    catch (Exception ex) when (ex is IOException || ex is COMException)
-                    {
-                        // File is still locked by Explorer; wait 200ms and try again
-                        await Task.Delay(200, cts.Token);
-                    }
-                }
-            }
-            catch (TaskCanceledException)
-            {
-                // Normal - superseded by a newer event for the same file
-            }
-            finally
-            {
-                _debouncers.TryRemove(filePath, out _);
-                cts.Dispose();
-            }
-        });
-    }
     private CancellationTokenSource? _albumReloadCts;
 
-    private async void UpdateSongInCollections(string filePath, string newAlbum, string newArtist, string newTitle, TimeSpan duration)
-    {
-        string currentFilter = txtArtistName?.Text?.Trim() ?? "";
-        var collections = new ObservableCollection<SongModel>[] { FoundSongs, mostplayedsongs, Singles };
-        bool foundInAny = false;
-
-        bool matchesArtist = string.IsNullOrEmpty(currentFilter) ||
-                             newArtist.Contains(currentFilter, StringComparison.OrdinalIgnoreCase);
-
-        foreach (var collection in collections)
-        {
-            if (collection == null) continue;
-
-            var song = collection.FirstOrDefault(s => s.FilePath == filePath);
-            if (song != null)
-            {
-                foundInAny = true;
-                if (!matchesArtist)
-                {
-                    collection.Remove(song);
-                    Debug.WriteLine($"[Watcher] Removed (Artist changed/unmatched): {filePath}");
-                }
-                else
-                {
-                    song.AlbumName = newAlbum;
-                    song.Artist = newArtist;
-                    song.Title = newTitle;
-                    song.SongDuration = duration;
-                    Debug.WriteLine($"[Watcher] Updated: {filePath}");
-                }
-            }
-        }
-
-        if (!foundInAny && matchesArtist)
-        {
-            FoundSongs?.Add(new SongModel
-            {
-                FilePath = filePath,
-                AlbumName = newAlbum,
-                Artist = newArtist,
-                Title = newTitle,
-                SongDuration = duration
-            });
-            Debug.WriteLine($"[Watcher] Added new track: {filePath}");
-        }
-        if (FoundSongs != null)
-        {
-            txtSongCount.Text = $"• {FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
-            TotalDuration();
-        }
-        // DEBOUNCE LoadAlbums: Wait until ALL batch file watcher events finish before rebuilding albums view
-        _albumReloadCts?.Cancel();
-        _albumReloadCts = new CancellationTokenSource();
-        var token = _albumReloadCts.Token;
-
-        try
-        {
-            await Task.Delay(500, token); // Wait 500ms after last watcher event
-            if (!token.IsCancellationRequested)
-            {
-                LoadAlbums();
-            }
-        }
-        catch (TaskCanceledException)
-        {
-            // Normal: a new file watcher event reset the timer
-        }
-    }
-    private async void FoundSongs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-        if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove ||
-            e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add ||
-            e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move
-            )
-        {
-
-            txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
-            TotalDuration();
-        }
-        txtEmptySongs.Visibility = FoundSongs.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-        lstViewAllSongs.Visibility = FoundSongs.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
-    }
-    public ObservableCollection<SongModel> FoundSongs { get; set; } = new ObservableCollection<SongModel>();
     ObservableCollection<ArtistDiscAlbumModel> albumCollection = new ObservableCollection<ArtistDiscAlbumModel>();
-    public ObservableCollection<SongModel> Singles { get; set; } = new ObservableCollection<SongModel>();
     HashSet<string> uniqueArtists = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     ObservableCollection<string> AlbumsList { get; set; } = new();
-    private void LoadSingles()
-    {
-        Singles.Clear();
-        var singlesongs = FoundSongs.Where(p => p.AlbumName == "Unknown Album");
-        Singles = new ObservableCollection<SongModel>(singlesongs);
-
-        txtEmptySingles.Visibility = Singles.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-
-        lstViewSingles.Visibility = Singles.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
-        lstViewSingles.ItemsSource = Singles;
-        txtSinglesCount.Text = $"• {Singles.Count} {(Singles.Count == 1 ? "item" : "items")}";
-        TimeSpan? timeSpan = TimeSpan.Zero;
-        foreach (var item in Singles.ToList())
-        {
-
-            timeSpan += item.SongDuration;
-        }
-        string formatted = timeSpan is TimeSpan ts
-          ? (ts.TotalHours >= 1 ? ts.ToString(@"h\:mm\:ss") : ts.ToString(@"m\:ss"))
-          : "0:00";
-        txtSinglesDuration.Text = "• " + formatted;
-    }
 
     private bool _isRenaming = false;
 
@@ -267,104 +180,10 @@ public sealed partial class ArtistView : Page
         }
 
         return new BitmapImage(fallbackUri);
-    }
+    }]
+    ALBUMS CONTEXT FLYOUT OPTIONS FAIL TO MAKE CHANGES IN RAWSONGS
     private readonly SemaphoreSlim _loadLock = new SemaphoreSlim(1, 1);
 
-    private async Task LoadAlbums()
-    {
-        // Prevent overlapping executions if triggered multiple times
-        if (!await _loadLock.WaitAsync(0))
-            return;
-
-        try
-        {
-            // 1. Deduplicate source songs by file path (case-insensitive)
-            var distinctSongs = FoundSongs
-                .Where(song => !string.IsNullOrWhiteSpace(song?.AlbumName) && !string.IsNullOrWhiteSpace(song?.FilePath))
-                .DistinctBy(song => song.FilePath.Trim(), StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            // 2. Group albums with case-insensitive and trimmed names
-            var groupedAlbums = distinctSongs
-                .GroupBy(song => song.AlbumName.Trim(), StringComparer.OrdinalIgnoreCase)
-                .Select(group =>
-                {
-                    var years = group
-                        .Select(song =>
-                        {
-                            try
-                            {
-                                using var file = TagLib.File.Create(song.FilePath);
-                                return (int)file.Tag.Year;
-                            }
-                            catch
-                            {
-                                return 0;
-                            }
-                        })
-                        .Where(year => year > 0)
-                        .ToList();
-
-                    int finalYear = 0;
-                    if (years.Count > 0)
-                    {
-                        var yearGroups = years.GroupBy(y => y).OrderByDescending(g => g.Count()).ToList();
-                        bool isAllVaried = yearGroups.All(g => g.Count() == yearGroups[0].Count());
-                        finalYear = isAllVaried ? years[0] : yearGroups[0].Key;
-                    }
-
-                    return new
-                    {
-                        // Preserve the display casing from the first entry in the group
-                        AlbumName = group.First().AlbumName.Trim(),
-                        CalculatedYear = finalYear,
-                        Songs = group.ToList()
-                    };
-                })
-                .OrderBy(result => result.AlbumName, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            // 3. Pre-load thumbnails asynchronously before clearing the bound UI collection
-            var newAlbums = new List<ArtistDiscAlbumModel>();
-
-            foreach (var albumGroup in groupedAlbums)
-            {
-                int countsongs = albumGroup.Songs.Count;
-                string countsong = $"{countsongs} {(countsongs == 1 ? "item" : "items")}";
-
-                BitmapImage img = await LoadExistingThumbnailAsync(albumGroup.AlbumName);
-
-                newAlbums.Add(new ArtistDiscAlbumModel
-                {
-                    AlbumName = albumGroup.AlbumName,
-                    AlbumCount = countsong,
-                    AlbumCoverThumbnail = img,
-                    AlbumYear = albumGroup.CalculatedYear > 0 ? albumGroup.CalculatedYear.ToString() : string.Empty,
-                    Songs = albumGroup.Songs
-                });
-            }
-
-            // 4. Reset and populate collection on UI thread atomically
-            AlbumsList.Clear();
-            albumCollection.Clear();
-
-            foreach (var album in newAlbums)
-            {
-                albumCollection.Add(album);
-            }
-
-            grdViewAlbums.ItemsSource = albumCollection;
-
-            bool hasItems = albumCollection.Count > 0;
-            txtEmptyAlbums.Visibility = hasItems ? Visibility.Collapsed : Visibility.Visible;
-            grdViewAlbums.Visibility = hasItems ? Visibility.Visible : Visibility.Collapsed;
-            txtAlbumCount.Text = $"• {albumCollection.Count} {(albumCollection.Count == 1 ? "Album" : "Albums")}";
-        }
-        finally
-        {
-            _loadLock.Release();
-        }
-    }
     private async void LoadSelectorBarSelectionSettings()
     {
         var currentSettings = await SettingsLoader.LoadSettingsAsync();
@@ -372,17 +191,17 @@ public sealed partial class ArtistView : Page
         if (selectorBarindex == 0)
         {
             selBarMain.SelectedItem = selBarItemMostPlayed;
-            LoadMostPlayed();
+            await LoadMostPlayed(txtArtistName.Text);
         }
         else if (selectorBarindex == 1)
         {
             selBarMain.SelectedItem = selBarItemAlbum;
-            LoadAlbums();
+            await LoadAlbums();
         }
         else if (selectorBarindex == 2)
         {
             selBarMain.SelectedItem = selBarItemSingles;
-            LoadSingles();
+            await LoadSingles(txtArtistName.Text);
         }
         else if (selectorBarindex == 3)
         {
@@ -413,6 +232,231 @@ public sealed partial class ArtistView : Page
         await SettingsLoader.SaveSettingsAsync(currentSettings);
 
     }
+    private async void LoadArtistImage(string artistName)
+    {
+        Uri fallbackUri = new Uri(IconHolder.Instance.DefaultArtist);
+        var currentSettings = await SettingsLoader.LoadSettingsAsync();
+        var existingArtist = currentSettings.ArtistsList?
+
+          .FirstOrDefault(a => a.Name == txtArtistName.Text);
+        if (existingArtist != null && !string.IsNullOrEmpty(existingArtist.Thumbnail))
+        {
+            if (!File.Exists(existingArtist.Thumbnail))
+            {
+                imgArtist.ProfilePicture = new BitmapImage(new Uri(existingArtist.Thumbnail));
+                Logger.Log($"Requested Artist profile picture doesn't exist on disk: {existingArtist.Thumbnail}", "ArtistPage.LoadArtistPicture", Logger.LogLevelType.Error);
+
+                return;
+            }
+            try
+            {
+                imgArtist.ProfilePicture = new BitmapImage(new Uri(existingArtist.Thumbnail));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Failed to load artist profile picture, reverting to default: {ex.Message}", "ArtistPage", Logger.LogLevelType.Error);
+                imgArtist.ProfilePicture = new BitmapImage(fallbackUri);
+            }
+        }
+        else
+        {
+            imgArtist.ProfilePicture = new BitmapImage(fallbackUri);
+        }
+    }
+    CancellationTokenSource? ct;
+    CancellationTokenSource? ctsingles;
+    CancellationTokenSource? ctmostplayed;
+    private async Task LoadArtistMedia(string artistName)
+    {
+        ct?.Cancel();
+        ct?.Dispose();
+        ct = new CancellationTokenSource();
+        CancellationToken token = ct.Token;
+        FoundSongs.Clear();
+        try
+        {
+            var songModels = await Task.Run(() =>
+            {
+                var results = new List<SongModel>();
+
+                foreach (var song in FilesInDatabase.rawSongs)
+                {
+                    token.ThrowIfCancellationRequested();
+                    if (song.Artist is not null && song.Artist.Contains(artistName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        results.Add(new SongModel
+                        {
+                            Title = song.Title,
+                            AlbumName = song.AlbumName,
+                            Artist = song.Artist,
+                            FilePath = song.FilePath,
+                            SongDuration = song.SongDuration,
+                            IsFileMissing = !File.Exists(song.FilePath)
+                        });
+                    }
+                }
+                return results;
+            }, token);
+            token.ThrowIfCancellationRequested();
+            FoundSongs = new ObservableCollection<SongModel>(songModels);
+        }
+        catch (OperationCanceledException)
+        {
+            //ignore
+        }
+    }
+    private async Task LoadSingles(string artistName)
+    {
+        ctsingles?.Cancel();
+        ctsingles?.Dispose();
+        ctsingles = new CancellationTokenSource();
+        CancellationToken token = ctsingles.Token;
+        Singles.Clear();
+        try
+        {
+            var songModels = await Task.Run(() =>
+            {
+                var results = new List<SongModel>();
+                foreach (var song in FilesInDatabase.rawSongs)
+                {
+                    token.ThrowIfCancellationRequested();
+                    if (song.Artist.Contains(artistName, StringComparison.OrdinalIgnoreCase) && (string.Equals(song.AlbumName, "Unknown Album", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(song.AlbumName)))
+                    {
+                        results.Add(new SongModel
+                        {
+                            Title = song.Title,
+                            AlbumName = "Unknown Album",
+                            Artist = song.Artist,
+                            FilePath = song.FilePath,
+                            SongDuration = song.SongDuration,
+                            IsFileMissing = !File.Exists(song.FilePath)
+                        });
+                    }
+                }
+                return results;
+            }, token);
+            token.ThrowIfCancellationRequested();
+            Singles = new ObservableCollection<SongModel>(songModels);
+        }
+        catch (OperationCanceledException)
+        {
+            //ignore
+        }
+    }
+    private async Task LoadMostPlayed(string artistName)
+    {
+        ctmostplayed?.Cancel();
+        ctmostplayed?.Dispose();
+        ctmostplayed = new CancellationTokenSource();
+        CancellationToken token = ctmostplayed.Token;
+        mostplayedsongs.Clear();
+        try
+        {
+            var currentSettings = await SettingsLoader.LoadSettingsAsync();
+            var top5 = await Task.Run(() =>
+            {
+                var sortedSongs = currentSettings.RecentMusic.OrderByDescending(x => x.PlayCount).ToList();
+                var results = new ObservableCollection<SongModel>();
+                foreach (var song in sortedSongs)
+                {
+                    token.ThrowIfCancellationRequested();
+                    var existingsong = FoundSongs.FirstOrDefault(p => p.FilePath == song.SongPath);
+                    if (existingsong != null)
+                    {
+                        results.Add(existingsong);
+                    }
+                }
+                return results;
+            }, token);
+            token.ThrowIfCancellationRequested();
+
+            foreach (var item in top5)
+            {
+                mostplayedsongs.Add(item);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            //ignore
+        }
+    }
+    private async Task LoadAlbums()
+    {
+        if (!await _loadLock.WaitAsync(0))
+            return;
+
+        try
+        {
+            var distinctSongs = FoundSongs
+                .Where(song => !string.IsNullOrWhiteSpace(song?.AlbumName) && !string.IsNullOrWhiteSpace(song?.FilePath))
+                .DistinctBy(song => song.FilePath.Trim(), StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            var groupedAlbums = distinctSongs
+                .GroupBy(song => song.AlbumName.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Select(async group =>
+                {
+                    var yearTasks = group
+                        .Select(async song =>
+                        {
+                            try
+                            {
+                                var metadatayear = await MetadataFetcher.GetMediaYear(song.FilePath);
+                                return metadatayear;
+                            }
+                            catch
+                            {
+                                return 0;
+                            }
+                        })
+                        .ToList();
+                    int[] years = await Task.WhenAll(yearTasks);
+                    int finalYear = 0;
+                    if (years.Length > 0)
+                    {
+                        var yearGroups = years.GroupBy(y => y).OrderByDescending(g => g.Count()).ToList();
+                        bool isAllVaried = yearGroups.All(g => g.Count() == yearGroups[0].Count());
+                        finalYear = isAllVaried ? years[0] : yearGroups[0].Key;
+                    }
+
+                    return new
+                    {
+                        AlbumName = group.First().AlbumName.Trim(),
+                        CalculatedYear = finalYear,
+                        Songs = group.ToList()
+                    };
+                });
+            var unsortedAlbums = await Task.WhenAll(groupedAlbums);
+            var sortedAlbums = unsortedAlbums.OrderBy(result => result.AlbumName, StringComparer.OrdinalIgnoreCase).ToList();
+            var newAlbums = new List<ArtistDiscAlbumModel>();
+
+            foreach (var albumGroup in sortedAlbums)
+            {
+                int countsongs = albumGroup.Songs.Count;
+                string countsong = $"{countsongs} {(countsongs == 1 ? "item" : "items")}";
+
+                BitmapImage img = await LoadExistingThumbnailAsync(albumGroup.AlbumName);
+
+                newAlbums.Add(new ArtistDiscAlbumModel
+                {
+                    AlbumName = albumGroup.AlbumName,
+                    AlbumCoverThumbnail = img,
+                    AlbumYear = albumGroup.CalculatedYear > 0 ? albumGroup.CalculatedYear.ToString() : string.Empty,
+                    Songs = albumGroup.Songs
+                });
+            }
+            albumCollection.Clear();
+
+            foreach (var album in newAlbums)
+            {
+                albumCollection.Add(album);
+            }
+        }
+        finally
+        {
+            _loadLock.Release();
+        }
+    }
+
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         if (e.Parameter is string selectedSongArtist)
@@ -421,129 +465,45 @@ public sealed partial class ArtistView : Page
 
             imgArtist.DisplayName = txtArtistName.Text;
 
-            Uri fallbackUri = new Uri(IconHolder.Instance.DefaultArtist);
-
-            var currentSettings = await SettingsLoader.LoadSettingsAsync();
-
-            var existingArtist = currentSettings.ArtistsList?
-
-            .FirstOrDefault(a => a.Name == txtArtistName.Text);
-
-            if (existingArtist != null && !string.IsNullOrEmpty(existingArtist.Thumbnail))
-            {
-                try
-                {
-                    imgArtist.ProfilePicture = new BitmapImage(new Uri(existingArtist.Thumbnail));
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log($"Failed to load thumbnail, reverting to default: {ex.Message}", "ArtistPage", Logger.LogLevelType.Error);
-                    imgArtist.ProfilePicture = new BitmapImage(fallbackUri);
-                }
-            }
-            else
-            {
-                imgArtist.ProfilePicture = new BitmapImage(fallbackUri);
-            }
-            FoundSongs.Clear();
-            //lstViewAllSongs.ItemsSource = FoundSongs;
-
+            LoadArtistImage(selectedSongArtist);
             try
-
             {
-                string targetArtist = txtArtistName.Text;
-                var rawSongs = FilesInDatabase.rawSongs;
-                var songModels = rawSongs.Where(s => s.Artist.Contains(targetArtist)).Select(s => new SongModel
-
-                {
-
-                    Title = s.Title,
-
-                    Artist = s.Artist,
-
-                    AlbumName = s.AlbumName,
-
-                    FilePath = s.FilePath,
-
-                    SongDuration = s.SongDuration
-
-                }).ToList();
-
-                // 3. Assign directly to UI
-
-                FoundSongs = new ObservableCollection<SongModel>(songModels);
-
-                lstViewAllSongs.ItemsSource = FoundSongs;
-
-
-
-                txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
-
-                TotalDuration();
+                await LoadArtistMedia(selectedSongArtist);
                 LoadSelectorBarSelectionSettings();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Failed to load songs: {ex.Message}");
+                Logger.Log("Failed to load artist songs: " + ex.Message, "ArtistView.LoadSongs", Logger.LogLevelType.Error);
             }
         }
-        FilesInDatabase.SongsDiscovered -= FilesInDatabase_SongsDiscovered;
         FilesInDatabase.SongsDiscovered += FilesInDatabase_SongsDiscovered;
-        LoadAlbums();
-        FoundSongs.CollectionChanged -= FoundSongs_CollectionChanged;
-        FoundSongs.CollectionChanged += FoundSongs_CollectionChanged;
+        try
+        {
+            await LoadAlbums();
+        }
+        catch (Exception ex)
+        {
+            Logger.Log("Failed to load artist albums: " + ex.Message, "ArtistView.LoadAlbumsInitial", Logger.LogLevelType.Error);
+        }
         base.OnNavigatedTo(e);
     }
-
-    private void FilesInDatabase_SongsDiscovered(IEnumerable<SongModel> obj)
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
-        foreach (var song in obj.ToList())
+        FilesInDatabase.SongsDiscovered -= FilesInDatabase_SongsDiscovered;
+    }
+
+    private void FilesInDatabase_SongsDiscovered(IEnumerable<SongModel> newdiscovery)
+    {
+        foreach (var song in newdiscovery.ToList())
         {
-            FoundSongs.Add(song);
+            if (string.Equals(txtArtistName.Text, song.Artist, StringComparison.OrdinalIgnoreCase))
+                FoundSongs.Add(song);
         }
     }
 
-    private void TotalDuration()
-    {
-        TimeSpan total = TimeSpan.FromTicks(
-            FoundSongs.Sum(s => s.SongDuration?.Ticks ?? 0)
-        );
-
-        txtTotalDuration.Text = total.TotalHours >= 1
-            ? $"{(int)total.TotalHours}:{total.Minutes:D2}:{total.Seconds:D2}"
-            : total.ToString(@"m\:ss");
-    }
 
 
 
-    private async void LoadMostPlayed()
-    {
-        mostplayedsongs.Clear();
-        var currentSettings = await SettingsLoader.LoadSettingsAsync();
-        var sortedSongs = currentSettings.RecentMusic.OrderByDescending(x => x.PlayCount).Take(5).ToList();
-        foreach (var song in sortedSongs)
-        {
-            var existingsong = FoundSongs.FirstOrDefault(p => p.FilePath == song.SongPath);
-            if (existingsong != null)
-            {
-                mostplayedsongs.Add(existingsong);
-            }
-        }
-        lstViewMasterMostPlayed.ItemsSource = mostplayedsongs;
-        lstViewMasterMostPlayed.Visibility = mostplayedsongs.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
-        txtEmptyMostPlayed.Visibility = mostplayedsongs.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-        txtMostPlayedCount.Text = $"• {mostplayedsongs.Count} {(mostplayedsongs.Count == 1 ? "item" : "items")}";
-        TimeSpan? timeSpan = TimeSpan.Zero;
-        foreach (var item in mostplayedsongs.ToList())
-        {
-
-            timeSpan += item.SongDuration;
-        }
-        string formatted = +timeSpan is TimeSpan ts
-          ? (ts.TotalHours >= 1 ? ts.ToString(@"h\:mm\:ss") : ts.ToString(@"m\:ss"))
-          : "0:00";
-        txtMostPlayedDuration.Text = "• " + formatted;
-    }
     ObservableCollection<SongModel> mostplayedsongs = new();
     private async Task LoadMostPlayedSongsBackground(SettingsValues currentSettings, string targetArtist, HashSet<string> favSet, string currentPlayingPath, bool isPlaying)
     {
@@ -732,13 +692,7 @@ public sealed partial class ArtistView : Page
     }
 
 
-    // --- Cropping / ContentDialog Events ---
-    private void cropCircle_PointerPressed(object sender, PointerRoutedEventArgs e) { }
-    private void cropCircle_PointerMoved(object sender, PointerRoutedEventArgs e) { }
-    private void cropCircle_PointerReleased(object sender, PointerRoutedEventArgs e) { }
-
-    // --- Artist Action Buttons (Rename, Play, Shuffle) ---
-    private void Button_Click_1(object sender, RoutedEventArgs e)
+    private void btnOpenRenameTT_Click(object sender, RoutedEventArgs e)
     {
         txtRename.Text = txtArtistName.Text;
     }
@@ -825,11 +779,11 @@ public sealed partial class ArtistView : Page
 
     private void btnShuffle_Checked(object sender, RoutedEventArgs e)
     {
-        QueueObjects.QueueInstance.IsQueuePageShuffleEnabled = btnShuffle.IsChecked ??false;
+        QueueObjects.QueueInstance.IsQueuePageShuffleEnabled = btnShuffle.IsChecked ?? false;
         QueueService.ToggleShuffle(btnShuffle.IsChecked ?? false);
     }
 
- 
+
     private async void btnAddSongs_Click(object sender, RoutedEventArgs e)
     {
         if (App.MainWindowInstance == null) return;
@@ -851,97 +805,8 @@ public sealed partial class ArtistView : Page
                 }
             }
         }
-        //if (App.MainWindowInstance == null) return;
-
-        //var files = await FilePickers.MediaPicker.PickMultipleAudioFilesAsync(App.MainWindowInstance, "Choose files");
-        //if (files == null || !files.Any()) return;
-
-        //string targetArtist = txtArtistName?.Text?.Trim() ?? "";
-
-        //// 1. Pause watchers during batch file & DB operations
-        //FileSystemWatch.Pause();
-
-        //try
-        //{
-        //    await Task.Run(async () =>
-        //    {
-        //        foreach (var file in files)
-        //        {
-        //            string path = file.Path;
-
-        //            // Check if already in current memory collection
-        //            bool existsInMemory = FoundSongs.Any(s => s.FilePath.Equals(path, StringComparison.OrdinalIgnoreCase));
-
-        //            // 2. Modify metadata on disk if an artist name is set
-        //            if (!string.IsNullOrEmpty(targetArtist))
-        //            {
-        //                AudioMetadata.ChangeArtistName(path, targetArtist);
-        //            }
-
-        //            // Read updated tags using TagLib for accurate database entry
-        //            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        //            var abstraction = new SimpleStreamAbstraction(path, stream);
-        //            using var tagFile = TagLib.File.Create(abstraction);
-
-        //            string title = string.IsNullOrWhiteSpace(tagFile.Tag.Title)
-        //                ? Path.GetFileNameWithoutExtension(path)
-        //                : tagFile.Tag.Title;
-
-        //            string artist = string.IsNullOrWhiteSpace(tagFile.Tag.FirstPerformer)
-        //                ? (string.IsNullOrEmpty(targetArtist) ? "Unknown Artist" : targetArtist)
-        //                : tagFile.Tag.FirstPerformer;
-
-        //            string album = string.IsNullOrWhiteSpace(tagFile.Tag.Album)
-        //                ? "Unknown Album"
-        //                : tagFile.Tag.Album;
-
-        //            TimeSpan duration = tagFile.Properties.Duration;
-
-        //            // 3. Save / Update in SQLite Database
-        //            await DatabaseService.UpdateSongMetadataAsync(path, title, artist, album);
-
-        //            // 4. Update UI collection safely on UI thread
-        //            DispatcherQueue.TryEnqueue(() =>
-        //            {
-        //                var existingSong = FoundSongs.FirstOrDefault(s => s.FilePath.Equals(path, StringComparison.OrdinalIgnoreCase));
-
-        //                if (existingSong != null)
-        //                {
-        //                    // Update existing entry
-        //                    existingSong.Title = title;
-        //                    existingSong.Artist = artist;
-        //                    existingSong.AlbumName = album;
-        //                    existingSong.SongDuration = duration;
-        //                }
-        //                else
-        //                {
-        //                    // Add new entry
-        //                    FoundSongs.Add(new SongModel
-        //                    {
-        //                        FilePath = path,
-        //                        Title = title,
-        //                        Artist = artist,
-        //                        AlbumName = album,
-        //                        SongDuration = duration
-        //                    });
-        //                }
-        //            });
-
-        //            // Small breather to let Windows Explorer release handles
-        //            await Task.Delay(30);
-        //        }
-        //    });
-
-        //    // 5. Recalculate total duration once all files are processed
-        //    TotalDuration();
-        //}
-        //finally
-        //{
-        //    // 6. Always resume watchers
-        //    FileSystemWatch.Resume();
-        //}
     }
-    // --- Discography & Album Events ---
+
     private void ifbError_CloseButtonClick(InfoBar sender, object args)
     {
         sender.Visibility = Visibility.Collapsed;
@@ -979,11 +844,6 @@ public sealed partial class ArtistView : Page
         grdViewAlbums.DeselectAll();
     }
 
-    // --- GridView (Albums) Interaction ---
-    private void grdViewAlbums_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        Debug.WriteLine("Album selection changed.");
-    }
 
     private void grdViewAlbums_ItemClick(object sender, ItemClickEventArgs e)
     {
@@ -1010,9 +870,60 @@ public sealed partial class ArtistView : Page
     {
         OceanContentDialog.HideDlg();
         MainWindow.ShowWindow();
-       await LoadAlbums();
+        await LoadAlbums();
+    }
+    #region Albums Context Flyout Click 
+    private void mnftOpenAlbum_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel sng && sng.AlbumName is string str)
+        {
+            if (str != "")
+            {
+                if (App.NavigationFrame == null) return;
+                var myApp = (App)Application.Current;
+                if (myApp.SelectedAlbum == null)
+                {
+                    myApp.SelectedAlbum = new AlbumContext { Name = str };
+                }
+                else
+                {
+                    myApp.SelectedAlbum.Name = str;
+                }
+                App.NavigationFrame.Navigate(typeof(AlbumView), myApp.SelectedAlbum);
+            }
+        }
+    }
+    private void mnftRenameAlbum_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel albumModel && albumModel.AlbumName is string name)
+        {
+            txtRenameAlbum.Text = name;
+            ttRenameAlbum.IsOpen = true;
+            RoutedEventHandler? clickHandler = null;
+            clickHandler = (object btnSender, RoutedEventArgs e) =>
+            {
+                btnRenameAlbum.Click -= clickHandler;
+                ttRenameAlbum.IsOpen = false;
+
+                var newName = txtRenameAlbum.Text.Trim();
+                if (string.IsNullOrEmpty(newName) || newName == name)
+                {
+                    return;
+                }
+                albumModel.AlbumName = newName;
+                var songs = albumModel.Songs;
+
+                foreach (var song in songs)
+                {
+                    AudioMetadata.ChangeAlbumName(song.FilePath, newName);
+                }
+            };
+            btnRenameAlbum.Click += clickHandler;
+        }
     }
 
+
+    #endregion
 
 
     private async void mnftChangeAlbumCover_Click(object sender, RoutedEventArgs e)
@@ -1126,7 +1037,6 @@ public sealed partial class ArtistView : Page
                 {
                     var count = albumunknown.Songs.Count;
                     count += albumModel.Songs.Count;
-                    albumunknown.AlbumCount = $"{count} {(count == 1 ? "item" : "items")}";
 
                 }
             }
@@ -1270,87 +1180,7 @@ public sealed partial class ArtistView : Page
             }
         }
     }
-    // --- Image Large Viewer ---
-    // If you plan to handle the ContentDialog showing the large image:
-    private async void ShowLargeImage()
-    {
-        // Note: Your ContentDialog in XAML needs an x:Name="cdLargeImage" 
-        // to be called from code-behind
-        // await cdLargeImage.ShowAsync();
-    }
 
-    private void mnftOpenAlbum_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel sng && sng.AlbumName is string str)
-        {
-            if (str != "")
-            {
-                if (App.NavigationFrame == null) return;
-                var myApp = (App)Application.Current;
-                if (myApp.SelectedAlbum == null)
-                {
-                    myApp.SelectedAlbum = new AlbumContext { Name = str };
-                }
-                else
-                {
-                    myApp.SelectedAlbum.Name = str;
-                }
-                App.NavigationFrame.Navigate(typeof(AlbumView), myApp.SelectedAlbum);
-
-            }
-        }
-
-    }
-
-    private void mnftRenameAlbum_Click(object sender, RoutedEventArgs e)
-    {
-
-        if (sender is MenuFlyoutItem mnft && mnft.DataContext is ArtistDiscAlbumModel albumModel && albumModel.AlbumName is string name)
-        {
-            txtRenameAlbum.Text = name;
-            ttRenameAlbum.IsOpen = true;
-
-            // 1. Safe Event Handling: Remove any previous handler before adding a new one
-            // to prevent multiple executions and memory leaks.
-            RoutedEventHandler? clickHandler = null;
-            clickHandler = (object btnSender, RoutedEventArgs e) =>
-            {
-                btnRenameAlbum.Click -= clickHandler; // Unsubscribe immediately
-                ttRenameAlbum.IsOpen = false;
-
-                var newName = txtRenameAlbum.Text.Trim();
-                if (string.IsNullOrEmpty(newName) || newName == name)
-                {
-                    return;
-                }
-
-                // 2. Update the main model
-                albumModel.AlbumName = newName;
-                var songs = albumModel.Songs;
-
-                foreach (var song in songs)
-                {
-                    Debug.WriteLine($"RENAME ALBUM: {song.FilePath}");
-
-                    // Write to file metadata asynchronously if possible, or keep synchronous if required
-                    AudioMetadata.ChangeAlbumName(song.FilePath, newName);
-
-                    // 3. Optimized Lookup: Target specific lists directly if you know where the song lives,
-                    // or use a unified update approach.
-                    UpdateSongCollection(FoundSongs, song.FilePath, newName);
-                    UpdateSongCollection(Singles, song.FilePath, newName);
-                    UpdateSongCollection(mostplayedsongs, song.FilePath, newName);
-                }
-
-                // 4. Update the item count string efficiently
-                var count = FoundSongs.Count(p => p.AlbumName == newName);
-                albumModel.AlbumCount = $"{count} {(count == 1 ? "item" : "items")}";
-            };
-
-            // Clear old handlers just in case, then bind the new one
-            btnRenameAlbum.Click += clickHandler;
-        }
-    }
 
     // Helper method to keep your code DRY (Don't Repeat Yourself)
     private void UpdateSongCollection(IEnumerable<SongModel> collection, string filePath, string newName)
@@ -1371,7 +1201,7 @@ public sealed partial class ArtistView : Page
             txtAlbumName.Text = name;
             ToolTipService.SetToolTip(txtAlbumName, name);
             txtCount.Text = "• " + $"{albumModel.Songs.Count} {(albumModel.Songs.Count == 1 ? "item" : "items")}";
-            txtArtistsInvolved.Text = albumModel.AlbumArtists;
+            txtArtistsInvolved.Text = albumModel.AlbumArtists.Replace("•", "");
             ToolTipService.SetToolTip(txtArtistsInvolved, txtArtistsInvolved.Text);
             imgAlbumCover.Source = albumModel.AlbumCoverThumbnail;
             TimeSpan total = TimeSpan.FromTicks(albumModel.Songs.Sum(s => s.SongDuration?.Ticks ?? 0));
@@ -1403,7 +1233,7 @@ public sealed partial class ArtistView : Page
     }
 
 
-    private void selBarMain_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
+    private async void selBarMain_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
     {
         grdMostPlayed.Visibility = Visibility.Collapsed;
         grdArtistSingles.Visibility = Visibility.Collapsed;
@@ -1412,17 +1242,17 @@ public sealed partial class ArtistView : Page
         if (selBarMain.SelectedItem == selBarItemMostPlayed)
         {
             grdMostPlayed.Visibility = Visibility.Visible;
-            LoadMostPlayed();
+            await LoadMostPlayed(txtArtistName.Text);
         }
         else if (selBarMain.SelectedItem == selBarItemAlbum)
         {
             grdAlbums.Visibility = Visibility.Visible;
-            LoadAlbums();
+            await LoadAlbums();
         }
         else if (selBarMain.SelectedItem == selBarItemSingles)
         {
             grdArtistSingles.Visibility = Visibility.Visible;
-            LoadSingles();
+            await LoadSingles(txtArtistName.Text);
         }
         else if (selBarMain.SelectedItem == selBarItemAllSongs)
         {
@@ -1455,17 +1285,8 @@ public sealed partial class ArtistView : Page
 
             }).ToList();
 
-            // 3. Assign directly to UI
-
             FoundSongs = new ObservableCollection<SongModel>(songModels);
 
-            lstViewAllSongs.ItemsSource = FoundSongs;
-
-
-
-            txtSongCount.Text = "• " + $"{FoundSongs.Count} {(FoundSongs.Count == 1 ? "song" : "songs")}";
-
-            TotalDuration();
             LoadSelectorBarSelectionSettings();
         }
         catch (Exception ex)
@@ -1474,15 +1295,15 @@ public sealed partial class ArtistView : Page
         }
         if (selBarMain.SelectedItem == selBarItemMostPlayed)
         {
-            LoadMostPlayed();
+            await LoadMostPlayed(txtArtistName.Text);
         }
         else if (selBarMain.SelectedItem == selBarItemAlbum)
         {
-            LoadAlbums();
+            await LoadAlbums();
         }
         else if (selBarMain.SelectedItem == selBarItemSingles)
         {
-            LoadSingles();
+            await LoadSingles(txtArtistName.Text);
         }
 
     }
@@ -1657,5 +1478,11 @@ public sealed partial class ArtistView : Page
         ttAddedtoQueue.IsOpen = true;
         await Task.Delay(2000);
         ttAddedtoQueue.IsOpen = false;
+    }
+
+    private void grdViewAlbums_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        btnRemoveSelections.IsEnabled = grdViewAlbums.SelectedItems.Count > 0;
+        btnClearSelection.IsEnabled = grdViewAlbums.SelectedItems.Count > 0;
     }
 }
