@@ -200,8 +200,8 @@ namespace Vusic_Player.Configuration.ClassModels
         public SongModel()
         {
             GlobalFavourites.Instance.FavouritesChanged += OnGlobalFavouritesChanged;
-            PlayerService.PlayerServiceInstance.PropertyChanged += PlayerServiceInstance_PropertyChanged
-                ;
+            PlayerService.PlayerServiceInstance.PropertyChanged += PlayerServiceInstance_PropertyChanged;
+            WatchFile();
         }
 
         private void PlayerServiceInstance_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -305,13 +305,13 @@ namespace Vusic_Player.Configuration.ClassModels
                 await Task.Delay(150); // Allow file writer to release exclusive lock
                 Debug.WriteLine("ALEL5");
 
-                if (_dispatcherQueue is null)
+                if (App.MainDispatcherQueue is null)
                 {
                     Debug.WriteLine("WATCHER: _dispatcherQueue is null.");
                     return;
                 }
 
-                _dispatcherQueue.TryEnqueue(async () =>
+                App.MainDispatcherQueue.TryEnqueue(async () =>
                 {
                     try
                     {

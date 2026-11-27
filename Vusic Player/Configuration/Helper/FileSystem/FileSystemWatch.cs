@@ -16,7 +16,7 @@ namespace Vusic_Player.Configuration.Helper.FileSystem
         private static readonly ConcurrentDictionary<string, CancellationTokenSource> _debounceTokens = new();
         public static void WatchFolders(List<string> FolderPaths)
         {
-            StopWatching();
+        //    StopWatching();
             foreach (var path in FolderPaths)
             {
                 if (!Directory.Exists(path)) continue;

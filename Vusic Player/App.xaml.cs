@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
@@ -30,6 +31,7 @@ namespace Vusic_Player
         public static Window? FirstLaunchWindowInstance;
         public static Window? OceanDialogInstance;
         public static Window? VideoDialogInstance;
+        public static DispatcherQueue MainDispatcherQueue { get; private set; } = null!;
         public static Window? SubtitleEditorDialogInstance;
         public static Frame? NavigationFrame { get; set; }
         public static Frame? MasterFrame { get; set; }
@@ -57,6 +59,7 @@ namespace Vusic_Player
 
         protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            MainDispatcherQueue = DispatcherQueue.GetForCurrentThread();
             var currentSettings = await SettingsLoader.LoadSettingsAsync();
              if (currentSettings.isFirstTimeLaunch == false)
             {

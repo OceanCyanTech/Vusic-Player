@@ -598,22 +598,17 @@ public sealed partial class AlbumView : Page
 
         if (existing != null)
         {
-            // 1. Update the existing entry
             existing.Thumbnail = "";
         }
         else
         {
-            // 2. Create a new entry if it doesn't exist
             var newAlbum = new AlbumModel
             {
                 Name = txtAlbumName.Text,
                 Thumbnail = ""
-                // Add other default properties here
             };
             list.Add(newAlbum);
         }
-
-        // Don't forget to save the changes back to storage!
         await SettingsLoader.SaveSettingsAsync(currentSettings);
     }
 

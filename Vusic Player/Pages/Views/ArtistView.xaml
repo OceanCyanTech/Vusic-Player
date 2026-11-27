@@ -26,6 +26,31 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <Grid.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Play all Songs of Artist" Click="btnPlayAll_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE768;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Add Songs to Artist" Click="btnAddSongs_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE710;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="Rename Artist" Click="btnOpenRenameTT_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE8AC;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Refresh Artist Discography" Click="btnRefresh_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE72C;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                </MenuFlyout>
+            </Grid.ContextFlyout>
 
             <TeachingTip FontFamily="{StaticResource GlobalFontHolder}" PreferredPlacement="Bottom" Title="Finding files across your libraries..." Name="ttProgress" >
                 <StackPanel Orientation="Horizontal" Margin="0, 15">
@@ -61,22 +86,18 @@
                     </ProgressBar>
                 </StackPanel>
             </TeachingTip>
-            <PersonPicture Grid.Row="0" Name="imgArtist" Width="300" Tapped="imgArtist_Tapped" Height="300" >
+            <PersonPicture Grid.Row="0" Name="imgArtist" Width="300" Height="300" >
                 <PersonPicture.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Visibility="Collapsed" FontFamily="{StaticResource GlobalFontHolder}" Text="View Image" Click="mnftViewImage_Click" Name="mnftViewImage">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="x"></FontIcon>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
+
                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Change Image" Click="btnSetArtistProfilePicture_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="x"></FontIcon>
+                                <FontIcon Glyph="&#xE7C5;"></FontIcon>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Remove Image" Name="mnftRemoveImage" Click="mnftRemoveImage_Click">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="x"></FontIcon>
+                                <FontIcon Glyph="&#xE894;"></FontIcon>
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>
@@ -100,6 +121,7 @@
 
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -155,7 +177,7 @@ Stretch="UniformToFill"/>
                                 <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtDuration" Text="• 55:07" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
                                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,5,0,0">
-                                    <Image Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}" Width="32" Height="32"/>
+                                    <Image Source="{Binding DefaultArtist, Source={StaticResource GlobalIconHolder}}" Width="25" Height="25"/>
                                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtArtistsInvolved" 
                            Text="• Artists"  IsTextSelectionEnabled="True"
                            VerticalAlignment="Center" 
@@ -166,8 +188,9 @@ Stretch="UniformToFill"/>
                             </StackPanel>
 
                         </Grid>
-                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="2" Text="Album Contents" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0, 10"/>
-                        <ListView Name="lstViewAlbumSongs" Grid.Row="3" Margin="0, 10">
+                        <MenuFlyoutSeparator Grid.Row="2"/>
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Row="3" Text="Album Contents" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0, 10"/>
+                        <ListView Name="lstViewAlbumSongs" Grid.Row="4" Margin="0, 10">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid ToolTipService.ToolTip="{Binding FilePath}" ColumnSpacing="5">
@@ -178,7 +201,26 @@ Stretch="UniformToFill"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
-                                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Copy Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click"/>
+                                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Play" Name="mnftPlayAlbumSong" Click="mnftPlayAlbumSong_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE768;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Copy Path" Name="mnftCopyFilePath" Click="mnftCopyFilePath_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE8C8;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="Open File Location" Name="mnftOpenFileLoc" Click="mnftOpenFileLoc_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE8DA;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Text="File Info" Name="mnftOpenFileInfo" Click="mnftOpenFileInfo_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE946;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
                                             </MenuFlyout>
                                         </Grid.ContextFlyout>
                                         <FontIcon FontSize="12" Glyph="{Binding Glyph}"/>
@@ -188,9 +230,7 @@ Stretch="UniformToFill"/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtEmptySongsAlbum" Grid.Row="3" Visibility="Collapsed" Text="This album is empty!"/>
-
-
+                        <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Name="txtEmptySongsAlbum" Grid.Row="4" Visibility="Collapsed" Text="This album is empty!"/>
                     </Grid>
 
 
@@ -210,7 +250,7 @@ Stretch="UniformToFill"/>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock   Text="&#xE823;" FontFamily="Segoe Fluent Icons" 
 Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0, 3" />
-                    <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="5, 0" ToolTipService.ToolTip="Total Runtime of Artist"  Text="{x:Bind FormatTotalDuration(FoundSongs.Count), Mode=OneWay}"
+                    <TextBlock IsTextSelectionEnabled="True" FontFamily="{StaticResource GlobalFontHolder}"  Margin="5, 0" ToolTipService.ToolTip="Total Runtime of Artist"  Text="{x:Bind FormatTotalDuration(FoundSongs.Count), Mode=OneWay}"
 Name="txtTotalDuration" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
             </StackPanel>
@@ -296,7 +336,7 @@ CornerRadius="16"
                     </Button>
 
                     <ToggleButton CornerRadius="12"  Background="Transparent" BorderBrush="Transparent" Name="btnShuffle" Checked="btnShuffle_Checked" Unchecked="btnShuffle_Checked" Margin="5"
-                  ToolTipService.ToolTip="Shuffle playlist">
+                  ToolTipService.ToolTip="Toggle Shuffle">
                         <ToggleButton.Resources>
                             <!-- 1. Background Fill when CHECKED -->
                             <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="{StaticResource GlobalAccentColor}"/>
@@ -351,18 +391,18 @@ ToolTipService.ToolTip="Set Artist Cover">
                         <Button.Flyout>
                             <Flyout>
                                 <StackPanel Orientation="Vertical" Spacing="5">
-                                    <Button Name="btnFindArtistProfileOnline" Click="btnFindArtistProfileOnline_Click">
+                                    <HyperlinkButton Name="btnFindArtistProfileOnline" Click="btnFindArtistProfileOnline_Click">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Width="25" Source="{Binding ArtistPictureOnline, Source={StaticResource GlobalIconHolder}}" />
                                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="5,2" Text="Find artist picture online" />
                                         </StackPanel>
-                                    </Button>
-                                    <Button Name="btnFindArtistProfileLocal" Click="btnSetArtistProfilePicture_Click" >
+                                    </HyperlinkButton>
+                                    <HyperlinkButton Name="btnFindArtistProfileLocal" Click="btnSetArtistProfilePicture_Click" >
                                         <StackPanel Orientation="Horizontal">
                                             <Image Width="25" Source="{Binding ArtistPictureLocal, Source={StaticResource GlobalIconHolder}}" />
                                             <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Margin="5,2" Text="Find artist picture on disk" />
                                         </StackPanel>
-                                    </Button>
+                                    </HyperlinkButton>
                                 </StackPanel>
                             </Flyout>
                         </Button.Flyout>
@@ -383,6 +423,32 @@ ToolTipService.ToolTip="Set Artist Cover">
             </StackPanel>
         </TeachingTip>
         <Grid Margin="10, 0" Grid.Column="1" RowSpacing="30">
+            <Grid.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Play all Songs of Artist" Click="btnPlayAll_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE768;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Add Songs to Artist" Click="btnAddSongs_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE710;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="Rename Artist" Click="btnOpenRenameTT_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE8AC;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Refresh Artist Discography" Click="btnRefresh_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE72C;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                </MenuFlyout>
+            </Grid.ContextFlyout>
+
             <Grid.RowDefinitions>
                 <!-- Row 0: Page header and top collections (Albums, Singles, Most Played) -->
                 <RowDefinition Height="Auto" />
@@ -430,7 +496,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                             <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
                             <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
 
-                          
+
                             <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
                             <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
                             <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
@@ -556,11 +622,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                                                 <FontIcon Glyph="&#xE8DA;"></FontIcon>
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem FontFamily="{StaticResource GlobalFontHolder}" Visibility="Collapsed" Text="Delete Album and its contents" Name="mnftDeleteAlbum" Click="mnftDeleteAlbum_Click" >
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE8DA;"></FontIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
+
                                     </MenuFlyout>
                                 </StackPanel.ContextFlyout>
 
@@ -577,7 +639,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                                     <Run Text="{Binding AlbumCount}" />
                                     </TextBlock>
                                     <TextBlock FontFamily="{StaticResource GlobalFontHolder}"  Grid.Column="1" FontSize="12" ToolTipService.ToolTip="Album Year" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">
-                                    <Run Text="• " />
+                                    
                                     <Run Text="{Binding AlbumYear}" />
                                     </TextBlock>
                                 </Grid>
@@ -605,7 +667,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                         <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
                         <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
 
-                      
+
                         <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
                         <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
                         <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
@@ -689,7 +751,7 @@ ToolTipService.ToolTip="Set Artist Cover">
                                 <SolidColorBrush x:Key="AccentButtonForeground" Color="#0B0D13"/>
                                 <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="Transparent"/>
 
-                              
+
                                 <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="{StaticResource GlobalAccentColorPointerOver}"/>
                                 <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#0B0D13"/>
                                 <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="Transparent"/>
